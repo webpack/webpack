@@ -14,7 +14,7 @@
     "acorn-import-assertions": "^1.9.0",
     "browserslist": "^4.21.10",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^5.15.0",
+    "enhanced-resolve": "^5.16.0",
     "es-module-lexer": "^1.2.1",
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",

@@ -83,7 +83,6 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { Dirent as DirentImport } from "fs";
 import {
 	IncomingMessage,
 	ServerOptions as ServerOptionsImport,
@@ -106,6 +105,7 @@ import {
 	SyncWaterfallHook
 } from "tapable";
 import { SecureContextOptions, TlsOptions } from "tls";
+import { URL } from "url";
 import { Context } from "vm";
 
 declare interface Abortable {
@@ -836,7 +836,7 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
-type BufferEncoding =
+type BufferEncodingBuffer =
 	| "ascii"
 	| "utf8"
 	| "utf16le"
@@ -849,6 +849,19 @@ type BufferEncoding =
 	| "base64url"
 	| "hex";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
+type BufferEncodingTypes =
+	| "ascii"
+	| "utf8"
+	| "utf16le"
+	| "ucs2"
+	| "latin1"
+	| "binary"
+	| "utf-8"
+	| "utf-16le"
+	| "ucs-2"
+	| "base64"
+	| "base64url"
+	| "hex";
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -2614,12 +2627,12 @@ declare interface Configuration {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptionsWebpackOptions;
+	resolve?: ResolveOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader?: ResolveOptionsWebpackOptions;
+	resolveLoader?: ResolveOptions;
 
 	/**
 	 * Options affecting how file system snapshots are created and validated.
@@ -3346,7 +3359,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-declare interface DirentFs {
+declare interface Dirent {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
 	isBlockDevice: () => boolean;
@@ -3636,7 +3649,7 @@ declare class EnableWasmLoadingPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
-type EncodingOption =
+type EncodingOptionFs =
 	| undefined
 	| null
 	| "ascii"
@@ -3650,7 +3663,23 @@ type EncodingOption =
 	| "base64"
 	| "base64url"
 	| "hex"
-	| ObjectEncodingOptions;
+	| ObjectEncodingOptionsFs;
+type EncodingOptionTypes =
+	| undefined
+	| null
+	| "ascii"
+	| "utf8"
+	| "utf16le"
+	| "ucs2"
+	| "latin1"
+	| "binary"
+	| "utf-8"
+	| "utf-16le"
+	| "ucs-2"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| ObjectEncodingOptionsTypes;
 type Entry =
 	| string
 	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
@@ -4425,7 +4454,7 @@ declare interface ExternalItemFunctionData {
 	 * Get a resolve function with the current resolver options.
 	 */
 	getResolve?: (
-		options?: ResolveOptionsWebpackOptions
+		options?: ResolveOptions
 	) =>
 		| ((
 				context: string,
@@ -4725,71 +4754,19 @@ declare interface FileCacheOptions {
 	version?: string;
 }
 declare interface FileSystem {
-	readFile: {
-		(arg0: string, arg1: FileSystemCallback<string | Buffer>): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<string | Buffer>
-		): void;
-	};
-	readdir: (
-		arg0: string,
-		arg1?:
-			| null
-			| "ascii"
-			| "utf8"
-			| "utf16le"
-			| "ucs2"
-			| "latin1"
-			| "binary"
-			| ((
-					arg0?: null | NodeJS.ErrnoException,
-					arg1?: (string | Buffer)[] | DirentImport[]
-			  ) => void)
-			| ReaddirOptions
-			| "utf-8"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "hex"
-			| "buffer",
-		arg2?: (
-			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | DirentImport[]
+	readFile: ReadFileTypes;
+	readdir: ReaddirTypes;
+	readJson?: (
+		arg0: PathOrFileDescriptorTypes,
+		arg1: (
+			arg0: null | Error | NodeJS.ErrnoException,
+			arg1?: JsonObjectTypes
 		) => void
 	) => void;
-	readJson?: {
-		(arg0: string, arg1: FileSystemCallback<object>): void;
-		(arg0: string, arg1: object, arg2: FileSystemCallback<object>): void;
-	};
-	readlink: {
-		(arg0: string, arg1: FileSystemCallback<string | Buffer>): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<string | Buffer>
-		): void;
-	};
-	lstat?: {
-		(arg0: string, arg1: FileSystemCallback<FileSystemStats>): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<string | Buffer>
-		): void;
-	};
-	stat: {
-		(arg0: string, arg1: FileSystemCallback<FileSystemStats>): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<string | Buffer>
-		): void;
-	};
-}
-declare interface FileSystemCallback<T> {
-	(err?: null | (PossibleFileSystemError & Error), result?: T): any;
+	readlink: ReadlinkTypes;
+	lstat?: LStatTypes;
+	stat: StatTypes;
+	realpath?: RealPathTypes;
 }
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
@@ -4883,10 +4860,6 @@ declare abstract class FileSystemInfo {
 declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
-}
-declare interface FileSystemStats {
-	isDirectory: () => boolean;
-	isFile: () => boolean;
 }
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface GenerateContext {
@@ -5412,26 +5385,26 @@ declare abstract class InitFragment<GenerateContext> {
 	merge: any;
 }
 declare interface InputFileSystem {
-	readFile: ReadFile;
+	readFile: ReadFileFs;
 	readFileSync?: ReadFileSync;
-	readlink: Readlink;
+	readlink: ReadlinkFs;
 	readlinkSync?: ReadlinkSync;
-	readdir: Readdir;
+	readdir: ReaddirFs;
 	readdirSync?: ReaddirSync;
-	stat: Stat;
+	stat: StatFs;
 	statSync?: StatSync;
-	lstat?: LStat;
+	lstat?: LStatFs;
 	lstatSync?: LStatSync;
-	realpath?: RealPath;
+	realpath?: RealPathFs;
 	realpathSync?: RealPathSync;
 	readJson?: (
-		arg0: PathOrFileDescriptor,
+		arg0: PathOrFileDescriptorFs,
 		arg1: (
 			arg0: null | Error | NodeJS.ErrnoException,
 			arg1?: JsonObjectFs
 		) => void
 	) => void;
-	readJsonSync?: (arg0: PathOrFileDescriptor) => JsonObjectFs;
+	readJsonSync?: (arg0: PathOrFileDescriptorFs) => JsonObjectFs;
 	purge?: (arg0?: string | string[] | Set<string>) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
@@ -5443,7 +5416,7 @@ type IntermediateFileSystem = InputFileSystem &
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: MkdirSync;
 	createWriteStream: (
-		arg0: PathLike,
+		arg0: PathLikeFs,
 		arg1?:
 			| "ascii"
 			| "utf8"
@@ -5465,8 +5438,8 @@ declare interface IntermediateFileSystemExtras {
 		arg1: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
 	rename: (
-		arg0: PathLike,
-		arg1: PathLike,
+		arg0: PathLikeFs,
+		arg1: PathLikeFs,
 		arg2: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
 }
@@ -7089,50 +7062,74 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
-declare interface LStat {
+declare interface LStatFs {
 	(
-		path: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+		path: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: undefined | (StatOptions & { bigint?: false }),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatOptions & { bigint: true },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IBigIntStats) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: undefined | StatOptions,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
-			arg1: IStats | IBigIntStats
+			arg1?: IStats | IBigIntStats
 		) => void
 	): void;
 }
 declare interface LStatSync {
-	(path: PathLike, options?: undefined): IStats;
+	(path: PathLikeFs, options?: undefined): IStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
 	): undefined | IStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStats;
-	(path: PathLike, options?: StatSyncOptions & { bigint?: false }): IStats;
-	(path: PathLike, options: StatSyncOptions & { bigint: true }): IBigIntStats;
+	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStats;
+	(path: PathLikeFs, options: StatSyncOptions & { bigint: true }): IBigIntStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
 	): IStats | IBigIntStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStats | IBigIntStats;
+}
+declare interface LStatTypes {
+	(
+		path: PathLikeTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: undefined | (StatOptions & { bigint?: false }),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: StatOptions & { bigint: true },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: undefined | StatOptions,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: IStats | IBigIntStats
+		) => void
+	): void;
 }
 
 /**
@@ -7854,12 +7851,12 @@ declare interface MinChunkSizePluginOptions {
 }
 declare interface Mkdir {
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		options: MakeDirectoryOptions & { recursive: true },
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		options:
 			| undefined
 			| null
@@ -7869,22 +7866,22 @@ declare interface Mkdir {
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		options: undefined | null | string | number | MakeDirectoryOptions,
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
 }
 declare interface MkdirSync {
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: MakeDirectoryOptions & { recursive: true }
 	): undefined | string;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?:
 			| null
 			| string
@@ -7892,7 +7889,7 @@ declare interface MkdirSync {
 			| (MakeDirectoryOptions & { recursive?: false })
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?: null | string | number | MakeDirectoryOptions
 	): undefined | string;
 }
@@ -7903,7 +7900,7 @@ declare class Module extends DependenciesBlock {
 	layer: null | string;
 	needId: boolean;
 	debugId: number;
-	resolveOptions?: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptions;
 	factoryMeta?: FactoryMeta;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
@@ -8062,7 +8059,7 @@ declare abstract class ModuleFactory {
 }
 declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions?: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptions;
 	context: string;
 	dependencies: Dependency[];
 }
@@ -8532,7 +8529,7 @@ declare interface ModuleSettings {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptionsWebpackOptions;
+	resolve?: ResolveOptions;
 
 	/**
 	 * Options for parsing.
@@ -8877,7 +8874,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * options used for resolving requests from this module
 	 */
-	resolveOptions?: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptions;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -9080,7 +9077,7 @@ declare interface ObjectDeserializerContext {
 	read: () => any;
 	setCircularReference: (arg0?: any) => void;
 }
-declare interface ObjectEncodingOptions {
+declare interface ObjectEncodingOptionsFs {
 	encoding?:
 		| null
 		| "ascii"
@@ -9090,6 +9087,22 @@ declare interface ObjectEncodingOptions {
 		| "latin1"
 		| "binary"
 		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "base64url"
+		| "hex";
+}
+declare interface ObjectEncodingOptionsTypes {
+	encoding?:
+		| null
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "utf-16le"
 		| "ucs-2"
 		| "base64"
 		| "base64url"
@@ -9135,19 +9148,19 @@ declare interface OccurrenceModuleIdsPluginOptions {
 }
 declare interface Open {
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		flags: undefined | string | number,
 		mode: undefined | null | string | number,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
 	): void;
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		flags: undefined | string | number,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
 	): void;
 	(
-		file: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+		file: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
 	): void;
 }
 
@@ -9848,15 +9861,15 @@ declare interface Output {
 declare interface OutputFileSystem {
 	writeFile: WriteFile;
 	mkdir: Mkdir;
-	readdir?: Readdir;
+	readdir?: ReaddirFs;
 	rmdir?: Rmdir;
 	unlink?: (
-		arg0: PathLike,
+		arg0: PathLikeFs,
 		arg1: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
-	stat: Stat;
-	lstat?: LStat;
-	readFile: ReadFile;
+	stat: StatFs;
+	lstat?: LStatFs;
+	readFile: ReadFileFs;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
@@ -10244,8 +10257,10 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 }
-type PathLike = string | Buffer | URL;
-type PathOrFileDescriptor = string | number | Buffer | URL;
+type PathLikeFs = string | Buffer | URL;
+type PathLikeTypes = string | Buffer | URL_url;
+type PathOrFileDescriptorFs = string | number | Buffer | URL;
+type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -10301,14 +10316,12 @@ type Plugin =
 	| 0
 	| { apply: (arg0: Resolver) => void }
 	| ((this: Resolver, arg1: Resolver) => void);
-declare interface PnpApiImpl {
-	resolveToUnqualified: (arg0: string, arg1: string, arg2: object) => string;
-}
-declare interface PossibleFileSystemError {
-	code?: string;
-	errno?: number;
-	path?: string;
-	syscall?: string;
+declare interface PnpApi {
+	resolveToUnqualified: (
+		arg0: string,
+		arg1: string,
+		arg2: object
+	) => null | string;
 }
 declare class PrefetchPlugin {
 	constructor(context: string, request?: string);
@@ -10595,59 +10608,6 @@ declare interface ReadAsyncOptions<TBuffer extends ArrayBufferView> {
 	position?: null | number | bigint;
 	buffer?: TBuffer;
 }
-declare interface ReadFile {
-	(
-		path: PathOrFileDescriptor,
-		options:
-			| undefined
-			| null
-			| ({ encoding?: null; flag?: string } & Abortable),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
-	): void;
-	(
-		path: PathOrFileDescriptor,
-		options:
-			| "ascii"
-			| "utf8"
-			| "utf16le"
-			| "ucs2"
-			| "latin1"
-			| "binary"
-			| "utf-8"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "hex"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
-	): void;
-	(
-		path: PathOrFileDescriptor,
-		options:
-			| undefined
-			| null
-			| "ascii"
-			| "utf8"
-			| "utf16le"
-			| "ucs2"
-			| "latin1"
-			| "binary"
-			| "utf-8"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "hex"
-			| (ObjectEncodingOptions & { flag?: string } & Abortable),
-		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1: string | Buffer
-		) => void
-	): void;
-	(
-		path: PathOrFileDescriptor,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
-	): void;
-}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: ReadFileCompileWasmPluginOptions);
 	options: ReadFileCompileWasmPluginOptions;
@@ -10663,13 +10623,17 @@ declare interface ReadFileCompileWasmPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare interface ReadFileSync {
+declare interface ReadFileFs {
 	(
-		path: PathOrFileDescriptor,
-		options?: null | { encoding?: null; flag?: string }
-	): Buffer;
+		path: PathOrFileDescriptorFs,
+		options:
+			| undefined
+			| null
+			| ({ encoding?: null; flag?: string } & Abortable),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
 	(
-		path: PathOrFileDescriptor,
+		path: PathOrFileDescriptorFs,
 		options:
 			| "ascii"
 			| "utf8"
@@ -10682,10 +10646,59 @@ declare interface ReadFileSync {
 			| "base64"
 			| "base64url"
 			| "hex"
-			| { encoding: BufferEncoding; flag?: string }
+			| ({ encoding: BufferEncodingBuffer; flag?: string } & Abortable),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		path: PathOrFileDescriptorFs,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptionsFs & { flag?: string } & Abortable),
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathOrFileDescriptorFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+}
+declare interface ReadFileSync {
+	(
+		path: PathOrFileDescriptorFs,
+		options?: null | { encoding?: null; flag?: string }
+	): Buffer;
+	(
+		path: PathOrFileDescriptorFs,
+		options:
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| { encoding: BufferEncodingBuffer; flag?: string }
 	): string;
 	(
-		path: PathOrFileDescriptor,
+		path: PathOrFileDescriptorFs,
 		options?:
 			| null
 			| "ascii"
@@ -10699,12 +10712,67 @@ declare interface ReadFileSync {
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptions & { flag?: string })
+			| (ObjectEncodingOptionsFs & { flag?: string })
 	): string | Buffer;
 }
-declare interface Readdir {
+declare interface ReadFileTypes {
 	(
-		path: PathLike,
+		path: PathOrFileDescriptorTypes,
+		options:
+			| undefined
+			| null
+			| ({ encoding?: null; flag?: string } & Abortable),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+	(
+		path: PathOrFileDescriptorTypes,
+		options:
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| ({ encoding: BufferEncodingTypes; flag?: string } & Abortable)
+			| "utf-8"
+			| "utf-16le"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex",
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		path: PathOrFileDescriptorTypes,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "utf-16le"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptionsTypes & { flag?: string } & Abortable),
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathOrFileDescriptorTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+}
+declare interface ReaddirFs {
+	(
+		path: PathLikeFs,
 		options:
 			| undefined
 			| null
@@ -10736,21 +10804,21 @@ declare interface Readdir {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string[]) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options:
 			| "buffer"
 			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer[]) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer[]) => void
 	): void;
 	(
-		path: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string[]) => void
+		path: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options:
 			| undefined
 			| null
@@ -10765,44 +10833,27 @@ declare interface Readdir {
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptions & {
+			| (ObjectEncodingOptionsFs & {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  }),
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
-			arg1: string[] | Buffer[]
+			arg1?: string[] | Buffer[]
 		) => void
 	): void;
 	(
-		path: PathLike,
-		options: ObjectEncodingOptions & {
+		path: PathLikeFs,
+		options: ObjectEncodingOptionsFs & {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: DirentFs[]) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Dirent[]) => void
 	): void;
-}
-declare interface ReaddirOptions {
-	encoding?:
-		| null
-		| "ascii"
-		| "utf8"
-		| "utf16le"
-		| "ucs2"
-		| "latin1"
-		| "binary"
-		| "utf-8"
-		| "ucs-2"
-		| "base64"
-		| "base64url"
-		| "hex"
-		| "buffer";
-	withFileTypes?: boolean;
 }
 declare interface ReaddirSync {
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?:
 			| null
 			| "ascii"
@@ -10835,13 +10886,13 @@ declare interface ReaddirSync {
 			  }
 	): string[];
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options:
 			| "buffer"
 			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean }
 	): Buffer[];
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?:
 			| null
 			| "ascii"
@@ -10855,44 +10906,155 @@ declare interface ReaddirSync {
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptions & { withFileTypes?: false; recursive?: boolean })
+			| (ObjectEncodingOptionsFs & {
+					withFileTypes?: false;
+					recursive?: boolean;
+			  })
 	): string[] | Buffer[];
 	(
-		path: PathLike,
-		options: ObjectEncodingOptions & {
+		path: PathLikeFs,
+		options: ObjectEncodingOptionsFs & {
 			withFileTypes: true;
 			recursive?: boolean;
 		}
-	): DirentFs[];
+	): Dirent[];
 }
-declare interface Readlink {
+declare interface ReaddirTypes {
 	(
-		path: PathLike,
-		options: EncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+		path: PathLikeTypes,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "utf-16le"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| {
+					encoding:
+						| null
+						| "ascii"
+						| "utf8"
+						| "utf16le"
+						| "ucs2"
+						| "latin1"
+						| "binary"
+						| "utf-8"
+						| "utf-16le"
+						| "ucs-2"
+						| "base64"
+						| "base64url"
+						| "hex";
+					withFileTypes?: false;
+					recursive?: boolean;
+			  },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
 	): void;
 	(
-		path: PathLike,
-		options: BufferEncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+		path: PathLikeTypes,
+		options:
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean }
+			| "buffer",
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer[]) => void
 	): void;
 	(
-		path: PathLike,
-		options: EncodingOption,
+		path: PathLikeTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "utf-16le"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptionsTypes & {
+					withFileTypes?: false;
+					recursive?: boolean;
+			  }),
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
-			arg1: string | Buffer
+			arg1?: string[] | Buffer[]
 		) => void
 	): void;
 	(
-		path: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+		path: PathLikeTypes,
+		options: ObjectEncodingOptionsTypes & {
+			withFileTypes: true;
+			recursive?: boolean;
+		},
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Dirent[]) => void
+	): void;
+}
+declare interface ReadlinkFs {
+	(
+		path: PathLikeFs,
+		options: EncodingOptionFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		path: PathLikeFs,
+		options: BufferEncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+	(
+		path: PathLikeFs,
+		options: EncodingOptionFs,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
 declare interface ReadlinkSync {
-	(path: PathLike, options?: EncodingOption): string;
-	(path: PathLike, options: BufferEncodingOption): Buffer;
-	(path: PathLike, options?: EncodingOption): string | Buffer;
+	(path: PathLikeFs, options?: EncodingOptionFs): string;
+	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
+	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
+}
+declare interface ReadlinkTypes {
+	(
+		path: PathLikeTypes,
+		options: EncodingOptionTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: BufferEncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: EncodingOptionTypes,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
 }
 declare class RealContentHashPlugin {
 	constructor(__0: {
@@ -10919,34 +11081,58 @@ declare interface RealDependencyLocation {
 	end?: SourcePosition;
 	index?: number;
 }
-declare interface RealPath {
+declare interface RealPathFs {
 	(
-		path: PathLike,
-		options: EncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+		path: PathLikeFs,
+		options: EncodingOptionFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: BufferEncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
 	): void;
 	(
-		path: PathLike,
-		options: EncodingOption,
+		path: PathLikeFs,
+		options: EncodingOptionFs,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
-			arg1: string | Buffer
+			arg1?: string | Buffer
 		) => void
 	): void;
 	(
-		path: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+		path: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
 declare interface RealPathSync {
-	(path: PathLike, options?: EncodingOption): string;
-	(path: PathLike, options: BufferEncodingOption): Buffer;
-	(path: PathLike, options?: EncodingOption): string | Buffer;
+	(path: PathLikeFs, options?: EncodingOptionFs): string;
+	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
+	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
+}
+declare interface RealPathTypes {
+	(
+		path: PathLikeTypes,
+		options: EncodingOptionTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: BufferEncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: EncodingOptionTypes,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
 }
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
@@ -11145,10 +11331,6 @@ declare interface ResolveBuildDependenciesResult {
 		missing: Set<string>;
 	};
 }
-
-/**
- * Resolve context
- */
 declare interface ResolveContext {
 	contextDependencies?: WriteOnlySet<string>;
 
@@ -11179,7 +11361,7 @@ declare interface ResolveContext {
 }
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions?: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptions;
 	context: string;
 	request: string;
 	assertions?: Record<string, any>;
@@ -11195,44 +11377,11 @@ declare interface ResolveData {
 	 */
 	cacheable: boolean;
 }
-declare interface ResolveOptionsTypes {
-	alias: AliasOption[];
-	fallback: AliasOption[];
-	aliasFields: Set<string | string[]>;
-	extensionAlias: ExtensionAliasOption[];
-	cachePredicate: (arg0: ResolveRequest) => boolean;
-	cacheWithContext: boolean;
-
-	/**
-	 * A list of exports field condition names.
-	 */
-	conditionNames: Set<string>;
-	descriptionFiles: string[];
-	enforceExtension: boolean;
-	exportsFields: Set<string | string[]>;
-	importsFields: Set<string | string[]>;
-	extensions: Set<string>;
-	fileSystem: FileSystem;
-	unsafeCache: false | object;
-	symlinks: boolean;
-	resolver?: Resolver;
-	modules: (string | string[])[];
-	mainFields: { name: string[]; forceRelative: boolean }[];
-	mainFiles: Set<string>;
-	plugins: Plugin[];
-	pnpApi: null | PnpApiImpl;
-	roots: Set<string>;
-	fullySpecified: boolean;
-	resolveToContext: boolean;
-	restrictions: Set<string | RegExp>;
-	preferRelative: boolean;
-	preferAbsolute: boolean;
-}
 
 /**
  * Options object for resolving requests.
  */
-declare interface ResolveOptionsWebpackOptions {
+declare interface ResolveOptions {
 	/**
 	 * Redirect module requests.
 	 */
@@ -11261,7 +11410,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 	 */
-	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+	byDependency?: { [index: string]: ResolveOptions };
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -11411,7 +11560,185 @@ declare interface ResolveOptionsWebpackOptions {
 	 */
 	useSyncFileSystemCalls?: boolean;
 }
-type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
+declare interface ResolveOptionsResolverFactoryObject1 {
+	alias: AliasOption[];
+	fallback: AliasOption[];
+	aliasFields: Set<string | string[]>;
+	extensionAlias: ExtensionAliasOption[];
+	cachePredicate: (arg0: ResolveRequest) => boolean;
+	cacheWithContext: boolean;
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames: Set<string>;
+	descriptionFiles: string[];
+	enforceExtension: boolean;
+	exportsFields: Set<string | string[]>;
+	importsFields: Set<string | string[]>;
+	extensions: Set<string>;
+	fileSystem: FileSystem;
+	unsafeCache: false | object;
+	symlinks: boolean;
+	resolver?: Resolver;
+	modules: (string | string[])[];
+	mainFields: { name: string[]; forceRelative: boolean }[];
+	mainFiles: Set<string>;
+	plugins: Plugin[];
+	pnpApi: null | PnpApi;
+	roots: Set<string>;
+	fullySpecified: boolean;
+	resolveToContext: boolean;
+	restrictions: Set<string | RegExp>;
+	preferRelative: boolean;
+	preferAbsolute: boolean;
+}
+declare interface ResolveOptionsResolverFactoryObject2 {
+	/**
+	 * A list of module alias configurations or an object which maps key to value
+	 */
+	alias?: AliasOption[] | AliasOptions;
+
+	/**
+	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
+	 */
+	fallback?: AliasOption[] | AliasOptions;
+
+	/**
+	 * An object which maps extension to extension aliases
+	 */
+	extensionAlias?: ExtensionAliasOptions;
+
+	/**
+	 * A list of alias fields in description files
+	 */
+	aliasFields?: (string | string[])[];
+
+	/**
+	 * A function which decides whether a request should be cached or not. An object is passed with at least `path` and `request` properties.
+	 */
+	cachePredicate?: (arg0: ResolveRequest) => boolean;
+
+	/**
+	 * Whether or not the unsafeCache should include request context as part of the cache key.
+	 */
+	cacheWithContext?: boolean;
+
+	/**
+	 * A list of description files to read from
+	 */
+	descriptionFiles?: string[];
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames?: string[];
+
+	/**
+	 * Enforce that a extension from extensions must be used
+	 */
+	enforceExtension?: boolean;
+
+	/**
+	 * A list of exports fields in description files
+	 */
+	exportsFields?: (string | string[])[];
+
+	/**
+	 * A list of imports fields in description files
+	 */
+	importsFields?: (string | string[])[];
+
+	/**
+	 * A list of extensions which should be tried for files
+	 */
+	extensions?: string[];
+
+	/**
+	 * The file system which should be used
+	 */
+	fileSystem: FileSystem;
+
+	/**
+	 * Use this cache object to unsafely cache the successful requests
+	 */
+	unsafeCache?: boolean | object;
+
+	/**
+	 * Resolve symlinks to their symlinked location
+	 */
+	symlinks?: boolean;
+
+	/**
+	 * A prepared Resolver to which the plugins are attached
+	 */
+	resolver?: Resolver;
+
+	/**
+	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 */
+	modules?: string | string[];
+
+	/**
+	 * A list of main fields in description files
+	 */
+	mainFields?: (
+		| string
+		| string[]
+		| { name: string | string[]; forceRelative: boolean }
+	)[];
+
+	/**
+	 * A list of main files in directories
+	 */
+	mainFiles?: string[];
+
+	/**
+	 * A list of additional resolve plugins which should be applied
+	 */
+	plugins?: Plugin[];
+
+	/**
+	 * A PnP API that should be used - null is "never", undefined is "auto"
+	 */
+	pnpApi?: null | PnpApi;
+
+	/**
+	 * A list of root paths
+	 */
+	roots?: string[];
+
+	/**
+	 * The request is already fully specified and no extensions or directories are resolved for it
+	 */
+	fullySpecified?: boolean;
+
+	/**
+	 * Resolve to a context instead of a file
+	 */
+	resolveToContext?: boolean;
+
+	/**
+	 * A list of resolve restrictions
+	 */
+	restrictions?: (string | RegExp)[];
+
+	/**
+	 * Use only the sync constraints of the file system calls
+	 */
+	useSyncFileSystemCalls?: boolean;
+
+	/**
+	 * Prefer to resolve module requests as relative requests before falling back to modules
+	 */
+	preferRelative?: boolean;
+
+	/**
+	 * Prefer to resolve server-relative urls as absolute paths before falling back to resolve in roots
+	 */
+	preferAbsolute?: boolean;
+}
+type ResolveOptionsWithDependencyType = ResolveOptions & {
 	dependencyType?: string;
 	resolveToContext?: boolean;
 };
@@ -11439,7 +11766,7 @@ declare interface ResolvedContextTimestampAndHash {
 }
 declare abstract class Resolver {
 	fileSystem: FileSystem;
-	options: ResolveOptionsTypes;
+	options: ResolveOptionsResolverFactoryObject1;
 	hooks: KnownHooks;
 	ensureHook(
 		name:
@@ -11502,7 +11829,13 @@ declare abstract class ResolverFactory {
 			SyncWaterfallHook<[ResolveOptionsWithDependencyType]>
 		>;
 		resolver: HookMap<
-			SyncHook<[Resolver, UserResolveOptions, ResolveOptionsWithDependencyType]>
+			SyncHook<
+				[
+					Resolver,
+					ResolveOptionsResolverFactoryObject2,
+					ResolveOptionsWithDependencyType
+				]
+			>
 		>;
 	}>;
 	cache: Map<string, ResolverCache>;
@@ -11528,11 +11861,11 @@ declare interface RmDirOptions {
 }
 declare interface Rmdir {
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
 	(
-		file: PathLike,
+		file: PathLikeFs,
 		options: RmDirOptions,
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
@@ -11750,7 +12083,7 @@ declare interface RuleSetRule {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptionsWebpackOptions;
+	resolve?: ResolveOptions;
 
 	/**
 	 * Match the resource path of the module.
@@ -12957,27 +13290,27 @@ declare abstract class StackedMap<K, V> {
 	createChild(): StackedMap<K, V>;
 }
 type StartupRenderContext = RenderContext & { inlined: boolean };
-declare interface Stat {
+declare interface StatFs {
 	(
-		path: PathLike,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+		path: PathLikeFs,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: undefined | (StatOptions & { bigint?: false }),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatOptions & { bigint: true },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1: IBigIntStats) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
 	): void;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: undefined | StatOptions,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
-			arg1: IStats | IBigIntStats
+			arg1?: IStats | IBigIntStats
 		) => void
 	): void;
 }
@@ -12985,29 +13318,53 @@ declare interface StatOptions {
 	bigint?: boolean;
 }
 declare interface StatSync {
-	(path: PathLike, options?: undefined): IStats;
+	(path: PathLikeFs, options?: undefined): IStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
 	): undefined | IStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStats;
-	(path: PathLike, options?: StatSyncOptions & { bigint?: false }): IStats;
-	(path: PathLike, options: StatSyncOptions & { bigint: true }): IBigIntStats;
+	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStats;
+	(path: PathLikeFs, options: StatSyncOptions & { bigint: true }): IBigIntStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
 	): IStats | IBigIntStats;
 	(
-		path: PathLike,
+		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStats | IBigIntStats;
 }
 declare interface StatSyncOptions {
 	bigint?: boolean;
 	throwIfNoEntry?: boolean;
+}
+declare interface StatTypes {
+	(
+		path: PathLikeTypes,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: undefined | (StatOptions & { bigint?: false }),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: StatOptions & { bigint: true },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
+	): void;
+	(
+		path: PathLikeTypes,
+		options: undefined | StatOptions,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1?: IStats | IBigIntStats
+		) => void
+	): void;
 }
 type Statement =
 	| FunctionDeclaration
@@ -13725,9 +14082,15 @@ declare interface TrustedTypes {
 	policyName?: string;
 }
 declare const UNDEFINED_MARKER: unique symbol;
+
+/**
+ * `URL` class is a global reference for `require('url').URL`
+ * https://nodejs.org/api/url.html#the-whatwg-url-api
+ */
+declare interface URL_url extends URL {}
 declare interface UnsafeCacheData {
 	factoryMeta?: FactoryMeta;
-	resolveOptions?: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptions;
 }
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
@@ -13744,151 +14107,6 @@ declare interface UpdateHashContextGenerator {
 	runtimeTemplate?: RuntimeTemplate;
 }
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
-declare interface UserResolveOptions {
-	/**
-	 * A list of module alias configurations or an object which maps key to value
-	 */
-	alias?: AliasOption[] | AliasOptions;
-
-	/**
-	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
-	 */
-	fallback?: AliasOption[] | AliasOptions;
-
-	/**
-	 * An object which maps extension to extension aliases
-	 */
-	extensionAlias?: ExtensionAliasOptions;
-
-	/**
-	 * A list of alias fields in description files
-	 */
-	aliasFields?: (string | string[])[];
-
-	/**
-	 * A function which decides whether a request should be cached or not. An object is passed with at least `path` and `request` properties.
-	 */
-	cachePredicate?: (arg0: ResolveRequest) => boolean;
-
-	/**
-	 * Whether or not the unsafeCache should include request context as part of the cache key.
-	 */
-	cacheWithContext?: boolean;
-
-	/**
-	 * A list of description files to read from
-	 */
-	descriptionFiles?: string[];
-
-	/**
-	 * A list of exports field condition names.
-	 */
-	conditionNames?: string[];
-
-	/**
-	 * Enforce that a extension from extensions must be used
-	 */
-	enforceExtension?: boolean;
-
-	/**
-	 * A list of exports fields in description files
-	 */
-	exportsFields?: (string | string[])[];
-
-	/**
-	 * A list of imports fields in description files
-	 */
-	importsFields?: (string | string[])[];
-
-	/**
-	 * A list of extensions which should be tried for files
-	 */
-	extensions?: string[];
-
-	/**
-	 * The file system which should be used
-	 */
-	fileSystem: FileSystem;
-
-	/**
-	 * Use this cache object to unsafely cache the successful requests
-	 */
-	unsafeCache?: boolean | object;
-
-	/**
-	 * Resolve symlinks to their symlinked location
-	 */
-	symlinks?: boolean;
-
-	/**
-	 * A prepared Resolver to which the plugins are attached
-	 */
-	resolver?: Resolver;
-
-	/**
-	 * A list of directories to resolve modules from, can be absolute path or folder name
-	 */
-	modules?: string | string[];
-
-	/**
-	 * A list of main fields in description files
-	 */
-	mainFields?: (
-		| string
-		| string[]
-		| { name: string | string[]; forceRelative: boolean }
-	)[];
-
-	/**
-	 * A list of main files in directories
-	 */
-	mainFiles?: string[];
-
-	/**
-	 * A list of additional resolve plugins which should be applied
-	 */
-	plugins?: Plugin[];
-
-	/**
-	 * A PnP API that should be used - null is "never", undefined is "auto"
-	 */
-	pnpApi?: null | PnpApiImpl;
-
-	/**
-	 * A list of root paths
-	 */
-	roots?: string[];
-
-	/**
-	 * The request is already fully specified and no extensions or directories are resolved for it
-	 */
-	fullySpecified?: boolean;
-
-	/**
-	 * Resolve to a context instead of a file
-	 */
-	resolveToContext?: boolean;
-
-	/**
-	 * A list of resolve restrictions
-	 */
-	restrictions?: (string | RegExp)[];
-
-	/**
-	 * Use only the sync constraints of the file system calls
-	 */
-	useSyncFileSystemCalls?: boolean;
-
-	/**
-	 * Prefer to resolve module requests as relative requests before falling back to modules
-	 */
-	preferRelative?: boolean;
-
-	/**
-	 * Prefer to resolve server-relative urls as absolute paths before falling back to resolve in roots
-	 */
-	preferAbsolute?: boolean;
-}
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
@@ -13911,7 +14129,7 @@ declare interface WatchFileSystem {
 		startTime: number,
 		options: WatchOptions,
 		callback: (
-			arg0: undefined | Error,
+			arg0: null | Error,
 			arg1: Map<string, FileSystemInfoEntry | "ignore">,
 			arg2: Map<string, FileSystemInfoEntry | "ignore">,
 			arg3: Set<string>,
@@ -14349,12 +14567,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve: ResolveOptionsWebpackOptions;
+	resolve: ResolveOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader: ResolveOptionsWebpackOptions;
+	resolveLoader: ResolveOptions;
 
 	/**
 	 * Options affecting how file system snapshots are created and validated.
@@ -14406,7 +14624,7 @@ declare interface WithOptions {
 }
 declare interface WriteFile {
 	(
-		file: PathOrFileDescriptor,
+		file: PathOrFileDescriptorFs,
 		data:
 			| string
 			| Uint8Array
@@ -14425,7 +14643,7 @@ declare interface WriteFile {
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
 	(
-		file: PathOrFileDescriptor,
+		file: PathOrFileDescriptorFs,
 		data:
 			| string
 			| Uint8Array
@@ -14456,7 +14674,7 @@ type WriteFileOptions =
 	| "base64"
 	| "base64url"
 	| "hex"
-	| (ObjectEncodingOptions &
+	| (ObjectEncodingOptionsFs &
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
@@ -15101,7 +15319,7 @@ declare namespace exports {
 		LibraryOptions,
 		MemoryCacheOptions,
 		ModuleOptions,
-		ResolveOptionsWebpackOptions as ResolveOptions,
+		ResolveOptions,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
 		RuleSetRule,
