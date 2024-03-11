@@ -12383,7 +12383,7 @@ declare abstract class RuntimeTemplate {
 	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
-	globalObject?: string;
+	globalObject: string;
 	contentHashReplacement: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
@@ -14377,13 +14377,13 @@ declare abstract class WebpackLogger {
 	group(...args: any[]): void;
 	groupCollapsed(...args: any[]): void;
 	groupEnd(...args: any[]): void;
-	profile(label?: any): void;
-	profileEnd(label?: any): void;
-	time(label?: any): void;
-	timeLog(label?: any): void;
-	timeEnd(label?: any): void;
-	timeAggregate(label?: any): void;
-	timeAggregateEnd(label?: any): void;
+	profile(label?: string): void;
+	profileEnd(label?: string): void;
+	time(label: string): void;
+	timeLog(label?: string): void;
+	timeEnd(label?: string): void;
+	timeAggregate(label?: string): void;
+	timeAggregateEnd(label?: string): void;
 }
 declare class WebpackOptionsApply extends OptionsApply {
 	constructor();
