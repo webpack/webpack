@@ -1839,7 +1839,7 @@ declare class Compilation {
 	endTime?: number;
 	compiler: Compiler;
 	resolverFactory: ResolverFactory;
-	inputFileSystem: null | InputFileSystem;
+	inputFileSystem: InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 	requestShortener: RequestShortener;
