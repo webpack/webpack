@@ -8,7 +8,7 @@ it("should not mangle export when destructuring module", () => {
 	expect(objCanMangle).toBe(false)
 });
 
-it("should mangle export when destructuring module's porperty", () => {
+it("should mangle export when destructuring module's property", () => {
 	const { a, b } = module.obj2
 	const { obj2CanMangle } = module
 	expect(a).toBe("a");
