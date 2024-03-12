@@ -836,32 +836,20 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
-type BufferEncodingBuffer =
+type BufferEncoding =
 	| "ascii"
 	| "utf8"
+	| "utf-8"
 	| "utf16le"
+	| "utf-16le"
 	| "ucs2"
+	| "ucs-2"
 	| "latin1"
 	| "binary"
-	| "utf-8"
-	| "ucs-2"
 	| "base64"
 	| "base64url"
 	| "hex";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
-type BufferEncodingTypes =
-	| "ascii"
-	| "utf8"
-	| "utf16le"
-	| "ucs2"
-	| "latin1"
-	| "binary"
-	| "utf-8"
-	| "utf-16le"
-	| "ucs-2"
-	| "base64"
-	| "base64url"
-	| "hex";
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -3649,37 +3637,22 @@ declare class EnableWasmLoadingPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
-type EncodingOptionFs =
+type EncodingOption =
 	| undefined
 	| null
 	| "ascii"
 	| "utf8"
-	| "utf16le"
-	| "ucs2"
-	| "latin1"
-	| "binary"
 	| "utf-8"
-	| "ucs-2"
-	| "base64"
-	| "base64url"
-	| "hex"
-	| ObjectEncodingOptionsFs;
-type EncodingOptionTypes =
-	| undefined
-	| null
-	| "ascii"
-	| "utf8"
 	| "utf16le"
-	| "ucs2"
-	| "latin1"
-	| "binary"
-	| "utf-8"
 	| "utf-16le"
+	| "ucs2"
 	| "ucs-2"
+	| "latin1"
+	| "binary"
 	| "base64"
 	| "base64url"
 	| "hex"
-	| ObjectEncodingOptionsTypes;
+	| ObjectEncodingOptions;
 type Entry =
 	| string
 	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
@@ -5420,12 +5393,13 @@ declare interface IntermediateFileSystemExtras {
 		arg1?:
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
@@ -9077,33 +9051,18 @@ declare interface ObjectDeserializerContext {
 	read: () => any;
 	setCircularReference: (arg0?: any) => void;
 }
-declare interface ObjectEncodingOptionsFs {
+declare interface ObjectEncodingOptions {
 	encoding?:
 		| null
 		| "ascii"
 		| "utf8"
-		| "utf16le"
-		| "ucs2"
-		| "latin1"
-		| "binary"
 		| "utf-8"
-		| "ucs-2"
-		| "base64"
-		| "base64url"
-		| "hex";
-}
-declare interface ObjectEncodingOptionsTypes {
-	encoding?:
-		| null
-		| "ascii"
-		| "utf8"
 		| "utf16le"
-		| "ucs2"
-		| "latin1"
-		| "binary"
-		| "utf-8"
 		| "utf-16le"
+		| "ucs2"
 		| "ucs-2"
+		| "latin1"
+		| "binary"
 		| "base64"
 		| "base64url"
 		| "hex";
@@ -10647,16 +10606,17 @@ declare interface ReadFileFs {
 		options:
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| ({ encoding: BufferEncodingBuffer; flag?: string } & Abortable),
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -10666,16 +10626,17 @@ declare interface ReadFileFs {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsFs & { flag?: string } & Abortable),
+			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -10696,16 +10657,17 @@ declare interface ReadFileSync {
 		options:
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| { encoding: BufferEncodingBuffer; flag?: string }
+			| { encoding: BufferEncoding; flag?: string }
 	): string;
 	(
 		path: PathOrFileDescriptorFs,
@@ -10713,16 +10675,17 @@ declare interface ReadFileSync {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsFs & { flag?: string })
+			| (ObjectEncodingOptions & { flag?: string })
 	): string | Buffer;
 }
 declare interface ReadFileTypes {
@@ -10739,14 +10702,14 @@ declare interface ReadFileTypes {
 		options:
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| ({ encoding: BufferEncodingTypes; flag?: string } & Abortable)
-			| "utf-8"
-			| "utf-16le"
-			| "ucs-2"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "base64"
 			| "base64url"
 			| "hex",
@@ -10759,17 +10722,17 @@ declare interface ReadFileTypes {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "utf-16le"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsTypes & { flag?: string } & Abortable),
+			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -10788,12 +10751,13 @@ declare interface ReaddirFs {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
@@ -10802,12 +10766,13 @@ declare interface ReaddirFs {
 						| null
 						| "ascii"
 						| "utf8"
+						| "utf-8"
 						| "utf16le"
+						| "utf-16le"
 						| "ucs2"
+						| "ucs-2"
 						| "latin1"
 						| "binary"
-						| "utf-8"
-						| "ucs-2"
 						| "base64"
 						| "base64url"
 						| "hex";
@@ -10834,16 +10799,17 @@ declare interface ReaddirFs {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsFs & {
+			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  }),
@@ -10854,7 +10820,7 @@ declare interface ReaddirFs {
 	): void;
 	(
 		path: PathLikeFs,
-		options: ObjectEncodingOptionsFs & {
+		options: ObjectEncodingOptions & {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
@@ -10868,12 +10834,13 @@ declare interface ReaddirSync {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
@@ -10882,12 +10849,13 @@ declare interface ReaddirSync {
 						| null
 						| "ascii"
 						| "utf8"
+						| "utf-8"
 						| "utf16le"
+						| "utf-16le"
 						| "ucs2"
+						| "ucs-2"
 						| "latin1"
 						| "binary"
-						| "utf-8"
-						| "ucs-2"
 						| "base64"
 						| "base64url"
 						| "hex";
@@ -10907,23 +10875,21 @@ declare interface ReaddirSync {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsFs & {
-					withFileTypes?: false;
-					recursive?: boolean;
-			  })
+			| (ObjectEncodingOptions & { withFileTypes?: false; recursive?: boolean })
 	): string[] | Buffer[];
 	(
 		path: PathLikeFs,
-		options: ObjectEncodingOptionsFs & {
+		options: ObjectEncodingOptions & {
 			withFileTypes: true;
 			recursive?: boolean;
 		}
@@ -10937,13 +10903,13 @@ declare interface ReaddirTypes {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "utf-16le"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
@@ -10952,13 +10918,13 @@ declare interface ReaddirTypes {
 						| null
 						| "ascii"
 						| "utf8"
+						| "utf-8"
 						| "utf16le"
+						| "utf-16le"
 						| "ucs2"
+						| "ucs-2"
 						| "latin1"
 						| "binary"
-						| "utf-8"
-						| "utf-16le"
-						| "ucs-2"
 						| "base64"
 						| "base64url"
 						| "hex";
@@ -10985,17 +10951,17 @@ declare interface ReaddirTypes {
 			| null
 			| "ascii"
 			| "utf8"
+			| "utf-8"
 			| "utf16le"
+			| "utf-16le"
 			| "ucs2"
+			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| "utf-8"
-			| "utf-16le"
-			| "ucs-2"
 			| "base64"
 			| "base64url"
 			| "hex"
-			| (ObjectEncodingOptionsTypes & {
+			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  }),
@@ -11006,7 +10972,7 @@ declare interface ReaddirTypes {
 	): void;
 	(
 		path: PathLikeTypes,
-		options: ObjectEncodingOptionsTypes & {
+		options: ObjectEncodingOptions & {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
@@ -11016,7 +10982,7 @@ declare interface ReaddirTypes {
 declare interface ReadlinkFs {
 	(
 		path: PathLikeFs,
-		options: EncodingOptionFs,
+		options: EncodingOption,
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -11026,7 +10992,7 @@ declare interface ReadlinkFs {
 	): void;
 	(
 		path: PathLikeFs,
-		options: EncodingOptionFs,
+		options: EncodingOption,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -11038,14 +11004,14 @@ declare interface ReadlinkFs {
 	): void;
 }
 declare interface ReadlinkSync {
-	(path: PathLikeFs, options?: EncodingOptionFs): string;
+	(path: PathLikeFs, options?: EncodingOption): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
-	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
+	(path: PathLikeFs, options?: EncodingOption): string | Buffer;
 }
 declare interface ReadlinkTypes {
 	(
 		path: PathLikeTypes,
-		options: EncodingOptionTypes,
+		options: EncodingOption,
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -11055,7 +11021,7 @@ declare interface ReadlinkTypes {
 	): void;
 	(
 		path: PathLikeTypes,
-		options: EncodingOptionTypes,
+		options: EncodingOption,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -11094,7 +11060,7 @@ declare interface RealDependencyLocation {
 declare interface RealPathFs {
 	(
 		path: PathLikeFs,
-		options: EncodingOptionFs,
+		options: EncodingOption,
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -11104,7 +11070,7 @@ declare interface RealPathFs {
 	): void;
 	(
 		path: PathLikeFs,
-		options: EncodingOptionFs,
+		options: EncodingOption,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -11116,14 +11082,14 @@ declare interface RealPathFs {
 	): void;
 }
 declare interface RealPathSync {
-	(path: PathLikeFs, options?: EncodingOptionFs): string;
+	(path: PathLikeFs, options?: EncodingOption): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
-	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
+	(path: PathLikeFs, options?: EncodingOption): string | Buffer;
 }
 declare interface RealPathTypes {
 	(
 		path: PathLikeTypes,
-		options: EncodingOptionTypes,
+		options: EncodingOption,
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -11133,7 +11099,7 @@ declare interface RealPathTypes {
 	): void;
 	(
 		path: PathLikeTypes,
-		options: EncodingOptionTypes,
+		options: EncodingOption,
 		callback: (
 			arg0: null | NodeJS.ErrnoException,
 			arg1?: string | Buffer
@@ -14679,16 +14645,17 @@ type WriteFileOptions =
 	| null
 	| "ascii"
 	| "utf8"
+	| "utf-8"
 	| "utf16le"
+	| "utf-16le"
 	| "ucs2"
+	| "ucs-2"
 	| "latin1"
 	| "binary"
-	| "utf-8"
-	| "ucs-2"
 	| "base64"
 	| "base64url"
 	| "hex"
-	| (ObjectEncodingOptionsFs &
+	| (ObjectEncodingOptions &
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
@@ -14699,12 +14666,13 @@ declare interface WriteStreamOptions {
 	encoding?:
 		| "ascii"
 		| "utf8"
+		| "utf-8"
 		| "utf16le"
+		| "utf-16le"
 		| "ucs2"
+		| "ucs-2"
 		| "latin1"
 		| "binary"
-		| "utf-8"
-		| "ucs-2"
 		| "base64"
 		| "base64url"
 		| "hex";
