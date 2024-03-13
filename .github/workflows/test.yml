@@ -88,7 +88,7 @@ jobs:
         with:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
-          restore-keys: jest-unit-
+          restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
       - uses: codecov/codecov-action@v4
         with:
@@ -165,7 +165,7 @@ jobs:
         with:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
-          restore-keys: jest-integration-
+          restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
       - run: yarn cover:merge
       - uses: codecov/codecov-action@v4
