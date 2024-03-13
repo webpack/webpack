@@ -120,7 +120,7 @@ module.exports = function checkArrayExpectation(
 						);
 					}
 				}
-			} else if (!check(expected[i], array[i]))
+			} else if (!check(expected[i], array[i])) {
 				return (
 					done(
 						new Error(
@@ -131,6 +131,7 @@ module.exports = function checkArrayExpectation(
 					),
 					true
 				);
+			}
 		}
 	} else if (array.length > 0) {
 		return (
