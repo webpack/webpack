@@ -48,6 +48,7 @@
     "concated",
     "contenthash",
     "contextifies",
+    "cspellcache",
     "crossorigin",
     "csvg",
     "cujojs",
@@ -70,6 +71,7 @@
     "devtool",
     "devtools",
     "donotcallme",
+    "eslintcache",
     "endregion",
     "entrypoint",
     "entrypoints",
@@ -299,6 +301,7 @@
   ],
   "ignorePaths": [
     "**/dist/**",
+    "**/node_modules/**",
     "examples/**/README.md",
     "examples/wasm-bindgen*/pkg/*_bg.js",
     "examples/wasm-bindgen*/pkg/*_bg*.d.ts",

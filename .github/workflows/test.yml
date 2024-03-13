@@ -1,7 +1,5 @@
 name: Test
 
-# cspell:word eslintcache
-
 on:
   push:
     branches:
@@ -29,8 +27,13 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .eslintcache
-          key: lint-${{ env.GITHUB_SHA }}
-          restore-keys: lint-
+          key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.eslintrc.js') }}
+          restore-keys: lint-eslint-
+      - uses: actions/cache@v4
+        with:
+          path: .cspellcache
+          key: lint-cspell-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/cspell.json') }}
+          restore-keys: lint-cspell-
       - run: yarn lint
   basic:
     runs-on: ubuntu-latest
