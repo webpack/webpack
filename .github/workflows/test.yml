@@ -24,12 +24,20 @@ jobs:
           node-version: lts/*
           cache: "yarn"
       - run: yarn --frozen-lockfile
-      - uses: actions/cache@v4
+      - name: Cache prettier result
+        uses: actions/cache@v4
+        with:
+          path: ./node_modules/.cache/prettier/.prettier-cache
+          key: lint-prettier-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.prettierrc.js') }}
+          restore-keys: lint-prettier-
+      - name: Cache eslint result
+        uses: actions/cache@v4
         with:
           path: .eslintcache
           key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.eslintrc.js') }}
           restore-keys: lint-eslint-
-      - uses: actions/cache@v4
+      - name: Cache cspell result
+        uses: actions/cache@v4
         with:
           path: .cspellcache
           key: lint-cspell-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/cspell.json') }}
@@ -138,11 +146,11 @@ jobs:
           cache: "yarn"
       # Install old `jest` version and deps for legacy node versions
       - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: |
-          yarn upgrade eslint-plugin-jsdoc@^47.0.0 husky@^8.0.3 lint-staged@^13.2.1
+          yarn upgrade eslint-plugin-jsdoc@^47.0.0 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
       # Install main version of our deps
