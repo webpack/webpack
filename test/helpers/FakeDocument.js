@@ -202,6 +202,7 @@ class FakeSheet {
 				this._basePath,
 				this._element.href
 					.replace(/^https:\/\/test\.cases\/path\//, "")
+					.replace(/^https:\/\/example\.com\/public\/path\//, "")
 					.replace(/^https:\/\/example\.com\//, "")
 			),
 			"utf-8"
