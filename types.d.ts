@@ -702,9 +702,9 @@ declare abstract class BasicEvaluatedExpression {
 	 * Wraps an array of expressions with a prefix and postfix expression.
 	 */
 	setWrapped(
-		prefix: undefined | null | BasicEvaluatedExpression,
-		postfix: undefined | null | BasicEvaluatedExpression,
-		innerExpressions: BasicEvaluatedExpression[]
+		prefix?: null | BasicEvaluatedExpression,
+		postfix?: null | BasicEvaluatedExpression,
+		innerExpressions?: BasicEvaluatedExpression[]
 	): BasicEvaluatedExpression;
 
 	/**
@@ -1709,13 +1709,16 @@ declare class Compilation {
 		optimize: SyncHook<[]>;
 		optimizeModules: SyncBailHook<[Iterable<Module>], any>;
 		afterOptimizeModules: SyncHook<[Iterable<Module>]>;
-		optimizeChunks: SyncBailHook<[Iterable<Chunk>, ChunkGroup[]], any>;
+		optimizeChunks: SyncBailHook<
+			[Iterable<Chunk>, ChunkGroup[]],
+			boolean | void
+		>;
 		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, ChunkGroup[]]>;
 		optimizeTree: AsyncSeriesHook<[Iterable<Chunk>, Iterable<Module>]>;
 		afterOptimizeTree: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
 		optimizeChunkModules: AsyncSeriesBailHook<
 			[Iterable<Chunk>, Iterable<Module>],
-			any
+			void
 		>;
 		afterOptimizeChunkModules: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
 		shouldRecord: SyncBailHook<[], undefined | boolean>;
@@ -1723,7 +1726,7 @@ declare class Compilation {
 			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInChunk: HookMap<
-			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], any>
+			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], void>
 		>;
 		additionalModuleRuntimeRequirements: SyncHook<
 			[Module, Set<string>, RuntimeRequirementsContext]
@@ -1841,7 +1844,7 @@ declare class Compilation {
 	mainTemplate: MainTemplate;
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
-	moduleTemplates: { javascript: ModuleTemplate };
+	moduleTemplates: ModuleTemplates;
 	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
 	moduleMemCaches2?: Map<Module, WeakTupleMap<any, any>>;
 	moduleGraph: ModuleGraph;
@@ -1981,7 +1984,7 @@ declare class Compilation {
 		module: Module,
 		blocks: DependenciesBlock[]
 	): boolean;
-	codeGeneration(callback?: any): void;
+	codeGeneration(callback: (err?: null | WebpackError) => void): void;
 	processRuntimeRequirements(__0?: {
 		/**
 		 * the chunk graph
@@ -5512,7 +5515,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		evaluateCallExpressionMember: HookMap<
 			SyncBailHook<
-				[CallExpression, undefined | BasicEvaluatedExpression],
+				[CallExpression, BasicEvaluatedExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -5677,7 +5680,7 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		export: SyncBailHook<
-			[ExportNamedDeclaration | ExportAllDeclaration],
+			[ExportNamedDeclaration | ExportDefaultDeclaration],
 			boolean | void
 		>;
 		exportImport: SyncBailHook<
@@ -5685,16 +5688,27 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		exportDeclaration: SyncBailHook<
-			[ExportNamedDeclaration | ExportAllDeclaration, Declaration],
+			[
+				(
+					| ExportNamedDeclaration
+					| ExportDefaultDeclaration
+					| ExportAllDeclaration
+				),
+				Declaration
+			],
 			boolean | void
 		>;
 		exportExpression: SyncBailHook<
-			[ExportDefaultDeclaration, Declaration],
+			[ExportDefaultDeclaration, FunctionDeclaration | ClassDeclaration],
 			boolean | void
 		>;
 		exportSpecifier: SyncBailHook<
 			[
-				ExportNamedDeclaration | ExportAllDeclaration,
+				(
+					| ExportNamedDeclaration
+					| ExportDefaultDeclaration
+					| ExportAllDeclaration
+				),
 				string,
 				string,
 				undefined | number
@@ -5729,7 +5743,39 @@ declare class JavascriptParser extends Parser {
 		>;
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		importCall: SyncBailHook<[ImportExpression], boolean | void>;
-		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
+		topLevelAwait: SyncBailHook<
+			[
+				| UnaryExpression
+				| ArrayExpression
+				| ArrowFunctionExpression
+				| AssignmentExpression
+				| AwaitExpression
+				| BinaryExpression
+				| SimpleCallExpression
+				| NewExpression
+				| ChainExpression
+				| ClassExpression
+				| ConditionalExpression
+				| FunctionExpression
+				| Identifier
+				| ImportExpression
+				| SimpleLiteral
+				| RegExpLiteral
+				| BigIntLiteral
+				| LogicalExpression
+				| MemberExpression
+				| MetaProperty
+				| ObjectExpression
+				| SequenceExpression
+				| TaggedTemplateExpression
+				| TemplateLiteral
+				| ThisExpression
+				| UpdateExpression
+				| YieldExpression
+				| ForOfStatement
+			],
+			boolean | void
+		>;
 		call: HookMap<SyncBailHook<[CallExpression], boolean | void>>;
 		callMemberChain: HookMap<
 			SyncBailHook<
@@ -6073,19 +6119,19 @@ declare class JavascriptParser extends Parser {
 	walkForStatement(statement: ForStatement): void;
 	preWalkForInStatement(statement: ForInStatement): void;
 	walkForInStatement(statement: ForInStatement): void;
-	preWalkForOfStatement(statement?: any): void;
+	preWalkForOfStatement(statement: ForOfStatement): void;
 	walkForOfStatement(statement: ForOfStatement): void;
 	preWalkFunctionDeclaration(statement: FunctionDeclaration): void;
 	walkFunctionDeclaration(statement: FunctionDeclaration): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
-	blockPreWalkImportDeclaration(statement?: any): void;
+	blockPreWalkImportDeclaration(statement: ImportDeclaration): void;
 	enterDeclaration(declaration: Declaration, onIdent?: any): void;
-	blockPreWalkExportNamedDeclaration(statement?: any): void;
+	blockPreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	blockPreWalkExportDefaultDeclaration(statement?: any): void;
-	walkExportDefaultDeclaration(statement?: any): void;
-	blockPreWalkExportAllDeclaration(statement?: any): void;
+	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
+	blockPreWalkExportAllDeclaration(statement: ExportAllDeclaration): void;
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
 	blockPreWalkVariableDeclaration(statement: VariableDeclaration): void;
 	preWalkVariableDeclarator(declarator: VariableDeclarator): void;
@@ -6098,7 +6144,7 @@ declare class JavascriptParser extends Parser {
 	walkCatchClause(catchClause: CatchClause): void;
 	walkPattern(pattern: Pattern): void;
 	walkAssignmentPattern(pattern: AssignmentPattern): void;
-	walkObjectPattern(pattern?: any): void;
+	walkObjectPattern(pattern: ObjectPattern): void;
 	walkArrayPattern(pattern: ArrayPattern): void;
 	walkRestElement(pattern: RestElement): void;
 	walkExpressions(
@@ -6159,7 +6205,7 @@ declare class JavascriptParser extends Parser {
 	walkClassExpression(expression: ClassExpression): void;
 	walkChainExpression(expression: ChainExpression): void;
 	walkImportExpression(expression: ImportExpression): void;
-	walkCallExpression(expression?: any): void;
+	walkCallExpression(expression: CallExpression): void;
 	walkMemberExpression(expression: MemberExpression): void;
 	walkMemberExpressionWithExpressionName(
 		expression: any,
@@ -6250,6 +6296,7 @@ declare class JavascriptParser extends Parser {
 	): void;
 	enterPatterns(
 		patterns: (
+			| string
 			| Identifier
 			| MemberExpression
 			| ObjectPattern
@@ -6278,7 +6325,7 @@ declare class JavascriptParser extends Parser {
 	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
 	evaluateExpression(expression?: any): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
-	parseCalculatedString(expression?: any): any;
+	parseCalculatedString(expression: Expression): any;
 	evaluate(source: string): BasicEvaluatedExpression;
 	isPure(
 		expr:
@@ -7885,7 +7932,7 @@ declare class Module extends DependenciesBlock {
 	id: string | number;
 	get hash(): string;
 	get renderedHash(): string;
-	profile: null | ModuleProfile;
+	profile?: ModuleProfile;
 	index: null | number;
 	index2: null | number;
 	depth: null | number;
@@ -8185,8 +8232,8 @@ declare class ModuleGraph {
 	getOutgoingConnectionsByModule(
 		module: Module
 	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
-	getProfile(module: Module): null | ModuleProfile;
-	setProfile(module: Module, profile: null | ModuleProfile): void;
+	getProfile(module: Module): undefined | ModuleProfile;
+	setProfile(module: Module, profile?: ModuleProfile): void;
 	getIssuer(module: Module): undefined | null | Module;
 	setIssuer(module: Module, issuer: null | Module): void;
 	setIssuerIfUnset(module: Module, issuer: null | Module): void;
@@ -8530,6 +8577,9 @@ declare abstract class ModuleTemplate {
 		hash: { tap: (options?: any, fn?: any) => void };
 	}>;
 	get runtimeTemplate(): any;
+}
+declare interface ModuleTemplates {
+	javascript: ModuleTemplate;
 }
 declare class MultiCompiler {
 	constructor(
@@ -12813,7 +12863,7 @@ declare interface ScopeInfo {
 	isAsmJs: boolean;
 }
 declare interface Selector<A, B> {
-	(input: A): B;
+	(input: A): undefined | null | B;
 }
 declare abstract class Serializer {
 	serializeMiddlewares: any;
