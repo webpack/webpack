@@ -8,6 +8,9 @@ module.exports = {
 	performance: {
 		hints: false
 	},
+	experiments: {
+		css: true
+	},
 	optimization: {
 		minimize: false
 	}

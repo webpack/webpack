@@ -2,7 +2,8 @@
 module.exports = {
 	entry: "./index.mjs",
 	experiments: {
-		outputModule: true
+		outputModule: true,
+		css: true
 	},
 	name: "esm",
 	target: "web",
