@@ -256,9 +256,6 @@ type ArrayBufferView =
 	| Float32Array
 	| Float64Array
 	| DataView;
-declare interface Assertions {
-	[index: string]: any;
-}
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -432,6 +429,9 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 * mangle imports
 	 */
 	mangleImports?: boolean;
+}
+declare interface Attributes {
+	[index: string]: any;
 }
 declare class AutomaticPrefetchPlugin {
 	constructor();
@@ -5063,7 +5063,7 @@ declare interface HandleModuleCreationOptions {
 	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(request: string, sourceOrder: number, assertions?: Assertions);
+	constructor(request: string, sourceOrder: number, attributes?: Attributes);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
@@ -5297,7 +5297,7 @@ type IgnorePluginOptions =
 			checkResource: (resource: string, context: string) => boolean;
 	  };
 declare interface ImportDependencyMeta {
-	assertions?: Assertions;
+	attributes?: Attributes;
 }
 declare interface ImportModuleOptions {
 	/**
@@ -8080,7 +8080,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Assertions;
+	assertions?: Attributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
