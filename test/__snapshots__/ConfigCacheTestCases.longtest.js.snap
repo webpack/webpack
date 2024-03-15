@@ -4184,7 +4184,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css urls-css-filename exported tests should be able to handle styles in div.css 1`] = `
+exports[`ConfigCacheTestCases css urls exported tests should be able to handle styles in div.css 2`] = `
 Object {
   "--foo": " url(../../asset/img.09a1a1112c577c279435.png)",
   "--foo-bar": " \\"http://www.example.com/pinkish.gif\\"",

@@ -1,15 +1,10 @@
 /** @type {import("../../../../").Configuration} */
-module.exports = {
+const common = {
 	target: "web",
 	mode: "development",
 	devtool: false,
 	experiments: {
 		css: true
-	},
-	output: {
-		cssFilename: "css/[name].css",
-		cssChunkFilename: "css/async/[name].css",
-		assetModuleFilename: "asset/[name].[hash][ext][query][fragment]"
 	},
 	optimization: {
 		splitChunks: {
@@ -30,3 +25,23 @@ module.exports = {
 		}
 	}
 };
+
+/** @type {import("../../../../").Configuration} */
+module.exports = [
+	{
+		...common,
+		output: {
+			publicPath: "auto",
+			cssFilename: "bundle0/css/[name].css",
+			assetModuleFilename: "bundle0/asset/[name][ext]"
+		}
+	},
+	{
+		...common,
+		output: {
+			publicPath: "https://test.cases/path/",
+			cssFilename: "bundle1/css/[name].css",
+			assetModuleFilename: "bundle1/asset/[name][ext]"
+		}
+	}
+];
