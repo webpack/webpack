@@ -1928,6 +1928,22 @@
             }
           ]
         },
+        "worklet": {
+          "description": "Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \"xyz\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "wrappedContextCritical": {
           "description": "Enable warnings for partial dynamic dependencies.",
           "type": "boolean"

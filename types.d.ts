@@ -5032,6 +5032,30 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 }
+declare class GetWorkletBootstrapFilenameRuntimeModule extends RuntimeModule {
+	constructor(global: string);
+	global: string;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
 declare interface GroupConfig {
 	getKeys: (arg0?: any) => string[];
 	createGroup: (arg0: string, arg1: any[], arg2: any[]) => object;
@@ -6629,6 +6653,11 @@ declare interface JavascriptParserOptions {
 	worker?: boolean | string[];
 
 	/**
+	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
+	 */
+	worklet?: boolean | string[];
+
+	/**
 	 * Enable warnings for partial dynamic dependencies.
 	 */
 	wrappedContextCritical?: boolean;
@@ -7644,6 +7673,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -14946,6 +14976,7 @@ declare namespace exports {
 		export let chunkName: "__webpack_require__.cn";
 		export let runtimeId: "__webpack_require__.j";
 		export let getChunkScriptFilename: "__webpack_require__.u";
+		export let getWorkletBootstrapFilename: "__webpack_require__.wb";
 		export let getChunkCssFilename: "__webpack_require__.k";
 		export let hasCssModules: "has css modules";
 		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
@@ -15084,7 +15115,11 @@ declare namespace exports {
 		};
 	}
 	export namespace runtime {
-		export { GetChunkFilenameRuntimeModule, LoadScriptRuntimeModule };
+		export {
+			GetChunkFilenameRuntimeModule,
+			GetWorkletBootstrapFilenameRuntimeModule,
+			LoadScriptRuntimeModule
+		};
 	}
 	export namespace prefetch {
 		export { ChunkPrefetchPreloadPlugin };
