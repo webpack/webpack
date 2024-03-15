@@ -571,6 +571,11 @@ const describeCases = config => {
 															: ns;
 													})();
 												} else {
+													const isJSON = p.endsWith(".json");
+													if (isJSON) {
+														return JSON.parse(content);
+													}
+
 													if (p in requireCache) {
 														return requireCache[p].exports;
 													}
@@ -578,6 +583,7 @@ const describeCases = config => {
 														exports: {}
 													};
 													requireCache[p] = m;
+
 													const moduleScope = {
 														...baseModuleScope,
 														require: _require.bind(

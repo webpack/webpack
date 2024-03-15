@@ -256,9 +256,6 @@ type ArrayBufferView =
 	| Float32Array
 	| Float64Array
 	| DataView;
-declare interface Assertions {
-	[index: string]: any;
-}
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -432,6 +429,9 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 * mangle imports
 	 */
 	mangleImports?: boolean;
+}
+declare interface Attributes {
+	[index: string]: any;
 }
 declare class AutomaticPrefetchPlugin {
 	constructor();
@@ -2900,6 +2900,7 @@ declare interface ContextModuleOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: string;
+	attributes?: Attributes;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -3029,6 +3030,11 @@ declare interface CssGlobalParserOptions {
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+}
+declare interface CssImportDependencyMeta {
+	layer?: string;
+	supports?: string;
+	media?: string;
 }
 
 /**
@@ -4467,15 +4473,21 @@ type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
 		request: string | string[] | Record<string, string | string[]>,
-		type: any,
-		userRequest: string
+		type: string,
+		userRequest: string,
+		dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta
 	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta;
+
+	/**
+	 * restore unsafe cache data
+	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData?: any,
-		normalModuleFactory?: any
+		unsafeCacheData: object,
+		normalModuleFactory: NormalModuleFactory
 	): void;
 }
 declare interface ExternalModuleInfo {
@@ -5052,7 +5064,7 @@ declare interface HandleModuleCreationOptions {
 	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(request: string, sourceOrder: number, assertions?: Assertions);
+	constructor(request: string, sourceOrder: number, attributes?: Attributes);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
@@ -5285,6 +5297,9 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+declare interface ImportDependencyMeta {
+	attributes?: Attributes;
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -8066,7 +8081,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Record<string, any>;
+	assertions?: Attributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
