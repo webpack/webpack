@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const {
 	Compilation,
-	sources: { OriginalSource }
+	sources: { RawSource }
 } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
@@ -40,7 +40,7 @@ module.exports = {
 								const content = fs.readFileSync(resolvedFilename);
 								compilation.emitAsset(
 									filename.replace(/\.\/nested\//, ""),
-									new OriginalSource(content)
+									new RawSource(content)
 								);
 							});
 						}
