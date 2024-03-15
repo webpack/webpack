@@ -30,11 +30,18 @@ module.exports = {
 								"static-package.json",
 								"static-package-str.json",
 								"dynamic-package.json",
-								"dynamic-package-str.json"
+								"dynamic-package-str.json",
+								"eager.json",
+								"weak.json",
+								"./nested/pkg.json",
+								"./re-export.json"
 							].forEach(filename => {
 								const resolvedFilename = path.resolve(__dirname, filename);
 								const content = fs.readFileSync(resolvedFilename);
-								compilation.emitAsset(filename, new OriginalSource(content));
+								compilation.emitAsset(
+									filename.replace(/\.\/nested\//, ""),
+									new OriginalSource(content)
+								);
 							});
 						}
 					);
@@ -46,6 +53,11 @@ module.exports = {
 		"./static-package.json": "module ./static-package.json",
 		"./static-package-str.json": "module ./static-package-str.json",
 		"./dynamic-package.json": "import ./dynamic-package.json",
-		"./dynamic-package-str.json": "import ./dynamic-package-str.json"
+		"./dynamic-package-str.json": "import ./dynamic-package-str.json",
+		"./eager.json": "import ./eager.json",
+		"./weak.json": "import ./weak.json",
+		"./pkg.json": "import ./pkg.json",
+		"./pkg": "import ./pkg",
+		"./re-export.json": "import ./re-export.json"
 	}
 };

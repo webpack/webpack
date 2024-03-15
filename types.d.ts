@@ -2900,6 +2900,7 @@ declare interface ContextModuleOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: string;
+	attributes?: Attributes;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
