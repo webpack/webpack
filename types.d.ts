@@ -3030,6 +3030,11 @@ declare interface CssGlobalParserOptions {
 	 */
 	namedExports?: boolean;
 }
+declare interface CssImportDependencyMeta {
+	layer?: string;
+	supports?: string;
+	media?: string;
+}
 
 /**
  * Generator options for css/module modules.
@@ -4467,15 +4472,21 @@ type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
 		request: string | string[] | Record<string, string | string[]>,
-		type: any,
-		userRequest: string
+		type: string,
+		userRequest: string,
+		dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta
 	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta;
+
+	/**
+	 * restore unsafe cache data
+	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData?: any,
-		normalModuleFactory?: any
+		unsafeCacheData: object,
+		normalModuleFactory: NormalModuleFactory
 	): void;
 }
 declare interface ExternalModuleInfo {
@@ -5285,6 +5296,9 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+declare interface ImportDependencyMeta {
+	assertions?: Assertions;
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -8066,7 +8080,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Record<string, any>;
+	assertions?: Assertions;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
