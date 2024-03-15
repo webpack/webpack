@@ -494,6 +494,11 @@ declare interface BannerPluginOptions {
 	raw?: boolean;
 
 	/**
+	 * Specifies the banner.
+	 */
+	stage?: number;
+
+	/**
 	 * Include all modules that pass test assertion.
 	 */
 	test?: string | RegExp | Rule[];

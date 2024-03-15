@@ -89,6 +89,10 @@
           "description": "If true, banner will not be wrapped in a comment.",
           "type": "boolean"
         },
+        "stage": {
+          "description": "Specifies the banner.",
+          "type": "number"
+        },
         "test": {
           "description": "Include all modules that pass test assertion.",
           "oneOf": [
