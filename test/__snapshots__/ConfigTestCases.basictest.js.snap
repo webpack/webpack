@@ -4187,54 +4187,81 @@ Object {
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 1`] = `
 Object {
   "getPropertyValue": [Function],
-  "nested-dir": " url(bundle0/asset/img2.png)",
-  "nested-nested-dir": " url(bundle0/asset/img3.png)",
-  "same-dir": " url(bundle0/asset/img1.png)",
+  "nested-dir": " url(../../bundle0/assets/img2.png)",
+  "nested-nested-dir": " url(../../bundle0/assets/img3.png)",
+  "same-dir": " url(../../bundle0/assets/img1.png)",
 }
 `;
 
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 2`] = `
 Object {
   "getPropertyValue": [Function],
-  "nested-dir": " url(bundle0/asset/img3.png)",
-  "outer-dir": " url(bundle0/asset/img1.png)",
-  "same-dir": " url(bundle0/asset/img2.png)",
+  "nested-dir": " url(../../bundle0/assets/img3.png)",
+  "outer-dir": " url(../../bundle0/assets/img1.png)",
+  "same-dir": " url(../../bundle0/assets/img2.png)",
 }
 `;
 
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 3`] = `
 Object {
   "getPropertyValue": [Function],
-  "outer-dir": " url(bundle0/asset/img2.png)",
-  "outer-outer-dir": " url(bundle0/asset/img1.png)",
-  "same-dir": " url(bundle0/asset/img3.png)",
+  "outer-dir": " url(../../bundle0/assets/img2.png)",
+  "outer-outer-dir": " url(../../bundle0/assets/img1.png)",
+  "same-dir": " url(../../bundle0/assets/img3.png)",
 }
 `;
 
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 4`] = `
 Object {
   "getPropertyValue": [Function],
-  "nested-dir": " url(https://test.cases/path/bundle1/asset/img2.png)",
-  "nested-nested-dir": " url(https://test.cases/path/bundle1/asset/img3.png)",
-  "same-dir": " url(https://test.cases/path/bundle1/asset/img1.png)",
+  "nested-dir": " url(https://test.cases/path/bundle1/assets/img2.png)",
+  "nested-nested-dir": " url(https://test.cases/path/bundle1/assets/img3.png)",
+  "same-dir": " url(https://test.cases/path/bundle1/assets/img1.png)",
 }
 `;
 
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 5`] = `
 Object {
   "getPropertyValue": [Function],
-  "nested-dir": " url(https://test.cases/path/bundle1/asset/img3.png)",
-  "outer-dir": " url(https://test.cases/path/bundle1/asset/img1.png)",
-  "same-dir": " url(https://test.cases/path/bundle1/asset/img2.png)",
+  "nested-dir": " url(https://test.cases/path/bundle1/assets/img3.png)",
+  "outer-dir": " url(https://test.cases/path/bundle1/assets/img1.png)",
+  "same-dir": " url(https://test.cases/path/bundle1/assets/img2.png)",
 }
 `;
 
 exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 6`] = `
 Object {
   "getPropertyValue": [Function],
-  "outer-dir": " url(https://test.cases/path/bundle1/asset/img2.png)",
-  "outer-outer-dir": " url(https://test.cases/path/bundle1/asset/img1.png)",
-  "same-dir": " url(https://test.cases/path/bundle1/asset/img3.png)",
+  "outer-dir": " url(https://test.cases/path/bundle1/assets/img2.png)",
+  "outer-outer-dir": " url(https://test.cases/path/bundle1/assets/img1.png)",
+  "same-dir": " url(https://test.cases/path/bundle1/assets/img3.png)",
+}
+`;
+
+exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 7`] = `
+Object {
+  "getPropertyValue": [Function],
+  "nested-dir": " url(https://test.cases/path/bundle2/assets/img2.png)",
+  "nested-nested-dir": " url(https://test.cases/path/bundle2/assets/img3.png)",
+  "same-dir": " url(https://test.cases/path/bundle2/assets/img1.png)",
+}
+`;
+
+exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 8`] = `
+Object {
+  "getPropertyValue": [Function],
+  "nested-dir": " url(https://test.cases/path/bundle2/assets/img3.png)",
+  "outer-dir": " url(https://test.cases/path/bundle2/assets/img1.png)",
+  "same-dir": " url(https://test.cases/path/bundle2/assets/img2.png)",
+}
+`;
+
+exports[`ConfigTestCases css urls-css-filename exported tests should generate correct url public path with css filename 9`] = `
+Object {
+  "getPropertyValue": [Function],
+  "outer-dir": " url(https://test.cases/path/bundle2/assets/img2.png)",
+  "outer-outer-dir": " url(https://test.cases/path/bundle2/assets/img1.png)",
+  "same-dir": " url(https://test.cases/path/bundle2/assets/img3.png)",
 }
 `;
 
