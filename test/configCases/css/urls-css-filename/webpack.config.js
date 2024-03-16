@@ -32,16 +32,35 @@ module.exports = [
 		...common,
 		output: {
 			publicPath: "auto",
-			cssFilename: "bundle0/css/[name].css",
-			assetModuleFilename: "bundle0/asset/[name][ext]"
+			cssChunkFilename: "bundle0/css/[name].css",
+			assetModuleFilename: "bundle0/assets/[name][ext]"
 		}
 	},
 	{
 		...common,
 		output: {
 			publicPath: "https://test.cases/path/",
-			cssFilename: "bundle1/css/[name].css",
-			assetModuleFilename: "bundle1/asset/[name][ext]"
+			cssChunkFilename: "bundle1/css/[name].css",
+			assetModuleFilename: "bundle1/assets/[name][ext]"
+		}
+	},
+	{
+		...common,
+		output: {
+			cssChunkFilename: "bundle2/css/[name].css"
+		},
+		module: {
+			rules: [
+				{
+					test: /\.png$/i,
+					type: "asset/resource",
+					generator: {
+						filename: "[name][ext]",
+						outputPath: "bundle2/assets/",
+						publicPath: "https://test.cases/path/bundle2/assets/"
+					}
+				}
+			]
 		}
 	}
 ];

@@ -12832,10 +12832,6 @@ declare abstract class RuntimeTemplate {
 		 */
 		module: Module;
 		/**
-		 * the public path
-		 */
-		publicPath: string;
-		/**
 		 * runtime
 		 */
 		runtime?: RuntimeSpec;
