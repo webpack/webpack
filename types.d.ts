@@ -449,7 +449,7 @@ declare interface BackendApi {
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
-	banner: (data: { hash: string; chunk: Chunk; filename: string }) => string;
+	banner: (data: { hash?: string; chunk: Chunk; filename: string }) => string;
 
 	/**
 	 * Apply the plugin
@@ -459,14 +459,14 @@ declare class BannerPlugin {
 type BannerPluginArgument =
 	| string
 	| BannerPluginOptions
-	| ((data: { hash: string; chunk: Chunk; filename: string }) => string);
+	| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
 declare interface BannerPluginOptions {
 	/**
 	 * Specifies the banner.
 	 */
 	banner:
 		| string
-		| ((data: { hash: string; chunk: Chunk; filename: string }) => string);
+		| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
 
 	/**
 	 * If true, the banner will only be added to the entry chunks.
@@ -995,7 +995,7 @@ declare interface CallbackCacheCache<T> {
 	(err: null | WebpackError, result?: T): void;
 }
 declare interface CallbackCacheCacheFacade<T> {
-	(err?: null | WebpackError, result?: T): void;
+	(err?: null | Error, result?: null | T): void;
 }
 declare interface CallbackFunction_1<T> {
 	(err: null | Error, result?: T): any;
@@ -1204,7 +1204,7 @@ declare class ChunkGraph {
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
 	): Iterable<[Module, undefined | Entrypoint]>;
-	getBlockChunkGroup(depBlock: AsyncDependenciesBlock): ChunkGroup;
+	getBlockChunkGroup(depBlock: AsyncDependenciesBlock): undefined | ChunkGroup;
 	connectBlockAndChunkGroup(
 		depBlock: AsyncDependenciesBlock,
 		chunkGroup: ChunkGroup
@@ -1581,7 +1581,7 @@ declare interface CodeGenerationContext {
 	/**
 	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
 	 */
-	codeGenerationResults: CodeGenerationResults;
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * the compilation
@@ -1903,14 +1903,14 @@ declare class Compilation {
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
-	compilationDependencies: { add: (item?: any) => LazySet<string> };
+	compilationDependencies: { add: (item: string) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
 		optionsOrPreset?: string | boolean | StatsOptions,
 		context?: CreateStatsOptionsContext
 	): NormalizedStatsOptions;
-	createStatsFactory(options?: any): StatsFactory;
-	createStatsPrinter(options?: any): StatsPrinter;
+	createStatsFactory(options: NormalizedStatsOptions): StatsFactory;
+	createStatsPrinter(options: NormalizedStatsOptions): StatsPrinter;
 	getCache(name: string): CacheFacade;
 	getLogger(name: string | (() => string)): WebpackLogger;
 	addModule(
@@ -2069,7 +2069,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0?: AssetInfo) => AssetInfo)
 	): void;
-	renameAsset(file?: any, newFile?: any): void;
+	renameAsset(file: string, newFile: string): void;
 	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): undefined | Readonly<Asset>;
@@ -2315,7 +2315,7 @@ declare class Compiler {
 	moduleMemCaches?: Map<
 		Module,
 		{
-			buildInfo: object;
+			buildInfo: BuildInfo;
 			references?: WeakMap<Dependency, Module>;
 			memCache: WeakTupleMap<any, any>;
 		}
@@ -4286,7 +4286,7 @@ declare abstract class ExportsInfo {
 	isEquallyUsed(runtimeA: RuntimeSpec, runtimeB: RuntimeSpec): boolean;
 	getUsed(name: string | string[], runtime: RuntimeSpec): UsageStateType;
 	getUsedName(
-		name: string | string[],
+		name: undefined | string | string[],
 		runtime: RuntimeSpec
 	): string | false | string[];
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
@@ -5087,7 +5087,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		WARN: 1;
 		AUTO: 2;
 		ERROR: 3;
-		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+		fromUserOption(str: string | false): 0 | 1 | 2 | 3;
 	};
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -5369,12 +5369,12 @@ declare interface InfrastructureLogging {
 	stream?: NodeJS.WritableStream;
 }
 declare abstract class InitFragment<GenerateContext> {
-	content: string | Source;
+	content?: string | Source;
 	stage: number;
 	position: number;
 	key?: string;
 	endContent?: string | Source;
-	getContent(context: GenerateContext): string | Source;
+	getContent(context: GenerateContext): undefined | string | Source;
 	getEndContent(context: GenerateContext): undefined | string | Source;
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
@@ -6678,7 +6678,7 @@ type JsonValueTypes =
 	| JsonObjectTypes
 	| JsonValueTypes[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
-	constructor(runtimeRequirements: Set<string>);
+	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
@@ -8218,7 +8218,7 @@ declare class ModuleGraph {
 	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
-		originModule: Module,
+		originModule: null | Module,
 		dependency: Dependency,
 		module: Module
 	): void;
@@ -8929,7 +8929,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
-		factorize: AsyncSeriesBailHook<[ResolveData], Module>;
+		factorize: AsyncSeriesBailHook<[ResolveData], undefined | Module>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<
@@ -9143,6 +9143,8 @@ declare interface ObjectSerializer {
 }
 declare interface ObjectSerializerContext {
 	write: (arg0?: any) => void;
+	writeLazy?: (arg0?: any) => void;
+	writeSeparate?: (arg0: any, arg1?: object) => () => any;
 	setCircularReference: (arg0?: any) => void;
 }
 declare class OccurrenceChunkIdsPlugin {
@@ -12886,11 +12888,21 @@ declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
 declare abstract class Serializer {
-	serializeMiddlewares: any;
-	deserializeMiddlewares: any;
+	serializeMiddlewares: SerializerMiddleware<any, any>[];
+	deserializeMiddlewares: SerializerMiddleware<any, any>[];
 	context: any;
-	serialize(obj?: any, context?: any): any;
-	deserialize(value?: any, context?: any): any;
+	serialize(obj?: any, context?: any): Promise<any>;
+	deserialize(value?: any, context?: any): Promise<any>;
+}
+declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
+	serialize(
+		data: DeserializedType,
+		context: Object
+	): SerializedType | Promise<SerializedType>;
+	deserialize(
+		data: SerializedType,
+		context: Object
+	): DeserializedType | Promise<DeserializedType>;
 }
 type ServerOptionsHttps<
 	Request extends typeof IncomingMessage = typeof IncomingMessage,
@@ -15217,7 +15229,7 @@ declare namespace exports {
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
 			export let deepMergeRuntime: (
-				runtimes: RuntimeSpec[],
+				runtimes: undefined | RuntimeSpec[],
 				runtime: RuntimeSpec
 			) => RuntimeSpec;
 			export let mergeRuntimeCondition: (

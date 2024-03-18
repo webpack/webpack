@@ -124,14 +124,15 @@ declare module "neo-async" {
 
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
+	export interface Visitor {
+		ModuleImport?: (p: NodePath<ModuleImport>) => void;
+		ModuleExport?: (p: NodePath<ModuleExport>) => void;
+		Start?: (p: NodePath<Start>) => void;
+		Global?: (p: NodePath<Global>) => void;
+	}
 	export function traverse(
 		ast: any,
-		visitor: {
-			ModuleImport?: (p: NodePath<ModuleImport>) => void;
-			ModuleExport?: (p: NodePath<ModuleExport>) => void;
-			Start?: (p: NodePath<Start>) => void;
-			Global?: (p: NodePath<Global>) => void;
-		}
+		visitor: Visitor
 	): void;
 	export class NodePath<T> {
 		node: T;
@@ -244,6 +245,15 @@ declare module "@webassemblyjs/ast" {
 	export function isTable(n: Node): boolean;
 	export function isMemory(n: Node): boolean;
 	export function isFuncImportDescr(n: Node): boolean;
+}
+
+declare module "@webassemblyjs/wasm-parser" {
+	export function decode(source: string | Buffer, options: { dump?: boolean, ignoreCodeSection?: boolean, ignoreDataSection?: boolean, ignoreCustomNameSection?: boolean }): any;
+}
+
+declare module "@webassemblyjs/wasm-edit" {
+	export function addWithAST(ast: any, bin: any, newNodes: import("@webassemblyjs/ast").Node[]): ArrayBuffer;
+	export function editWithAST(ast: any, bin: any, visitors: import("@webassemblyjs/ast").Visitor): ArrayBuffer;
 }
 
 declare module "webpack-sources" {
