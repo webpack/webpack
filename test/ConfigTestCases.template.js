@@ -442,6 +442,8 @@ const describeCases = config => {
 											baseModuleScope.document = globalContext.document;
 											baseModuleScope.setTimeout = globalContext.setTimeout;
 											baseModuleScope.clearTimeout = globalContext.clearTimeout;
+											baseModuleScope.getComputedStyle =
+												globalContext.getComputedStyle;
 											baseModuleScope.URL = URL;
 											baseModuleScope.Worker =
 												require("./helpers/createFakeWorker")({
@@ -540,6 +542,7 @@ const describeCases = config => {
 													}
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
+														if (esmMode === "unlinked") return esm;
 														await esm.link(
 															async (specifier, referencingModule) => {
 																return await asModule(
