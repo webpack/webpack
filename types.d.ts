@@ -1814,7 +1814,7 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, object, AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, object, undefined | AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], true>;
@@ -3361,6 +3361,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+type DevtoolModuleFilenameTemplate = string | Function;
 declare interface Dirent {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -3967,15 +3968,31 @@ declare interface Etag {
 	toString: () => string;
 }
 declare class EvalDevToolModulePlugin {
-	constructor(options?: any);
-	namespace: any;
-	sourceUrlComment: any;
-	moduleFilenameTemplate: any;
+	constructor(options?: EvalDevToolModulePluginOptions);
+	namespace: string;
+	sourceUrlComment: string;
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface EvalDevToolModulePluginOptions {
+	/**
+	 * namespace
+	 */
+	namespace?: string;
+
+	/**
+	 * source url comment
+	 */
+	sourceUrlComment?: string;
+
+	/**
+	 * module filename template
+	 */
+	moduleFilenameTemplate?: string | Function;
 }
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
@@ -4257,7 +4274,7 @@ declare abstract class ExportsInfo {
 	get exports(): Iterable<ExportInfo>;
 	get orderedExports(): Iterable<ExportInfo>;
 	get otherExportsInfo(): ExportInfo;
-	setRedirectNamedTo(exportsInfo?: any): boolean;
+	setRedirectNamedTo(exportsInfo?: ExportsInfo): boolean;
 	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
 	getOwnExportInfo(name: string): ExportInfo;
@@ -4477,7 +4494,7 @@ declare interface ExternalItemObjectUnknown {
 type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
-		request: string | string[] | Record<string, string | string[]>,
+		request: string | string[] | RequestRecord,
 		type: string,
 		userRequest: string,
 		dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta
@@ -5148,8 +5165,8 @@ declare interface HashedModuleIdsPluginOptions {
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: Object);
+	options: Object;
 
 	/**
 	 * Apply the plugin
@@ -11336,6 +11353,9 @@ declare class ReplaceSource extends Source {
 		name: string;
 	}[];
 }
+declare interface RequestRecord {
+	[index: string]: string | string[];
+}
 declare abstract class RequestShortener {
 	contextify: (arg0: string) => string;
 	shorten(request?: null | string): undefined | null | string;
@@ -14898,7 +14918,7 @@ declare namespace exports {
 				/**
 				 * the hash function to use
 				 */
-				hashFunction: string | typeof Hash;
+				hashFunction?: string | typeof Hash;
 			}
 		) => string;
 		export let replaceDuplicates: <T>(
@@ -15152,7 +15172,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm?: string | typeof Hash) => Hash;
+		export const createHash: (algorithm: string | typeof Hash) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (
