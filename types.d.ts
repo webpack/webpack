@@ -10702,10 +10702,10 @@ declare interface ReadFileFs {
 			| "ucs-2"
 			| "latin1"
 			| "binary"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "base64"
 			| "base64url"
-			| "hex"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
+			| "hex",
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -10798,10 +10798,10 @@ declare interface ReadFileTypes {
 			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "base64"
 			| "base64url"
-			| "hex",
+			| "hex"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -11025,8 +11025,8 @@ declare interface ReaddirTypes {
 	(
 		path: PathLikeTypes,
 		options:
-			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean }
-			| "buffer",
+			| "buffer"
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer[]) => void
 	): void;
 	(
@@ -15442,6 +15442,8 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
+		InputFileSystem,
+		OutputFileSystem,
 		LoaderModule,
 		RawLoaderDefinition,
 		LoaderDefinition,
