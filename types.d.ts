@@ -5385,7 +5385,14 @@ declare interface InfrastructureLogging {
 	 */
 	stream?: NodeJS.WritableStream;
 }
-declare abstract class InitFragment<GenerateContext> {
+declare class InitFragment<GenerateContext> {
+	constructor(
+		content: undefined | string | Source,
+		stage: number,
+		position: number,
+		key?: string,
+		endContent?: string | Source
+	);
 	content?: string | Source;
 	stage: number;
 	position: number;
@@ -5396,6 +5403,18 @@ declare abstract class InitFragment<GenerateContext> {
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
 	merge: any;
+	static addToSource<Context, T>(
+		source: Source,
+		initFragments: InitFragment<T>[],
+		context: Context
+	): Source;
+	static STAGE_CONSTANTS: number;
+	static STAGE_ASYNC_BOUNDARY: number;
+	static STAGE_HARMONY_EXPORTS: number;
+	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_PROVIDES: number;
+	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
 declare interface InputFileSystem {
 	readFile: ReadFileFs;
@@ -15363,6 +15382,7 @@ declare namespace exports {
 		Generator,
 		HotUpdateChunk,
 		HotModuleReplacementPlugin,
+		InitFragment,
 		IgnorePlugin,
 		JavascriptModulesPlugin,
 		LibManifestPlugin,
