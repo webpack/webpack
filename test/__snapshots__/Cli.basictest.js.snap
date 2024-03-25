@@ -6283,6 +6283,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-document": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'document'.",
+        "multiple": false,
+        "path": "output.environment.document",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'document'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-dynamic-import": Object {
     "configs": Array [
       Object {

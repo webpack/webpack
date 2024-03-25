@@ -11,8 +11,7 @@ module.exports = {
 		publicPath: "",
 		module: true,
 		filename: "bundle0.mjs",
-		chunkFilename: "[name].mjs",
-		chunkFormat: "module",
+		chunkFilename: "[name].js",
 		crossOriginLoading: "anonymous"
 	},
 	performance: {

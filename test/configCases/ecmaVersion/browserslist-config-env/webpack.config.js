@@ -13,6 +13,7 @@ module.exports = {
 			  "bigIntLiteral": false,
 			  "const": false,
 			  "destructuring": false,
+			  "document": true,
 			  "dynamicImport": false,
 			  "dynamicImportInWorker": false,
 			  "forOf": false,

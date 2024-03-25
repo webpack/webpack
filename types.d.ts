@@ -3919,6 +3919,11 @@ declare interface Environment {
 	destructuring?: boolean;
 
 	/**
+	 * The environment supports 'document'.
+	 */
+	document?: boolean;
+
+	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
 	dynamicImport?: boolean;
