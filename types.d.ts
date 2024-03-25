@@ -1210,8 +1210,8 @@ declare class ChunkGraph {
 		chunkGroup: ChunkGroup
 	): void;
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
-	getModuleId(module: Module): string | number;
-	setModuleId(module: Module, id: string | number): void;
+	getModuleId(module: Module): ModuleId;
+	setModuleId(module: Module, id: ModuleId): void;
 	getRuntimeId(runtime: string): string | number;
 	setRuntimeId(runtime: string, id: string | number): void;
 	hasModuleHashes(module: Module, runtime: RuntimeSpec): boolean;
@@ -4858,9 +4858,9 @@ declare abstract class FileSystemInfo {
 	): void;
 	createSnapshot(
 		startTime: undefined | null | number,
-		files: Iterable<string>,
-		directories: Iterable<string>,
-		missing: Iterable<string>,
+		files: null | Iterable<string>,
+		directories: null | Iterable<string>,
+		missing: null | Iterable<string>,
 		options: undefined | null | SnapshotOptionsFileSystemInfo,
 		callback: (arg0?: null | WebpackError, arg1?: null | Snapshot) => void
 	): void;
@@ -7990,7 +7990,7 @@ declare class Module extends DependenciesBlock {
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
-	id: string | number;
+	id: ModuleId;
 	get hash(): string;
 	get renderedHash(): string;
 	profile?: ModuleProfile;
@@ -8393,6 +8393,7 @@ declare class ModuleGraphConnection {
 	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 }
+type ModuleId = string | number;
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 
 /**
@@ -13064,7 +13065,7 @@ declare abstract class Snapshot {
 	managedMissing?: Set<string>;
 	children?: Set<Snapshot>;
 	hasStartTime(): boolean;
-	setStartTime(value?: any): void;
+	setStartTime(value: number): void;
 	setMergedStartTime(value?: any, snapshot?: any): void;
 	hasFileTimestamps(): boolean;
 	setFileTimestamps(value?: any): void;
