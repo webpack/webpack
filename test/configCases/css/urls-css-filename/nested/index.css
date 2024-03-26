@@ -1,0 +1,7 @@
+@import "./nested/index.css";
+
+h2 {
+  same-dir: url('./img2.png');
+  nested-dir: url('./nested/img3.png');
+  outer-dir: url('../img1.png');
+}
