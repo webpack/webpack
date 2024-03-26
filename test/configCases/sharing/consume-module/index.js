@@ -262,3 +262,40 @@ it("should not instantiate multiple singletons even if a higher version exists",
 		expect(result.default).toBe("shared singleton v1.0.0");
 	}
 });
+
+
+it("should exclude modules from sharing based off exclusion criteria", async () => {
+	__webpack_share_scopes__["exclude-scope"] = {
+		"x": {
+			"0": {
+				get: () => () => "provided-x"
+			}
+		},
+		"@abc/y": {
+			"0": {
+				get: () => () => "provided-y"
+			}
+		},
+		"foo": {
+			"1.0.1": {
+				get: () => () => "recommended-foo"
+			}
+		},
+		"bar": {
+			"2.0.1": {
+				get: () => () => "provided-bar"
+			}
+		}
+	};
+	// no package.json, so fallbackVersion is used for exclusion, which excludes from sharing
+	expect((await import("x")).default).toBe("x");
+
+	// no package.json, and no fallback version, so consumes from shared scope
+	expect((await import("@abc/y")).default).toBe("provided-y");
+
+	// foo has package.json, and is excluded from sharing
+	expect((await import("foo")).default).toBe("foo");
+
+	// excluded version does not match fallbackVersion (which overrides default 1.5.0)
+	expect((await import("bar")).default).toBe("provided-bar");
+});

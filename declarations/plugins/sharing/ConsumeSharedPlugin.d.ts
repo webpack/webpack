@@ -44,6 +44,10 @@ export interface ConsumesConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * Extended exclusion criteria with fallback version added.
+	 */
+	exclusionCriteria?: SharedExclusionCriteriaWithFallbackVersion;
+	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: false | ConsumesItem;
@@ -71,4 +75,26 @@ export interface ConsumesConfig {
 	 * Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available and shared module is not a singleton, otherwise no, has no effect if there is no required version specified).
 	 */
 	strictVersion?: boolean;
+}
+/**
+ * Extended exclusion criteria with fallback version added.
+ */
+export interface SharedExclusionCriteriaWithFallbackVersion {
+	/**
+	 * Version of the package provided by the fallback if there is one.
+	 */
+	fallbackVersion?: string;
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
+}
+/**
+ * A set of exclusion criteria to use to decide if a module must participate in sharing.
+ */
+export interface SharedExclusionCriteria {
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
 }

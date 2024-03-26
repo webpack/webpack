@@ -60,6 +60,45 @@ module.exports = {
 					singleton: true
 				}
 			}
+		}),
+		new ConsumeSharedPlugin({
+			shareScope: "exclude-scope",
+			consumes: [
+				{
+					x: {
+						exclusionCriteria: {
+							version: "2.x",
+							fallbackVersion: "2.0.0"
+						},
+						shareScope: "exclude-scope"
+					}
+				},
+				{
+					"@abc/y": {
+						exclusionCriteria: {
+							version: "*"
+						},
+						shareScope: "exclude-scope"
+					}
+				},
+				{
+					foo: {
+						exclusionCriteria: {
+							version: "1.x"
+						},
+						shareScope: "exclude-scope"
+					}
+				},
+				{
+					bar: {
+						exclusionCriteria: {
+							version: "1.x",
+							fallbackVersion: "2.0.0"
+						},
+						shareScope: "exclude-scope"
+					}
+				}
+			]
 		})
 	]
 };

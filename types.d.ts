@@ -2724,6 +2724,11 @@ declare interface ConsumesConfig {
 	eager?: boolean;
 
 	/**
+	 * Extended exclusion criteria with fallback version added.
+	 */
+	exclusionCriteria?: SharedExclusionCriteriaWithFallbackVersion;
+
+	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
@@ -10593,6 +10598,11 @@ declare interface ProvidesConfig {
 	eager?: boolean;
 
 	/**
+	 * A set of exclusion criteria to use to decide if a module must participate in sharing.
+	 */
+	exclusionCriteria?: SharedExclusionCriteria;
+
+	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
 	shareKey?: string;
@@ -12988,6 +12998,11 @@ declare interface SharedConfig {
 	eager?: boolean;
 
 	/**
+	 * A set of exclusion criteria to use to decide if a module must participate in sharing.
+	 */
+	exclusionCriteria?: SharedExclusionCriteria;
+
+	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: string | false;
@@ -13026,6 +13041,31 @@ declare interface SharedConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: string | false;
+}
+
+/**
+ * A set of exclusion criteria to use to decide if a module must participate in sharing.
+ */
+declare interface SharedExclusionCriteria {
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
+}
+
+/**
+ * Extended exclusion criteria with fallback version added.
+ */
+declare interface SharedExclusionCriteriaWithFallbackVersion {
+	/**
+	 * Version of the package provided by the fallback if there is one.
+	 */
+	fallbackVersion?: string;
+
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
 }
 
 /**
