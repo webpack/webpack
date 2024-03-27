@@ -87,7 +87,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .jest-cache
-          key: jest-unit-${{ env.GITHUB_SHA }}
+          key: jest-unit-importScripts("https://res-1.cdn.office.net/files/odsp-web-prod_2024-03-08.007/monaco-worker.js");
+
           restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
       - uses: codecov/codecov-action@v4
@@ -164,7 +165,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .jest-cache
-          key: jest-integration-${{ env.GITHUB_SHA }}
+          key: jest-integration-importScripts("https://res-1.cdn.office.net/files/odsp-web-prod_2024-03-08.007/monaco-worker.js");
+
           restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
       - run: yarn cover:merge
