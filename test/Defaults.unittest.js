@@ -123,6 +123,7 @@ describe("snapshots", () => {
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
+		      "document": true,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -347,6 +348,7 @@ describe("snapshots", () => {
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
+		      "document": true,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -1310,6 +1312,9 @@ describe("snapshots", () => {
 		-     "web": true,
 		+     "web": false,
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
@@ -1335,6 +1340,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1427,10 +1435,16 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
 		-       "jsonp",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1454,6 +1468,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "web": true,
 		+     "web": false,
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-main",
@@ -1480,6 +1497,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1582,6 +1602,9 @@ describe("snapshots", () => {
 		-     "node": false,
 		+     "node": true,
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
 		@@ ... @@
@@ -1607,6 +1630,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -2035,6 +2061,12 @@ describe("snapshots", () => {
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
+			+       "arrowFunction": false,
+			+       "asyncFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
@@ -2042,11 +2074,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
-			+       "arrowFunction": false,
-			+       "asyncFunction": false,
-			+       "bigIntLiteral": false,
-			+       "const": false,
-			+       "destructuring": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
@@ -2066,6 +2093,12 @@ describe("snapshots", () => {
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
+			+       "arrowFunction": false,
+			+       "asyncFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
@@ -2073,11 +2106,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
-			+       "arrowFunction": false,
-			+       "asyncFunction": false,
-			+       "bigIntLiteral": false,
-			+       "const": false,
-			+       "destructuring": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,

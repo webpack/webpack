@@ -256,9 +256,6 @@ type ArrayBufferView =
 	| Float32Array
 	| Float64Array
 	| DataView;
-declare interface Assertions {
-	[index: string]: any;
-}
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -433,6 +430,9 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
+declare interface Attributes {
+	[index: string]: any;
+}
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -449,7 +449,7 @@ declare interface BackendApi {
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
-	banner: (data: { hash: string; chunk: Chunk; filename: string }) => string;
+	banner: (data: { hash?: string; chunk: Chunk; filename: string }) => string;
 
 	/**
 	 * Apply the plugin
@@ -459,14 +459,14 @@ declare class BannerPlugin {
 type BannerPluginArgument =
 	| string
 	| BannerPluginOptions
-	| ((data: { hash: string; chunk: Chunk; filename: string }) => string);
+	| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
 declare interface BannerPluginOptions {
 	/**
 	 * Specifies the banner.
 	 */
 	banner:
 		| string
-		| ((data: { hash: string; chunk: Chunk; filename: string }) => string);
+		| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
 
 	/**
 	 * If true, the banner will only be added to the entry chunks.
@@ -492,6 +492,11 @@ declare interface BannerPluginOptions {
 	 * If true, banner will not be wrapped in a comment.
 	 */
 	raw?: boolean;
+
+	/**
+	 * Specifies the banner.
+	 */
+	stage?: number;
 
 	/**
 	 * Include all modules that pass test assertion.
@@ -990,7 +995,7 @@ declare interface CallbackCacheCache<T> {
 	(err: null | WebpackError, result?: T): void;
 }
 declare interface CallbackCacheCacheFacade<T> {
-	(err?: null | WebpackError, result?: T): void;
+	(err?: null | Error, result?: null | T): void;
 }
 declare interface CallbackFunction_1<T> {
 	(err: null | Error, result?: T): any;
@@ -1199,14 +1204,14 @@ declare class ChunkGraph {
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
 	): Iterable<[Module, undefined | Entrypoint]>;
-	getBlockChunkGroup(depBlock: AsyncDependenciesBlock): ChunkGroup;
+	getBlockChunkGroup(depBlock: AsyncDependenciesBlock): undefined | ChunkGroup;
 	connectBlockAndChunkGroup(
 		depBlock: AsyncDependenciesBlock,
 		chunkGroup: ChunkGroup
 	): void;
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
-	getModuleId(module: Module): string | number;
-	setModuleId(module: Module, id: string | number): void;
+	getModuleId(module: Module): ModuleId;
+	setModuleId(module: Module, id: ModuleId): void;
 	getRuntimeId(runtime: string): string | number;
 	setRuntimeId(runtime: string, id: string | number): void;
 	hasModuleHashes(module: Module, runtime: RuntimeSpec): boolean;
@@ -1576,7 +1581,7 @@ declare interface CodeGenerationContext {
 	/**
 	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
 	 */
-	codeGenerationResults: CodeGenerationResults;
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * the compilation
@@ -1809,7 +1814,7 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, object, AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, object, undefined | AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], true>;
@@ -1898,14 +1903,14 @@ declare class Compilation {
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
-	compilationDependencies: { add: (item?: any) => LazySet<string> };
+	compilationDependencies: { add: (item: string) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
 		optionsOrPreset?: string | boolean | StatsOptions,
 		context?: CreateStatsOptionsContext
 	): NormalizedStatsOptions;
-	createStatsFactory(options?: any): StatsFactory;
-	createStatsPrinter(options?: any): StatsPrinter;
+	createStatsFactory(options: NormalizedStatsOptions): StatsFactory;
+	createStatsPrinter(options: NormalizedStatsOptions): StatsPrinter;
 	getCache(name: string): CacheFacade;
 	getLogger(name: string | (() => string)): WebpackLogger;
 	addModule(
@@ -2064,7 +2069,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0?: AssetInfo) => AssetInfo)
 	): void;
-	renameAsset(file?: any, newFile?: any): void;
+	renameAsset(file: string, newFile: string): void;
 	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): undefined | Readonly<Asset>;
@@ -2310,7 +2315,7 @@ declare class Compiler {
 	moduleMemCaches?: Map<
 		Module,
 		{
-			buildInfo: object;
+			buildInfo: BuildInfo;
 			references?: WeakMap<Dependency, Module>;
 			memCache: WeakTupleMap<any, any>;
 		}
@@ -2900,6 +2905,7 @@ declare interface ContextModuleOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: string;
+	attributes?: Attributes;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -3029,6 +3035,11 @@ declare interface CssGlobalParserOptions {
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+}
+declare interface CssImportDependencyMeta {
+	layer?: string;
+	supports?: string;
+	media?: string;
 }
 
 /**
@@ -3350,6 +3361,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+type DevtoolModuleFilenameTemplate = string | Function;
 declare interface Dirent {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -3907,6 +3919,11 @@ declare interface Environment {
 	destructuring?: boolean;
 
 	/**
+	 * The environment supports 'document'.
+	 */
+	document?: boolean;
+
+	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
 	dynamicImport?: boolean;
@@ -3956,15 +3973,31 @@ declare interface Etag {
 	toString: () => string;
 }
 declare class EvalDevToolModulePlugin {
-	constructor(options?: any);
-	namespace: any;
-	sourceUrlComment: any;
-	moduleFilenameTemplate: any;
+	constructor(options?: EvalDevToolModulePluginOptions);
+	namespace: string;
+	sourceUrlComment: string;
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface EvalDevToolModulePluginOptions {
+	/**
+	 * namespace
+	 */
+	namespace?: string;
+
+	/**
+	 * source url comment
+	 */
+	sourceUrlComment?: string;
+
+	/**
+	 * module filename template
+	 */
+	moduleFilenameTemplate?: string | Function;
 }
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
@@ -4246,7 +4279,7 @@ declare abstract class ExportsInfo {
 	get exports(): Iterable<ExportInfo>;
 	get orderedExports(): Iterable<ExportInfo>;
 	get otherExportsInfo(): ExportInfo;
-	setRedirectNamedTo(exportsInfo?: any): boolean;
+	setRedirectNamedTo(exportsInfo?: ExportsInfo): boolean;
 	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
 	getOwnExportInfo(name: string): ExportInfo;
@@ -4275,7 +4308,7 @@ declare abstract class ExportsInfo {
 	isEquallyUsed(runtimeA: RuntimeSpec, runtimeB: RuntimeSpec): boolean;
 	getUsed(name: string | string[], runtime: RuntimeSpec): UsageStateType;
 	getUsedName(
-		name: string | string[],
+		name: undefined | string | string[],
 		runtime: RuntimeSpec
 	): string | false | string[];
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
@@ -4466,16 +4499,22 @@ declare interface ExternalItemObjectUnknown {
 type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
-		request: string | string[] | Record<string, string | string[]>,
-		type: any,
-		userRequest: string
+		request: string | string[] | RequestRecord,
+		type: string,
+		userRequest: string,
+		dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta
 	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta;
+
+	/**
+	 * restore unsafe cache data
+	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData?: any,
-		normalModuleFactory?: any
+		unsafeCacheData: object,
+		normalModuleFactory: NormalModuleFactory
 	): void;
 }
 declare interface ExternalModuleInfo {
@@ -4819,9 +4858,9 @@ declare abstract class FileSystemInfo {
 	): void;
 	createSnapshot(
 		startTime: undefined | null | number,
-		files: Iterable<string>,
-		directories: Iterable<string>,
-		missing: Iterable<string>,
+		files: null | Iterable<string>,
+		directories: null | Iterable<string>,
+		missing: null | Iterable<string>,
 		options: undefined | null | SnapshotOptionsFileSystemInfo,
 		callback: (arg0?: null | WebpackError, arg1?: null | Snapshot) => void
 	): void;
@@ -5052,7 +5091,7 @@ declare interface HandleModuleCreationOptions {
 	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(request: string, sourceOrder: number, assertions?: Assertions);
+	constructor(request: string, sourceOrder: number, attributes?: Attributes);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
@@ -5070,7 +5109,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		WARN: 1;
 		AUTO: 2;
 		ERROR: 3;
-		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+		fromUserOption(str: string | false): 0 | 1 | 2 | 3;
 	};
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -5131,8 +5170,8 @@ declare interface HashedModuleIdsPluginOptions {
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: Object);
+	options: Object;
 
 	/**
 	 * Apply the plugin
@@ -5285,6 +5324,9 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+declare interface ImportDependencyMeta {
+	attributes?: Attributes;
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -5348,17 +5390,36 @@ declare interface InfrastructureLogging {
 	 */
 	stream?: NodeJS.WritableStream;
 }
-declare abstract class InitFragment<GenerateContext> {
-	content: string | Source;
+declare class InitFragment<GenerateContext> {
+	constructor(
+		content: undefined | string | Source,
+		stage: number,
+		position: number,
+		key?: string,
+		endContent?: string | Source
+	);
+	content?: string | Source;
 	stage: number;
 	position: number;
 	key?: string;
 	endContent?: string | Source;
-	getContent(context: GenerateContext): string | Source;
+	getContent(context: GenerateContext): undefined | string | Source;
 	getEndContent(context: GenerateContext): undefined | string | Source;
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
 	merge: any;
+	static addToSource<Context, T>(
+		source: Source,
+		initFragments: InitFragment<T>[],
+		context: Context
+	): Source;
+	static STAGE_CONSTANTS: number;
+	static STAGE_ASYNC_BOUNDARY: number;
+	static STAGE_HARMONY_EXPORTS: number;
+	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_PROVIDES: number;
+	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
 declare interface InputFileSystem {
 	readFile: ReadFileFs;
@@ -6658,7 +6719,7 @@ type JsonValueTypes =
 	| JsonObjectTypes
 	| JsonValueTypes[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
-	constructor(runtimeRequirements: Set<string>);
+	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
@@ -7929,7 +7990,7 @@ declare class Module extends DependenciesBlock {
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
-	id: string | number;
+	id: ModuleId;
 	get hash(): string;
 	get renderedHash(): string;
 	profile?: ModuleProfile;
@@ -8066,7 +8127,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Record<string, any>;
+	assertions?: Attributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -8198,7 +8259,7 @@ declare class ModuleGraph {
 	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
-		originModule: Module,
+		originModule: null | Module,
 		dependency: Dependency,
 		module: Module
 	): void;
@@ -8332,6 +8393,7 @@ declare class ModuleGraphConnection {
 	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 }
+type ModuleId = string | number;
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 
 /**
@@ -8909,7 +8971,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
-		factorize: AsyncSeriesBailHook<[ResolveData], Module>;
+		factorize: AsyncSeriesBailHook<[ResolveData], undefined | Module>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<
@@ -9123,6 +9185,8 @@ declare interface ObjectSerializer {
 }
 declare interface ObjectSerializerContext {
 	write: (arg0?: any) => void;
+	writeLazy?: (arg0?: any) => void;
+	writeSeparate?: (arg0: any, arg1?: object) => () => any;
 	setCircularReference: (arg0?: any) => void;
 }
 declare class OccurrenceChunkIdsPlugin {
@@ -10663,10 +10727,10 @@ declare interface ReadFileFs {
 			| "ucs-2"
 			| "latin1"
 			| "binary"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "base64"
 			| "base64url"
-			| "hex"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
+			| "hex",
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -10759,10 +10823,10 @@ declare interface ReadFileTypes {
 			| "ucs-2"
 			| "latin1"
 			| "binary"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "base64"
 			| "base64url"
-			| "hex",
+			| "hex"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 	(
@@ -10986,8 +11050,8 @@ declare interface ReaddirTypes {
 	(
 		path: PathLikeTypes,
 		options:
-			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean }
-			| "buffer",
+			| "buffer"
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer[]) => void
 	): void;
 	(
@@ -11313,6 +11377,9 @@ declare class ReplaceSource extends Source {
 		insertIndex: number;
 		name: string;
 	}[];
+}
+declare interface RequestRecord {
+	[index: string]: string | string[];
 }
 declare abstract class RequestShortener {
 	contextify: (arg0: string) => string;
@@ -12866,11 +12933,21 @@ declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
 declare abstract class Serializer {
-	serializeMiddlewares: any;
-	deserializeMiddlewares: any;
+	serializeMiddlewares: SerializerMiddleware<any, any>[];
+	deserializeMiddlewares: SerializerMiddleware<any, any>[];
 	context: any;
-	serialize(obj?: any, context?: any): any;
-	deserialize(value?: any, context?: any): any;
+	serialize(obj?: any, context?: any): Promise<any>;
+	deserialize(value?: any, context?: any): Promise<any>;
+}
+declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
+	serialize(
+		data: DeserializedType,
+		context: Object
+	): SerializedType | Promise<SerializedType>;
+	deserialize(
+		data: SerializedType,
+		context: Object
+	): DeserializedType | Promise<DeserializedType>;
 }
 type ServerOptionsHttps<
 	Request extends typeof IncomingMessage = typeof IncomingMessage,
@@ -12988,7 +13065,7 @@ declare abstract class Snapshot {
 	managedMissing?: Set<string>;
 	children?: Set<Snapshot>;
 	hasStartTime(): boolean;
-	setStartTime(value?: any): void;
+	setStartTime(value: number): void;
 	setMergedStartTime(value?: any, snapshot?: any): void;
 	hasFileTimestamps(): boolean;
 	setFileTimestamps(value?: any): void;
@@ -14866,7 +14943,7 @@ declare namespace exports {
 				/**
 				 * the hash function to use
 				 */
-				hashFunction: string | typeof Hash;
+				hashFunction?: string | typeof Hash;
 			}
 		) => string;
 		export let replaceDuplicates: <T>(
@@ -15120,7 +15197,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm?: string | typeof Hash) => Hash;
+		export const createHash: (algorithm: string | typeof Hash) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (
@@ -15197,7 +15274,7 @@ declare namespace exports {
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
 			export let deepMergeRuntime: (
-				runtimes: RuntimeSpec[],
+				runtimes: undefined | RuntimeSpec[],
 				runtime: RuntimeSpec
 			) => RuntimeSpec;
 			export let mergeRuntimeCondition: (
@@ -15311,6 +15388,7 @@ declare namespace exports {
 		Generator,
 		HotUpdateChunk,
 		HotModuleReplacementPlugin,
+		InitFragment,
 		IgnorePlugin,
 		JavascriptModulesPlugin,
 		LibManifestPlugin,
@@ -15390,6 +15468,8 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
+		InputFileSystem,
+		OutputFileSystem,
 		LoaderModule,
 		RawLoaderDefinition,
 		LoaderDefinition,

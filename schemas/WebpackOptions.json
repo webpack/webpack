@@ -865,6 +865,10 @@
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"
         },
+        "document": {
+          "description": "The environment supports 'document'.",
+          "type": "boolean"
+        },
         "dynamicImport": {
           "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"

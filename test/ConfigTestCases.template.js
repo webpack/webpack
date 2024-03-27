@@ -442,6 +442,8 @@ const describeCases = config => {
 											baseModuleScope.document = globalContext.document;
 											baseModuleScope.setTimeout = globalContext.setTimeout;
 											baseModuleScope.clearTimeout = globalContext.clearTimeout;
+											baseModuleScope.getComputedStyle =
+												globalContext.getComputedStyle;
 											baseModuleScope.URL = URL;
 											baseModuleScope.Worker =
 												require("./helpers/createFakeWorker")({
@@ -540,6 +542,7 @@ const describeCases = config => {
 													}
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
+														if (esmMode === "unlinked") return esm;
 														await esm.link(
 															async (specifier, referencingModule) => {
 																return await asModule(
@@ -571,6 +574,11 @@ const describeCases = config => {
 															: ns;
 													})();
 												} else {
+													const isJSON = p.endsWith(".json");
+													if (isJSON) {
+														return JSON.parse(content);
+													}
+
 													if (p in requireCache) {
 														return requireCache[p].exports;
 													}
@@ -578,6 +586,7 @@ const describeCases = config => {
 														exports: {}
 													};
 													requireCache[p] = m;
+
 													const moduleScope = {
 														...baseModuleScope,
 														require: _require.bind(
