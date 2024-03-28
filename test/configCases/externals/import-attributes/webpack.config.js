@@ -29,12 +29,17 @@ module.exports = {
 							[
 								"static-package.json",
 								"static-package-str.json",
+								"static-package-with.json",
+								"static-package-str-with.json",
 								"dynamic-package.json",
 								"dynamic-package-str.json",
+								"dynamic-package-with.json",
+								"dynamic-package-str-with.json",
 								"eager.json",
 								"weak.json",
 								"./nested/pkg.json",
-								"./re-export.json"
+								"./re-export-assert.json",
+								"./re-export-with.json"
 							].forEach(filename => {
 								const resolvedFilename = path.resolve(__dirname, filename);
 								const content = fs.readFileSync(resolvedFilename);
@@ -52,12 +57,17 @@ module.exports = {
 	externals: {
 		"./static-package.json": "module ./static-package.json",
 		"./static-package-str.json": "module ./static-package-str.json",
+		"./static-package-with.json": "module ./static-package-with.json",
+		"./static-package-str-with.json": "module ./static-package-str-with.json",
 		"./dynamic-package.json": "import ./dynamic-package.json",
 		"./dynamic-package-str.json": "import ./dynamic-package-str.json",
+		"./dynamic-package-with.json": "import ./dynamic-package-with.json",
+		"./dynamic-package-str-with.json": "import ./dynamic-package-str-with.json",
 		"./eager.json": "import ./eager.json",
 		"./weak.json": "import ./weak.json",
 		"./pkg.json": "import ./pkg.json",
 		"./pkg": "import ./pkg",
-		"./re-export.json": "import ./re-export.json"
+		"./re-export-assert.json": "module ./re-export-assert.json",
+		"./re-export-with.json": "module ./re-export-with.json"
 	}
 };
