@@ -38,7 +38,8 @@ module.exports = {
 								"eager.json",
 								"weak.json",
 								"./nested/pkg.json",
-								"./re-export.json"
+								"./re-export-assert.json",
+								"./re-export-with.json"
 							].forEach(filename => {
 								const resolvedFilename = path.resolve(__dirname, filename);
 								const content = fs.readFileSync(resolvedFilename);
@@ -66,6 +67,7 @@ module.exports = {
 		"./weak.json": "import ./weak.json",
 		"./pkg.json": "import ./pkg.json",
 		"./pkg": "import ./pkg",
-		"./re-export.json": "import ./re-export.json"
+		"./re-export-assert.json": "module ./re-export-assert.json",
+		"./re-export-with.json": "module ./re-export-with.json"
 	}
 };

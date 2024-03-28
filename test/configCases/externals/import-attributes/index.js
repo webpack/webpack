@@ -61,3 +61,6 @@ it("should allow async externals", async () => {
 
 	expect(reExportPkg.foo).toBe("re-export");
 });
+
+export * from "./re-export-assert.json" assert { type: "json" }
+export * from "./re-export-with.json" with { type: "json" }
