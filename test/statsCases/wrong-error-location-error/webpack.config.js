@@ -10,5 +10,6 @@ module.exports = {
 			}
 		]
 	},
+	devtool: "source-map",
 	stats: "errors-only"
 };
