@@ -1,3 +1,6 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Compilation} Compilation */
+
 var webpack = require("../../../../");
 var path = require("path");
 /** @type {function(any, any): import("../../../../").Configuration[]} */
@@ -12,6 +15,42 @@ module.exports = (env, { testPath }) => [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("esm")
 			})
+		]
+	},
+	{
+		entry: "./default-test-esm.js",
+		optimization: {
+			minimize: true
+		},
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-tree-shakable")
+			}),
+			/**
+			 * @this {Compiler} compiler
+			 */
+			function () {
+				/**
+				 * @param {Compilation} compilation compilation
+				 * @returns {void}
+				 */
+				const handler = compilation => {
+					compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+						for (const asset of Object.keys(assets)) {
+							const source = assets[asset].source();
+							expect(source).not.toContain('"a"');
+							expect(source).not.toContain('"b"');
+							expect(source).not.toContain('"non-external"');
+						}
+					});
+				};
+				this.hooks.compilation.tap("testcase", handler);
+			}
 		]
 	},
 	{
