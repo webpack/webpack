@@ -15,7 +15,10 @@ it("should able to import with different namedExports (async)", (done) => {
 		import("./style.module.css?named"),
 	]).then(([style1, style2, style3]) => {
 		expect(style1).toEqual(nsObj({ class: '-_style_module_css-class' }));
-		expect(style2).toEqual(nsObj({ default: nsObj({ class: '-_style_module_css_default-class' }) }));
+		expect(style2).toEqual(nsObj({
+			class: "-_style_module_css_default-class",
+			default: nsObj({ class: '-_style_module_css_default-class' })
+		}));
 		expect(style3).toEqual(nsObj({ class: '-_style_module_css_named-class' }));
 		done()
 	}, done)
