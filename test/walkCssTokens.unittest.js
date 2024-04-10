@@ -120,14 +120,12 @@ describe("walkCssTokens", () => {
 			    "background",
 			  ],
 			  Array [
-			    "url",
-			    "url(  \\"https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png\\"   )",
-			    "https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png",
+			    "rightParenthesis",
+			    ")",
 			  ],
 			  Array [
-			    "url",
-			    "url('https://example.com/\\\\'\\"quotes\\"\\\\'.png')",
-			    "https://example.com/\\\\'\\"quotes\\"\\\\'.png",
+			    "rightParenthesis",
+			    ")",
 			  ],
 			  Array [
 			    "semicolon",

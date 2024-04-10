@@ -191,7 +191,8 @@ describe("StatsTestCases", () => {
 					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
 					.replace(new RegExp(quoteMeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
-					.replace(/, additional resolving: X ms/g, "");
+					.replace(/, additional resolving: X ms/g, "")
+					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier");
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();

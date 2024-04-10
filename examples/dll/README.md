@@ -10,7 +10,7 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
@@ -35,7 +35,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_32ae439e7568b31a353c;
+var alpha_a53f6ab3ecd4de18316c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -127,7 +127,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_32ae439e7568b31a353c = __webpack_exports__;
+/******/ 	alpha_a53f6ab3ecd4de18316c = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -136,7 +136,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_32ae439e7568b31a353c","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_a53f6ab3ecd4de18316c","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -160,7 +160,7 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -180,5 +180,5 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   dll beta 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

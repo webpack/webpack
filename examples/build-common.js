@@ -16,7 +16,8 @@ const targetArgs = global.NO_TARGET_ARGS ? "" : "--entry ./example.js --output-f
 const displayReasons = global.NO_REASONS ? "" : "--stats-reasons --stats-used-exports --stats-provided-exports";
 const statsArgs = global.NO_STATS_OPTIONS ? "" : "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
 const publicPathArgs = global.NO_PUBLIC_PATH ? "" : '--output-public-path "dist/"';
-const commonArgs = `--no-stats-colors ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
+const statsColorsArg = global.STATS_COLORS ? "" : "--no-stats-colors";
+const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
 
@@ -50,7 +51,30 @@ const doCompileAndReplace = (args, prefix, callback) => {
 		throw new Error("Please install webpack-cli at root.");
 	}
 
-	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
+	const connectIO = (subprocess) => {
+		const { stdin, stdout, stderr } = process;
+		const { stdin: _stdin, stdout: _stdout, stderr: _stderr } = subprocess;
+		const inputPair = [[stdin, _stdin]];
+		const outputPair = [[stdout, _stdout], [stderr, _stderr]];
+		inputPair.forEach(pair => {
+			pair[0].pipe(pair[1])
+		})
+		outputPair.forEach(pair => {
+			pair[1].pipe(pair[0])
+		})
+		disconnectIO = () => {
+			inputPair.forEach(pair => {
+				pair[0].unpipe(pair[1])
+			})
+			outputPair.forEach(pair => {
+				pair[1].unpipe(pair[0])
+			})
+		}
+	}
+	let disconnectIO = null;
+
+	const subprocess = cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
+		disconnectIO && disconnectIO();
 		if (stderr)
 			console.log(stderr);
 		if (error !== null)
@@ -63,6 +87,7 @@ const doCompileAndReplace = (args, prefix, callback) => {
 		}
 		callback();
 	});
+	connectIO(subprocess);
 };
 
 async.series([

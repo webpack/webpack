@@ -8,6 +8,22 @@ module.exports = (env, { testPath }) => [
 		mode: "development",
 		experiments: {
 			css: true
+		},
+		module: {
+			rules: [
+				{
+					test: /\.my-css$/i,
+					type: "css/auto"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/auto"
+				}
+			]
+		},
+		node: {
+			__dirname: false,
+			__filename: false
 		}
 	},
 	{
@@ -18,6 +34,22 @@ module.exports = (env, { testPath }) => [
 		},
 		experiments: {
 			css: true
+		},
+		module: {
+			rules: [
+				{
+					test: /\.my-css$/i,
+					type: "css/auto"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/auto"
+				}
+			]
+		},
+		node: {
+			__dirname: false,
+			__filename: false
 		},
 		plugins: [
 			new webpack.ids.DeterministicModuleIdsPlugin({

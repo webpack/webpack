@@ -89,7 +89,11 @@ class FakeElement {
 	}
 
 	setAttribute(name, value) {
-		this._attributes[name] = value;
+		if (this._type === "link" && name === "href") {
+			this.href(value);
+		} else {
+			this._attributes[name] = value;
+		}
 	}
 
 	removeAttribute(name) {
@@ -97,7 +101,11 @@ class FakeElement {
 	}
 
 	getAttribute(name) {
-		return this._attributes[name];
+		if (this._type === "link" && name === "href") {
+			return this.href;
+		} else {
+			return this._attributes[name];
+		}
 	}
 
 	_toRealUrl(value) {
@@ -143,6 +151,38 @@ class FakeSheet {
 		this._basePath = basePath;
 	}
 
+	get css() {
+		let css = fs.readFileSync(
+			path.resolve(
+				this._basePath,
+				this._element.href
+					.replace(/^https:\/\/test\.cases\/path\//, "")
+					.replace(/^https:\/\/example\.com\//, "")
+			),
+			"utf-8"
+		);
+
+		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+				return `@import url("${url}");`;
+			}
+
+			if (url.startsWith("#")) {
+				return url;
+			}
+
+			return fs.readFileSync(
+				path.resolve(
+					this._basePath,
+					url.replace(/^https:\/\/test\.cases\/path\//, "")
+				),
+				"utf-8"
+			);
+		});
+
+		return css;
+	}
+
 	get cssRules() {
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
 		const rules = [];
@@ -157,14 +197,25 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		let css = fs.readFileSync(
-			path.resolve(
-				this._basePath,
-				this._element.href.replace(/^https:\/\/test\.cases\/path\//, "")
-			),
-			"utf-8"
-		);
+		const filepath = /file:\/\//.test(this._element.href)
+			? new URL(this._element.href)
+			: path.resolve(
+					this._basePath,
+					this._element.href
+						.replace(/^https:\/\/test\.cases\/path\//, "")
+						.replace(/^https:\/\/example\.com\/public\/path\//, "")
+						.replace(/^https:\/\/example\.com\//, "")
+				);
+		let css = fs.readFileSync(filepath, "utf-8");
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+				return url;
+			}
+
+			if (url.startsWith("#")) {
+				return url;
+			}
+
 			return fs.readFileSync(
 				path.resolve(
 					this._basePath,

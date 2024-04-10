@@ -9,7 +9,7 @@ module.exports = {
 		splitChunks: {
 			cacheGroups: {
 				css: {
-					type: "css",
+					type: "css/auto",
 					enforce: true,
 					name: "css"
 				}

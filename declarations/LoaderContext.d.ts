@@ -13,6 +13,7 @@ import type {
 	ImportModuleOptions
 } from "../lib/dependencies/LoaderPlugin";
 import type { Resolver } from "enhanced-resolve";
+import type { Environment } from "./WebpackOptions";
 
 type ResolveCallback = Parameters<Resolver["resolve"]>[4];
 type Schema = Parameters<typeof validate>[0];
@@ -40,7 +41,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	utils: {
 		absolutify: (context: string, request: string) => string;
 		contextify: (context: string, request: string) => string;
-		createHash: (algorithm?: string) => Hash;
+		createHash: (algorithm?: string | typeof Hash) => Hash;
 	};
 	rootContext: string;
 	fs: InputFileSystem;
@@ -187,6 +188,7 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 		data: object | undefined;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
+		type?: "commonjs" | "module" | undefined;
 	}[];
 
 	/**
@@ -212,6 +214,18 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
+
+	/**
+	 * Tell what kind of ES-features may be used in the generated runtime-code.
+	 * Example: { arrowFunction: true }
+	 */
+	environment: Environment;
 }
 
 type AdditionalData = {

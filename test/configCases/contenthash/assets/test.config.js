@@ -4,7 +4,7 @@ const allAssets = new Set();
 const allBundles = new Set();
 
 module.exports = {
-	findBundle: function(i, options) {
+	findBundle: function (i, options) {
 		const bundle = findOutputFiles(options, new RegExp(`^bundle${i}`))[0];
 		allBundles.add(/\.([^.]+)\./.exec(bundle)[1]);
 
@@ -12,11 +12,11 @@ module.exports = {
 
 		switch (i) {
 			case 0:
-				asset = findOutputFiles(options, /^1\.[^\.]*\.jpg$/, 'img')[0];
+				asset = findOutputFiles(options, /^1\.[^.]*\.jpg$/, "img")[0];
 				break;
 			case 1:
 			case 5:
-				asset = findOutputFiles(options, /^1\.[^\.]*\.jpg$/, 'asset')[0];
+				asset = findOutputFiles(options, /^1\.[^.]*\.jpg$/, "asset")[0];
 				break;
 		}
 

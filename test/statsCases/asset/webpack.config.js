@@ -16,10 +16,21 @@ module.exports = {
 				}
 			},
 			{
+				test: /\.css$/,
+				type: "asset/inline"
+			},
+			{
+				test: /\.source\.js$/,
+				type: "asset/source"
+			},
+			{
 				mimetype: "text/plain",
 				type: "asset"
 			}
 		]
+	},
+	optimization: {
+		concatenateModules: false
 	},
 	output: {
 		filename: "bundle.js"

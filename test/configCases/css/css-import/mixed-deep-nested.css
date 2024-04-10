@@ -1,0 +1,5 @@
+@import "./mixed-deep-deep-nested.css" layer(bar);
+
+.class {
+	deep-nested: 1;
+}

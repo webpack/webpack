@@ -5,14 +5,21 @@ const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
+/** @typedef {{ size: number, lazySize: number }} SizeInfo */
+
 const binaryMiddleware = new BinaryMiddleware();
 
 const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
+/** @type {Array<SizeInfo | undefined>} */
 const lazySizes = [];
 
+/**
+ * @param {Array<any>} data data
+ * @returns {Promise<SizeInfo>} size info
+ */
 const captureSize = async data => {
 	let size = 0;
 	let lazySize = 0;
@@ -24,7 +31,6 @@ const captureSize = async data => {
 			lazySizes.push(undefined);
 			const r = await captureSize(await b());
 			lazySize += r.size + r.lazySize;
-			// eslint-disable-next-line require-atomic-updates
 			lazySizes[i] = r;
 		}
 	}
@@ -36,13 +42,18 @@ const ESCAPE_ESCAPE_VALUE = null;
 const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
+/**
+ * @param {Array<any>} data data
+ * @param {string} indent indent
+ * @returns {Promise<void>} promise
+ */
 const printData = async (data, indent) => {
 	if (!Array.isArray(data)) throw new Error("Not an array");
 	if (Buffer.isBuffer(data[0])) {
 		for (const b of data) {
 			if (typeof b === "function") {
 				const innerData = await b();
-				const info = lazySizes.shift();
+				const info = /** @type {SizeInfo} */ (lazySizes.shift());
 				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;
@@ -64,6 +75,9 @@ const printData = async (data, indent) => {
 	const read = () => {
 		return data[i++];
 	};
+	/**
+	 * @param {string} content content
+	 */
 	const printLine = content => {
 		console.log(`${indent}${content}`);
 	};
@@ -123,7 +137,7 @@ const printData = async (data, indent) => {
 		} else if (typeof item === "function") {
 			const innerData = await item();
 			if (!SerializerMiddleware.isLazy(item, binaryMiddleware)) {
-				const info = lazySizes.shift();
+				const info = /** @type {SizeInfo} */ (lazySizes.shift());
 				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;

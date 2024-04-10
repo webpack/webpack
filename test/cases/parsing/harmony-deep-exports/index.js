@@ -1,6 +1,19 @@
 import * as C from "./reexport-namespace";
 import { counter } from "./reexport-namespace";
 import * as C2 from "./reexport-namespace-again";
+import cj2, { cjs3DefaultProvidedInfo } from "./cjs2";
+import esm1, { esmDefaultProvidedInfo } from "./esm1";
+
+it("default providedInfo should be correct for cjs", () => {
+	expect(cj2.a).toBe(1);
+	expect(cjs3DefaultProvidedInfo).toBe(false);
+	expect(__webpack_exports_info__.cj2.default.provideInfo).toBe(false);
+});
+
+it("default providedInfo and usedInfo should be correct for esm", () => {
+	expect(esm1).toBe(2);
+	expect(esmDefaultProvidedInfo).toBe(true);
+});
 
 it("should allow to reexport namespaces 1", () => {
 	(0, counter.reset)();

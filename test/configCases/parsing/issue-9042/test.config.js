@@ -1,5 +1,5 @@
 module.exports = {
-	moduleScope: function(scope) {
+	moduleScope: function (scope) {
 		delete scope.__dirname;
 		delete scope.__filename;
 	}

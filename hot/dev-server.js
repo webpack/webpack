@@ -4,9 +4,10 @@
 */
 /* globals __webpack_hash__ */
 if (module.hot) {
+	/** @type {undefined|string} */
 	var lastHash;
 	var upToDate = function upToDate() {
-		return lastHash.indexOf(__webpack_hash__) >= 0;
+		return /** @type {string} */ (lastHash).indexOf(__webpack_hash__) >= 0;
 	};
 	var log = require("./log");
 	var check = function check() {
@@ -14,12 +15,20 @@ if (module.hot) {
 			.check(true)
 			.then(function (updatedModules) {
 				if (!updatedModules) {
-					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
+					log(
+						"warning",
+						"[HMR] Cannot find update. " +
+							(typeof window !== "undefined"
+								? "Need to do a full reload!"
+								: "Please reload manually!")
+					);
 					log(
 						"warning",
 						"[HMR] (Probably because of restarting the webpack-dev-server)"
 					);
-					window.location.reload();
+					if (typeof window !== "undefined") {
+						window.location.reload();
+					}
 					return;
 				}
 
@@ -38,10 +47,15 @@ if (module.hot) {
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log(
 						"warning",
-						"[HMR] Cannot apply update. Need to do a full reload!"
+						"[HMR] Cannot apply update. " +
+							(typeof window !== "undefined"
+								? "Need to do a full reload!"
+								: "Please reload manually!")
 					);
 					log("warning", "[HMR] " + log.formatError(err));
-					window.location.reload();
+					if (typeof window !== "undefined") {
+						window.location.reload();
+					}
 				} else {
 					log("warning", "[HMR] Update failed: " + log.formatError(err));
 				}

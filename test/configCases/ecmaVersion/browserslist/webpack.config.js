@@ -7,12 +7,18 @@ module.exports = {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": true,
+			  "asyncFunction": true,
 			  "bigIntLiteral": true,
 			  "const": true,
 			  "destructuring": true,
+			  "document": false,
 			  "dynamicImport": true,
+			  "dynamicImportInWorker": false,
 			  "forOf": true,
+			  "globalThis": true,
 			  "module": true,
+			  "optionalChaining": true,
+			  "templateLiteral": true,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`

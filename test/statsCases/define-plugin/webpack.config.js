@@ -56,5 +56,26 @@ module.exports = [
 				)
 			})
 		]
+	},
+
+	{
+		mode: "production",
+		entry: "./index",
+		output: {
+			filename: "log.js"
+		},
+		infrastructureLogging: {
+			debug: /DefinePlugin/,
+			level: "none"
+		},
+		stats: {
+			loggingDebug: /DefinePlugin/,
+			logging: "none"
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				VALUE: "123"
+			})
+		]
 	}
 ];
