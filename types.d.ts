@@ -12930,7 +12930,6 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
-	inTry: boolean;
 	inGuardPosition: boolean;
 }
 declare interface Selector<A, B> {
@@ -14791,6 +14790,12 @@ type WriteFileOptions =
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
 }
+declare abstract class WriteOnlyStackedSet<T> {
+	add(el: T): void;
+	has(el: T): boolean;
+	clear(): void;
+	createChild(): WriteOnlyStackedSet<any>;
+}
 
 declare interface WriteStreamOptions {
 	flags?: string;
@@ -14814,12 +14819,6 @@ declare interface WriteStreamOptions {
 	start?: number;
 	signal?: null | AbortSignal;
 	fs?: null | CreateWriteStreamFSImplementation;
-}
-declare abstract class WriteOnlyStackedSet<T> {
-	add(el: T): void;
-	has(el: T): boolean;
-	clear(): void;
-	createChild(): WriteOnlyStackedSet<any>;
 }
 type __TypeWebpackOptions = (data: object) =>
 	| string
