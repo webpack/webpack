@@ -19,6 +19,7 @@ module.exports = {
 			  "forOf": false,
 			  "globalThis": false,
 			  "module": false,
+			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,
 			  "templateLiteral": false,
 			}

@@ -17,6 +17,7 @@ module.exports = {
 			  "forOf": true,
 			  "globalThis": true,
 			  "module": true,
+			  "nodePrefixForCoreModules": true,
 			  "optionalChaining": true,
 			  "templateLiteral": true,
 			}
