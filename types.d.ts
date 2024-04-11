@@ -229,6 +229,12 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+declare abstract class AppendOnlyStackedSet<T> {
+	add(el: T): void;
+	has(el: T): boolean;
+	clear(): void;
+	createChild(): AppendOnlyStackedSet<any>;
+}
 declare interface Argument {
 	description: string;
 	simpleType: "string" | "number" | "boolean";
@@ -12923,7 +12929,7 @@ declare interface RuntimeValueOptions {
  */
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
-	guards: WriteOnlyStackedSet<string>;
+	guards: AppendOnlyStackedSet<string>;
 	topLevelScope: boolean | "arrow";
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
@@ -14789,12 +14795,6 @@ type WriteFileOptions =
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
-}
-declare abstract class WriteOnlyStackedSet<T> {
-	add(el: T): void;
-	has(el: T): boolean;
-	clear(): void;
-	createChild(): WriteOnlyStackedSet<any>;
 }
 
 declare interface WriteStreamOptions {
