@@ -3,22 +3,21 @@ function rand() {
 }
 
 it("should track return in function declaration", () => {
-	let result = 0;
 	function a1() {
 		return;
-		result = require("./a");
+		require("fail");
 	}
 
 	function a2() {
 		if (true) return;
-		result = require("./a");
+		require("fail");
 	}
 
 	function a3() {
 		{
 			{
 				if (true) return;
-				result = require("./a");
+				require("fail");
 			}
 		}
 	}
@@ -28,7 +27,7 @@ it("should track return in function declaration", () => {
 			{
 				{}
 				return;
-				result = require("./a");
+				require("fail");
 			}
 		}
 	}
@@ -36,7 +35,7 @@ it("should track return in function declaration", () => {
 	function a5() {
 		if (rand()) {
 			return;
-			throw require("./a");
+			throw require("fail");
 		}
 
 		if (rand()) return;
@@ -48,27 +47,24 @@ it("should track return in function declaration", () => {
 	a3();
 	a4();
 	a5();
-
-	expect(result).toBe(0);
 });
 
 it("should track return in function expression", () => {
-	let result = 0;
 	const a1 = function () {
 		return;
-		result = require("./b");
+		require("fail");
 	}
 
 	const a2 = function () {
 		if (true) return;
-		result = require("./b");
+		require("fail");
 	}
 
 	const a3 = function () {
 		{
 			{
 				if (true) return;
-				result = require("./b");
+				require("fail");
 			}
 		}
 	}
@@ -78,7 +74,7 @@ it("should track return in function expression", () => {
 			{
 				{}
 				return;
-				result = require("./b");
+				require("fail");
 			}
 		}
 	}
@@ -86,7 +82,7 @@ it("should track return in function expression", () => {
 	const a5 = function () {
 		if (rand()) {
 			return;
-			throw require("./b");
+			throw require("fail");
 		}
 	}
 
@@ -95,27 +91,24 @@ it("should track return in function expression", () => {
 	a3();
 	a4();
 	a5();
-
-	expect(result).toBe(0);
 });
 
 it("should track return in arrow function expression", () => {
-	let result = 0;
 	const a1 = () => {
 		return;
-		result = require("./c");
+		require("fail");
 	}
 
 	const a2 = () => {
 		if (true) return;
-		result = require("./c");
+		result = require("fail");
 	}
 
 	const a3 = () => {
 		{
 			{
 				if (true) return;
-				result = require("./c");
+				result = require("fail");
 			}
 		}
 	}
@@ -125,7 +118,7 @@ it("should track return in arrow function expression", () => {
 			{
 				{}
 				return;
-				result = require("./c");
+				result = require("fail");
 			}
 		}
 	}
@@ -133,7 +126,14 @@ it("should track return in arrow function expression", () => {
 	const a5 = () => {
 		if (rand()) {
 			return;
-			throw require("./c");
+			throw require("fail");
+		}
+	}
+
+	const a6 = () => {
+		if (true) {
+			return;
+			(() => require("fail"))()
 		}
 	}
 
@@ -142,14 +142,13 @@ it("should track return in arrow function expression", () => {
 	a3();
 	a4();
 	a5();
-
-	expect(result).toBe(0);
+	a6();
 });
 
 it("should work correct for try catch and loops", () => {
 	try {
 		throw 1;
-		require("./c");
+		require("fail");
 	} catch (e) {
 		require('./used');
 	}
@@ -158,15 +157,23 @@ it("should work correct for try catch and loops", () => {
 		if (rand())
 			require('./used1');
 
+	for(let i = 0; i < 1; i++) {
+		if (true) {
+			require('./used4');
+			return;
+		}
+		import("fail");
+	}
+
 	try {
 		if (rand()) {
 			if (true) return;
-			require("./c");
+			require("fail");
 		}
 		return;
 	} catch {}
 
-	require("./c");
+	require("fail");
 });
 
 it("should handle edge case with switch case", () => {
@@ -174,12 +181,12 @@ it("should handle edge case with switch case", () => {
 	switch (a) {
 		case 1: {
 			if (true) return;
-			return require('./c');
+			return require("fail");
 		}
 		case 2:
 			if (true) return;
-			return require('./c');
+			return require("fail");
 		default:
-			require('./used2');
+			require("./used2");
 	}
 });
