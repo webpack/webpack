@@ -1403,6 +1403,10 @@ export interface RuleSetRule {
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+	/**
 	 * The options for the module generator.
 	 */
 	generator?: {
