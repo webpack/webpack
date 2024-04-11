@@ -111,7 +111,7 @@ const describeCases = config => {
 											emitOnErrors: true,
 											minimizer: [terserForTesting],
 											...config.optimization
-									  }
+										}
 									: {
 											removeAvailableModules: true,
 											removeEmptyChunks: true,
@@ -127,7 +127,7 @@ const describeCases = config => {
 											chunkIds: "size",
 											minimizer: [terserForTesting],
 											...config.optimization
-									  },
+										},
 								performance: {
 									hints: false
 								},

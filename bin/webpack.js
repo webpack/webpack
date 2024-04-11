@@ -119,6 +119,7 @@ if (!cli.installed) {
 
 	console.error(notify);
 
+	/** @type {string | undefined} */
 	let packageManager;
 
 	if (fs.existsSync(path.resolve(process.cwd(), "yarn.lock"))) {
@@ -171,7 +172,10 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(packageManager, installOptions.concat(cli.package))
+		runCommand(
+			/** @type {string} */ (packageManager),
+			installOptions.concat(cli.package)
+		)
 			.then(() => {
 				runCli(cli);
 			})

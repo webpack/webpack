@@ -315,7 +315,7 @@ a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tag
 
 If you are twitter savvy you can tweet #webpack with your question and someone should be able to reach out and help also.
 
-If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on Github.
+If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on GitHub.
 
 ### License
 
@@ -405,7 +405,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Gold Sponsors</h2>
 
-[Become a gold sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a gold sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
 <div align="center">
 
@@ -444,7 +444,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Silver Sponsors</h2>
 
-[Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
 <div align="center">
 
@@ -483,7 +483,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Bronze Sponsors</h2>
 
-[Become a bronze sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a bronze sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
 <div align="center">
 
@@ -593,7 +593,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Backers</h2>
 
-[Become a backer](https://opencollective.com/webpack#backer) and get your image on our README on Github with a link to your site.
+[Become a backer](https://opencollective.com/webpack#backer) and get your image on our README on GitHub with a link to your site.
 
 <a href="https://opencollective.com/webpack/backer/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/0/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/1/avatar.svg?requireActive=false"></a>

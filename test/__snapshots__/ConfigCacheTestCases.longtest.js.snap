@@ -10,6 +10,7 @@ Array [
 @import url(\\"https://fonts.googleapis.com/css?family=Roboto\\");
 @import url(\\"https://fonts.googleapis.com/css?family=Noto+Sans+TC\\");
 @import url(\\"https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto\\");
+@import url(\\"https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto?foo=1\\") layer(super.foo) supports(display: flex) screen and (min-width: 400px);
 body {
 	externally-imported1: true;
 }
@@ -18,6 +19,21 @@ body {
 	externally-imported2: true;
 }
 
+@import url(\\"external-1.css\\");
+@import url(\\"external-2.css\\") supports(display: grid) screen and (max-width: 400px);
+@import url(\\"external-3.css\\") supports(not (display: grid) and (display: flex)) screen and (max-width: 400px);
+@import url(\\"external-4.css\\") supports((selector(h2 > p)) and
+    (font-tech(color-COLRv1)));
+@import url(\\"external-5.css\\") layer(default);
+@import url(\\"external-6.css\\") layer(default);
+@import url(\\"external-7.css\\") layer();
+@import url(\\"external-8.css\\") layer();
+@import url(\\"external-9.css\\") print;
+@import url(\\"external-10.css\\") print, screen;
+@import url(\\"external-11.css\\") screen;
+@import url(\\"external-12.css\\") screen and (orientation: landscape);
+@import url(\\"external-13.css\\") supports(not (display: flex));
+@import url(\\"external-14.css\\") layer(default) supports(display: grid) screen and (max-width: 400px);
 p {
 	color: steelblue;
 }
@@ -1244,115 +1260,115 @@ body {
 	background: red;
 }
 
-head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,\\\\.\\\\/extensions-imported\\\\.mycss,\\\\.\\\\/file\\\\.less,\\\\.\\\\/with-less-import\\\\.css,\\\\.\\\\/prefer-relative\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,\\\\.\\\\/style-import\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?1832,\\\\.\\\\/imported\\\\.css\\\\?e0bb,\\\\.\\\\/imported\\\\.css\\\\?769a,\\\\.\\\\/imported\\\\.css\\\\?d4d6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?cf0d,\\\\.\\\\/style2\\\\.css\\\\?dfe6,\\\\.\\\\/style2\\\\.css\\\\?7d49,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?b84b,\\\\.\\\\/style8\\\\.css\\\\?5dc5,\\\\.\\\\/style8\\\\.css\\\\?71be,\\\\.\\\\/style8\\\\.css\\\\?386a,\\\\.\\\\/style8\\\\.css\\\\?568a,\\\\.\\\\/style8\\\\.css\\\\?b9af,\\\\.\\\\/style8\\\\.css\\\\?7300,\\\\.\\\\/style8\\\\.css\\\\?6efd,\\\\.\\\\/style8\\\\.css\\\\?288c,\\\\.\\\\/style8\\\\.css\\\\?1094,\\\\.\\\\/style8\\\\.css\\\\?38bf,\\\\.\\\\/style8\\\\.css\\\\?d697,\\\\.\\\\/style2\\\\.css\\\\?0aae,\\\\.\\\\/style9\\\\.css\\\\?8e91,\\\\.\\\\/style9\\\\.css\\\\?71b5,\\\\.\\\\/style11\\\\.css,\\\\.\\\\/style12\\\\.css,\\\\.\\\\/style10\\\\.css,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,\\\\.\\\\/media-deep-nested\\\\.css,\\\\.\\\\/media-nested\\\\.css,\\\\.\\\\/supports-deep-deep-nested\\\\.css,\\\\.\\\\/supports-deep-nested\\\\.css,\\\\.\\\\/supports-nested\\\\.css,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,\\\\.\\\\/layer-nested\\\\.css,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,\\\\.\\\\/mixed-deep-deep-nested\\\\.css,\\\\.\\\\/mixed-deep-nested\\\\.css,\\\\.\\\\/mixed-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,\\\\.\\\\/style8\\\\.css\\\\?8af1,\\\\.\\\\/duplicate-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,\\\\.\\\\/style2\\\\.css\\\\?unknown3,\\\\.\\\\/style2\\\\.css\\\\?after-namespace,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,\\\\.\\\\/extensions-imported\\\\.mycss,\\\\.\\\\/file\\\\.less,\\\\.\\\\/with-less-import\\\\.css,\\\\.\\\\/prefer-relative\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,\\\\.\\\\/style-import\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?1832,\\\\.\\\\/imported\\\\.css\\\\?e0bb,\\\\.\\\\/imported\\\\.css\\\\?769a,\\\\.\\\\/imported\\\\.css\\\\?d4d6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?cf0d,\\\\.\\\\/style2\\\\.css\\\\?dfe6,\\\\.\\\\/style2\\\\.css\\\\?7d49,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?b84b,\\\\.\\\\/style8\\\\.css\\\\?5dc5,\\\\.\\\\/style8\\\\.css\\\\?71be,\\\\.\\\\/style8\\\\.css\\\\?386a,\\\\.\\\\/style8\\\\.css\\\\?568a,\\\\.\\\\/style8\\\\.css\\\\?b9af,\\\\.\\\\/style8\\\\.css\\\\?7300,\\\\.\\\\/style8\\\\.css\\\\?6efd,\\\\.\\\\/style8\\\\.css\\\\?288c,\\\\.\\\\/style8\\\\.css\\\\?1094,\\\\.\\\\/style8\\\\.css\\\\?38bf,\\\\.\\\\/style8\\\\.css\\\\?d697,\\\\.\\\\/style2\\\\.css\\\\?0aae,\\\\.\\\\/style9\\\\.css\\\\?8e91,\\\\.\\\\/style9\\\\.css\\\\?71b5,\\\\.\\\\/style11\\\\.css,\\\\.\\\\/style12\\\\.css,\\\\.\\\\/style10\\\\.css,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,\\\\.\\\\/media-deep-nested\\\\.css,\\\\.\\\\/media-nested\\\\.css,\\\\.\\\\/supports-deep-deep-nested\\\\.css,\\\\.\\\\/supports-deep-nested\\\\.css,\\\\.\\\\/supports-nested\\\\.css,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,\\\\.\\\\/layer-nested\\\\.css,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,\\\\.\\\\/mixed-deep-deep-nested\\\\.css,\\\\.\\\\/mixed-deep-nested\\\\.css,\\\\.\\\\/mixed-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,\\\\.\\\\/style8\\\\.css\\\\?8af1,\\\\.\\\\/duplicate-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,\\\\.\\\\/style2\\\\.css\\\\?unknown3,\\\\.\\\\/style2\\\\.css\\\\?after-namespace,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 1`] = `
-".\\\\.\\\\/style\\\\.module\\\\.css-class {
+"._-_style_module_css-class {
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local1,
-.\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
-.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+._-_style_module_css-local1,
+._-_style_module_css-local2 .global,
+._-_style_module_css-local3 {
 	color: green;
 }
 
-.global .\\\\.\\\\/style\\\\.module\\\\.css-local4 {
+.global ._-_style_module_css-local4 {
 	color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local5.global.\\\\.\\\\/style\\\\.module\\\\.css-local6 {
+._-_style_module_css-local5.global._-_style_module_css-local6 {
 	color: blue;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local7 div:not(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+._-_style_module_css-local7 div:not(._-_style_module_css-disabled, ._-_style_module_css-mButtonDisabled, ._-_style_module_css-tipOnly) {
     pointer-events: initial !important;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local8 :is(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local8 :is(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local9 :matches(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local10 :where(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local10 :where(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local11 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+._-_style_module_css-local11 div:has(._-_style_module_css-disabled, ._-_style_module_css-mButtonDisabled, ._-_style_module_css-tipOnly) {
     pointer-events: initial !important;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local12 div:current(p, span) {
+._-_style_module_css-local12 div:current(p, span) {
 	background-color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local13 div:past(p, span) {
+._-_style_module_css-local13 div:past(p, span) {
 	display: none;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local14 div:future(p, span) {
+._-_style_module_css-local14 div:future(p, span) {
 	background-color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local15 div:-moz-any(ol, ul, menu, dir) {
+._-_style_module_css-local15 div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local16 li:-webkit-any(:first-child, :last-child) {
+._-_style_module_css-local16 li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local9 :matches(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
 	max-height: 0;
 	margin: 0;
 	overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
+._-_style_module_css-nested1.nested2._-_style_module_css-nested3 {
 	color: pink;
 }
 
-#\\\\.\\\\/style\\\\.module\\\\.css-ident {
+#_-_style_module_css-ident {
 	color: purple;
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes{
+@keyframes _-_style_module_css-localkeyframes{
 	0% {
-		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
-		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		left: var(---_style_module_css-pos1x);
+		top: var(---_style_module_css-pos1y);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
-		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		left: var(---_style_module_css-pos2x);
+		top: var(---_style_module_css-pos2y);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2{
+@keyframes _-_style_module_css-localkeyframes2{
 	0% {
 		left: 0;
 	}
@@ -1361,13 +1377,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-animation {
-	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes;
-	animation: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+._-_style_module_css-animation {
+	animation-name: _-_style_module_css-localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused _-_style_module_css-localkeyframes, _-_style_module_css-localkeyframes2;
+	---_style_module_css-pos1x: 0px;
+	---_style_module_css-pos1y: 0px;
+	---_style_module_css-pos2x: 10px;
+	---_style_module_css-pos2y: 20px;
 }
 
 /* .composed {
@@ -1375,45 +1391,45 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	composes: local2;
 } */
 
-.\\\\.\\\\/style\\\\.module\\\\.css-vars {
-	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-	--\\\\.\\\\/style\\\\.module\\\\.css-local-color: red;
+._-_style_module_css-vars {
+	color: var(---_style_module_css-local-color);
+	---_style_module_css-local-color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-globalVars {
+._-_style_module_css-globalVars {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-wideScreenClass {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: green;
+	._-_style_module_css-wideScreenClass {
+		color: var(---_style_module_css-local-color);
+		---_style_module_css-local-color: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-narrowScreenClass {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: purple;
+	._-_style_module_css-narrowScreenClass {
+		color: var(---_style_module_css-local-color);
+		---_style_module_css-local-color: purple;
 	}
 }
 
 @supports (display: grid) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-displayGridInSupports {
+	._-_style_module_css-displayGridInSupports {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .\\\\.\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports {
+  ._-_style_module_css-floatRightInNegativeSupports {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports {
+    ._-_style_module_css-displayFlexInMediaInSupports {
       display: flex;
     }
   }
@@ -1421,7 +1437,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia {
+    ._-_style_module_css-displayFlexInSupportsInMedia {
       display: flex;
     }
   }
@@ -1429,35 +1445,35 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase {
+		._-_style_module_css-displayFlexInSupportsInMediaUpperCase {
 			display: flex;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-animationUpperCase {
-	ANIMATION-NAME: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+._-_style_module_css-animationUpperCase {
+	ANIMATION-NAME: _-_style_module_css-localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused _-_style_module_css-localkeyframesUPPERCASE, _-_style_module_css-localkeyframes2UPPPERCASE;
+	---_style_module_css-pos1x: 0px;
+	---_style_module_css-pos1y: 0px;
+	---_style_module_css-pos2x: 10px;
+	---_style_module_css-pos2y: 20px;
 }
 
-@KEYFRAMES \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE{
+@KEYFRAMES _-_style_module_css-localkeyframesUPPERCASE{
 	0% {
-		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
-		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		left: VAR(---_style_module_css-pos1x);
+		top: VAR(---_style_module_css-pos1y);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
-		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		left: VAR(---_style_module_css-pos2x);
+		top: VAR(---_style_module_css-pos2y);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE{
+@KEYframes _-_style_module_css-localkeyframes2UPPPERCASE{
 	0% {
 		left: 0;
 	}
@@ -1466,46 +1482,46 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.globalUpperCase .\\\\.\\\\/style\\\\.module\\\\.css-localUpperCase {
+.globalUpperCase ._-_style_module_css-localUpperCase {
 	color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-VARS {
-	color: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR);
-	--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR: red;
+._-_style_module_css-VARS {
+	color: VAR(---_style_module_css-LOCAL-COLOR);
+	---_style_module_css-LOCAL-COLOR: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-globalVarsUpperCase {
+._-_style_module_css-globalVarsUpperCase {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-inSupportScope {
+	._-_style_module_css-inSupportScope {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-a {
-	animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
-	-webkit-animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+._-_style_module_css-a {
+	animation: 3s _-_style_module_css-animationName;
+	-webkit-animation: 3s _-_style_module_css-animationName;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-b {
-	animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
-	-webkit-animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
+._-_style_module_css-b {
+	animation: _-_style_module_css-animationName 3s;
+	-webkit-animation: _-_style_module_css-animationName 3s;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-c {
-	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
-	-webkit-animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+._-_style_module_css-c {
+	animation-name: _-_style_module_css-animationName;
+	-webkit-animation-name: _-_style_module_css-animationName;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-d {
-	--\\\\.\\\\/style\\\\.module\\\\.css-animation-name: animationName;
+._-_style_module_css-d {
+	---_style_module_css-animation-name: animationName;
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+@keyframes _-_style_module_css-animationName{
 	0% {
 		background: white;
 	}
@@ -1514,7 +1530,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-webkit-keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+@-webkit-keyframes _-_style_module_css-animationName{
 	0% {
 		background: white;
 	}
@@ -1523,7 +1539,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-moz-keyframes \\\\.\\\\/style\\\\.module\\\\.css-mozAnimationName{
+@-moz-keyframes _-_style_module_css-mozAnimationName{
 	0% {
 		background: white;
 	}
@@ -1551,37 +1567,37 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@property --\\\\.\\\\/style\\\\.module\\\\.css-my-color{
+@property ---_style_module_css-my-color{
 	syntax: \\"<color>\\";
 	inherits: false;
-	initial-value: #\\\\.\\\\/style\\\\.module\\\\.css-c0ffee;
+	initial-value: #_-_style_module_css-c0ffee;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-my-color);
+._-_style_module_css-class {
+	color: var(---_style_module_css-my-color);
 }
 
 @layer utilities {
-	.\\\\.\\\\/style\\\\.module\\\\.css-padding-sm {
+	._-_style_module_css-padding-sm {
 		padding: 0.5rem;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-padding-lg {
+	._-_style_module_css-padding-lg {
 		padding: 0.8rem;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
+._-_style_module_css-class {
 	color: red;
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-nested-pure {
+	._-_style_module_css-nested-pure {
 		color: red;
 	}
 
 	@media screen and (min-width: 200px) {
 		color: blue;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-media {
+		._-_style_module_css-nested-media {
 			color: blue;
 		}
 	}
@@ -1589,7 +1605,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@supports (display: flex) {
 		display: flex;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-supports {
+		._-_style_module_css-nested-supports {
 			display: flex;
 		}
 	}
@@ -1597,7 +1613,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@layer foo {
 		background: red;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+		._-_style_module_css-nested-layer {
 			background: red;
 		}
 	}
@@ -1605,13 +1621,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@container foo {
 		background: red;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+		._-_style_module_css-nested-layer {
 			background: red;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-not-selector-inside {
+._-_style_module_css-not-selector-inside {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
@@ -1630,16 +1646,16 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-var {
-	.\\\\.\\\\/style\\\\.module\\\\.css-again {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+._-_style_module_css-nested-var {
+	._-_style_module_css-again {
+		color: var(---_style_module_css-local-color);
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo {
+._-_style_module_css-nested-with-local-pseudo {
 	color: red;
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+	._-_style_module_css-local-nested {
 		color: red;
 	}
 
@@ -1647,7 +1663,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+	._-_style_module_css-local-nested {
 		color: red;
 	}
 
@@ -1655,29 +1671,29 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+	._-_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+	._-_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
+	.foo, ._-_style_module_css-bar {
 		color: red;
 	}
 }
 
-#\\\\.\\\\/style\\\\.module\\\\.css-id-foo {
+#_-_style_module_css-id-foo {
 	color: red;
 
-	#\\\\.\\\\/style\\\\.module\\\\.css-id-bar {
+	#_-_style_module_css-id-bar {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-parens {
-	.\\\\.\\\\/style\\\\.module\\\\.css-local9 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny, .\\\\.\\\\/style\\\\.module\\\\.css-vertical-small) {
+._-_style_module_css-nested-parens {
+	._-_style_module_css-local9 div:has(._-_style_module_css-vertical-tiny, ._-_style_module_css-vertical-small) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -1689,7 +1705,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global {
+	._-_style_module_css-local-in-global {
 		color: blue;
 	}
 }
@@ -1702,21 +1718,21 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
-.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
-.\\\\.\\\\/style\\\\.module\\\\.css-class-local-scope .in-local-global-scope {
+.class ._-_style_module_css-in-local-global-scope,
+.class ._-_style_module_css-in-local-global-scope,
+._-_style_module_css-class-local-scope .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class-in-container {
+	._-_style_module_css-class-in-container {
 		font-size: 1.5em;
 	}
 }
 
 @container summary (min-width: 400px) {
 	@container (width > 400px) {
-		.\\\\.\\\\/style\\\\.module\\\\.css-deep-class-in-container {
+		._-_style_module_css-deep-class-in-container {
 			font-size: 1.5em;
 		}
 	}
@@ -1726,33 +1742,33 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700:-ms-input-placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700:-ms-input-placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::-ms-input-placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700::-ms-input-placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700::placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-test: dark;
+	---_style_module_css-test: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--\\\\.\\\\/style\\\\.module\\\\.css-test)) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-baz {
+@media screen and (prefers-color-scheme: var(---_style_module_css-test)) {
+	._-_style_module_css-baz {
 		color: white;
 	}
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-slidein{
+@keyframes _-_style_module_css-slidein{
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -1764,44 +1780,44 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
+._-_style_module_css-class {
 	animation:
-		foo var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
-		var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
-		3s linear 1s infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein,
-		3s linear env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz)) infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein;
+		foo var(---_style_module_css-animation-name) 3s,
+		var(---_style_module_css-animation-name) 3s,
+		3s linear 1s infinite running _-_style_module_css-slidein,
+		3s linear env(foo, var(---_style_module_css-baz)) infinite running _-_style_module_css-slidein;
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-baz: 10px;
+	---_style_module_css-baz: 10px;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	bar: env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz));
+._-_style_module_css-class {
+	bar: env(foo, var(---_style_module_css-baz));
 }
 
-.global-foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global       {
+.global-foo, ._-_style_module_css-bar {
+	._-_style_module_css-local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
 		.my-global-class-again,
-		.\\\\.\\\\/style\\\\.module\\\\.css-my-global-class-again {
+		._-_style_module_css-my-global-class-again {
 			color: red;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-first-nested {
-	.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested {
+._-_style_module_css-first-nested {
+	._-_style_module_css-first-nested-nested {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-at-rule {
+._-_style_module_css-first-nested-at-rule {
 	@media screen {
-		.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep {
+		._-_style_module_css-first-nested-nested-at-rule-deep {
 			color: red;
 		}
 	}
@@ -1818,7 +1834,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-foo: red;
+	---_style_module_css-foo: red;
 }
 
 .again-again-global {
@@ -1832,12 +1848,12 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .\\\\.\\\\/style\\\\.module\\\\.css-class, .\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
-		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+	.again-again-global, ._-_style_module_css-class, ._-_style_module_css-nested1.nested2._-_style_module_css-nested3 {
+		animation: _-_style_module_css-slidein 3s;
 	}
 
-  .\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
-	.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+  ._-_style_module_css-local2 .global,
+	._-_style_module_css-local3 {
 		color: red;
 	}
 }
@@ -1846,38 +1862,38 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {}
+._-_style_module_css-class {
+	._-_style_module_css-class {
+		._-_style_module_css-class {
+			._-_style_module_css-class {}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {
-				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+._-_style_module_css-class {
+	._-_style_module_css-class {
+		._-_style_module_css-class {
+			._-_style_module_css-class {
+				animation: _-_style_module_css-slidein 3s;
 			}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {
-				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+._-_style_module_css-class {
+	animation: _-_style_module_css-slidein 3s;
+	._-_style_module_css-class {
+		animation: _-_style_module_css-slidein 3s;
+		._-_style_module_css-class {
+			animation: _-_style_module_css-slidein 3s;
+			._-_style_module_css-class {
+				animation: _-_style_module_css-slidein 3s;
 			}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.my-css-myCssClass {
+._-_style_module_my-css-myCssClass {
     color: red;
 }
 
@@ -1885,45 +1901,45 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     color: teal;
 }
 
-.\\\\.\\\\/identifiers\\\\.module\\\\.css-UnusedClassName{
+._-_identifiers_module_css-UnusedClassName{
     color: red;
-    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class);
-    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class: 10px;
+    padding: var(---_identifiers_module_css-variable-unused-class);
+    ---_identifiers_module_css-variable-unused-class: 10px;
 }
 
-.\\\\.\\\\/identifiers\\\\.module\\\\.css-UsedClassName {
+._-_identifiers_module_css-UsedClassName {
     color: green;
-    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class);
-    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class: 10px;
+    padding: var(---_identifiers_module_css-variable-used-class);
+    ---_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class/local1/local2/local3/local4/local5/local6/local7/disabled/mButtonDisabled/tipOnly/local8/parent1/child1/vertical-tiny/vertical-small/otherDiv/horizontal-tiny/horizontal-small/description/local9/local10/local11/local12/local13/local14/local15/local16/nested1/nested3/ident/localkeyframes/pos1x%pos1y%pos2x%pos2y%localkeyframes2/animation/vars/local-color%globalVars/wideScreenClass/narrowScreenClass/displayGridInSupports/floatRightInNegativeSupports/displayFlexInMediaInSupports/displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase/animationUpperCase/localkeyframesUPPERCASE/localkeyframes2UPPPERCASE/localUpperCase/VARS/LOCAL-COLOR%globalVarsUpperCase/inSupportScope/a/animationName/b/c/d/animation-name%mozAnimationName/my-color%c0ffee/padding-sm/padding-lg/nested-pure/nested-media/nested-supports/nested-layer/not-selector-inside/nested-var/again/nested-with-local-pseudo/local-nested/bar/id-foo/id-bar/nested-parens/local-in-global/in-local-global-scope/class-local-scope/class-in-container/deep-class-in-container/placeholder-gray-700/placeholder-opacity%test%baz%slidein/my-global-class-again/first-nested/first-nested-nested/first-nested-at-rule/first-nested-nested-at-rule-deep/foo%\\\\.\\\\/style\\\\.module\\\\.css,myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName/variable-unused-class%UsedClassName/variable-used-class%\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/c0ffee:_-_style_module_css-c0ffee/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:---_style_module_css-test/baz:---_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:---_style_module_css-foo/\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
-".my-app-274-S {
+".my-app-235-zg {
 	color: red;
 }
 
-.my-app-274-Zw,
-.my-app-274-yl .global,
-.my-app-274-J_ {
+.my-app-235-Hi,
+.my-app-235-OB .global,
+.my-app-235-VE {
 	color: green;
 }
 
-.global .my-app-274-gc {
+.global .my-app-235-O2 {
 	color: yellow;
 }
 
-.my-app-274-Xg.global.my-app-274-AY {
+.my-app-235-Vj.global.my-app-235-OH {
 	color: blue;
 }
 
-.my-app-274-Kw div:not(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-H5 div:not(.disabled, .mButtonDisabled, .tipOnly) {
     pointer-events: initial !important;
 }
 
-.my-app-274-rw :is(div.parent1.child1.vertical-tiny,
+.my-app-235-aq :is(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1932,7 +1948,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-274-\\\\$Y :matches(div.parent1.child1.vertical-tiny,
+.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1941,7 +1957,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-274-ie :where(div.parent1.child1.vertical-tiny,
+.my-app-235-VM :where(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1950,31 +1966,31 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-274-PK div:has(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-AO div:has(.disabled, .mButtonDisabled, .tipOnly) {
     pointer-events: initial !important;
 }
 
-.my-app-274-yK div:current(p, span) {
+.my-app-235-Hq div:current(p, span) {
 	background-color: yellow;
 }
 
-.my-app-274-P_ div:past(p, span) {
+.my-app-235-O4 div:past(p, span) {
 	display: none;
 }
 
-.my-app-274-Y4 div:future(p, span) {
+.my-app-235-Hb div:future(p, span) {
 	background-color: yellow;
 }
 
-.my-app-274-TT div:-moz-any(ol, ul, menu, dir) {
+.my-app-235-OP div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.my-app-274-rT li:-webkit-any(:first-child, :last-child) {
+.my-app-235-Hw li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.my-app-274-\\\\$Y :matches(div.parent1.child1.vertical-tiny,
+.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1983,28 +1999,28 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	overflow: hidden;
 }
 
-.my-app-274-RX.nested2.my-app-274-X2 {
+.my-app-235-nb.nested2.my-app-235-\\\\$Q {
 	color: pink;
 }
 
-#my-app-274-yR {
+#my-app-235-bD {
 	color: purple;
 }
 
-@keyframes my-app-274-y3{
+@keyframes my-app-235-\\\\$t{
 	0% {
-		left: var(--my-app-274-Gx);
-		top: var(--my-app-274-\\\\$s);
+		left: var(--my-app-235-qi);
+		top: var(--my-app-235-xB);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--my-app-274-MX);
-		top: var(--my-app-274-nj);
+		left: var(--my-app-235-\\\\$6);
+		top: var(--my-app-235-gJ);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes my-app-274-JJ{
+@keyframes my-app-235-x{
 	0% {
 		left: 0;
 	}
@@ -2013,13 +2029,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.my-app-274-oQ {
-	animation-name: my-app-274-y3;
-	animation: 3s ease-in 1s 2 reverse both paused my-app-274-y3, my-app-274-JJ;
-	--my-app-274-Gx: 0px;
-	--my-app-274-\\\\$s: 0px;
-	--my-app-274-MX: 10px;
-	--my-app-274-nj: 20px;
+.my-app-235-lY {
+	animation-name: my-app-235-\\\\$t;
+	animation: 3s ease-in 1s 2 reverse both paused my-app-235-\\\\$t, my-app-235-x;
+	--my-app-235-qi: 0px;
+	--my-app-235-xB: 0px;
+	--my-app-235-\\\\$6: 10px;
+	--my-app-235-gJ: 20px;
 }
 
 /* .composed {
@@ -2027,45 +2043,45 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	composes: local2;
 } */
 
-.my-app-274-gR {
-	color: var(--my-app-274-y4);
-	--my-app-274-y4: red;
+.my-app-235-f {
+	color: var(--my-app-235-uz);
+	--my-app-235-uz: red;
 }
 
-.my-app-274-xk {
+.my-app-235-aK {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.my-app-274-w7 {
-		color: var(--my-app-274-y4);
-		--my-app-274-y4: green;
+	.my-app-235-a7 {
+		color: var(--my-app-235-uz);
+		--my-app-235-uz: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.my-app-274-J {
-		color: var(--my-app-274-y4);
-		--my-app-274-y4: purple;
+	.my-app-235-uf {
+		color: var(--my-app-235-uz);
+		--my-app-235-uz: purple;
 	}
 }
 
 @supports (display: grid) {
-	.my-app-274-T\\\\$ {
+	.my-app-235-sW {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .my-app-274-zz {
+  .my-app-235-TZ {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .my-app-274-Kr {
+    .my-app-235-aY {
       display: flex;
     }
   }
@@ -2073,7 +2089,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .my-app-274-SQ {
+    .my-app-235-II {
       display: flex;
     }
   }
@@ -2081,35 +2097,35 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.my-app-274-XM {
+		.my-app-235-ij {
 			display: flex;
 		}
 	}
 }
 
 .animationUpperCase {
-	ANIMATION-NAME: my-app-274-T4;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-274-T4, my-app-274-Xi;
-	--my-app-274-Gx: 0px;
-	--my-app-274-\\\\$s: 0px;
-	--my-app-274-MX: 10px;
-	--my-app-274-nj: 20px;
+	ANIMATION-NAME: my-app-235-zG;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-235-zG, my-app-235-Dk;
+	--my-app-235-qi: 0px;
+	--my-app-235-xB: 0px;
+	--my-app-235-\\\\$6: 10px;
+	--my-app-235-gJ: 20px;
 }
 
-@KEYFRAMES my-app-274-T4{
+@KEYFRAMES my-app-235-zG{
 	0% {
-		left: VAR(--my-app-274-Gx);
-		top: VAR(--my-app-274-\\\\$s);
+		left: VAR(--my-app-235-qi);
+		top: VAR(--my-app-235-xB);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--my-app-274-MX);
-		top: VAR(--my-app-274-nj);
+		left: VAR(--my-app-235-\\\\$6);
+		top: VAR(--my-app-235-gJ);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes my-app-274-Xi{
+@KEYframes my-app-235-Dk{
 	0% {
 		left: 0;
 	}
@@ -2122,42 +2138,42 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: yellow;
 }
 
-.my-app-274-ms {
-	color: VAR(--my-app-274-DJ);
-	--my-app-274-DJ: red;
+.my-app-235-XE {
+	color: VAR(--my-app-235-I0);
+	--my-app-235-I0: red;
 }
 
-.my-app-274-cU {
+.my-app-235-wt {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.my-app-274-FO {
+	.my-app-235-nc {
 		color: red;
 	}
 }
 
 .a {
-	animation: 3s my-app-274-w3;
-	-webkit-animation: 3s my-app-274-w3;
+	animation: 3s my-app-235-iZ;
+	-webkit-animation: 3s my-app-235-iZ;
 }
 
 .b {
-	animation: my-app-274-w3 3s;
-	-webkit-animation: my-app-274-w3 3s;
+	animation: my-app-235-iZ 3s;
+	-webkit-animation: my-app-235-iZ 3s;
 }
 
 .c {
-	animation-name: my-app-274-w3;
-	-webkit-animation-name: my-app-274-w3;
+	animation-name: my-app-235-iZ;
+	-webkit-animation-name: my-app-235-iZ;
 }
 
 .d {
-	--my-app-274-VQ: animationName;
+	--my-app-235-ZP: animationName;
 }
 
-@keyframes my-app-274-w3{
+@keyframes my-app-235-iZ{
 	0% {
 		background: white;
 	}
@@ -2166,7 +2182,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-webkit-keyframes my-app-274-w3{
+@-webkit-keyframes my-app-235-iZ{
 	0% {
 		background: white;
 	}
@@ -2175,7 +2191,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-moz-keyframes my-app-274-t6{
+@-moz-keyframes my-app-235-M6{
 	0% {
 		background: white;
 	}
@@ -2203,27 +2219,27 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@property --my-app-274-lC{
+@property --my-app-235-rX{
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-.my-app-274-S {
-	color: var(--my-app-274-lC);
+.my-app-235-zg {
+	color: var(--my-app-235-rX);
 }
 
 @layer utilities {
-	.my-app-274-zE {
+	.my-app-235-dW {
 		padding: 0.5rem;
 	}
 
-	.my-app-274-FP {
+	.my-app-235-cD {
 		padding: 0.8rem;
 	}
 }
 
-.my-app-274-S {
+.my-app-235-zg {
 	color: red;
 
 	.nested-pure {
@@ -2284,7 +2300,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 .nested-var {
 	.again {
-		color: var(--my-app-274-y4);
+		color: var(--my-app-235-uz);
 	}
 }
 
@@ -2329,7 +2345,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 .nested-parens {
-	.my-app-274-\\\\$Y div:has(.vertical-tiny, .vertical-small) {
+	.my-app-235-VN div:has(.vertical-tiny, .vertical-small) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -2354,21 +2370,21 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.class .my-app-274-Zv,
-.class .my-app-274-Zv,
-.my-app-274-gz .in-local-global-scope {
+.class .my-app-235-V0,
+.class .my-app-235-V0,
+.my-app-235-Ci .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.my-app-274-Gp {
+	.my-app-235-bK {
 		font-size: 1.5em;
 	}
 }
 
 @container summary (min-width: 400px) {
 	@container (width > 400px) {
-		.my-app-274-rn {
+		.my-app-235-Y1 {
 			font-size: 1.5em;
 		}
 	}
@@ -2379,32 +2395,32 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 .placeholder-gray-700:-ms-input-placeholder {
-	--my-app-274-xs: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 .placeholder-gray-700::-ms-input-placeholder {
-	--my-app-274-xs: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 .placeholder-gray-700::placeholder {
-	--my-app-274-xs: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 
 :root {
-	--my-app-274-Bu: dark;
+	--my-app-235-t6: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--my-app-274-Bu)) {
-	.my-app-274-Wx {
+@media screen and (prefers-color-scheme: var(--my-app-235-t6)) {
+	.my-app-235-KR {
 		color: white;
 	}
 }
 
-@keyframes my-app-274-Y8{
+@keyframes my-app-235-Fk{
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -2416,20 +2432,20 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.my-app-274-S {
+.my-app-235-zg {
 	animation:
-		foo var(--my-app-274-VQ) 3s,
-		var(--my-app-274-VQ) 3s,
-		3s linear 1s infinite running my-app-274-Y8,
-		3s linear env(foo, var(--my-app-274-Wx)) infinite running my-app-274-Y8;
+		foo var(--my-app-235-ZP) 3s,
+		var(--my-app-235-ZP) 3s,
+		3s linear 1s infinite running my-app-235-Fk,
+		3s linear env(foo, var(--my-app-235-KR)) infinite running my-app-235-Fk;
 }
 
 :root {
-	--my-app-274-Wx: 10px;
+	--my-app-235-KR: 10px;
 }
 
-.my-app-274-S {
-	bar: env(foo, var(--my-app-274-Wx));
+.my-app-235-zg {
+	bar: env(foo, var(--my-app-235-KR));
 }
 
 .global-foo, .bar {
@@ -2484,12 +2500,12 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .my-app-274-S, .my-app-274-RX.nested2.my-app-274-X2 {
-		animation: my-app-274-Y8 3s;
+	.again-again-global, .my-app-235-zg, .my-app-235-nb.nested2.my-app-235-\\\\$Q {
+		animation: my-app-235-Fk 3s;
 	}
 
-  .my-app-274-yl .global,
-	.my-app-274-J_ {
+  .my-app-235-OB .global,
+	.my-app-235-VE {
 		color: red;
 	}
 }
@@ -2498,38 +2514,38 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.my-app-274-S {
-	.my-app-274-S {
-		.my-app-274-S {
-			.my-app-274-S {}
+.my-app-235-zg {
+	.my-app-235-zg {
+		.my-app-235-zg {
+			.my-app-235-zg {}
 		}
 	}
 }
 
-.my-app-274-S {
-	.my-app-274-S {
-		.my-app-274-S {
-			.my-app-274-S {
-				animation: my-app-274-Y8 3s;
+.my-app-235-zg {
+	.my-app-235-zg {
+		.my-app-235-zg {
+			.my-app-235-zg {
+				animation: my-app-235-Fk 3s;
 			}
 		}
 	}
 }
 
-.my-app-274-S {
-	animation: my-app-274-Y8 3s;
-	.my-app-274-S {
-		animation: my-app-274-Y8 3s;
-		.my-app-274-S {
-			animation: my-app-274-Y8 3s;
-			.my-app-274-S {
-				animation: my-app-274-Y8 3s;
+.my-app-235-zg {
+	animation: my-app-235-Fk 3s;
+	.my-app-235-zg {
+		animation: my-app-235-Fk 3s;
+		.my-app-235-zg {
+			animation: my-app-235-Fk 3s;
+			.my-app-235-zg {
+				animation: my-app-235-Fk 3s;
 			}
 		}
 	}
 }
 
-.my-app-444-s {
+.my-app-666-k {
     color: red;
 }
 
@@ -2539,17 +2555,655 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 .UnusedClassName{
     color: red;
-    padding: var(--my-app-627-Wc);
-    --my-app-627-Wc: 10px;
+    padding: var(--my-app-194-RJ);
+    --my-app-194-RJ: 10px;
 }
 
-.my-app-627-Q3 {
+.my-app-194-ZL {
     color: green;
-    padding: var(--my-app-627-PB);
-    --my-app-627-PB: 10px;
+    padding: var(--my-app-194-c5);
+    --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-249:S/Zw/yl/J_/gc/Xg/AY/Kw/rw/\\\\$Y/ie/PK/yK/P_/Y4/TT/rT/RX/X2/yR/y3/Gx%\\\\$s%MX%nj%JJ/oQ/gR/y4%xk/w7/J/T\\\\$/zz/Kr/SQ/XM/T4/Xi/ms/DJ%cU/FO/w3/VQ%t6/lC%zE/FP/Zv/gz/Gp/rn/xs%Bu%Wx%Y8/_274,s/_444,_438,Wc%Q3/PB%_627;}"
+head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtƞɀƢ-Ʉ/KRȞɁČɋ/FǰǶɒ/_Ė,ɓǼ6ɜ-kɖɜ6,_81ɢRƨɆĈ194-ɨȏLĻɬɮZLȧŀɪ-ɴ-cń_ɴ;}"
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "UsedClassName": "-_identifiers_module_css-UsedClassName",
+  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
+  "animation": "-_style_module_css-animation",
+  "animationName": "-_style_module_css-animationName",
+  "class": "-_style_module_css-class",
+  "classInContainer": "-_style_module_css-class-in-container",
+  "classLocalScope": "-_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
+  "currentWmultiParams": "-_style_module_css-local12",
+  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "-_style_module_css-local14",
+  "global": undefined,
+  "hasWmultiParams": "-_style_module_css-local11",
+  "ident": "-_style_module_css-ident",
+  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
+  "inSupportScope": "-_style_module_css-inSupportScope",
+  "isWmultiParams": "-_style_module_css-local8",
+  "keyframes": "-_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
+  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
+  "local2": "-_style_module_css-local5 -_style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "-_style_module_css-local9",
+  "media": "-_style_module_css-wideScreenClass",
+  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
+  "mozAnimationName": "-_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "-_style_module_css-local15",
+  "myColor": "---_style_module_css-my-color",
+  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "-_style_module_css-local7",
+  "paddingLg": "-_style_module_css-padding-lg",
+  "paddingSm": "-_style_module_css-padding-sm",
+  "pastWmultiParams": "-_style_module_css-local13",
+  "supports": "-_style_module_css-displayGridInSupports",
+  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
+  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
+  "webkitAnyWmultiParams": "-_style_module_css-local16",
+  "whereWmultiParams": "-_style_module_css-local10",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "class": "my-app-235-z",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "UsedClassName": "-_identifiers_module_css-UsedClassName",
+  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
+  "animation": "-_style_module_css-animation",
+  "animationName": "-_style_module_css-animationName",
+  "class": "-_style_module_css-class",
+  "classInContainer": "-_style_module_css-class-in-container",
+  "classLocalScope": "-_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
+  "currentWmultiParams": "-_style_module_css-local12",
+  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "-_style_module_css-local14",
+  "global": undefined,
+  "hasWmultiParams": "-_style_module_css-local11",
+  "ident": "-_style_module_css-ident",
+  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
+  "inSupportScope": "-_style_module_css-inSupportScope",
+  "isWmultiParams": "-_style_module_css-local8",
+  "keyframes": "-_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
+  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
+  "local2": "-_style_module_css-local5 -_style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "-_style_module_css-local9",
+  "media": "-_style_module_css-wideScreenClass",
+  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
+  "mozAnimationName": "-_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "-_style_module_css-local15",
+  "myColor": "---_style_module_css-my-color",
+  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "-_style_module_css-local7",
+  "paddingLg": "-_style_module_css-padding-lg",
+  "paddingSm": "-_style_module_css-padding-sm",
+  "pastWmultiParams": "-_style_module_css-local13",
+  "supports": "-_style_module_css-displayGridInSupports",
+  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
+  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
+  "webkitAnyWmultiParams": "-_style_module_css-local16",
+  "whereWmultiParams": "-_style_module_css-local10",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 2`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"-_style_module_css-class"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"my-app-235-zg"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"my-app-235-zg"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"-_style_module_css-local1"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"my-app-235-Hi"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"my-app-235-Hi"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"-_style_module_css-local2"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"my-app-235-OB"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"my-app-235-OB"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"-_style_module_css-local3"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"my-app-235-VE"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"my-app-235-VE"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"-_style_module_css-local4"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
+
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_as-is-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "foo_bar": "-_style_module_css_camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
+Object {
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 4`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
+Object {
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
+  "FOO": "bar",
+  "FOO_BAR": "-_style_module_css_upper-foo_bar",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "-_style_module_css_upper-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_as-is-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "foo_bar": "-_style_module_css_camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
+Object {
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 10`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
+Object {
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
+  "FOO": "bar",
+  "FOO_BAR": "-_style_module_css_upper-foo_bar",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "-_style_module_css_upper-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "placeholder": "my-app-_tailwind_module_css-placeholder-gray-700",
+}
+`;
+
+exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "placeholder": "-144-Oh6j",
+}
+`;
+
+exports[`ConfigCacheTestCases css large-css-head-data-compression exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "placeholder": "my-app-_large_tailwind_module_css-placeholder-gray-700",
+}
+`;
+
+exports[`ConfigCacheTestCases css large-css-head-data-compression exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "placeholder": "-658-Oh6j",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 1`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css-btn-info_is-disabled",
+  "color-red": "---_style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
+Object {
+  "btn--info_is-disabled_1": "de84261a9640bc9390f3",
+  "btn-info_is-disabled": "ecdfa12ee9c667c55af7",
+  "color-red": "--b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
+Object {
+  "btn--info_is-disabled_1": "ea850e6088d2566f677d-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "ea850e6088d2566f677d-btn-info_is-disabled",
+  "color-red": "--ea850e6088d2566f677d-color-red",
+  "foo": "bar",
+  "foo_bar": "ea850e6088d2566f677d-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "ea850e6088d2566f677d-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 4`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 5`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 9`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css-btn-info_is-disabled",
+  "color-red": "---_style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
+Object {
+  "btn--info_is-disabled_1": "de84261a9640bc9390f3",
+  "btn-info_is-disabled": "ecdfa12ee9c667c55af7",
+  "color-red": "--b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
+Object {
+  "btn--info_is-disabled_1": "ea850e6088d2566f677d-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "ea850e6088d2566f677d-btn-info_is-disabled",
+  "color-red": "--ea850e6088d2566f677d-color-red",
+  "foo": "bar",
+  "foo_bar": "ea850e6088d2566f677d-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "ea850e6088d2566f677d-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
+}
 `;
 
 exports[`ConfigCacheTestCases css pure-css exported tests should compile 1`] = `
@@ -3486,81 +4140,4 @@ Object {
   "m": " green url(img.09a1a1112c577c279435.png) xyz",
   "n": " green url(img.09a1a1112c577c279435.png) xyz",
 }
-`;
-
-exports[`ConfigCacheTestCases custom-modules json-custom exported tests should transform toml to json 1`] = `
-Object {
-  "owner": Object {
-    "bio": "GitHub Cofounder & CEO
-Likes tater tots and beer.",
-    "dob": "1979-05-27T07:32:00.000Z",
-    "name": "Tom Preston-Werner",
-    "organization": "GitHub",
-  },
-  "title": "TOML Example",
-}
-`;
-
-exports[`ConfigCacheTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
-"{
-  \\"chunks\\": {
-    \\"byName\\": {
-      \\"main\\": 179
-    },
-    \\"bySource\\": {
-      \\"0 main\\": 179
-    },
-    \\"usedIds\\": [
-      179
-    ]
-  },
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"./test.js\\": 393,
-      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
-      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17,
-      \\"ignored|./.|pkgs/somepackage/foo\\": 802
-    },
-    \\"usedIds\\": [
-      17,
-      147,
-      393,
-      802
-    ]
-  }
-}"
-`;
-
-exports[`ConfigCacheTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
-"{
-  \\"chunks\\": {
-    \\"byName\\": {
-      \\"main\\": 179
-    },
-    \\"bySource\\": {
-      \\"0 main\\": 179
-    },
-    \\"usedIds\\": [
-      179
-    ]
-  },
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"./dependencies/bar.js\\": 379,
-      \\"./dependencies/foo.js\\": 117,
-      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 412,
-      \\"./test.js\\": 393,
-      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
-      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17
-    },
-    \\"usedIds\\": [
-      17,
-      117,
-      147,
-      379,
-      393,
-      412
-    ]
-  }
-}"
 `;

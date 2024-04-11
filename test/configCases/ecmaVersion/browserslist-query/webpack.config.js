@@ -7,9 +7,11 @@ module.exports = {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": false,
+			  "asyncFunction": false,
 			  "bigIntLiteral": false,
 			  "const": false,
 			  "destructuring": false,
+			  "document": true,
 			  "dynamicImport": false,
 			  "dynamicImportInWorker": false,
 			  "forOf": false,
