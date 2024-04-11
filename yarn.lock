@@ -1604,9 +1604,9 @@ asn1@~0.2.3:
     safer-buffer "~2.1.0"
 
 assemblyscript@^0.27.22:
-  version "0.27.26"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.26.tgz#6ddb28c7a9b58f275157fdf291200fda8414f242"
-  integrity sha512-1Fn3r45s+F0zgOSTp2Hbw8+XTot/aNdzRToY+9peuWHAcQXRzlZZborBXcqkypYYvNvEa1etNxhlkqQ2oWZhNg==
+  version "0.27.27"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.27.tgz#a3ebab9ab1f7e5ed3e88d7e81d04be57874f15bf"
+  integrity sha512-z4ijXsjjk3uespEeCWpO1K2GQySc6bn+LL5dL0tsC2VXNYKFnKDmAh3wefcKazxXHFVhYlxqNfyv96ajaQyINQ==
   dependencies:
     binaryen "116.0.0-nightly.20240114"
     long "^5.2.1"
