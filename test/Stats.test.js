@@ -62,6 +62,22 @@ describe("Stats", () => {
 			})
 		).toEqual({});
 	});
+	it("should the results of hasWarnings() be affected by ignoreWarnings", async () => {
+		const stats = await compile({
+			mode: "development",
+			context: __dirname,
+			entry: "./fixtures/ignoreWarnings/index",
+			module: {
+				rules: [
+					{
+						loader: "./fixtures/ignoreWarnings/loader"
+					}
+				]
+			},
+			ignoreWarnings: [/__mocked__warning__/]
+		});
+		expect(stats.hasWarnings()).toBeFalsy();
+	});
 	describe("chunkGroups", () => {
 		it("should be empty when there is no additional chunks", async () => {
 			const stats = await compile({

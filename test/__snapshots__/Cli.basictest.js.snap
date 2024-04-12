@@ -6361,6 +6361,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-node-prefix-for-core-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`node:\` prefix for Node.js core modules.",
+        "multiple": false,
+        "path": "output.environment.nodePrefixForCoreModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`node:\` prefix for Node.js core modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-optional-chaining": Object {
     "configs": Array [
       Object {

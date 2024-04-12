@@ -3949,6 +3949,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `node:` prefix for Node.js core modules.
+	 */
+	nodePrefixForCoreModules?: boolean;
+
+	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
@@ -12494,6 +12499,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): undefined | boolean;
+	supportNodePrefixForCoreModules(): undefined | boolean;
 	returningFunction(returnValue: string, args?: string): string;
 	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;
