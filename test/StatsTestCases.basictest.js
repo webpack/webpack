@@ -83,7 +83,7 @@ describe("StatsTestCases", () => {
 					options.cache !== true &&
 					options.cache.type === "filesystem"
 				) {
-					options.cache.cacheLocation = path.resolve(
+					options.cache.cacheDirectory = path.resolve(
 						outputBase,
 						".cache",
 						testName

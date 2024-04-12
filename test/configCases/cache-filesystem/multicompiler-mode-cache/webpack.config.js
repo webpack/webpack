@@ -1,15 +1,14 @@
 "use strict";
 
-/** @type {import("../../../").Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = [
 	{
 		mode: "production",
 		entry: "./index",
 		cache: {
 			type: "filesystem",
-			name: "name1"
-		},
-		stats: { preset: "minimal" }
+			name: "name2"
+		}
 	},
 	{
 		mode: "production",
@@ -17,7 +16,6 @@ module.exports = [
 		cache: {
 			type: "filesystem",
 			name: "name1"
-		},
-		stats: { preset: "minimal" }
+		}
 	}
 ];
