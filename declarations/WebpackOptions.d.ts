@@ -2317,6 +2317,10 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
+	 * The environment supports `node:` prefix for Node.js core modules.
+	 */
+	nodePrefixForCoreModules?: boolean;
+	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
