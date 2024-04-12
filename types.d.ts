@@ -3301,6 +3301,18 @@ declare abstract class DependencyTemplates {
 	getHash(): string;
 	clone(): DependencyTemplates;
 }
+
+/**
+ * Helper function for joining two ranges into a single range. This is useful
+ * when working with AST nodes, as it allows you to combine the ranges of child nodes
+ * to create the range of the _parent node_.
+ */
+declare interface DestructuringAssignmentProperty {
+	id: string;
+	range?: [number, number];
+	pattern?: Set<DestructuringAssignmentProperty>;
+	shorthand: string | boolean;
+}
 declare class DeterministicChunkIdsPlugin {
 	constructor(options?: DeterministicChunkIdsPluginOptions);
 	options: DeterministicChunkIdsPluginOptions;
@@ -5946,12 +5958,15 @@ declare class JavascriptParser extends Parser {
 		| ExportNamedDeclaration
 		| ExportDefaultDeclaration
 		| ExportAllDeclaration;
-	destructuringAssignmentProperties?: WeakMap<Expression, Set<string>>;
+	destructuringAssignmentProperties?: WeakMap<
+		Expression,
+		Set<DestructuringAssignmentProperty>
+	>;
 	currentTagData: any;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
-	): undefined | Set<string>;
+	): undefined | Set<DestructuringAssignmentProperty>;
 	getRenameIdentifier(
 		expr: Expression
 	): undefined | string | VariableInfoInterface;

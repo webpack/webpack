@@ -5,7 +5,7 @@ it("should not mangle export when destructuring module", () => {
 	const { obj: { a, b }, objCanMangle } = module
 	expect(a).toBe("a");
 	expect(b).toBe("b");
-	expect(objCanMangle).toBe(false)
+	expect(objCanMangle).toBe(true)
 });
 
 it("should mangle export when destructuring module's property", () => {
@@ -25,7 +25,7 @@ it("should not mangle export when destructuring module's property is a module", 
 	const { aaa, bbb } = obj3;
 	expect(aaa).toBe("a");
 	expect(bbb).toBe("b");
-	expect(obj3CanMangle).toBe(false)
+	expect(obj3CanMangle).toBe(true)
 });
 
 it("should not mangle export when destructuring module's nested property is a module", () => {

@@ -8,7 +8,7 @@ it("__webpack_exports_info__.xxx.canMangle should be correct", () => {
 
 	const { bbb, bbbCanMangle } = b;
 	expect(bbb).toBe("bbb");
-	expect(bbbCanMangle).toBe(false);
+	expect(bbbCanMangle).toBe(true);
 	
 	expect(caCanMangle).toBe(true);
 	expect(cbCanMangle).toBe(true);

@@ -47,9 +47,9 @@ it("expect tree-shake bailout when rest element is used", () => {
 	expect(rest.exportsInfo.counter).toBe(true);
 });
 
-it("expect no support of \"deep\" tree-shaking", () => {
+it("expect support of \"deep\" tree-shaking", () => {
 	const { counter2: { d } } = C;
 	expect(d).toBe(1);
 	expect(exportsInfo2.d).toBe(true);
-	expect(exportsInfo2.counter).toBe(true);
+	expect(exportsInfo2.counter).toBe(false);
 });
