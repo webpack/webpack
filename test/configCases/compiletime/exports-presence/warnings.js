@@ -61,6 +61,10 @@ module.exports = [
 	},
 	{
 		moduleName: /index/,
+		message: /d.+not found/
+	},
+	{
+		moduleName: /index/,
 		message: /c.+not found/
 	},
 	{

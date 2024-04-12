@@ -60,6 +60,15 @@ describe("should not add additional warnings/errors", () => {
 		if (`${a}`) {}
 	});
 
+	it("ternary operator", () => {
+		(c && c.a ? c.a() : 0);
+		const b1 = c ? c() : 0;
+		(c && c.a && d && d.a ? c.a(d.a) : 0);
+		("a" in c ? c.a() : 0);
+		("a" in c && "a" in b ? b.a(c.a) : 0);
+		(c ? d() : (() => {})());
+	});
+
 	it("in operator", () => {
 		if ("a" in m) { justFunction(m.a); }
 		if ("b" in m && "c" in m.b) { justFunction(m.b.c); }
