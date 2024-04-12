@@ -110,12 +110,21 @@ const describeCases = config => {
 										(options.experiments && options.experiments.outputModule
 											? ".mjs"
 											: ".js");
-								if (config.cache) {
+								if (
+									(config.cache && config.cache !== true) ||
+									(options.cache && options.cache !== true)
+								) {
 									options.cache = {
 										cacheDirectory,
-										name: `config-${idx}`,
-										...config.cache
+										name:
+											options.cache && options.cache !== true
+												? options.cache.name
+												: `config-${idx}`,
+										...config.cache,
+										...options.cache
 									};
+								}
+								if (config.cache) {
 									options.infrastructureLogging = {
 										debug: true,
 										console: createLogger(infraStructureLog)

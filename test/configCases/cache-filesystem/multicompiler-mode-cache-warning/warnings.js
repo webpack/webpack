@@ -1,4 +1,4 @@
 module.exports = [
-	/Please set "cache\.name" option/,
-	/Compiler with name "3rd compiler" doesn't use cache name/
+	/Please set unique "cache\.name" option/,
+	/Compiler with name "3rd compiler" doesn't use unique cache name/
 ];
