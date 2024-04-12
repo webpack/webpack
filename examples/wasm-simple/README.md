@@ -134,11 +134,11 @@ module.exports = __webpack_require__.v(exports, module.id, "0eaeab8b9fa3cef100d1
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "add": () => (/* reexport safe */ _add_wasm__WEBPACK_IMPORTED_MODULE_0__.add),
-/* harmony export */   "factorial": () => (/* reexport safe */ _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__.factorial),
-/* harmony export */   "factorialJavascript": () => (/* binding */ factorialJavascript),
-/* harmony export */   "fibonacci": () => (/* reexport safe */ _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__.fibonacci),
-/* harmony export */   "fibonacciJavascript": () => (/* binding */ fibonacciJavascript)
+/* harmony export */   add: () => (/* reexport safe */ _add_wasm__WEBPACK_IMPORTED_MODULE_0__.add),
+/* harmony export */   factorial: () => (/* reexport safe */ _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__.factorial),
+/* harmony export */   factorialJavascript: () => (/* binding */ factorialJavascript),
+/* harmony export */   fibonacci: () => (/* reexport safe */ _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__.fibonacci),
+/* harmony export */   fibonacciJavascript: () => (/* binding */ fibonacciJavascript)
 /* harmony export */ });
 /* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
 /* harmony import */ var _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factorial.wasm */ 3);
@@ -229,7 +229,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
 /******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		var resolveQueue = (queue) => {
-/******/ 			if(queue && !queue.d) {
+/******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
@@ -260,7 +260,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
 /******/ 			var queue;
-/******/ 			hasAwait && ((queue = []).d = 1);
+/******/ 			hasAwait && ((queue = []).d = -1);
 /******/ 			var depQueues = new Set();
 /******/ 			var exports = module.exports;
 /******/ 			var currentDeps;
@@ -288,7 +288,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
-/******/ 			queue && (queue.d = 0);
+/******/ 			queue && queue.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -324,14 +324,26 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
 /******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".wasm");
-/******/ 			if (typeof WebAssembly.instantiateStreaming === 'function') {
-/******/ 				return WebAssembly.instantiateStreaming(req, importsObj)
-/******/ 					.then((res) => (Object.assign(exports, res.instance.exports)));
-/******/ 			}
-/******/ 			return req
+/******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
 /******/ 				.then((bytes) => (WebAssembly.instantiate(bytes, importsObj)))
-/******/ 				.then((res) => (Object.assign(exports, res.instance.exports)));
+/******/ 				.then((res) => (Object.assign(exports, res.instance.exports))));
+/******/ 			return req.then((res) => {
+/******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
+/******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
+/******/ 						.then(
+/******/ 							(res) => (Object.assign(exports, res.instance.exports)),
+/******/ 							(e) => {
+/******/ 								if(res.headers.get("Content-Type") !== "application/wasm") {
+/******/ 									console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+/******/ 									return fallback();
+/******/ 								}
+/******/ 								throw e;
+/******/ 							}
+/******/ 						);
+/******/ 				}
+/******/ 				return fallback();
+/******/ 			});
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -361,35 +373,35 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 ## Unoptimized
 
 ```
-asset output.js 12.6 KiB [emitted] (name: main)
+asset output.js 13.2 KiB [emitted] (name: main)
 asset 5a6637e8d63cdf9c72da.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 35a58b7c95860d720a3c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0eaeab8b9fa3cef100d1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.23 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.68 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.23 KiB 6 modules
+  runtime modules 3.68 KiB 6 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.90.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.57 KiB [emitted] [minimized] (name: main)
+asset output.js 2.89 KiB [emitted] [minimized] (name: main)
 asset 67aca7a09456080b5120.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 36825f9224dde8d88de0.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 10cff76bc58b7aa8f9cb.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 2.96 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.96 KiB 5 modules
+  runtime modules 3.42 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.90.0 compiled successfully
 ```

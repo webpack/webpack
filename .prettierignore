@@ -29,3 +29,5 @@ schemas/**/*.check.js
 # Ignore example fixtures
 examples/
 !examples/**/webpack.config.js
+
+.vscode/**/*.*

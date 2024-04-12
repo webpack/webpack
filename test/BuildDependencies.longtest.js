@@ -25,7 +25,7 @@ const exec = (n, options = {}) => {
 							"--cache-dir",
 							".jest-cache/nyc",
 							process.execPath
-					  ]
+						]
 					: []),
 				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
 				n,
@@ -133,7 +133,18 @@ describe("BuildDependencies", () => {
 		);
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-			'import path from "node:path"; import vm from "vm"; export default 0;'
+			`import path from "node:path";
+import vm from "vm";
+
+async function preload() {
+  await import(\`markdown-wasm/dist/markdown-node.js\`);
+  await import("markdown-wasm/dist/markdown-node.js");
+  await import('markdown-wasm/dist/markdown-node.js');
+  await import('test-"/test');
+  await import(\`test-"/test\`);
+}
+
+export default 0;`
 		);
 		await exec("0", {
 			invalidBuildDependencies: true,

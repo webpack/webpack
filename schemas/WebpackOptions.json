@@ -359,6 +359,32 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssAutoGeneratorOptions": {
+      "description": "Generator options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssAutoParserOptions": {
+      "description": "Parser options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -366,17 +392,6 @@
           "$ref": "#/definitions/FilenameTemplate"
         }
       ]
-    },
-    "CssExperimentOptions": {
-      "description": "Options for css handling.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "exportsOnly": {
-          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
-          "type": "boolean"
-        }
-      }
     },
     "CssFilename": {
       "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -386,17 +401,114 @@
         }
       ]
     },
+    "CssGeneratorExportsConvention": {
+      "description": "Specifies the convention of exported names.",
+      "anyOf": [
+        {
+          "enum": [
+            "as-is",
+            "camel-case",
+            "camel-case-only",
+            "dashes",
+            "dashes-only"
+          ]
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((name: string) => string)"
+        }
+      ]
+    },
+    "CssGeneratorExportsOnly": {
+      "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+      "type": "boolean"
+    },
+    "CssGeneratorLocalIdentName": {
+      "description": "Configure the generated local ident name.",
+      "type": "string"
+    },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
+    },
+    "CssGlobalGeneratorOptions": {
+      "description": "Generator options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssGlobalParserOptions": {
+      "description": "Parser options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
+    "CssHeadDataCompression": {
+      "description": "Compress the data in the head tag of CSS files.",
+      "type": "boolean"
+    },
+    "CssModuleGeneratorOptions": {
+      "description": "Generator options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssModuleParserOptions": {
+      "description": "Parser options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
+    "CssParserNamedExports": {
+      "description": "Use ES modules named export for css exports.",
+      "type": "boolean"
     },
     "CssParserOptions": {
       "description": "Parser options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -408,7 +520,16 @@
     },
     "DevServer": {
       "description": "Options for the webpack-dev-server.",
-      "type": "object"
+      "anyOf": [
+        {
+          "description": "Disable dev server.",
+          "enum": [false]
+        },
+        {
+          "description": "Options for the webpack-dev-server.",
+          "type": "object"
+        }
+      ]
     },
     "DevTool": {
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
@@ -728,6 +849,10 @@
           "description": "The environment supports arrow functions ('() => { ... }').",
           "type": "boolean"
         },
+        "asyncFunction": {
+          "description": "The environment supports async function and await ('async function () { await ... }').",
+          "type": "boolean"
+        },
         "bigIntLiteral": {
           "description": "The environment supports BigInt as literal (123n).",
           "type": "boolean"
@@ -738,6 +863,10 @@
         },
         "destructuring": {
           "description": "The environment supports destructuring ('{ a, b } = obj').",
+          "type": "boolean"
+        },
+        "document": {
+          "description": "The environment supports 'document'.",
           "type": "boolean"
         },
         "dynamicImport": {
@@ -801,14 +930,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -910,14 +1032,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "anyOf": [
-            {
-              "enum": [false]
-            },
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -1374,6 +1489,18 @@
         },
         "asset/resource": {
           "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssGeneratorOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoGeneratorOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalGeneratorOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "javascript": {
           "$ref": "#/definitions/EmptyGeneratorOptions"
@@ -2402,11 +2529,11 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "warn-mock", "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "node-module", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "warn-mock", "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "node-module", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
@@ -3172,6 +3299,9 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
+        "cssHeadDataCompression": {
+          "$ref": "#/definitions/CssHeadDataCompression"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3378,6 +3508,9 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
+        "cssHeadDataCompression": {
+          "$ref": "#/definitions/CssHeadDataCompression"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3517,6 +3650,18 @@
         },
         "asset/source": {
           "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssParserOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoParserOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalParserOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "javascript": {
           "$ref": "#/definitions/JavascriptParserOptions"
@@ -4013,16 +4158,24 @@
     },
     "ResolvePluginInstance": {
       "description": "Plugin instance.",
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "apply": {
-          "description": "The run point of the plugin, required method.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "apply": {
+              "description": "The run point of the plugin, required method.",
+              "instanceof": "Function",
+              "tsType": "(arg0: import('enhanced-resolve').Resolver) => void"
+            }
+          },
+          "required": ["apply"]
+        },
+        {
           "instanceof": "Function",
-          "tsType": "(resolver: import('enhanced-resolve').Resolver) => void"
+          "tsType": "((this: import('enhanced-resolve').Resolver, arg1: import('enhanced-resolve').Resolver) => void)"
         }
-      },
-      "required": ["apply"]
+      ]
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",
@@ -4613,6 +4766,26 @@
               "description": "Use timestamps of the files/directories to determine invalidation.",
               "type": "boolean"
             }
+          }
+        },
+        "unmanagedPaths": {
+          "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+          "type": "array",
+          "items": {
+            "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an unmanaged directory.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an unmanaged directory.",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         }
       }

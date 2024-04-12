@@ -19,7 +19,10 @@ describe("FileSystemInfo", () => {
 		"/path/nested/deep/symlink/file.txt",
 		"/path/context+files/sub/symlink/file.txt",
 		"/path/context/sub/symlink/file.txt",
-		"/path/missing.txt"
+		"/path/missing.txt",
+		"/path/node_modules/@foo/package1/index.js",
+		"/path/node_modules/@foo/package2/index.js",
+		"/path/node_modules/bar-package3/index.js"
 	];
 	const directories = [
 		"/path/context+files",
@@ -27,6 +30,10 @@ describe("FileSystemInfo", () => {
 		"/path/missing",
 		"/path/node_modules/package",
 		"/path/node_modules/missing",
+		"/path/node_modules/@foo",
+		"/path/node_modules/@foo/package1",
+		"/path/node_modules/@foo/package2",
+		"/path/node_modules/bar-package3",
 		"/path/cache/package-1234",
 		"/path/cache/package-missing"
 	];
@@ -48,18 +55,27 @@ describe("FileSystemInfo", () => {
 		"/path/node_modules/package/ignored.txt",
 		"/path/cache/package-1234/ignored.txt"
 	];
+	const unmanagedPaths = [
+		"/path/node_modules/@foo/package1",
+		"/path/node_modules/@foo/package2",
+		"/path/node_modules/bar-package3"
+	];
 	const managedPaths = ["/path/node_modules"];
 	const immutablePaths = ["/path/cache"];
 	const createFs = () => {
 		const fs = createFsFromVolume(new Volume());
-		fs.mkdirpSync("/path/context+files/sub");
-		fs.mkdirpSync("/path/context/sub");
-		fs.mkdirpSync("/path/nested/deep");
-		fs.mkdirpSync("/path/node_modules/package");
-		fs.mkdirpSync("/path/cache/package-1234");
-		fs.mkdirpSync("/path/folder/context");
-		fs.mkdirpSync("/path/folder/context+files");
-		fs.mkdirpSync("/path/folder/nested");
+		fs.mkdirSync("/path/context+files/sub", { recursive: true });
+		fs.mkdirSync("/path/context/sub", { recursive: true });
+		fs.mkdirSync("/path/nested/deep", { recursive: true });
+		fs.mkdirSync("/path/node_modules/package", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo/package1", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo/package2", { recursive: true });
+		fs.mkdirSync("/path/node_modules/bar-package3", { recursive: true });
+		fs.mkdirSync("/path/cache/package-1234", { recursive: true });
+		fs.mkdirSync("/path/folder/context", { recursive: true });
+		fs.mkdirSync("/path/folder/context+files", { recursive: true });
+		fs.mkdirSync("/path/folder/nested", { recursive: true });
 		fs.writeFileSync("/path/file.txt", "Hello World");
 		fs.writeFileSync("/path/file2.txt", "Hello World2");
 		fs.writeFileSync("/path/nested/deep/file.txt", "Hello World");
@@ -92,6 +108,15 @@ describe("FileSystemInfo", () => {
 		fs.writeFileSync("/path/folder/context/file.txt", "Hello World");
 		fs.writeFileSync("/path/folder/context+files/file.txt", "Hello World");
 		fs.writeFileSync("/path/folder/nested/file.txt", "Hello World");
+		fs.writeFileSync(
+			"/path/node_modules/@foo/package1/index.js",
+			"Hello World"
+		);
+		fs.writeFileSync(
+			"/path/node_modules/@foo/package2/index.js",
+			"Hello World"
+		);
+		fs.writeFileSync("/path/node_modules/bar-package3/index.js", "Hello World");
 		fs.symlinkSync("/path/folder/context", "/path/context/sub/symlink", "dir");
 		fs.symlinkSync(
 			"/path/folder/context+files",
@@ -110,6 +135,7 @@ describe("FileSystemInfo", () => {
 		};
 		const fsInfo = new FileSystemInfo(fs, {
 			logger,
+			unmanagedPaths,
 			managedPaths,
 			immutablePaths,
 			hashFunction: "sha256"
@@ -287,6 +313,9 @@ ${details(snapshot)}`)
 				"/path/folder/context/file.txt",
 				"/path/folder/context+files/file.txt",
 				"/path/folder/nested/file.txt",
+				"/path/node_modules/@foo/package1/index.js",
+				"/path/node_modules/@foo/package2/index.js",
+				"/path/node_modules/bar-package3/index.js",
 				...(name !== "timestamp" ? ignoredFileChanges : []),
 				...(name === "hash" ? ["/path/context/sub/ignored.txt"] : [])
 			]) {

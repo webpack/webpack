@@ -75,8 +75,8 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 			match = regexp.exec(content);
 		}
 
-		const prettierConfig = prettier.resolveConfig.sync(filePath);
-		const newContent = prettier.format(
+		const prettierConfig = await prettier.resolveConfig(filePath);
+		const newContent = await prettier.format(
 			content.replace(regexp, match => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);

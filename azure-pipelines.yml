@@ -8,7 +8,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^16.0.0"
+          versionSpec: "^18.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -60,7 +60,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^16.0.0"
+          versionSpec: "^18.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -113,16 +113,16 @@ jobs:
           node_version: ^10.13.0
           part: b
         node-12-a:
-          node_version: ^12.4.0
+          node_version: ^18.0.0
           part: a
         node-12-b:
-          node_version: ^12.4.0
+          node_version: ^18.0.0
           part: b
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: b
     steps:
       - task: NodeTool@0
@@ -143,13 +143,13 @@ jobs:
         displayName: "Cache Yarn packages"
       # Install old `jest` version and ignore platform problem for legacy node versions
       - script: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         displayName: "Install dependencies (old node.js version)"
-        condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
+        condition: eq(variables['node_version'], '^10.13.0')
       - script: yarn --frozen-lockfile
         displayName: "Install dependencies"
-        condition: and(not(eq(variables['node_version'], '^10.13.0')), not(eq(variables['node_version'], '^12.4.0')))
+        condition: not(eq(variables['node_version'], '^10.13.0'))
       - script: yarn link --frozen-lockfile || true
         displayName: "Link webpack"
         continueOnError: true
@@ -184,16 +184,16 @@ jobs:
           node_version: ^10.13.0
           part: b
         node-12-a:
-          node_version: ^12.4.0
+          node_version: ^18.0.0
           part: a
-        node-14-a:
-          node_version: ^14.0.0
-          part: a
+        node-12-b:
+          node_version: ^18.0.0
+          part: b
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: b
     steps:
       - task: NodeTool@0
@@ -218,12 +218,12 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies (old node.js version)"
-        condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'), eq(variables['node_version'], '^14.0.0'))
+        condition: eq(variables['node_version'], '^10.13.0')
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -231,7 +231,7 @@ jobs:
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
-        condition: and(not(eq(variables['node_version'], '^10.13.0')), not(eq(variables['node_version'], '^12.4.0')), not(eq(variables['node_version'], '^14.0.0')))
+        condition: not(eq(variables['node_version'], '^10.13.0'))
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -254,19 +254,25 @@ jobs:
     pool:
       vmImage: macOS-latest
     strategy:
-      maxParallel: 4
+      maxParallel: 6
       matrix:
+        node-10-a:
+          node_version: ^10.13.0
+          part: a
+        node-10-b:
+          node_version: ^10.13.0
+          part: b
         node-12-a:
-          node_version: ^12.4.0
+          node_version: ^18.0.0
           part: a
         node-12-b:
-          node_version: ^12.4.0
+          node_version: ^18.0.0
           part: b
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^20.0.0
           part: b
     steps:
       - task: NodeTool@0
@@ -290,12 +296,12 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies (old node.js version)"
-        condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
+        condition: eq(variables['node_version'], '^10.13.0')
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -303,7 +309,7 @@ jobs:
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
-        condition: and(not(eq(variables['node_version'], '^10.13.0')), not(eq(variables['node_version'], '^12.4.0')))
+        condition: not(eq(variables['node_version'], '^10.13.0'))
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

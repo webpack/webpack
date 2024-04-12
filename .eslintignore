@@ -25,5 +25,6 @@ schemas/**/*.check.js
 
 # Ignore some examples files
 examples/**/*.js
+examples/**/*.mjs
 !examples/*/webpack.config.js
 

@@ -119,9 +119,11 @@ describe("snapshots", () => {
 		  "loader": Object {
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "asyncFunction": true,
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
+		      "document": true,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -328,6 +330,7 @@ describe("snapshots", () => {
 		    "crossOriginLoading": false,
 		    "cssChunkFilename": "[name].css",
 		    "cssFilename": "[name].css",
+		    "cssHeadDataCompression": true,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -341,9 +344,11 @@ describe("snapshots", () => {
 		    ],
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "asyncFunction": true,
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
+		      "document": true,
 		      "dynamicImport": undefined,
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
@@ -373,6 +378,7 @@ describe("snapshots", () => {
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
+		    "strictModuleErrorHandling": false,
 		    "strictModuleExceptionHandling": false,
 		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
@@ -639,6 +645,7 @@ describe("snapshots", () => {
 		      "hash": true,
 		      "timestamp": true,
 		    },
+		    "unmanagedPaths": Array [],
 		  },
 		  "stats": Object {},
 		  "target": "web",
@@ -838,6 +845,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "minRemainingSize": undefined,
 		+       "minRemainingSize": 0,
+		@@ ... @@
+		-     "cssHeadDataCompression": true,
+		+     "cssHeadDataCompression": false,
 		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
@@ -1302,6 +1312,9 @@ describe("snapshots", () => {
 		-     "web": true,
 		+     "web": false,
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
@@ -1327,6 +1340,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1419,10 +1435,16 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
 		-       "jsonp",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1446,6 +1468,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "web": true,
 		+     "web": false,
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-main",
@@ -1472,6 +1497,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1574,6 +1602,9 @@ describe("snapshots", () => {
 		-     "node": false,
 		+     "node": true,
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
 		@@ ... @@
@@ -1599,6 +1630,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
+		@@ ... @@
+		-       "document": true,
+		+       "document": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1863,6 +1897,9 @@ describe("snapshots", () => {
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
 			@@ ... @@
+			-     "cssHeadDataCompression": true,
+			+     "cssHeadDataCompression": false,
+			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
 			@@ ... @@
@@ -2020,9 +2057,16 @@ describe("snapshots", () => {
 			+   "context": "<cwd>/test/fixtures/browserslist",
 			@@ ... @@
 			-       "arrowFunction": true,
+			-       "asyncFunction": true,
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
+			+       "arrowFunction": false,
+			+       "asyncFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
@@ -2030,10 +2074,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
-			+       "arrowFunction": false,
-			+       "bigIntLiteral": false,
-			+       "const": false,
-			+       "destructuring": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
@@ -2049,9 +2089,16 @@ describe("snapshots", () => {
 			+     "devtoolNamespace": "browserslist-test",
 			@@ ... @@
 			-       "arrowFunction": true,
+			-       "asyncFunction": true,
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
+			+       "arrowFunction": false,
+			+       "asyncFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
@@ -2059,10 +2106,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
-			+       "arrowFunction": false,
-			+       "bigIntLiteral": false,
-			+       "const": false,
-			+       "destructuring": false,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
@@ -2203,12 +2246,9 @@ describe("snapshots", () => {
 			-     "css": undefined,
 			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
-			+     "css": Object {
-			+       "exportsOnly": false,
-			+     },
+			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
 			+           Object {
@@ -2226,18 +2266,18 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			@@ ... @@
+			+             },
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2263,6 +2303,27 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
+			-     "generator": Object {},
+			+     "generator": Object {
+			+       "css": Object {
+			+         "exportsConvention": "as-is",
+			+         "exportsOnly": false,
+			+       },
+			+       "css/auto": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/global": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/module": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+     },
+			@@ ... @@
+			+       },
+			+       "css": Object {
+			+         "namedExports": true,
+			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
 			-     "__dirname": "mock",
@@ -2279,9 +2340,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2293,8 +2351,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

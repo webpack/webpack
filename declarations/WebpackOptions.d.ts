@@ -36,6 +36,14 @@ export type Context = string;
  */
 export type Dependencies = string[];
 /**
+ * Options for the webpack-dev-server.
+ */
+export type DevServer =
+	| false
+	| {
+			[k: string]: any;
+	  };
+/**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
 export type DevTool = (false | "eval") | string;
@@ -326,6 +334,21 @@ export type ResolveAlias =
 			[k: string]: string[] | false | string;
 	  };
 /**
+ * Plugin instance.
+ */
+export type ResolvePluginInstance =
+	| {
+			/**
+			 * The run point of the plugin, required method.
+			 */
+			apply: (arg0: import("enhanced-resolve").Resolver) => void;
+			[k: string]: any;
+	  }
+	| ((
+			this: import("enhanced-resolve").Resolver,
+			arg1: import("enhanced-resolve").Resolver
+	  ) => void);
+/**
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
@@ -469,6 +492,10 @@ export type CssChunkFilename = FilenameTemplate;
  * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
 export type CssFilename = FilenameTemplate;
+/**
+ * Compress the data in the head tag of CSS files.
+ */
+export type CssHeadDataCompression = boolean;
 /**
  * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
  */
@@ -728,6 +755,24 @@ export type AssetParserDataUrlFunction = (
 	source: string | Buffer,
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
+/**
+ * Specifies the convention of exported names.
+ */
+export type CssGeneratorExportsConvention =
+	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
+	| ((name: string) => string);
+/**
+ * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+ */
+export type CssGeneratorExportsOnly = boolean;
+/**
+ * Configure the generated local ident name.
+ */
+export type CssGeneratorLocalIdentName = string;
+/**
+ * Use ES modules named export for css exports.
+ */
+export type CssParserNamedExports = boolean;
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -1046,12 +1091,6 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
-}
-/**
- * Options for the webpack-dev-server.
- */
-export interface DevServer {
-	[k: string]: any;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
@@ -1620,27 +1659,23 @@ export interface ResolveOptions {
 	useSyncFileSystemCalls?: boolean;
 }
 /**
- * Plugin instance.
- */
-export interface ResolvePluginInstance {
-	/**
-	 * The run point of the plugin, required method.
-	 */
-	apply: (resolver: import("enhanced-resolve").Resolver) => void;
-	[k: string]: any;
-}
-/**
  * Options object for node compatibility features.
  */
 export interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: false | true | "warn-mock" | "mock" | "eval-only";
+	__dirname?: false | true | "warn-mock" | "mock" | "node-module" | "eval-only";
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: false | true | "warn-mock" | "mock" | "eval-only";
+	__filename?:
+		| false
+		| true
+		| "warn-mock"
+		| "mock"
+		| "node-module"
+		| "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
@@ -2056,6 +2091,10 @@ export interface Output {
 	 */
 	cssFilename?: CssFilename;
 	/**
+	 * Compress the data in the head tag of CSS files.
+	 */
+	cssHeadDataCompression?: CssHeadDataCompression;
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -2238,6 +2277,10 @@ export interface Environment {
 	 */
 	arrowFunction?: boolean;
 	/**
+	 * The environment supports async function and await ('async function () { await ... }').
+	 */
+	asyncFunction?: boolean;
+	/**
 	 * The environment supports BigInt as literal (123n).
 	 */
 	bigIntLiteral?: boolean;
@@ -2249,6 +2292,10 @@ export interface Environment {
 	 * The environment supports destructuring ('{ a, b } = obj').
 	 */
 	destructuring?: boolean;
+	/**
+	 * The environment supports 'document'.
+	 */
+	document?: boolean;
 	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
@@ -2376,6 +2423,10 @@ export interface SnapshotOptions {
 		 */
 		timestamp?: boolean;
 	};
+	/**
+	 * List of paths that are not managed by a package manager and the contents are subject to change.
+	 */
+	unmanagedPaths?: (RegExp | string)[];
 }
 /**
  * Stats options object.
@@ -2804,22 +2855,105 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
- * Options for css handling.
+ * Generator options for css/auto modules.
  */
-export interface CssExperimentOptions {
+export interface CssAutoGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
-	exportsOnly?: boolean;
+	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
+}
+/**
+ * Parser options for css/auto modules.
+ */
+export interface CssAutoParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
 }
 /**
  * Generator options for css modules.
  */
-export interface CssGeneratorOptions {}
+export interface CssGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+}
+/**
+ * Generator options for css/global modules.
+ */
+export interface CssGlobalGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
+}
+/**
+ * Parser options for css/global modules.
+ */
+export interface CssGlobalParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
+/**
+ * Generator options for css/module modules.
+ */
+export interface CssModuleGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
+}
+/**
+ * Parser options for css/module modules.
+ */
+export interface CssModuleParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
 /**
  * Parser options for css modules.
  */
-export interface CssParserOptions {}
+export interface CssParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
 /**
  * No generator options are supported for this module type.
  */
@@ -3285,6 +3419,10 @@ export interface OutputNormalized {
 	 */
 	cssFilename?: CssFilename;
 	/**
+	 * Compress the data in the head tag of CSS files.
+	 */
+	cssHeadDataCompression?: CssHeadDataCompression;
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -3585,7 +3723,7 @@ export interface ExperimentsExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: boolean | CssExperimentOptions;
+	css?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
@@ -3602,7 +3740,7 @@ export interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: false | CssExperimentOptions;
+	css?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
@@ -3643,6 +3781,22 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for asset/resource modules.
 	 */
 	"asset/resource"?: AssetResourceGeneratorOptions;
+	/**
+	 * Generator options for css modules.
+	 */
+	css?: CssGeneratorOptions;
+	/**
+	 * Generator options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoGeneratorOptions;
+	/**
+	 * Generator options for css/global modules.
+	 */
+	"css/global"?: CssGlobalGeneratorOptions;
+	/**
+	 * Generator options for css/module modules.
+	 */
+	"css/module"?: CssModuleGeneratorOptions;
 	/**
 	 * No generator options are supported for this module type.
 	 */
@@ -3691,6 +3845,22 @@ export interface ParserOptionsByModuleTypeKnown {
 	 * No parser options are supported for this module type.
 	 */
 	"asset/source"?: EmptyParserOptions;
+	/**
+	 * Parser options for css modules.
+	 */
+	css?: CssParserOptions;
+	/**
+	 * Parser options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoParserOptions;
+	/**
+	 * Parser options for css/global modules.
+	 */
+	"css/global"?: CssGlobalParserOptions;
+	/**
+	 * Parser options for css/module modules.
+	 */
+	"css/module"?: CssModuleParserOptions;
 	/**
 	 * Parser options for javascript modules.
 	 */

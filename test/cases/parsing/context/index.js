@@ -20,7 +20,7 @@ it("should automatically create contexts", function() {
 	expect(require("./templates/t" + mp + "l")).toBe("test template");
 });
 
-it("should be able to require.resolve with automatical context", function() {
+it("should be able to require.resolve with automatic context", function() {
 	var template = "tmpl";
 	expect(require.resolve("./templates/" + template)).toBe(
 		require.resolve("./templates/tmpl")

@@ -76,11 +76,10 @@ const isInstalled = packageName => {
 const runCli = cli => {
 	const path = require("path");
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
-	// eslint-disable-next-line node/no-missing-require
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
-		// eslint-disable-next-line node/no-unsupported-features/es-syntax
+		// eslint-disable-next-line n/no-unsupported-features/es-syntax
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
 			error => {
 				console.error(error);
@@ -88,7 +87,6 @@ const runCli = cli => {
 			}
 		);
 	} else {
-		// eslint-disable-next-line node/no-missing-require
 		require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
 	}
 };
@@ -121,6 +119,7 @@ if (!cli.installed) {
 
 	console.error(notify);
 
+	/** @type {string | undefined} */
 	let packageManager;
 
 	if (fs.existsSync(path.resolve(process.cwd(), "yarn.lock"))) {
@@ -173,7 +172,10 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(packageManager, installOptions.concat(cli.package))
+		runCommand(
+			/** @type {string} */ (packageManager),
+			installOptions.concat(cli.package)
+		)
 			.then(() => {
 				runCli(cli);
 			})
