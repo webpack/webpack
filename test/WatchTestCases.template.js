@@ -348,10 +348,9 @@ const describeCases = config => {
 											let testConfig = {};
 											try {
 												// try to load a test file
-												testConfig = require(path.join(
-													testDirectory,
-													"test.config.js"
-												));
+												testConfig = require(
+													path.join(testDirectory, "test.config.js")
+												);
 											} catch (e) {
 												// empty
 											}

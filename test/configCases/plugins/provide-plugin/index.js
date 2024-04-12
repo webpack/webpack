@@ -48,6 +48,11 @@ it("should provide a module for a property request", function() {
 	expect(x).toBe("fff");
 });
 
+it("should tree-shake unused exports", function() {
+	expect(aa1(2)).toBe(8);
+	expect(es2015_aUsed).toBe(false);
+});
+
 it("should provide ES2015 modules", function() {
 	expect((es2015.default)).toBe("ECMAScript 2015");
 	expect((es2015.alias)).toBe("ECMAScript Harmony");

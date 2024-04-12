@@ -13,7 +13,11 @@ describe("Examples", () => {
 		const filterPath = path.join(examplePath, "test.filter.js");
 		const relativePath = path.relative(basePath, examplePath);
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
-			describe.skip(relativePath, () => it("filtered"));
+			describe.skip(relativePath, () =>
+				it("filtered", done => {
+					done();
+				})
+			);
 			return;
 		}
 		it(
@@ -22,8 +26,8 @@ describe("Examples", () => {
 				let options = {};
 				let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 				webpackConfigPath =
-					webpackConfigPath.substr(0, 1).toUpperCase() +
-					webpackConfigPath.substr(1);
+					webpackConfigPath.slice(0, 1).toUpperCase() +
+					webpackConfigPath.slice(1);
 				if (fs.existsSync(webpackConfigPath))
 					options = require(webpackConfigPath);
 				if (typeof options === "function") options = options();

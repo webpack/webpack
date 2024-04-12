@@ -3,7 +3,7 @@
     "BannerFunction": {
       "description": "The banner as function, it will be wrapped in a comment.",
       "instanceof": "Function",
-      "tsType": "(data: { hash: string, chunk: import('../../lib/Chunk'), filename: string }) => string"
+      "tsType": "(data: { hash?: string, chunk: import('../../lib/Chunk'), filename: string }) => string"
     },
     "Rule": {
       "description": "Filtering rule as regex or string.",
@@ -73,6 +73,10 @@
             }
           ]
         },
+        "footer": {
+          "description": "If true, banner will be placed at the end of the output.",
+          "type": "boolean"
+        },
         "include": {
           "description": "Include all modules matching any of these conditions.",
           "oneOf": [
@@ -84,6 +88,10 @@
         "raw": {
           "description": "If true, banner will not be wrapped in a comment.",
           "type": "boolean"
+        },
+        "stage": {
+          "description": "Specifies the banner.",
+          "type": "number"
         },
         "test": {
           "description": "Include all modules that pass test assertion.",

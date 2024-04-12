@@ -13,6 +13,11 @@
         }
       ]
     },
+    "AmdContainer": {
+      "description": "Add a container for define/require functions in the AMD module.",
+      "type": "string",
+      "minLength": 1
+    },
     "AssetFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -354,6 +359,32 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssAutoGeneratorOptions": {
+      "description": "Generator options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssAutoParserOptions": {
+      "description": "Parser options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -361,17 +392,6 @@
           "$ref": "#/definitions/FilenameTemplate"
         }
       ]
-    },
-    "CssExperimentOptions": {
-      "description": "Options for css handling.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "exportsOnly": {
-          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
-          "type": "boolean"
-        }
-      }
     },
     "CssFilename": {
       "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -381,17 +401,114 @@
         }
       ]
     },
+    "CssGeneratorExportsConvention": {
+      "description": "Specifies the convention of exported names.",
+      "anyOf": [
+        {
+          "enum": [
+            "as-is",
+            "camel-case",
+            "camel-case-only",
+            "dashes",
+            "dashes-only"
+          ]
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((name: string) => string)"
+        }
+      ]
+    },
+    "CssGeneratorExportsOnly": {
+      "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+      "type": "boolean"
+    },
+    "CssGeneratorLocalIdentName": {
+      "description": "Configure the generated local ident name.",
+      "type": "string"
+    },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
+    },
+    "CssGlobalGeneratorOptions": {
+      "description": "Generator options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssGlobalParserOptions": {
+      "description": "Parser options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
+    "CssHeadDataCompression": {
+      "description": "Compress the data in the head tag of CSS files.",
+      "type": "boolean"
+    },
+    "CssModuleGeneratorOptions": {
+      "description": "Generator options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
+        }
+      }
+    },
+    "CssModuleParserOptions": {
+      "description": "Parser options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
+    "CssParserNamedExports": {
+      "description": "Use ES modules named export for css exports.",
+      "type": "boolean"
     },
     "CssParserOptions": {
       "description": "Parser options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -403,7 +520,16 @@
     },
     "DevServer": {
       "description": "Options for the webpack-dev-server.",
-      "type": "object"
+      "anyOf": [
+        {
+          "description": "Disable dev server.",
+          "enum": [false]
+        },
+        {
+          "description": "Options for the webpack-dev-server.",
+          "type": "object"
+        }
+      ]
     },
     "DevTool": {
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
@@ -723,6 +849,10 @@
           "description": "The environment supports arrow functions ('() => { ... }').",
           "type": "boolean"
         },
+        "asyncFunction": {
+          "description": "The environment supports async function and await ('async function () { await ... }').",
+          "type": "boolean"
+        },
         "bigIntLiteral": {
           "description": "The environment supports BigInt as literal (123n).",
           "type": "boolean"
@@ -735,12 +865,24 @@
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"
         },
+        "document": {
+          "description": "The environment supports 'document'.",
+          "type": "boolean"
+        },
         "dynamicImport": {
           "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"
         },
+        "dynamicImportInWorker": {
+          "description": "The environment supports an async import() is available when creating a worker.",
+          "type": "boolean"
+        },
         "forOf": {
           "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "globalThis": {
+          "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
         "module": {
@@ -788,14 +930,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -897,11 +1032,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -913,7 +1044,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
@@ -932,6 +1066,24 @@
           "type": "boolean"
         }
       }
+    },
+    "Extends": {
+      "description": "Extend configuration from another configuration (only works when using webpack-cli).",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtendsItem"
+          }
+        },
+        {
+          "$ref": "#/definitions/ExtendsItem"
+        }
+      ]
+    },
+    "ExtendsItem": {
+      "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+      "type": "string"
     },
     "ExternalItem": {
       "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
@@ -972,7 +1124,7 @@
         {
           "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
           "instanceof": "Function",
-          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: Error, result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
+          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
         }
       ]
     },
@@ -1108,6 +1260,15 @@
         "node-commonjs"
       ]
     },
+    "Falsy": {
+      "description": "These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.",
+      "cli": {
+        "exclude": true
+      },
+      "enum": [false, 0, "", null],
+      "undefinedAsNull": true,
+      "tsType": "false | 0 | '' | null | undefined"
+    },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching.",
       "type": "object",
@@ -1225,6 +1386,10 @@
           "description": "Track and log detailed timing information for individual cache items.",
           "type": "boolean"
         },
+        "readonly": {
+          "description": "Enable/disable readonly mode.",
+          "type": "boolean"
+        },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]
@@ -1324,6 +1489,18 @@
         },
         "asset/resource": {
           "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssGeneratorOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoGeneratorOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalGeneratorOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "javascript": {
           "$ref": "#/definitions/EmptyGeneratorOptions"
@@ -1580,6 +1757,47 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dynamicImportFetchPriority": {
+          "description": "Specifies global fetchPriority for dynamic import.",
+          "enum": ["low", "high", "auto", false]
+        },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
@@ -1622,6 +1840,10 @@
         },
         "importMeta": {
           "description": "Enable/disable evaluating import.meta.",
+          "type": "boolean"
+        },
+        "importMetaContext": {
+          "description": "Enable/disable evaluating import.meta.webpackContext.",
           "type": "boolean"
         },
         "node": {
@@ -1954,6 +2176,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "$ref": "#/definitions/AmdContainer"
+        },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
         },
@@ -2304,11 +2529,11 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "warn-mock", "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "node-module", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "warn-mock", "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "node-module", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
@@ -2386,6 +2611,9 @@
             "anyOf": [
               {
                 "enum": ["..."]
+              },
+              {
+                "$ref": "#/definitions/Falsy"
               },
               {
                 "$ref": "#/definitions/WebpackPluginInstance"
@@ -2539,6 +2767,10 @@
           "anyOf": [
             {
               "enum": ["initial", "async", "all"]
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "instanceof": "Function",
@@ -2788,6 +3020,10 @@
               "enum": ["initial", "async", "all"]
             },
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
               "instanceof": "Function",
               "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
@@ -2825,6 +3061,10 @@
               "anyOf": [
                 {
                   "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "RegExp",
+                  "tsType": "RegExp"
                 },
                 {
                   "instanceof": "Function",
@@ -2999,6 +3239,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AmdContainer"
+            }
+          ]
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
@@ -3049,6 +3299,9 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
+        "cssHeadDataCompression": {
+          "$ref": "#/definitions/CssHeadDataCompression"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3096,6 +3349,10 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
         },
         "iife": {
           "$ref": "#/definitions/Iife"
@@ -3194,6 +3451,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
@@ -3248,6 +3508,9 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
+        "cssHeadDataCompression": {
+          "$ref": "#/definitions/CssHeadDataCompression"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3295,6 +3558,10 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
         },
         "iife": {
           "$ref": "#/definitions/Iife"
@@ -3350,6 +3617,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
@@ -3380,6 +3650,18 @@
         },
         "asset/source": {
           "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssParserOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoParserOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalParserOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "javascript": {
           "$ref": "#/definitions/JavascriptParserOptions"
@@ -3452,6 +3734,9 @@
       "items": {
         "description": "Plugin of type object or instanceof Function.",
         "anyOf": [
+          {
+            "$ref": "#/definitions/Falsy"
+          },
           {
             "$ref": "#/definitions/WebpackPluginInstance"
           },
@@ -3696,6 +3981,29 @@
             "type": "string"
           }
         },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
           "type": "array",
@@ -3780,6 +4088,9 @@
                 "enum": ["..."]
               },
               {
+                "$ref": "#/definitions/Falsy"
+              },
+              {
                 "$ref": "#/definitions/ResolvePluginInstance"
               }
             ]
@@ -3847,16 +4158,24 @@
     },
     "ResolvePluginInstance": {
       "description": "Plugin instance.",
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "apply": {
-          "description": "The run point of the plugin, required method.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "apply": {
+              "description": "The run point of the plugin, required method.",
+              "instanceof": "Function",
+              "tsType": "(arg0: import('enhanced-resolve').Resolver) => void"
+            }
+          },
+          "required": ["apply"]
+        },
+        {
           "instanceof": "Function",
-          "tsType": "(resolver: import('enhanced-resolve').Resolver) => void"
+          "tsType": "((this: import('enhanced-resolve').Resolver, arg1: import('enhanced-resolve').Resolver) => void)"
         }
-      },
-      "required": ["apply"]
+      ]
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",
@@ -4139,7 +4458,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4208,7 +4530,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4262,6 +4587,9 @@
             "enum": ["..."]
           },
           {
+            "$ref": "#/definitions/Falsy"
+          },
+          {
             "$ref": "#/definitions/RuleSetRule"
           }
         ]
@@ -4274,7 +4602,10 @@
           "type": "array",
           "items": {
             "description": "An use item.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetUseItem"
               }
@@ -4283,7 +4614,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => RuleSetUseItem[])"
+          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"
@@ -4321,7 +4652,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
+          "tsType": "((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetLoader"
@@ -4435,6 +4766,26 @@
               "description": "Use timestamps of the files/directories to determine invalidation.",
               "type": "boolean"
             }
+          }
+        },
+        "unmanagedPaths": {
+          "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+          "type": "array",
+          "items": {
+            "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an unmanaged directory.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an unmanaged directory.",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         }
       }
@@ -4618,6 +4969,10 @@
         "errorsCount": {
           "description": "Add errors count.",
           "type": "boolean"
+        },
+        "errorsSpace": {
+          "description": "Space to display errors (value is in number of lines).",
+          "type": "number"
         },
         "exclude": {
           "description": "Please use excludeModules instead.",
@@ -4851,6 +5206,10 @@
               "$ref": "#/definitions/WarningFilterTypes"
             }
           ]
+        },
+        "warningsSpace": {
+          "description": "Space to display warnings (value is in number of lines).",
+          "type": "number"
         }
       }
     },
@@ -4911,6 +5270,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "onPolicyCreationFailure": {
+          "description": "If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+          "enum": ["continue", "stop"]
+        },
         "policyName": {
           "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
           "type": "string",
@@ -5201,6 +5564,10 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerPublicPath": {
+      "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+      "type": "string"
     }
   },
   "title": "WebpackOptions",
@@ -5234,6 +5601,9 @@
     },
     "experiments": {
       "$ref": "#/definitions/Experiments"
+    },
+    "extends": {
+      "$ref": "#/definitions/Extends"
     },
     "externals": {
       "$ref": "#/definitions/Externals"

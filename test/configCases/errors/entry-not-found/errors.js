@@ -1,3 +1,1 @@
-module.exports = [
-	[/^Module not found/, /.\/index\.js/]
-];
+module.exports = [[/^Module not found/, /.\/index\.js/]];

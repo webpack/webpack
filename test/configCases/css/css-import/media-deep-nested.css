@@ -1,0 +1,5 @@
+@import "./media-deep-deep-nested.css" screen and (orientation: portrait);
+
+.class {
+	deep-nested: 1;
+}

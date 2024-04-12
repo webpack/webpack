@@ -17,7 +17,7 @@ Note: When your library has dependencies that should not be included in the comp
 ```javascript
 var path = require("path");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		alpha: "./alpha",
 		beta: "./beta"
@@ -43,7 +43,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(self, function() {
+})(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -119,7 +119,7 @@ module.exports = "alpha";
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(self, function() {
+})(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
@@ -189,7 +189,7 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.07 KiB [emitted] (name: beta)
+asset MyLibrary.beta.js 2.06 KiB [emitted] (name: beta)
 asset MyLibrary.alpha.js 2.06 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
@@ -205,14 +205,14 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 429 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 425 bytes [emitted] [minimized] (name: beta)
+asset MyLibrary.alpha.js 423 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 419 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]
@@ -227,5 +227,5 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

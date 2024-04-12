@@ -175,10 +175,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2961,
+			          "size": 3010,
 			        },
 			      ],
-			      "assetsSize": 2961,
+			      "assetsSize": 3010,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -223,10 +223,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2961,
+			        "size": 3010,
 			      },
 			      "name": "entryB.js",
-			      "size": 2961,
+			      "size": 3010,
 			      "type": "asset",
 			    },
 			    Object {

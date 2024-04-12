@@ -1,0 +1,15 @@
+@keyframes broken;
+
+.class {
+	color: red;
+}
+
+@keyframes/*test*/animationName/*test*/{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+

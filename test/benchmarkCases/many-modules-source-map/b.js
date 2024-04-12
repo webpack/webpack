@@ -8,4 +8,4 @@ require("./c?6" + __resourceQuery);
 require("./c?7" + __resourceQuery);
 require("./c?8" + __resourceQuery);
 require("./c?9" + __resourceQuery);
-require("./a" + __resourceQuery.substr(0, 2));
+require("./a" + __resourceQuery.slice(0, 2));

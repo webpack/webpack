@@ -15,4 +15,4 @@ const testCase = (tagName, impFn) => {
 	});
 };
 
-testCase("spacing", () => import("./spacing.css"));
+testCase("div", () => import("./spacing.css"));

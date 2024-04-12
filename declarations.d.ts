@@ -124,17 +124,19 @@ declare module "neo-async" {
 
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
+	export interface Visitor {
+		ModuleImport?: (p: NodePath<ModuleImport>) => void;
+		ModuleExport?: (p: NodePath<ModuleExport>) => void;
+		Start?: (p: NodePath<Start>) => void;
+		Global?: (p: NodePath<Global>) => void;
+	}
 	export function traverse(
 		ast: any,
-		visitor: {
-			ModuleImport?: (p: NodePath<ModuleImport>) => void;
-			ModuleExport?: (p: NodePath<ModuleExport>) => void;
-			Start?: (p: NodePath<Start>) => void;
-			Global?: (p: NodePath<Global>) => void;
-		}
+		visitor: Visitor
 	): void;
 	export class NodePath<T> {
 		node: T;
+		remove(): void;
 	}
 	export class Node {}
 	export class Identifier extends Node {
@@ -148,6 +150,7 @@ declare module "@webassemblyjs/ast" {
 		valtype?: string;
 		id?: Identifier;
 		signature?: Signature;
+		mutability: string;
 	}
 	export class ModuleImport extends Node {
 		module: string;
@@ -171,6 +174,7 @@ declare module "@webassemblyjs/ast" {
 	export class FloatLiteral extends Node {}
 	export class GlobalType extends Node {
 		valtype: string;
+		mutability: string;
 	}
 	export class Global extends Node {
 		init: Instruction[];
@@ -214,9 +218,9 @@ declare module "@webassemblyjs/ast" {
 		init: Node[]
 	): ObjectInstruction;
 	export function signature(params: FuncParam[], results: string[]): Signature;
-	export function func(initFuncId, signature: Signature, funcBody): Func;
+	export function func(initFuncId: Identifier, signature: Signature, funcBody: Instruction[]): Func;
 	export function typeInstruction(
-		id: Identifier,
+		id: Identifier | undefined,
 		functype: Signature
 	): TypeInstruction;
 	export function indexInFuncSection(index: Index): IndexInFuncSection;
@@ -229,7 +233,7 @@ declare module "@webassemblyjs/ast" {
 		index: Index
 	): ModuleExportDescr;
 
-	export function getSectionMetadata(ast: any, section: string);
+	export function getSectionMetadata(ast: any, section: string): { vectorOfSize: { value: number } };
 	export class FuncSignature {
 		args: string[];
 		result: string[];
@@ -243,13 +247,32 @@ declare module "@webassemblyjs/ast" {
 	export function isFuncImportDescr(n: Node): boolean;
 }
 
+declare module "@webassemblyjs/wasm-parser" {
+	export function decode(source: string | Buffer, options: { dump?: boolean, ignoreCodeSection?: boolean, ignoreDataSection?: boolean, ignoreCustomNameSection?: boolean }): any;
+}
+
+declare module "@webassemblyjs/wasm-edit" {
+	export function addWithAST(ast: any, bin: any, newNodes: import("@webassemblyjs/ast").Node[]): ArrayBuffer;
+	export function editWithAST(ast: any, bin: any, visitors: import("@webassemblyjs/ast").Visitor): ArrayBuffer;
+}
+
 declare module "webpack-sources" {
 	export type MapOptions = { columns?: boolean; module?: boolean };
+
+	export type RawSourceMap = {
+		version: number;
+		sources: string[];
+		names: string[];
+		sourceRoot?: string;
+		sourcesContent?: string[];
+		mappings: string;
+		file: string;
+	};
 
 	export abstract class Source {
 		size(): number;
 
-		map(options?: MapOptions): Object;
+		map(options?: MapOptions): RawSourceMap | null;
 
 		sourceAndMap(options?: MapOptions): {
 			source: string | Buffer;
@@ -369,6 +392,11 @@ declare module "browserslist" {
 		export function findConfig(path: string): Record<string, string[]>;
 	}
 	export = browserslist;
+}
+
+declare module "json-parse-even-better-errors" {
+	function parseJson(text: string, reviver?: (this: any, key: string, value: any) => any, context?: number): any;
+	export = parseJson;
 }
 
 // TODO remove that when @types/estree is updated

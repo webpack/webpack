@@ -3,7 +3,7 @@
 ```javascript
 var path = require("path");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		// The entry points for the pages
 		// They also contains router
@@ -366,7 +366,6 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -470,7 +469,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -531,8 +530,8 @@ asset pageA.bundle.js 13 KiB [emitted] (name: pageA)
 asset router_js.bundle.js 2.45 KiB [emitted]
 asset aPage.bundle.js 392 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 392 bytes [emitted] (name: bPage)
-Entrypoint pageA 15.9 KiB = router_js.bundle.js 2.45 KiB aPage.bundle.js 392 bytes pageA.bundle.js 13 KiB
-Entrypoint pageB 15.9 KiB = router_js.bundle.js 2.45 KiB bPage.bundle.js 392 bytes pageB.bundle.js 13 KiB
+Entrypoint pageA 15.8 KiB = router_js.bundle.js 2.45 KiB aPage.bundle.js 392 bytes pageA.bundle.js 13 KiB
+Entrypoint pageB 15.8 KiB = router_js.bundle.js 2.45 KiB bPage.bundle.js 392 bytes pageB.bundle.js 13 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -575,7 +574,7 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [used exports unknown]
     entry ./router pageA
     entry ./router pageB
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -630,5 +629,5 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [no exports used]
     entry ./router pageA
     entry ./router pageB
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

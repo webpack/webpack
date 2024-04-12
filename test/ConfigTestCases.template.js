@@ -61,10 +61,8 @@ const describeCases = config => {
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
-			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
-					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
@@ -257,7 +255,7 @@ const describeCases = config => {
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
 													modules || []
-											  )
+												)
 											: modules;
 										if (
 											allModules.some(
@@ -441,6 +439,11 @@ const describeCases = config => {
 										) {
 											baseModuleScope.window = globalContext;
 											baseModuleScope.self = globalContext;
+											baseModuleScope.document = globalContext.document;
+											baseModuleScope.setTimeout = globalContext.setTimeout;
+											baseModuleScope.clearTimeout = globalContext.clearTimeout;
+											baseModuleScope.getComputedStyle =
+												globalContext.getComputedStyle;
 											baseModuleScope.URL = URL;
 											baseModuleScope.Worker =
 												require("./helpers/createFakeWorker")({
@@ -455,7 +458,6 @@ const describeCases = config => {
 											name: "context for esm"
 										});
 
-										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
 											options,
@@ -540,6 +542,7 @@ const describeCases = config => {
 													}
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
+														if (esmMode === "unlinked") return esm;
 														await esm.link(
 															async (specifier, referencingModule) => {
 																return await asModule(
@@ -548,7 +551,7 @@ const describeCases = config => {
 																			referencingModule.identifier
 																				? referencingModule.identifier.slice(
 																						esmIdentifier.length + 1
-																				  )
+																					)
 																				: fileURLToPath(referencingModule.url)
 																		),
 																		options,
@@ -571,6 +574,11 @@ const describeCases = config => {
 															: ns;
 													})();
 												} else {
+													const isJSON = p.endsWith(".json");
+													if (isJSON) {
+														return JSON.parse(content);
+													}
+
 													if (p in requireCache) {
 														return requireCache[p].exports;
 													}
@@ -578,6 +586,7 @@ const describeCases = config => {
 														exports: {}
 													};
 													requireCache[p] = m;
+
 													const moduleScope = {
 														...baseModuleScope,
 														require: _require.bind(
@@ -619,7 +628,12 @@ const describeCases = config => {
 													const fn = runInNewContext
 														? vm.runInNewContext(code, globalContext, p)
 														: vm.runInThisContext(code, p);
-													fn.call(m.exports, ...argValues);
+													fn.call(
+														testConfig.nonEsmThis
+															? testConfig.nonEsmThis(module)
+															: m.exports,
+														...argValues
+													);
 													document.currentScript = oldCurrentScript;
 													return m.exports;
 												}
@@ -629,9 +643,9 @@ const describeCases = config => {
 											) {
 												return testConfig.modules[module];
 											} else {
-												return require(module.startsWith("node:")
-													? module.slice(5)
-													: module);
+												return require(
+													module.startsWith("node:") ? module.slice(5) : module
+												);
 											}
 										};
 

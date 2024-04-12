@@ -3,7 +3,7 @@
 ```javascript
 var path = require("path");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		vendor1: ["./vendor1"],
 		vendor2: ["./vendor2"],
@@ -314,7 +314,7 @@ chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -360,5 +360,5 @@ chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
     cjs self exports reference ./vendor1.js 1:0-14
     cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

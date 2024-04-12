@@ -27,7 +27,7 @@ describe("NodeTemplatePlugin", () => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
 				expect(stats.hasWarnings()).toBe(false);
-				// eslint-disable-next-line node/no-missing-require
+				// eslint-disable-next-line n/no-missing-require
 				const result = require("./js/NodeTemplatePlugin/result").abc;
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
@@ -69,7 +69,7 @@ describe("NodeTemplatePlugin", () => {
 			(err, stats) => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
-				// eslint-disable-next-line node/no-missing-require
+				// eslint-disable-next-line n/no-missing-require
 				const result = require("./js/NodeTemplatePluginSingle/result2");
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));

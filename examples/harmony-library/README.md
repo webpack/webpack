@@ -3,7 +3,7 @@
 ```javascript
 var path = require("path");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "dist"),
@@ -26,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(self, function() {
+})(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
@@ -84,9 +84,9 @@ var __webpack_exports__ = {};
 /*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "value": () => (/* binding */ value),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "increment": () => (/* binding */ increment),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "value": () => (/* binding */ value)
 /* harmony export */ });
 var value = 0;
 function increment() {
@@ -105,7 +105,7 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 2.89 KiB [emitted] (name: main)
+asset MyLibrary.umd.js 2.88 KiB [emitted] (name: main)
 chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example main
   runtime modules 670 bytes 3 modules
@@ -114,13 +114,13 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [used exports unknown]
     entry ./example main
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 688 bytes [emitted] [minimized] (name: main)
+asset MyLibrary.umd.js 674 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example main
   runtime modules 670 bytes 3 modules
@@ -128,5 +128,5 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [exports: default, increment, value]
     entry ./example main
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

@@ -55,6 +55,18 @@ greatly appreciate any time spent fixing typos or clarifying sections in the
 documentation. [See a list of issues with the documentation tag](https://github.com/webpack/webpack/labels/documentation),
 or [check out the issues on the documentation website's repository](https://github.com/webpack/webpack.js.org/issues).
 
+## Types
+
+webpack is statically typed using JSDoc annotation and TypeScript. If you would like to export a new type which doesn't belong to a public API, then you can do so by declaring it in `webpack/lib/index.js`.
+
+`webpack/lib/index.js`
+
+```js
+/** @typedef {import("./NormalModuleFactory").ResolveData} ResolveData */
+```
+
+Then, automatically generate the type declarations by running `yarn fix` locally, and the changes you have made will be reflected in `types.d.ts`.
+
 ## Discussions
 
 Gitter is only for small questions. To discuss a subject in detail, please send a link to your forum or blog in the Gitter chat.

@@ -111,7 +111,7 @@ const describeCases = config => {
 											emitOnErrors: true,
 											minimizer: [terserForTesting],
 											...config.optimization
-									  }
+										}
 									: {
 											removeAvailableModules: true,
 											removeEmptyChunks: true,
@@ -127,7 +127,7 @@ const describeCases = config => {
 											chunkIds: "size",
 											minimizer: [terserForTesting],
 											...config.optimization
-									  },
+										},
 								performance: {
 									hints: false
 								},
@@ -427,7 +427,7 @@ const describeCases = config => {
 									});
 									cleanups.push(() => (esmContext.it = undefined));
 									function _require(module, esmMode) {
-										if (module.substr(0, 2) === "./") {
+										if (module.startsWith("./")) {
 											const p = path.join(outputDirectory, module);
 											const content = fs.readFileSync(p, "utf-8");
 											if (p.endsWith(".mjs")) {
