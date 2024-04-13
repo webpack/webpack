@@ -1,7 +1,7 @@
 import * as module from "./module";
 import { obj3, obj3CanMangle, obj4, obj4CanMangle } from "./reexport?side-effects" // enable side effects to ensure reexport is not skipped
 import data from "./data.json";
-import fs from "fs/promises";
+import fs from "fs";
 import path from "path";
 
 it("should mangle export when destructuring module", () => {
@@ -69,7 +69,7 @@ it("should mangle when destructuring json", async () => {
 	expect(values[2]).toBe(5);
 	expect(values[3]).toBe(3);
 
-	const info = JSON.parse(await fs.readFile(path.resolve(__dirname, "json-exports-info.json"), 'utf-8'));
+	const info = JSON.parse(await fs.promises.readFile(path.resolve(__dirname, "json-exports-info.json"), 'utf-8'));
 	const exportsInfo = info["main"]["./data.json"];
 	expect(exportsInfo.foo.usedName !== "foo").toBe(true);
 	expect(exportsInfo.obj.usedName !== "obj").toBe(true);

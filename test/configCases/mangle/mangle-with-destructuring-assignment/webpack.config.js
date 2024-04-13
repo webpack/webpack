@@ -1,4 +1,4 @@
-const { getRuntimeKey } = require("../../../../lib/util/runtime");
+// const { getRuntimeKey } = require("../../../../lib/util/runtime");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -33,7 +33,7 @@ module.exports = {
 					};
 					const map = {};
 					for (const chunk of compilation.chunks) {
-						const map2 = (map[getRuntimeKey(chunk.runtime)] = {});
+						const map2 = (map[chunk.runtime] = {});
 						for (const module of compilation.modules) {
 							if (module.type !== "json") continue;
 							const map3 = (map2[
