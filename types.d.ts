@@ -5529,6 +5529,18 @@ declare class JavascriptModulesPlugin {
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): string;
+	renamedRootModule(
+		allModules: Module[],
+		renderContext: MainRenderContext,
+		inlinedModules: Set<Module>,
+		chunkRenderContext: ChunkRenderContext,
+		hooks: CompilationHooksJavascriptModulesPlugin
+	): Map<Module, Source>;
+	findNewName(
+		oldName: string,
+		usedName: Set<string>,
+		extraInfo: string
+	): string;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
