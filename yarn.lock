@@ -4543,9 +4543,9 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.7.7:
-  version "4.8.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.8.1.tgz#1e02c15c4397212a9a1b037fa4324c6f7dd45b47"
-  integrity sha512-7q/AdPzf2WpwPlPL4v1kE2KsJsHl7EF4+hAeVzlyanr2+YnR21NVn9mDqo+7DEaKDRsQy8nvxPlKH4WqMtiO0w==
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.8.2.tgz#9bb7c3e43647348451082557f05fb170b7442949"
+  integrity sha512-j4WKth315edViMBGkHW6NTF0QBjsTrcRDmYNcGsPq+ozMEyCCCIlX2d2mJ5wuh6iHvJ3FevUrr48v58YRqVdYg==
   dependencies:
     tslib "^2.0.0"
 
