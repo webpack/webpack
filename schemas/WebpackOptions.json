@@ -889,6 +889,10 @@
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
         },
+        "node": {
+          "description": "The environment is Node.js.",
+          "type": "boolean"
+        },
         "nodePrefixForCoreModules": {
           "description": "The environment supports `node:` prefix for Node.js core modules.",
           "type": "boolean"
@@ -899,6 +903,14 @@
         },
         "templateLiteral": {
           "description": "The environment supports template literals.",
+          "type": "boolean"
+        },
+        "web": {
+          "description": "The environment is web.",
+          "type": "boolean"
+        },
+        "webworker": {
+          "description": "The environment is Web Worker.",
           "type": "boolean"
         }
       }

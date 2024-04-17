@@ -6361,6 +6361,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-node": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment is Node.js.",
+        "multiple": false,
+        "path": "output.environment.node",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment is Node.js.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-node-prefix-for-core-modules": Object {
     "configs": Array [
       Object {
@@ -6397,6 +6410,32 @@ Object {
       },
     ],
     "description": "The environment supports template literals.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-web": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment is web.",
+        "multiple": false,
+        "path": "output.environment.web",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment is web.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-webworker": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment is Web Worker.",
+        "multiple": false,
+        "path": "output.environment.webworker",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment is Web Worker.",
     "multiple": false,
     "simpleType": "boolean",
   },

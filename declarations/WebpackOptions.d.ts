@@ -2317,6 +2317,10 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
+	 * The environment is Node.js.
+	 */
+	node?: boolean;
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -2328,6 +2332,14 @@ export interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+	/**
+	 * The environment is web.
+	 */
+	web?: boolean;
+	/**
+	 * The environment is Web Worker.
+	 */
+	webworker?: boolean;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.

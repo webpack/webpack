@@ -3949,6 +3949,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment is Node.js.
+	 */
+	node?: boolean;
+
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -3962,6 +3967,16 @@ declare interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+
+	/**
+	 * The environment is web.
+	 */
+	web?: boolean;
+
+	/**
+	 * The environment is Web Worker.
+	 */
+	webworker?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);

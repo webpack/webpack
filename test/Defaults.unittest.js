@@ -120,7 +120,7 @@ describe("snapshots", () => {
 		    "environment": Object {
 		      "arrowFunction": true,
 		      "asyncFunction": true,
-		      "bigIntLiteral": undefined,
+		      "bigIntLiteral": true,
 		      "const": true,
 		      "destructuring": true,
 		      "document": true,
@@ -129,9 +129,12 @@ describe("snapshots", () => {
 		      "forOf": true,
 		      "globalThis": undefined,
 		      "module": undefined,
+		      "node": false,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "templateLiteral": true,
+		      "web": true,
+		      "webworker": null,
 		    },
 		    "target": "web",
 		  },
@@ -346,7 +349,7 @@ describe("snapshots", () => {
 		    "environment": Object {
 		      "arrowFunction": true,
 		      "asyncFunction": true,
-		      "bigIntLiteral": undefined,
+		      "bigIntLiteral": true,
 		      "const": true,
 		      "destructuring": true,
 		      "document": true,
@@ -355,9 +358,12 @@ describe("snapshots", () => {
 		      "forOf": true,
 		      "globalThis": undefined,
 		      "module": undefined,
+		      "node": false,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "templateLiteral": true,
+		      "web": true,
+		      "webworker": null,
 		    },
 		    "filename": "[name].js",
 		    "globalObject": "self",
@@ -1317,6 +1323,14 @@ describe("snapshots", () => {
 		-       "document": true,
 		+       "document": false,
 		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "web": true,
+		-       "webworker": null,
+		+       "web": false,
+		+       "webworker": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
@@ -1345,6 +1359,14 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
+		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "web": true,
+		-       "webworker": null,
+		+       "web": false,
+		+       "webworker": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1440,6 +1462,9 @@ describe("snapshots", () => {
 		-       "document": true,
 		+       "document": false,
 		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": true,
+		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
@@ -1447,6 +1472,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
+		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": true,
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1473,6 +1501,14 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
+		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "web": true,
+		-       "webworker": null,
+		+       "web": false,
+		+       "webworker": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-main",
@@ -1502,6 +1538,14 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
+		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "web": true,
+		-       "webworker": null,
+		+       "web": false,
+		+       "webworker": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1607,6 +1651,12 @@ describe("snapshots", () => {
 		-       "document": true,
 		+       "document": false,
 		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": false,
+		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
 		@@ ... @@
@@ -1635,6 +1685,12 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
+		@@ ... @@
+		-       "node": false,
+		+       "node": true,
+		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": false,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -2060,7 +2116,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "arrowFunction": true,
 			-       "asyncFunction": true,
-			-       "bigIntLiteral": undefined,
+			-       "bigIntLiteral": true,
 			-       "const": true,
 			-       "destructuring": true,
 			+       "arrowFunction": false,
@@ -2074,17 +2130,21 @@ describe("snapshots", () => {
 			-       "forOf": true,
 			-       "globalThis": undefined,
 			-       "module": undefined,
-			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
-			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
 			+       "module": false,
+			@@ ... @@
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			-       "templateLiteral": true,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "templateLiteral": false,
+			@@ ... @@
+			-       "webworker": null,
+			+       "webworker": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunkbrowserslist_test",
@@ -2094,7 +2154,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "arrowFunction": true,
 			-       "asyncFunction": true,
-			-       "bigIntLiteral": undefined,
+			-       "bigIntLiteral": true,
 			-       "const": true,
 			-       "destructuring": true,
 			+       "arrowFunction": false,
@@ -2108,17 +2168,21 @@ describe("snapshots", () => {
 			-       "forOf": true,
 			-       "globalThis": undefined,
 			-       "module": undefined,
-			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
-			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
 			+       "module": false,
+			@@ ... @@
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			-       "templateLiteral": true,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "templateLiteral": false,
+			@@ ... @@
+			-       "webworker": null,
+			+       "webworker": false,
 			@@ ... @@
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
