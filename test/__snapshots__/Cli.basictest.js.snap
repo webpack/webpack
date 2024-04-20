@@ -1475,26 +1475,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "module-generator-css-exports-convention": Object {
-    "configs": Array [
-      Object {
-        "description": "Specifies the convention of exported names.",
-        "multiple": false,
-        "path": "module.generator.css.exportsConvention",
-        "type": "enum",
-        "values": Array [
-          "as-is",
-          "camel-case",
-          "camel-case-only",
-          "dashes",
-          "dashes-only",
-        ],
-      },
-    ],
-    "description": "Specifies the convention of exported names.",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "module-generator-css-exports-only": Object {
     "configs": Array [
       Object {

@@ -2889,10 +2889,6 @@ export interface CssAutoParserOptions {
  */
 export interface CssGeneratorOptions {
 	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?: CssGeneratorExportsConvention;
-	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
