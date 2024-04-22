@@ -2255,6 +2255,7 @@ describe("snapshots", () => {
 			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
 			+           Object {
@@ -2272,18 +2273,18 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			+           },
+			@@ ... @@
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2312,16 +2313,18 @@ describe("snapshots", () => {
 			-     "generator": Object {},
 			+     "generator": Object {
 			+       "css": Object {
-			+         "exportsConvention": "as-is",
 			+         "exportsOnly": false,
 			+       },
 			+       "css/auto": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+       "css/global": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+       "css/module": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+     },

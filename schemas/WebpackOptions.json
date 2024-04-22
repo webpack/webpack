@@ -432,9 +432,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "exportsConvention": {
-          "$ref": "#/definitions/CssGeneratorExportsConvention"
-        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }

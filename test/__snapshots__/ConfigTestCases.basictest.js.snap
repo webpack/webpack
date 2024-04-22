@@ -3213,16 +3213,16 @@ Array [
 }
 
 .local1,
-.local2 :global .global,
+.local2 .global,
 .local3 {
 	color: green;
 }
 
-:global .global :local .local4 {
+.global ._-_css-modules_style_module_css-local4 {
 	color: yellow;
 }
 
-.local5:global(.global).local6 {
+.local5.global.local6 {
 	color: blue;
 }
 
@@ -3290,7 +3290,7 @@ Array [
 	overflow: hidden;
 }
 
-:global(:global(:local(.nested1)).nested2).nested3 {
+._-_css-modules_style_module_css-nested1.nested2.nested3 {
 	color: pink;
 }
 
@@ -3339,7 +3339,7 @@ Array [
 	--local-color: red;
 }
 
-.globalVars :global {
+.globalVars {
 	color: var(--global-color);
 	--global-color: red;
 }
@@ -3425,7 +3425,7 @@ Array [
 	}
 }
 
-:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
+.globalUpperCase ._-_css-modules_style_module_css-localUpperCase {
 	color: yellow;
 }
 
@@ -3434,7 +3434,7 @@ Array [
 	--LOCAL-COLOR: red;
 }
 
-.globalVarsUpperCase :GLOBAL {
+.globalVarsUpperCase {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
@@ -3598,31 +3598,31 @@ Array [
 .nested-with-local-pseudo {
 	color: red;
 
-	:local .local-nested {
+	._-_css-modules_style_module_css-local-nested {
 		color: red;
 	}
 
-	:global .global-nested {
+	.global-nested {
 		color: red;
 	}
 
-	:local(.local-nested) {
+	._-_css-modules_style_module_css-local-nested {
 		color: red;
 	}
 
-	:global(.global-nested) {
+	.global-nested {
 		color: red;
 	}
 
-	:local .local-nested, :global .global-nested-next {
+	._-_css-modules_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	:local(.local-nested), :global(.global-nested-next) {
+	._-_css-modules_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	:global .foo, .bar {
+	.foo, .bar {
 		color: red;
 	}
 }
@@ -3643,12 +3643,12 @@ Array [
 	}
 }
 
-:global .global-foo {
+.global-foo {
 	.nested-global {
 		color: red;
 	}
 
-	:local .local-in-global {
+	._-_css-modules_style_module_css-local-in-global {
 		color: blue;
 	}
 }
@@ -3661,9 +3661,9 @@ Array [
 	}
 }
 
-:global .class :local .in-local-global-scope,
-:global .class :local .in-local-global-scope,
-:local .class-local-scope :global .in-local-global-scope {
+.class ._-_css-modules_style_module_css-in-local-global-scope,
+.class ._-_css-modules_style_module_css-in-local-global-scope,
+._-_css-modules_style_module_css-class-local-scope .in-local-global-scope {
 	color: red;
 }
 
@@ -3739,14 +3739,14 @@ Array [
 	bar: env(foo, var(--baz));
 }
 
-:global      .global-foo, :local        .bar {
-	:local      .local-in-global       {
+.global-foo, ._-_css-modules_style_module_css-bar {
+	._-_css-modules_style_module_css-local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
-		:global .my-global-class-again,
-		:local .my-global-class-again {
+		.my-global-class-again,
+		._-_css-modules_style_module_css-my-global-class-again {
 			color: red;
 		}
 	}
@@ -3766,12 +3766,12 @@ Array [
 	}
 }
 
-:global .again-global {
+.again-global {
 	color:red;
 }
 
-:global .again-again-global {
-	:global .again-again-global {
+.again-again-global {
+	.again-again-global {
 		color: red;
 	}
 }
@@ -3780,22 +3780,22 @@ Array [
 	--foo: red;
 }
 
-:global .again-again-global {
+.again-again-global {
 	color: var(--foo);
 
-	:global .again-again-global {
+	.again-again-global {
 		color: var(--foo);
 	}
 }
 
-:global .again-again-global {
+.again-again-global {
 	animation: slidein 3s;
 
-	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+	.again-again-global, .class, ._-_css-modules_style_module_css-nested1.nested2.nested3 {
 		animation: slidein 3s;
 	}
 
-  .local2 :global .global,
+  .local2 .global,
 	.local3 {
 		color: red;
 	}
@@ -3850,31 +3850,28 @@ Array [
 	}
 }
 
-:local(.class) {
+._-_style_css-class {
 	color: red;
 }
 
-:local .class {
+._-_style_css-class {
 	color: green;
 }
 
-:global(.class) {
+.class {
 	color: blue;
 }
 
-:global .class {
+.class {
 	color: white;
 }
 
-:export {
-	foo: bar;
-}
 
 .class {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:local4:_-_css-modules_style_module_css-local4/nested1:_-_css-modules_style_module_css-nested1/localUpperCase:_-_css-modules_style_module_css-localUpperCase/local-nested:_-_css-modules_style_module_css-local-nested/local-in-global:_-_css-modules_style_module_css-local-in-global/in-local-global-scope:_-_css-modules_style_module_css-in-local-global-scope/class-local-scope:_-_css-modules_style_module_css-class-local-scope/bar:_-_css-modules_style_module_css-bar/my-global-class-again:_-_css-modules_style_module_css-my-global-class-again/\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,class:_-_style_css-class/foo:bar/\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
