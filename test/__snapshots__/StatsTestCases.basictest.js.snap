@@ -157,7 +157,7 @@ webpack/runtime/make namespace object 274 bytes {main} [code generated]
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
 "asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset bundle.js 13.6 KiB [emitted] (name: main)
+asset bundle.js 13.4 KiB [emitted] (name: main)
 asset static/file.html 12 bytes [emitted] [from: static/file.html] (auxiliary name: main)
 runtime modules 1.15 KiB 2 modules
 modules by path ./ 9.36 KiB (javascript) 14.6 KiB (asset)
@@ -519,10 +519,10 @@ webpack x.x.x compiled with 1 warning in X ms"
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
 "PublicPath: auto
-asset main1.js 4.52 KiB [emitted] (name: main1)
-asset main2.js 4.51 KiB [emitted] (name: main2)
-Entrypoint main1 4.52 KiB = main1.js
-Entrypoint main2 4.51 KiB = main2.js
+asset main1.js 4.39 KiB [emitted] (name: main1)
+asset main2.js 4.39 KiB [emitted] (name: main2)
+Entrypoint main1 4.39 KiB = main1.js
+Entrypoint main2 4.39 KiB = main2.js
 chunk (runtime: main1) main1.js (main1) 189 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./main1 main1
   runtime modules 670 bytes 3 modules
@@ -546,7 +546,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
 "PublicPath: auto
-asset bundle.js 10.3 KiB [emitted] (name: main)
+asset bundle.js 10.2 KiB [emitted] (name: main)
 asset 964.bundle.js 323 bytes [emitted]
 asset 226.bundle.js 206 bytes [emitted]
 asset 899.bundle.js 138 bytes [emitted]
@@ -751,7 +751,7 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"asset main-ca1a74034b366de49c9b.js 12.8 KiB [emitted] [immutable] (name: main)
+"asset main-ca1a74034b366de49c9b.js 12.7 KiB [emitted] [immutable] (name: main)
   sourceMap main-ca1a74034b366de49c9b.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
 asset 977-0d034101f87f8fa73545.js 455 bytes [emitted] [immutable]
   sourceMap 977-0d034101f87f8fa73545.js.map 347 bytes [emitted] [dev]
@@ -767,7 +767,7 @@ built modules 500 bytes [built]
   ./a/cc/b.js (in my-layer) 18 bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-ca1a74034b366de49c9b.js 12.8 KiB [emitted] [immutable] (name: main)
+asset main-ca1a74034b366de49c9b.js 12.7 KiB [emitted] [immutable] (name: main)
   sourceMap main-ca1a74034b366de49c9b.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
 asset 977-0d034101f87f8fa73545.js 455 bytes [emitted] [immutable]
   sourceMap 977-0d034101f87f8fa73545.js.map 347 bytes [emitted] [dev]
@@ -841,7 +841,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for custom-terser 1`] = `
-"asset bundle.js 586 bytes [emitted] [minimized] (name: main)
+"asset bundle.js 623 bytes [emitted] [minimized] (name: main)
 ./index.js 128 bytes [built] [code generated]
   [no exports used]
 ./a.js 49 bytes [built] [code generated]
@@ -1021,7 +1021,7 @@ webpack x.x.x compiled with 1 error in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dynamic-chunk-name-error 1`] = `
-"assets by status 8.29 KiB [cached] 3 assets
+"assets by status 8.04 KiB [cached] 3 assets
 runtime modules 3.54 KiB 8 modules
 cacheable modules 128 bytes
   ./entry-1.js 63 bytes [built] [code generated]
@@ -1164,7 +1164,7 @@ webpack x.x.x compiled with 2 errors in X ms"
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "hidden assets 34 bytes 1 asset
-asset bundle.js 5.38 KiB [emitted] (name: main)
+asset bundle.js 5.25 KiB [emitted] (name: main)
 runtime modules 1.81 KiB 5 modules
 hidden modules 99 bytes 2 modules
 cacheable modules 119 bytes
@@ -1174,7 +1174,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
-"asset main.js 1.37 KiB [emitted] (name: main)
+"asset main.js 1.25 KiB [emitted] (name: main)
 ./index.js 17 bytes [built] [code generated]
 external \\"test\\" 42 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
@@ -1295,7 +1295,7 @@ asset 22c24a3b26d46118dc06.js 809 bytes [emitted] [immutable]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"asset entry.js 12 KiB [emitted] (name: entry)
+"asset entry.js 11.9 KiB [emitted] (name: entry)
 asset 717.js 482 bytes [emitted]
 asset 776.js 482 bytes [emitted]
 asset 0.js 475 bytes [emitted]
@@ -1394,7 +1394,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "1 chunks:
-  asset bundle1.js 4.85 KiB [emitted] (name: main)
+  asset bundle1.js 4.72 KiB [emitted] (name: main)
   chunk (runtime: main) bundle1.js (main) 219 bytes (javascript) 1.77 KiB (runtime) <{792}> >{792}< [entry] [rendered]
     runtime modules 1.77 KiB 4 modules
     cacheable modules 219 bytes
@@ -1547,14 +1547,14 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-external-module-readable-identifier 1`] = `
-"asset main.js 1.45 KiB [emitted] (name: main)
+"asset main.js 1.32 KiB [emitted] (name: main)
 ./index.js 17 bytes [built] [code generated]
 external \\"very-very-very-very-long-external-module-readable-identifier-it-should...(truncated) 42 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
-"asset main.js 5.46 KiB [emitted] (name: main)
+"asset main.js 5.34 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./a.js?1 33 bytes [built] [code generated]
 ./a.js?2 33 bytes [built] [code generated]
@@ -1579,7 +1579,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules-default 1`] = `
-"asset main.js 5.46 KiB [emitted] (name: main)
+"asset main.js 5.34 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./a.js?1 33 bytes [built] [code generated]
 ./a.js?2 33 bytes [built] [code generated]
@@ -1630,9 +1630,9 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
-"asset e2.js 12.2 KiB [emitted] (name: e2)
-asset e3.js 12.2 KiB [emitted] (name: e3)
-asset e1.js 12.2 KiB [emitted] (name: e1)
+"asset e2.js 12.1 KiB [emitted] (name: e2)
+asset e3.js 12.1 KiB [emitted] (name: e3)
+asset e1.js 12.1 KiB [emitted] (name: e1)
 asset 471.js 856 bytes [emitted]
 asset 752.js 856 bytes [emitted]
 asset 637.js 854 bytes [emitted]
@@ -1676,9 +1676,9 @@ webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication-named 1`] = `
-"asset e2.js 12.1 KiB [emitted] (name: e2)
-asset e1.js 12.1 KiB [emitted] (name: e1)
-asset e3.js 12.1 KiB [emitted] (name: e3)
+"asset e2.js 12 KiB [emitted] (name: e2)
+asset e1.js 12 KiB [emitted] (name: e1)
+asset e3.js 12 KiB [emitted] (name: e3)
 asset async1.js 961 bytes [emitted] (name: async1)
 asset async2.js 961 bytes [emitted] (name: async2)
 asset async3.js 960 bytes [emitted] (name: async3)
@@ -1765,7 +1765,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
-"assets by status 2 KiB [cached] 1 asset
+"assets by status 1.88 KiB [cached] 1 asset
 ./index.js 19 bytes [built] [code generated]
 ./inner.js 53 bytes [built] [code generated]
 ./not-existing.js 26 bytes [built] [code generated]
@@ -1787,7 +1787,7 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
-"assets by status 2 KiB [cached] 1 asset
+"assets by status 1.88 KiB [cached] 1 asset
 ./index.js 19 bytes [built] [code generated]
 ./inner.js 53 bytes [built] [code generated]
 ./not-existing.js 26 bytes [built] [code generated]
@@ -1907,7 +1907,7 @@ webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"asset main.js 11.1 KiB {792} [emitted] (name: main)
+"asset main.js 11 KiB {792} [emitted] (name: main)
 asset cir2 from cir1.js 377 bytes {816}, {915} [emitted] (name: cir2 from cir1)
 asset cir1.js 333 bytes {712} [emitted] (name: cir1)
 asset cir2.js 333 bytes {915} [emitted] (name: cir2)
@@ -2106,9 +2106,9 @@ webpack x.x.x compiled with <CLR=31,BOLD>2 errors</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-no-async-chunks-shown 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>294 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>sec.js</CLR> 1.53 KiB <CLR=32,BOLD>[emitted]</CLR> (name: sec)
+asset <CLR=32,BOLD>sec.js</CLR> 1.41 KiB <CLR=32,BOLD>[emitted]</CLR> (name: sec)
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 294 KiB = <CLR=32,BOLD>main.js</CLR>
-Entrypoint <CLR=BOLD>sec</CLR> 1.53 KiB = <CLR=32,BOLD>sec.js</CLR>
+Entrypoint <CLR=BOLD>sec</CLR> 1.41 KiB = <CLR=32,BOLD>sec.js</CLR>
 <CLR=BOLD>./index.js</CLR> 32 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 <CLR=BOLD>./index2.js</CLR> 48 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2243,11 +2243,11 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
       [LogTestPlugin] Log
     [LogTestPlugin] End
 PublicPath: auto
-asset main.js 10.3 KiB {792} [emitted] (name: main)
+asset main.js 10.2 KiB {792} [emitted] (name: main)
 asset 964.js 323 bytes {964} [emitted]
 asset 226.js 206 bytes {226} [emitted]
 asset 899.js 138 bytes {899} [emitted]
-Entrypoint main 10.3 KiB = main.js
+Entrypoint main 10.2 KiB = main.js
 chunk {226} (runtime: main) 226.js 44 bytes <{964}> [rendered]
   > [964] ./c.js 1:0-52
 chunk {792} (runtime: main) main.js (main) 73 bytes (javascript) 6.05 KiB (runtime) >{899}< >{964}< [entry] [rendered]
@@ -2421,7 +2421,7 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
-asset main.js 10.3 KiB [emitted] (name: main)
+asset main.js 10.2 KiB [emitted] (name: main)
 asset 964.js 323 bytes [emitted]
 asset 226.js 206 bytes [emitted]
 asset 899.js 138 bytes [emitted]
@@ -2519,11 +2519,11 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
       [LogTestPlugin] Log
     [LogTestPlugin] End
 PublicPath: auto
-asset main.js 10.3 KiB {792} [emitted] (name: main)
+asset main.js 10.2 KiB {792} [emitted] (name: main)
 asset 964.js 323 bytes {964} [emitted]
 asset 226.js 206 bytes {226} [emitted]
 asset 899.js 138 bytes {899} [emitted]
-Entrypoint main 10.3 KiB = main.js
+Entrypoint main 10.2 KiB = main.js
 chunk {226} (runtime: main) 226.js 44 bytes <{964}> [rendered]
   > [964] ./c.js 1:0-52
   ./d.js [425] 22 bytes {226} [depth 2] [built] [code generated]
@@ -2845,18 +2845,18 @@ b-source-map:
 
 exports[`StatsTestCases should print correct stats for related-assets 1`] = `
 "default:
-  assets by path *.js 15.3 KiB
-    asset default-main.js 14.5 KiB [emitted] (name: main) 3 related assets
+  assets by path *.js 15.2 KiB
+    asset default-main.js 14.4 KiB [emitted] (name: main) 3 related assets
     asset default-chunk_js.js 803 bytes [emitted] 3 related assets
   assets by path *.css 142 bytes
     asset default-chunk_js.css 73 bytes [emitted] 3 related assets
     asset default-main.css 69 bytes [emitted] (name: main) 3 related assets
 
 relatedAssets:
-  assets by path *.js 15.3 KiB
-    asset relatedAssets-main.js 14.5 KiB [emitted] (name: main)
-      compressed relatedAssets-main.js.br 14.5 KiB [emitted]
-      compressed relatedAssets-main.js.gz 14.5 KiB [emitted]
+  assets by path *.js 15.2 KiB
+    asset relatedAssets-main.js 14.4 KiB [emitted] (name: main)
+      compressed relatedAssets-main.js.br 14.4 KiB [emitted]
+      compressed relatedAssets-main.js.gz 14.4 KiB [emitted]
       sourceMap relatedAssets-main.js.map 12.6 KiB [emitted] [dev] (auxiliary name: main)
         compressed relatedAssets-main.js.map.br 12.6 KiB [emitted]
         compressed relatedAssets-main.js.map.gz 12.6 KiB [emitted]
@@ -2881,9 +2881,9 @@ relatedAssets:
       compressed relatedAssets-main.css.gz 75 bytes [emitted]
 
 exclude1:
-  assets by path *.js 15.3 KiB
-    asset exclude1-main.js 14.5 KiB [emitted] (name: main)
-      hidden assets 29.1 KiB 2 assets
+  assets by path *.js 15.2 KiB
+    asset exclude1-main.js 14.4 KiB [emitted] (name: main)
+      hidden assets 28.8 KiB 2 assets
       sourceMap exclude1-main.js.map 12.5 KiB [emitted] [dev] (auxiliary name: main)
         hidden assets 25.1 KiB 2 assets
         + 1 related asset
@@ -2909,11 +2909,11 @@ exclude1:
       + 1 related asset
 
 exclude2:
-  assets by path *.js 15.3 KiB
-    asset exclude2-main.js 14.5 KiB [emitted] (name: main)
+  assets by path *.js 15.2 KiB
+    asset exclude2-main.js 14.4 KiB [emitted] (name: main)
       hidden assets 12.5 KiB 1 asset
-      compressed exclude2-main.js.br 14.5 KiB [emitted]
-      compressed exclude2-main.js.gz 14.5 KiB [emitted]
+      compressed exclude2-main.js.br 14.4 KiB [emitted]
+      compressed exclude2-main.js.gz 14.4 KiB [emitted]
     asset exclude2-chunk_js.js 804 bytes [emitted]
       hidden assets 295 bytes 1 asset
       compressed exclude2-chunk_js.js.br 804 bytes [emitted]
@@ -2930,10 +2930,10 @@ exclude2:
 
 exclude3:
   hidden assets 878 bytes 2 assets
-  assets by status 14.6 KiB [emitted]
-    asset exclude3-main.js 14.5 KiB [emitted] (name: main)
-      compressed exclude3-main.js.br 14.5 KiB [emitted]
-      compressed exclude3-main.js.gz 14.5 KiB [emitted]
+  assets by status 14.5 KiB [emitted]
+    asset exclude3-main.js 14.4 KiB [emitted] (name: main)
+      compressed exclude3-main.js.br 14.4 KiB [emitted]
+      compressed exclude3-main.js.gz 14.4 KiB [emitted]
       sourceMap exclude3-main.js.map 12.5 KiB [emitted] [dev] (auxiliary name: main)
         compressed exclude3-main.js.map.br 12.5 KiB [emitted]
         compressed exclude3-main.js.map.gz 12.5 KiB [emitted]
@@ -2946,7 +2946,7 @@ exclude3:
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
-"asset bundle.js 1.67 KiB [emitted] (name: main)
+"asset bundle.js 1.55 KiB [emitted] (name: main)
 modules by path ./node_modules/def/ 17 bytes
   ./node_modules/def/index.js 16 bytes [built] [code generated]
   ./node_modules/def/node_modules/xyz/index.js 1 bytes [built] [code generated]
@@ -2957,7 +2957,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for reverse-sort-modules 1`] = `
-"asset main.js 5.46 KiB [emitted] (name: main)
+"asset main.js 5.34 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./c.js?9 33 bytes [built] [code generated]
 ./c.js?8 33 bytes [built] [code generated]
@@ -3066,8 +3066,8 @@ webpack x.x.x compiled successfully"
 
 exports[`StatsTestCases should print correct stats for runtime-specific-used-exports 1`] = `
 "production:
-  asset production-a.js 13.2 KiB [emitted] (name: a)
-  asset production-b.js 13.2 KiB [emitted] (name: b)
+  asset production-a.js 13.1 KiB [emitted] (name: a)
+  asset production-b.js 13.1 KiB [emitted] (name: b)
   asset production-dw_js-_a6170.js 1.15 KiB [emitted]
   asset production-dw_js-_a6171.js 1.15 KiB [emitted]
   asset production-dx_js.js 1.15 KiB [emitted]
@@ -3233,8 +3233,8 @@ development:
   development (webpack x.x.x) compiled successfully in X ms
 
 global:
-  asset global-a.js 13.4 KiB [emitted] (name: a)
-  asset global-b.js 13.4 KiB [emitted] (name: b)
+  asset global-a.js 13.3 KiB [emitted] (name: a)
+  asset global-b.js 13.3 KiB [emitted] (name: b)
   asset global-dw_js.js 1.15 KiB [emitted]
   asset global-dx_js.js 1.15 KiB [emitted]
   asset global-dy_js.js 1.15 KiB [emitted]
@@ -3391,7 +3391,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"asset main.js 12.4 KiB [emitted] (name: main)
+"asset main.js 12.2 KiB [emitted] (name: main)
 asset 1.js 643 bytes [emitted]
 runtime modules 6.62 KiB 9 modules
 cacheable modules 823 bytes
@@ -3569,9 +3569,9 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
 "default:
   Entrypoint main 11.5 KiB = default/main.js
-  Entrypoint a 12.6 KiB = default/a.js
-  Entrypoint b 3.93 KiB = default/b.js
-  Entrypoint c 3.93 KiB = default/c.js
+  Entrypoint a 12.5 KiB = default/a.js
+  Entrypoint b 3.81 KiB = default/b.js
+  Entrypoint c 3.81 KiB = default/c.js
   chunk (runtime: a, main) default/async-g.js (async-g) 45 bytes <{263}> <{425}> <{628}> <{723}> <{996}> ={935}= [rendered]
     > ./g ./a.js 6:0-47
     ./g.js 45 bytes [built] [code generated]
@@ -3843,7 +3843,7 @@ name-too-long:
 
 custom-chunks-filter:
   Entrypoint main 11.5 KiB = custom-chunks-filter/main.js
-  Entrypoint a 12.6 KiB = custom-chunks-filter/a.js
+  Entrypoint a 12.5 KiB = custom-chunks-filter/a.js
   Entrypoint b 8.13 KiB = custom-chunks-filter/628.js 412 bytes custom-chunks-filter/723.js 412 bytes custom-chunks-filter/935.js 412 bytes custom-chunks-filter/425.js 412 bytes custom-chunks-filter/b.js 6.52 KiB
   Entrypoint c 8.13 KiB = custom-chunks-filter/628.js 412 bytes custom-chunks-filter/862.js 412 bytes custom-chunks-filter/935.js 412 bytes custom-chunks-filter/425.js 412 bytes custom-chunks-filter/c.js 6.52 KiB
   chunk (runtime: a, main) custom-chunks-filter/async-g.js (async-g) 45 bytes <{263}> <{425}> <{628}> <{723}> <{996}> ={935}= [rendered]
