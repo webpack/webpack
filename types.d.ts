@@ -2949,6 +2949,11 @@ type CreateWriteStreamFSImplementation = FSImplementation & {
  */
 declare interface CssAutoGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
@@ -2985,6 +2990,11 @@ declare interface CssAutoParserOptions {
  */
 declare interface CssGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
@@ -2994,6 +3004,11 @@ declare interface CssGeneratorOptions {
  * Generator options for css/global modules.
  */
 declare interface CssGlobalGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
 	/**
 	 * Specifies the convention of exported names.
 	 */
@@ -3035,6 +3050,11 @@ declare interface CssImportDependencyMeta {
  * Generator options for css/module modules.
  */
 declare interface CssModuleGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
 	/**
 	 * Specifies the convention of exported names.
 	 */
