@@ -99,7 +99,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         node-version: [10.x, 20.x]
         part: [a, b]
         include:
@@ -136,6 +136,12 @@ jobs:
           - os: ubuntu-latest
             node-version: 12.x
             part: a
+          - os: macos-latest
+            node-version: 20.x
+            part: a
+          - os: macos-latest
+            node-version: 20.x
+            part: b
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
