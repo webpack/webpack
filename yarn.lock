@@ -1025,6 +1025,26 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
+"@jsonjoy.com/base64@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/base64/-/base64-1.1.1.tgz#a717fd8840f7bad49c7fe66cc65db8bcfc4c4dc5"
+  integrity sha512-LnFjVChaGY8cZVMwAIMjvA1XwQjZ/zIXHyh28IyJkyNkzof4Dkm1+KN9UIm3lHhREH4vs7XwZ0NpkZKnwOtEfg==
+
+"@jsonjoy.com/json-pack@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/json-pack/-/json-pack-1.0.3.tgz#a68cbe3ccfd85d26cd763e4175fe90c9ee383d33"
+  integrity sha512-Q0SPAdmK6s5Fe3e1kcNvwNyk6e2+CxM8XZdGbf4abZG7nUO05KSie3/iX29loTBuY+75uVP6RixDSPVpotfzmQ==
+  dependencies:
+    "@jsonjoy.com/base64" "^1.1.1"
+    "@jsonjoy.com/util" "^1.1.2"
+    hyperdyperid "^1.2.0"
+    thingies "^1.20.0"
+
+"@jsonjoy.com/util@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/util/-/util-1.1.2.tgz#5072c27ecdb16d1ed7a2d125a1d0ed8aba01d652"
+  integrity sha512-HOGa9wtE6LEz2I5mMQ2pMSjth85PmD71kPbsecs02nEUq3/Kw0wRK3gmZn5BCEB8mFLXByqPxjHgApoMwIPMKQ==
+
 "@kwsites/file-exists@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@kwsites/file-exists/-/file-exists-1.1.1.tgz#ad1efcac13e1987d8dbaf235ef3be5b0d96faa99"
@@ -3417,6 +3437,11 @@ husky@^9.0.11:
   resolved "https://registry.yarnpkg.com/husky/-/husky-9.0.11.tgz#fc91df4c756050de41b3e478b2158b87c1e79af9"
   integrity sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==
 
+hyperdyperid@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hyperdyperid/-/hyperdyperid-1.2.0.tgz#59668d323ada92228d2a869d3e474d5a33b69e6b"
+  integrity sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==
+
 iconv-lite@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
@@ -4543,10 +4568,13 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.7.7:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.8.2.tgz#9bb7c3e43647348451082557f05fb170b7442949"
-  integrity sha512-j4WKth315edViMBGkHW6NTF0QBjsTrcRDmYNcGsPq+ozMEyCCCIlX2d2mJ5wuh6iHvJ3FevUrr48v58YRqVdYg==
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.9.2.tgz#42e7b48207268dad8c9c48ea5d4952c5d3840433"
+  integrity sha512-f16coDZlTG1jskq3mxarwB+fGRrd0uXWt+o1WIhRfOwbXQZqUDsTVxQBFK9JjRQHblg8eAG2JSbprDXKjc7ijQ==
   dependencies:
+    "@jsonjoy.com/json-pack" "^1.0.3"
+    "@jsonjoy.com/util" "^1.1.2"
+    sonic-forest "^1.0.0"
     tslib "^2.0.0"
 
 memoizee@^0.4.15:
@@ -5073,8 +5101,7 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-"prettier-2@npm:prettier@^2", prettier@^2.0.5:
-  name prettier-2
+"prettier-2@npm:prettier@^2":
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -5085,6 +5112,11 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
+
+prettier@^2.0.5:
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
 prettier@^3.2.1:
   version "3.2.5"
@@ -5622,6 +5654,11 @@ slice-ansi@^7.0.0:
     ansi-styles "^6.2.1"
     is-fullwidth-code-point "^5.0.0"
 
+sonic-forest@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/sonic-forest/-/sonic-forest-1.0.1.tgz#856d790bc21070bf94baf33d752604e5b7cbff2d"
+  integrity sha512-YWIS40U3Y7N2e5gxkQiz40eisSsi7s+plZpqU6CSOehjybSDGkhFIMXmr5dmM7GaqqE+VZDihfTrxxdb0of/wA==
+
 source-list-map@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
@@ -5924,6 +5961,11 @@ thenify-all@^1.0.0:
   integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
   dependencies:
     any-promise "^1.0.0"
+
+thingies@^1.20.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/thingies/-/thingies-1.21.0.tgz#e80fbe58fd6fdaaab8fad9b67bd0a5c943c445c1"
+  integrity sha512-hsqsJsFMsV+aD4s3CWKk85ep/3I9XzYV/IXaSouJMYIoDlgyi11cBhsqYe9/geRfB0YIikBQg6raRaM+nIMP9g==
 
 timers-ext@^0.1.7:
   version "0.1.7"
