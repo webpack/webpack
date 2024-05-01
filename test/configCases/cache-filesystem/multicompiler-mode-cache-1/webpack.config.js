@@ -1,27 +1,23 @@
 "use strict";
 
+// default settings. should just work
+
 /** @type {import("../../../../").Configuration} */
 module.exports = [
 	{
 		mode: "production",
 		entry: "./index",
 		cache: {
-			type: "filesystem"
+			type: "filesystem",
+			name: "name2"
 		}
 	},
 	{
 		mode: "production",
 		entry: "./index",
 		cache: {
-			type: "filesystem"
-		}
-	},
-	{
-		name: "3rd compiler",
-		mode: "production",
-		entry: "./index",
-		cache: {
-			type: "filesystem"
+			type: "filesystem",
+			name: "name1"
 		}
 	}
 ];
