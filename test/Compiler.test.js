@@ -227,7 +227,7 @@ describe("Compiler", () => {
 			}
 		});
 		it("default platform info", done => {
-			const platform = compiler.getPlatformTargetInfo();
+			const platform = compiler.platform;
 			expect(platform.web).toBe(true);
 			expect(platform.node).toBe(false);
 			done();
@@ -306,7 +306,7 @@ describe("Compiler", () => {
 				new (require("../lib/PlatformPlugin"))({ node: true }),
 				compiler => {
 					compiler.hooks.afterEnvironment.tap("test", () => {
-						const platform = compiler.getPlatformTargetInfo();
+						const platform = compiler.platform;
 						expect(platform.node).toBe(true);
 						expect(platform.web).toBe(true);
 					});

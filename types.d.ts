@@ -2308,7 +2308,7 @@ declare class Compiler {
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
-	target: PlatformTargetProperties;
+	platform: Readonly<PlatformTargetProperties>;
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
@@ -2325,8 +2325,6 @@ declare class Compiler {
 	running: boolean;
 	idle: boolean;
 	watchMode: boolean;
-	getPlatformTargetInfo(): Readonly<PlatformTargetProperties>;
-	setPlatformTargetInfo(platform: PlatformTargetProperties): void;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
 	watch(watchOptions: WatchOptions, handler: RunCallback<Stats>): Watching;
