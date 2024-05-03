@@ -2660,9 +2660,9 @@ eslint-plugin-es-x@^7.5.0:
     eslint-compat-utils "^0.1.2"
 
 eslint-plugin-jest@^28.2.0:
-  version "28.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-28.2.0.tgz#863e2b2bda95eb41981ba9bcf4c44f57dce40a73"
-  integrity sha512-yRDti/a+f+SMSmNTiT9/M/MzXGkitl8CfzUxnpoQcTyfq8gUrXMriVcWU36W1X6BZSUoyUCJrDAWWUA2N4hE5g==
+  version "28.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-28.4.0.tgz#213be88f799a35ca9d63ce1a30081bb32b8da765"
+  integrity sha512-ORVHiFPC8RQxHLyQJ37MxNilK9k+cPzjHz65T8gAbpYZunGutXvKqwfM3WXBCvFDF1QBeYJJu9LB/i5cuXBs+g==
   dependencies:
     "@typescript-eslint/utils" "^6.0.0"
 
@@ -5073,8 +5073,7 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-"prettier-2@npm:prettier@^2", prettier@^2.0.5:
-  name prettier-2
+"prettier-2@npm:prettier@^2":
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -5085,6 +5084,11 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
+
+prettier@^2.0.5:
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
 prettier@^3.2.1:
   version "3.2.5"
