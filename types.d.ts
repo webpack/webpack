@@ -5530,7 +5530,7 @@ declare class JavascriptModulesPlugin {
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): string;
-	renamedRootModule(
+	renameInlineModule(
 		allModules: Module[],
 		renderContext: MainRenderContext,
 		inlinedModules: Set<Module>,

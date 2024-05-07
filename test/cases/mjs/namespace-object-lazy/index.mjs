@@ -26,6 +26,16 @@ it("should receive a namespace object when importing commonjs with __esModule", 
 		.catch(done);
 });
 
+it("should resolve the promise returned by the imported dynamic commonjs", function (done) {
+	const post = "dynamic.js";
+	import(/* webpackMode: "eager" */ "./cjs-" + post) // context module
+		.then(function (result) {
+			expect(result).toBe(1);
+			done();
+		})
+		.catch(done);
+});
+
 function contextCJS(name) {
 	return Promise.all([
 		import(`./dir-cjs/${name}.js`),
