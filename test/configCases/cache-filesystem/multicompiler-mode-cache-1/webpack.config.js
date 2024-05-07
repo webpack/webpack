@@ -19,5 +19,15 @@ module.exports = [
 			type: "filesystem",
 			name: "name1"
 		}
+	},
+	{
+		mode: "production",
+		entry: "./index",
+		cache: true
+	},
+	{
+		mode: "production",
+		entry: "./index",
+		cache: true
 	}
 ];
