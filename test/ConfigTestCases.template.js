@@ -110,18 +110,14 @@ const describeCases = config => {
 										(options.experiments && options.experiments.outputModule
 											? ".mjs"
 											: ".js");
-								if (
-									(config.cache && config.cache !== true) ||
-									(options.cache && options.cache !== true)
-								) {
+								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
 										name:
 											options.cache && options.cache !== true
 												? options.cache.name
 												: `config-${idx}`,
-										...config.cache,
-										...options.cache
+										...config.cache
 									};
 								}
 								if (config.cache) {
