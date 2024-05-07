@@ -129,6 +129,7 @@ describe("snapshots", () => {
 		      "forOf": true,
 		      "globalThis": undefined,
 		      "module": undefined,
+		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "templateLiteral": true,
 		    },
@@ -354,6 +355,7 @@ describe("snapshots", () => {
 		      "forOf": true,
 		      "globalThis": undefined,
 		      "module": undefined,
+		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "templateLiteral": true,
 		    },
@@ -592,6 +594,9 @@ describe("snapshots", () => {
 		      "exports",
 		    ],
 		    "extensions": Array [],
+		    "importsFields": Array [
+		      "imports",
+		    ],
 		    "mainFields": Array [
 		      "main",
 		    ],
@@ -2072,6 +2077,7 @@ describe("snapshots", () => {
 			-       "forOf": true,
 			-       "globalThis": undefined,
 			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
 			+       "dynamicImport": false,
@@ -2079,6 +2085,7 @@ describe("snapshots", () => {
 			+       "forOf": false,
 			+       "globalThis": false,
 			+       "module": false,
+			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "templateLiteral": false,
 			@@ ... @@
@@ -2104,6 +2111,7 @@ describe("snapshots", () => {
 			-       "forOf": true,
 			-       "globalThis": undefined,
 			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
 			+       "dynamicImport": false,
@@ -2111,6 +2119,7 @@ describe("snapshots", () => {
 			+       "forOf": false,
 			+       "globalThis": false,
 			+       "module": false,
+			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "templateLiteral": false,
 			@@ ... @@
@@ -2249,6 +2258,7 @@ describe("snapshots", () => {
 			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
 			+           Object {
@@ -2266,18 +2276,18 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			+           },
+			@@ ... @@
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2306,16 +2316,18 @@ describe("snapshots", () => {
 			-     "generator": Object {},
 			+     "generator": Object {
 			+       "css": Object {
-			+         "exportsConvention": "as-is",
 			+         "exportsOnly": false,
 			+       },
 			+       "css/auto": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+       "css/global": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+       "css/module": Object {
+			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			+     },

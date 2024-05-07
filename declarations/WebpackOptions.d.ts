@@ -2317,6 +2317,10 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
+	 * The environment supports `node:` prefix for Node.js core modules.
+	 */
+	nodePrefixForCoreModules?: boolean;
+	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
@@ -2884,10 +2888,6 @@ export interface CssAutoParserOptions {
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {
-	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?: CssGeneratorExportsConvention;
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */

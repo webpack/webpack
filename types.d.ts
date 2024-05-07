@@ -2985,17 +2985,6 @@ declare interface CssAutoParserOptions {
  */
 declare interface CssGeneratorOptions {
 	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-
-	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
@@ -3947,6 +3936,11 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports `node:` prefix for Node.js core modules.
+	 */
+	nodePrefixForCoreModules?: boolean;
 
 	/**
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
@@ -5534,6 +5528,18 @@ declare class JavascriptModulesPlugin {
 	renderRequire(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
+	): string;
+	renameInlineModule(
+		allModules: Module[],
+		renderContext: MainRenderContext,
+		inlinedModules: Set<Module>,
+		chunkRenderContext: ChunkRenderContext,
+		hooks: CompilationHooksJavascriptModulesPlugin
+	): Map<Module, Source>;
+	findNewName(
+		oldName: string,
+		usedName: Set<string>,
+		extraInfo: string
 	): string;
 	static getCompilationHooks(
 		compilation: Compilation
@@ -12494,6 +12500,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): undefined | boolean;
+	supportNodePrefixForCoreModules(): undefined | boolean;
 	returningFunction(returnValue: string, args?: string): string;
 	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;

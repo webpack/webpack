@@ -22,7 +22,7 @@ module.exports = [
 					generator: {
 						exportsOnly: true
 					},
-					type: "css"
+					type: "css/global"
 				}
 			]
 		},

@@ -53,6 +53,7 @@ p {
   color: #428bca;
 }
 
+
 .foo {
 	color: red;
 }
@@ -97,7 +98,9 @@ p {
 	color: steelblue;
 }
 
+
 /* Technically, this is not entirely true, but we allow it because the final file can be processed by the loader and return the CSS code */
+
 
 /* Failed */
 
@@ -835,9 +838,14 @@ a {
 	color: red;
 }
 
+
 .style12 {
 	color: red;
 }
+
+div{color: red;}
+
+
 
 .style10 {
 	color: red;
@@ -855,6 +863,7 @@ a {
 
 @media screen and (min-width: 400px) {
 	@media screen and (max-width: 500px) {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -862,6 +871,7 @@ a {
 }
 
 @media screen and (min-width: 400px) {
+	
 	.class {
 		nested: 1;
 	}
@@ -879,6 +889,7 @@ a {
 
 @supports (display: flex) {
 	@supports (display: grid) {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -886,6 +897,7 @@ a {
 }
 
 @supports (display: flex) {
+	
 	.class {
 		nested: 1;
 	}
@@ -903,6 +915,7 @@ a {
 
 @layer foo {
 	@layer bar {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -910,6 +923,7 @@ a {
 }
 
 @layer foo {
+	
 	.class {
 		nested: 1;
 	}
@@ -943,6 +957,7 @@ a {
 			@layer bar {
 				@supports (display: grid) {
 					@media screen and (min-width: 500px) {
+						
 						.class {
 							deep-nested: 1;
 						}
@@ -956,6 +971,7 @@ a {
 @layer foo {
 	@supports (display: flex) {
 		@media screen and (min-width: 400px) {
+			
 			.class {
 				nested: 1;
 			}
@@ -975,6 +991,7 @@ a {
 
 @media screen and (min-width: 400px) {
 	@supports (display: flex) {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -982,6 +999,7 @@ a {
 }
 
 @media screen and (min-width: 400px) {
+	
 	.class {
 		nested: 1;
 	}
@@ -999,6 +1017,7 @@ a {
 
 @layer {
 	@layer {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -1017,6 +1036,7 @@ a {
 
 @layer {
 	@layer base {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -1024,6 +1044,7 @@ a {
 }
 
 @layer {
+	
 	.class {
 		deep-nested: 1;
 	}
@@ -1044,6 +1065,7 @@ a {
 }
 
 @media screen and (orientation: portrait) {
+	
 	.class {
 		duplicate-nested: true;
 	}
@@ -1064,6 +1086,7 @@ a {
 @supports (display: flex) {
 	@media screen and (orientation: portrait) {
 		@layer {
+			
 			.class {
 				deep-nested: 1;
 			}
@@ -1086,6 +1109,7 @@ a {
 @supports (display: flex) {
 	@media screen and (orientation: portrait) {
 		@layer base {
+			
 			.class {
 				deep-nested: 1;
 			}
@@ -1095,6 +1119,7 @@ a {
 
 @supports (display: flex) {
 	@media screen and (orientation: portrait) {
+		
 		.class {
 			deep-nested: 1;
 		}
@@ -1129,6 +1154,7 @@ a {
 			@layer bar {
 				@supports (display: grid) {
 					@media screen and (min-width: 500px) {
+						
 						.class {
 							deep-nested: 1;
 						}
@@ -1142,6 +1168,7 @@ a {
 @layer super.foo {
 	@supports (display: flex) {
 		@media screen and (min-width: 400px) {
+			
 			.class {
 				nested: 1;
 			}
@@ -1227,12 +1254,27 @@ a {
 	color: red;
 }
 
+
 /* Has the same URL */
+
+
+
+
+
+
+
+
 /* anonymous */
+
 /* All unknown parse as media for compatibility */
+
+
+
 /* Inside support */
 
+
 /** Possible syntax in future */
+
 
 /** Unknown */
 
@@ -1256,11 +1298,13 @@ a {
 @import layer(test) supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);
 @import screen and (min-width: 400px);
 
+
+
 body {
 	background: red;
 }
 
-head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,\\\\.\\\\/extensions-imported\\\\.mycss,\\\\.\\\\/file\\\\.less,\\\\.\\\\/with-less-import\\\\.css,\\\\.\\\\/prefer-relative\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,\\\\.\\\\/style-import\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?1832,\\\\.\\\\/imported\\\\.css\\\\?e0bb,\\\\.\\\\/imported\\\\.css\\\\?769a,\\\\.\\\\/imported\\\\.css\\\\?d4d6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?cf0d,\\\\.\\\\/style2\\\\.css\\\\?dfe6,\\\\.\\\\/style2\\\\.css\\\\?7d49,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?b84b,\\\\.\\\\/style8\\\\.css\\\\?5dc5,\\\\.\\\\/style8\\\\.css\\\\?71be,\\\\.\\\\/style8\\\\.css\\\\?386a,\\\\.\\\\/style8\\\\.css\\\\?568a,\\\\.\\\\/style8\\\\.css\\\\?b9af,\\\\.\\\\/style8\\\\.css\\\\?7300,\\\\.\\\\/style8\\\\.css\\\\?6efd,\\\\.\\\\/style8\\\\.css\\\\?288c,\\\\.\\\\/style8\\\\.css\\\\?1094,\\\\.\\\\/style8\\\\.css\\\\?38bf,\\\\.\\\\/style8\\\\.css\\\\?d697,\\\\.\\\\/style2\\\\.css\\\\?0aae,\\\\.\\\\/style9\\\\.css\\\\?8e91,\\\\.\\\\/style9\\\\.css\\\\?71b5,\\\\.\\\\/style11\\\\.css,\\\\.\\\\/style12\\\\.css,\\\\.\\\\/style10\\\\.css,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,\\\\.\\\\/media-deep-nested\\\\.css,\\\\.\\\\/media-nested\\\\.css,\\\\.\\\\/supports-deep-deep-nested\\\\.css,\\\\.\\\\/supports-deep-nested\\\\.css,\\\\.\\\\/supports-nested\\\\.css,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,\\\\.\\\\/layer-nested\\\\.css,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,\\\\.\\\\/mixed-deep-deep-nested\\\\.css,\\\\.\\\\/mixed-deep-nested\\\\.css,\\\\.\\\\/mixed-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,\\\\.\\\\/style8\\\\.css\\\\?8af1,\\\\.\\\\/duplicate-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,\\\\.\\\\/style2\\\\.css\\\\?unknown3,\\\\.\\\\/style2\\\\.css\\\\?after-namespace,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,\\\\.\\\\/extensions-imported\\\\.mycss,\\\\.\\\\/file\\\\.less,\\\\.\\\\/with-less-import\\\\.css,\\\\.\\\\/prefer-relative\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,\\\\.\\\\/style-import\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?1832,\\\\.\\\\/imported\\\\.css\\\\?e0bb,\\\\.\\\\/imported\\\\.css\\\\?769a,\\\\.\\\\/imported\\\\.css\\\\?d4d6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?cf0d,\\\\.\\\\/style2\\\\.css\\\\?dfe6,\\\\.\\\\/style2\\\\.css\\\\?7d49,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?b84b,\\\\.\\\\/style8\\\\.css\\\\?5dc5,\\\\.\\\\/style8\\\\.css\\\\?71be,\\\\.\\\\/style8\\\\.css\\\\?386a,\\\\.\\\\/style8\\\\.css\\\\?568a,\\\\.\\\\/style8\\\\.css\\\\?b9af,\\\\.\\\\/style8\\\\.css\\\\?7300,\\\\.\\\\/style8\\\\.css\\\\?6efd,\\\\.\\\\/style8\\\\.css\\\\?288c,\\\\.\\\\/style8\\\\.css\\\\?1094,\\\\.\\\\/style8\\\\.css\\\\?38bf,\\\\.\\\\/style8\\\\.css\\\\?d697,\\\\.\\\\/style2\\\\.css\\\\?0aae,\\\\.\\\\/style9\\\\.css\\\\?8e91,\\\\.\\\\/style9\\\\.css\\\\?71b5,\\\\.\\\\/style11\\\\.css,\\\\.\\\\/style12\\\\.css,\\\\.\\\\/style13\\\\.css,\\\\.\\\\/style10\\\\.css,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,\\\\.\\\\/media-deep-nested\\\\.css,\\\\.\\\\/media-nested\\\\.css,\\\\.\\\\/supports-deep-deep-nested\\\\.css,\\\\.\\\\/supports-deep-nested\\\\.css,\\\\.\\\\/supports-nested\\\\.css,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,\\\\.\\\\/layer-nested\\\\.css,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,\\\\.\\\\/mixed-deep-deep-nested\\\\.css,\\\\.\\\\/mixed-deep-nested\\\\.css,\\\\.\\\\/mixed-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,\\\\.\\\\/style8\\\\.css\\\\?8af1,\\\\.\\\\/duplicate-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,\\\\.\\\\/style2\\\\.css\\\\?unknown3,\\\\.\\\\/style2\\\\.css\\\\?after-namespace,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
@@ -3213,16 +3257,16 @@ Array [
 }
 
 .local1,
-.local2 :global .global,
+.local2 .global,
 .local3 {
 	color: green;
 }
 
-:global .global :local .local4 {
+.global ._-_css-modules_style_module_css-local4 {
 	color: yellow;
 }
 
-.local5:global(.global).local6 {
+.local5.global.local6 {
 	color: blue;
 }
 
@@ -3290,7 +3334,7 @@ Array [
 	overflow: hidden;
 }
 
-:global(:global(:local(.nested1)).nested2).nested3 {
+._-_css-modules_style_module_css-nested1.nested2.nested3 {
 	color: pink;
 }
 
@@ -3339,7 +3383,7 @@ Array [
 	--local-color: red;
 }
 
-.globalVars :global {
+.globalVars {
 	color: var(--global-color);
 	--global-color: red;
 }
@@ -3425,7 +3469,7 @@ Array [
 	}
 }
 
-:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
+.globalUpperCase ._-_css-modules_style_module_css-localUpperCase {
 	color: yellow;
 }
 
@@ -3434,7 +3478,7 @@ Array [
 	--LOCAL-COLOR: red;
 }
 
-.globalVarsUpperCase :GLOBAL {
+.globalVarsUpperCase {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
@@ -3598,31 +3642,31 @@ Array [
 .nested-with-local-pseudo {
 	color: red;
 
-	:local .local-nested {
+	._-_css-modules_style_module_css-local-nested {
 		color: red;
 	}
 
-	:global .global-nested {
+	.global-nested {
 		color: red;
 	}
 
-	:local(.local-nested) {
+	._-_css-modules_style_module_css-local-nested {
 		color: red;
 	}
 
-	:global(.global-nested) {
+	.global-nested {
 		color: red;
 	}
 
-	:local .local-nested, :global .global-nested-next {
+	._-_css-modules_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	:local(.local-nested), :global(.global-nested-next) {
+	._-_css-modules_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	:global .foo, .bar {
+	.foo, .bar {
 		color: red;
 	}
 }
@@ -3643,12 +3687,12 @@ Array [
 	}
 }
 
-:global .global-foo {
+.global-foo {
 	.nested-global {
 		color: red;
 	}
 
-	:local .local-in-global {
+	._-_css-modules_style_module_css-local-in-global {
 		color: blue;
 	}
 }
@@ -3661,9 +3705,9 @@ Array [
 	}
 }
 
-:global .class :local .in-local-global-scope,
-:global .class :local .in-local-global-scope,
-:local .class-local-scope :global .in-local-global-scope {
+.class ._-_css-modules_style_module_css-in-local-global-scope,
+.class ._-_css-modules_style_module_css-in-local-global-scope,
+._-_css-modules_style_module_css-class-local-scope .in-local-global-scope {
 	color: red;
 }
 
@@ -3739,14 +3783,14 @@ Array [
 	bar: env(foo, var(--baz));
 }
 
-:global      .global-foo, :local        .bar {
-	:local      .local-in-global       {
+.global-foo, ._-_css-modules_style_module_css-bar {
+	._-_css-modules_style_module_css-local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
-		:global .my-global-class-again,
-		:local .my-global-class-again {
+		.my-global-class-again,
+		._-_css-modules_style_module_css-my-global-class-again {
 			color: red;
 		}
 	}
@@ -3766,12 +3810,12 @@ Array [
 	}
 }
 
-:global .again-global {
+.again-global {
 	color:red;
 }
 
-:global .again-again-global {
-	:global .again-again-global {
+.again-again-global {
+	.again-again-global {
 		color: red;
 	}
 }
@@ -3780,22 +3824,22 @@ Array [
 	--foo: red;
 }
 
-:global .again-again-global {
+.again-again-global {
 	color: var(--foo);
 
-	:global .again-again-global {
+	.again-again-global {
 		color: var(--foo);
 	}
 }
 
-:global .again-again-global {
+.again-again-global {
 	animation: slidein 3s;
 
-	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+	.again-again-global, .class, ._-_css-modules_style_module_css-nested1.nested2.nested3 {
 		animation: slidein 3s;
 	}
 
-  .local2 :global .global,
+  .local2 .global,
 	.local3 {
 		color: red;
 	}
@@ -3836,6 +3880,7 @@ Array [
 	}
 }
 
+
 .class {
 	color: red;
 	background: var(--color);
@@ -3850,31 +3895,28 @@ Array [
 	}
 }
 
-:local(.class) {
+._-_style_css-class {
 	color: red;
 }
 
-:local .class {
+._-_style_css-class {
 	color: green;
 }
 
-:global(.class) {
+.class {
 	color: blue;
 }
 
-:global .class {
+.class {
 	color: white;
 }
 
-:export {
-	foo: bar;
-}
 
 .class {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:local4:_-_css-modules_style_module_css-local4/nested1:_-_css-modules_style_module_css-nested1/localUpperCase:_-_css-modules_style_module_css-localUpperCase/local-nested:_-_css-modules_style_module_css-local-nested/local-in-global:_-_css-modules_style_module_css-local-in-global/in-local-global-scope:_-_css-modules_style_module_css-in-local-global-scope/class-local-scope:_-_css-modules_style_module_css-class-local-scope/bar:_-_css-modules_style_module_css-bar/my-global-class-again:_-_css-modules_style_module_css-my-global-class-again/\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,class:_-_style_css-class/foo:bar/\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
