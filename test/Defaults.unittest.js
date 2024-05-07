@@ -594,6 +594,9 @@ describe("snapshots", () => {
 		      "exports",
 		    ],
 		    "extensions": Array [],
+		    "importsFields": Array [
+		      "imports",
+		    ],
 		    "mainFields": Array [
 		      "main",
 		    ],
