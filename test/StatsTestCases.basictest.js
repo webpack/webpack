@@ -78,6 +78,17 @@ describe("StatsTestCases", () => {
 				if (!options.optimization) options.optimization = {};
 				if (options.optimization.minimize === undefined)
 					options.optimization.minimize = false;
+				if (
+					options.cache &&
+					options.cache !== true &&
+					options.cache.type === "filesystem"
+				) {
+					options.cache.cacheDirectory = path.resolve(
+						outputBase,
+						".cache",
+						testName
+					);
+				}
 			});
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];

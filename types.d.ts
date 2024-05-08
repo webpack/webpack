@@ -15098,7 +15098,8 @@ declare namespace exports {
 			config: Configuration
 		) => WebpackOptionsNormalized;
 		export const applyWebpackOptionsDefaults: (
-			options: WebpackOptionsNormalized
+			options: WebpackOptionsNormalized,
+			compilerIndex?: number
 		) => false | PlatformTargetProperties;
 	}
 	export namespace dependencies {
