@@ -66,7 +66,7 @@ const describeCases = config => {
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
-						if (fs.existsSync(filterPath) && !require(filterPath)()) {
+						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
 							describe.skip(testName, () => {
 								it("filtered", () => {});
 							});
@@ -113,9 +113,14 @@ const describeCases = config => {
 								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
-										name: `config-${idx}`,
+										name:
+											options.cache && options.cache !== true
+												? options.cache.name
+												: `config-${idx}`,
 										...config.cache
 									};
+								}
+								if (config.cache) {
 									options.infrastructureLogging = {
 										debug: true,
 										console: createLogger(infraStructureLog)
