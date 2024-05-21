@@ -174,7 +174,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de1831
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!

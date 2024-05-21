@@ -4670,7 +4670,7 @@
       "additionalProperties": false,
       "properties": {
         "buildDependencies": {
-          "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "description": "Options for snapshotting build dependencies to determine if the whole cache needs to be invalidated.",
           "type": "object",
           "additionalProperties": false,
           "properties": {

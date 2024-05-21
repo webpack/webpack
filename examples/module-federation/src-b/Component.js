@@ -2,7 +2,7 @@ import React from "react";
 import { formatRelative, subDays } from "date-fns";
 // date-fns is a shared module, but used as usual
 // exposing modules act as async boundary,
-// so no additional async boundary need to be added here
+// so no additional async boundary needs to be added here
 // As data-fns is an shared module, it will be placed in a separate file
 // It will be loaded in parallel to the code of this module
 

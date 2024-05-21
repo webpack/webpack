@@ -1,4 +1,4 @@
-// This config need to be set on initial evaluation to be effective
+// This config needs to be set on initial evaluation to be effective
 __webpack_nonce__ = "nonce";
 __webpack_public_path__ = "https://example.com/public/path/";
 

@@ -13122,7 +13122,7 @@ declare interface SnapshotOptionsFileSystemInfo {
  */
 declare interface SnapshotOptionsWebpackOptions {
 	/**
-	 * Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.
+	 * Options for snapshotting build dependencies to determine if the whole cache needs to be invalidated.
 	 */
 	buildDependencies?: {
 		/**
