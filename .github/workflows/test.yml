@@ -114,10 +114,10 @@ jobs:
             use_main_branches: 1
           # Test on the latest version of Node.js
           - os: ubuntu-latest
-            node-version: 21.x
+            node-version: 22.x
             part: a
           - os: ubuntu-latest
-            node-version: 21.x
+            node-version: 22.x
             part: b
           # Test on the old LTS version of Node.js
           - os: ubuntu-latest
