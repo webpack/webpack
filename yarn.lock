@@ -5145,17 +5145,17 @@ pug-attrs@^3.0.0:
     js-stringify "^1.0.2"
     pug-runtime "^3.0.0"
 
-pug-code-gen@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/pug-code-gen/-/pug-code-gen-3.0.2.tgz#ad190f4943133bf186b60b80de483100e132e2ce"
-  integrity sha512-nJMhW16MbiGRiyR4miDTQMRWDgKplnHyeLvioEJYbk1RsPI3FuA3saEP8uwnTb2nTJEKBU90NFVWJBk4OU5qyg==
+pug-code-gen@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/pug-code-gen/-/pug-code-gen-3.0.3.tgz#58133178cb423fe1716aece1c1da392a75251520"
+  integrity sha512-cYQg0JW0w32Ux+XTeZnBEeuWrAY7/HNE6TWnhiHGnnRYlCgyAUPoyh9KzCMa9WhcJlJ1AtQqpEYHc+vbCzA+Aw==
   dependencies:
     constantinople "^4.0.1"
     doctypes "^1.1.0"
     js-stringify "^1.0.2"
     pug-attrs "^3.0.0"
-    pug-error "^2.0.0"
-    pug-runtime "^3.0.0"
+    pug-error "^2.1.0"
+    pug-runtime "^3.0.1"
     void-elements "^3.1.0"
     with "^7.0.0"
 
@@ -5163,6 +5163,11 @@ pug-error@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/pug-error/-/pug-error-2.0.0.tgz#5c62173cb09c34de2a2ce04f17b8adfec74d8ca5"
   integrity sha512-sjiUsi9M4RAGHktC1drQfCr5C5eriu24Lfbt4s+7SykztEOwVZtbFk1RRq0tzLxcMxMYTBR+zMQaG07J/btayQ==
+
+pug-error@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/pug-error/-/pug-error-2.1.0.tgz#17ea37b587b6443d4b8f148374ec27b54b406e55"
+  integrity sha512-lv7sU9e5Jk8IeUheHata6/UThZ7RK2jnaaNztxfPYUY+VxZyk/ePVaNZ/vwmH8WqGvDz3LrNYt/+gA55NDg6Pg==
 
 pug-filters@^4.0.0:
   version "4.0.0"
@@ -5240,11 +5245,11 @@ pug-walk@^2.0.0:
   integrity sha512-yYELe9Q5q9IQhuvqsZNwA5hfPkMJ8u92bQLIMcsMxf/VADjNtEYptU+inlufAFYcWdHlwNfZOEnOOQrZrcyJCQ==
 
 pug@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/pug/-/pug-3.0.2.tgz#f35c7107343454e43bc27ae0ff76c731b78ea535"
-  integrity sha512-bp0I/hiK1D1vChHh6EfDxtndHji55XP/ZJKwsRqrz6lRia6ZC2OZbdAymlxdVFwd1L70ebrVJw4/eZ79skrIaw==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/pug/-/pug-3.0.3.tgz#e18324a314cd022883b1e0372b8af3a1a99f7597"
+  integrity sha512-uBi6kmc9f3SZ3PXxqcHiUZLmIXgfgWooKWXcwSGwQd2Zi5Rb0bT14+8CJjJgI8AB+nndLaNgHGrcc6bPIB665g==
   dependencies:
-    pug-code-gen "^3.0.2"
+    pug-code-gen "^3.0.3"
     pug-filters "^4.0.0"
     pug-lexer "^5.0.1"
     pug-linker "^4.0.0"
