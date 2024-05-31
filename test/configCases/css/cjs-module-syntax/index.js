@@ -2,7 +2,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 it("should able to require the css module as commonjs", () => {
 	const style = require("./style.module.css");
-	console.log(style)
 	const interoperatedStyle = _interopRequireDefault(require("./style.module.css"));
 
 	expect(style).toEqual({ foo: '-_style_module_css-foo' });
