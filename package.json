@@ -144,6 +144,7 @@
     "test": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test:update-snapshots": "yarn jest -u",
     "test:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
+    "test:mine": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/ConfigTestCases.basictest.js\"",
     "test:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:unit": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
     "build:examples": "cd examples && node buildAll.js",
