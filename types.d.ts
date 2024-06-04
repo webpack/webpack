@@ -1564,14 +1564,9 @@ declare interface CodeGenerationContext {
 	chunkGraph: ChunkGraph;
 
 	/**
-	 * the runtime code should be generated for
-	 */
-	runtime: RuntimeSpec;
-
-	/**
 	 * the runtimes code should be generated for
 	 */
-	runtimes?: RuntimeSpec[];
+	runtime: RuntimeSpec;
 
 	/**
 	 * when in concatenated module, information about other concatenated modules
@@ -3251,14 +3246,9 @@ declare interface DependencyTemplateContext {
 	module: Module;
 
 	/**
-	 * current runtime, for which code is generated
-	 */
-	runtime: RuntimeSpec;
-
-	/**
 	 * current runtimes, for which code is generated
 	 */
-	runtimes?: RuntimeSpec[];
+	runtime: RuntimeSpec;
 
 	/**
 	 * mutable array of init fragments for the current module
@@ -4901,11 +4891,6 @@ declare interface GenerateContext {
 	 * the runtime
 	 */
 	runtime: RuntimeSpec;
-
-	/**
-	 * the runtimes
-	 */
-	runtimes?: RuntimeSpec[];
 
 	/**
 	 * when in concatenated module, information about other concatenated modules
@@ -15281,10 +15266,6 @@ declare namespace exports {
 			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
-			export let deepMergeRuntime: (
-				runtimes: undefined | RuntimeSpec[],
-				runtime: RuntimeSpec
-			) => RuntimeSpec;
 			export let mergeRuntimeCondition: (
 				a: RuntimeCondition,
 				b: RuntimeCondition,
