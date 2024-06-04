@@ -62,9 +62,7 @@ const describeCases = config => {
 
 		for (const category of categories) {
 			describe(category.name, () => {
-				// if (category.name !== "code-generation") return;
 				for (const testName of category.tests) {
-					// if (testName !== "import-export-format") continue;
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
