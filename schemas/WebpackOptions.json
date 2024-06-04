@@ -364,6 +364,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "esModule": {
+          "$ref": "#/definitions/CssGeneratorEsModule"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },
@@ -401,6 +404,10 @@
         }
       ]
     },
+    "CssGeneratorEsModule": {
+      "description": "Configure the generated JS modules that use the ES modules syntax.",
+      "type": "boolean"
+    },
     "CssGeneratorExportsConvention": {
       "description": "Specifies the convention of exported names.",
       "anyOf": [
@@ -432,6 +439,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "esModule": {
+          "$ref": "#/definitions/CssGeneratorEsModule"
+        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }
@@ -442,6 +452,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "esModule": {
+          "$ref": "#/definitions/CssGeneratorEsModule"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },
@@ -472,6 +485,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "esModule": {
+          "$ref": "#/definitions/CssGeneratorEsModule"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },

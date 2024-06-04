@@ -2283,11 +2283,11 @@ describe("snapshots", () => {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			@@ ... @@
+			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2308,14 +2308,14 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "css",
 			+       },
-			+       Object {
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
 			+       "css": Object {
+			+         "esModule": true,
 			+         "exportsOnly": false,
 			+       },
 			+       "css/auto": Object {

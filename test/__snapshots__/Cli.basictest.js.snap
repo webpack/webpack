@@ -1429,6 +1429,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-css-auto-es-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated JS modules that use the ES modules syntax.",
+        "multiple": false,
+        "path": "module.generator.css/auto.esModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Configure the generated JS modules that use the ES modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-css-auto-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1475,6 +1488,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-css-es-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated JS modules that use the ES modules syntax.",
+        "multiple": false,
+        "path": "module.generator.css.esModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Configure the generated JS modules that use the ES modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-css-exports-only": Object {
     "configs": Array [
       Object {
@@ -1485,6 +1511,19 @@ Object {
       },
     ],
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-css-global-es-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated JS modules that use the ES modules syntax.",
+        "multiple": false,
+        "path": "module.generator.css/global.esModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Configure the generated JS modules that use the ES modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1533,6 +1572,19 @@ Object {
     "description": "Configure the generated local ident name.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-css-module-es-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated JS modules that use the ES modules syntax.",
+        "multiple": false,
+        "path": "module.generator.css/module.esModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Configure the generated JS modules that use the ES modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-generator-css-module-exports-convention": Object {
     "configs": Array [
