@@ -10,7 +10,7 @@ module.exports = {
 		libraryTarget: "umd",
 		chunkLoading: "jsonp",
 		chunkFormat: "array-push",
-		globalObject: "this"
+		globalObject: "globalThis"
 	},
 	optimization: {
 		minimize: false,
