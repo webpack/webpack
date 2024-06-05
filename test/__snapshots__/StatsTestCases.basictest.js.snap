@@ -2728,20 +2728,23 @@ LOG from webpack.FileSystemInfo
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
 <<<<<<< HEAD
+<<<<<<< HEAD
   assets by path *.js 3.25 KiB
     asset 2a14e619729cafd3bb77-2a14e6.js 2.8 KiB [emitted] [immutable] [minimized] (name: runtime)
     asset 0a1b2c7ae2cee5086d70-0a1b2c.js 232 bytes [emitted] [immutable] [minimized] (name: lazy)
 =======
+=======
+>>>>>>> e8568abb4 (fix: assert output won’t be wrapped in IIFE)
   assets by path *.js 3.08 KiB
-    asset 12beb53ee92f2ec82aeb-12beb5.js 2.63 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset 4c293dac5a10c0220231-4c293d.js 2.63 KiB [emitted] [immutable] [minimized] (name: runtime)
     asset 1b48b6222bb1ec5c3c23-1b48b6.js 225 bytes [emitted] [immutable] [minimized] (name: lazy)
->>>>>>> f162fa1a7 (feat: tree shakable output for module library)
     asset fdf80674ac46a61ff9fe-fdf806.js 213 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk 20.4 KiB (auxiliary name: lazy)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+<<<<<<< HEAD
 <<<<<<< HEAD
   Entrypoint index 3 KiB (5.89 KiB) = 2a14e619729cafd3bb77-2a14e6.js 2.8 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
 =======
@@ -2751,6 +2754,9 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
   Entrypoint index 2.84 KiB (5.89 KiB) = 12beb53ee92f2ec82aeb-12beb5.js 2.63 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
 >>>>>>> f162fa1a7 (feat: tree shakable output for module library)
 >>>>>>> a0dcf6578 (feat: tree shakable output for module library)
+=======
+  Entrypoint index 2.84 KiB (5.89 KiB) = 4c293dac5a10c0220231-4c293d.js 2.63 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
+>>>>>>> e8568abb4 (fix: assert output won’t be wrapped in IIFE)
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
   runtime modules 7.1 KiB 8 modules
