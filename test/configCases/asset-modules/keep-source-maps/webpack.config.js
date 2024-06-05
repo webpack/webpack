@@ -20,7 +20,7 @@ module.exports = {
 				type: "asset/resource",
 				generator: {
 					binary: false,
-					filename: pathInfo => pathInfo.filename.replaceAll(/\.scss/gi, ".css")
+					filename: pathInfo => pathInfo.filename.replace(/\.scss/gi, ".css")
 				},
 				use: ["./loader.js"]
 			}
