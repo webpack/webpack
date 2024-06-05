@@ -13,47 +13,36 @@ module.exports = {
 	optimization: {
 		mangleExports: true,
 		usedExports: true,
-		providedExports: true
+		providedExports: true,
+		concatenateModules: false
 	},
 	plugins: [
-		function jsonExportsInfo(compiler) {
-			compiler.hooks.compilation.tap(jsonExportsInfo.name, compilation => {
-				compilation.hooks.processAssets.tap(jsonExportsInfo.name, () => {
-					const getMangleInfo = (exportInfo, runtime, module, mangleInfo) => {
-						mangleInfo[exportInfo.name] = {
-							usedName: exportInfo.getUsedName(runtime),
-							used: exportInfo.getUsed(runtime)
-						};
-						const nested = exportInfo.getNestedExportsInfo();
-						if (nested) {
-							for (const e of nested.exports) {
-								getMangleInfo(e, runtime, module, mangleInfo[exportInfo.name]);
+		function getJsonCodeGeneratedSource(compiler) {
+			compiler.hooks.compilation.tap(
+				getJsonCodeGeneratedSource.name,
+				compilation => {
+					compilation.hooks.processAssets.tap(
+						getJsonCodeGeneratedSource.name,
+						() => {
+							for (const module of compilation.modules) {
+								if (module.type === "json") {
+									const { sources } = compilation.codeGenerationResults.get(
+										module,
+										"main"
+									);
+									const source = sources.get("javascript");
+									const file = compilation.getAssetPath("[name].js", {
+										filename:
+											module.readableIdentifier(compilation.requestShortener) +
+											".js"
+									});
+									compilation.emitAsset(file, source);
+								}
 							}
 						}
-					};
-					const map = {};
-					for (const chunk of compilation.chunks) {
-						const map2 = (map[chunk.runtime] = {});
-						for (const module of compilation.modules) {
-							if (module.type !== "json") continue;
-							const map3 = (map2[
-								module.readableIdentifier(compilation.requestShortener)
-							] = {});
-							for (const exportInfo of compilation.moduleGraph.getExportsInfo(
-								module
-							).exports) {
-								getMangleInfo(exportInfo, chunk.runtime, module, map3);
-							}
-						}
-					}
-					compilation.emitAsset(
-						"json-exports-info.json",
-						new compiler.webpack.sources.RawSource(
-							JSON.stringify(map, undefined, 2)
-						)
 					);
-				});
-			});
+				}
+			);
 		}
 	]
 };

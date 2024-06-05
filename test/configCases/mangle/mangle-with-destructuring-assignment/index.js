@@ -69,17 +69,17 @@ it("should mangle when destructuring json", async () => {
 	expect(values[2]).toBe(5);
 	expect(values[3]).toBe(3);
 
-	const info = JSON.parse(await fs.promises.readFile(path.resolve(__dirname, "json-exports-info.json"), 'utf-8'));
-	const exportsInfo = info["main"]["./data.json"];
-	expect(exportsInfo.foo.usedName !== "foo").toBe(true);
-	expect(exportsInfo.obj.usedName !== "obj").toBe(true);
-	expect(exportsInfo.obj.arr.usedName !== "arr").toBe(true);
-	expect(exportsInfo.obj.arr.length.usedName !== "length").toBe(false); // keep the name of array length
-	expect(exportsInfo.obj.arr[0].usedName !== "0").toBe(false); // keep the name of array index
-	expect(exportsInfo.obj.arr[0].prop1.usedName !== "prop1").toBe(true);
-	expect(exportsInfo.obj.arr[0].prop2.usedName !== "prop2").toBe(true);
-	expect(exportsInfo.obj.arr[0].prop3.usedName !== "prop3").toBe(false); // prop3 is not provided
-	expect(exportsInfo.obj.arr[1].prop3.usedName !== "prop3").toBe(true);
-	expect(exportsInfo.obj.arr[1].prop4.used === 0).toBe(true); // prop4 is unused
-	expect(exportsInfo.obj.arr[2].used === 4).toBe(true); // arr[2] is used (fallback to no destructuring since failed to evaluate `prop5`)
+	const generatedJson = __non_webpack_require__(path.resolve(__dirname, "data.json.js"));
+	expect(generatedJson.foo).toBeUndefined();
+	expect(generatedJson.obj).toBeUndefined();
+	expect(generatedJson).toEqual({
+		"W": {
+			"arr": [
+				{ "prop1": 1, "prop2": 2 },
+				{ "prop3": 3, "prop4": 4 },
+				{ "prop5": 5, "prop6": 6 }
+			]
+		},
+		"p": "foo"
+	});
 });
