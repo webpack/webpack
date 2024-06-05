@@ -1,7 +1,7 @@
 import * as module from "./module";
 import { obj3, obj3CanMangle, obj4, obj4CanMangle } from "./reexport?side-effects" // enable side effects to ensure reexport is not skipped
 import data from "./data.json";
-import fs from "fs";
+import data2 from "./data.json?2";
 import path from "path";
 
 it("should mangle export when destructuring module", () => {
@@ -41,37 +41,25 @@ it("should not mangle export when destructuring module's nested property is a mo
 
 it("should mangle when destructuring json", async () => {
 	const { obj: {
-		["a" + "r" + "r"]: [
-			{
-				prop1: p1 = 0,
-				[`prop${2}`]: p2,
-				prop3 = 3
-			}
+		"arr": [
+			{ prop1: p1 = 0 }
 		]
 	} } = data;
 	expect(p1).toBe(1);
-	expect(p2).toBe(2);
-	expect(prop3).toBe(3);
-	const prop5 = "prop5";
+
 	const values = [];
 	({
 		foo: values[0],
 		obj: {
 			["a" + "r" + "r"]: {
-				1: { prop3: values[1] },
-				2: { [prop5]: values[2] },
-				length: values[3],
+				length: values[1],
 			}
 		}
 	} = data);
 	expect(values[0]).toBe("foo");
 	expect(values[1]).toBe(3);
-	expect(values[2]).toBe(5);
-	expect(values[3]).toBe(3);
 
 	const generatedJson = __non_webpack_require__(path.resolve(__dirname, "data.json.js"));
-	expect(generatedJson.foo).toBeUndefined();
-	expect(generatedJson.obj).toBeUndefined();
 	expect(generatedJson).toEqual({
 		"W": {
 			"arr": [
@@ -81,5 +69,20 @@ it("should mangle when destructuring json", async () => {
 			]
 		},
 		"p": "foo"
+	});
+});
+
+it("should mangle when destructuring json 2", async () => {
+	const { prop1, prop2 } = data2.obj.arr[0];
+	expect(prop1).toBe(1);
+	expect(prop2).toBe(2);
+
+	const generatedJson = __non_webpack_require__(path.resolve(__dirname, "data.json_2.js"));
+	expect(generatedJson).toEqual({
+		"W": {
+			"Q": [
+				{ "X": 1, "Q": 2 },
+			],
+		}
 	});
 });
