@@ -15340,6 +15340,16 @@ declare namespace exports {
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
+		export function compileBooleanMatcher(
+			map: Record<string | number, boolean>
+		): boolean | ((arg0: string) => string);
+		export namespace compileBooleanMatcher {
+			export let fromLists: (
+				positiveItems: string[],
+				negativeItems: string[]
+			) => (arg0: string) => string;
+			export let itemsToRegexp: (itemsArr: string[]) => string;
+		}
 		export { LazySet };
 	}
 	export namespace sources {
