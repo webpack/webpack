@@ -756,6 +756,10 @@ export type AssetParserDataUrlFunction = (
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
 /**
+ * Configure the generated JS modules that use the ES modules syntax.
+ */
+export type CssGeneratorEsModule = boolean;
+/**
  * Specifies the convention of exported names.
  */
 export type CssGeneratorExportsConvention =
@@ -2863,6 +2867,10 @@ export interface AssetResourceGeneratorOptions {
  */
 export interface CssAutoGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: CssGeneratorEsModule;
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?: CssGeneratorExportsConvention;
@@ -2889,6 +2897,10 @@ export interface CssAutoParserOptions {
  */
 export interface CssGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: CssGeneratorEsModule;
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
@@ -2897,6 +2909,10 @@ export interface CssGeneratorOptions {
  * Generator options for css/global modules.
  */
 export interface CssGlobalGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: CssGeneratorEsModule;
 	/**
 	 * Specifies the convention of exported names.
 	 */
@@ -2923,6 +2939,10 @@ export interface CssGlobalParserOptions {
  * Generator options for css/module modules.
  */
 export interface CssModuleGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: CssGeneratorEsModule;
 	/**
 	 * Specifies the convention of exported names.
 	 */

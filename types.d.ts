@@ -1564,14 +1564,9 @@ declare interface CodeGenerationContext {
 	chunkGraph: ChunkGraph;
 
 	/**
-	 * the runtime code should be generated for
-	 */
-	runtime: RuntimeSpec;
-
-	/**
 	 * the runtimes code should be generated for
 	 */
-	runtimes?: RuntimeSpec[];
+	runtime: RuntimeSpec;
 
 	/**
 	 * when in concatenated module, information about other concatenated modules
@@ -2949,6 +2944,11 @@ type CreateWriteStreamFSImplementation = FSImplementation & {
  */
 declare interface CssAutoGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
@@ -2985,6 +2985,11 @@ declare interface CssAutoParserOptions {
  */
 declare interface CssGeneratorOptions {
 	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
@@ -2994,6 +2999,11 @@ declare interface CssGeneratorOptions {
  * Generator options for css/global modules.
  */
 declare interface CssGlobalGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
 	/**
 	 * Specifies the convention of exported names.
 	 */
@@ -3035,6 +3045,11 @@ declare interface CssImportDependencyMeta {
  * Generator options for css/module modules.
  */
 declare interface CssModuleGeneratorOptions {
+	/**
+	 * Configure the generated JS modules that use the ES modules syntax.
+	 */
+	esModule?: boolean;
+
 	/**
 	 * Specifies the convention of exported names.
 	 */
@@ -3251,14 +3266,9 @@ declare interface DependencyTemplateContext {
 	module: Module;
 
 	/**
-	 * current runtime, for which code is generated
-	 */
-	runtime: RuntimeSpec;
-
-	/**
 	 * current runtimes, for which code is generated
 	 */
-	runtimes?: RuntimeSpec[];
+	runtime: RuntimeSpec;
 
 	/**
 	 * mutable array of init fragments for the current module
@@ -4901,11 +4911,6 @@ declare interface GenerateContext {
 	 * the runtime
 	 */
 	runtime: RuntimeSpec;
-
-	/**
-	 * the runtimes
-	 */
-	runtimes?: RuntimeSpec[];
 
 	/**
 	 * when in concatenated module, information about other concatenated modules
@@ -15281,10 +15286,6 @@ declare namespace exports {
 			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
-			export let deepMergeRuntime: (
-				runtimes: undefined | RuntimeSpec[],
-				runtime: RuntimeSpec
-			) => RuntimeSpec;
 			export let mergeRuntimeCondition: (
 				a: RuntimeCondition,
 				b: RuntimeCondition,
@@ -15339,6 +15340,16 @@ declare namespace exports {
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
+		export function compileBooleanMatcher(
+			map: Record<string | number, boolean>
+		): boolean | ((arg0: string) => string);
+		export namespace compileBooleanMatcher {
+			export let fromLists: (
+				positiveItems: string[],
+				negativeItems: string[]
+			) => (arg0: string) => string;
+			export let itemsToRegexp: (itemsArr: string[]) => string;
+		}
 		export { LazySet };
 	}
 	export namespace sources {
