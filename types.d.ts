@@ -3310,7 +3310,6 @@ declare abstract class DependencyTemplates {
 declare interface DestructuringAssignmentProperty {
 	id: string;
 	range?: [number, number];
-	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
 declare class DeterministicChunkIdsPlugin {
