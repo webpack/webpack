@@ -2303,6 +2303,7 @@ declare class Compiler {
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
+	platform: Readonly<PlatformTargetProperties>;
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
@@ -10416,6 +10417,46 @@ declare interface PitchLoaderDefinitionFunction<
 		data: object
 	): string | void | Buffer | Promise<string | Buffer>;
 }
+declare class PlatformPlugin {
+	constructor(platform: Partial<PlatformTargetProperties>);
+	platform: Partial<PlatformTargetProperties>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface PlatformTargetProperties {
+	/**
+	 * web platform, importing of http(s) and std: is available
+	 */
+	web: null | boolean;
+
+	/**
+	 * browser platform, running in a normal web browser
+	 */
+	browser: null | boolean;
+
+	/**
+	 * (Web)Worker platform, running in a web/shared/service worker
+	 */
+	webworker: null | boolean;
+
+	/**
+	 * node platform, require of node built-in modules is available
+	 */
+	node: null | boolean;
+
+	/**
+	 * nwjs platform, require of legacy nw.gui is available
+	 */
+	nwjs: null | boolean;
+
+	/**
+	 * electron platform, require of some electron built-in modules is available
+	 */
+	electron: null | boolean;
+}
 type Plugin =
 	| undefined
 	| null
@@ -11885,6 +11926,12 @@ declare interface ResolvedContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
 	hash: string;
+}
+declare interface ResolvedOptions {
+	/**
+	 * - platform target properties
+	 */
+	platform: false | PlatformTargetProperties;
 }
 declare abstract class Resolver {
 	fileSystem: FileSystem;
@@ -15078,7 +15125,7 @@ declare namespace exports {
 		export const applyWebpackOptionsDefaults: (
 			options: WebpackOptionsNormalized,
 			compilerIndex?: number
-		) => void;
+		) => ResolvedOptions;
 	}
 	export namespace dependencies {
 		export {
@@ -15436,6 +15483,7 @@ declare namespace exports {
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
 		Parser,
+		PlatformPlugin,
 		PrefetchPlugin,
 		ProgressPlugin,
 		ProvidePlugin,

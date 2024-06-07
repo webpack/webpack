@@ -226,6 +226,12 @@ describe("Compiler", () => {
 				callback();
 			}
 		});
+		it("default platform info", done => {
+			const platform = compiler.platform;
+			expect(platform.web).toBe(true);
+			expect(platform.node).toBe(false);
+			done();
+		});
 		describe("purgeInputFileSystem", () => {
 			it("invokes purge() if inputFileSystem.purge", done => {
 				const mockPurge = jest.fn();
@@ -287,6 +293,29 @@ describe("Compiler", () => {
 			});
 		});
 	});
+
+	it("PlatformPlugin", done => {
+		const webpack = require("..");
+		const compiler = webpack({
+			entry: "./c",
+			context: path.join(__dirname, "fixtures"),
+			output: {
+				path: "/directory"
+			},
+			plugins: [
+				new (require("../lib/PlatformPlugin"))({ node: true }),
+				compiler => {
+					compiler.hooks.afterEnvironment.tap("test", () => {
+						const platform = compiler.platform;
+						expect(platform.node).toBe(true);
+						expect(platform.web).toBe(true);
+					});
+				}
+			]
+		});
+		compiler.close(done);
+	});
+
 	it("should not emit on errors", done => {
 		const webpack = require("..");
 		compiler = webpack({
