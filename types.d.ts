@@ -11908,6 +11908,12 @@ declare interface ResolvedContextTimestampAndHash {
 	timestampHash?: string;
 	hash: string;
 }
+declare interface ResolvedOptions {
+	/**
+	 * - platform target properties
+	 */
+	platform: false | PlatformTargetProperties;
+}
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsResolverFactoryObject1;
@@ -15100,7 +15106,7 @@ declare namespace exports {
 		export const applyWebpackOptionsDefaults: (
 			options: WebpackOptionsNormalized,
 			compilerIndex?: number
-		) => false | PlatformTargetProperties;
+		) => ResolvedOptions;
 	}
 	export namespace dependencies {
 		export {
