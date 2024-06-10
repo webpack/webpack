@@ -5250,7 +5250,6 @@ type IBigIntStats = IStatsBase<bigint> & {
 	ctimeNs: bigint;
 	birthtimeNs: bigint;
 };
-declare const IS_LEGACY_IMPORT_ASSERTION: unique symbol;
 declare interface IStats {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -5337,8 +5336,7 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
-type ImportAttributes = Record<string, string> &
-	Partial<Record<typeof IS_LEGACY_IMPORT_ASSERTION, boolean>>;
+type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
 }
@@ -6521,7 +6519,6 @@ declare class JavascriptParser extends Parser {
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
-	static IS_LEGACY_IMPORT_ASSERTION: typeof IS_LEGACY_IMPORT_ASSERTION;
 }
 
 /**
