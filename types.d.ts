@@ -12390,6 +12390,11 @@ declare interface RuleSetRule {
 				options?: string | { [index: string]: any };
 		  }
 		| __TypeWebpackOptions;
+
+	/**
+	 * Match on import attributes of the dependency.
+	 */
+	with?: { [index: string]: RuleSetConditionOrConditions };
 }
 type RuleSetUse =
 	| string

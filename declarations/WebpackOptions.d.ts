@@ -1494,6 +1494,12 @@ export interface RuleSetRule {
 	 * Modifiers applied to the module when rule is matched.
 	 */
 	use?: RuleSetUse;
+	/**
+	 * Match on import attributes of the dependency.
+	 */
+	with?: {
+		[k: string]: RuleSetConditionOrConditions;
+	};
 }
 /**
  * Logic operators used in a condition matcher.
