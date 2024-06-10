@@ -430,9 +430,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare interface Attributes {
-	[index: string]: any;
-}
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -2901,7 +2898,7 @@ declare interface ContextModuleOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: string;
-	attributes?: Attributes;
+	attributes?: ImportAttributes;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -5102,7 +5099,11 @@ declare interface HandleModuleCreationOptions {
 	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(request: string, sourceOrder: number, attributes?: Attributes);
+	constructor(
+		request: string,
+		sourceOrder: number,
+		attributes?: ImportAttributes
+	);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
@@ -5249,6 +5250,7 @@ type IBigIntStats = IStatsBase<bigint> & {
 	ctimeNs: bigint;
 	birthtimeNs: bigint;
 };
+declare const IS_LEGACY_IMPORT_ASSERTION: unique symbol;
 declare interface IStats {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -5335,8 +5337,10 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+type ImportAttributes = Record<string, any> &
+	Partial<Record<typeof IS_LEGACY_IMPORT_ASSERTION, boolean>>;
 declare interface ImportDependencyMeta {
-	attributes?: Attributes;
+	attributes?: ImportAttributes;
 }
 declare interface ImportModuleOptions {
 	/**
@@ -8153,7 +8157,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Attributes;
+	assertions?: ImportAttributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
