@@ -430,9 +430,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare interface Attributes {
-	[index: string]: any;
-}
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -2901,7 +2898,7 @@ declare interface ContextModuleOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: string;
-	attributes?: Attributes;
+	attributes?: ImportAttributes;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -5102,7 +5099,11 @@ declare interface HandleModuleCreationOptions {
 	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(request: string, sourceOrder: number, attributes?: Attributes);
+	constructor(
+		request: string,
+		sourceOrder: number,
+		attributes?: ImportAttributes
+	);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
@@ -5335,8 +5336,9 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
-	attributes?: Attributes;
+	attributes?: ImportAttributes;
 }
 declare interface ImportModuleOptions {
 	/**
@@ -8153,7 +8155,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
-	assertions?: Attributes;
+	assertions?: ImportAttributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -12385,6 +12387,11 @@ declare interface RuleSetRule {
 				options?: string | { [index: string]: any };
 		  }
 		| __TypeWebpackOptions;
+
+	/**
+	 * Match on import attributes of the dependency.
+	 */
+	with?: { [index: string]: RuleSetConditionOrConditions };
 }
 type RuleSetUse =
 	| string

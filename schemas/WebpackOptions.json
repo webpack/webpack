@@ -4588,6 +4588,13 @@
               "$ref": "#/definitions/RuleSetUse"
             }
           ]
+        },
+        "with": {
+          "description": "Match on import attributes of the dependency.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RuleSetConditionOrConditions"
+          }
         }
       }
     },
