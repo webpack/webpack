@@ -1,0 +1,5 @@
+h3 {
+  same-dir: url('./img3.png');
+  outer-dir: url('../img2.png');
+  outer-outer-dir: url('../../img1.png');
+}
