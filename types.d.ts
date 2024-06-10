@@ -5337,7 +5337,7 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
-type ImportAttributes = Record<string, any> &
+type ImportAttributes = Record<string, string> &
 	Partial<Record<typeof IS_LEGACY_IMPORT_ASSERTION, boolean>>;
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
@@ -6521,6 +6521,7 @@ declare class JavascriptParser extends Parser {
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
+	static IS_LEGACY_IMPORT_ASSERTION: typeof IS_LEGACY_IMPORT_ASSERTION;
 }
 
 /**
