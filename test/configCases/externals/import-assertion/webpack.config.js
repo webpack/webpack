@@ -60,6 +60,6 @@ module.exports = {
 		"./pkg.json": "import ./pkg.json",
 		"./pkg": "import ./pkg",
 		"./re-export.json": "module ./re-export.json",
-		"./re-export-directly": "module ./re-export-directly.json"
+		"./re-export-directly.json": "module ./re-export-directly.json"
 	}
 };

@@ -1,1 +1,1 @@
-export * from "./re-export.json" assert { type: "json" };
+export * from "./re-export.json" with { type: "json" };
