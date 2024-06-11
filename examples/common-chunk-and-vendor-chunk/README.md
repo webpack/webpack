@@ -719,7 +719,7 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.91.0 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -732,7 +732,7 @@ asset pageA.js 1 KiB [emitted] [minimized] (name: pageA)
 asset pageB.js 1020 bytes [emitted] [minimized] (name: pageB)
 asset pageC.js 1010 bytes [emitted] [minimized] (name: pageC)
 asset vendor.js 121 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.22 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 1 KiB
+Entrypoint pageA 1.23 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 1 KiB
 Entrypoint pageB 1.32 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageB.js 1020 bytes
 Entrypoint pageC 1.19 KiB = commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageC.js 1010 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
@@ -786,5 +786,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.91.0 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
