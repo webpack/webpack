@@ -77,6 +77,12 @@ module.exports = [
 			"no-inner-declarations": "error",
 			"no-loop-func": "off",
 			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
+			"n/no-unsupported-features/node-builtins": [
+				"error",
+				{
+					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
+				}
+			],
 			"jsdoc/check-alignment": "off",
 			"jsdoc/tag-lines": "off",
 			// TODO enable me
@@ -182,7 +188,6 @@ module.exports = [
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{
-					version: ">=10.13.0",
 					allowExperimental: true
 				}
 			]
