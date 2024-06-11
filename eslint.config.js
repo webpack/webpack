@@ -85,7 +85,6 @@ module.exports = [
 			],
 			"jsdoc/check-alignment": "off",
 			"jsdoc/tag-lines": "off",
-			// TODO enable me
 			"jsdoc/valid-types": "off",
 			// TODO remove me after switch to typescript strict mode
 			"jsdoc/require-jsdoc": "off",
