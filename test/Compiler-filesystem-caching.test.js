@@ -43,6 +43,7 @@ describe("Compiler (filesystem caching)", () => {
 
 		const isBigIntSupported = typeof BigInt !== "undefined";
 		const isErrorCaseSupported =
+			// eslint-disable-next-line n/no-unsupported-features/es-syntax
 			typeof new Error("test", { cause: new Error("cause") }).cause !==
 			"undefined";
 
@@ -106,9 +107,11 @@ describe("Compiler (filesystem caching)", () => {
 								storeValue.string = "string";
 
 								if (isErrorCaseSupported) {
+									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error = new Error("error", {
 										cause: new Error("cause")
 									});
+									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error1 = new Error("error", {
 										cause: { string: "string", number: 42 }
 									});

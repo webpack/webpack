@@ -67,6 +67,7 @@ const describeCases = config => {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+							// eslint-disable-next-line jest/no-disabled-tests
 							describe.skip(testName, () => {
 								it("filtered", () => {});
 							});
@@ -260,7 +261,7 @@ const describeCases = config => {
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
 													modules || []
-												)
+											  )
 											: modules;
 										if (
 											allModules.some(
@@ -556,7 +557,7 @@ const describeCases = config => {
 																			referencingModule.identifier
 																				? referencingModule.identifier.slice(
 																						esmIdentifier.length + 1
-																					)
+																				  )
 																				: fileURLToPath(referencingModule.url)
 																		),
 																		options,
@@ -648,9 +649,9 @@ const describeCases = config => {
 											) {
 												return testConfig.modules[module];
 											} else {
-												return require(
-													module.startsWith("node:") ? module.slice(5) : module
-												);
+												return require(module.startsWith("node:")
+													? module.slice(5)
+													: module);
 											}
 										};
 

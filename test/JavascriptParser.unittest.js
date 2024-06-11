@@ -7,7 +7,6 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
 describe("JavascriptParser", () => {
 	/* eslint-disable no-undef */
 	/* eslint-disable no-unused-vars */
-	/* eslint-disable no-inner-declarations */
 	const testCases = {
 		"call ident": [
 			function () {
@@ -251,7 +250,6 @@ describe("JavascriptParser", () => {
 	};
 	/* eslint-enable no-undef */
 	/* eslint-enable no-unused-vars */
-	/* eslint-enable no-inner-declarations */
 
 	Object.keys(testCases).forEach(name => {
 		it("should parse " + name, () => {

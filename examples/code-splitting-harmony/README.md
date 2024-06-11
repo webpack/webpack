@@ -53,19 +53,19 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 var map = {
 	"./1": [
 		4,
-		346
+		197
 	],
 	"./1.js": [
 		4,
-		346
+		197
 	],
 	"./2": [
 		5,
-		98
+		140
 	],
 	"./2.js": [
 		5,
-		98
+		140
 	]
 };
 function webpackAsyncContext(req) {
@@ -228,6 +228,7 @@ module.exports = webpackAsyncContext;
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -272,7 +273,7 @@ module.exports = webpackAsyncContext;
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			792: 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -309,7 +310,7 @@ module.exports = webpackAsyncContext;
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -375,7 +376,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e(/*! import() */ 644).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 3, 23)).then(function(b) {
+__webpack_require__.e(/*! import() */ 414).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 3, 23)).then(function(b) {
 	console.log("b loaded", b);
 })
 
@@ -399,72 +400,72 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 ```
 asset output.js 13.6 KiB [emitted] (name: main)
-asset 346.output.js 296 bytes [emitted]
-asset 98.output.js 295 bytes [emitted]
-asset 644.output.js 288 bytes [emitted]
-chunk (runtime: main) 98.output.js 13 bytes [rendered]
+asset 140.output.js 296 bytes [emitted]
+asset 197.output.js 296 bytes [emitted]
+asset 414.output.js 288 bytes [emitted]
+chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
   ./node_modules/c/2.js 13 bytes [optional] [built] [code generated]
     [used exports unknown]
     import() context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     import() context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) 197.output.js 13 bytes [rendered]
+  > ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
+  > ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
+  ./node_modules/c/1.js 13 bytes [optional] [built] [code generated]
+    [used exports unknown]
+    import() context element ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
+    import() context element ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
+chunk (runtime: main) 414.output.js 11 bytes [rendered]
+  > b ./example.js 3:0-11
+  ./node_modules/b.js 11 bytes [built] [code generated]
+    [used exports unknown]
+    import() b ./example.js 3:0-11
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.88 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.88 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 346.output.js 13 bytes [rendered]
-  > ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
-  > ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
-  ./node_modules/c/1.js 13 bytes [optional] [built] [code generated]
-    [used exports unknown]
-    import() context element ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
-    import() context element ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
-chunk (runtime: main) 644.output.js 11 bytes [rendered]
-  > b ./example.js 3:0-11
-  ./node_modules/b.js 11 bytes [built] [code generated]
-    [used exports unknown]
-    import() b ./example.js 3:0-11
-webpack 5.78.0 compiled successfully
+webpack 5.91.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.88 KiB [emitted] [minimized] (name: main)
-asset 346.output.js 69 bytes [emitted] [minimized]
-asset 644.output.js 69 bytes [emitted] [minimized]
-asset 98.output.js 67 bytes [emitted] [minimized]
-chunk (runtime: main) 98.output.js 13 bytes [rendered]
+asset output.js 2.89 KiB [emitted] [minimized] (name: main)
+asset 140.output.js 69 bytes [emitted] [minimized]
+asset 197.output.js 69 bytes [emitted] [minimized]
+asset 414.output.js 69 bytes [emitted] [minimized]
+chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
   ./node_modules/c/2.js 13 bytes [optional] [built] [code generated]
     [used exports unknown]
     import() context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     import() context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 6.65 KiB 9 modules
-  dependent modules 160 bytes [dependent] 1 module
-  ./example.js 243 bytes [built] [code generated]
-    [no exports]
-    [no exports used]
-    entry ./example.js main
-chunk (runtime: main) 346.output.js 13 bytes [rendered]
+chunk (runtime: main) 197.output.js 13 bytes [rendered]
   > ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
   > ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
   ./node_modules/c/1.js 13 bytes [optional] [built] [code generated]
     [used exports unknown]
     import() context element ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
     import() context element ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
-chunk (runtime: main) 644.output.js 11 bytes [rendered]
+chunk (runtime: main) 414.output.js 11 bytes [rendered]
   > b ./example.js 3:0-11
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.78.0 compiled successfully
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.62 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 6.62 KiB 9 modules
+  dependent modules 160 bytes [dependent] 1 module
+  ./example.js 243 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
+webpack 5.91.0 compiled successfully
 ```

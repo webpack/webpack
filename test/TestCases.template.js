@@ -61,6 +61,7 @@ const describeCases = config => {
 						const testDirectory = path.join(casesPath, category.name, test);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+							// eslint-disable-next-line jest/no-disabled-tests
 							describe.skip(test, () => {
 								it("filtered", () => {});
 							});
@@ -111,7 +112,7 @@ const describeCases = config => {
 											emitOnErrors: true,
 											minimizer: [terserForTesting],
 											...config.optimization
-										}
+									  }
 									: {
 											removeAvailableModules: true,
 											removeEmptyChunks: true,
@@ -127,7 +128,7 @@ const describeCases = config => {
 											chunkIds: "size",
 											minimizer: [terserForTesting],
 											...config.optimization
-										},
+									  },
 								performance: {
 									hints: false
 								},

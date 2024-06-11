@@ -123,7 +123,7 @@ describe("Compiler (caching)", () => {
 		};
 	}
 
-	it("should cache single file (with manual 1s wait) ", done => {
+	it("should cache single file (with manual 1s wait)", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
@@ -157,7 +157,7 @@ describe("Compiler (caching)", () => {
 		});
 	});
 
-	it("should cache single file (even with no timeout) ", done => {
+	it("should cache single file (even with no timeout)", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 

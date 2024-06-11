@@ -23,7 +23,7 @@ module.exports = {
 						)) {
 							hashes.push(module.hash);
 						}
-					}).toThrowError(
+					}).toThrow(
 						/No unique hash info entry for unspecified runtime .+ \(existing runtimes: a, b\)\.\n.+opt-out via optimization\.usedExports: "global"/
 					);
 				});

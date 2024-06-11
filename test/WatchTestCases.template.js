@@ -46,6 +46,7 @@ function copyDiff(src, dest, initial) {
 const describeCases = config => {
 	describe(config.name, () => {
 		if (process.env.NO_WATCH_TESTS) {
+			// eslint-disable-next-line jest/no-disabled-tests
 			it.skip("long running tests excluded", () => {});
 			return;
 		}
@@ -63,6 +64,7 @@ const describeCases = config => {
 						const testDirectory = path.join(casesPath, cat, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+							// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 							describe.skip(testName, () => it("filtered", () => {}));
 							return false;
 						}
@@ -348,9 +350,10 @@ const describeCases = config => {
 											let testConfig = {};
 											try {
 												// try to load a test file
-												testConfig = require(
-													path.join(testDirectory, "test.config.js")
-												);
+												testConfig = require(path.join(
+													testDirectory,
+													"test.config.js"
+												));
 											} catch (e) {
 												// empty
 											}

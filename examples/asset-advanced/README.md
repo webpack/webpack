@@ -137,8 +137,6 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -176,8 +174,6 @@ function createImageElement(title, src) {
 	createImageElement(src.split(".").pop(), src);
 });
 
-})();
-
 /******/ })()
 ;
 ```
@@ -187,7 +183,7 @@ function createImageElement(title, src) {
 ## webpack output
 
 ```
-asset output.js 3.81 KiB [emitted] (name: main)
+asset output.js 3.69 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module
@@ -196,5 +192,5 @@ chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime)
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.91.0 compiled successfully
 ```
