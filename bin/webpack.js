@@ -91,7 +91,7 @@ const runCli = cli => {
 };
 
 /**
- * @typedef {Object} CliOption
+ * @typedef {object} CliOption
  * @property {string} name display name
  * @property {string} package npm package name
  * @property {string} binName name of the executable file

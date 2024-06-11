@@ -80,29 +80,13 @@ module.exports = [
 			"jsdoc/check-alignment": "off",
 			"jsdoc/tag-lines": "off",
 			// TODO enable me
-			"jsdoc/check-types": "off",
-			// TODO enable me
 			"jsdoc/valid-types": "off",
 			// TODO remove me after switch to typescript strict mode
 			"jsdoc/require-jsdoc": "off",
 			"jsdoc/require-returns-check": "off",
-			// TODO remove duplication from recommended
 			"jsdoc/check-indentation": "error",
-			"jsdoc/check-param-names": "error",
-			"jsdoc/check-property-names": "error",
-			"jsdoc/check-tag-names": "error",
 			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-			"jsdoc/require-param-description": "error",
-			"jsdoc/require-param-name": "error",
-			"jsdoc/require-param-type": "error",
-			"jsdoc/require-param": "error",
-			"jsdoc/require-property": "error",
-			"jsdoc/require-property-name": "error",
-			"jsdoc/require-property-type": "error",
 			"jsdoc/require-property-description": "off",
-			"jsdoc/require-returns-description": "error",
-			"jsdoc/require-returns-type": "error",
-			"jsdoc/require-returns": "error",
 			// Disallow @ts-ignore directive. Use @ts-expect-error instead
 			"no-warning-comments": [
 				"error",
@@ -133,9 +117,6 @@ module.exports = [
 					desc: false,
 					inheritdoc: false,
 					class: "constructor"
-				},
-				preferredTypes: {
-					object: "Object"
 				},
 				overrideReplacesDocs: false
 			}
