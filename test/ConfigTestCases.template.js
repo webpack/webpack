@@ -261,7 +261,7 @@ const describeCases = config => {
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
 													modules || []
-											  )
+												)
 											: modules;
 										if (
 											allModules.some(
@@ -557,7 +557,7 @@ const describeCases = config => {
 																			referencingModule.identifier
 																				? referencingModule.identifier.slice(
 																						esmIdentifier.length + 1
-																				  )
+																					)
 																				: fileURLToPath(referencingModule.url)
 																		),
 																		options,
@@ -649,9 +649,9 @@ const describeCases = config => {
 											) {
 												return testConfig.modules[module];
 											} else {
-												return require(module.startsWith("node:")
-													? module.slice(5)
-													: module);
+												return require(
+													module.startsWith("node:") ? module.slice(5) : module
+												);
 											}
 										};
 
