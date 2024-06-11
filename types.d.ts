@@ -5182,8 +5182,8 @@ declare interface HashedModuleIdsPluginOptions {
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
-	constructor(options?: Object);
-	options: Object;
+	constructor(options?: object);
+	options: object;
 
 	/**
 	 * Apply the plugin
@@ -7328,7 +7328,7 @@ declare interface LibIdentOptions {
 	/**
 	 * object for caching
 	 */
-	associatedObjectForCache?: Object;
+	associatedObjectForCache?: object;
 }
 declare class LibManifestPlugin {
 	constructor(options: LibManifestPluginOptions);
@@ -8352,8 +8352,8 @@ declare class ModuleGraph {
 	setDepthIfLower(module: Module, depth: number): boolean;
 	isAsync(module: Module): boolean;
 	setAsync(module: Module): void;
-	getMeta(thing?: any): Object;
-	getMetaIfExisting(thing?: any): undefined | Object;
+	getMeta(thing?: any): object;
+	getMetaIfExisting(thing?: any): undefined | object;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
@@ -8886,14 +8886,14 @@ declare class NormalModule extends Module {
 		name: string,
 		content: string | Buffer,
 		sourceMap?: string | SourceMap,
-		associatedObjectForCache?: Object
+		associatedObjectForCache?: object
 	): Source;
 	getCurrentLoader(loaderContext?: any, index?: number): null | LoaderItem;
 	createSource(
 		context: string,
 		content: string | Buffer,
 		sourceMap?: string | SourceMapSource,
-		associatedObjectForCache?: Object
+		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
 	applyNoParseRule(rule: any, content: string): boolean;
@@ -9027,8 +9027,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<Object, Parser>>;
-	generatorCache: Map<string, WeakMap<Object, Generator>>;
+	parserCache: Map<string, WeakMap<object, Parser>>;
+	generatorCache: Map<string, WeakMap<object, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
 		contextInfo: ModuleFactoryCreateDataContextInfo,
@@ -11991,7 +11991,7 @@ declare abstract class Resolver {
 	normalize(path: string): string;
 }
 declare interface ResolverCache {
-	direct: WeakMap<Object, ResolverWithOptions>;
+	direct: WeakMap<object, ResolverWithOptions>;
 	stringified: Map<string, ResolverWithOptions>;
 }
 declare abstract class ResolverFactory {
@@ -13018,11 +13018,11 @@ declare abstract class Serializer {
 declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
 	serialize(
 		data: DeserializedType,
-		context: Object
+		context: object
 	): SerializedType | Promise<SerializedType>;
 	deserialize(
 		data: SerializedType,
-		context: Object
+		context: object
 	): DeserializedType | Promise<DeserializedType>;
 }
 type ServerOptionsHttps<
@@ -13645,7 +13645,7 @@ type StatsCompilation = KnownStatsCompilation & Record<string, any>;
 type StatsError = KnownStatsError & Record<string, any>;
 declare abstract class StatsFactory {
 	hooks: Readonly<{
-		extract: HookMap<SyncBailHook<[Object, any, StatsFactoryContext], any>>;
+		extract: HookMap<SyncBailHook<[object, any, StatsFactoryContext], any>>;
 		filter: HookMap<
 			SyncBailHook<[any, StatsFactoryContext, number, number], any>
 		>;
@@ -14150,7 +14150,7 @@ declare abstract class StatsPrinter {
 		print: HookMap<SyncBailHook<[{}, StatsPrinterContext], string>>;
 		result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 	}>;
-	print(type: string, object: Object, baseContext?: Object): string;
+	print(type: string, object: object, baseContext?: object): string;
 }
 type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
 type StatsProfile = KnownStatsProfile & Record<string, any>;

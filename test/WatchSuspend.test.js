@@ -7,6 +7,7 @@ const fs = require("fs");
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
 		return;
 	}

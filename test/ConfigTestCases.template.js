@@ -67,6 +67,7 @@ const describeCases = config => {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+							// eslint-disable-next-line jest/no-disabled-tests
 							describe.skip(testName, () => {
 								it("filtered", () => {});
 							});

@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .eslintcache
-          key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.eslintrc.js') }}
+          key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/eslint.config.js') }}
           restore-keys: lint-eslint-
       - name: Cache cspell result
         uses: actions/cache@v4
@@ -161,7 +161,7 @@ jobs:
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: |
-          yarn upgrade eslint-plugin-jest@~28.4.0 eslint-plugin-jsdoc@^47.0.0 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0
+          yarn upgrade husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
       # Install main version of our deps
