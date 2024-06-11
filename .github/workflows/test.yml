@@ -161,7 +161,7 @@ jobs:
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: |
-          yarn upgrade eslint-plugin-jest@~28.4.0 eslint-plugin-jsdoc@^47.0.0 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 nyc@^15.1.0 eslint@^8 @eslint/js@^8 eslint-plugin-n@^16 globals@^13
+          yarn upgrade husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
       # Install main version of our deps
