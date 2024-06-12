@@ -365,6 +365,13 @@ declare interface AssetResourceGeneratorOptions {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * when false, if hash has only numeric char, the returned hash will be prefixed with character `a` to make it has at least one non numeric char.
+	 * when true, the returned hash may not contain any non-numeric characters.
+	 * default false.
+	 */
+	allowNumericOnlyHash?: boolean;
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(

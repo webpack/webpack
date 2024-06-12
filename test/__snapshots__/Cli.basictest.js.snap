@@ -1377,6 +1377,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-resource-allow-numeric-only-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Hash may not contain any non-numeric characters when true. Hash may prefixed with character 'a' when false.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.allowNumericOnlyHash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Hash may not contain any non-numeric characters when true. Hash may prefixed with character 'a' when false.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-resource-emit": Object {
     "configs": Array [
       Object {
