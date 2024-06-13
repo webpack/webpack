@@ -220,6 +220,12 @@ describe("snapshots", () => {
 		        },
 		        "type": "json",
 		      },
+		      Object {
+		        "type": "json",
+		        "with": Object {
+		          "type": "json",
+		        },
+		      },
 		    ],
 		    "generator": Object {},
 		    "noParse": undefined,

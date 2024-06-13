@@ -1,3 +1,4 @@
+// eslint-disable-next-line jest/no-export
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global["JEST_STATE_SYMBOL"];
 	let currentDescribeBlock;
@@ -89,6 +90,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[1] = createDisposableFn(args[1], true);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
+				// eslint-disable-next-line jest/no-disabled-tests
 				it(...args);
 				fixAsyncError(
 					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]

@@ -68,6 +68,7 @@ function createFiles() {
 
 describe("ChangesAndRemovals", () => {
 	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("watch tests excluded", () => {});
 		return;
 	}

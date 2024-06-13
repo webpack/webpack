@@ -79,7 +79,6 @@ const runCli = cli => {
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
-		// eslint-disable-next-line n/no-unsupported-features/es-syntax
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
 			error => {
 				console.error(error);
@@ -92,7 +91,7 @@ const runCli = cli => {
 };
 
 /**
- * @typedef {Object} CliOption
+ * @typedef {object} CliOption
  * @property {string} name display name
  * @property {string} package npm package name
  * @property {string} binName name of the executable file
