@@ -12064,11 +12064,6 @@ declare interface RuleSetLogicalConditionsAbsolute {
  */
 declare interface RuleSetRule {
 	/**
-	 * Match on import assertions of the dependency.
-	 */
-	assert?: { [index: string]: RuleSetConditionOrConditions };
-
-	/**
 	 * Match the child compiler name.
 	 */
 	compiler?:
