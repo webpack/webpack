@@ -8,5 +8,4 @@ module.exports = function(_) {
 	const sourceMap = fs.readFileSync(path.join(__dirname, "data/asset.css.map"), { encoding: "utf8" });
 
 	this.callback(null, transformed, JSON.parse(sourceMap));
-	return;
 }

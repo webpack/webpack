@@ -7723,7 +7723,6 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
-	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
