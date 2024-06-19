@@ -2825,6 +2825,10 @@ export interface AssetGeneratorDataUrlOptions {
  */
 export interface AssetInlineGeneratorOptions {
 	/**
+	 * Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.
+	 */
+	binary?: boolean;
+	/**
 	 * The options for data url generator.
 	 */
 	dataUrl?: AssetGeneratorDataUrl;
@@ -2851,6 +2855,10 @@ export interface AssetParserOptions {
  * Generator options for asset/resource modules.
  */
 export interface AssetResourceGeneratorOptions {
+	/**
+	 * Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.
+	 */
+	binary?: boolean;
 	/**
 	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
 	 */

@@ -103,6 +103,10 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "binary": {
+          "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+          "type": "boolean"
+        },
         "dataUrl": {
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         },
@@ -126,6 +130,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "binary": {
+          "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+          "type": "boolean"
+        },
         "dataUrl": {
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         }
@@ -196,6 +204,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "binary": {
+          "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+          "type": "boolean"
+        },
         "emit": {
           "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
           "type": "boolean"

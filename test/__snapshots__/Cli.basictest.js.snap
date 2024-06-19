@@ -1265,6 +1265,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-binary": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+        "multiple": false,
+        "path": "module.generator.asset.binary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-data-url-encoding": Object {
     "configs": Array [
       Object {
@@ -1321,6 +1334,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-inline-binary": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+        "multiple": false,
+        "path": "module.generator.asset/inline.binary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-inline-data-url-encoding": Object {
     "configs": Array [
       Object {
@@ -1376,6 +1402,19 @@ Object {
     "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-asset-resource-binary": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.binary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-generator-asset-resource-emit": Object {
     "configs": Array [
