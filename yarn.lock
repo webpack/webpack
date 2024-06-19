@@ -3251,9 +3251,9 @@ globals@^14.0.0:
   integrity sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==
 
 globals@^15.0.0, globals@^15.4.0:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-15.4.0.tgz#3e36ea6e4d9ddcf1cb42d92f5c4a145a8a2ddc1c"
-  integrity sha512-unnwvMZpv0eDUyjNyh9DH/yxUaRYrEjW/qK4QcdrHg3oO11igUQrCSgODHEqxlKg8v2CD2Sd7UkqqEBoz5U7TQ==
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-15.6.0.tgz#3872d3ab4427e1df4718efd3f7d2c721c503f65f"
+  integrity sha512-UzcJi88Hw//CurUIRa9Jxb0vgOCcuD/MNjwmXp633cyaRKkCWACkoqHCtfZv43b1kqXGg/fpOa8bwgacCeXsVg==
 
 globby@^11.1.0:
   version "11.1.0"
