@@ -753,8 +753,8 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
 "asset main-ca1a74034b366de49c9b.js 12.7 KiB [emitted] [immutable] (name: main)
   sourceMap main-ca1a74034b366de49c9b.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
-asset 977-0d034101f87f8fa73545.js 455 bytes [emitted] [immutable]
-  sourceMap 977-0d034101f87f8fa73545.js.map 347 bytes [emitted] [dev]
+asset 977-0d034101f87f8fa73545.js 327 bytes [emitted] [immutable]
+  sourceMap 977-0d034101f87f8fa73545.js.map 345 bytes [emitted] [dev]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -769,8 +769,8 @@ webpack x.x.x compiled successfully in X ms
 
 asset main-ca1a74034b366de49c9b.js 12.7 KiB [emitted] [immutable] (name: main)
   sourceMap main-ca1a74034b366de49c9b.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
-asset 977-0d034101f87f8fa73545.js 455 bytes [emitted] [immutable]
-  sourceMap 977-0d034101f87f8fa73545.js.map 347 bytes [emitted] [dev]
+asset 977-0d034101f87f8fa73545.js 327 bytes [emitted] [immutable]
+  sourceMap 977-0d034101f87f8fa73545.js.map 345 bytes [emitted] [dev]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -784,7 +784,7 @@ built modules 500 bytes [built]
 webpack x.x.x compiled successfully in X ms
 
 asset main-1a22a9efdea25febc014.js 14.9 KiB [emitted] [immutable] (name: main)
-asset 977-e5e90d6b226bc2f54dcd.js 1.51 KiB [emitted] [immutable]
+asset 977-e5e90d6b226bc2f54dcd.js 1.38 KiB [emitted] [immutable]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -798,7 +798,7 @@ built modules 500 bytes [built]
 webpack x.x.x compiled successfully in X ms
 
 asset main-1a22a9efdea25febc014.js 14.9 KiB [emitted] [immutable] (name: main)
-asset 977-e5e90d6b226bc2f54dcd.js 1.51 KiB [emitted] [immutable]
+asset 977-e5e90d6b226bc2f54dcd.js 1.38 KiB [emitted] [immutable]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -812,7 +812,7 @@ built modules 500 bytes [built]
 webpack x.x.x compiled successfully in X ms
 
 asset main-5309722c0fef9e0be101.js 13.8 KiB [emitted] [immutable] (name: main)
-asset 977-f918f071346b7b0f2bf2.js 1.01 KiB [emitted] [immutable]
+asset 977-f918f071346b7b0f2bf2.js 904 bytes [emitted] [immutable]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -826,7 +826,7 @@ built modules 500 bytes [built]
 webpack x.x.x compiled successfully in X ms
 
 asset main-5309722c0fef9e0be101.js 13.8 KiB [emitted] [immutable] (name: main)
-asset 977-f918f071346b7b0f2bf2.js 1.01 KiB [emitted] [immutable]
+asset 977-f918f071346b7b0f2bf2.js 904 bytes [emitted] [immutable]
 runtime modules 6.65 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -1599,15 +1599,15 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"assets by path *.js 11.8 KiB
+"assets by path *.js 11.7 KiB
   asset main.js 10.5 KiB [emitted] (name: main)
-  asset a.js 732 bytes [emitted] (name: a)
+  asset a.js 686 bytes [emitted] (name: a)
   asset b.js 549 bytes [emitted] (name: b)
 assets by path *.png 42 KiB
   asset 1.png 21 KiB [emitted] [from: node_modules/a/1.png] (auxiliary name: a)
   asset 2.png 21 KiB [emitted] [from: node_modules/a/2.png] (auxiliary name: a, b)
 Entrypoint main 10.5 KiB = main.js
-Chunk Group a 732 bytes (42 KiB) = a.js 732 bytes (1.png 21 KiB 2.png 21 KiB)
+Chunk Group a 686 bytes (42 KiB) = a.js 686 bytes (1.png 21 KiB 2.png 21 KiB)
 Chunk Group b 549 bytes (21 KiB) = b.js 549 bytes (2.png 21 KiB)
 chunk (runtime: main) b.js (b) 67 bytes [rendered]
   ./node_modules/a/2.png 49 bytes [dependent] [built] [code generated] [1 asset]
@@ -2727,19 +2727,19 @@ LOG from webpack.FileSystemInfo
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
-  assets by path *.js 3.25 KiB
-    asset 2a14e619729cafd3bb77-2a14e6.js 2.8 KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset 0a1b2c7ae2cee5086d70-0a1b2c.js 232 bytes [emitted] [immutable] [minimized] (name: lazy)
+  assets by path *.js 3.08 KiB
+    asset e46444d575748038d69c-e46444.js 2.63 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset 1b48b6222bb1ec5c3c23-1b48b6.js 225 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset fdf80674ac46a61ff9fe-fdf806.js 213 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk 20.4 KiB (auxiliary name: lazy)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3 KiB (5.89 KiB) = 2a14e619729cafd3bb77-2a14e6.js 2.8 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
+  Entrypoint index 2.84 KiB (5.89 KiB) = e46444d575748038d69c-e46444.js 2.63 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
-  runtime modules 7.37 KiB 9 modules
+  runtime modules 7.1 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 556 bytes (javascript) 26.3 KiB (asset)
     javascript modules 430 bytes
@@ -2754,19 +2754,19 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
   a-normal (webpack x.x.x) compiled successfully in X ms
 
 b-normal:
-  assets by path *.js 3.25 KiB
-    asset bafce6ffbfea2c4d43a0-bafce6.js 2.8 KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset 0a1b2c7ae2cee5086d70-0a1b2c.js 232 bytes [emitted] [immutable] [minimized] (name: lazy)
+  assets by path *.js 3.08 KiB
+    asset 12beb53ee92f2ec82aeb-12beb5.js 2.63 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset 1b48b6222bb1ec5c3c23-1b48b6.js 225 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset fdf80674ac46a61ff9fe-fdf806.js 213 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk 20.4 KiB (auxiliary name: lazy)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3 KiB (5.89 KiB) = bafce6ffbfea2c4d43a0-bafce6.js 2.8 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
+  Entrypoint index 2.84 KiB (5.89 KiB) = 12beb53ee92f2ec82aeb-12beb5.js 2.63 KiB fdf80674ac46a61ff9fe-fdf806.js 213 bytes 1 auxiliary asset
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
-  runtime modules 7.37 KiB 9 modules
+  runtime modules 7.1 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
   cacheable modules 511 bytes (javascript) 26.3 KiB (asset)
     javascript modules 385 bytes
@@ -2781,11 +2781,11 @@ b-normal:
   b-normal (webpack x.x.x) compiled successfully in X ms
 
 a-source-map:
-  assets by path *.js 3.47 KiB
-    asset 752ca0e9d5619da650b4-752ca0.js 2.85 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 752ca0e9d5619da650b4-752ca0.js.map 14.7 KiB [emitted] [dev] (auxiliary name: runtime)
-    asset 5f97639daffeace56533-5f9763.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap 5f97639daffeace56533-5f9763.js.map 409 bytes [emitted] [dev] (auxiliary name: lazy)
+  assets by path *.js 3.3 KiB
+    asset 480b0c27db49c79825c2-480b0c.js 2.69 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap 480b0c27db49c79825c2-480b0c.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset 4c0746c98a23357bfa90-4c0746.js 281 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 4c0746c98a23357bfa90-4c0746.js.map 409 bytes [emitted] [dev] (auxiliary name: lazy)
     asset 46504ddf1bd748642c76-46504d.js 269 bytes [emitted] [immutable] [minimized] (name: index)
       sourceMap 46504ddf1bd748642c76-46504d.js.map 366 bytes [emitted] [dev] (auxiliary name: index)
     asset 222c2acc68675174e6b2-222c2a.js 77 bytes [emitted] [immutable] [minimized] (name: a, b)
@@ -2794,10 +2794,10 @@ a-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.11 KiB (21 KiB) = 752ca0e9d5619da650b4-752ca0.js 2.85 KiB 46504ddf1bd748642c76-46504d.js 269 bytes 3 auxiliary assets
+  Entrypoint index 2.95 KiB (20.5 KiB) = 480b0c27db49c79825c2-480b0c.js 2.69 KiB 46504ddf1bd748642c76-46504d.js 269 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
-  runtime modules 7.37 KiB 9 modules
+  runtime modules 7.1 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 556 bytes (javascript) 26.3 KiB (asset)
     javascript modules 430 bytes
@@ -2812,11 +2812,11 @@ a-source-map:
   a-source-map (webpack x.x.x) compiled successfully in X ms
 
 b-source-map:
-  assets by path *.js 3.47 KiB
-    asset 566919aefaf1935c0294-566919.js 2.85 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 566919aefaf1935c0294-566919.js.map 14.7 KiB [emitted] [dev] (auxiliary name: runtime)
-    asset 5f97639daffeace56533-5f9763.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap 5f97639daffeace56533-5f9763.js.map 405 bytes [emitted] [dev] (auxiliary name: lazy)
+  assets by path *.js 3.3 KiB
+    asset 480b0c27db49c79825c2-480b0c.js 2.69 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap 480b0c27db49c79825c2-480b0c.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset 4c0746c98a23357bfa90-4c0746.js 281 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 4c0746c98a23357bfa90-4c0746.js.map 405 bytes [emitted] [dev] (auxiliary name: lazy)
     asset 46504ddf1bd748642c76-46504d.js 269 bytes [emitted] [immutable] [minimized] (name: index)
       sourceMap 46504ddf1bd748642c76-46504d.js.map 323 bytes [emitted] [dev] (auxiliary name: index)
     asset 222c2acc68675174e6b2-222c2a.js 77 bytes [emitted] [immutable] [minimized] (name: a, b)
@@ -2825,10 +2825,10 @@ b-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.11 KiB (20.9 KiB) = 566919aefaf1935c0294-566919.js 2.85 KiB 46504ddf1bd748642c76-46504d.js 269 bytes 3 auxiliary assets
+  Entrypoint index 2.95 KiB (20.4 KiB) = 480b0c27db49c79825c2-480b0c.js 2.69 KiB 46504ddf1bd748642c76-46504d.js 269 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
-  runtime modules 7.37 KiB 9 modules
+  runtime modules 7.1 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
   cacheable modules 511 bytes (javascript) 26.3 KiB (asset)
     javascript modules 385 bytes
