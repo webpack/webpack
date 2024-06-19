@@ -36,7 +36,7 @@ describe("SemVer", () => {
 			expect(fn("1.2.3-beta")).toEqual([1, 2, 3, , "beta"]);
 			// eslint-disable-next-line no-sparse-arrays
 			expect(fn("1.2.3-beta.1.2")).toEqual([1, 2, 3, , "beta", 1, 2]);
-			// eslint-disable-next-line no-sparse-arrays
+			/* eslint-disable no-sparse-arrays */
 			expect(fn("1.2.3-alpha.beta-42")).toEqual([
 				1,
 				2,
@@ -45,7 +45,6 @@ describe("SemVer", () => {
 				"alpha",
 				"beta-42"
 			]);
-			// eslint-disable-next-line no-sparse-arrays
 			expect(fn("1.2.3-beta.1.alpha.0+5343")).toEqual([
 				1,
 				2,
@@ -58,6 +57,7 @@ describe("SemVer", () => {
 				[],
 				5343
 			]);
+			/* eslint-enable no-sparse-arrays */
 			expect(fn("1.2.3+5343.beta+1")).toEqual([1, 2, 3, [], 5343, "beta+1"]);
 			expect(fn("1.2.3+5343.beta+1")).toEqual([1, 2, 3, [], 5343, "beta+1"]);
 		});
