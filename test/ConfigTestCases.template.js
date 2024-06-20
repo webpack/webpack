@@ -233,7 +233,7 @@ const describeCases = config => {
 										return;
 									}
 									compiler.close(closeErr => {
-										if (err) return handleFatalError(closeErr, done);
+										if (closeErr) return handleFatalError(closeErr, done);
 										done();
 									});
 								});
@@ -305,7 +305,7 @@ const describeCases = config => {
 										return;
 									}
 									compiler.close(closeErr => {
-										if (err) return handleFatalError(closeErr, done);
+										if (closeErr) return handleFatalError(closeErr, done);
 										done();
 									});
 								});
