@@ -483,15 +483,7 @@ describe("Validation", () => {
 	createTestCase(
 		"holey array",
 		// eslint-disable-next-line no-sparse-arrays
-		[
-			{
-				mode: "production"
-			},
-			,
-			{
-				mode: "development"
-			}
-		],
+		[{ mode: "production" }, , { mode: "development" }],
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.

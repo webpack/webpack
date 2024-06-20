@@ -38,7 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
-    "@eslint/js": "^9.4.0",
+    "@eslint/js": "^9.5.0",
     "@types/glob-to-regexp": "^0.4.4",
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
@@ -56,7 +56,7 @@
     "date-fns": "^3.2.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
-    "eslint": "^9.4.0",
+    "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-jsdoc": "^48.2.9",
