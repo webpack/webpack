@@ -1,8 +1,8 @@
+import path from "path";
 import * as module from "./module";
 import { obj3, obj3CanMangle, obj4, obj4CanMangle } from "./reexport?side-effects" // enable side effects to ensure reexport is not skipped
 import data from "./data.json";
 import data2 from "./data.json?2";
-import path from "path";
 
 it("should mangle export when destructuring module", () => {
 	const { obj: { a, b }, objCanMangle } = module
@@ -37,6 +37,12 @@ it("should not mangle export when destructuring module's nested property is a mo
 	expect(obj5.bbb).toBe("b");
 	expect(obj4CanMangle).toBe(true);
 	expect(obj5CanMangle).toBe(false); // obj5 is used in unknown way
+});
+
+it("should mangle default in namespace import", async () => {
+	const { default: foo, defaultCanMangle } = module;
+	expect(foo).toBe("default");
+	expect(defaultCanMangle).toBe(true);
 });
 
 it("should mangle when destructuring json", async () => {
