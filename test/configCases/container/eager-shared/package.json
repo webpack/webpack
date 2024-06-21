@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "dependencies": {
+    "tiny-emitter": "=2.0.0"
+  }
+}
