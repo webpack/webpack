@@ -5919,6 +5919,7 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
+		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
@@ -6360,8 +6361,9 @@ declare class JavascriptParser extends Parser {
 	): undefined | R;
 	inScope(params: any, fn: () => void): void;
 	inClassScope(hasThis: boolean, params: any, fn: () => void): void;
+	inExecutedPath(state?: any, fn?: any): void;
 	inFunctionScope(hasThis: boolean, params: any, fn: () => void): void;
-	inBlockScope(fn: () => void): void;
+	inBlockScope(fn: () => void, executedPath?: boolean): void;
 	detectMode(
 		statements: (
 			| FunctionDeclaration
@@ -13014,6 +13016,12 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
+
+	/**
+	 * false for unknown state
+	 */
+	executedPath: boolean;
+	terminated?: "return" | "throw";
 }
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
