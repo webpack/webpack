@@ -229,6 +229,12 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+declare abstract class AppendOnlyStackedSet<T> {
+	add(el: T): void;
+	has(el: T): boolean;
+	clear(): void;
+	createChild(): AppendOnlyStackedSet<any>;
+}
 declare interface Argument {
 	description: string;
 	simpleType: "string" | "number" | "boolean";
@@ -6358,6 +6364,7 @@ declare class JavascriptParser extends Parser {
 		defined: undefined | (() => any),
 		...args: AsArray<T>
 	): undefined | R;
+	inGuardPosition(fn: Function, state: boolean): void;
 	inScope(params: any, fn: () => void): void;
 	inClassScope(hasThis: boolean, params: any, fn: () => void): void;
 	inFunctionScope(hasThis: boolean, params: any, fn: () => void): void;
@@ -13008,12 +13015,14 @@ declare interface RuntimeValueOptions {
  */
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
+	guards: AppendOnlyStackedSet<string>;
 	topLevelScope: boolean | "arrow";
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
+	inGuardPosition: boolean;
 }
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
