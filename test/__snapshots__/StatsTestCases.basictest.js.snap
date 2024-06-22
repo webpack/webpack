@@ -1392,6 +1392,15 @@ cacheable modules 101 bytes
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for issue-17747 1`] = `
+"asset issue-17747-chunk 1.73 KiB [emitted]
+asset main.js 1.4 KiB [emitted] (name: main)
+asset fe5639f39c635af0c4fa.json 36 bytes [emitted] [immutable] [from: entry.json]
+asset 3ee037f347c64cc372ad.txt 4 bytes [emitted]
+./index.js 20 bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "1 chunks:
   asset bundle1.js 4.72 KiB [emitted] (name: main)
