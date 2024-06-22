@@ -195,19 +195,19 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 	 * The resource path.
 	 * In the example: "/abc/resource.js"
 	 */
-	resourcePath: string;
+	resourcePath?: string;
 
 	/**
 	 * The resource query string.
 	 * Example: "?query"
 	 */
-	resourceQuery: string;
+	resourceQuery?: string;
 
 	/**
 	 * The resource fragment.
 	 * Example: "#frag"
 	 */
-	resourceFragment: string;
+	resourceFragment?: string;
 
 	/**
 	 * The resource inclusive query and fragment.
