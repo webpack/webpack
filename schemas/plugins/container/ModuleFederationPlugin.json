@@ -388,6 +388,9 @@
           "description": "Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.",
           "type": "boolean"
         },
+        "exclusionCriteria": {
+          "$ref": "#/definitions/SharedExclusionCriteria"
+        },
         "import": {
           "description": "Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.",
           "anyOf": [
@@ -448,6 +451,17 @@
               "type": "string"
             }
           ]
+        }
+      }
+    },
+    "SharedExclusionCriteria": {
+      "description": "A set of exclusion criteria to use to decide if a module must participate in sharing.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "description": "A version or semver range of the dependency to exclude from sharing.",
+          "type": "string"
         }
       }
     },
