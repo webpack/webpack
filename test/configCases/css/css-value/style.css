@@ -1,0 +1,7 @@
+@value primary: #333;
+@value large: 72px;
+
+body {
+    background: primary;
+    font-size: large;
+}
