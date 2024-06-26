@@ -2,6 +2,6 @@
 @value large: 72px;
 
 body {
-    background: primary;
+    color: primary;
     font-size: large;
 }
