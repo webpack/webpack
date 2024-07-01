@@ -3,7 +3,7 @@ import * as styles2 from "./style.module.css?camel-case#2";
 import * as styles3 from "./style.module.css?camel-case#3";
 
 const nsObjForWebTarget = m => {
-	if (globalThis.document) {
+	if (global.document) {
 		return nsObj(m);
 	}
 	return m
