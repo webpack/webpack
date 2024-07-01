@@ -2916,10 +2916,10 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
 Object {
-  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btnInfoIsDisabled1",
   "foo": "bar",
-  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-only-fooBar",
   "myBtnInfoIsDisabled": "value",
   "simple": "-_style_module_css_camel-case-only-simple",
 }
@@ -2941,8 +2941,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
 Object {
-  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btnInfo_isDisabled_1",
   "foo": "bar",
   "foo_bar": "-_style_module_css_dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
@@ -2952,12 +2952,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
-  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-BTN-INFO_IS-DISABLED",
   "FOO": "bar",
-  "FOO_BAR": "-_style_module_css_upper-foo_bar",
+  "FOO_BAR": "-_style_module_css_upper-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "-_style_module_css_upper-simple",
+  "SIMPLE": "-_style_module_css_upper-SIMPLE",
 }
 `;
 
@@ -2989,10 +2989,10 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
 Object {
-  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btnInfoIsDisabled1",
   "foo": "bar",
-  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-only-fooBar",
   "myBtnInfoIsDisabled": "value",
   "simple": "-_style_module_css_camel-case-only-simple",
 }
@@ -3014,8 +3014,8 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
 Object {
-  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btnInfo_isDisabled_1",
   "foo": "bar",
   "foo_bar": "-_style_module_css_dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
@@ -3025,12 +3025,12 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
-  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-BTN-INFO_IS-DISABLED",
   "FOO": "bar",
-  "FOO_BAR": "-_style_module_css_upper-foo_bar",
+  "FOO_BAR": "-_style_module_css_upper-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "-_style_module_css_upper-simple",
+  "SIMPLE": "-_style_module_css_upper-SIMPLE",
 }
 `;
 
