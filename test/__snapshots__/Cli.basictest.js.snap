@@ -649,6 +649,40 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until its first use.",
+        "multiple": false,
+        "path": "experiments.deferImport",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until its first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-defer-import-async-module": Object {
+    "configs": Array [
+      Object {
+        "description": "The execution of async modules (module that uses top-level-await or AsyncWebAssembly) cannot be deferred. This options controls how to handle them: \\"error\\", to throw an error when an async module is deferred; \\"ignore\\", to ignore the \`webpackDefer\` annotation when importing an async module, or one with async dependencies; \\"proposal\\", to eagerly evaluate the async subgraphs of a deferred module graph (this matches the behavior of the TC39 deferred imports proposal).",
+        "multiple": false,
+        "path": "experiments.deferImport.asyncModule",
+        "type": "enum",
+        "values": Array [
+          "ignore",
+          "proposal",
+          "error",
+        ],
+      },
+    ],
+    "description": "The execution of async modules (module that uses top-level-await or AsyncWebAssembly) cannot be deferred. This options controls how to handle them: \\"error\\", to throw an error when an async module is deferred; \\"ignore\\", to ignore the \`webpackDefer\` annotation when importing an async module, or one with async dependencies; \\"proposal\\", to eagerly evaluate the async subgraphs of a deferred module graph (this matches the behavior of the TC39 deferred imports proposal).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {
