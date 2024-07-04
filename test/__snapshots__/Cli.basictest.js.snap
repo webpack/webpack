@@ -2158,6 +2158,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-override-strict": Object {
+    "configs": Array [
+      Object {
+        "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.overrideStrict",
+        "type": "enum",
+        "values": Array [
+          "strict",
+          "non-strict",
+        ],
+      },
+    ],
+    "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -2927,6 +2944,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-override-strict": Object {
+    "configs": Array [
+      Object {
+        "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.overrideStrict",
+        "type": "enum",
+        "values": Array [
+          "strict",
+          "non-strict",
+        ],
+      },
+    ],
+    "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -3562,6 +3596,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-override-strict": Object {
+    "configs": Array [
+      Object {
+        "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.overrideStrict",
+        "type": "enum",
+        "values": Array [
+          "strict",
+          "non-strict",
+        ],
+      },
+    ],
+    "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -4044,6 +4095,23 @@ Object {
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-override-strict": Object {
+    "configs": Array [
+      Object {
+        "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
+        "multiple": false,
+        "path": "module.parser.javascript.overrideStrict",
+        "type": "enum",
+        "values": Array [
+          "strict",
+          "non-strict",
+        ],
+      },
+    ],
+    "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
     "multiple": false,
     "simpleType": "string",
   },
