@@ -95,7 +95,7 @@
     "raw-loader": "^4.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "rimraf": "^3.0.2",
+    "rimraf": "^6.0.0",
     "script-loader": "^0.7.2",
     "simple-git": "^3.25.0",
     "strip-ansi": "^6.0.0",
