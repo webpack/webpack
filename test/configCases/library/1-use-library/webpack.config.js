@@ -46,6 +46,9 @@ module.exports = (env, { testPath }) => [
 							expect(source).not.toContain('"a"');
 							expect(source).not.toContain('"b"');
 							expect(source).not.toContain('"non-external"');
+							// expect pure ESM export without webpack runtime
+							expect(source).not.toContain('"__webpack_exports__"');
+							expect(source).not.toContain('"__webpack_require__"');
 						}
 					});
 				};

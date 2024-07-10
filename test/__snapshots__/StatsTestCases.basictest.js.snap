@@ -499,11 +499,11 @@ all:
 `;
 
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
-"asset child.js 84 bytes [emitted]
-asset parent.js 84 bytes [emitted] (name: parent)
-Entrypoint parent 84 bytes = parent.js
+"asset child.js 54 bytes [emitted]
+asset parent.js 54 bytes [emitted] (name: parent)
+Entrypoint parent 54 bytes = parent.js
 ./parent.js 1 bytes [built] [code generated]
-  assets by status 84 bytes [cached] 1 asset
+  assets by status 54 bytes [cached] 1 asset
   Entrypoint child = child.js
   ./child.js 1 bytes [built] [code generated]
     
@@ -651,19 +651,19 @@ webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for color-disabled 1`] = `
-"asset main.js 84 bytes [emitted] (name: main)
+"asset main.js 54 bytes [emitted] (name: main)
 ./index.js 1 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for color-enabled 1`] = `
-"asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
+"asset <CLR=32,BOLD>main.js</CLR> 54 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
 <CLR=BOLD>./index.js</CLR> 1 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for color-enabled-custom 1`] = `
-"asset <CLR=32>main.js</CLR> 84 bytes <CLR=32>[emitted]</CLR> (name: main)
+"asset <CLR=32>main.js</CLR> 54 bytes <CLR=32>[emitted]</CLR> (name: main)
 <CLR=BOLD>./index.js</CLR> 1 bytes <CLR=33>[built]</CLR> <CLR=33>[code generated]</CLR>
 webpack x.x.x compiled <CLR=32>successfully</CLR> in X ms"
 `;
@@ -1005,13 +1005,13 @@ exports[`StatsTestCases should print correct stats for details-error 1`] = `
 `;
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
-"asset bundle.js 113 bytes [emitted] (name: main)
+"asset bundle.js 83 bytes [emitted] (name: main)
 ./entry.js 29 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
-"assets by status 113 bytes [cached] 1 asset
+"assets by status 83 bytes [cached] 1 asset
 ./entry.js 29 bytes [built] [code generated]
 
 ERROR in Dll manifest ./blank-manifest.json
@@ -1021,7 +1021,7 @@ webpack x.x.x compiled with 1 error in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dynamic-chunk-name-error 1`] = `
-"assets by status 8.04 KiB [cached] 3 assets
+"assets by status 7.96 KiB [cached] 3 assets
 runtime modules 3.54 KiB 8 modules
 cacheable modules 128 bytes
   ./entry-1.js 63 bytes [built] [code generated]
@@ -1058,7 +1058,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for errors-space-error 1`] = `
-"assets by status 84 bytes [cached] 1 asset
+"assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1074,7 +1074,7 @@ Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
 
-assets by status 84 bytes [cached] 1 asset
+assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1090,7 +1090,7 @@ Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
 
-assets by status 84 bytes [cached] 1 asset
+assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1106,7 +1106,7 @@ Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
 
-assets by status 84 bytes [cached] 1 asset
+assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1124,7 +1124,7 @@ Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
 
-assets by status 84 bytes [cached] 1 asset
+assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1143,7 +1143,7 @@ Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
 
-assets by status 84 bytes [cached] 1 asset
+assets by status 54 bytes [cached] 1 asset
 ./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
 
 ERROR in ./index.js (./loader.js!./index.js)
@@ -1174,7 +1174,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
-"asset main.js 1.25 KiB [emitted] (name: main)
+"asset main.js 1.22 KiB [emitted] (name: main)
 ./index.js 17 bytes [built] [code generated]
 external \\"test\\" 42 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
@@ -1274,7 +1274,7 @@ chunk (runtime: main) trees.js (trees) 215 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
-"asset main.js 1000 bytes [emitted] (name: main)
+"asset main.js 972 bytes [emitted] (name: main)
 orphan modules 617 bytes [orphan] 9 modules
 ./index.js + 9 modules 790 bytes [built] [code generated]
 
@@ -1394,7 +1394,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "1 chunks:
-  asset bundle1.js 4.72 KiB [emitted] (name: main)
+  asset bundle1.js 4.69 KiB [emitted] (name: main)
   chunk (runtime: main) bundle1.js (main) 219 bytes (javascript) 1.77 KiB (runtime) <{792}> >{792}< [entry] [rendered]
     runtime modules 1.77 KiB 4 modules
     cacheable modules 219 bytes
@@ -1458,7 +1458,7 @@ exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 
 
 exports[`StatsTestCases should print correct stats for logging 1`] = `
 "<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
-asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
+asset <CLR=32,BOLD>main.js</CLR> 54 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
 <CLR=BOLD>./index.js</CLR> 1 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 
 <CLR=BOLD>LOG from LogTestPlugin</CLR>
@@ -1522,7 +1522,7 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for logging-debug 1`] = `
 "<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
-asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
+asset <CLR=32,BOLD>main.js</CLR> 54 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
 <CLR=BOLD>./index.js</CLR> 1 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 
 <CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ../logging/node_modules/custom-loader/index.js ../logging/node_modules/custom-loader/index.js!./index.js</CLR>
@@ -1547,14 +1547,14 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-external-module-readable-identifier 1`] = `
-"asset main.js 1.32 KiB [emitted] (name: main)
+"asset main.js 1.29 KiB [emitted] (name: main)
 ./index.js 17 bytes [built] [code generated]
 external \\"very-very-very-very-long-external-module-readable-identifier-it-should...(truncated) 42 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
-"asset main.js 5.34 KiB [emitted] (name: main)
+"asset main.js 5.31 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./a.js?1 33 bytes [built] [code generated]
 ./a.js?2 33 bytes [built] [code generated]
@@ -1579,7 +1579,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules-default 1`] = `
-"asset main.js 5.34 KiB [emitted] (name: main)
+"asset main.js 5.31 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./a.js?1 33 bytes [built] [code generated]
 ./a.js?2 33 bytes [built] [code generated]
@@ -1715,7 +1715,7 @@ webpack x.x.x compiled successfully"
 exports[`StatsTestCases should print correct stats for module-federation-custom-exposed-module-name 1`] = `
 "asset container_bundle.js 12 KiB [emitted] (name: container)
 asset custom-entry_bundle.js 413 bytes [emitted] (name: custom-entry)
-asset main_bundle.js 84 bytes [emitted] (name: main)
+asset main_bundle.js 54 bytes [emitted] (name: main)
 runtime modules 6.63 KiB 9 modules
 built modules 82 bytes [built]
   ./index.js 1 bytes [built] [code generated]
@@ -1753,7 +1753,7 @@ webpack compiled with 2 errors"
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"asset main.js 1.47 KiB [emitted] (name: main)
+"asset main.js 1.44 KiB [emitted] (name: main)
 orphan modules 75 bytes [orphan] 2 modules
 cacheable modules 110 bytes
   ./index.js + 2 modules 102 bytes [built] [code generated]
@@ -1765,7 +1765,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
-"assets by status 1.88 KiB [cached] 1 asset
+"assets by status 1.85 KiB [cached] 1 asset
 ./index.js 19 bytes [built] [code generated]
 ./inner.js 53 bytes [built] [code generated]
 ./not-existing.js 26 bytes [built] [code generated]
@@ -1787,7 +1787,7 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
-"assets by status 1.88 KiB [cached] 1 asset
+"assets by status 1.85 KiB [cached] 1 asset
 ./index.js 19 bytes [built] [code generated]
 ./inner.js 53 bytes [built] [code generated]
 ./not-existing.js 26 bytes [built] [code generated]
@@ -1894,7 +1894,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"assets by status 168 bytes [cached] 2 assets
+"assets by status 108 bytes [cached] 2 assets
 ./index.js 1 bytes [built] [code generated]
 
 WARNING in configuration
@@ -1964,7 +1964,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
-"assets by status 1.67 KiB [cached] 1 asset
+"assets by status 1.65 KiB [cached] 1 asset
 orphan modules 15 bytes [orphan] 1 module
 ./index.js + 1 modules 30 bytes [built] [code generated]
 ./b.js 55 bytes [built] [code generated] [1 error]
@@ -2106,9 +2106,9 @@ webpack x.x.x compiled with <CLR=31,BOLD>2 errors</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-no-async-chunks-shown 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>294 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>sec.js</CLR> 1.41 KiB <CLR=32,BOLD>[emitted]</CLR> (name: sec)
+asset <CLR=32,BOLD>sec.js</CLR> 1.38 KiB <CLR=32,BOLD>[emitted]</CLR> (name: sec)
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 294 KiB = <CLR=32,BOLD>main.js</CLR>
-Entrypoint <CLR=BOLD>sec</CLR> 1.41 KiB = <CLR=32,BOLD>sec.js</CLR>
+Entrypoint <CLR=BOLD>sec</CLR> 1.38 KiB = <CLR=32,BOLD>sec.js</CLR>
 <CLR=BOLD>./index.js</CLR> 32 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 <CLR=BOLD>./index2.js</CLR> 48 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2215,14 +2215,14 @@ chunk (runtime: main) a.js (a) 136 bytes <{792}> >{150}< >{341}< (prefetch: {341
 `;
 
 exports[`StatsTestCases should print correct stats for preload 1`] = `
-"asset main.js 15.3 KiB [emitted] (name: main)
+"asset main.js 15.2 KiB [emitted] (name: main)
 asset preloaded.js 556 bytes [emitted] (name: preloaded)
 asset inner2.js 150 bytes [emitted] (name: inner2)
 asset inner.js 110 bytes [emitted] (name: inner)
 asset normal.js 110 bytes [emitted] (name: normal)
 asset preloaded3.js 110 bytes [emitted] (name: preloaded3)
 asset preloaded2.js 109 bytes [emitted] (name: preloaded2)
-Entrypoint main 15.3 KiB = main.js
+Entrypoint main 15.2 KiB = main.js
   preload: preloaded2.js (name: preloaded2), preloaded.js (name: preloaded), preloaded3.js (name: preloaded3)
 chunk (runtime: main) preloaded.js (preloaded) 226 bytes (preload: {573} {253}) [rendered]
 chunk (runtime: main) inner.js (inner) 1 bytes [rendered]
@@ -2401,7 +2401,7 @@ exports[`StatsTestCases should print correct stats for preset-mixed-array 1`] = 
   minimal (webpack x.x.x) compiled successfully in X ms
 
 verbose:
-  Entrypoint main 92 bytes = verbose.js
+  Entrypoint main 62 bytes = verbose.js
   ./index.js 8 bytes [built] [code generated]
   verbose (webpack x.x.x) compiled successfully"
 `;
@@ -2946,7 +2946,7 @@ exclude3:
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
-"asset bundle.js 1.55 KiB [emitted] (name: main)
+"asset bundle.js 1.52 KiB [emitted] (name: main)
 modules by path ./node_modules/def/ 17 bytes
   ./node_modules/def/index.js 16 bytes [built] [code generated]
   ./node_modules/def/node_modules/xyz/index.js 1 bytes [built] [code generated]
@@ -2957,7 +2957,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for reverse-sort-modules 1`] = `
-"asset main.js 5.34 KiB [emitted] (name: main)
+"asset main.js 5.31 KiB [emitted] (name: main)
 ./index.js 181 bytes [built] [code generated]
 ./c.js?9 33 bytes [built] [code generated]
 ./c.js?8 33 bytes [built] [code generated]
@@ -3073,7 +3073,7 @@ exports[`StatsTestCases should print correct stats for runtime-specific-used-exp
   asset production-dx_js.js 1.15 KiB [emitted]
   asset production-dy_js.js 1.13 KiB [emitted]
   asset production-dz_js.js 1.13 KiB [emitted]
-  asset production-c.js 93 bytes [emitted] (name: c)
+  asset production-c.js 63 bytes [emitted] (name: c)
   chunk (runtime: a) production-a.js (a) 605 bytes (javascript) 6.63 KiB (runtime) [entry] [rendered]
     runtime modules 6.63 KiB 9 modules
     cacheable modules 605 bytes
@@ -3239,7 +3239,7 @@ global:
   asset global-dx_js.js 1.15 KiB [emitted]
   asset global-dy_js.js 1.15 KiB [emitted]
   asset global-dz_js.js 1.15 KiB [emitted]
-  asset global-c.js 93 bytes [emitted] (name: c)
+  asset global-c.js 63 bytes [emitted] (name: c)
   chunk (runtime: a) global-a.js (a) 605 bytes (javascript) 6.63 KiB (runtime) [entry] [rendered]
     runtime modules 6.63 KiB 9 modules
     cacheable modules 605 bytes
@@ -3498,7 +3498,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"asset main.js 355 bytes [emitted] (name: main)
+"asset main.js 325 bytes [emitted] (name: main)
 ./index.js + 2 modules 158 bytes [built] [code generated]
   [no exports used]
   entry ./index main
@@ -3559,7 +3559,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for simple-more-info 1`] = `
 "PublicPath: auto
-asset bundle.js 84 bytes [emitted] (name: main)
+asset bundle.js 54 bytes [emitted] (name: main)
 ./index.js 1 bytes [built] [code generated]
   entry ./index main
   X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
@@ -4648,8 +4648,8 @@ exports[`StatsTestCases should print correct stats for split-chunks-runtime-spec
   asset used-exports-c.js 6.04 KiB [emitted] (name: c)
   asset used-exports-b.js 6.03 KiB [emitted] (name: b)
   asset used-exports-637.js 422 bytes [emitted]
-  asset used-exports-a.js 257 bytes [emitted] (name: a)
-  Entrypoint a 257 bytes = used-exports-a.js
+  asset used-exports-a.js 227 bytes [emitted] (name: a)
+  Entrypoint a 227 bytes = used-exports-a.js
   Entrypoint b 6.44 KiB = used-exports-637.js 422 bytes used-exports-b.js 6.03 KiB
   Entrypoint c 6.45 KiB = used-exports-637.js 422 bytes used-exports-c.js 6.04 KiB
   chunk (runtime: b) used-exports-b.js (b) 54 bytes (javascript) 2.75 KiB (runtime) [entry] [rendered]
@@ -4746,7 +4746,7 @@ webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-space-warning 1`] = `
-"asset main.js 1010 bytes [emitted] (name: main)
+"asset main.js 981 bytes [emitted] (name: main)
 orphan modules 20 bytes [orphan] 1 module
 runtime modules 274 bytes 1 module
 ./index.js + 1 modules 64 bytes [built] [code generated]
@@ -4807,8 +4807,8 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for worker-public-path 1`] = `
-"asset main-3d12a5fd7ca4c4480248.js 3.63 KiB [emitted] [immutable] (name: main)
-asset 447-579eebb6602aecc20b13.js 219 bytes [emitted] [immutable]
+"asset main-2e89d929757fa581c506.js 3.6 KiB [emitted] [immutable] (name: main)
+asset 447-c9c491291b40347cb83b.js 189 bytes [emitted] [immutable]
 runtime modules 1.84 KiB 5 modules
 cacheable modules 250 bytes
   ./index.js 115 bytes [built] [code generated]
