@@ -3238,6 +3238,10 @@ export interface JavascriptParserOptions {
 	 */
 	node?: Node;
 	/**
+	 * Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.
+	 */
+	overrideStrict?: "strict" | "non-strict";
+	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
 	reexportExportsPresence?: "error" | "warn" | "auto" | false;
