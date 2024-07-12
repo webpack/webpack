@@ -77,6 +77,32 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			stack: block.asyncError.stack
 		};
 	};
+	function _it(...args) {
+		numberOfTests++;
+		if (runTests >= numberOfTests) throw new Error("it called too late");
+		args[1] = createDisposableFn(args[1], true);
+		args[2] = args[2] || globalTimeout;
+		inSuite(() => {
+			// eslint-disable-next-line jest/no-disabled-tests
+			it(...args);
+			fixAsyncError(
+				currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
+			);
+		});
+	}
+	_it.failing = (...args) => {
+		numberOfTests++;
+		if (runTests >= numberOfTests) throw new Error("it called too late");
+		args[1] = createDisposableFn(args[1], true);
+		args[2] = args[2] || globalTimeout;
+		inSuite(() => {
+			// eslint-disable-next-line jest/no-disabled-tests
+			it.failing(...args);
+			fixAsyncError(
+				currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
+			);
+		});
+	};
 	return {
 		setDefaultTimeout(time) {
 			globalTimeout = time;
@@ -84,19 +110,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		getNumberOfTests() {
 			return numberOfTests;
 		},
-		it(...args) {
-			numberOfTests++;
-			if (runTests >= numberOfTests) throw new Error("it called too late");
-			args[1] = createDisposableFn(args[1], true);
-			args[2] = args[2] || globalTimeout;
-			inSuite(() => {
-				// eslint-disable-next-line jest/no-disabled-tests
-				it(...args);
-				fixAsyncError(
-					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
-				);
-			});
-		},
+		it: _it,
 		beforeEach(...args) {
 			if (runTests >= numberOfTests)
 				throw new Error("beforeEach called too late");
