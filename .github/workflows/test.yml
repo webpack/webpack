@@ -144,7 +144,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            if ('${{ matrix.os }}' === 'macos-latest' && '${{ matrix['node-version'] }}' === '10.x') {
+            if ('${{ matrix.os }}' === 'macos-latest' && '${{ matrix['node-version'] }}' === '12.x') {
               return "x64"
             } else {
               return ''
