@@ -10,6 +10,7 @@ const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
 const utimes = util.promisify(fs.utimes);
 const mkdir = util.promisify(fs.mkdir);
+const rimrafProm = util.promisify(rimraf);
 
 describe("Persistent Caching", () => {
 	const tempPath = path.resolve(__dirname, "js", "persistent-caching");
@@ -46,8 +47,8 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	beforeEach(done => {
-		rimraf(tempPath, done);
+	beforeEach(async () => {
+		await rimrafProm(tempPath);
 	});
 
 	const updateSrc = async data => {
@@ -105,8 +106,8 @@ describe("Persistent Caching", () => {
 	it("should compile fine (warmup)", async () => {
 		const data = {
 			"index.js": `import file from "./file.js";
-export default 40 + file;
-`,
+	export default 40 + file;
+	`,
 			"file.js": "export default 2;"
 		};
 		await updateSrc(data);
@@ -118,17 +119,17 @@ export default 40 + file;
 		const files = Array.from({ length: 30 }).map((_, i) => `file${i}.js`);
 		const data = {
 			"index.js": `
-import * as style from "./style.modules.css";
+	import * as style from "./style.modules.css";
 
-${files.map((f, i) => `import f${i} from "./${f}";`).join("\n")}
+	${files.map((f, i) => `import f${i} from "./${f}";`).join("\n")}
 
-export default ${files.map((_, i) => `f${i}`).join(" + ")};
-export { style };
-`,
+	export default ${files.map((_, i) => `f${i}`).join(" + ")};
+	export { style };
+	`,
 			"style.modules.css": `.class {
-	color: red;
-	background: url('image.png');
-}`
+		color: red;
+		background: url('image.png');
+	}`
 		};
 		for (const file of files) {
 			data[file] = `export default 1;`;
@@ -219,10 +220,10 @@ export { style };
 	it("should not overwrite cache files if readonly = true", async () => {
 		await updateSrc({
 			"main.js": `
-import { sum } from 'lodash';
+	import { sum } from 'lodash';
 
-sum([1,2,3])
-			`
+	sum([1,2,3])
+				`
 		});
 		await compile({ entry: `./src/main.js` });
 		const firstCacheFiles = (await readdir(cachePath)).sort();
@@ -232,9 +233,9 @@ sum([1,2,3])
 		);
 
 		await updateSrc({
-			"main.js": `
-import 'lodash';
-			`
+			"main.js": `†e
+	import 'lodash';
+				`
 		});
 		await compile({
 			entry: `./src/main.js`,
@@ -250,4 +251,275 @@ import 'lodash';
 			// cSpell:words Mtimes
 		).toStrictEqual(firstMtimes);
 	}, 20000);
+
+	describe("cache hit rate", () => {
+		class CacheHitRateDetector {
+			apply(compiler) {
+				this.hitMap = {};
+				const configure = name => {
+					if (!this.hitMap[name])
+						this.hitMap[name] = { hits: 0, calls: 0, stores: 0 };
+				};
+				const countStore = name => {
+					configure(name);
+					this.hitMap[name].stores++;
+				};
+				const countCall = name => {
+					configure(name);
+					this.hitMap[name].calls++;
+				};
+				const countHit = name => {
+					configure(name);
+					this.hitMap[name].hits++;
+				};
+				compiler.cache.hooks.store.intercept({
+					register: ctx => {
+						const origFn = ctx.fn;
+						if (ctx.type === "promise") {
+							const wrapper = async (...args) => {
+								countStore(ctx.name);
+								const result = await origFn(...args);
+								if (result) countHit(ctx.name);
+								return result;
+							};
+							ctx.fn = wrapper;
+						} else {
+							const wrapper = (identifier, etag, data) => {
+								countStore(ctx.name);
+								const result = origFn(identifier, etag, data);
+								if (result) countHit(ctx.name);
+								return result;
+							};
+							ctx.fn = wrapper;
+						}
+					}
+				});
+				compiler.cache.hooks.get.intercept({
+					register: ctx => {
+						const origFn = ctx.fn;
+						if (ctx.type === "promise") {
+							const wrapper = async (identifier, etag, gotHandlers) => {
+								countCall(ctx.name);
+								const result = await origFn(identifier, etag, gotHandlers);
+								if (result) countHit(ctx.name);
+								return result;
+							};
+							ctx.fn = wrapper;
+						} else {
+							const wrapper = (identifier, etag, gotHandlers) => {
+								countCall(ctx.name);
+								const result = origFn(identifier, etag, gotHandlers);
+								if (result) countHit(ctx.name);
+								return result;
+							};
+							ctx.fn = wrapper;
+						}
+					}
+				});
+			}
+		}
+		it("should have a 100% hit rate when run twice back to back", async () => {
+			await updateSrc({
+				"main.js": `
+		import { sum } from 'lodash';
+
+		sum([1,2,3])
+					`
+			});
+			const compile1Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				plugins: [compile1Plugin]
+			});
+			await rimrafProm(outputPath);
+
+			expect(compile1Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 13
+				},
+				MemoryCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 13
+				}
+			});
+
+			const compile2Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				plugins: [compile2Plugin]
+			});
+			expect(compile2Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 13,
+					hits: 13
+				},
+				MemoryCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 13
+				}
+			});
+		});
+
+		it("should have a 100% hit rate when run twice back to back with sourcemaps enabled.", async () => {
+			await updateSrc({
+				"main.js": `
+		import { sum } from 'lodash';
+
+		sum([1,2,3])
+					`
+			});
+			const compile1Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				devtool: "source-map",
+				plugins: [compile1Plugin]
+			});
+			expect(() =>
+				fs.statSync(path.join(outputPath, "main.js.map"))
+			).not.toThrow();
+			await rimrafProm(outputPath);
+
+			expect(compile1Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				},
+				MemoryCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				}
+			});
+
+			const compile2Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				devtool: "source-map",
+				plugins: [compile2Plugin]
+			});
+			expect(() =>
+				fs.statSync(path.join(outputPath, "main.js.map"))
+			).not.toThrow();
+			expect(compile2Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 14,
+					stores: 0,
+					hits: 14
+				},
+				MemoryCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 0
+				}
+			});
+		});
+
+		it("should have a 0% hit rate when run first without sourcemaps, then with sourcemaps", async () => {
+			await updateSrc({
+				"main.js": `
+			import { sum } from 'lodash';
+
+			sum([1,2,3])
+						`
+			});
+			const compile1Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				plugins: [compile1Plugin]
+			});
+			await rimrafProm(outputPath);
+
+			expect(compile1Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 13
+				},
+				MemoryCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 13
+				}
+			});
+
+			const compile2Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				devtool: "source-map",
+				plugins: [compile2Plugin]
+			});
+			expect(() =>
+				fs.statSync(path.join(outputPath, "main.js.map"))
+			).not.toThrow();
+			expect(compile2Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				},
+				MemoryCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				}
+			});
+		});
+
+		it("should have a 100% hit rate when run first with sourcemaps, then without sourcemaps", async () => {
+			await updateSrc({
+				"main.js": `
+			import { sum } from 'lodash';
+
+			sum([1,2,3])
+						`
+			});
+			const compile1Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				devtool: "source-map",
+				plugins: [compile1Plugin]
+			});
+
+			expect(() =>
+				fs.statSync(path.join(outputPath, "main.js.map"))
+			).not.toThrow();
+			await rimrafProm(outputPath);
+			expect(compile1Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				},
+				MemoryCachePlugin: {
+					calls: 14,
+					hits: 0,
+					stores: 14
+				}
+			});
+
+			const compile2Plugin = new CacheHitRateDetector();
+			await compile({
+				entry: `./src/main.js`,
+				plugins: [compile2Plugin]
+			});
+			expect(() => fs.statSync(path.join(outputPath, "main.js.map"))).toThrow();
+			expect(compile2Plugin.hitMap).toEqual({
+				IdleFileCachePlugin: {
+					calls: 13,
+					hits: 13,
+					stores: 0
+				},
+				MemoryCachePlugin: {
+					calls: 13,
+					hits: 0,
+					stores: 0
+				}
+			});
+		});
+	});
 });
