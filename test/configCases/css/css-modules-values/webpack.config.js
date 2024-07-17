@@ -1,4 +1,4 @@
-/** @type {import("../../../../").Configuration} */
+/** @type {import("../../../../types").Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",
