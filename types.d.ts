@@ -4200,7 +4200,8 @@ declare abstract class ExportInfo {
 	 */
 	getUsedName(
 		fallbackName: undefined | string,
-		runtime: RuntimeSpec
+		runtime: RuntimeSpec,
+		isGlobalUsedExports?: boolean
 	): string | false;
 	hasUsedName(): boolean;
 
@@ -4332,7 +4333,8 @@ declare abstract class ExportsInfo {
 	getUsed(name: string | string[], runtime: RuntimeSpec): UsageStateType;
 	getUsedName(
 		name: undefined | string | string[],
-		runtime: RuntimeSpec
+		runtime: RuntimeSpec,
+		isGlobalUsedExports?: boolean
 	): string | false | string[];
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getRestoreProvidedData(): any;
