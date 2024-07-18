@@ -3398,9 +3398,9 @@ human-signals@^5.0.0:
   integrity sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==
 
 husky@^9.0.11:
-  version "9.0.11"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-9.0.11.tgz#fc91df4c756050de41b3e478b2158b87c1e79af9"
-  integrity sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-9.1.0.tgz#8a089536efb5736f1a48fa3b03e18168158d7269"
+  integrity sha512-8XCjbomYTGdNF2h50dio3T3zghmZ9f/ZNzr99YwSkvDdhEjJGs5qzy8tbFx+SG8yCx2wn9nMVfZxVrr/yT8gNQ==
 
 hyperdyperid@^1.2.0:
   version "1.2.0"
