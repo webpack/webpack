@@ -1,1 +1,1 @@
-module.exports = [];
+module.exports = [[/Invalid value definition: empty/]];
