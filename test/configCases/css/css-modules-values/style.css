@@ -1,15 +1,9 @@
-@value /* comment */ primary /* comment */: /* comment */ 
-#333 /* comment */;
-@value emoji: "😄";
-@value char-1: "*&?!"; 
+@value /* comment */ primary: /* comment */ blue /* comment */;
+@value large: 
+72px;
+@value empty:;
 
-
-body {
-    color: primary;
-}
-body::after{
-    content: emoji;
-}
-body::before{
-    content: char-1
+body{
+    background: primary;
+    font-size: large;
 }

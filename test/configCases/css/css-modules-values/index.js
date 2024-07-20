@@ -1,13 +1,9 @@
-import "./style.css";
+import './style.css';
 
-it("should compile", done => {
+it("should compile",  ()=> {
 	const style = getComputedStyle(document.body);
-	// const styleAfter = getComputedStyle(document.body, ":after");
-	// const styleBefore = getComputedStyle(document.body, ":before");
-	// expect(style.getPropertyValue("color")).toBe(" #333");
-	// expect(styleAfter.getPropertyValue("content")).toBe("😄")
-	// expect(styleBefore.getPropertyValue("content")).toBe("*&?!")
-	done();
+	expect(style.getPropertyValue("background")).toBe(" blue");
+	expect(style.getPropertyValue("font-size")).toBe(" 72px");
 });
 
 it("should export correctly", done => {
@@ -15,8 +11,8 @@ it("should export correctly", done => {
 		try{
 			expect(x).toEqual(
 				nsObj({
-					a: 1,
-					b: 2
+					emoji: "😄",
+					"char-1": "*&?!"
 				})
 			)
 		} catch(e) {
