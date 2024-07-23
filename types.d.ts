@@ -2515,6 +2515,7 @@ declare interface Configuration {
 		| "jsonp"
 		| "system"
 		| "promise"
+		| "module-import"
 		| "script"
 		| "node-commonjs";
 
@@ -4631,6 +4632,7 @@ type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
+	| "module-import"
 	| "script"
 	| "node-commonjs";
 declare interface FSImplementation {
@@ -8257,6 +8259,7 @@ declare interface ModuleFederationPluginOptions {
 		| "jsonp"
 		| "system"
 		| "promise"
+		| "module-import"
 		| "script"
 		| "node-commonjs";
 
@@ -14674,6 +14677,7 @@ declare interface WebpackOptionsNormalized {
 		| "jsonp"
 		| "system"
 		| "promise"
+		| "module-import"
 		| "script"
 		| "node-commonjs";
 

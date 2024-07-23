@@ -27,6 +27,7 @@ export type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
+	| "module-import"
 	| "script"
 	| "node-commonjs";
 /**
