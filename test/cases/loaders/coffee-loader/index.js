@@ -4,7 +4,7 @@ it("should handle the coffee loader correctly", function() {
 });
 
 it("should handle literate coffee script correctly", function() {
-	expect(require("!coffee-loader?literate!./script.coffee.md")).toBe("literate coffee test");
+	expect(require("!coffee-loader?literate=1!./script.coffee.md")).toBe("literate coffee test");
 });
 
 it("should generate valid code with cheap-source-map", function() {

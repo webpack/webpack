@@ -9,7 +9,8 @@ const config = (i, options) => ({
 		x: "./x" // also imports chunk but with different exports
 	},
 	output: {
-		filename: `${i}_[name].js`
+		filename: `${i}_[name].js`,
+		pathinfo: false
 	},
 	module: {
 		rules: [

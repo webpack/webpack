@@ -204,7 +204,8 @@ describe("StatsTestCases", () => {
 					.replace(new RegExp(quoteMeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
-					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier");
+					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
+					.replace(/[.0-9]+(\s?(bytes|KiB))/g, "X$1");
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();
