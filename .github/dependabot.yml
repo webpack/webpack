@@ -10,6 +10,10 @@ updates:
     labels:
       - dependencies
     versioning-strategy: widen
+    groups:
+      dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
