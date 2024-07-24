@@ -4499,9 +4499,9 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.9.2:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.9.3.tgz#41a3218065fe3911d9eba836250c8f4e43f816bc"
-  integrity sha512-bsYSSnirtYTWi1+OPMFb0M048evMKyUYe0EbtuGQgq6BVQM1g1W8/KIUJCCvjgI/El0j6Q4WsmMiBwLUBSw8LA==
+  version "4.9.4"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.9.4.tgz#803eb7f2091d1c6198ec9ba9b582505ad8699c9e"
+  integrity sha512-Xlj8b2rU11nM6+KU6wC7cuWcHQhVINWCUgdPS4Ar9nPxLaOya3RghqK7ALyDW2QtGebYAYs6uEdEVnwPVT942A==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.0.3"
     "@jsonjoy.com/util" "^1.1.2"
