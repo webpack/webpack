@@ -1,9 +1,45 @@
-@value /* comment */ primary: /* comment */ blue /* comment */;
-@value large: 
-72px;
-@value empty:;
+@value small: (max-width: 599px);
+@value blue: red;
+@value aaa: red;
+@value bbb: aaa;
+.a {
+	color: bbb;
+}
+.foo {
+	color: blue;
+	&.bar {
+		color: blue;
+	}
+	@media (min-width: 1024px) {
+		&.baz {
+			@media (min-width: 1024px) {
+				color: blue;
+			}
+		}
+	}
+}
 
-body{
-    background: primary;
-    font-size: large;
+@value named: red;
+@value char-1: #0f0;
+@value char-2: #00ff00;
+@value rgba: rgba(34, 12, 64, 0.3);
+@value hsla: hsla(220, 13.0%, 18.0%, 1);
+
+@value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+.foo {
+	color: named;
+	background-color: char-1;
+	border-top-color: char-2;
+	border-bottom-color: rgba;
+	outline-color: hsla;
+	box-shadow: coolShadow;
+}
+
+@value v-empty:;
+@value v-empty-1:/* comment */;
+@value v-empty-2:    ;
+:root {
+	--color1: v-empty;
+	--color2: v-empty-1;
+	--color3: v-empty-2;
 }

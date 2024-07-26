@@ -3548,6 +3548,43 @@ exports[`ConfigTestCases css css-modules-in-node exported tests should allow to 
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
 
+exports[`ConfigTestCases css css-modules-values exported tests should compile 1`] = `
+Array [
+  ".a {
+	color: aaa;
+}
+.foo {
+	color: red;
+	&.bar {
+		color: red;
+	}
+	@media (min-width: 1024px) {
+		&.baz {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+.foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+	box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+}
+
+:root {
+	--color1: ;
+	--color2: ;
+	--color3: ;
+}
+head{--webpack-main:small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue:red/aaa:red/bbb:aaa/named:red/char-1:\\\\#0f0/char-2:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/v-empty:/v-empty-1:/v-empty-2:/&\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_as-is-btn--info_is-disabled_1",
