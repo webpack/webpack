@@ -9,14 +9,6 @@ module.exports = {
 	},
 	target: "web",
 	mode: "production",
-	module: {
-		rules: [
-			{
-				test: /lib\/common/,
-				sideEffects: false
-			}
-		]
-	},
 	optimization: {
 		concatenateModules: false,
 		splitChunks: {

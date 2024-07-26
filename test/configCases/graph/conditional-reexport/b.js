@@ -1,5 +1,5 @@
 import { utilB } from "./lib"
 
 it("should not emit error when running b.js (runtime b)", () => {
-  expect(utilB()).toBe("[object Object] 1");
+  expect(utilB()).toBe("[object Object] common");
 })
