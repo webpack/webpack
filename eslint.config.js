@@ -6,6 +6,8 @@ const jsdoc = require("eslint-plugin-jsdoc");
 const prettierConfig = require("eslint-config-prettier");
 const globals = require("globals");
 
+const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
+
 module.exports = [
 	{
 		ignores: [
@@ -42,7 +44,31 @@ module.exports = [
 	},
 	js.configs.recommended,
 	n.configs["flat/recommended"],
-	jsdoc.configs["flat/recommended-typescript-flavor-error"],
+	{
+		...jsdocConfig,
+		rules: {
+			...jsdocConfig.rules,
+			// Override recommended
+			// TODO remove me after switch to typescript strict mode
+			"jsdoc/require-jsdoc": "off",
+			// Doesn't support function overloading/tuples/`readonly`/module keyword/etc
+			// Also `typescript` reports this itself
+			"jsdoc/valid-types": "off",
+			// A lot of false positive with loops/`switch`/`if`/etc
+			"jsdoc/require-returns-check": "off",
+			// TODO fix and enable in future
+			"jsdoc/require-property-description": "off",
+
+			// More rules
+			"jsdoc/check-indentation": "error",
+			"jsdoc/no-bad-blocks": "error",
+			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
+			"jsdoc/require-template": "error",
+			"jsdoc/no-blank-block-descriptions": "error",
+			"jsdoc/no-blank-blocks": "error",
+			"jsdoc/require-asterisk-prefix": "error"
+		}
+	},
 	prettierConfig,
 	{
 		languageOptions: {
@@ -83,15 +109,6 @@ module.exports = [
 					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
 				}
 			],
-			"jsdoc/check-alignment": "off",
-			"jsdoc/tag-lines": "off",
-			"jsdoc/valid-types": "off",
-			// TODO remove me after switch to typescript strict mode
-			"jsdoc/require-jsdoc": "off",
-			"jsdoc/require-returns-check": "off",
-			"jsdoc/check-indentation": "error",
-			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-			"jsdoc/require-property-description": "off",
 			// Disallow @ts-ignore directive. Use @ts-expect-error instead
 			"no-warning-comments": [
 				"error",
