@@ -163,7 +163,7 @@
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
     "prepare": "husky",
     "pretty-lint-base": "node node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
-    "pretty-lint-fix": "yarn pretty-lint-base --loglevel warn --write",
+    "pretty-lint-fix": "yarn pretty-lint-base --log-level warn --write",
     "pretty-lint": "yarn pretty-lint-base --check",
     "yarn-lint": "yarn-deduplicate --fail --list -s highest yarn.lock",
     "yarn-lint-fix": "yarn-deduplicate -s highest yarn.lock",
