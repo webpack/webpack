@@ -205,7 +205,7 @@ class FakeSheet {
 						.replace(/^https:\/\/test\.cases\/path\//, "")
 						.replace(/^https:\/\/example\.com\/public\/path\//, "")
 						.replace(/^https:\/\/example\.com\//, "")
-			  );
+				);
 		let css = fs.readFileSync(filepath, "utf-8");
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
