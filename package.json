@@ -59,7 +59,7 @@
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.6.0",
-    "eslint-plugin-jsdoc": "^48.2.9",
+    "eslint-plugin-jsdoc": "^48.10.1",
     "eslint-plugin-n": "^17.8.1",
     "eslint-plugin-prettier": "^5.1.3",
     "file-loader": "^6.0.0",
