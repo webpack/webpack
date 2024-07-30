@@ -344,15 +344,17 @@ const describeCases = config => {
 													module in testConfig.modules
 												) {
 													return testConfig.modules[module];
-												} else return jest.requireActual(module);
+												}
+												return jest.requireActual(module);
 											}
 
 											let testConfig = {};
 											try {
 												// try to load a test file
-												testConfig = require(
-													path.join(testDirectory, "test.config.js")
-												);
+												testConfig = require(path.join(
+													testDirectory,
+													"test.config.js"
+												));
 											} catch (e) {
 												// empty
 											}

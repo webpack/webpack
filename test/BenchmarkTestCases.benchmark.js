@@ -157,9 +157,8 @@ describe("BenchmarkTestCases", function () {
 								}
 							].filter(Boolean)
 						);
-					} else {
-						return callback(new Error("No baseline found"));
 					}
+					return callback(new Error("No baseline found"));
 				}
 			);
 		});
@@ -185,9 +184,9 @@ describe("BenchmarkTestCases", function () {
 			var b = data[Math.ceil(n / 10) - 3];
 			var f = n / 10 - Math.floor(n / 10);
 			return a * (1 - f) + b * f;
-		} else {
-			return 1.645;
 		}
+
+		return 1.645;
 	}
 
 	function runBenchmark(webpack, config, callback) {

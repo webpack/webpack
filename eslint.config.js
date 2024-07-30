@@ -110,6 +110,7 @@ module.exports = [
 				}
 			],
 			"object-shorthand": "error",
+			"no-else-return": "error",
 			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
 			"n/no-unsupported-features/node-builtins": [
 				"error",

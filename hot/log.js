@@ -73,7 +73,6 @@ module.exports.formatError = function (err) {
 		return message;
 	} else if (stack.indexOf(message) < 0) {
 		return message + "\n" + stack;
-	} else {
-		return stack;
 	}
+	return stack;
 };

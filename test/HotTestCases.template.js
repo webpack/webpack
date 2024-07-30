@@ -254,43 +254,43 @@ const describeCases = config => {
 											const p = path.join(outputDirectory, module);
 											if (module.endsWith(".json")) {
 												return JSON.parse(fs.readFileSync(p, "utf-8"));
-											} else {
-												const fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
-														"global.expect = expect;" +
-														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														fs.readFileSync(p, "utf-8") +
-														"\n})",
-													p
-												);
-												const m = {
-													exports: {}
-												};
-												fn.call(
-													m.exports,
-													_require,
-													m,
-													m.exports,
-													outputDirectory,
-													p,
-													_it,
-													_beforeEach,
-													_afterEach,
-													expect,
-													jest,
-													window,
-													window,
-													window.fetch,
-													window.document,
-													window.importScripts,
-													window.Worker,
-													window.EventSource,
-													_next,
-													jsonStats
-												);
-												return m.exports;
 											}
-										} else return require(module);
+											const fn = vm.runInThisContext(
+												"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
+													"global.expect = expect;" +
+													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+													fs.readFileSync(p, "utf-8") +
+													"\n})",
+												p
+											);
+											const m = {
+												exports: {}
+											};
+											fn.call(
+												m.exports,
+												_require,
+												m,
+												m.exports,
+												outputDirectory,
+												p,
+												_it,
+												_beforeEach,
+												_afterEach,
+												expect,
+												jest,
+												window,
+												window,
+												window.fetch,
+												window.document,
+												window.importScripts,
+												window.Worker,
+												window.EventSource,
+												_next,
+												jsonStats
+											);
+											return m.exports;
+										}
+										return require(module);
 									}
 									let promise = Promise.resolve();
 									const info = stats.toJson({ all: false, entrypoints: true });

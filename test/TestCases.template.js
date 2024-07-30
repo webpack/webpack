@@ -475,32 +475,32 @@ const describeCases = config => {
 														? ns.default
 														: ns;
 												})();
-											} else {
-												const fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-														"global.expect = expect;" +
-														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														content +
-														"\n})",
-													p
-												);
-												const m = {
-													exports: {},
-													webpackTestSuiteModule: true
-												};
-												fn.call(
-													m.exports,
-													_require,
-													m,
-													m.exports,
-													outputDirectory,
-													p,
-													_it,
-													expect
-												);
-												return m.exports;
 											}
-										} else return require(module);
+											const fn = vm.runInThisContext(
+												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+													"global.expect = expect;" +
+													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+													content +
+													"\n})",
+												p
+											);
+											const m = {
+												exports: {},
+												webpackTestSuiteModule: true
+											};
+											fn.call(
+												m.exports,
+												_require,
+												m,
+												m.exports,
+												outputDirectory,
+												p,
+												_it,
+												expect
+											);
+											return m.exports;
+										}
+										return require(module);
 									}
 									_require.webpackTestSuiteRequire = true;
 									Promise.resolve()

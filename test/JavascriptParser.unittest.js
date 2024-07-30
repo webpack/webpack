@@ -565,49 +565,48 @@ describe("JavascriptParser", () => {
 			function evalExprToString(evalExpr) {
 				if (!evalExpr) {
 					return "null";
-				} else {
-					const result = [];
-					if (evalExpr.isString()) result.push("string=" + evalExpr.string);
-					if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
-					if (evalExpr.isBigInt()) result.push("bigint=" + evalExpr.bigint);
-					if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
-					if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
-					if (evalExpr.isConditional())
-						result.push(
-							"options=[" +
-								evalExpr.options.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isArray())
-						result.push(
-							"items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]"
-						);
-					if (evalExpr.isConstArray())
-						result.push("array=[" + evalExpr.array.join("],[") + "]");
-					if (evalExpr.isTemplateString())
-						result.push(
-							"template=[" +
-								evalExpr.quasis.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isWrapped())
-						result.push(
-							"wrapped=[" +
-								evalExprToString(evalExpr.prefix) +
-								"]+[" +
-								evalExprToString(evalExpr.postfix) +
-								"]"
-						);
-					if (evalExpr.range) {
-						const start = evalExpr.range[0] - 5;
-						const end = evalExpr.range[1] - 5;
-						return (
-							key.slice(start, end) +
-							(result.length > 0 ? " " + result.join(" ") : "")
-						);
-					}
-					return result.join(" ");
 				}
+				const result = [];
+				if (evalExpr.isString()) result.push("string=" + evalExpr.string);
+				if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
+				if (evalExpr.isBigInt()) result.push("bigint=" + evalExpr.bigint);
+				if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
+				if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
+				if (evalExpr.isConditional())
+					result.push(
+						"options=[" +
+							evalExpr.options.map(evalExprToString).join("],[") +
+							"]"
+					);
+				if (evalExpr.isArray())
+					result.push(
+						"items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]"
+					);
+				if (evalExpr.isConstArray())
+					result.push("array=[" + evalExpr.array.join("],[") + "]");
+				if (evalExpr.isTemplateString())
+					result.push(
+						"template=[" +
+							evalExpr.quasis.map(evalExprToString).join("],[") +
+							"]"
+					);
+				if (evalExpr.isWrapped())
+					result.push(
+						"wrapped=[" +
+							evalExprToString(evalExpr.prefix) +
+							"]+[" +
+							evalExprToString(evalExpr.postfix) +
+							"]"
+					);
+				if (evalExpr.range) {
+					const start = evalExpr.range[0] - 5;
+					const end = evalExpr.range[1] - 5;
+					return (
+						key.slice(start, end) +
+						(result.length > 0 ? " " + result.join(" ") : "")
+					);
+				}
+				return result.join(" ");
 			}
 
 			it("should eval " + key, () => {

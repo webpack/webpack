@@ -103,9 +103,9 @@ class FakeElement {
 	getAttribute(name) {
 		if (this._type === "link" && name === "href") {
 			return this.href;
-		} else {
-			return this._attributes[name];
 		}
+
+		return this._attributes[name];
 	}
 
 	_toRealUrl(value) {
@@ -119,9 +119,9 @@ class FakeElement {
 			return value;
 		} else if (/^\/\//.test(value)) {
 			return `https:${value}`;
-		} else {
-			return `https://test.cases/path/${value}`;
 		}
+
+		return `https://test.cases/path/${value}`;
 	}
 
 	set src(value) {
