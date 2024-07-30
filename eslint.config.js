@@ -111,6 +111,7 @@ module.exports = [
 			],
 			"object-shorthand": "error",
 			"no-else-return": "error",
+			"no-lonely-if": "error",
 			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
 			"n/no-unsupported-features/node-builtins": [
 				"error",
@@ -118,6 +119,7 @@ module.exports = [
 					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
 				}
 			],
+			"n/exports-style": "error",
 			// Disallow @ts-ignore directive. Use @ts-expect-error instead
 			"no-warning-comments": [
 				"error",
@@ -179,7 +181,8 @@ module.exports = [
 		},
 		rules: {
 			"prefer-const": "off",
-			"object-shorthand": "off"
+			"object-shorthand": "off",
+			"n/exports-style": "off"
 		}
 	},
 	{

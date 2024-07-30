@@ -27,7 +27,7 @@ util.deprecate = (fn, message, code) => {
 	};
 };
 
-exports.start = handler => {
+module.exports.start = handler => {
 	interception = new Map();
 
 	return () => {

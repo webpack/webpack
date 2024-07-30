@@ -1,1 +1,1 @@
-exports.noTests = true;
+module.exports.noTests = true;

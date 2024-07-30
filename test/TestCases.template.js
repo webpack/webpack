@@ -526,4 +526,5 @@ const describeCases = config => {
 	});
 };
 
-exports.describeCases = describeCases;
+// eslint-disable-next-line jest/no-export
+module.exports.describeCases = describeCases;
