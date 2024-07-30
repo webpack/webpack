@@ -187,7 +187,7 @@ class FakeSheet {
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
 		const rules = [];
 		let currentRule = { getPropertyValue };
-		let selector = undefined;
+		let selector;
 		let last = 0;
 		const processDeclaration = str => {
 			const colon = str.indexOf(":");

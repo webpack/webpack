@@ -7,7 +7,7 @@
 
 const util = require("util");
 
-let interception = undefined;
+let interception;
 
 const originalDeprecate = util.deprecate;
 util.deprecate = (fn, message, code) => {

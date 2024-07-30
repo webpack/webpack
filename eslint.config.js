@@ -112,6 +112,7 @@ module.exports = [
 			"object-shorthand": "error",
 			"no-else-return": "error",
 			"no-lonely-if": "error",
+			"no-undef-init": "error",
 			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
 			"n/no-unsupported-features/node-builtins": [
 				"error",
@@ -182,6 +183,7 @@ module.exports = [
 		rules: {
 			"prefer-const": "off",
 			"object-shorthand": "off",
+			"no-undef-init": "off",
 			"n/exports-style": "off"
 		}
 	},
@@ -230,6 +232,12 @@ module.exports = [
 		files: ["examples/**/*.js"],
 		rules: {
 			"n/no-missing-require": "off"
+		}
+	},
+	{
+		files: ["lib/util/semver.js"],
+		rules: {
+			"n/exports-style": "off"
 		}
 	}
 ];
