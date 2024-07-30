@@ -108,7 +108,7 @@ describe("BinaryMiddleware", () => {
 			for (const prepend of items) {
 				for (const append of items) {
 					if (c > 1 && append !== undefined) continue;
-					let data = [prepend, ...caseData, append].filter(
+					const data = [prepend, ...caseData, append].filter(
 						x => x !== undefined
 					);
 					if (data.length * c > 200000) continue;

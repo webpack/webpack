@@ -70,7 +70,7 @@ const describeCases = config => {
 						return true;
 					})
 					.forEach(testName => {
-						let infraStructureLog = [];
+						const infraStructureLog = [];
 
 						describe(testName, () => {
 							const testDirectory = path.join(
@@ -112,7 +112,7 @@ const describeCases = config => {
 											emitOnErrors: true,
 											minimizer: [terserForTesting],
 											...config.optimization
-										}
+									  }
 									: {
 											removeAvailableModules: true,
 											removeEmptyChunks: true,
@@ -128,7 +128,7 @@ const describeCases = config => {
 											chunkIds: "size",
 											minimizer: [terserForTesting],
 											...config.optimization
-										},
+									  },
 								performance: {
 									hints: false
 								},

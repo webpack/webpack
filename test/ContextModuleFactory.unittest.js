@@ -15,7 +15,7 @@ describe("ContextModuleFactory", () => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
 			memfs.stat = (file, callback) => {
-				let err = new Error("fake ENOENT error");
+				const err = new Error("fake ENOENT error");
 				err.code = "ENOENT";
 				setTimeout(() => callback(err, null));
 			};
@@ -39,7 +39,7 @@ describe("ContextModuleFactory", () => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
 			memfs.stat = (file, callback) => {
-				let err = new Error("fake EACCES error");
+				const err = new Error("fake EACCES error");
 				err.code = "EACCES";
 				setTimeout(() => callback(err, null));
 			};

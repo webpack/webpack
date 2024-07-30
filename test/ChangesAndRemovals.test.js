@@ -88,7 +88,6 @@ describe("ChangesAndRemovals", () => {
 
 	it("should not track modified/removed files during initial watchRun", done => {
 		const compiler = createSingleCompiler();
-		let watcher;
 		const watchRunFinished = new Promise(resolve => {
 			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 				expect(getChanges(compiler)).toEqual({
@@ -98,7 +97,7 @@ describe("ChangesAndRemovals", () => {
 				resolve();
 			});
 		});
-		watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
+		const watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
 			if (err) done(err);
 		});
 

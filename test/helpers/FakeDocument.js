@@ -33,7 +33,7 @@ module.exports = class FakeDocument {
 
 	_onElementRemoved(element) {
 		const type = element._type;
-		let list = this._elementsByTagName.get(type);
+		const list = this._elementsByTagName.get(type);
 		const idx = list.indexOf(element);
 		list.splice(idx, 1);
 	}
@@ -205,7 +205,7 @@ class FakeSheet {
 						.replace(/^https:\/\/test\.cases\/path\//, "")
 						.replace(/^https:\/\/example\.com\/public\/path\//, "")
 						.replace(/^https:\/\/example\.com\//, "")
-				);
+			  );
 		let css = fs.readFileSync(filepath, "utf-8");
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 			if (!/^https:\/\/test\.cases\/path\//.test(url)) {

@@ -194,7 +194,7 @@ describe("NormalModule", () => {
 	});
 
 	describe("#originalSource", () => {
-		let expectedSource = "some source";
+		const expectedSource = "some source";
 		beforeEach(() => {
 			normalModule._source = new RawSource(expectedSource);
 		});

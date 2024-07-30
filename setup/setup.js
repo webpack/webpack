@@ -67,7 +67,7 @@ function installYarnAsync() {
 function exec(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		let cp = require("child_process").spawn(command, args, {
+		const cp = require("child_process").spawn(command, args, {
 			cwd: root,
 			stdio: "inherit",
 			shell: true
@@ -88,7 +88,7 @@ function exec(command, args, description) {
 function execGetOutput(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		let cp = require("child_process").spawn(command, args, {
+		const cp = require("child_process").spawn(command, args, {
 			cwd: root,
 			stdio: [process.stdin, "pipe", process.stderr],
 			shell: true

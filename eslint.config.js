@@ -75,7 +75,7 @@ module.exports = [
 			ecmaVersion: 2018,
 			globals: {
 				...globals.node,
-				...globals.es2015,
+				...globals.es2018,
 				WebAssembly: true
 			}
 		},
@@ -102,6 +102,14 @@ module.exports = [
 			],
 			"no-inner-declarations": "error",
 			"no-loop-func": "off",
+			"prefer-const": [
+				"error",
+				{
+					destructuring: "all",
+					ignoreReadBeforeAssign: true
+				}
+			],
+			"object-shorthand": "error",
 			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
 			"n/no-unsupported-features/node-builtins": [
 				"error",
@@ -167,6 +175,10 @@ module.exports = [
 				...globals.browser,
 				...globals.es5
 			}
+		},
+		rules: {
+			"prefer-const": "off",
+			"object-shorthand": "off"
 		}
 	},
 	{
@@ -174,7 +186,7 @@ module.exports = [
 		languageOptions: {
 			ecmaVersion: 2020,
 			globals: {
-				...globals.es2015
+				...globals.es2020
 			}
 		}
 	},
@@ -206,7 +218,8 @@ module.exports = [
 				{
 					allowExperimental: true
 				}
-			]
+			],
+			"object-shorthand": "off"
 		}
 	},
 	{
