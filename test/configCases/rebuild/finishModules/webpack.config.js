@@ -19,7 +19,6 @@ var testPlugin = compiler => {
 				const src = resolve(join(__dirname, "other-file.js"));
 
 				/**
-				 *
 				 * @param {any} m test
 				 * @returns {boolean} test
 				 */

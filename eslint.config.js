@@ -89,9 +89,12 @@ module.exports = [
 			// TODO remove me after switch to typescript strict mode
 			"jsdoc/require-jsdoc": "off",
 			"jsdoc/require-returns-check": "off",
+			"jsdoc/require-property-description": "off",
 			"jsdoc/check-indentation": "error",
 			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-			"jsdoc/require-property-description": "off",
+			"jsdoc/require-template": "error",
+			"jsdoc/no-blank-block-descriptions": "error",
+			"jsdoc/no-blank-blocks": "error",
 			// Disallow @ts-ignore directive. Use @ts-expect-error instead
 			"no-warning-comments": [
 				"error",
