@@ -3859,8 +3859,7 @@ type EntryOptions = { name?: string } & Omit<
 >;
 declare class EntryPlugin {
 	/**
-	 * An entry plugin which will handle
-	 * creation of the EntryDependency
+	 * An entry plugin which will handle creation of the EntryDependency
 	 */
 	constructor(context: string, entry: string, options?: string | EntryOptions);
 	context: string;
@@ -5319,8 +5318,7 @@ declare class IgnorePlugin {
 	options: IgnorePluginOptions;
 
 	/**
-	 * Note that if "contextRegExp" is given, both the "resourceRegExp"
-	 * and "contextRegExp" have to match.
+	 * Note that if "contextRegExp" is given, both the "resourceRegExp" and "contextRegExp" have to match.
 	 */
 	checkIgnore(resolveData: ResolveData): undefined | false;
 
@@ -13276,11 +13274,14 @@ declare interface SnapshotOptionsWebpackOptions {
 	 */
 	unmanagedPaths?: (string | RegExp)[];
 }
+declare interface SortFunction<T> {
+	(arg0: T, arg1: T): number;
+}
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Sort with a comparer function
 	 */
-	sortWith(sortFn: (arg0: T, arg1: T) => number): void;
+	sortWith(sortFn: SortFunction<T>): void;
 	sort(): SortableSet<T>;
 
 	/**
