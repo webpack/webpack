@@ -11,8 +11,6 @@ jobs:
           version: "18.x"
         displayName: "Install Node.js"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
@@ -25,15 +23,11 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn --frozen-lockfile
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           export JEST_JUNIT_OUTPUT_NAME=basic-junit.xml
           yarn test:basic --ci --reporters=default --reporters=jest-junit
           export JEST_JUNIT_OUTPUT_NAME=unit-junit.xml
@@ -47,6 +41,9 @@ jobs:
           testResultsFiles: "**/basic-junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish basic test results"
+      - script: |
+          node -e "const fs = require('fs');let data = fs.readFileSync('unit-junit.xml', 'utf-8');fs.writeFileSync('unit-junit.xml', data.replace(/\0/g, 'NULL_CHARACTER'))"
+        displayName: "Fix junit output"
       - task: PublishTestResults@2
         inputs:
           testRunTitle: "unit"
@@ -63,8 +60,6 @@ jobs:
           version: "18.x"
         displayName: "Install Node.js"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
@@ -77,15 +72,11 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn --frozen-lockfile
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn lint
         env:
           CI: "true"
@@ -137,6 +128,7 @@ jobs:
         displayName: "Cache Yarn packages"
       # Install old `jest` version and ignore platform problem for legacy node versions
       - script: |
+          node -e "const fs = require('fs');fs.createReadStream('yarn.lock').pipe(fs.createWriteStream('.yarn.lock'));"
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         displayName: "Install dependencies (old node.js version)"
@@ -161,6 +153,9 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish test results"
+      - script: node -e "const fs = require('fs');fs.createReadStream('.yarn.lock').pipe(fs.createWriteStream('yarn.lock'));"
+        displayName: "Restore original yarn.lock"
+        condition: eq(variables['node_version'], '10.x')
 
   - job: Linux
     dependsOn:
@@ -195,8 +190,6 @@ jobs:
           version: $(node_version)
         displayName: "Install Node.js $(node_version)"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
@@ -208,27 +201,25 @@ jobs:
             yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
+        # Doesn't work due to modified yarn.lock
+        condition: not(eq(variables['node_version'], '10.x'))
       # Install old `jest` version and ignore platform problem for legacy node versions
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -e "const fs = require('fs');fs.createReadStream('yarn.lock').pipe(fs.createWriteStream('.yarn.lock'));"
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
         displayName: "Install dependencies (old node.js version)"
         condition: eq(variables['node_version'], '10.x')
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
         condition: not(eq(variables['node_version'], '10.x'))
+      - script: yarn link --frozen-lockfile || true
+        displayName: "Link webpack"
+        continueOnError: true
+      - script: yarn link webpack --frozen-lockfile
+        displayName: "Link webpack into node_modules"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit -f
           yarn cover:merge
         env:
@@ -240,6 +231,9 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish test results"
+      - script: node -e "const fs = require('fs');fs.createReadStream('.yarn.lock').pipe(fs.createWriteStream('yarn.lock'));"
+        displayName: "Restore original yarn.lock"
+        condition: eq(variables['node_version'], '10.x')
 
   - job: macOS
     dependsOn:
@@ -274,8 +268,6 @@ jobs:
           version: $(node_version)
         displayName: "Install Node.js $(node_version)"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
@@ -287,26 +279,24 @@ jobs:
             yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
+        # Doesn't work due to modified yarn.lock
+        condition: not(eq(variables['node_version'], '10.x'))
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -e "const fs = require('fs');fs.createReadStream('yarn.lock').pipe(fs.createWriteStream('.yarn.lock'));"
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
         displayName: "Install dependencies (old node.js version)"
         condition: eq(variables['node_version'], '10.x')
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
         condition: not(eq(variables['node_version'], '10.x'))
+      - script: yarn link --frozen-lockfile || true
+        displayName: "Link webpack"
+        continueOnError: true
+      - script: yarn link webpack --frozen-lockfile
+        displayName: "Link webpack into node_modules"
       - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit -f
           yarn cover:merge
         env:
@@ -318,3 +308,6 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish test results"
+      - script: node -e "const fs = require('fs');fs.createReadStream('.yarn.lock').pipe(fs.createWriteStream('yarn.lock'));"
+        displayName: "Restore original yarn.lock"
+        condition: eq(variables['node_version'], '10.x')
