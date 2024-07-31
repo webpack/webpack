@@ -247,34 +247,35 @@ module.exports = [
 				}
 			],
 			"arrow-body-style": ["error", "as-needed"],
+			"new-cap": [
+				"error",
+				{
+					newIsCapExceptions: [],
+					capIsNewExceptions: ["A", "F", "D", "MODULES_GROUPERS"]
+				}
+			],
+			"func-style": [
+				"error",
+				"declaration",
+				{
+					allowArrowFunctions: true
+				}
+			],
 
 			// TODO Enable
 			"no-sequences": "off",
 			"prefer-spread": "off",
 			"default-case": "off",
-			"new-cap": [
-				"off",
-				{
-					newIsCap: true,
-					newIsCapExceptions: [],
-					capIsNew: true,
-					capIsNewExceptions: [],
-					properties: true
-				}
-			],
 			"no-loop-func": "off",
 			"no-shadow": "off",
 			"prefer-destructuring": "off",
-			"func-style": "off",
 			"no-plusplus": "off",
 			"no-param-reassign": "off",
 			"no-unreachable-loop": "off",
 			"no-unmodified-loop-condition": "off",
 			"@stylistic/lines-between-class-members": "off",
 			"@stylistic/quotes": "off",
-			"@stylistic/spaced-comment": "off",
-			// TODO Disable everywhere?
-			"no-useless-constructor": "off"
+			"@stylistic/spaced-comment": "off"
 		}
 	},
 	{
@@ -308,7 +309,8 @@ module.exports = [
 			"no-var": "off",
 			"n/exports-style": "off",
 			"prefer-template": "off",
-			"no-implicit-coercion": "off"
+			"no-implicit-coercion": "off",
+			"func-style": "off"
 		}
 	},
 	{

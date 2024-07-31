@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const getPropertyValue = function (property) {
+function getPropertyValue(property) {
 	return this[property];
-};
+}
 
 module.exports = class FakeDocument {
 	constructor(basePath) {

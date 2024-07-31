@@ -1,16 +1,15 @@
 var fs = require("fs");
 
-var findFile = function (files, regex) {
-	return files.find(function (file) {
+const findFile = (files, regex) =>
+	files.find(function (file) {
 		if (regex.test(file)) {
 			return true;
 		}
 
 		return false;
 	});
-};
 
-var verifyFilenameLength = function (filename, expectedNameLength) {
+const verifyFilenameLength = (filename, expectedNameLength) => {
 	expect(filename).toMatch(new RegExp(`^.{${expectedNameLength}}$`));
 };
 

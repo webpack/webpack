@@ -236,6 +236,7 @@ describe("JavascriptParser", () => {
 		],
 		"new Foo(...)": [
 			function () {
+				// eslint-disable-next-line new-cap
 				new xyz("membertest");
 			},
 			{

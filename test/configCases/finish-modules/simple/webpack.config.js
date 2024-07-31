@@ -1,7 +1,7 @@
 /**
  * @this {import("../../../../").Compiler} the compiler
  */
-var testPlugin = function () {
+function testPlugin() {
 	this.hooks.compilation.tap("TestPlugin", compilation => {
 		compilation.hooks.finishModules.tapAsync(
 			"TestPlugin",
@@ -10,7 +10,7 @@ var testPlugin = function () {
 			}
 		);
 	});
-};
+}
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

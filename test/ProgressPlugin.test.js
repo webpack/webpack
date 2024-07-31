@@ -70,7 +70,7 @@ const createSimpleCompilerWithCustomHandler = options => {
 
 const getLogs = logsStr => logsStr.split(/\r/).filter(v => !(v === " "));
 
-const RunCompilerAsync = compiler =>
+const runCompilerAsync = compiler =>
 	new Promise((resolve, reject) => {
 		compiler.run(err => {
 			if (err) {
@@ -97,7 +97,7 @@ describe("ProgressPlugin", function () {
 	const nanTest = createCompiler => () => {
 		const compiler = createCompiler();
 
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			expect(stderr.toString()).toContain("%");
 			expect(stderr.toString()).not.toContain("NaN");
 		});
@@ -130,7 +130,7 @@ describe("ProgressPlugin", function () {
 			profile: true
 		});
 
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs).toContainEqual(
@@ -165,7 +165,7 @@ describe("ProgressPlugin", function () {
 			}
 		});
 
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			let lastLine = handlerCalls[0];
 			for (const line of handlerCalls) {
 				if (line.value < lastLine.value) {
@@ -195,7 +195,7 @@ describe("ProgressPlugin", function () {
 		const compiler = createSimpleCompiler();
 		process.stderr.columns = 36;
 
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
@@ -214,7 +214,7 @@ describe("ProgressPlugin", function () {
 		const compiler = createSimpleCompiler();
 
 		process.stderr.columns = undefined;
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
@@ -226,7 +226,7 @@ describe("ProgressPlugin", function () {
 		const compiler = createSimpleCompiler();
 
 		process.stderr.columns = undefined;
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs).toContain("4% setup normal module factory");
@@ -243,7 +243,7 @@ describe("ProgressPlugin", function () {
 		});
 
 		process.stderr.columns = 70;
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = stderr.toString();
 
 			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ entries/));
@@ -257,7 +257,7 @@ describe("ProgressPlugin", function () {
 		const compiler = createSimpleCompilerWithCustomHandler();
 
 		process.stderr.columns = 70;
-		return RunCompilerAsync(compiler).then(() => {
+		return runCompilerAsync(compiler).then(() => {
 			const logs = stderr.toString();
 			expect(logs).toEqual(
 				expect.stringMatching(/\d+\/\d+ [custom test logger]/)
