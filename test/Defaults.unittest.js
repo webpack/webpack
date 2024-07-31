@@ -9,9 +9,7 @@ const stripAnsi = require("strip-ansi");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => {
-	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
-};
+const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const cwd = process.cwd();
 const cwdRegExp = new RegExp(

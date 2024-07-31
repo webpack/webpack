@@ -15,33 +15,29 @@ const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
-categories = categories.map(cat => {
-	return {
-		name: cat,
-		tests: fs
-			.readdirSync(path.join(casesPath, cat))
-			.filter(folder => folder.indexOf("_") < 0)
-	};
-});
+categories = categories.map(cat => ({
+	name: cat,
+	tests: fs
+		.readdirSync(path.join(casesPath, cat))
+		.filter(folder => folder.indexOf("_") < 0)
+}));
 
-const createLogger = appendTarget => {
-	return {
-		log: l => appendTarget.push(l),
-		debug: l => appendTarget.push(l),
-		trace: l => appendTarget.push(l),
-		info: l => appendTarget.push(l),
-		warn: console.warn.bind(console),
-		error: console.error.bind(console),
-		logTime: () => {},
-		group: () => {},
-		groupCollapsed: () => {},
-		groupEnd: () => {},
-		profile: () => {},
-		profileEnd: () => {},
-		clear: () => {},
-		status: () => {}
-	};
-};
+const createLogger = appendTarget => ({
+	log: l => appendTarget.push(l),
+	debug: l => appendTarget.push(l),
+	trace: l => appendTarget.push(l),
+	info: l => appendTarget.push(l),
+	warn: console.warn.bind(console),
+	error: console.error.bind(console),
+	logTime: () => {},
+	group: () => {},
+	groupCollapsed: () => {},
+	groupEnd: () => {},
+	profile: () => {},
+	profileEnd: () => {},
+	clear: () => {},
+	status: () => {}
+});
 
 const describeCases = config => {
 	describe(config.name, () => {
@@ -458,13 +454,14 @@ const describeCases = config => {
 											}
 											if (esmMode === "unlinked") return esm;
 											return (async () => {
-												await esm.link(async (specifier, module) => {
-													return await asModule(
-														await _require(specifier, "unlinked"),
-														module.context,
-														true
-													);
-												});
+												await esm.link(
+													async (specifier, module) =>
+														await asModule(
+															await _require(specifier, "unlinked"),
+															module.context,
+															true
+														)
+												);
 												// node.js 10 needs instantiate
 												if (esm.instantiate) esm.instantiate();
 												await esm.evaluate();

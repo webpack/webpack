@@ -18,15 +18,14 @@ const tempFolderPath = path.join(__dirname, "ChangesAndRemovalsTemp");
 const tempFilePath = path.join(tempFolderPath, "temp-file.js");
 const tempFile2Path = path.join(tempFolderPath, "temp-file2.js");
 
-const createSingleCompiler = () => {
-	return createCompiler({
+const createSingleCompiler = () =>
+	createCompiler({
 		entry: tempFilePath,
 		output: {
 			path: tempFolderPath,
 			filename: "bundle.js"
 		}
 	});
-};
 
 const onceDone = (compiler, action) => {
 	let initial = true;

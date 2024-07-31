@@ -69,54 +69,52 @@ if (process.env.ALTERNATIVE_SORT) {
 
 // Setup debugging info for tests
 if (process.env.DEBUG_INFO) {
-	const addDebugInfo = it => {
-		return (name, fn, timeout) => {
-			if (fn.length === 0) {
-				it(
-					name,
-					() => {
-						process.stdout.write(`START1 ${name}\n`);
-						try {
-							const promise = fn();
-							if (promise && promise.then) {
-								return promise.then(
-									r => {
-										process.stdout.write(`DONE OK ${name}\n`);
-										return r;
-									},
-									e => {
-										process.stdout.write(`DONE FAIL ${name}\n`);
-										throw e;
-									}
-								);
-							}
-
-							process.stdout.write(`DONE OK ${name}\n`);
-						} catch (e) {
-							process.stdout.write(`DONE FAIL ${name}\n`);
-							throw e;
+	const addDebugInfo = it => (name, fn, timeout) => {
+		if (fn.length === 0) {
+			it(
+				name,
+				() => {
+					process.stdout.write(`START1 ${name}\n`);
+					try {
+						const promise = fn();
+						if (promise && promise.then) {
+							return promise.then(
+								r => {
+									process.stdout.write(`DONE OK ${name}\n`);
+									return r;
+								},
+								e => {
+									process.stdout.write(`DONE FAIL ${name}\n`);
+									throw e;
+								}
+							);
 						}
-					},
-					timeout
-				);
-			} else {
-				it(
-					name,
-					done => {
-						process.stdout.write(`START2 ${name}\n`);
-						return fn(err => {
-							if (err) {
-								process.stdout.write(`DONE FAIL ${name}\n`);
-							} else {
-								process.stdout.write(`DONE OK ${name}\n`);
-							}
-							return done(err);
-						});
-					},
-					timeout
-				);
-			}
-		};
+
+						process.stdout.write(`DONE OK ${name}\n`);
+					} catch (e) {
+						process.stdout.write(`DONE FAIL ${name}\n`);
+						throw e;
+					}
+				},
+				timeout
+			);
+		} else {
+			it(
+				name,
+				done => {
+					process.stdout.write(`START2 ${name}\n`);
+					return fn(err => {
+						if (err) {
+							process.stdout.write(`DONE FAIL ${name}\n`);
+						} else {
+							process.stdout.write(`DONE OK ${name}\n`);
+						}
+						return done(err);
+					});
+				},
+				timeout
+			);
+		}
 	};
 	// eslint-disable-next-line no-global-assign
 	it = addDebugInfo(it);

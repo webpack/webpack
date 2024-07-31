@@ -7,9 +7,7 @@ module.exports = {
 	module: {
 		parser: {
 			asset: {
-				dataUrlCondition: (source, { filename }) => {
-					return filename.includes("?inline");
-				}
+				dataUrlCondition: (source, { filename }) => filename.includes("?inline")
 			}
 		},
 		generator: {

@@ -126,15 +126,11 @@ module.exports = definitions.map((defs, i) => ({
 				(compilation, { normalModuleFactory }) => {
 					normalModuleFactory.hooks.createParser
 						.for("localization")
-						.tap("LocalizationPlugin", () => {
-							return new LocalizationParser();
-						});
+						.tap("LocalizationPlugin", () => new LocalizationParser());
 
 					normalModuleFactory.hooks.createGenerator
 						.for("localization")
-						.tap("LocalizationPlugin", () => {
-							return new LocalizationGenerator();
-						});
+						.tap("LocalizationPlugin", () => new LocalizationGenerator());
 
 					compilation.chunkTemplate.hooks.renderManifest.tap(
 						"LocalizationPlugin",

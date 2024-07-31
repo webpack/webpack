@@ -1,3 +1,1 @@
-module.exports = () => {
-	return /^v(2[2-9])/.test(process.version);
-};
+module.exports = () => /^v(2[2-9])/.test(process.version);

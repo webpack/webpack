@@ -16,16 +16,13 @@ module.exports = (stdio, tty) => {
 
 		reset: () => (logs = []),
 
-		toString: () => {
-			return stripAnsi(logs.join("")).replace(
+		toString: () =>
+			stripAnsi(logs.join("")).replace(
 				/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
 				""
-			);
-		},
+			),
 
-		toStringRaw: () => {
-			return logs.join("");
-		},
+		toStringRaw: () => logs.join(""),
 
 		restore() {
 			stdio.write = write;

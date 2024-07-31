@@ -12,9 +12,7 @@ const webpack = require("..");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => {
-	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
-};
+const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");

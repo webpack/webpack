@@ -54,25 +54,23 @@ const describeCases = config => {
 		const casesPath = path.join(__dirname, "watchCases");
 		let categories = fs.readdirSync(casesPath);
 
-		categories = categories.map(cat => {
-			return {
-				name: cat,
-				tests: fs
-					.readdirSync(path.join(casesPath, cat))
-					.filter(folder => folder.indexOf("_") < 0)
-					.filter(testName => {
-						const testDirectory = path.join(casesPath, cat, testName);
-						const filterPath = path.join(testDirectory, "test.filter.js");
-						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
-							// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
-							describe.skip(testName, () => it("filtered", () => {}));
-							return false;
-						}
-						return true;
-					})
-					.sort()
-			};
-		});
+		categories = categories.map(cat => ({
+			name: cat,
+			tests: fs
+				.readdirSync(path.join(casesPath, cat))
+				.filter(folder => folder.indexOf("_") < 0)
+				.filter(testName => {
+					const testDirectory = path.join(casesPath, cat, testName);
+					const filterPath = path.join(testDirectory, "test.filter.js");
+					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+						// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
+						describe.skip(testName, () => it("filtered", () => {}));
+						return false;
+					}
+					return true;
+				})
+				.sort()
+		}));
 		beforeAll(() => {
 			let dest = path.join(__dirname, "js");
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
@@ -103,11 +101,9 @@ const describeCases = config => {
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
-							.filter(name => {
-								return fs
-									.statSync(path.join(testDirectory, name))
-									.isDirectory();
-							})
+							.filter(name =>
+								fs.statSync(path.join(testDirectory, name)).isDirectory()
+							)
 							.map(name => ({ name }));
 
 						beforeAll(done => {

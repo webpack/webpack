@@ -20,34 +20,30 @@ const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
-const categories = fs.readdirSync(casesPath).map(cat => {
-	return {
-		name: cat,
-		tests: fs
-			.readdirSync(path.join(casesPath, cat))
-			.filter(folder => !folder.startsWith("_"))
-			.sort()
-	};
-});
+const categories = fs.readdirSync(casesPath).map(cat => ({
+	name: cat,
+	tests: fs
+		.readdirSync(path.join(casesPath, cat))
+		.filter(folder => !folder.startsWith("_"))
+		.sort()
+}));
 
-const createLogger = appendTarget => {
-	return {
-		log: l => appendTarget.push(l),
-		debug: l => appendTarget.push(l),
-		trace: l => appendTarget.push(l),
-		info: l => appendTarget.push(l),
-		warn: console.warn.bind(console),
-		error: console.error.bind(console),
-		logTime: () => {},
-		group: () => {},
-		groupCollapsed: () => {},
-		groupEnd: () => {},
-		profile: () => {},
-		profileEnd: () => {},
-		clear: () => {},
-		status: () => {}
-	};
-};
+const createLogger = appendTarget => ({
+	log: l => appendTarget.push(l),
+	debug: l => appendTarget.push(l),
+	trace: l => appendTarget.push(l),
+	info: l => appendTarget.push(l),
+	warn: console.warn.bind(console),
+	error: console.error.bind(console),
+	logTime: () => {},
+	group: () => {},
+	groupCollapsed: () => {},
+	groupEnd: () => {},
+	profile: () => {},
+	profileEnd: () => {},
+	clear: () => {},
+	status: () => {}
+});
 
 const describeCases = config => {
 	describe(config.name, () => {
@@ -493,9 +489,9 @@ const describeCases = config => {
 												if (Array.isArray(module)) {
 													p = path.join(currentDirectory, ".array-require.js");
 													content = `module.exports = (${module
-														.map(arg => {
-															return `require(${JSON.stringify(`./${arg}`)})`;
-														})
+														.map(
+															arg => `require(${JSON.stringify(`./${arg}`)})`
+														)
 														.join(", ")});`;
 												} else {
 													p = path.join(currentDirectory, module);
@@ -560,8 +556,8 @@ const describeCases = config => {
 													return (async () => {
 														if (esmMode === "unlinked") return esm;
 														await esm.link(
-															async (specifier, referencingModule) => {
-																return await asModule(
+															async (specifier, referencingModule) =>
+																await asModule(
 																	await _require(
 																		path.dirname(
 																			referencingModule.identifier
@@ -577,8 +573,7 @@ const describeCases = config => {
 																	),
 																	referencingModule.context,
 																	true
-																);
-															}
+																)
 														);
 														// node.js 10 needs instantiate
 														if (esm.instantiate) esm.instantiate();

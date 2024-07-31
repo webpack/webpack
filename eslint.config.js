@@ -246,9 +246,9 @@ module.exports = [
 					string: true
 				}
 			],
+			"arrow-body-style": ["error", "as-needed"],
 
 			// TODO Enable
-			"arrow-body-style": "off",
 			"no-sequences": "off",
 			"prefer-spread": "off",
 			"default-case": "off",

@@ -60,8 +60,8 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async (configAdditions = {}) => {
-		return new Promise((resolve, reject) => {
+	const compile = async (configAdditions = {}) =>
+		new Promise((resolve, reject) => {
 			const webpack = require("../");
 			webpack(
 				{
@@ -77,7 +77,6 @@ describe("Persistent Caching", () => {
 				}
 			);
 		});
-	};
 
 	const execute = () => {
 		const cache = {};

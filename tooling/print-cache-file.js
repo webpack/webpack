@@ -72,9 +72,7 @@ const printData = async (data, indent) => {
 	let currentReference = 0;
 	let currentTypeReference = 0;
 	let i = 0;
-	const read = () => {
-		return data[i++];
-	};
+	const read = () => data[i++];
 	/**
 	 * @param {string} content content
 	 */
@@ -152,9 +150,7 @@ const printData = async (data, indent) => {
 		}
 	}
 	const refCounters = Array.from(referencedValuesCounters);
-	refCounters.sort(([a, A], [b, B]) => {
-		return B - A;
-	});
+	refCounters.sort(([a, A], [b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {
 		const value = referencedValues.get(ref);

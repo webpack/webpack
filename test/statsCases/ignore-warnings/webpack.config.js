@@ -10,8 +10,6 @@ module.exports = {
 			message: /homepage/
 		},
 		/The 'mode' option has not been set/,
-		warning => {
-			return warning.module.identifier().endsWith("?2");
-		}
+		warning => warning.module.identifier().endsWith("?2")
 	]
 };

@@ -30,9 +30,9 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort((a, b) => {
-							return a[1] - b[1];
-						});
+						const sortedModules = Array.from(modules).sort(
+							(a, b) => a[1] - b[1]
+						);
 						const text = sortedModules
 							.map(
 								([m, index]) =>

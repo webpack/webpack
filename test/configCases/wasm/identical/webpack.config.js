@@ -28,10 +28,12 @@ module.exports = {
 			this.hooks.compilation.tap("Test", compilation => {
 				AsyncWebAssemblyModulesPlugin.getCompilationHooks(
 					compilation
-				).renderModuleContent.tap("Test", source => {
-					// this is important to make each returned value a new instance
-					return new CachedSource(source);
-				});
+				).renderModuleContent.tap(
+					"Test",
+					source =>
+						// this is important to make each returned value a new instance
+						new CachedSource(source)
+				);
 			});
 		}
 	]

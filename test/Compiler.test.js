@@ -337,8 +337,8 @@ describe("Compiler", () => {
 	});
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		try {
-			const createCompiler = options => {
-				return new Promise((resolve, reject) => {
+			const createCompiler = options =>
+				new Promise((resolve, reject) => {
 					const webpack = require("..");
 					const c = webpack(options);
 					c.run((err, stats) => {
@@ -352,7 +352,6 @@ describe("Compiler", () => {
 						}
 					});
 				});
-			};
 			compiler = await createCompiler({
 				context: __dirname,
 				mode: "production",
@@ -370,8 +369,8 @@ describe("Compiler", () => {
 		}
 	});
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = options => {
-			return new Promise((resolve, reject) => {
+		const createStats = options =>
+			new Promise((resolve, reject) => {
 				const webpack = require("..");
 				const c = webpack(options);
 				c.outputFileSystem = createFsFromVolume(new Volume());
@@ -382,7 +381,6 @@ describe("Compiler", () => {
 					});
 				});
 			});
-		};
 		const stats = await createStats({
 			context: __dirname,
 			mode: "production",

@@ -13,14 +13,12 @@ const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
 	.readdirSync(casesPath)
 	.filter(dir => fs.statSync(path.join(casesPath, dir)).isDirectory());
-categories = categories.map(cat => {
-	return {
-		name: cat,
-		tests: fs
-			.readdirSync(path.join(casesPath, cat))
-			.filter(folder => folder.indexOf("_") < 0)
-	};
-});
+categories = categories.map(cat => ({
+	name: cat,
+	tests: fs
+		.readdirSync(path.join(casesPath, cat))
+		.filter(folder => folder.indexOf("_") < 0)
+}));
 
 const describeCases = config => {
 	describe(config.name, () => {
