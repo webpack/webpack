@@ -97,7 +97,7 @@ describe("WatchDetection", () => {
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
-								.indexOf("original") >= 0
+								.includes("original")
 						)
 							step2();
 					};
@@ -141,7 +141,7 @@ describe("WatchDetection", () => {
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
-								.indexOf("correct") >= 0
+								.includes("correct")
 						)
 							step5();
 					};

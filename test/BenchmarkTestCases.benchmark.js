@@ -10,7 +10,7 @@ describe("BenchmarkTestCases", function () {
 	const casesPath = path.join(__dirname, "benchmarkCases");
 	const tests = fs.readdirSync(casesPath).filter(function (folder) {
 		return (
-			folder.indexOf("_") < 0 &&
+			!folder.includes("_") &&
 			fs.existsSync(path.resolve(casesPath, folder, "webpack.config.js"))
 		);
 	});

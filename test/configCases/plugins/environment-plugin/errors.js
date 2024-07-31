@@ -43,7 +43,7 @@ const modules = [
 const regex = [];
 modules.forEach(module => {
 	variables.forEach(variable => {
-		if (module.variables.indexOf(variable) === -1) {
+		if (!module.variables.includes(variable)) {
 			// the module doesn't include the env variable, an error is expected when requiring the variable
 			regex.push([
 				{ compilerPath: new RegExp(`${module.name}`) },

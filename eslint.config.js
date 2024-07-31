@@ -211,6 +211,7 @@ module.exports = [
 				"error",
 				{ name: "err", ignore: [/(^_|[0-9]+$)/i] }
 			],
+			"unicorn/prefer-includes": "error",
 			// TODO Enable
 			"unicorn/prefer-spread": "off",
 			"unicorn/prefer-string-slice": "off",
@@ -225,7 +226,6 @@ module.exports = [
 			"unicorn/prefer-number-properties": "off",
 			"unicorn/prefer-default-parameters": "off",
 			"unicorn/prefer-regexp-test": "off",
-			"unicorn/prefer-includes": "off",
 			"unicorn/prefer-math-trunc": "off",
 			"unicorn/prefer-array-find": "off",
 			"unicorn/prefer-native-coercion-functions": "off",
@@ -361,7 +361,8 @@ module.exports = [
 			"n/exports-style": "off",
 			"prefer-template": "off",
 			"no-implicit-coercion": "off",
-			"func-style": "off"
+			"func-style": "off",
+			"unicorn/prefer-includes": "off"
 		}
 	},
 	{

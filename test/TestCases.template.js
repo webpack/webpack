@@ -19,7 +19,7 @@ categories = categories.map(cat => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter(folder => folder.indexOf("_") < 0)
+		.filter(folder => !folder.includes("_"))
 }));
 
 const createLogger = appendTarget => ({
