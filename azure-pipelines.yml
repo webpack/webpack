@@ -6,20 +6,17 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: "^18.0.0"
+          version: "18.x"
         displayName: "Install Node.js"
-      - script: |
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-        displayName: "Install Yarn"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
-      - task: CacheBeta@1
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
@@ -58,20 +55,17 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: "^18.0.0"
+          version: "18.x"
         displayName: "Install Node.js"
-      - script: |
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-        displayName: "Install Yarn"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
-      - task: CacheBeta@1
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
@@ -90,12 +84,6 @@ jobs:
         env:
           CI: "true"
         displayName: "Run linting"
-      - task: PublishTestResults@2
-        inputs:
-          testRunTitle: "lint"
-          testResultsFiles: "**/junit.xml"
-        condition: succeededOrFailed()
-        displayName: "Publish lint results"
 
   - job: Windows
     dependsOn:
@@ -107,36 +95,33 @@ jobs:
       maxParallel: 6
       matrix:
         node-10-a:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: a
         node-10-b:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: b
         node-18-a:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: a
         node-18-b:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: b
         node-20-a:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: a
         node-20-b:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: b
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: $(node_version)
+          version: $(node_version)
         displayName: "Install Node.js $(node_version)"
-      - script: |
-          npm install --global yarn
-        displayName: "Install Yarn"
       - script: |
           node -v
           yarn -v
         displayName: "Print versions"
-      - task: CacheBeta@1
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
@@ -178,38 +163,35 @@ jobs:
       maxParallel: 6
       matrix:
         node-10-a:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: a
         node-10-b:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: b
         node-18-a:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: a
         node-18-b:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: b
         node-20-a:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: a
         node-20-b:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: b
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: $(node_version)
+          version: $(node_version)
         displayName: "Install Node.js $(node_version)"
-      - script: |
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-        displayName: "Install Yarn"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
-      - task: CacheBeta@1
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
@@ -257,38 +239,35 @@ jobs:
       maxParallel: 6
       matrix:
         node-10-a:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: a
         node-10-b:
-          node_version: ^10.13.0
+          node_version: 10.x
           part: b
         node-18-a:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: a
         node-18-b:
-          node_version: ^18.0.0
+          node_version: 18.x
           part: b
         node-20-a:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: a
         node-20-b:
-          node_version: ^20.0.0
+          node_version: 20.x
           part: b
     steps:
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: $(node_version)
+          version: $(node_version)
         displayName: "Install Node.js $(node_version)"
-      - script: |
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-        displayName: "Install Yarn"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           node -v
           yarn -v
         displayName: "Print versions"
-      - task: CacheBeta@1
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
