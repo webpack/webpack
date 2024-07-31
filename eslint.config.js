@@ -6,6 +6,7 @@ const jsdoc = require("eslint-plugin-jsdoc");
 const prettierConfig = require("eslint-config-prettier");
 const globals = require("globals");
 
+const nodeConfig = n.configs["flat/recommended"];
 const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
 
 module.exports = [
@@ -36,6 +37,9 @@ module.exports = [
 			// Ignore precompiled schemas
 			"schemas/**/*.check.js",
 
+			// Auto generation
+			"lib/util/semver.js",
+
 			// Ignore some examples files
 			"examples/**/*.js",
 			"examples/**/*.mjs",
@@ -43,9 +47,50 @@ module.exports = [
 		]
 	},
 	js.configs.recommended,
-	n.configs["flat/recommended"],
+	{
+		...nodeConfig,
+		rules: {
+			...nodeConfig.rules,
+			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
+			"n/no-unsupported-features/node-builtins": [
+				"error",
+				{
+					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
+				}
+			],
+			"n/exports-style": "error"
+		}
+	},
 	{
 		...jsdocConfig,
+		settings: {
+			jsdoc: {
+				mode: "typescript",
+				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
+				tagNamePreference: {
+					...["implements", "const", "memberof", "yields"].reduce(
+						(acc, tag) => {
+							acc[tag] = {
+								message: `@${tag} currently not supported in TypeScript`
+							};
+							return acc;
+						},
+						{}
+					),
+					extends: "extends",
+					return: "returns",
+					constructor: "constructor",
+					prop: "property",
+					arg: "param",
+					augments: "extends",
+					description: false,
+					desc: false,
+					inheritdoc: false,
+					class: "constructor"
+				},
+				overrideReplacesDocs: false
+			}
+		},
 		rules: {
 			...jsdocConfig.rules,
 			// Override recommended
@@ -98,10 +143,17 @@ module.exports = [
 			"no-use-before-define": "off",
 			"no-unused-vars": [
 				"error",
-				{ caughtErrors: "none", args: "none", ignoreRestSiblings: true }
+				{
+					vars: "all",
+					varsIgnorePattern: "^_",
+					args: "none",
+					argsIgnorePattern: "^_",
+					caughtErrors: "none",
+					caughtErrorsIgnorePattern: "^_",
+					ignoreRestSiblings: true
+				}
 			],
 			"no-inner-declarations": "error",
-			"no-loop-func": "off",
 			"prefer-const": [
 				"error",
 				{
@@ -113,47 +165,110 @@ module.exports = [
 			"no-else-return": "error",
 			"no-lonely-if": "error",
 			"no-undef-init": "error",
-			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
-			"n/no-unsupported-features/node-builtins": [
-				"error",
-				{
-					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
-				}
-			],
-			"n/exports-style": "error",
 			// Disallow @ts-ignore directive. Use @ts-expect-error instead
 			"no-warning-comments": [
 				"error",
 				{ terms: ["@ts-ignore"], location: "start" }
-			]
-		},
-		settings: {
-			jsdoc: {
-				mode: "typescript",
-				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
-				tagNamePreference: {
-					...["implements", "const", "memberof", "yields"].reduce(
-						(acc, tag) => {
-							acc[tag] = {
-								message: `@${tag} currently not supported in TypeScript`
-							};
-							return acc;
-						},
-						{}
-					),
-					extends: "extends",
-					return: "returns",
-					constructor: "constructor",
-					prop: "property",
-					arg: "param",
-					augments: "extends",
-					description: false,
-					desc: false,
-					inheritdoc: false,
-					class: "constructor"
-				},
-				overrideReplacesDocs: false
-			}
+			],
+			"no-constructor-return": "error",
+			"symbol-description": "error",
+			"array-callback-return": [
+				"error",
+				{
+					allowImplicit: true
+				}
+			],
+			"no-promise-executor-return": "error",
+			"no-undef": "error",
+			"guard-for-in": "error",
+			"no-constant-condition": "error",
+			camelcase: [
+				"error",
+				{
+					allow: [
+						"__webpack_require__",
+						"__webpack_public_path__",
+						"__webpack_base_uri__",
+						"__webpack_modules__",
+						"__webpack_chunk_load__",
+						"__non_webpack_require__",
+						"__webpack_nonce__",
+						"__webpack_hash__",
+						"__webpack_chunkname__",
+						"__webpack_get_script_filename__",
+						"__webpack_runtime_id__",
+						"__system_context__",
+						"__webpack_share_scopes__",
+						"__webpack_init_sharing__",
+						"__webpack_require_module__",
+						"_stream_duplex",
+						"_stream_passthrough",
+						"_stream_readable",
+						"_stream_transform",
+						"_stream_writable",
+						"string_decoder"
+					]
+				}
+			],
+			"prefer-exponentiation-operator": "error",
+			"no-useless-return": "error",
+			"no-return-assign": "error",
+			"default-case-last": "error",
+			"default-param-last": "error",
+			"dot-notation": "error",
+			"grouped-accessor-pairs": "error",
+			"id-match": [
+				"error",
+				"^[$a-zA-Z_][$a-zA-Z0-9_]*$",
+				{
+					properties: true
+				}
+			],
+			"no-extra-label": "error",
+			"no-label-var": "error",
+			"no-lone-blocks": "error",
+			"no-multi-str": "error",
+			"no-new-func": "error",
+			"no-unneeded-ternary": ["error", { defaultAssignment: false }],
+			"no-useless-call": "error",
+			"no-useless-concat": "error",
+			"prefer-object-spread": "error",
+			"prefer-regex-literals": "error",
+			"prefer-rest-params": "error",
+
+			// TODO Enable
+			"no-sequences": "off",
+			"prefer-spread": "off",
+			"default-case": "off",
+			"new-cap": [
+				"off",
+				{
+					newIsCap: true,
+					newIsCapExceptions: [],
+					capIsNew: true,
+					capIsNewExceptions: [],
+					properties: true
+				}
+			],
+			"no-loop-func": "off",
+			"no-implicit-coercion": "off",
+			"arrow-body-style": "off",
+			"no-shadow": "off",
+			"prefer-template": "off",
+			"prefer-destructuring": "off",
+			"func-style": "off",
+			"no-plusplus": "off",
+			"no-param-reassign": "off",
+			"no-var": "off",
+			"one-var": "off",
+			"vars-on-top": "off",
+			"no-unreachable-loop": "off",
+			"no-unmodified-loop-condition": "off",
+			"@stylistic/lines-between-class-members": "off",
+			"@stylistic/quotes": "off",
+			"@stylistic/spaced-comment": "off",
+			// TODO Disable everywhere?
+			"no-useless-constructor": "off"
 		}
 	},
 	{
@@ -225,19 +340,14 @@ module.exports = [
 					allowExperimental: true
 				}
 			],
-			"object-shorthand": "off"
+			"object-shorthand": "off",
+			camelcase: "off"
 		}
 	},
 	{
 		files: ["examples/**/*.js"],
 		rules: {
 			"n/no-missing-require": "off"
-		}
-	},
-	{
-		files: ["lib/util/semver.js"],
-		rules: {
-			"n/exports-style": "off"
 		}
 	}
 ];

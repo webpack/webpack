@@ -1,6 +1,6 @@
 // eslint-disable-next-line jest/no-export
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
-	const state = global["JEST_STATE_SYMBOL"];
+	const state = global.JEST_STATE_SYMBOL;
 	let currentDescribeBlock;
 	let currentlyRunningTest;
 	let runTests = -1;

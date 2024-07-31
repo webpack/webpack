@@ -113,8 +113,7 @@ if (!cli.installed) {
 	const fs = require("graceful-fs");
 	const readLine = require("readline");
 
-	const notify =
-		"CLI for webpack must be installed.\n" + `  ${cli.name} (${cli.url})\n`;
+	const notify = `CLI for webpack must be installed.\n  ${cli.name} (${cli.url})\n`;
 
 	console.error(notify);
 

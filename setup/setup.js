@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const root = process.cwd();
-const node_modulesFolder = path.resolve(root, "node_modules");
+const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
 function setup() {
@@ -36,7 +36,7 @@ async function runSetupSymlinkAsync() {
 function checkSymlinkExistsAsync() {
 	return new Promise((resolve, reject) => {
 		if (
-			fs.existsSync(node_modulesFolder) &&
+			fs.existsSync(nodeModulesFolder) &&
 			fs.existsSync(webpackDependencyFolder) &&
 			fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
 		) {

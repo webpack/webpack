@@ -191,7 +191,6 @@ const describeCases = config => {
 							}
 							// Wait for uncaught errors to occur
 							setTimeout(done, 200);
-							return;
 						};
 						if (config.cache) {
 							it(`${testName} should pre-compile to fill disk cache (1st)`, done => {

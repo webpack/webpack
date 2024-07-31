@@ -26,6 +26,7 @@ describe("JavascriptParser", () => {
 		],
 		"call member using bracket notation": [
 			function () {
+				// eslint-disable-next-line dot-notation
 				cde["abc"]("membertest");
 			},
 			{
@@ -42,6 +43,7 @@ describe("JavascriptParser", () => {
 		],
 		"call inner member using bracket notation": [
 			function () {
+				// eslint-disable-next-line dot-notation
 				cde.ddd["abc"]("inner");
 			},
 			{

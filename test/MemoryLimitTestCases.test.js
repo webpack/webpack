@@ -87,6 +87,7 @@ describe("MemoryLimitTestCases", () => {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
 				c.inputFileSystem.readFile = function () {
+					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					ifs.readFile.apply(

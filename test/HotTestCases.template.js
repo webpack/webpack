@@ -146,11 +146,11 @@ const describeCases = config => {
 									const window = {
 										fetch: async url => {
 											try {
-												const buffer = await new Promise((resolve, reject) =>
+												const buffer = await new Promise((resolve, reject) => {
 													fs.readFile(urlToPath(url), (err, b) =>
 														err ? reject(err) : resolve(b)
-													)
-												);
+													);
+												});
 												return {
 													status: 200,
 													ok: true,

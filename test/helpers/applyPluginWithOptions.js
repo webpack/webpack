@@ -1,6 +1,7 @@
 var PluginEnvironment = require("./PluginEnvironment");
 
 module.exports = function applyPluginWithOptions(Plugin) {
+	// eslint-disable-next-line prefer-rest-params
 	var plugin = new (Function.prototype.bind.apply(Plugin, arguments))();
 	var pluginEnvironment = new PluginEnvironment();
 	plugin.apply(pluginEnvironment.getEnvironmentStub());

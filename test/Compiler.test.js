@@ -351,7 +351,6 @@ describe("Compiler", () => {
 							resolve(stats);
 						}
 					});
-					return c;
 				});
 			};
 			compiler = await createCompiler({

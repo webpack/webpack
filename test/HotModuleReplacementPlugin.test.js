@@ -230,7 +230,7 @@ describe("HotModuleReplacementPlugin", () => {
 							path.join(outputPath, `0.${hash}.hot-update.json`),
 							"utf-8"
 						)
-					)["c"];
+					).c;
 					expect(result).toEqual([chunkName]);
 					done();
 				});

@@ -5,6 +5,8 @@ var findFile = function (files, regex) {
 		if (regex.test(file)) {
 			return true;
 		}
+
+		return false;
 	});
 };
 
