@@ -10,7 +10,20 @@ module.exports = [
 		cache: {
 			name: "filesystem",
 			type: "filesystem"
-		}
+		},
+		plugins: [
+			{
+				apply(compiler) {
+					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
+						compiler.options.cache.cacheLocation =
+							compiler.options.cache.cacheLocation.replace(
+								/filesystem$/,
+								"filesystem-extra-1"
+							);
+					});
+				}
+			}
+		]
 	},
 	{
 		mode: "production",
@@ -18,7 +31,20 @@ module.exports = [
 		cache: {
 			name: "filesystem",
 			type: "filesystem"
-		}
+		},
+		plugins: [
+			{
+				apply(compiler) {
+					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
+						compiler.options.cache.cacheLocation =
+							compiler.options.cache.cacheLocation.replace(
+								/filesystem$/,
+								"filesystem-extra-2"
+							);
+					});
+				}
+			}
+		]
 	},
 	{
 		name: "3rd compiler",

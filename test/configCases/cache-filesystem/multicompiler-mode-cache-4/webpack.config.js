@@ -10,7 +10,20 @@ module.exports = [
 		cache: {
 			name: "default",
 			type: "filesystem"
-		}
+		},
+		plugins: [
+			{
+				apply(compiler) {
+					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
+						compiler.options.cache.cacheLocation =
+							compiler.options.cache.cacheLocation.replace(
+								/default$/,
+								"default-extra"
+							);
+					});
+				}
+			}
+		]
 	},
 	{
 		mode: "production",
