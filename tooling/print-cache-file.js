@@ -141,10 +141,10 @@ const printData = async (data, indent) => {
 				).toFixed(2)} lazy MiB`;
 				printLine(`lazy-file ${sizeInfo} {`);
 			} else {
-				printLine(`lazy-inline {`);
+				printLine("lazy-inline {");
 			}
 			await printData(innerData, `${indent}  `);
-			printLine(`}`);
+			printLine("}");
 		} else {
 			printLine(String(item));
 		}

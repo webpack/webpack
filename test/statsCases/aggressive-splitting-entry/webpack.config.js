@@ -18,7 +18,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 		})
 	],
 	recordsInputPath: `${__dirname}/input-records-${type}.json`,
-	//recordsOutputPath: __dirname + `/records-${type}.json`,
+	// recordsOutputPath: __dirname + `/records-${type}.json`,
 	stats: {
 		chunks: true,
 		chunkModules: true,

@@ -57,7 +57,7 @@ describe("Cli", () => {
 		});
 	};
 
-	test("none", {}, {}, e => e.toMatchInlineSnapshot(`Object {}`));
+	test("none", {}, {}, e => e.toMatchInlineSnapshot("Object {}"));
 
 	test("root boolean", { bail: true }, {}, e =>
 		e.toMatchInlineSnapshot(`

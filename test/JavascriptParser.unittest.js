@@ -133,6 +133,7 @@ describe("JavascriptParser", () => {
 					cde() {
 						abc("cde");
 					}
+
 					static fgh() {
 						abc("fgh");
 						fgh();

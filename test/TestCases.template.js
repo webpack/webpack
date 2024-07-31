@@ -473,8 +473,8 @@ const describeCases = config => {
 											})();
 										}
 										const fn = vm.runInThisContext(
-											`(function(require, module, exports, __dirname, __filename, it, expect) {` +
-												`global.expect = expect;` +
+											"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+												"global.expect = expect;" +
 												`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
 													content
 												}\n})`,

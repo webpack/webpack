@@ -109,10 +109,10 @@ for (const name of Object.keys(wasmHashes)) {
 				test(`two updates ${size1} + ${size2} bytes`, [size1, size2]);
 			}
 		}
-		test(`many updates 1`, sizes);
-		test(`many updates 2`, sizes.slice().reverse());
-		test(`many updates 3`, sizes.concat(sizes.slice().reverse()));
-		test(`many updates 4`, sizes.slice().reverse().concat(sizes));
+		test("many updates 1", sizes);
+		test("many updates 2", sizes.slice().reverse());
+		test("many updates 3", sizes.concat(sizes.slice().reverse()));
+		test("many updates 4", sizes.slice().reverse().concat(sizes));
 
 		const unicodeTest = (name, codePoints) => {
 			it(`${name} should hash unicode chars correctly`, async () => {

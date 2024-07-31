@@ -136,7 +136,7 @@ if (!cli.installed) {
 		)} ${cli.package}".`
 	);
 
-	const question = `Do you want to install 'webpack-cli' (yes/no): `;
+	const question = "Do you want to install 'webpack-cli' (yes/no): ";
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,

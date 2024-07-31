@@ -39,6 +39,7 @@
     "@babel/core": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@eslint/js": "^9.5.0",
+    "@stylistic/eslint-plugin": "^2.4.0",
     "@types/glob-to-regexp": "^0.4.4",
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",

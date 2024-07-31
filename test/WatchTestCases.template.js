@@ -284,7 +284,7 @@ const describeCases = config => {
 													options.target === "webworker"
 												) {
 													fn = vm.runInNewContext(
-														`(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window, self) {` +
+														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window, self) {" +
 															`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
 																content
 															}\n})`,
@@ -293,8 +293,8 @@ const describeCases = config => {
 													);
 												} else {
 													fn = vm.runInThisContext(
-														`(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {` +
-															`global.expect = expect;` +
+														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
+															"global.expect = expect;" +
 															`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
 																content
 															}\n})`,

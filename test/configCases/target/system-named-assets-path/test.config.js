@@ -7,6 +7,6 @@ module.exports = {
 		scope.System = System;
 	},
 	afterExecute: () => {
-		System.execute(`named-system-module-main`);
+		System.execute("named-system-module-main");
 	}
 };

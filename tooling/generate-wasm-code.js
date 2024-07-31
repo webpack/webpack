@@ -19,7 +19,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 		const content = fs.readFileSync(filePath, "utf-8");
 
 		const regexp =
-			/\n\/\/#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/#endregion\n/g;
+			/\n\/\/[\s]*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
 
 		const replaces = new Map();
 
@@ -61,7 +61,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 			replaces.set(
 				fullMatch,
 				`
-//#region wasm code: ${identifier} (${name})${flags}
+// #region wasm code: ${identifier} (${name})${flags}
 const ${identifier} = new WebAssembly.Module(
 	Buffer.from(
 		// ${wasm.length} bytes
@@ -69,7 +69,7 @@ const ${identifier} = new WebAssembly.Module(
 		"base64"
 	)
 );
-//#endregion
+// #endregion
 `
 			);
 			match = regexp.exec(content);

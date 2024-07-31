@@ -15,7 +15,7 @@ module.exports = {
 		})
 	],
 	recordsInputPath: `${__dirname}/input-records.json`,
-	//recordsOutputPath: __dirname + "/records.json",
+	// recordsOutputPath: __dirname + "/records.json",
 	stats: {
 		chunks: true,
 		chunkModules: true,

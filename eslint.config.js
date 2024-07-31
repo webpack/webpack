@@ -5,6 +5,7 @@ const jest = require("eslint-plugin-jest");
 const jsdoc = require("eslint-plugin-jsdoc");
 const prettierConfig = require("eslint-config-prettier");
 const globals = require("globals");
+const stylistic = require("@stylistic/eslint-plugin");
 
 const nodeConfig = n.configs["flat/recommended"];
 const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
@@ -200,10 +201,35 @@ module.exports = [
 			"no-plusplus": "off",
 			"no-param-reassign": "off",
 			"no-unreachable-loop": "off",
-			"no-unmodified-loop-condition": "off",
-			"@stylistic/lines-between-class-members": "off",
-			"@stylistic/quotes": "off",
-			"@stylistic/spaced-comment": "off"
+			"no-unmodified-loop-condition": "off"
+		}
+	},
+	{
+		plugins: {
+			"@stylistic": stylistic
+		},
+		rules: {
+			"@stylistic/lines-between-class-members": "error",
+			"@stylistic/quotes": [
+				"error",
+				"double",
+				{ avoidEscape: true, allowTemplateLiterals: false }
+			],
+			"@stylistic/spaced-comment": [
+				"error",
+				"always",
+				{
+					line: {
+						markers: ["=", "!"], // Space here to support sprockets directives
+						exceptions: ["-", "+"]
+					},
+					block: {
+						markers: ["=", "!"], // Space here to support sprockets directives
+						exceptions: ["-", "+"],
+						balanced: true
+					}
+				}
+			]
 		}
 	},
 	{

@@ -18,7 +18,7 @@ module.exports = {
 	},
 	output: {
 		filename: data =>
-			/^[ac]$/.test(data.chunk.name) ? `inner1/inner2/[name].js` : "[name].js",
+			/^[ac]$/.test(data.chunk.name) ? "inner1/inner2/[name].js" : "[name].js",
 		assetModuleFilename: "[name][ext]"
 	},
 	module: {

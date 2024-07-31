@@ -249,8 +249,8 @@ const describeCases = config => {
 											return JSON.parse(fs.readFileSync(p, "utf-8"));
 										}
 										const fn = vm.runInThisContext(
-											`(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {` +
-												`global.expect = expect;` +
+											"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
+												"global.expect = expect;" +
 												`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${fs.readFileSync(
 													p,
 													"utf-8"
