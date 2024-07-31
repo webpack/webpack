@@ -191,17 +191,13 @@ module.exports = [
 					allowArrowFunctions: true
 				}
 			],
-
+			"no-loop-func": "error",
+			"no-unreachable-loop": "error",
+			"no-unmodified-loop-condition": "error",
+			"prefer-spread": "error",
+			"no-sequences": "error",
 			// TODO Enable
-			"no-sequences": "off",
-			"prefer-spread": "off",
-			"no-loop-func": "off",
-			"no-shadow": "off",
-			"prefer-destructuring": "off",
-			"no-plusplus": "off",
-			"no-param-reassign": "off",
-			"no-unreachable-loop": "off",
-			"no-unmodified-loop-condition": "off"
+			"prefer-destructuring": "off"
 		}
 	},
 	{

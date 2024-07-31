@@ -90,6 +90,7 @@ describe("MemoryLimitTestCases", () => {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
+					// eslint-disable-next-line prefer-spread
 					ifs.readFile.apply(
 						ifs,
 						args.concat([
