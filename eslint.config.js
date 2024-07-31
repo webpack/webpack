@@ -46,76 +46,8 @@ module.exports = [
 			"!examples/*/webpack.config.js"
 		]
 	},
-	js.configs.recommended,
 	{
-		...nodeConfig,
-		rules: {
-			...nodeConfig.rules,
-			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
-			"n/no-unsupported-features/node-builtins": [
-				"error",
-				{
-					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
-				}
-			],
-			"n/exports-style": "error"
-		}
-	},
-	{
-		...jsdocConfig,
-		settings: {
-			jsdoc: {
-				mode: "typescript",
-				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
-				tagNamePreference: {
-					...["implements", "const", "memberof", "yields"].reduce(
-						(acc, tag) => {
-							acc[tag] = {
-								message: `@${tag} currently not supported in TypeScript`
-							};
-							return acc;
-						},
-						{}
-					),
-					extends: "extends",
-					return: "returns",
-					constructor: "constructor",
-					prop: "property",
-					arg: "param",
-					augments: "extends",
-					description: false,
-					desc: false,
-					inheritdoc: false,
-					class: "constructor"
-				},
-				overrideReplacesDocs: false
-			}
-		},
-		rules: {
-			...jsdocConfig.rules,
-			// Override recommended
-			// TODO remove me after switch to typescript strict mode
-			"jsdoc/require-jsdoc": "off",
-			// Doesn't support function overloading/tuples/`readonly`/module keyword/etc
-			// Also `typescript` reports this itself
-			"jsdoc/valid-types": "off",
-			// A lot of false positive with loops/`switch`/`if`/etc
-			"jsdoc/require-returns-check": "off",
-			// TODO fix and enable in future
-			"jsdoc/require-property-description": "off",
-
-			// More rules
-			"jsdoc/check-indentation": "error",
-			"jsdoc/no-bad-blocks": "error",
-			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-			"jsdoc/require-template": "error",
-			"jsdoc/no-blank-block-descriptions": "error",
-			"jsdoc/no-blank-blocks": "error",
-			"jsdoc/require-asterisk-prefix": "error"
-		}
-	},
-	prettierConfig,
-	{
+		...js.configs.recommended,
 		languageOptions: {
 			ecmaVersion: 2018,
 			globals: {
@@ -127,11 +59,8 @@ module.exports = [
 		linterOptions: {
 			reportUnusedDisableDirectives: true
 		},
-		plugins: {
-			prettier
-		},
 		rules: {
-			"prettier/prettier": "error",
+			...js.configs.recommended.rules,
 			"no-template-curly-in-string": "error",
 			"no-caller": "error",
 			"no-control-regex": "off",
@@ -265,7 +194,6 @@ module.exports = [
 			// TODO Enable
 			"no-sequences": "off",
 			"prefer-spread": "off",
-			"default-case": "off",
 			"no-loop-func": "off",
 			"no-shadow": "off",
 			"prefer-destructuring": "off",
@@ -276,6 +204,73 @@ module.exports = [
 			"@stylistic/lines-between-class-members": "off",
 			"@stylistic/quotes": "off",
 			"@stylistic/spaced-comment": "off"
+		}
+	},
+	{
+		...nodeConfig,
+		rules: {
+			...nodeConfig.rules,
+			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
+			"n/no-unsupported-features/node-builtins": [
+				"error",
+				{
+					ignores: ["zlib.createBrotliCompress", "zlib.createBrotliDecompress"]
+				}
+			],
+			"n/exports-style": "error"
+		}
+	},
+	{
+		...jsdocConfig,
+		settings: {
+			jsdoc: {
+				mode: "typescript",
+				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
+				tagNamePreference: {
+					...["implements", "const", "memberof", "yields"].reduce(
+						(acc, tag) => {
+							acc[tag] = {
+								message: `@${tag} currently not supported in TypeScript`
+							};
+							return acc;
+						},
+						{}
+					),
+					extends: "extends",
+					return: "returns",
+					constructor: "constructor",
+					prop: "property",
+					arg: "param",
+					augments: "extends",
+					description: false,
+					desc: false,
+					inheritdoc: false,
+					class: "constructor"
+				},
+				overrideReplacesDocs: false
+			}
+		},
+		rules: {
+			...jsdocConfig.rules,
+			// Override recommended
+			// TODO remove me after switch to typescript strict mode
+			"jsdoc/require-jsdoc": "off",
+			// Doesn't support function overloading/tuples/`readonly`/module keyword/etc
+			// Also `typescript` reports this itself
+			"jsdoc/valid-types": "off",
+			// A lot of false positive with loops/`switch`/`if`/etc
+			"jsdoc/require-returns-check": "off",
+			// TODO fix and enable in future
+			"jsdoc/require-property-description": "off",
+
+			// More rules
+			"jsdoc/check-indentation": "error",
+			"jsdoc/no-bad-blocks": "error",
+			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
+			"jsdoc/require-template": "error",
+			"jsdoc/no-blank-block-descriptions": "error",
+			"jsdoc/no-blank-blocks": "error",
+			"jsdoc/require-asterisk-prefix": "error"
 		}
 	},
 	{
@@ -360,6 +355,17 @@ module.exports = [
 		files: ["examples/**/*.js"],
 		rules: {
 			"n/no-missing-require": "off"
+		}
+	},
+	{
+		...prettierConfig,
+		plugins: {
+			...prettierConfig.plugins,
+			prettier
+		},
+		rules: {
+			...prettierConfig.rules,
+			"prettier/prettier": "error"
 		}
 	}
 ];
