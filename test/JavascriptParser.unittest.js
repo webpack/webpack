@@ -89,6 +89,7 @@ describe("JavascriptParser", () => {
 		],
 		"const definition": [
 			function () {
+				// eslint-disable-next-line one-var
 				let abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
@@ -100,6 +101,7 @@ describe("JavascriptParser", () => {
 		],
 		"var definition": [
 			function () {
+				// eslint-disable-next-line one-var
 				var abc, cde, fgh;
 				abc("test");
 				cde.abc("test");

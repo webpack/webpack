@@ -235,6 +235,8 @@ module.exports = [
 			"prefer-object-spread": "error",
 			"prefer-regex-literals": "error",
 			"prefer-rest-params": "error",
+			"no-var": "error",
+			"one-var": ["error", "never"],
 
 			// TODO Enable
 			"no-sequences": "off",
@@ -259,9 +261,6 @@ module.exports = [
 			"func-style": "off",
 			"no-plusplus": "off",
 			"no-param-reassign": "off",
-			"no-var": "off",
-			"one-var": "off",
-			"vars-on-top": "off",
 			"no-unreachable-loop": "off",
 			"no-unmodified-loop-condition": "off",
 			"@stylistic/lines-between-class-members": "off",
@@ -299,6 +298,7 @@ module.exports = [
 			"prefer-const": "off",
 			"object-shorthand": "off",
 			"no-undef-init": "off",
+			"no-var": "off",
 			"n/exports-style": "off"
 		}
 	},
@@ -341,7 +341,8 @@ module.exports = [
 				}
 			],
 			"object-shorthand": "off",
-			camelcase: "off"
+			camelcase: "off",
+			"no-var": "off"
 		}
 	},
 	{

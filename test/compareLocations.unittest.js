@@ -19,7 +19,8 @@ const createLocation = (start, end, index) => {
 
 describe("compareLocations", () => {
 	describe("object location comparison", () => {
-		let a, b;
+		let a;
+		let b;
 
 		describe("location line number", () => {
 			beforeEach(() => {

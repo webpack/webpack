@@ -1,5 +1,6 @@
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = {
 	// mode: "development" || "production",
 	plugins: [

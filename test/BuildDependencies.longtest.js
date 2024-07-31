@@ -218,7 +218,8 @@ export default 0;`
 		await exec("7", {
 			definedValue: "other"
 		});
-		let now4, now5;
+		let now4;
+		let now5;
 		if (supportsEsm) {
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),

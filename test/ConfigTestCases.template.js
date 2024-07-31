@@ -78,7 +78,9 @@ const describeCases = config => {
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
 						const cacheDirectory = path.join(outBaseDir, ".cache", testSubPath);
-						let options, optionsArr, testConfig;
+						let options;
+						let optionsArr;
+						let testConfig;
 						beforeAll(() => {
 							options = prepareOptions(
 								require(path.join(testDirectory, "webpack.config.js")),

@@ -5,7 +5,8 @@ const ContextModuleFactory = require("../lib/ContextModuleFactory");
 
 describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {
-		let factory, memfs;
+		let factory;
+		let memfs;
 		beforeEach(() => {
 			factory = new ContextModuleFactory([]);
 			memfs = createFsFromVolume(new Volume());
