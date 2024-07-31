@@ -64,8 +64,8 @@ module.exports = {
 									)}`
 							)
 							.join(", ");
-						data[name + "Index"] = text;
-						data[name + "Index2"] = text2;
+						data[`${name}Index`] = text;
+						data[`${name}Index2`] = text2;
 					}
 					expect(data).toEqual({
 						entry1Index:

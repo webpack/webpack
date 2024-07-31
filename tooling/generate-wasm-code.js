@@ -41,9 +41,9 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 					"--noAssert",
 					"--converge",
 					"--textFile",
-					sourcePathBase + ".wat",
+					`${sourcePathBase}.wat`,
 					"--outFile",
-					sourcePathBase + ".wasm",
+					`${sourcePathBase}.wasm`,
 					...flags.split(" ").filter(Boolean)
 				],
 				{
@@ -56,7 +56,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 				throw error;
 			}
 
-			const wasm = fs.readFileSync(sourcePathBase + ".wasm");
+			const wasm = fs.readFileSync(`${sourcePathBase}.wasm`);
 
 			replaces.set(
 				fullMatch,

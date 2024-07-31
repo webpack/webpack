@@ -4,7 +4,7 @@ const data = require("./data");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	externals: {
-		data: "commonjs " + path.resolve(__dirname, "data.js")
+		data: `commonjs ${path.resolve(__dirname, "data.js")}`
 	},
 	plugins: [
 		new webpack.ProgressPlugin((value, ...messages) => {

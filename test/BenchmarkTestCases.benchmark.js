@@ -105,7 +105,7 @@ describe("BenchmarkTestCases", function () {
 
 	function getBaselineRevs(rootPath, callback) {
 		const git = require("simple-git")(rootPath);
-		const lastVersionTag = "v" + require("../package.json").version;
+		const lastVersionTag = `v${require("../package.json").version}`;
 		git.raw(["rev-list", "-n", "1", lastVersionTag], (err, resultVersion) => {
 			if (err) return callback(err);
 			const matchVersion = /^([a-f0-9]+)\s*$/.exec(resultVersion);

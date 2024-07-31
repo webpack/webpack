@@ -237,8 +237,11 @@ module.exports = [
 			"prefer-rest-params": "error",
 			"no-var": "error",
 			"one-var": ["error", "never"],
+			"prefer-template": "error",
 
 			// TODO Enable
+			"arrow-body-style": "off",
+			"no-implicit-coercion": "off",
 			"no-sequences": "off",
 			"prefer-spread": "off",
 			"default-case": "off",
@@ -253,10 +256,7 @@ module.exports = [
 				}
 			],
 			"no-loop-func": "off",
-			"no-implicit-coercion": "off",
-			"arrow-body-style": "off",
 			"no-shadow": "off",
-			"prefer-template": "off",
 			"prefer-destructuring": "off",
 			"func-style": "off",
 			"no-plusplus": "off",
@@ -299,7 +299,8 @@ module.exports = [
 			"object-shorthand": "off",
 			"no-undef-init": "off",
 			"no-var": "off",
-			"n/exports-style": "off"
+			"n/exports-style": "off",
+			"prefer-template": "off"
 		}
 	},
 	{

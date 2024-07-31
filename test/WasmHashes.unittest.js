@@ -77,7 +77,7 @@ for (const name of Object.keys(wasmHashes)) {
 		];
 
 		const test = (name, sizes) => {
-			it(name + " should generate a hash from binary data", async () => {
+			it(`${name} should generate a hash from binary data`, async () => {
 				const hash = createHash();
 				const hashString = createHash();
 				const reference = await createReferenceHash();
@@ -115,7 +115,7 @@ for (const name of Object.keys(wasmHashes)) {
 		test(`many updates 4`, sizes.slice().reverse().concat(sizes));
 
 		const unicodeTest = (name, codePoints) => {
-			it(name + " should hash unicode chars correctly", async () => {
+			it(`${name} should hash unicode chars correctly`, async () => {
 				const hash = createHash();
 				const reference = await createReferenceHash();
 				const str =

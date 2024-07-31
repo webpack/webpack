@@ -256,7 +256,7 @@ describe("JavascriptParser", () => {
 	/* eslint-enable no-unused-vars */
 
 	Object.keys(testCases).forEach(name => {
-		it("should parse " + name, () => {
+		it(`should parse ${name}`, () => {
 			let source = testCases[name][0].toString();
 			source = source.slice(13, -1).trim();
 			const state = testCases[name][1];
@@ -379,7 +379,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", expr =>
 					new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
 				);
-			return parser.parse("test(" + source + ");", {}).result;
+			return parser.parse(`test(${source});`, {}).result;
 		}
 
 		const testCases = {
@@ -571,52 +571,46 @@ describe("JavascriptParser", () => {
 					return "null";
 				}
 				const result = [];
-				if (evalExpr.isString()) result.push("string=" + evalExpr.string);
-				if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
-				if (evalExpr.isBigInt()) result.push("bigint=" + evalExpr.bigint);
-				if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
-				if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
+				if (evalExpr.isString()) result.push(`string=${evalExpr.string}`);
+				if (evalExpr.isNumber()) result.push(`number=${evalExpr.number}`);
+				if (evalExpr.isBigInt()) result.push(`bigint=${evalExpr.bigint}`);
+				if (evalExpr.isBoolean()) result.push(`bool=${evalExpr.bool}`);
+				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
 				if (evalExpr.isConditional())
 					result.push(
-						"options=[" +
-							evalExpr.options.map(evalExprToString).join("],[") +
-							"]"
+						`options=[${evalExpr.options.map(evalExprToString).join("],[")}]`
 					);
 				if (evalExpr.isArray())
 					result.push(
-						"items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]"
+						`items=[${evalExpr.items.map(evalExprToString).join("],[")}]`
 					);
 				if (evalExpr.isConstArray())
-					result.push("array=[" + evalExpr.array.join("],[") + "]");
+					result.push(`array=[${evalExpr.array.join("],[")}]`);
 				if (evalExpr.isTemplateString())
 					result.push(
-						"template=[" +
-							evalExpr.quasis.map(evalExprToString).join("],[") +
-							"]"
+						`template=[${evalExpr.quasis.map(evalExprToString).join("],[")}]`
 					);
 				if (evalExpr.isWrapped())
 					result.push(
-						"wrapped=[" +
-							evalExprToString(evalExpr.prefix) +
-							"]+[" +
-							evalExprToString(evalExpr.postfix) +
-							"]"
+						`wrapped=[${evalExprToString(evalExpr.prefix)}]+[${evalExprToString(
+							evalExpr.postfix
+						)}]`
 					);
 				if (evalExpr.range) {
 					const start = evalExpr.range[0] - 5;
 					const end = evalExpr.range[1] - 5;
 					return (
 						key.slice(start, end) +
-						(result.length > 0 ? " " + result.join(" ") : "")
+						(result.length > 0 ? ` ${result.join(" ")}` : "")
 					);
 				}
 				return result.join(" ");
 			}
 
-			it("should eval " + key, () => {
+			it(`should eval ${key}`, () => {
 				const evalExpr = evaluateInParser(key);
 				expect(evalExprToString(evalExpr)).toBe(
-					testCases[key] ? key + " " + testCases[key] : key
+					testCases[key] ? `${key} ${testCases[key]}` : key
 				);
 			});
 		});

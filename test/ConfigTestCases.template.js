@@ -107,12 +107,11 @@ const describeCases = config => {
 								if (typeof options.output.pathinfo === "undefined")
 									options.output.pathinfo = true;
 								if (!options.output.filename)
-									options.output.filename =
-										"bundle" +
-										idx +
-										(options.experiments && options.experiments.outputModule
+									options.output.filename = `bundle${idx}${
+										options.experiments && options.experiments.outputModule
 											? ".mjs"
-											: ".js");
+											: ".js"
+									}`;
 								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
@@ -143,10 +142,10 @@ const describeCases = config => {
 									);
 									if (
 										fs.existsSync(
-											path.join(options.output.path, "bundle" + i + ext)
+											path.join(options.output.path, `bundle${i}${ext}`)
 										)
 									) {
-										return "./bundle" + i + ext;
+										return `./bundle${i}${ext}`;
 									}
 								},
 								timeout: 30000
@@ -208,8 +207,9 @@ const describeCases = config => {
 									if (infrastructureLogging) {
 										return done(
 											new Error(
-												"Errors/Warnings during build:\n" +
+												`Errors/Warnings during build:\n${
 													infrastructureLogging
+												}`
 											)
 										);
 									}
@@ -258,8 +258,9 @@ const describeCases = config => {
 										if (infrastructureLogging) {
 											return done(
 												new Error(
-													"Errors/Warnings during build:\n" +
+													`Errors/Warnings during build:\n${
 														infrastructureLogging
+													}`
 												)
 											);
 										}
@@ -364,7 +365,7 @@ const describeCases = config => {
 								if (infrastructureLogging) {
 									return done(
 										new Error(
-											"Errors/Warnings during build:\n" + infrastructureLogging
+											`Errors/Warnings during build:\n${infrastructureLogging}`
 										)
 									);
 								}
@@ -533,8 +534,8 @@ const describeCases = config => {
 													let esm = esmCache.get(p);
 													if (!esm) {
 														esm = new vm.SourceTextModule(content, {
-															identifier: esmIdentifier + "-" + p,
-															url: pathToFileURL(p).href + "?" + esmIdentifier,
+															identifier: `${esmIdentifier}-${p}`,
+															url: `${pathToFileURL(p).href}?${esmIdentifier}`,
 															context: esmContext,
 															initializeImportMeta: (meta, module) => {
 																meta.url = pathToFileURL(p).href;
@@ -666,7 +667,7 @@ const describeCases = config => {
 													_require(
 														outputDirectory,
 														options,
-														"./" + bundlePathItem
+														`./${bundlePathItem}`
 													)
 												);
 											}

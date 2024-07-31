@@ -97,7 +97,7 @@ module.exports = [
 						const match = /[\\/](xyz|x)\.js/.exec(name);
 						if (match)
 							return {
-								name: "libs-" + match[1],
+								name: `libs-${match[1]}`,
 								enforce: true
 							};
 					},

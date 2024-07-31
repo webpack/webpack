@@ -58,7 +58,7 @@ const printData = async (data, indent) => {
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;
 				console.log(`${indent}= lazy ${sizeInfo} {`);
-				await printData(innerData, indent + "  ");
+				await printData(innerData, `${indent}  `);
 				console.log(`${indent}}`);
 			} else {
 				console.log(`${indent}= ${b.toString("hex")}`);
@@ -145,7 +145,7 @@ const printData = async (data, indent) => {
 			} else {
 				printLine(`lazy-inline {`);
 			}
-			await printData(innerData, indent + "  ");
+			await printData(innerData, `${indent}  `);
 			printLine(`}`);
 		} else {
 			printLine(`${item}`);

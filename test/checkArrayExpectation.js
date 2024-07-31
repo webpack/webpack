@@ -30,7 +30,7 @@ const explain = object => {
 			}
 			let msg = `${key} = ${value}`;
 			if (key !== "stack" && key !== "details" && msg.length > 100)
-				msg = msg.slice(0, 97) + "...";
+				msg = `${msg.slice(0, 97)}...`;
 			return msg;
 		})
 		.join("; ");

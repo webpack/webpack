@@ -32,10 +32,9 @@ module.exports = {
 									);
 									const source = sources.get("javascript");
 									const file = compilation.getAssetPath("[name].js", {
-										filename:
-											module
-												.readableIdentifier(compilation.requestShortener)
-												.replace(/[?#]/g, "_") + ".js"
+										filename: `${module
+											.readableIdentifier(compilation.requestShortener)
+											.replace(/[?#]/g, "_")}.js`
 									});
 									compilation.emitAsset(file, source);
 								}

@@ -21,48 +21,44 @@ describe("Examples", () => {
 			);
 			return;
 		}
-		it(
-			"should compile " + relativePath,
-			function (done) {
-				let options = {};
-				let webpackConfigPath = path.join(examplePath, "webpack.config.js");
-				webpackConfigPath =
-					webpackConfigPath.slice(0, 1).toUpperCase() +
-					webpackConfigPath.slice(1);
-				if (fs.existsSync(webpackConfigPath))
-					options = require(webpackConfigPath);
-				if (typeof options === "function") options = options();
-				if (Array.isArray(options)) options.forEach(processOptions);
-				else processOptions(options);
+		it(`should compile ${relativePath}`, function (done) {
+			let options = {};
+			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
+			webpackConfigPath =
+				webpackConfigPath.slice(0, 1).toUpperCase() +
+				webpackConfigPath.slice(1);
+			if (fs.existsSync(webpackConfigPath))
+				options = require(webpackConfigPath);
+			if (typeof options === "function") options = options();
+			if (Array.isArray(options)) options.forEach(processOptions);
+			else processOptions(options);
 
-				function processOptions(options) {
-					options.context = examplePath;
-					options.output = options.output || {};
-					options.output.pathinfo = true;
-					options.output.path = path.join(examplePath, "dist");
-					options.output.publicPath = "dist/";
-					if (!options.entry) options.entry = "./example.js";
-					if (!options.plugins) options.plugins = [];
+			function processOptions(options) {
+				options.context = examplePath;
+				options.output = options.output || {};
+				options.output.pathinfo = true;
+				options.output.path = path.join(examplePath, "dist");
+				options.output.publicPath = "dist/";
+				if (!options.entry) options.entry = "./example.js";
+				if (!options.plugins) options.plugins = [];
+			}
+			const webpack = require("..");
+			webpack(options, (err, stats) => {
+				if (err) return done(err);
+				if (stats.hasErrors()) {
+					return done(
+						new Error(
+							stats.toString({
+								all: false,
+								errors: true,
+								errorDetails: true,
+								errorStacks: true
+							})
+						)
+					);
 				}
-				const webpack = require("..");
-				webpack(options, (err, stats) => {
-					if (err) return done(err);
-					if (stats.hasErrors()) {
-						return done(
-							new Error(
-								stats.toString({
-									all: false,
-									errors: true,
-									errorDetails: true,
-									errorStacks: true
-								})
-							)
-						);
-					}
-					done();
-				});
-			},
-			90000
-		);
+				done();
+			});
+		}, 90000);
 	});
 });

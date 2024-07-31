@@ -153,7 +153,7 @@ module.exports = definitions.map((defs, i) => ({
 											module.buildInfo.content;
 									}
 									return new RawSource(
-										"module.exports = " + JSON.stringify(data)
+										`module.exports = ${JSON.stringify(data)}`
 									);
 								},
 								filenameTemplate: "localization-[id].js",

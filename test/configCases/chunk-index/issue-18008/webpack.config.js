@@ -45,7 +45,7 @@ module.exports = {
 									)}`
 							)
 							.join(", ");
-						data[name + "Index"] = text;
+						data[`${name}Index`] = text;
 					}
 					expect(data).toEqual({
 						AIndex: "0: ./A.js, 1: css ./m.css",

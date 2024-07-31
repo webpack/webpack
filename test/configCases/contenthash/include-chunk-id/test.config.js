@@ -13,7 +13,7 @@ module.exports = {
 		const chunkHash = /\.([a-f0-9]+)\.js$/.exec(chunk)[1];
 		allChunkHashes.add(chunkHash);
 
-		return "./" + filename;
+		return `./${filename}`;
 	},
 	afterExecute: () => {
 		expect(allFilenameHashes.size).toBe(2);

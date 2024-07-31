@@ -115,7 +115,7 @@ describe("BinaryMiddleware", () => {
 					if (data.length === 0) continue;
 					let key = JSON.stringify(data.map(resolveLazy));
 					if (key.length > 100)
-						key = key.slice(0, 50) + " ... " + key.slice(-50);
+						key = `${key.slice(0, 50)} ... ${key.slice(-50)}`;
 					it(`should serialize ${c} x ${key} (${data.length}) correctly`, () => {
 						// process.stderr.write(
 						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`

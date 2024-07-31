@@ -32,7 +32,7 @@ describe("WatchDetection", () => {
 			const fixturePath = path.join(
 				__dirname,
 				"fixtures",
-				"temp-" + changeTimeout
+				`temp-${changeTimeout}`
 			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
@@ -72,7 +72,7 @@ describe("WatchDetection", () => {
 			it("should build the bundle correctly", done => {
 				const compiler = webpack({
 					mode: "development",
-					entry: loaderPath + "!" + filePath,
+					entry: `${loaderPath}!${filePath}`,
 					output: {
 						path: "/directory",
 						filename: "bundle.js"

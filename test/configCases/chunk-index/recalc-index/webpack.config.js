@@ -41,7 +41,7 @@ module.exports = {
 									)}`
 							)
 							.join(", ");
-						data[name + "Index"] = text;
+						data[`${name}Index`] = text;
 					}
 					expect(data).toEqual({
 						dynamicIndex: "0: css ./a.css, 1: css ./b.css, 2: ./dynamic.js",

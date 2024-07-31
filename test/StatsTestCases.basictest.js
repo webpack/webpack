@@ -46,7 +46,7 @@ describe("StatsTestCases", () => {
 		stderr.restore();
 	});
 	tests.forEach(testName => {
-		it("should print correct stats for " + testName, done => {
+		it(`should print correct stats for ${testName}`, done => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -202,7 +202,7 @@ describe("StatsTestCases", () => {
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
-					.replace(new RegExp(quoteMeta(testPath), "g"), "Xdir/" + testName)
+					.replace(new RegExp(quoteMeta(testPath), "g"), `Xdir/${testName}`)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")

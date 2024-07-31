@@ -9,7 +9,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			manifest: __dirname + "/blank-manifest.json",
+			manifest: `${__dirname}/blank-manifest.json`,
 			name: "blank-manifest"
 		})
 	]

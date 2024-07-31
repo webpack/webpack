@@ -119,7 +119,7 @@ describe("NormalModule", () => {
 		describe("given a resource containing a ?-sign", () => {
 			const baseResource = "some/resource";
 			beforeEach(() => {
-				resource = baseResource + "?some=query";
+				resource = `${baseResource}?some=query`;
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -212,7 +212,7 @@ describe("NormalModule", () => {
 			});
 			describe("and the content starting with the string specified in rule", () => {
 				beforeEach(() => {
-					content = rule + "some-content";
+					content = `${rule}some-content`;
 				});
 				it("returns true", () => {
 					expect(normalModule.shouldPreventParsing(rule, content)).toBe(true);
@@ -233,7 +233,7 @@ describe("NormalModule", () => {
 			});
 			describe("and the content matches the rule", () => {
 				beforeEach(() => {
-					content = rule + "some-content";
+					content = `${rule}some-content`;
 				});
 				it("returns true", () => {
 					expect(normalModule.shouldPreventParsing(rule, content)).toBe(true);

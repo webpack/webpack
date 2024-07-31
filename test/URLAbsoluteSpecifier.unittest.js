@@ -78,7 +78,7 @@ describe("getProtocol", () => {
 	samples.forEach(({ specifier, expected }, i) => {
 		it(`should handle ${specifier}`, () => {
 			expect(getProtocol(specifier)).toBe(
-				expected ? expected + ":" : undefined
+				expected ? `${expected}:` : undefined
 			);
 		});
 	});

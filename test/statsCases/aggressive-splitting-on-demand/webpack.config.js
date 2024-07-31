@@ -14,7 +14,7 @@ module.exports = {
 			maxSize: 2500
 		})
 	],
-	recordsInputPath: __dirname + "/input-records.json",
+	recordsInputPath: `${__dirname}/input-records.json`,
 	//recordsOutputPath: __dirname + "/records.json",
 	stats: {
 		chunks: true,

@@ -18,7 +18,7 @@ describe("WatchSuspend", () => {
 		const fixturePath = path.join(
 			__dirname,
 			"fixtures",
-			"temp-watch-" + Date.now()
+			`temp-watch-${Date.now()}`
 		);
 		const filePath = path.join(fixturePath, "file.js");
 		const file2Path = path.join(fixturePath, "file2.js");
