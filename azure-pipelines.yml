@@ -112,16 +112,16 @@ jobs:
         node-10-b:
           node_version: ^10.13.0
           part: b
-        node-12-a:
+        node-18-a:
           node_version: ^18.0.0
           part: a
-        node-12-b:
+        node-18-b:
           node_version: ^18.0.0
           part: b
-        node-16-a:
+        node-20-a:
           node_version: ^20.0.0
           part: a
-        node-16-b:
+        node-20-b:
           node_version: ^20.0.0
           part: b
     steps:
@@ -183,16 +183,16 @@ jobs:
         node-10-b:
           node_version: ^10.13.0
           part: b
-        node-12-a:
+        node-18-a:
           node_version: ^18.0.0
           part: a
-        node-12-b:
+        node-18-b:
           node_version: ^18.0.0
           part: b
-        node-16-a:
+        node-20-a:
           node_version: ^20.0.0
           part: a
-        node-16-b:
+        node-20-b:
           node_version: ^20.0.0
           part: b
     steps:
@@ -262,16 +262,16 @@ jobs:
         node-10-b:
           node_version: ^10.13.0
           part: b
-        node-12-a:
+        node-18-a:
           node_version: ^18.0.0
           part: a
-        node-12-b:
+        node-128-b:
           node_version: ^18.0.0
           part: b
-        node-16-a:
+        node-20-a:
           node_version: ^20.0.0
           part: a
-        node-16-b:
+        node-20-b:
           node_version: ^20.0.0
           part: b
     steps:
