@@ -265,7 +265,7 @@ jobs:
         node-18-a:
           node_version: ^18.0.0
           part: a
-        node-128-b:
+        node-18-b:
           node_version: ^18.0.0
           part: b
         node-20-a:
