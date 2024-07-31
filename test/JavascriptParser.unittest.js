@@ -162,7 +162,7 @@ describe("JavascriptParser", () => {
 			},
 			{
 				fghsub: ["try", "notry", "notry"],
-				fgh: ["test", "test ttt", "test e"]
+				fgh: ["test", "test ttt", "test err"]
 			}
 		],
 		"renaming with const": [

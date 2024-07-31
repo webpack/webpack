@@ -212,6 +212,8 @@ module.exports = [
 				{ name: "err", ignore: [/(^_|[0-9]+$)/i] }
 			],
 			"unicorn/prefer-includes": "error",
+			"unicorn/no-zero-fractions": "error",
+			"unicorn/prefer-string-starts-ends-with": "error",
 			// TODO Enable
 			"unicorn/prefer-spread": "off",
 			"unicorn/prefer-string-slice": "off",
@@ -229,9 +231,7 @@ module.exports = [
 			"unicorn/prefer-math-trunc": "off",
 			"unicorn/prefer-array-find": "off",
 			"unicorn/prefer-native-coercion-functions": "off",
-			"unicorn/no-useless-switch-case": "off",
-			"unicorn/prefer-string-starts-ends-with": "off",
-			"unicorn/no-zero-fractions": "off"
+			"unicorn/no-useless-switch-case": "off"
 		}
 	},
 	{

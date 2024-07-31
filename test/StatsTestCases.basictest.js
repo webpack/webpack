@@ -133,7 +133,7 @@ describe("StatsTestCases", () => {
 					.map(s => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
-				if (/error$/.test(testName)) {
+				if (testName.endsWith("error")) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
 					return done(
