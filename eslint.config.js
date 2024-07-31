@@ -238,10 +238,17 @@ module.exports = [
 			"no-var": "error",
 			"one-var": ["error", "never"],
 			"prefer-template": "error",
+			"no-implicit-coercion": [
+				"error",
+				{
+					boolean: true,
+					number: true,
+					string: true
+				}
+			],
 
 			// TODO Enable
 			"arrow-body-style": "off",
-			"no-implicit-coercion": "off",
 			"no-sequences": "off",
 			"prefer-spread": "off",
 			"default-case": "off",
@@ -300,7 +307,8 @@ module.exports = [
 			"no-undef-init": "off",
 			"no-var": "off",
 			"n/exports-style": "off",
-			"prefer-template": "off"
+			"prefer-template": "off",
+			"no-implicit-coercion": "off"
 		}
 	},
 	{

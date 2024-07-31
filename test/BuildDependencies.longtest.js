@@ -95,7 +95,7 @@ const exec = (n, options = {}) => {
 	});
 };
 
-const supportsEsm = +process.versions.modules >= 83;
+const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
 	beforeEach(done => {

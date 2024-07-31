@@ -69,6 +69,7 @@ describe("JavascriptParser", () => {
 		"member expression": [
 			function () {
 				test[memberExpr];
+				// eslint-disable-next-line no-implicit-coercion
 				test[+memberExpr];
 			},
 			{

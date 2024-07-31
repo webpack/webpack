@@ -148,7 +148,7 @@ const printData = async (data, indent) => {
 			await printData(innerData, `${indent}  `);
 			printLine(`}`);
 		} else {
-			printLine(`${item}`);
+			printLine(String(item));
 		}
 	}
 	const refCounters = Array.from(referencedValuesCounters);
