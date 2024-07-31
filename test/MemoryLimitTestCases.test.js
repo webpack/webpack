@@ -51,7 +51,7 @@ describe("MemoryLimitTestCases", () => {
 				testConfig,
 				require(path.join(base, testName, "test.config.js"))
 			);
-		} catch (e) {
+		} catch (_err) {
 			// ignored
 		}
 		it(`should build ${JSON.stringify(testName)} with heap limit of ${toMiB(

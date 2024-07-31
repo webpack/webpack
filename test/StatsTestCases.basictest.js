@@ -65,7 +65,7 @@ describe("StatsTestCases", () => {
 					testConfig,
 					require(path.join(base, testName, "test.config.js"))
 				);
-			} catch (e) {
+			} catch (_err) {
 				// ignored
 			}
 

@@ -27,8 +27,8 @@ describe("MultiStats", () => {
 				);
 				expect(statsObject.children).toHaveLength(2);
 				done();
-			} catch (e) {
-				done(e);
+			} catch (err) {
+				done(err);
 			}
 		});
 	});

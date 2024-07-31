@@ -6,6 +6,7 @@ const jsdoc = require("eslint-plugin-jsdoc");
 const prettierConfig = require("eslint-config-prettier");
 const globals = require("globals");
 const stylistic = require("@stylistic/eslint-plugin");
+const unicorn = require("eslint-plugin-unicorn");
 
 const nodeConfig = n.configs["flat/recommended"];
 const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
@@ -78,7 +79,7 @@ module.exports = [
 					varsIgnorePattern: "^_",
 					args: "none",
 					argsIgnorePattern: "^_",
-					caughtErrors: "none",
+					caughtErrors: "all",
 					caughtErrorsIgnorePattern: "^_",
 					ignoreRestSiblings: true
 				}
@@ -197,7 +198,40 @@ module.exports = [
 			"prefer-spread": "error",
 			"no-sequences": "error",
 			// TODO Enable
+			"id-length": "off",
 			"prefer-destructuring": "off"
+		}
+	},
+	{
+		plugins: {
+			unicorn
+		},
+		rules: {
+			"unicorn/catch-error-name": [
+				"error",
+				{ name: "err", ignore: [/(^_|[0-9]+$)/i] }
+			],
+			// TODO Enable
+			"unicorn/prefer-spread": "off",
+			"unicorn/prefer-string-slice": "off",
+			"unicorn/explicit-length-check": "off",
+			"unicorn/no-lonely-if": "off",
+			"unicorn/prefer-ternary": "off",
+			"unicorn/no-useless-undefined": "off",
+			"unicorn/no-hex-escape": "off",
+			"unicorn/escape-case": "off",
+			"unicorn/prefer-negative-index": "off",
+			"unicorn/no-array-for-each": "off",
+			"unicorn/prefer-number-properties": "off",
+			"unicorn/prefer-default-parameters": "off",
+			"unicorn/prefer-regexp-test": "off",
+			"unicorn/prefer-includes": "off",
+			"unicorn/prefer-math-trunc": "off",
+			"unicorn/prefer-array-find": "off",
+			"unicorn/prefer-native-coercion-functions": "off",
+			"unicorn/no-useless-switch-case": "off",
+			"unicorn/prefer-string-starts-ends-with": "off",
+			"unicorn/no-zero-fractions": "off"
 		}
 	},
 	{

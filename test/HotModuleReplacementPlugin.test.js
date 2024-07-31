@@ -36,12 +36,12 @@ describe("HotModuleReplacementPlugin", () => {
 			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"), {
 				recursive: true
 			});
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		const compiler = webpack({
@@ -107,7 +107,7 @@ describe("HotModuleReplacementPlugin", () => {
 		let firstUpdate;
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf-8");
@@ -116,7 +116,7 @@ describe("HotModuleReplacementPlugin", () => {
 			try {
 				fs.statSync(path.join(outputPath, file));
 				return true;
-			} catch (err) {
+			} catch (_err) {
 				return false;
 			}
 		};
@@ -188,12 +188,12 @@ describe("HotModuleReplacementPlugin", () => {
 		const recordsFile = path.join(outputPath, "records.json");
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		const compiler = webpack({
@@ -271,12 +271,12 @@ describe("HotModuleReplacementPlugin", () => {
 					recursive: true
 				}
 			);
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (e) {
+		} catch (_err) {
 			// empty
 		}
 		const compiler = webpack({

@@ -16,7 +16,7 @@ it("should cache assets", done => {
 		fs.mkdirSync(path.join(pluginDir), {
 			recursive: true
 		});
-	} catch (e) {
+	} catch (_err) {
 		// empty
 	}
 	const compiler = webpack({
@@ -53,7 +53,7 @@ it("can place banner as footer", done => {
 		fs.mkdirSync(path.join(pluginDir), {
 			recursive: true
 		});
-	} catch (e) {
+	} catch (_err) {
 		// empty
 	}
 	const compiler = webpack({
@@ -87,7 +87,7 @@ it("should allow to change stage", done => {
 		fs.mkdirSync(path.join(pluginDir), {
 			recursive: true
 		});
-	} catch (e) {
+	} catch (_err) {
 		// empty
 	}
 	const compiler = webpack({

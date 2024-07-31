@@ -155,7 +155,7 @@ describe("JavascriptParser", () => {
 						fgh.sub;
 						fgh;
 					}
-				} catch (e) {
+				} catch (err) {
 					fgh.sub;
 					fgh;
 				}

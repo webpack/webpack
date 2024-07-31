@@ -335,7 +335,7 @@ const describeCases = config => {
 											testConfig = require(
 												path.join(testDirectory, "test.config.js")
 											);
-										} catch (e) {
+										} catch (_err) {
 											// empty
 										}
 

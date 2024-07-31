@@ -60,10 +60,10 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.hasStarted = false;
 		try {
 			fn();
-		} catch (e) {
+		} catch (err) {
 			// avoid leaking memory
-			e.stack;
-			throw e;
+			err.stack;
+			throw err;
 		}
 		state.currentDescribeBlock = oldCurrentDescribeBlock;
 		state.currentlyRunningTest = oldCurrentlyRunningTest;

@@ -21,8 +21,8 @@ function setup() {
 		.then(() => {
 			process.exitCode = 0;
 		})
-		.catch(e => {
-			console.error(e);
+		.catch(err => {
+			console.error(err);
 			process.exitCode = 1;
 		});
 }
@@ -54,7 +54,7 @@ async function ensureYarnInstalledAsync() {
 	try {
 		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
 		hasYarn = semverPattern.test(stdout);
-	} catch (e) {
+	} catch (_err) {
 		hasYarn = false;
 	}
 	if (!hasYarn) await installYarnAsync();

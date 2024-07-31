@@ -60,9 +60,9 @@ module.exports = {
 					expect(auxiliaryFiles).toContain("assets/file.png");
 					expect(auxiliaryFiles).toContain("assets/file.png?1");
 					expect(auxiliaryFiles).toContain("assets/file.jpg");
-				} catch (e) {
+				} catch (err) {
 					console.log(stats.toString({ colors: true, orphanModules: true }));
-					throw e;
+					throw err;
 				}
 			})
 	]

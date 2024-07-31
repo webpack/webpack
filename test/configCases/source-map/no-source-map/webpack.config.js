@@ -5,9 +5,9 @@ const plugins = [
 				const result = asset.source.sourceAndMap();
 				try {
 					expect(result.map).toBe(null);
-				} catch (e) {
-					e.message += `\nfor asset ${asset.name}`;
-					throw e;
+				} catch (err) {
+					err.message += `\nfor asset ${asset.name}`;
+					throw err;
 				}
 			}
 		});

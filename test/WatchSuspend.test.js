@@ -32,14 +32,14 @@ describe("WatchSuspend", () => {
 		beforeAll(() => {
 			try {
 				fs.mkdirSync(fixturePath);
-			} catch (e) {
+			} catch (_err) {
 				// skip
 			}
 			try {
 				fs.writeFileSync(filePath, "'foo'", "utf-8");
 				fs.writeFileSync(file2Path, "'file2'", "utf-8");
 				fs.writeFileSync(file3Path, "'file3'", "utf-8");
-			} catch (e) {
+			} catch (_err) {
 				// skip
 			}
 			const webpack = require("../");
@@ -63,12 +63,12 @@ describe("WatchSuspend", () => {
 			compiler = null;
 			try {
 				fs.unlinkSync(filePath);
-			} catch (e) {
+			} catch (_err) {
 				// skip
 			}
 			try {
 				fs.rmdirSync(fixturePath);
-			} catch (e) {
+			} catch (_err) {
 				// skip
 			}
 		});

@@ -451,9 +451,9 @@ describe("MultiCompiler", function () {
 					setTimeout(() => {
 						compiler.close(done);
 					}, 1000);
-				} catch (e) {
-					console.error(e);
-					done(e);
+				} catch (err) {
+					console.error(err);
+					done(err);
 				}
 			});
 		});
@@ -530,9 +530,9 @@ describe("MultiCompiler", function () {
 					setTimeout(() => {
 						compiler.close(done);
 					}, 1000);
-				} catch (e) {
-					console.error(e);
-					done(e);
+				} catch (err) {
+					console.error(err);
+					done(err);
 				}
 			});
 		});

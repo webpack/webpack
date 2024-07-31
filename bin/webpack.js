@@ -80,8 +80,8 @@ const runCli = cli => {
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			error => {
-				console.error(error);
+			err => {
+				console.error(err);
 				process.exitCode = 1;
 			}
 		);
@@ -177,8 +177,8 @@ if (!cli.installed) {
 			.then(() => {
 				runCli(cli);
 			})
-			.catch(error => {
-				console.error(error);
+			.catch(err => {
+				console.error(err);
 				process.exitCode = 1;
 			});
 	});

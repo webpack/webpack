@@ -83,17 +83,17 @@ if (process.env.DEBUG_INFO) {
 									process.stdout.write(`DONE OK ${name}\n`);
 									return r;
 								},
-								e => {
+								err => {
 									process.stdout.write(`DONE FAIL ${name}\n`);
-									throw e;
+									throw err;
 								}
 							);
 						}
 
 						process.stdout.write(`DONE OK ${name}\n`);
-					} catch (e) {
+					} catch (err) {
 						process.stdout.write(`DONE FAIL ${name}\n`);
-						throw e;
+						throw err;
 					}
 				},
 				timeout

@@ -447,10 +447,10 @@ const describeCases = config => {
 													}
 												});
 												cleanups.push(() => (esmContext.it = undefined));
-											} catch (e) {
-												console.log(e);
-												e.message += `\nwhile parsing ${p}`;
-												throw e;
+											} catch (err) {
+												console.log(err);
+												err.message += `\nwhile parsing ${p}`;
+												throw err;
 											}
 											if (esmMode === "unlinked") return esm;
 											return (async () => {

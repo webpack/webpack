@@ -1,7 +1,7 @@
 module.exports = function supportsWebAssembly() {
 	try {
 		return typeof WebAssembly !== "undefined";
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

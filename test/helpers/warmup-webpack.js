@@ -17,8 +17,8 @@ describe("warmup", () => {
 				try {
 					expect(err).toBe(END);
 					done();
-				} catch (e) {
-					done(e);
+				} catch (doneErr) {
+					done(doneErr);
 				}
 			}
 		);

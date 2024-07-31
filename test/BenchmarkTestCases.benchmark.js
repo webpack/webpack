@@ -20,10 +20,10 @@ describe("BenchmarkTestCases", function () {
 
 	try {
 		fs.mkdirSync(path.join(__dirname, "js"));
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (_err) {} // eslint-disable-line no-empty
 	try {
 		fs.mkdirSync(baselinesPath);
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (_err) {} // eslint-disable-line no-empty
 
 	beforeAll(function (done) {
 		const git = require("simple-git");
@@ -40,7 +40,7 @@ describe("BenchmarkTestCases", function () {
 					} else {
 						try {
 							fs.mkdirSync(baselinePath);
-						} catch (e) {} // eslint-disable-line no-empty
+						} catch (_err) {} // eslint-disable-line no-empty
 						const gitIndex = path.resolve(rootPath, ".git/index");
 						const index = fs.readFileSync(gitIndex);
 						git(rootPath).raw(

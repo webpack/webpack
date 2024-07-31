@@ -4,7 +4,7 @@ module.exports = function supportsSpread() {
 		var y;
 		eval("y = { ...x }");
 		return y !== x && y.a;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

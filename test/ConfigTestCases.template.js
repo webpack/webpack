@@ -154,7 +154,7 @@ const describeCases = config => {
 									testConfig,
 									require(path.join(testDirectory, "test.config.js"))
 								);
-							} catch (e) {
+							} catch (_err) {
 								// ignored
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
@@ -712,8 +712,8 @@ const describeCases = config => {
 											});
 										});
 									});
-								} catch (e) {
-									handleFatalError(e, done);
+								} catch (err) {
+									handleFatalError(err, done);
 								}
 							} else {
 								require("..")(options, onCompiled);

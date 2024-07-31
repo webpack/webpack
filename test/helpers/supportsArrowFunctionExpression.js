@@ -4,7 +4,7 @@ module.exports = function supportArrowFunctionExpression() {
 			"var foo = function(fn) {return fn.toString()}; foo(() => {return 'a'})"
 		);
 		return true;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

@@ -10,7 +10,7 @@ module.exports = () => {
 		);
 		fs.unlinkSync(path.join(__dirname, ".testlink"));
 		return true;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };
