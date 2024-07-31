@@ -60,6 +60,8 @@ jobs:
         with:
           flags: basic
           functionalities: gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   validate-legacy-node:
     runs-on: ubuntu-latest
     steps:
@@ -94,6 +96,8 @@ jobs:
         with:
           flags: unit
           functionalities: gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   integration:
     needs: basic
     strategy:
@@ -183,3 +187,5 @@ jobs:
         with:
           flags: integration
           functionalities: gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
