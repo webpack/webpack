@@ -86,7 +86,7 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 				fs.writeFileSync(filePath, newContent, "utf-8");
 				console.error(`${file} updated`);
 			} else {
-				console.error(`${file} need to be updated`);
+				console.error(`${file} needs to be updated`);
 				process.exitCode = 1;
 			}
 		}
