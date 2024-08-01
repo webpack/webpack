@@ -14281,6 +14281,10 @@ declare interface TrustedTypes {
 	policyName?: string;
 }
 declare const UNDEFINED_MARKER: unique symbol;
+declare class URLPreloadPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+}
 
 /**
  * `URL` class is a global reference for `require('url').URL`
@@ -15076,6 +15080,8 @@ declare namespace exports {
 		export let prefetchChunkHandlers: "__webpack_require__.F";
 		export let preloadChunk: "__webpack_require__.G";
 		export let preloadChunkHandlers: "__webpack_require__.H";
+		export let hasPreloadUrl: "has preload url";
+		export let preloadUrl: "__webpack_require__.B";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let makeNamespaceObject: "__webpack_require__.r";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
@@ -15237,7 +15243,7 @@ declare namespace exports {
 		export { GetChunkFilenameRuntimeModule, LoadScriptRuntimeModule };
 	}
 	export namespace prefetch {
-		export { ChunkPrefetchPreloadPlugin };
+		export { ChunkPrefetchPreloadPlugin, URLPreloadPlugin };
 	}
 	export namespace web {
 		export {
