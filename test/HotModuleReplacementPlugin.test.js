@@ -312,15 +312,15 @@ describe("HotModuleReplacementPlugin", () => {
 
 					let foundUpdates = false;
 
-					Object.keys(stats.compilation.assets).forEach(key => {
+					for (const key of Object.keys(stats.compilation.assets)) {
 						foundUpdates =
 							foundUpdates ||
 							Boolean(
-								key.match(
-									/static\/webpack\/\[name\]\/entry\.js\..*?\.hot-update\.js/
+								/static\/webpack\/\[name\]\/entry\.js\..*?\.hot-update\.js/.test(
+									key
 								)
 							);
-					});
+					}
 
 					expect(foundUpdates).toBe(true);
 					done();

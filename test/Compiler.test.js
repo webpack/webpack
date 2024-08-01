@@ -286,7 +286,7 @@ describe("Compiler", () => {
 				const response8 = compiler.isChild();
 				expect(response8).toBe(false);
 
-				compiler.parentCompilation = NaN;
+				compiler.parentCompilation = Number.NaN;
 				const response9 = compiler.isChild();
 				expect(response9).toBe(false);
 				done();
@@ -847,10 +847,10 @@ describe("Compiler", () => {
 		});
 		const escapeAnsi = stringRaw =>
 			stringRaw
-				.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-				.replace(/\u001b\[1m/g, "<CLR=BOLD>")
-				.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
-				.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>");
+				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
+				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
+				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");

@@ -214,24 +214,20 @@ module.exports = [
 			"unicorn/prefer-includes": "error",
 			"unicorn/no-zero-fractions": "error",
 			"unicorn/prefer-string-starts-ends-with": "error",
+			"unicorn/prefer-default-parameters": "error",
+			"unicorn/prefer-negative-index": "error",
+			"unicorn/prefer-ternary": ["error", "only-single-line"],
+			"unicorn/prefer-array-find": "error",
+			"unicorn/prefer-string-slice": "error",
+			"unicorn/no-lonely-if": "error",
+			"unicorn/no-hex-escape": "error",
+			"unicorn/escape-case": "error",
+			"unicorn/no-array-for-each": "error",
+			"unicorn/prefer-number-properties": "error",
+			"unicorn/prefer-regexp-test": "error",
+			"unicorn/prefer-native-coercion-functions": "error",
 			// TODO Enable
-			"unicorn/prefer-spread": "off",
-			"unicorn/prefer-string-slice": "off",
-			"unicorn/explicit-length-check": "off",
-			"unicorn/no-lonely-if": "off",
-			"unicorn/prefer-ternary": "off",
-			"unicorn/no-useless-undefined": "off",
-			"unicorn/no-hex-escape": "off",
-			"unicorn/escape-case": "off",
-			"unicorn/prefer-negative-index": "off",
-			"unicorn/no-array-for-each": "off",
-			"unicorn/prefer-number-properties": "off",
-			"unicorn/prefer-default-parameters": "off",
-			"unicorn/prefer-regexp-test": "off",
-			"unicorn/prefer-math-trunc": "off",
-			"unicorn/prefer-array-find": "off",
-			"unicorn/prefer-native-coercion-functions": "off",
-			"unicorn/no-useless-switch-case": "off"
+			"unicorn/prefer-spread": "off"
 		}
 	},
 	{
@@ -362,7 +358,9 @@ module.exports = [
 			"prefer-template": "off",
 			"no-implicit-coercion": "off",
 			"func-style": "off",
-			"unicorn/prefer-includes": "off"
+			"unicorn/prefer-includes": "off",
+			"unicorn/no-useless-undefined": "off",
+			"unicorn/no-array-for-each": "off"
 		}
 	},
 	{

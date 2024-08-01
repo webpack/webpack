@@ -258,7 +258,7 @@ describe("JavascriptParser", () => {
 	/* eslint-enable no-undef */
 	/* eslint-enable no-unused-vars */
 
-	Object.keys(testCases).forEach(name => {
+	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
 			let source = testCases[name][0].toString();
 			source = source.slice(13, -1).trim();
@@ -331,7 +331,7 @@ describe("JavascriptParser", () => {
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
 		});
-	});
+	}
 
 	it("should parse comments", () => {
 		const source = "//comment1\n/*comment2*/";
@@ -356,12 +356,12 @@ describe("JavascriptParser", () => {
 		const actual = testParser.parse(source, {});
 		expect(typeof actual).toBe("object");
 		expect(typeof actual.comments).toBe("object");
-		actual.comments.forEach((element, index) => {
+		for (const [index, element] of actual.comments.entries()) {
 			expect(typeof element.type).toBe("string");
 			expect(typeof element.value).toBe("string");
 			expect(element.type).toBe(state[index].type);
 			expect(element.value).toBe(state[index].value);
-		});
+		}
 	});
 
 	describe("expression evaluation", () => {
@@ -568,7 +568,7 @@ describe("JavascriptParser", () => {
 			"'a' + expr + 1": "wrapped=['a' string=a]+[1 string=1]"
 		};
 
-		Object.keys(testCases).forEach(key => {
+		for (const key of Object.keys(testCases)) {
 			function evalExprToString(evalExpr) {
 				if (!evalExpr) {
 					return "null";
@@ -616,7 +616,7 @@ describe("JavascriptParser", () => {
 					testCases[key] ? `${key} ${testCases[key]}` : key
 				);
 			});
-		});
+		}
 	});
 
 	describe("async/await support", () => {
@@ -628,13 +628,13 @@ describe("JavascriptParser", () => {
 				"await iteration": "async function f() { for await (x of xs); }"
 			};
 			const parser = new JavascriptParser();
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = parser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 		describe("should parse await", () => {
 			const cases = {
@@ -662,12 +662,12 @@ describe("JavascriptParser", () => {
 				parser.state.param = param.string;
 			});
 
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				it(name, () => {
 					const actual = parser.parse(cases[name][0], {});
 					expect(actual).toEqual(cases[name][1]);
 				});
-			});
+			}
 		});
 	});
 
@@ -677,13 +677,13 @@ describe("JavascriptParser", () => {
 				"object spread": "({...obj})",
 				"object rest": "({...obj} = foo)"
 			};
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 
 		it("should collect definitions from identifiers introduced in object patterns", () => {
@@ -708,13 +708,13 @@ describe("JavascriptParser", () => {
 			const cases = {
 				"optional binding": "try {} catch {}"
 			};
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr);
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 	});
 
@@ -735,7 +735,7 @@ describe("JavascriptParser", () => {
 			["ia", false]
 		];
 
-		tests.forEach(([suite, expected]) => {
+		for (const [suite, expected] of tests) {
 			it(`BasicEvaluatedExpression.isValidRegExpFlags(${JSON.stringify(
 				suite
 			)})`, () => {
@@ -743,6 +743,6 @@ describe("JavascriptParser", () => {
 					expected
 				);
 			});
-		});
+		}
 	});
 });

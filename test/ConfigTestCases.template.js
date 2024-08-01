@@ -85,7 +85,7 @@ const describeCases = config => {
 								{ testPath: outputDirectory }
 							);
 							optionsArr = [].concat(options);
-							optionsArr.forEach((options, idx) => {
+							for (const [idx, options] of optionsArr.entries()) {
 								if (!options.context) options.context = testDirectory;
 								if (!options.mode) options.mode = "production";
 								if (!options.optimization) options.optimization = {};
@@ -132,7 +132,7 @@ const describeCases = config => {
 										path.resolve(__dirname, "../node_modules")
 									];
 								}
-							});
+							}
 							testConfig = {
 								findBundle: function (i, options) {
 									const ext = path.extname(

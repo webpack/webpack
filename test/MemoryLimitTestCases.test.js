@@ -41,7 +41,7 @@ describe("MemoryLimitTestCases", () => {
 	afterEach(() => {
 		stderr.restore();
 	});
-	tests.forEach(testName => {
+	for (const testName of tests) {
 		let testConfig = {
 			heapSizeLimitBytes: 250 * 1024 * 1024
 		};
@@ -54,9 +54,9 @@ describe("MemoryLimitTestCases", () => {
 		} catch (_err) {
 			// ignored
 		}
-		it(`should build ${JSON.stringify(testName)} with heap limit of ${toMiB(
-			testConfig.heapSizeLimitBytes
-		)}`, done => {
+		const size = toMiB(testConfig.heapSizeLimitBytes);
+		// eslint-disable-next-line no-loop-func
+		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, done => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -71,7 +71,8 @@ describe("MemoryLimitTestCases", () => {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
 
-			(Array.isArray(options) ? options : [options]).forEach(options => {
+			const resolvedOptions = Array.isArray(options) ? options : [options];
+			for (const options of resolvedOptions) {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
 				if (!options.output.path) options.output.path = outputDirectory;
@@ -79,11 +80,11 @@ describe("MemoryLimitTestCases", () => {
 				if (!options.optimization) options.optimization = {};
 				if (options.optimization.minimize === undefined)
 					options.optimization.minimize = false;
-			});
+			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];
-			compilers.forEach(c => {
+			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
 				c.inputFileSystem.readFile = function () {
@@ -103,7 +104,7 @@ describe("MemoryLimitTestCases", () => {
 						])
 					);
 				};
-			});
+			}
 			c.run((err, stats) => {
 				if (err) return done(err);
 				if (testName.endsWith("error")) {
@@ -130,5 +131,5 @@ describe("MemoryLimitTestCases", () => {
 				done();
 			});
 		});
-	});
+	}
 });

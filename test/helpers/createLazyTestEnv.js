@@ -10,21 +10,19 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	// manually, usually after the suite has been run.
 	const createDisposableFn = (fn, isTest) => {
 		if (!fn) return null;
-		let rfn;
-		if (fn.length >= 1) {
-			rfn = done => {
-				fn((...args) => {
-					if (isTest) runTests++;
-					done(...args);
-				});
-			};
-		} else {
-			rfn = () => {
-				const r = fn();
-				if (isTest) runTests++;
-				return r;
-			};
-		}
+		const rfn =
+			fn.length >= 1
+				? done => {
+						fn((...args) => {
+							if (isTest) runTests++;
+							done(...args);
+						});
+					}
+				: () => {
+						const r = fn();
+						if (isTest) runTests++;
+						return r;
+					};
 		disposables.push(() => {
 			fn = null;
 		});

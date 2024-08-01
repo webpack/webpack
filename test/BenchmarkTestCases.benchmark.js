@@ -236,12 +236,13 @@ describe("BenchmarkTestCases", function () {
 	}
 
 	function createTests() {
-		tests.forEach(testName => {
+		for (const testName of tests) {
 			const testDirectory = path.join(casesPath, testName);
 			let headStats = null;
 			describe(`${testName} create benchmarks`, function () {
-				baselines.forEach(baseline => {
+				for (const baseline of baselines) {
 					let baselineStats = null;
+					// eslint-disable-next-line no-loop-func
 					it(`should benchmark ${baseline.name} (${baseline.rev})`, function (done) {
 						const outputDirectory = path.join(
 							__dirname,
@@ -267,7 +268,7 @@ describe("BenchmarkTestCases", function () {
 							done();
 						});
 					}, 180000);
-
+					// eslint-disable-next-line no-loop-func
 					it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
 						const outputDirectory = path.join(
 							__dirname,
@@ -293,6 +294,7 @@ describe("BenchmarkTestCases", function () {
 					}, 180000);
 
 					if (baseline.name !== "HEAD") {
+						// eslint-disable-next-line no-loop-func
 						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
 							if (baselineStats.maxConfidence < headStats.minConfidence) {
 								throw new Error(
@@ -309,8 +311,8 @@ describe("BenchmarkTestCases", function () {
 							}
 						});
 					}
-				});
+				}
 			});
-		});
+		}
 	}
 });

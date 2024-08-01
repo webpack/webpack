@@ -16,7 +16,7 @@ const FakeDocument = require("./helpers/FakeDocument");
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
-	files.forEach(filename => {
+	for (const filename of files) {
 		const srcFile = path.join(src, filename);
 		const destFile = path.join(dest, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
@@ -40,7 +40,7 @@ function copyDiff(src, dest, initial) {
 				}
 			}
 		}
-	});
+	}
 }
 
 const describeCases = config => {
@@ -77,7 +77,7 @@ const describeCases = config => {
 			dest = path.join(__dirname, "js", `${config.name}-src`);
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 		});
-		categories.forEach(category => {
+		for (const category of categories) {
 			beforeAll(() => {
 				const dest = path.join(
 					__dirname,
@@ -88,7 +88,7 @@ const describeCases = config => {
 				if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 			});
 			describe(category.name, () => {
-				category.tests.forEach(testName => {
+				for (const testName of category.tests) {
 					describe(testName, () => {
 						const tempDirectory = path.join(
 							__dirname,
@@ -414,9 +414,9 @@ const describeCases = config => {
 							remove(tempDirectory);
 						});
 					});
-				});
+				}
 			});
-		});
+		}
 	});
 };
 

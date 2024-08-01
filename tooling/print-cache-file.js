@@ -89,7 +89,7 @@ const printData = async (data, indent) => {
 			} else if (nextItem === ESCAPE_UNDEFINED) {
 				printLine("undefined");
 			} else if (nextItem === ESCAPE_END_OBJECT) {
-				indent = indent.slice(0, indent.length - 2);
+				indent = indent.slice(0, -2);
 				printLine(`} = #${currentReference++}`);
 			} else if (typeof nextItem === "number" && nextItem < 0) {
 				const ref = currentReference + nextItem;

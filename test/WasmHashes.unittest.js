@@ -25,7 +25,7 @@ const wasmHashes = {
 		return {
 			createHash: createMd4Hash,
 			createReferenceHash:
-				parseInt(process.version.slice(1), 10) < 17
+				Number.parseInt(process.version.slice(1), 10) < 17
 					? async () => createHash("md4")
 					: createMd4Hash,
 			regExp: /^[0-9a-f]{32}$/

@@ -9,7 +9,7 @@ describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
 	const examples = require("../examples/examples.js");
 
-	examples.forEach(examplePath => {
+	for (const examplePath of examples) {
 		const filterPath = path.join(examplePath, "test.filter.js");
 		const relativePath = path.relative(basePath, examplePath);
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
@@ -19,7 +19,7 @@ describe("Examples", () => {
 					done();
 				})
 			);
-			return;
+			continue;
 		}
 		it(`should compile ${relativePath}`, function (done) {
 			let options = {};
@@ -60,5 +60,5 @@ describe("Examples", () => {
 				done();
 			});
 		}, 90000);
-	});
+	}
 });

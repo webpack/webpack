@@ -22,9 +22,9 @@ categories = categories.map(cat => ({
 
 const describeCases = config => {
 	describe(config.name, () => {
-		categories.forEach(category => {
+		for (const category of categories) {
 			describe(category.name, () => {
-				category.tests.forEach(testName => {
+				for (const testName of category.tests) {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -32,7 +32,7 @@ const describeCases = config => {
 						describe.skip(testName, () => {
 							it("filtered", () => {});
 						});
-						return;
+						continue;
 					}
 					describe(testName, () => {
 						let compiler;
@@ -321,9 +321,9 @@ const describeCases = config => {
 							getNumberOfTests
 						} = createLazyTestEnv(20000);
 					});
-				});
+				}
 			});
-		});
+		}
 	});
 };
 

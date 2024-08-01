@@ -21,10 +21,8 @@ module.exports = (options, argv) => {
 
 	options = handleExport(options);
 
-	if (Array.isArray(options)) {
-		options = options.map(_options => handleFunction(_options, argv));
-	} else {
-		options = handleFunction(options, argv);
-	}
+	options = Array.isArray(options)
+		? options.map(_options => handleFunction(_options, argv))
+		: handleFunction(options, argv);
 	return options;
 };

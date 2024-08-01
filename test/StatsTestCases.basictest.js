@@ -43,7 +43,8 @@ describe("StatsTestCases", () => {
 	afterEach(() => {
 		stderr.restore();
 	});
-	tests.forEach(testName => {
+	for (const testName of tests) {
+		// eslint-disable-next-line no-loop-func
 		it(`should print correct stats for ${testName}`, done => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
@@ -69,7 +70,8 @@ describe("StatsTestCases", () => {
 				// ignored
 			}
 
-			(Array.isArray(options) ? options : [options]).forEach(options => {
+			const resolvedOptions = Array.isArray(options) ? options : [options];
+			for (const options of resolvedOptions) {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
 				if (!options.output.path) options.output.path = outputDirectory;
@@ -88,10 +90,10 @@ describe("StatsTestCases", () => {
 						testName
 					);
 				}
-			});
+			}
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];
-			compilers.forEach(c => {
+			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
 				c.inputFileSystem.readFile = function () {
@@ -112,20 +114,20 @@ describe("StatsTestCases", () => {
 					);
 				};
 				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
-					[
+					for (const hook of [
 						"optimize",
 						"optimizeModules",
 						"optimizeChunks",
 						"afterOptimizeTree",
 						"afterOptimizeAssets",
 						"beforeHash"
-					].forEach(hook => {
+					]) {
 						compilation.hooks[hook].tap("TestCasesTest", () =>
 							compilation.checkConstraints()
 						);
-					});
+					}
 				});
-			});
+			}
 			c.run((err, stats) => {
 				if (err) return done(err);
 				for (const compilation of []
@@ -185,15 +187,15 @@ describe("StatsTestCases", () => {
 				if (!hasColorSetting) {
 					actual = stderr.toString() + actual;
 					actual = actual
-						.replace(/\u001b\[[0-9;]*m/g, "")
+						.replace(/\u001B\[[0-9;]*m/g, "")
 						.replace(/[.0-9]+(\s?ms)/g, "X$1");
 				} else {
 					actual = stderr.toStringRaw() + actual;
 					actual = actual
-						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
-						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
-						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
+						.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+						.replace(/\u001B\[1m/g, "<CLR=BOLD>")
+						.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
+						.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>")
 						.replace(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 				}
 				// cspell:ignore Xdir
@@ -211,5 +213,5 @@ describe("StatsTestCases", () => {
 				done();
 			});
 		});
-	});
+	}
 });
