@@ -8,9 +8,10 @@
 [![npm][npm]][npm-url]
 
 [![node][node]][node-url]
+[![builds1][builds1]][builds1-url]
 [![builds2][builds2]][builds2-url]
+[![dependency-review][dependency-review]][dependency-review-url]
 [![coverage][cover]][cover-url]
-[![licenses][licenses]][licenses-url]
 [![PR's welcome][prs]][prs-url]
 
   <br>
@@ -716,9 +717,11 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
+[builds1]: https://github.com/webpack/webpack/actions/workflows/test.yml/badge.svg
+[builds1-url]: https://github.com/webpack/webpack/actions/workflows/test.yml
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status%2Fwebpack.webpack?branchName=main
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3&branchName=main
-[licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
-[licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
+[dependency-review-url]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml
+[dependency-review]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml/badge.svg
 [cover]: https://codecov.io/gh/webpack/webpack/branch/master/graph/badge.svg?token=mDP3mQJNnn
 [cover-url]: https://codecov.io/gh/webpack/webpack

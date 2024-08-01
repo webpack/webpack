@@ -50,7 +50,6 @@
     "coffee-loader": "^5.0.0",
     "coffeescript": "^2.5.1",
     "core-js": "^3.6.5",
-    "coveralls": "^3.1.0",
     "cspell": "^8.8.4",
     "css-loader": "^7.1.2",
     "date-fns": "^3.2.0",
