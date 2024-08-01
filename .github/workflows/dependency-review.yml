@@ -1,4 +1,5 @@
 name: "Dependency Review"
+
 on: [pull_request]
 
 permissions:
