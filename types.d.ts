@@ -4199,7 +4199,8 @@ declare abstract class ExportInfo {
 	 */
 	getUsedName(
 		fallbackName: undefined | string,
-		runtime: RuntimeSpec
+		runtime: RuntimeSpec,
+		isGlobalUsedExports?: boolean
 	): string | false;
 	hasUsedName(): boolean;
 
@@ -8289,7 +8290,7 @@ type ModuleFilterItemTypes =
 			type: "module" | "chunk" | "root-of-chunk" | "nested"
 	  ) => boolean);
 declare class ModuleGraph {
-	constructor();
+	constructor(options?: any);
 	setParents(
 		dependency: Dependency,
 		block: DependenciesBlock,
