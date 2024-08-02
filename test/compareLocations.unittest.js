@@ -1,25 +1,22 @@
 "use strict";
 
 const { compareLocations } = require("../lib/util/comparators");
-const createPosition = overrides => {
-	return {
-		line: 10,
-		column: 5,
-		...overrides
-	};
-};
+const createPosition = overrides => ({
+	line: 10,
+	column: 5,
+	...overrides
+});
 
-const createLocation = (start, end, index) => {
-	return {
-		start: createPosition(start),
-		end: createPosition(end),
-		index: index || 3
-	};
-};
+const createLocation = (start, end, index) => ({
+	start: createPosition(start),
+	end: createPosition(end),
+	index: index || 3
+});
 
 describe("compareLocations", () => {
 	describe("object location comparison", () => {
-		let a, b;
+		let a;
+		let b;
 
 		describe("location line number", () => {
 			beforeEach(() => {

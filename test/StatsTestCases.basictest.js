@@ -12,9 +12,7 @@ const webpack = require("..");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => {
-	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
-};
+const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
@@ -45,8 +43,9 @@ describe("StatsTestCases", () => {
 	afterEach(() => {
 		stderr.restore();
 	});
-	tests.forEach(testName => {
-		it("should print correct stats for " + testName, done => {
+	for (const testName of tests) {
+		// eslint-disable-next-line no-loop-func
+		it(`should print correct stats for ${testName}`, done => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -67,11 +66,12 @@ describe("StatsTestCases", () => {
 					testConfig,
 					require(path.join(base, testName, "test.config.js"))
 				);
-			} catch (e) {
+			} catch (_err) {
 				// ignored
 			}
 
-			(Array.isArray(options) ? options : [options]).forEach(options => {
+			const resolvedOptions = Array.isArray(options) ? options : [options];
+			for (const options of resolvedOptions) {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
 				if (!options.output.path) options.output.path = outputDirectory;
@@ -90,15 +90,17 @@ describe("StatsTestCases", () => {
 						testName
 					);
 				}
-			});
+			}
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];
-			compilers.forEach(c => {
+			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
 				c.inputFileSystem.readFile = function () {
+					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
+					// eslint-disable-next-line prefer-spread
 					ifs.readFile.apply(
 						ifs,
 						args.concat([
@@ -112,20 +114,20 @@ describe("StatsTestCases", () => {
 					);
 				};
 				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
-					[
+					for (const hook of [
 						"optimize",
 						"optimizeModules",
 						"optimizeChunks",
 						"afterOptimizeTree",
 						"afterOptimizeAssets",
 						"beforeHash"
-					].forEach(hook => {
+					]) {
 						compilation.hooks[hook].tap("TestCasesTest", () =>
 							compilation.checkConstraints()
 						);
-					});
+					}
 				});
-			});
+			}
 			c.run((err, stats) => {
 				if (err) return done(err);
 				for (const compilation of []
@@ -133,7 +135,7 @@ describe("StatsTestCases", () => {
 					.map(s => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
-				if (/error$/.test(testName)) {
+				if (testName.endsWith("error")) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
 					return done(
@@ -185,15 +187,15 @@ describe("StatsTestCases", () => {
 				if (!hasColorSetting) {
 					actual = stderr.toString() + actual;
 					actual = actual
-						.replace(/\u001b\[[0-9;]*m/g, "")
+						.replace(/\u001B\[[0-9;]*m/g, "")
 						.replace(/[.0-9]+(\s?ms)/g, "X$1");
 				} else {
 					actual = stderr.toStringRaw() + actual;
 					actual = actual
-						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
-						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
-						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
+						.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+						.replace(/\u001B\[1m/g, "<CLR=BOLD>")
+						.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
+						.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>")
 						.replace(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 				}
 				// cspell:ignore Xdir
@@ -201,7 +203,7 @@ describe("StatsTestCases", () => {
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
-					.replace(new RegExp(quoteMeta(testPath), "g"), "Xdir/" + testName)
+					.replace(new RegExp(quoteMeta(testPath), "g"), `Xdir/${testName}`)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
@@ -211,5 +213,5 @@ describe("StatsTestCases", () => {
 				done();
 			});
 		});
-	});
+	}
 });

@@ -2,7 +2,7 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-/*globals __resourceQuery */
+/* globals __resourceQuery */
 if (module.hot) {
 	var hotPollInterval = +__resourceQuery.slice(1) || 10 * 60 * 1000;
 	var log = require("./log");

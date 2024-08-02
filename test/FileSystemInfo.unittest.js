@@ -244,18 +244,13 @@ ${details(snapshot)}`)
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
 				filename,
-
 				JSON.stringify({
 					...data,
-					version: data.version + ".1"
+					version: `${data.version}.1`
 				})
 			);
 		} else {
-			fs.writeFileSync(
-				filename,
-
-				oldContent + "!"
-			);
+			fs.writeFileSync(filename, `${oldContent}!`);
 		}
 	};
 

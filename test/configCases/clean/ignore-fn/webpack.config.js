@@ -8,7 +8,7 @@ module.exports = {
 	output: {
 		clean: {
 			keep(asset) {
-				return asset.includes(`ignored/dir`);
+				return asset.includes("ignored/dir");
 			}
 		}
 	},

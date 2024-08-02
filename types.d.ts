@@ -8422,11 +8422,11 @@ declare class ModuleGraphConnection {
 	): void;
 	addExplanation(explanation: string): void;
 	get explanation(): string;
-	active: void;
 	isActive(runtime: RuntimeSpec): boolean;
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
+	active: void;
 	static addConnectionStates: (
 		a: ConnectionState,
 		b: ConnectionState

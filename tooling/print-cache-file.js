@@ -58,7 +58,7 @@ const printData = async (data, indent) => {
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;
 				console.log(`${indent}= lazy ${sizeInfo} {`);
-				await printData(innerData, indent + "  ");
+				await printData(innerData, `${indent}  `);
 				console.log(`${indent}}`);
 			} else {
 				console.log(`${indent}= ${b.toString("hex")}`);
@@ -72,9 +72,7 @@ const printData = async (data, indent) => {
 	let currentReference = 0;
 	let currentTypeReference = 0;
 	let i = 0;
-	const read = () => {
-		return data[i++];
-	};
+	const read = () => data[i++];
 	/**
 	 * @param {string} content content
 	 */
@@ -91,7 +89,7 @@ const printData = async (data, indent) => {
 			} else if (nextItem === ESCAPE_UNDEFINED) {
 				printLine("undefined");
 			} else if (nextItem === ESCAPE_END_OBJECT) {
-				indent = indent.slice(0, indent.length - 2);
+				indent = indent.slice(0, -2);
 				printLine(`} = #${currentReference++}`);
 			} else if (typeof nextItem === "number" && nextItem < 0) {
 				const ref = currentReference + nextItem;
@@ -143,18 +141,16 @@ const printData = async (data, indent) => {
 				).toFixed(2)} lazy MiB`;
 				printLine(`lazy-file ${sizeInfo} {`);
 			} else {
-				printLine(`lazy-inline {`);
+				printLine("lazy-inline {");
 			}
-			await printData(innerData, indent + "  ");
-			printLine(`}`);
+			await printData(innerData, `${indent}  `);
+			printLine("}");
 		} else {
-			printLine(`${item}`);
+			printLine(String(item));
 		}
 	}
 	const refCounters = Array.from(referencedValuesCounters);
-	refCounters.sort(([a, A], [b, B]) => {
-		return B - A;
-	});
+	refCounters.sort(([a, A], [b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {
 		const value = referencedValues.get(ref);

@@ -38,6 +38,7 @@ const files = ["lib/util/semver.js"];
 					ecma: 5,
 					toplevel: true,
 					parse: {
+						// eslint-disable-next-line camelcase
 						bare_returns: true
 					}
 				}

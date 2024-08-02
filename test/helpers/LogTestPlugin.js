@@ -2,6 +2,7 @@ module.exports = class LogTestPlugin {
 	constructor(noTraced) {
 		this.noTraced = noTraced;
 	}
+
 	apply(compiler) {
 		const logSome = logger => {
 			logger.group("Group");

@@ -1,15 +1,14 @@
 const deterministicGrouping = require("../lib/util/deterministicGrouping");
 
 describe("deterministicGrouping", () => {
-	const group = (items, minSize, maxSize) => {
-		return deterministicGrouping({
+	const group = (items, minSize, maxSize) =>
+		deterministicGrouping({
 			items: items.map((item, i) => [i, item]),
 			minSize,
 			maxSize,
 			getKey: ([key]) => `${100000 + key}`,
 			getSize: ([, size]) => size
 		}).map(group => ({ items: group.items.map(([i]) => i), size: group.size }));
-	};
 	it("should split large chunks with different size types", () => {
 		expect(
 			group(

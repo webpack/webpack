@@ -11,7 +11,10 @@ module.exports = {
 		compiler => {
 			const base = {
 				DEFINE: "{}",
-				RUN: DefinePlugin.runtimeValue(() => +(currentWatchStep.step || 0), [])
+				RUN: DefinePlugin.runtimeValue(
+					() => Number(currentWatchStep.step || 0),
+					[]
+				)
 			};
 			const defines = [
 				{
@@ -40,7 +43,9 @@ module.exports = {
 				}
 			];
 			compiler.hooks.compilation.tap("webpack.config", (...args) => {
-				const plugin = new DefinePlugin(defines[+(currentWatchStep.step || 0)]);
+				const plugin = new DefinePlugin(
+					defines[Number(currentWatchStep.step || 0)]
+				);
 				plugin.apply(
 					/** @type {any} */ ({
 						hooks: {

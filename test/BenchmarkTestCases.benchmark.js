@@ -10,7 +10,7 @@ describe("BenchmarkTestCases", function () {
 	const casesPath = path.join(__dirname, "benchmarkCases");
 	const tests = fs.readdirSync(casesPath).filter(function (folder) {
 		return (
-			folder.indexOf("_") < 0 &&
+			!folder.includes("_") &&
 			fs.existsSync(path.resolve(casesPath, folder, "webpack.config.js"))
 		);
 	});
@@ -20,10 +20,10 @@ describe("BenchmarkTestCases", function () {
 
 	try {
 		fs.mkdirSync(path.join(__dirname, "js"));
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (_err) {} // eslint-disable-line no-empty
 	try {
 		fs.mkdirSync(baselinesPath);
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (_err) {} // eslint-disable-line no-empty
 
 	beforeAll(function (done) {
 		const git = require("simple-git");
@@ -40,7 +40,7 @@ describe("BenchmarkTestCases", function () {
 					} else {
 						try {
 							fs.mkdirSync(baselinePath);
-						} catch (e) {} // eslint-disable-line no-empty
+						} catch (_err) {} // eslint-disable-line no-empty
 						const gitIndex = path.resolve(rootPath, ".git/index");
 						const index = fs.readFileSync(gitIndex);
 						git(rootPath).raw(
@@ -105,7 +105,7 @@ describe("BenchmarkTestCases", function () {
 
 	function getBaselineRevs(rootPath, callback) {
 		const git = require("simple-git")(rootPath);
-		const lastVersionTag = "v" + require("../package.json").version;
+		const lastVersionTag = `v${require("../package.json").version}`;
 		git.raw(["rev-list", "-n", "1", lastVersionTag], (err, resultVersion) => {
 			if (err) return callback(err);
 			const matchVersion = /^([a-f0-9]+)\s*$/.exec(resultVersion);
@@ -157,9 +157,8 @@ describe("BenchmarkTestCases", function () {
 								}
 							].filter(Boolean)
 						);
-					} else {
-						return callback(new Error("No baseline found"));
 					}
+					return callback(new Error("No baseline found"));
 				}
 			);
 		});
@@ -185,9 +184,9 @@ describe("BenchmarkTestCases", function () {
 			var b = data[Math.ceil(n / 10) - 3];
 			var f = n / 10 - Math.floor(n / 10);
 			return a * (1 - f) + b * f;
-		} else {
-			return 1.645;
 		}
+
+		return 1.645;
 	}
 
 	function runBenchmark(webpack, config, callback) {
@@ -237,12 +236,13 @@ describe("BenchmarkTestCases", function () {
 	}
 
 	function createTests() {
-		tests.forEach(testName => {
+		for (const testName of tests) {
 			const testDirectory = path.join(casesPath, testName);
 			let headStats = null;
 			describe(`${testName} create benchmarks`, function () {
-				baselines.forEach(baseline => {
+				for (const baseline of baselines) {
 					let baselineStats = null;
+					// eslint-disable-next-line no-loop-func
 					it(`should benchmark ${baseline.name} (${baseline.rev})`, function (done) {
 						const outputDirectory = path.join(
 							__dirname,
@@ -268,7 +268,7 @@ describe("BenchmarkTestCases", function () {
 							done();
 						});
 					}, 180000);
-
+					// eslint-disable-next-line no-loop-func
 					it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
 						const outputDirectory = path.join(
 							__dirname,
@@ -294,6 +294,7 @@ describe("BenchmarkTestCases", function () {
 					}, 180000);
 
 					if (baseline.name !== "HEAD") {
+						// eslint-disable-next-line no-loop-func
 						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
 							if (baselineStats.maxConfidence < headStats.minConfidence) {
 								throw new Error(
@@ -310,8 +311,8 @@ describe("BenchmarkTestCases", function () {
 							}
 						});
 					}
-				});
+				}
 			});
-		});
+		}
 	}
 });

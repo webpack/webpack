@@ -26,7 +26,7 @@ module.exports = {
 							stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
 						},
 						() => {
-							[
+							for (const filename of [
 								"static-package.json",
 								"static-package-str.json",
 								"dynamic-package.json",
@@ -36,14 +36,14 @@ module.exports = {
 								"./nested/pkg.json",
 								"re-export.json",
 								"re-export-directly.json"
-							].forEach(filename => {
+							]) {
 								const resolvedFilename = path.resolve(__dirname, filename);
 								const content = fs.readFileSync(resolvedFilename);
 								compilation.emitAsset(
 									filename.replace(/\.\/nested\//, ""),
 									new RawSource(content)
 								);
-							});
+							}
 						}
 					);
 				});

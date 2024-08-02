@@ -3,14 +3,12 @@
 const SyncHook = require("tapable").SyncHook;
 const MultiWatching = require("../lib/MultiWatching");
 
-const createWatching = () => {
-	return {
-		invalidate: jest.fn(),
-		suspend: jest.fn(),
-		resume: jest.fn(),
-		close: jest.fn()
-	};
-};
+const createWatching = () => ({
+	invalidate: jest.fn(),
+	suspend: jest.fn(),
+	resume: jest.fn(),
+	close: jest.fn()
+});
 
 const createCompiler = () => {
 	const compiler = {

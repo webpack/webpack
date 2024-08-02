@@ -15,9 +15,7 @@ module.exports = {
 	},
 	optimization: {
 		runtimeChunk: {
-			name: entrypoint => {
-				return `runtime/${entrypoint.name.replace(/^\/+/g, "")}`;
-			}
+			name: entrypoint => `runtime/${entrypoint.name.replace(/^\/+/g, "")}`
 		}
 	},
 	experiments: {

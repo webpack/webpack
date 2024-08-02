@@ -45,11 +45,7 @@ describe("MultiItemCache", () => {
 		for (let i = 0; i < howMany; ++i) {
 			const name = `ItemCache${i}`;
 			const tag = `ItemTag${i}`;
-			const dataGen =
-				dataGenerator ||
-				(() => {
-					return { name: tag };
-				});
+			const dataGen = dataGenerator || (() => ({ name: tag }));
 			const cache = new Cache();
 			cache.hooks.get.tapAsync(
 				"DataReturner",

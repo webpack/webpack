@@ -2,7 +2,7 @@ module.exports = function supportsOptionalCatchBinding() {
 	try {
 		eval("try {} catch {}");
 		return true;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

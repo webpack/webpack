@@ -20,7 +20,7 @@ module.exports = {
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
 			filename: "sourcemaps/[file].map",
-			append: data => `\n//# sourceMappingURL=http://localhost:50505/[file].map`
+			append: data => "\n//# sourceMappingURL=http://localhost:50505/[file].map"
 		})
 	]
 };

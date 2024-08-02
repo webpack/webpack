@@ -4,7 +4,7 @@ module.exports = function supportsBlockScoping() {
 			"(function f() { const x = 1; if (true) { const x = 2; } return x; })"
 		);
 		return f() === 1;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

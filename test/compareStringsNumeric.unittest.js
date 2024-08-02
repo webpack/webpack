@@ -19,13 +19,12 @@ const referenceComparer = (a, b) => {
 			} else if (pB.length > pA.length) {
 				if (pB.slice(0, pA.length) > pA) return -1;
 				return 1;
-			} else {
-				if (pA < pB) return -1;
-				if (pA > pB) return 1;
 			}
+			if (pA < pB) return -1;
+			if (pA > pB) return 1;
 		} else {
-			const nA = +pA;
-			const nB = +pB;
+			const nA = Number(pA);
+			const nB = Number(pB);
 			if (nA < nB) return -1;
 			if (nA > nB) return 1;
 		}

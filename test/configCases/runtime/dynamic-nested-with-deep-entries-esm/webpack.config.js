@@ -15,9 +15,8 @@ module.exports = {
 	},
 	optimization: {
 		runtimeChunk: {
-			name: entrypoint => {
-				return `dir5/dir6/runtime~${entrypoint.name.split("/").pop()}`;
-			}
+			name: entrypoint =>
+				`dir5/dir6/runtime~${entrypoint.name.split("/").pop()}`
 		}
 	},
 	experiments: {

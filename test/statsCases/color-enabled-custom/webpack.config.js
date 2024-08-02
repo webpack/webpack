@@ -4,8 +4,8 @@ module.exports = {
 	entry: "./index",
 	stats: {
 		colors: {
-			yellow: "\u001b[33m",
-			green: "\u001b[32m"
+			yellow: "\u001B[33m",
+			green: "\u001B[32m"
 		}
 	}
 };

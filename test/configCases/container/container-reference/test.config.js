@@ -4,7 +4,7 @@ module.exports = {
 			get(module) {
 				return new Promise(resolve => {
 					setTimeout(() => {
-						resolve(() => "abc " + module);
+						resolve(() => `abc ${module}`);
 					}, 100);
 				});
 			}

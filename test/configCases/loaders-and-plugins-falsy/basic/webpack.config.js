@@ -73,13 +73,11 @@ module.exports = {
 			{
 				test: /baz\.js$/,
 				resourceQuery: /custom-use/,
-				use: () => {
-					return [
-						nullValue && {
-							loader: "unknown-loader"
-						}
-					];
-				}
+				use: () => [
+					nullValue && {
+						loader: "unknown-loader"
+					}
+				]
 			},
 			{
 				test: /other\.js$/,

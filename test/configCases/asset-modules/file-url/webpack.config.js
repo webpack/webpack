@@ -17,14 +17,13 @@ fs.writeFileSync(
 		)
 	)};
 import v2 from ${JSON.stringify(
-		"file://localhost" +
-			pathToFileURL(
-				path.resolve(
-					"./test/configCases/asset-modules/file-url/src with spaces/module.js"
-				)
+		`file://localhost${pathToFileURL(
+			path.resolve(
+				"./test/configCases/asset-modules/file-url/src with spaces/module.js"
 			)
-				.toString()
-				.slice("file://".length)
+		)
+			.toString()
+			.slice("file://".length)}`
 	)};
 export const val1 = v1;
 export const val2 = v2;`

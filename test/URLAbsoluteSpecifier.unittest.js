@@ -67,19 +67,19 @@ const samples = [
 ];
 
 describe("getScheme", () => {
-	samples.forEach(({ specifier, expected }, i) => {
+	for (const [_i, { specifier, expected }] of samples.entries()) {
 		it(`should handle ${specifier}`, () => {
 			expect(getScheme(specifier)).toBe(expected);
 		});
-	});
+	}
 });
 
 describe("getProtocol", () => {
-	samples.forEach(({ specifier, expected }, i) => {
+	for (const [_i, { specifier, expected }] of samples.entries()) {
 		it(`should handle ${specifier}`, () => {
 			expect(getProtocol(specifier)).toBe(
-				expected ? expected + ":" : undefined
+				expected ? `${expected}:` : undefined
 			);
 		});
-	});
+	}
 });

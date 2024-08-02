@@ -41,20 +41,20 @@ const modules = [
 
 // build an array of regular expressions of expected errors
 const regex = [];
-modules.forEach(module => {
-	variables.forEach(variable => {
-		if (module.variables.indexOf(variable) === -1) {
+for (const module of modules) {
+	for (const variable of variables) {
+		if (!module.variables.includes(variable)) {
 			// the module doesn't include the env variable, an error is expected when requiring the variable
 			regex.push([
 				{ compilerPath: new RegExp(`${module.name}`) },
 				new RegExp(`Can't resolve '${variable}'`)
 			]);
 		}
-	});
+	}
 
 	if (module.allowedErrors) {
 		regex.push(...module.allowedErrors);
 	}
-});
+}
 
 module.exports = regex;

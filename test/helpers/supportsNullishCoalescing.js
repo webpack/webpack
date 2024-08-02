@@ -2,7 +2,7 @@ module.exports = function supportsNullishCoalescing() {
 	try {
 		var f = eval("(function f() { return null ?? true; })");
 		return f();
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

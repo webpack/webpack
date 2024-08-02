@@ -34,9 +34,9 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort((a, b) => {
-							return a[1] - b[1];
-						});
+						const sortedModules = Array.from(modules).sort(
+							(a, b) => a[1] - b[1]
+						);
 						const text = sortedModules
 							.map(
 								([m, index]) =>
@@ -45,7 +45,7 @@ module.exports = {
 									)}`
 							)
 							.join(", ");
-						data[name + "Index"] = text;
+						data[`${name}Index`] = text;
 					}
 					expect(data).toEqual({
 						AIndex: "0: ./A.js, 1: css ./m.css",

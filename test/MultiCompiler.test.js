@@ -192,14 +192,14 @@ describe("MultiCompiler", function () {
 			}
 		});
 		const events = [];
-		compiler.compilers.forEach(c => {
+		for (const c of compiler.compilers) {
 			c.hooks.run.tap("test", () => {
 				events.push(`${c.name} run`);
 			});
 			c.hooks.done.tap("test", () => {
 				events.push(`${c.name} done`);
 			});
-		});
+		}
 		compiler.run((err, stats) => {
 			expect(events.join(" ")).toBe(
 				"a run a done b run b done d run d done e run e done c run c done"
@@ -252,7 +252,7 @@ describe("MultiCompiler", function () {
 			}
 		};
 		const events = [];
-		compiler.compilers.forEach(c => {
+		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
 				events.push(`${c.name} invalid`);
 			});
@@ -262,7 +262,7 @@ describe("MultiCompiler", function () {
 			c.hooks.done.tap("test", () => {
 				events.push(`${c.name} done`);
 			});
-		});
+		}
 
 		let update = 0;
 		compiler.watch({}, (err, stats) => {
@@ -398,7 +398,7 @@ describe("MultiCompiler", function () {
 		const compiler = webpack(configs);
 
 		const events = [];
-		compiler.compilers.forEach(c => {
+		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
 				events.push(`${c.name} invalid`);
 			});
@@ -408,7 +408,7 @@ describe("MultiCompiler", function () {
 			c.hooks.done.tap("test", () => {
 				events.push(`${c.name} done`);
 			});
-		});
+		}
 
 		compiler.watchFileSystem = { watch() {} };
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
@@ -451,9 +451,9 @@ describe("MultiCompiler", function () {
 					setTimeout(() => {
 						compiler.close(done);
 					}, 1000);
-				} catch (e) {
-					console.error(e);
-					done(e);
+				} catch (err) {
+					console.error(err);
+					done(err);
 				}
 			});
 		});
@@ -477,7 +477,7 @@ describe("MultiCompiler", function () {
 		]);
 
 		const events = [];
-		compiler.compilers.forEach(c => {
+		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
 				events.push(`${c.name} invalid`);
 			});
@@ -487,7 +487,7 @@ describe("MultiCompiler", function () {
 			c.hooks.done.tap("test", () => {
 				events.push(`${c.name} done`);
 			});
-		});
+		}
 
 		compiler.watchFileSystem = { watch() {} };
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
@@ -530,9 +530,9 @@ describe("MultiCompiler", function () {
 					setTimeout(() => {
 						compiler.close(done);
 					}, 1000);
-				} catch (e) {
-					console.error(e);
-					done(e);
+				} catch (err) {
+					console.error(err);
+					done(err);
 				}
 			});
 		});

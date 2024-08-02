@@ -8,10 +8,10 @@ var regexEscape = require("./regexEscape.js");
 const doNotMatch = ["DO", "NOT", "MATCH", "BELOW", "THIS", "LINE"].join(" ");
 
 function expectSourceToContain(source, str) {
-	expect(source).toMatch(new RegExp(regexEscape(str) + ".*" + doNotMatch, "s"));
+	expect(source).toMatch(new RegExp(`${regexEscape(str)}.*${doNotMatch}`, "s"));
 }
 function expectSourceToMatch(source, regexStr) {
-	expect(source).toMatch(new RegExp(regexStr + ".*" + doNotMatch, "s"));
+	expect(source).toMatch(new RegExp(`${regexStr}.*${doNotMatch}`, "s"));
 }
 
 module.exports = { expectSourceToContain, expectSourceToMatch };

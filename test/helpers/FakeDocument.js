@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const getPropertyValue = function (property) {
+function getPropertyValue(property) {
 	return this[property];
-};
+}
 
 module.exports = class FakeDocument {
 	constructor(basePath) {
@@ -33,7 +33,7 @@ module.exports = class FakeDocument {
 
 	_onElementRemoved(element) {
 		const type = element._type;
-		let list = this._elementsByTagName.get(type);
+		const list = this._elementsByTagName.get(type);
 		const idx = list.indexOf(element);
 		list.splice(idx, 1);
 	}
@@ -103,9 +103,9 @@ class FakeElement {
 	getAttribute(name) {
 		if (this._type === "link" && name === "href") {
 			return this.href;
-		} else {
-			return this._attributes[name];
 		}
+
+		return this._attributes[name];
 	}
 
 	_toRealUrl(value) {
@@ -119,9 +119,9 @@ class FakeElement {
 			return value;
 		} else if (/^\/\//.test(value)) {
 			return `https:${value}`;
-		} else {
-			return `https://test.cases/path/${value}`;
 		}
+
+		return `https://test.cases/path/${value}`;
 	}
 
 	set src(value) {
@@ -187,7 +187,7 @@ class FakeSheet {
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
 		const rules = [];
 		let currentRule = { getPropertyValue };
-		let selector = undefined;
+		let selector;
 		let last = 0;
 		const processDeclaration = str => {
 			const colon = str.indexOf(":");

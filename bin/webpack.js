@@ -80,8 +80,8 @@ const runCli = cli => {
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			error => {
-				console.error(error);
+			err => {
+				console.error(err);
 				process.exitCode = 1;
 			}
 		);
@@ -113,8 +113,7 @@ if (!cli.installed) {
 	const fs = require("graceful-fs");
 	const readLine = require("readline");
 
-	const notify =
-		"CLI for webpack must be installed.\n" + `  ${cli.name} (${cli.url})\n`;
+	const notify = `CLI for webpack must be installed.\n  ${cli.name} (${cli.url})\n`;
 
 	console.error(notify);
 
@@ -137,7 +136,7 @@ if (!cli.installed) {
 		)} ${cli.package}".`
 	);
 
-	const question = `Do you want to install 'webpack-cli' (yes/no): `;
+	const question = "Do you want to install 'webpack-cli' (yes/no): ";
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
@@ -178,8 +177,8 @@ if (!cli.installed) {
 			.then(() => {
 				runCli(cli);
 			})
-			.catch(error => {
-				console.error(error);
+			.catch(err => {
+				console.error(err);
 				process.exitCode = 1;
 			});
 	});

@@ -286,7 +286,7 @@ describe("Compiler", () => {
 				const response8 = compiler.isChild();
 				expect(response8).toBe(false);
 
-				compiler.parentCompilation = NaN;
+				compiler.parentCompilation = Number.NaN;
 				const response9 = compiler.isChild();
 				expect(response9).toBe(false);
 				done();
@@ -337,8 +337,8 @@ describe("Compiler", () => {
 	});
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		try {
-			const createCompiler = options => {
-				return new Promise((resolve, reject) => {
+			const createCompiler = options =>
+				new Promise((resolve, reject) => {
 					const webpack = require("..");
 					const c = webpack(options);
 					c.run((err, stats) => {
@@ -351,9 +351,7 @@ describe("Compiler", () => {
 							resolve(stats);
 						}
 					});
-					return c;
 				});
-			};
 			compiler = await createCompiler({
 				context: __dirname,
 				mode: "production",
@@ -371,8 +369,8 @@ describe("Compiler", () => {
 		}
 	});
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = options => {
-			return new Promise((resolve, reject) => {
+		const createStats = options =>
+			new Promise((resolve, reject) => {
 				const webpack = require("..");
 				const c = webpack(options);
 				c.outputFileSystem = createFsFromVolume(new Volume());
@@ -383,7 +381,6 @@ describe("Compiler", () => {
 					});
 				});
 			});
-		};
 		const stats = await createStats({
 			context: __dirname,
 			mode: "production",
@@ -850,10 +847,10 @@ describe("Compiler", () => {
 		});
 		const escapeAnsi = stringRaw =>
 			stringRaw
-				.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-				.replace(/\u001b\[1m/g, "<CLR=BOLD>")
-				.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
-				.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>");
+				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
+				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
+				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");

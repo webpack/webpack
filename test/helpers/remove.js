@@ -4,7 +4,7 @@ const path = require("path");
 module.exports.remove = function remove(src) {
 	if (!fs.existsSync(src)) return;
 	const files = fs.readdirSync(src);
-	files.forEach(filename => {
+	for (const filename of files) {
 		const srcFile = path.join(src, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
 		if (directory) {
@@ -12,5 +12,5 @@ module.exports.remove = function remove(src) {
 		} else {
 			fs.unlinkSync(srcFile);
 		}
-	});
+	}
 };

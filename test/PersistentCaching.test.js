@@ -60,8 +60,8 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async (configAdditions = {}) => {
-		return new Promise((resolve, reject) => {
+	const compile = async (configAdditions = {}) =>
+		new Promise((resolve, reject) => {
 			const webpack = require("../");
 			webpack(
 				{
@@ -77,7 +77,6 @@ describe("Persistent Caching", () => {
 				}
 			);
 		});
-	};
 
 	const execute = () => {
 		const cache = {};
@@ -131,14 +130,14 @@ export { style };
 }`
 		};
 		for (const file of files) {
-			data[file] = `export default 1;`;
+			data[file] = "export default 1;";
 		}
 		await updateSrc(data);
 		await compile({ cache: { compression: false } });
 		expect(execute()).toBe(30);
 		for (let i = 0; i < 30; i++) {
 			updateSrc({
-				[files[i]]: `export default 2;`,
+				[files[i]]: "export default 2;",
 				"style.modules.css": `.class-${i} { color: red; background: url('image1.png'); }`
 			});
 			await compile({ cache: { compression: false } });
@@ -224,7 +223,7 @@ import { sum } from 'lodash';
 sum([1,2,3])
 			`
 		});
-		await compile({ entry: `./src/main.js` });
+		await compile({ entry: "./src/main.js" });
 		const firstCacheFiles = (await readdir(cachePath)).sort();
 		// cSpell:words Mtimes
 		const firstMtimes = firstCacheFiles.map(
@@ -237,7 +236,7 @@ import 'lodash';
 			`
 		});
 		await compile({
-			entry: `./src/main.js`,
+			entry: "./src/main.js",
 			cache: {
 				...config.cache,
 				readonly: true

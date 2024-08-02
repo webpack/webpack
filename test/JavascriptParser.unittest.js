@@ -26,6 +26,7 @@ describe("JavascriptParser", () => {
 		],
 		"call member using bracket notation": [
 			function () {
+				// eslint-disable-next-line dot-notation
 				cde["abc"]("membertest");
 			},
 			{
@@ -42,6 +43,7 @@ describe("JavascriptParser", () => {
 		],
 		"call inner member using bracket notation": [
 			function () {
+				// eslint-disable-next-line dot-notation
 				cde.ddd["abc"]("inner");
 			},
 			{
@@ -67,6 +69,7 @@ describe("JavascriptParser", () => {
 		"member expression": [
 			function () {
 				test[memberExpr];
+				// eslint-disable-next-line no-implicit-coercion
 				test[+memberExpr];
 			},
 			{
@@ -87,6 +90,7 @@ describe("JavascriptParser", () => {
 		],
 		"const definition": [
 			function () {
+				// eslint-disable-next-line one-var
 				let abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
@@ -98,6 +102,7 @@ describe("JavascriptParser", () => {
 		],
 		"var definition": [
 			function () {
+				// eslint-disable-next-line one-var
 				var abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
@@ -128,6 +133,7 @@ describe("JavascriptParser", () => {
 					cde() {
 						abc("cde");
 					}
+
 					static fgh() {
 						abc("fgh");
 						fgh();
@@ -149,14 +155,14 @@ describe("JavascriptParser", () => {
 						fgh.sub;
 						fgh;
 					}
-				} catch (e) {
+				} catch (err) {
 					fgh.sub;
 					fgh;
 				}
 			},
 			{
 				fghsub: ["try", "notry", "notry"],
-				fgh: ["test", "test ttt", "test e"]
+				fgh: ["test", "test ttt", "test err"]
 			}
 		],
 		"renaming with const": [
@@ -231,6 +237,7 @@ describe("JavascriptParser", () => {
 		],
 		"new Foo(...)": [
 			function () {
+				// eslint-disable-next-line new-cap
 				new xyz("membertest");
 			},
 			{
@@ -251,8 +258,8 @@ describe("JavascriptParser", () => {
 	/* eslint-enable no-undef */
 	/* eslint-enable no-unused-vars */
 
-	Object.keys(testCases).forEach(name => {
-		it("should parse " + name, () => {
+	for (const name of Object.keys(testCases)) {
+		it(`should parse ${name}`, () => {
 			let source = testCases[name][0].toString();
 			source = source.slice(13, -1).trim();
 			const state = testCases[name][1];
@@ -324,7 +331,7 @@ describe("JavascriptParser", () => {
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
 		});
-	});
+	}
 
 	it("should parse comments", () => {
 		const source = "//comment1\n/*comment2*/";
@@ -349,12 +356,12 @@ describe("JavascriptParser", () => {
 		const actual = testParser.parse(source, {});
 		expect(typeof actual).toBe("object");
 		expect(typeof actual.comments).toBe("object");
-		actual.comments.forEach((element, index) => {
+		for (const [index, element] of actual.comments.entries()) {
 			expect(typeof element.type).toBe("string");
 			expect(typeof element.value).toBe("string");
 			expect(element.type).toBe(state[index].type);
 			expect(element.value).toBe(state[index].value);
-		});
+		}
 	});
 
 	describe("expression evaluation", () => {
@@ -375,7 +382,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", expr =>
 					new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
 				);
-			return parser.parse("test(" + source + ");", {}).result;
+			return parser.parse(`test(${source});`, {}).result;
 		}
 
 		const testCases = {
@@ -561,62 +568,55 @@ describe("JavascriptParser", () => {
 			"'a' + expr + 1": "wrapped=['a' string=a]+[1 string=1]"
 		};
 
-		Object.keys(testCases).forEach(key => {
+		for (const key of Object.keys(testCases)) {
 			function evalExprToString(evalExpr) {
 				if (!evalExpr) {
 					return "null";
-				} else {
-					const result = [];
-					if (evalExpr.isString()) result.push("string=" + evalExpr.string);
-					if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
-					if (evalExpr.isBigInt()) result.push("bigint=" + evalExpr.bigint);
-					if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
-					if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
-					if (evalExpr.isConditional())
-						result.push(
-							"options=[" +
-								evalExpr.options.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isArray())
-						result.push(
-							"items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]"
-						);
-					if (evalExpr.isConstArray())
-						result.push("array=[" + evalExpr.array.join("],[") + "]");
-					if (evalExpr.isTemplateString())
-						result.push(
-							"template=[" +
-								evalExpr.quasis.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isWrapped())
-						result.push(
-							"wrapped=[" +
-								evalExprToString(evalExpr.prefix) +
-								"]+[" +
-								evalExprToString(evalExpr.postfix) +
-								"]"
-						);
-					if (evalExpr.range) {
-						const start = evalExpr.range[0] - 5;
-						const end = evalExpr.range[1] - 5;
-						return (
-							key.slice(start, end) +
-							(result.length > 0 ? " " + result.join(" ") : "")
-						);
-					}
-					return result.join(" ");
 				}
+				const result = [];
+				if (evalExpr.isString()) result.push(`string=${evalExpr.string}`);
+				if (evalExpr.isNumber()) result.push(`number=${evalExpr.number}`);
+				if (evalExpr.isBigInt()) result.push(`bigint=${evalExpr.bigint}`);
+				if (evalExpr.isBoolean()) result.push(`bool=${evalExpr.bool}`);
+				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
+				if (evalExpr.isConditional())
+					result.push(
+						`options=[${evalExpr.options.map(evalExprToString).join("],[")}]`
+					);
+				if (evalExpr.isArray())
+					result.push(
+						`items=[${evalExpr.items.map(evalExprToString).join("],[")}]`
+					);
+				if (evalExpr.isConstArray())
+					result.push(`array=[${evalExpr.array.join("],[")}]`);
+				if (evalExpr.isTemplateString())
+					result.push(
+						`template=[${evalExpr.quasis.map(evalExprToString).join("],[")}]`
+					);
+				if (evalExpr.isWrapped())
+					result.push(
+						`wrapped=[${evalExprToString(evalExpr.prefix)}]+[${evalExprToString(
+							evalExpr.postfix
+						)}]`
+					);
+				if (evalExpr.range) {
+					const start = evalExpr.range[0] - 5;
+					const end = evalExpr.range[1] - 5;
+					return (
+						key.slice(start, end) +
+						(result.length > 0 ? ` ${result.join(" ")}` : "")
+					);
+				}
+				return result.join(" ");
 			}
 
-			it("should eval " + key, () => {
+			it(`should eval ${key}`, () => {
 				const evalExpr = evaluateInParser(key);
 				expect(evalExprToString(evalExpr)).toBe(
-					testCases[key] ? key + " " + testCases[key] : key
+					testCases[key] ? `${key} ${testCases[key]}` : key
 				);
 			});
-		});
+		}
 	});
 
 	describe("async/await support", () => {
@@ -628,13 +628,13 @@ describe("JavascriptParser", () => {
 				"await iteration": "async function f() { for await (x of xs); }"
 			};
 			const parser = new JavascriptParser();
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = parser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 		describe("should parse await", () => {
 			const cases = {
@@ -662,12 +662,12 @@ describe("JavascriptParser", () => {
 				parser.state.param = param.string;
 			});
 
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				it(name, () => {
 					const actual = parser.parse(cases[name][0], {});
 					expect(actual).toEqual(cases[name][1]);
 				});
-			});
+			}
 		});
 	});
 
@@ -677,13 +677,13 @@ describe("JavascriptParser", () => {
 				"object spread": "({...obj})",
 				"object rest": "({...obj} = foo)"
 			};
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 
 		it("should collect definitions from identifiers introduced in object patterns", () => {
@@ -708,13 +708,13 @@ describe("JavascriptParser", () => {
 			const cases = {
 				"optional binding": "try {} catch {}"
 			};
-			Object.keys(cases).forEach(name => {
+			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr);
 					expect(typeof actual).toBe("object");
 				});
-			});
+			}
 		});
 	});
 
@@ -735,7 +735,7 @@ describe("JavascriptParser", () => {
 			["ia", false]
 		];
 
-		tests.forEach(([suite, expected]) => {
+		for (const [suite, expected] of tests) {
 			it(`BasicEvaluatedExpression.isValidRegExpFlags(${JSON.stringify(
 				suite
 			)})`, () => {
@@ -743,6 +743,6 @@ describe("JavascriptParser", () => {
 					expected
 				);
 			});
-		});
+		}
 	});
 });

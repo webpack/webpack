@@ -9,8 +9,8 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-const exec = (n, options = {}) => {
-	return new Promise((resolve, reject) => {
+const exec = (n, options = {}) =>
+	new Promise((resolve, reject) => {
 		const webpack = require("../");
 		const coverageEnabled = webpack.toString().includes("++");
 
@@ -93,9 +93,8 @@ const exec = (n, options = {}) => {
 			reject(err);
 		});
 	});
-};
 
-const supportsEsm = +process.versions.modules >= 83;
+const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
 	beforeEach(done => {
@@ -218,7 +217,8 @@ export default 0;`
 		await exec("7", {
 			definedValue: "other"
 		});
-		let now4, now5;
+		let now4;
+		let now5;
 		if (supportsEsm) {
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),
