@@ -30,8 +30,13 @@ describe("Examples", () => {
 			if (fs.existsSync(webpackConfigPath))
 				options = require(webpackConfigPath);
 			if (typeof options === "function") options = options();
-			if (Array.isArray(options)) options.forEach(processOptions);
-			else processOptions(options);
+			if (Array.isArray(options)) {
+				for (const [_, item] of options.entries()) {
+					processOptions(item);
+				}
+			} else {
+				processOptions(options);
+			}
 
 			function processOptions(options) {
 				options.context = examplePath;

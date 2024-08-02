@@ -161,7 +161,9 @@ const describeCases = config => {
 								}
 							};
 							if (Array.isArray(options)) {
-								options.forEach(applyConfig);
+								for (const [idx, item] of options.entries()) {
+									applyConfig(item, idx);
+								}
 							} else {
 								applyConfig(options, 0);
 							}

@@ -218,13 +218,11 @@ module.exports = [
 			"unicorn/prefer-negative-index": "error",
 			"unicorn/prefer-ternary": ["error", "only-single-line"],
 			"unicorn/prefer-array-find": "error",
-			"unicorn/prefer-string-slice": "error",
 			"unicorn/no-lonely-if": "error",
 			"unicorn/no-hex-escape": "error",
 			"unicorn/escape-case": "error",
 			"unicorn/no-array-for-each": "error",
 			"unicorn/prefer-number-properties": "error",
-			"unicorn/prefer-regexp-test": "error",
 			"unicorn/prefer-native-coercion-functions": "error",
 			// TODO Enable
 			"unicorn/prefer-spread": "off"
@@ -404,6 +402,14 @@ module.exports = [
 			"object-shorthand": "off",
 			camelcase: "off",
 			"no-var": "off"
+		}
+	},
+	{
+		files: [
+			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js"
+		],
+		rules: {
+			"n/no-missing-require": "off"
 		}
 	},
 	{
