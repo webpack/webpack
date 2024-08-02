@@ -4815,3 +4815,10 @@ cacheable modules X bytes
   ./worker.js X bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
+
+exports[`StatsTestCases should print correct stats for wrong-error-location-error 1`] = `
+"ERROR in ./index.js 2:13-33
+Module not found: Error: Can't resolve 'some_file' in 'Xdir/wrong-error-location-error'
+
+webpack compiled with 1 error"
+`;
