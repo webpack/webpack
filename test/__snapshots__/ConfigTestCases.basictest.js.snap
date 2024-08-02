@@ -4281,12 +4281,12 @@ Array [
 
 .class {
   color: red;
-  background: /** webpackIgnore: true */ url(\\"./url/img.png\\"),  url(\\"./url/img.png\\");
+  background: /** webpackIgnore: true */ url(\\"./url/img.png\\"),  url(89a353e9c515885abd8e.png);
 }
 
 .class {
   color: red;
-  background:/** webpackIgnore: true */url(\\"./url/img.png\\"),  url(\\"./url/img.png\\");
+  background:/** webpackIgnore: true */url(\\"./url/img.png\\"),  url(89a353e9c515885abd8e.png);
 }
 
 .class {
@@ -4338,11 +4338,11 @@ Array [
     url(89a353e9c515885abd8e.png),
     url(89a353e9c515885abd8e.png),
       /** webpackIgnore: true **/ url(\\"./url/img.png\\"),
-    url(\\"./url/img.png\\"),
+    url(89a353e9c515885abd8e.png),
       /** webpackIgnore: true **/ url(\\"./url/img.png\\"),
-    url(\\"./url/img.png\\"),
-    url(\\"./url/img.png\\"),
-    url(\\"./url/img.png\\"),
+    url(89a353e9c515885abd8e.png),
+    url(89a353e9c515885abd8e.png),
+    url(89a353e9c515885abd8e.png),
       /** webpackIgnore: true **/
     url(\\"./url/img.png\\");
 }
@@ -4353,10 +4353,10 @@ Array [
   src:
     /** webpackIgnore: true **/
     url(\\"./fonts/Roboto-Regular.eot#iefix\\") format(\\"embedded-opentype\\"),
-    url(\\"./fonts/Roboto-Regular.woff2\\") format(\\"woff\\"),
-    url(\\"./fonts/Roboto-Regular.woff\\") format(\\"woff\\"),
-    url(\\"./fonts/Roboto-Regular.ttf\\") format(\\"truetype\\"),
-    url(\\"./fonts/Roboto-Regular.svg#Roboto-Regular\\") format(\\"svg\\");
+    url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
+    url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
+    url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
+    url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
   font-weight: 400;
   font-style: normal;
 }
@@ -4382,10 +4382,10 @@ Array [
     url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
       /** webpackIgnore: true **/
     url(\\"./fonts/Roboto-Regular.woff2\\") format(\\"woff\\"),
-    url(\\"./fonts/Roboto-Regular.woff\\") format(\\"woff\\"),
+    url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
       /** webpackIgnore: true **/
     url(\\"./fonts/Roboto-Regular.ttf\\") format(\\"truetype\\"),
-    url(\\"./fonts/Roboto-Regular.svg#Roboto-Regular\\") format(\\"svg\\");
+    url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
   font-weight: 400;
   font-style: normal;
 }
@@ -4402,7 +4402,7 @@ Array [
 
 .class {
   color: red;
-  background: url(89a353e9c515885abd8e.png)/** webpackIgnore: true */, url(\\"./url/img.png\\");
+  background: url(89a353e9c515885abd8e.png)/** webpackIgnore: true */, url(89a353e9c515885abd8e.png);
 }
 
 @font-face {
