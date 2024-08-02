@@ -118,7 +118,7 @@ describe("snapshots", () => {
 		    "environment": Object {
 		      "arrowFunction": true,
 		      "asyncFunction": true,
-		      "bigIntLiteral": undefined,
+		      "bigIntLiteral": true,
 		      "const": true,
 		      "destructuring": true,
 		      "document": true,
@@ -350,7 +350,7 @@ describe("snapshots", () => {
 		    "environment": Object {
 		      "arrowFunction": true,
 		      "asyncFunction": true,
-		      "bigIntLiteral": undefined,
+		      "bigIntLiteral": true,
 		      "const": true,
 		      "destructuring": true,
 		      "document": true,
@@ -2067,7 +2067,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "arrowFunction": true,
 			-       "asyncFunction": true,
-			-       "bigIntLiteral": undefined,
+			-       "bigIntLiteral": true,
 			-       "const": true,
 			-       "destructuring": true,
 			+       "arrowFunction": false,
@@ -2101,7 +2101,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "arrowFunction": true,
 			-       "asyncFunction": true,
-			-       "bigIntLiteral": undefined,
+			-       "bigIntLiteral": true,
 			-       "const": true,
 			-       "destructuring": true,
 			+       "arrowFunction": false,
