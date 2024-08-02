@@ -2,6 +2,10 @@
   "dependencies": {
     "package": "*",
     "@scoped/package": "*",
-    "prefix": "*"
+    "prefix": "*",
+    "foo": "^1.0.0",
+    "bar": ">= 1.5.0",
+    "x": "*",
+    "@abc/y": "*"
   }
 }
