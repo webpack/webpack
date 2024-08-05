@@ -24,6 +24,11 @@
 @value char-2: #00ff00;
 @value rgba: rgba(34, 12, 64, 0.3);
 @value hsla: hsla(220, 13.0%, 18.0%, 1);
+@value class: red;
+.class { color: class; }
+.class > .class { color: class; }
+@value id: blue;
+#id { color: id; }
 
 @value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
 .foo {
