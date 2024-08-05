@@ -2,6 +2,7 @@ import value from "promise-external";
 import value2 from "module-promise-external";
 import value3 from "object-promise-external";
 import request from "import-external";
+import request2 from "module-import-external";
 import "./module.mjs";
 
 it("should allow async externals", () => {
@@ -9,6 +10,7 @@ it("should allow async externals", () => {
 	expect(value2).toBe(42);
 	expect(value3).toEqual({ default: 42, named: true });
 	expect(request).toBe("/hello/world.js");
+	expect(request2).toBe("/hello/world.js");
 });
 
 it("should allow to catch errors of async externals", () => {
