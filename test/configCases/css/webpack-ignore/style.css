@@ -191,6 +191,16 @@
   );
 }
 
+/* .class {
+  background-image: image-set(
+      webpackIgnore:  true
+      './url/img.png' 2x,
+      './url/img.png' 3x,
+      webpackIgnore:  true
+      './url/img.png' 5x
+  );
+} */
+
 .class {
   /*webpackIgnore:  true*/
   background-image: image-set(
