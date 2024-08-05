@@ -5349,6 +5349,7 @@ type IgnorePluginOptions =
 type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
+	externalType?: "import" | "module";
 }
 declare interface ImportModuleOptions {
 	/**
