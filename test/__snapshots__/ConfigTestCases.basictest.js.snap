@@ -4391,6 +4391,87 @@ Array [
 }
 
 .class {
+  /*webpackIgnore:  true*/
+  background-image: image-set(
+    url(./url/img.png) 2x,
+    url(./url/img.png) 3x,
+    url(./url/img.png) 4x
+  );
+}
+
+.class {
+  /*webpackIgnore:  true*/
+  background-image: 
+    image-set(
+        /*webpackIgnore:  false*/
+        url(89a353e9c515885abd8e.png) 2x,
+        /*webpackIgnore:  true*/
+        url(./url/img.png) 3x,
+        url(./url/img.png) 4x,
+        /*webpackIgnore:  false */
+        /*webpackIgnore:  true */
+        url(./url/img.png) 5x
+    ), 
+    url('./url/img.png');
+}
+
+.class {
+    background-image:
+      image-set(
+        /*webpackIgnore:  false*/
+        url(89a353e9c515885abd8e.png) 2x,
+        /*webpackIgnore:  true*/
+        url(./url/img.png) 3x,
+        url(89a353e9c515885abd8e.png) 4x,
+        /*webpackIgnore:  false */
+        /*webpackIgnore:  true */
+        url(./url/img.png) 5x
+      ),
+      /*webpackIgnore:  false*/
+      url(89a353e9c515885abd8e.png),
+      /*webpackIgnore:  true*/
+      url('./url/img.png');;
+}
+
+.class {
+    background-image:
+        image-set(
+            /*webpackIgnore:  false*/
+            url(89a353e9c515885abd8e.png) 2x,
+            /*webpackIgnore:  true*/
+            url(./url/img.png) 3x,
+            url(89a353e9c515885abd8e.png) 4x,
+            /*webpackIgnore:  false */
+            /*webpackIgnore:  true */
+            url(./url/img.png) 5x
+        ),
+        url(89a353e9c515885abd8e.png);
+}
+
+.class {
+  background-image: image-set(
+    /*webpackIgnore:  true*/
+    url(./url/img.png) 2x,
+    url(89a353e9c515885abd8e.png) 3x,
+      /*webpackIgnore:  true*/
+    url(./url/img.png) 5x
+  );
+}
+
+.class {
+  /*webpackIgnore:  true*/
+  background-image: image-set(
+    /*webpackIgnore:  false*/
+    url(89a353e9c515885abd8e.png) 2x,
+    /*webpackIgnore:  true*/
+    url(./url/img.png) 3x,
+    /*webpackIgnore:  false*/
+    url(89a353e9c515885abd8e.png) 4x,
+    url(./url/img.png) 5x
+  );
+}
+
+.class {
   color: red;
   background: url(89a353e9c515885abd8e.png), /** webpackIgnore: true */url(\\"./url/img.png\\");
 }
