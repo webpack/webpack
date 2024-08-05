@@ -3567,6 +3567,10 @@ Array [
 	}
 }
 
+.red { color: red; }
+.red > .red { color: red; }
+#blue { color: blue; }
+
 .foo {
 	color: red;
 	background-color: #0f0;
@@ -3581,7 +3585,7 @@ Array [
 	--color2: ;
 	--color3: ;
 }
-head{--webpack-main:small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue:red/aaa:red/bbb:aaa/named:red/char-1:\\\\#0f0/char-2:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/v-empty:/v-empty-1:/v-empty-2:/&\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue:red/aaa:red/bbb:aaa/named:red/char-1:\\\\#0f0/char-2:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/class:red/id:blue/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/v-empty:/v-empty-1:/v-empty-2:/&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
