@@ -292,7 +292,8 @@
     "xxhashjs",
     "Yann",
     "readonly",
-    "commithash"
+    "commithash",
+    "formaters"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

@@ -400,7 +400,9 @@ declare abstract class AsyncQueue<T, K, R> {
 		added: SyncHook<[T]>;
 		beforeStart: AsyncSeriesHook<[T]>;
 		started: SyncHook<[T]>;
-		result: SyncHook<[T, Error, R]>;
+		result: SyncHook<
+			[T, undefined | null | WebpackError, undefined | null | R]
+		>;
 	};
 	add(item: T, callback: CallbackAsyncQueue<R>): void;
 	invalidate(item: T): void;
@@ -996,7 +998,7 @@ declare interface CallExpressionInfo {
 	getMemberRanges: () => [number, number][];
 }
 declare interface CallbackAsyncQueue<T> {
-	(err?: null | WebpackError, result?: T): any;
+	(err?: null | WebpackError, result?: null | T): any;
 }
 declare interface CallbackCacheCache<T> {
 	(err: null | WebpackError, result?: T): void;
@@ -1217,7 +1219,7 @@ declare class ChunkGraph {
 		chunkGroup: ChunkGroup
 	): void;
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
-	getModuleId(module: Module): ModuleId;
+	getModuleId(module: Module): null | string | number;
 	setModuleId(module: Module, id: ModuleId): void;
 	getRuntimeId(runtime: string): string | number;
 	setRuntimeId(runtime: string, id: string | number): void;
@@ -1609,7 +1611,7 @@ declare interface CodeGenerationResult {
 	/**
 	 * the runtime requirements
 	 */
-	runtimeRequirements: ReadonlySet<string>;
+	runtimeRequirements: null | ReadonlySet<string>;
 
 	/**
 	 * a hash of the code generation result (will be automatically calculated from sources and runtimeRequirements if not provided)
@@ -1711,10 +1713,10 @@ declare class Compilation {
 		 * inspect, analyze, and/or modify the chunk graph.
 		 */
 		afterChunks: SyncHook<[Iterable<Chunk>]>;
-		optimizeDependencies: SyncBailHook<[Iterable<Module>], any>;
+		optimizeDependencies: SyncBailHook<[Iterable<Module>], boolean | void>;
 		afterOptimizeDependencies: SyncHook<[Iterable<Module>]>;
 		optimize: SyncHook<[]>;
-		optimizeModules: SyncBailHook<[Iterable<Module>], any>;
+		optimizeModules: SyncBailHook<[Iterable<Module>], boolean | void>;
 		afterOptimizeModules: SyncHook<[Iterable<Module>]>;
 		optimizeChunks: SyncBailHook<
 			[Iterable<Chunk>, ChunkGroup[]],
@@ -1739,13 +1741,13 @@ declare class Compilation {
 			[Module, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInModule: HookMap<
-			SyncBailHook<[Module, Set<string>, RuntimeRequirementsContext], any>
+			SyncBailHook<[Module, Set<string>, RuntimeRequirementsContext], void>
 		>;
 		additionalTreeRuntimeRequirements: SyncHook<
 			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInTree: HookMap<
-			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], any>
+			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], void>
 		>;
 		runtimeModule: SyncHook<[RuntimeModule, Chunk]>;
 		reviveModules: SyncHook<[Iterable<Module>, any]>;
@@ -1830,7 +1832,9 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		get normalModuleLoader(): SyncHook<[object, NormalModule]>;
+		get normalModuleLoader(): SyncHook<
+			[LoaderContextNormalModule<any>, NormalModule]
+		>;
 	}>;
 	name?: string;
 	startTime?: number;
@@ -2940,8 +2944,8 @@ declare interface ContextTimestampAndHash {
 	resolved?: ResolvedContextTimestampAndHash;
 	symlinks?: Set<string>;
 }
-type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
-	Record<string, any>;
+type CreateStatsOptionsContext = Record<string, any> &
+	KnownCreateStatsOptionsContext;
 type CreateWriteStreamFSImplementation = FSImplementation & {
 	write: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -3121,8 +3125,8 @@ declare class DefinePlugin {
 	): RuntimeValue;
 }
 declare class DelegatedPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: Options);
+	options: Options;
 
 	/**
 	 * Apply the plugin
@@ -3619,6 +3623,9 @@ declare interface Effect {
 	type: string;
 	value: any;
 }
+declare interface EffectData {
+	[index: string]: any;
+}
 declare class ElectronTargetPlugin {
 	constructor(context?: "main" | "preload" | "renderer");
 
@@ -3981,9 +3988,9 @@ declare interface Environment {
 	templateLiteral?: boolean;
 }
 declare class EnvironmentPlugin {
-	constructor(...keys: any[]);
-	keys: any[];
-	defaultValues: any;
+	constructor(...keys: (string | string[] | Record<string, string>)[]);
+	keys: string[];
+	defaultValues: Record<string, string>;
 
 	/**
 	 * Apply the plugin
@@ -4218,7 +4225,7 @@ declare abstract class ExportInfo {
 	findTarget(
 		moduleGraph: ModuleGraph,
 		validTargetModuleFilter: (arg0: Module) => boolean
-	): undefined | false | { module: Module; export?: string[] };
+	): undefined | null | false | { module: Module; export?: string[] };
 	getTarget(
 		moduleGraph: ModuleGraph,
 		resolveTargetFilter?: (arg0: {
@@ -4243,8 +4250,8 @@ declare abstract class ExportInfo {
 	): undefined | { module: Module; export?: string[] };
 	createNestedExportsInfo(): undefined | ExportsInfo;
 	getNestedExportsInfo(): undefined | ExportsInfo;
-	hasInfo(baseInfo?: any, runtime?: any): boolean;
-	updateHash(hash?: any, runtime?: any): void;
+	hasInfo(baseInfo: ExportInfo, runtime: RuntimeSpec): boolean;
+	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getUsedInfo(): string;
 	getProvidedInfo():
 		| "no provided info"
@@ -4808,16 +4815,12 @@ declare interface FileSystem {
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
 	logger?: WebpackLogger;
-	fileTimestampQueue: AsyncQueue<string, string, null | FileSystemInfoEntry>;
-	fileHashQueue: AsyncQueue<string, string, null | string>;
-	contextTimestampQueue: AsyncQueue<
-		string,
-		string,
-		null | ContextFileSystemInfoEntry
-	>;
-	contextHashQueue: AsyncQueue<string, string, null | ContextHash>;
-	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
-	managedItemQueue: AsyncQueue<string, string, null | string>;
+	fileTimestampQueue: AsyncQueue<string, string, FileSystemInfoEntry>;
+	fileHashQueue: AsyncQueue<string, string, string>;
+	contextTimestampQueue: AsyncQueue<string, string, ContextFileSystemInfoEntry>;
+	contextHashQueue: AsyncQueue<string, string, ContextHash>;
+	contextTshQueue: AsyncQueue<string, string, ContextTimestampAndHash>;
+	managedItemQueue: AsyncQueue<string, string, string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
 	unmanagedPathsWithSlash: string[];
 	unmanagedPathsRegExps: RegExp[];
@@ -4863,7 +4866,7 @@ declare abstract class FileSystemInfo {
 		path: string,
 		callback: (
 			arg0?: null | WebpackError,
-			arg1?: ResolvedContextTimestampAndHash
+			arg1?: null | ResolvedContextTimestampAndHash
 		) => void
 	): void;
 	resolveBuildDependencies(
@@ -4884,7 +4887,7 @@ declare abstract class FileSystemInfo {
 		directories: null | Iterable<string>,
 		missing: null | Iterable<string>,
 		options: undefined | null | SnapshotOptionsFileSystemInfo,
-		callback: (arg0?: null | WebpackError, arg1?: null | Snapshot) => void
+		callback: (arg0: null | WebpackError, arg1: null | Snapshot) => void
 	): void;
 	mergeSnapshots(snapshot1: Snapshot, snapshot2: Snapshot): Snapshot;
 	checkSnapshotValid(
@@ -5072,7 +5075,7 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface GroupConfig {
-	getKeys: (arg0?: any) => string[];
+	getKeys: (arg0?: any) => undefined | string[];
 	createGroup: (arg0: string, arg1: any[], arg2: any[]) => object;
 	getOptions?: (arg0: string, arg1: any[]) => GroupOptions;
 }
@@ -6973,14 +6976,14 @@ declare interface KnownStatsChunk {
 	recorded: boolean;
 	reason?: string;
 	size: number;
-	sizes?: Record<string, number>;
-	names?: string[];
-	idHints?: string[];
+	sizes: Record<string, number>;
+	names: string[];
+	idHints: string[];
 	runtime?: string[];
-	files?: string[];
-	auxiliaryFiles?: string[];
+	files: string[];
+	auxiliaryFiles: string[];
 	hash: string;
-	childrenByOrder?: Record<string, (string | number)[]>;
+	childrenByOrder: Record<string, (string | number)[]>;
 	id?: string | number;
 	siblings?: (string | number)[];
 	parents?: (string | number)[];
@@ -7003,11 +7006,11 @@ declare interface KnownStatsChunkGroup {
 	isOverSizeLimit?: boolean;
 }
 declare interface KnownStatsChunkOrigin {
-	module?: string;
-	moduleIdentifier?: string;
-	moduleName?: string;
-	loc?: string;
-	request?: string;
+	module: string;
+	moduleIdentifier: string;
+	moduleName: string;
+	loc: string;
+	request: string;
 	moduleId?: string | number;
 }
 declare interface KnownStatsCompilation {
@@ -7052,14 +7055,14 @@ declare interface KnownStatsError {
 }
 declare interface KnownStatsFactoryContext {
 	type: string;
-	makePathsRelative?: (arg0: string) => string;
-	compilation?: Compilation;
-	rootModules?: Set<Module>;
-	compilationFileToChunks?: Map<string, Chunk[]>;
-	compilationAuxiliaryFileToChunks?: Map<string, Chunk[]>;
-	runtime?: RuntimeSpec;
-	cachedGetErrors?: (arg0: Compilation) => WebpackError[];
-	cachedGetWarnings?: (arg0: Compilation) => WebpackError[];
+	makePathsRelative: (arg0: string) => string;
+	compilation: Compilation;
+	rootModules: Set<Module>;
+	compilationFileToChunks: Map<string, Chunk[]>;
+	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
+	runtime: RuntimeSpec;
+	cachedGetErrors: (arg0: Compilation) => WebpackError[];
+	cachedGetWarnings: (arg0: Compilation) => WebpackError[];
 }
 declare interface KnownStatsLogging {
 	entries: StatsLoggingEntry[];
@@ -7068,7 +7071,7 @@ declare interface KnownStatsLogging {
 }
 declare interface KnownStatsLoggingEntry {
 	type: string;
-	message: string;
+	message?: string;
 	trace?: string[];
 	children?: StatsLoggingEntry[];
 	args?: any[];
@@ -7077,10 +7080,10 @@ declare interface KnownStatsLoggingEntry {
 declare interface KnownStatsModule {
 	type?: string;
 	moduleType?: string;
-	layer?: string;
+	layer?: null | string;
 	identifier?: string;
 	name?: string;
-	nameForCondition?: string;
+	nameForCondition?: null | string;
 	index?: number;
 	preOrderIndex?: number;
 	index2?: number;
@@ -7095,45 +7098,45 @@ declare interface KnownStatsModule {
 	optional?: boolean;
 	orphan?: boolean;
 	id?: string | number;
-	issuerId?: string | number;
+	issuerId?: null | string | number;
 	chunks?: (string | number)[];
 	assets?: (string | number)[];
 	dependent?: boolean;
-	issuer?: string;
-	issuerName?: string;
+	issuer?: null | string;
+	issuerName?: null | string;
 	issuerPath?: StatsModuleIssuer[];
 	failed?: boolean;
 	errors?: number;
 	warnings?: number;
 	profile?: StatsProfile;
 	reasons?: StatsModuleReason[];
-	usedExports?: boolean | string[];
-	providedExports?: string[];
+	usedExports?: null | boolean | string[];
+	providedExports?: null | string[];
 	optimizationBailout?: string[];
-	depth?: number;
+	depth?: null | number;
 	modules?: StatsModule[];
 	filteredModules?: number;
 	source?: string | Buffer;
 }
 declare interface KnownStatsModuleIssuer {
-	identifier?: string;
-	name?: string;
+	identifier: string;
+	name: string;
 	id?: string | number;
-	profile?: StatsProfile;
+	profile: StatsProfile;
 }
 declare interface KnownStatsModuleReason {
-	moduleIdentifier?: string;
-	module?: string;
-	moduleName?: string;
-	resolvedModuleIdentifier?: string;
-	resolvedModule?: string;
-	type?: string;
+	moduleIdentifier: null | string;
+	module: null | string;
+	moduleName: null | string;
+	resolvedModuleIdentifier: null | string;
+	resolvedModule: null | string;
+	type: null | string;
 	active: boolean;
-	explanation?: string;
-	userRequest?: string;
-	loc?: string;
-	moduleId?: string | number;
-	resolvedModuleId?: string | number;
+	explanation: null | string;
+	userRequest: null | string;
+	loc?: null | string;
+	moduleId?: null | string | number;
+	resolvedModuleId?: null | string | number;
 }
 declare interface KnownStatsModuleTraceDependency {
 	loc?: string;
@@ -7147,20 +7150,31 @@ declare interface KnownStatsModuleTraceItem {
 	originId?: string | number;
 	moduleId?: string | number;
 }
-declare interface KnownStatsPrinterContext {
-	type?: string;
-	compilation?: StatsCompilation;
-	chunkGroup?: StatsChunkGroup;
-	asset?: StatsAsset;
-	module?: StatsModule;
-	chunk?: StatsChunk;
-	moduleReason?: StatsModuleReason;
+declare interface KnownStatsPrinterColorFn {
 	bold?: (str: string) => string;
 	yellow?: (str: string) => string;
 	red?: (str: string) => string;
 	green?: (str: string) => string;
 	magenta?: (str: string) => string;
 	cyan?: (str: string) => string;
+}
+declare interface KnownStatsPrinterContext {
+	type?: string;
+	compilation?: StatsCompilation;
+	chunkGroup?: StatsChunkGroup;
+	chunkGroupKind?: string;
+	asset?: StatsAsset;
+	module?: StatsModule;
+	chunk?: StatsChunk;
+	moduleReason?: StatsModuleReason;
+	moduleIssuer?: StatsModuleIssuer;
+	error?: StatsError;
+	profile?: StatsProfile;
+	logging?: StatsLogging;
+	moduleTraceItem?: StatsModuleTraceItem;
+	moduleTraceDependency?: StatsModuleTraceDependency;
+}
+declare interface KnownStatsPrinterFormaters {
 	formatFilename?: (file: string, oversize?: boolean) => string;
 	formatModuleId?: (id: string) => string;
 	formatChunkId?: (
@@ -7168,10 +7182,11 @@ declare interface KnownStatsPrinterContext {
 		direction?: "parent" | "child" | "sibling"
 	) => string;
 	formatSize?: (size: number) => string;
+	formatLayer?: (size: string) => string;
 	formatDateTime?: (dateTime: number) => string;
 	formatFlag?: (flag: string) => string;
 	formatTime?: (time: number, boldQuantity?: boolean) => string;
-	chunkGroupKind?: string;
+	formatError?: (message: string) => string;
 }
 declare interface KnownStatsProfile {
 	total: number;
@@ -7548,8 +7563,13 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
-type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
-	LoaderRunnerLoaderContext<OptionsType> &
+type LoaderContextDeclarationsIndex<OptionsType> =
+	NormalModuleLoaderContext<OptionsType> &
+		LoaderRunnerLoaderContext<OptionsType> &
+		LoaderPluginLoaderContext &
+		HotModuleReplacementPluginLoaderContext;
+type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+	LoaderRunnerLoaderContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 type LoaderDefinition<
@@ -7635,14 +7655,14 @@ declare interface LoaderPluginLoaderContext {
 		request: string,
 		callback: (
 			err: null | Error,
-			source: string,
-			sourceMap: any,
-			module: NormalModule
+			source?: string | Buffer,
+			sourceMap?: null | object,
+			module?: Module
 		) => void
 	): void;
 	importModule(
 		request: string,
-		options: ImportModuleOptions,
+		options: undefined | ImportModuleOptions,
 		callback: (err?: null | Error, exports?: any) => any
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
@@ -8031,7 +8051,7 @@ declare class Module extends DependenciesBlock {
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
-	id: ModuleId;
+	id: null | string | number;
 	get hash(): string;
 	get renderedHash(): string;
 	profile?: ModuleProfile;
@@ -8733,8 +8753,8 @@ declare abstract class MultiStats {
 	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(options?: any): StatsCompilation;
-	toString(options?: any): string;
+	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
+	toString(options?: string | boolean | StatsOptions): string;
 }
 declare abstract class MultiWatching {
 	watchings: Watching[];
@@ -8917,14 +8937,18 @@ declare class NormalModule extends Module {
 	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[object, NormalModule]>;
-	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, object]>;
+	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
+	beforeLoaders: SyncHook<
+		[LoaderItem[], NormalModule, LoaderContextNormalModule<any>]
+	>;
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
-		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
+		AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
 	>;
-	readResource: HookMap<AsyncSeriesBailHook<[object], string | Buffer>>;
+	readResource: HookMap<
+		AsyncSeriesBailHook<[LoaderContextNormalModule<any>], string | Buffer>
+	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare interface NormalModuleCreateData {
@@ -9219,6 +9243,9 @@ declare interface ObjectEncodingOptions {
 		| "base64"
 		| "base64url"
 		| "hex";
+}
+declare interface ObjectForExtract {
+	[index: string]: any;
 }
 declare interface ObjectSerializer {
 	serialize: (arg0: any, arg1: ObjectSerializerContext) => void;
@@ -9671,6 +9698,42 @@ declare interface OptimizationSplitChunksOptions {
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
 	usedExports?: boolean;
+}
+declare interface Options {
+	/**
+	 * source
+	 */
+	source: string;
+
+	/**
+	 * absolute context path to which lib ident is relative to
+	 */
+	context: string;
+
+	/**
+	 * content
+	 */
+	content: DllReferencePluginOptionsContent;
+
+	/**
+	 * type
+	 */
+	type?: "object" | "require";
+
+	/**
+	 * extensions
+	 */
+	extensions?: string[];
+
+	/**
+	 * scope
+	 */
+	scope?: string;
+
+	/**
+	 * object for caching
+	 */
+	associatedObjectForCache?: object;
 }
 declare abstract class OptionsApply {
 	process(options?: any, compiler?: any): void;
@@ -11485,7 +11548,7 @@ declare interface ResolveBuildDependenciesResult {
 	/**
 	 * stored resolve results
 	 */
-	resolveResults: Map<string, string | false>;
+	resolveResults: Map<string, undefined | string | false>;
 
 	/**
 	 * dependencies of the resolving
@@ -12064,7 +12127,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (arg0: object) => Effect[];
+	exec: (arg0: EffectData) => Effect[];
 }
 type RuleSetCondition =
 	| string
@@ -13155,32 +13218,36 @@ declare abstract class Snapshot {
 	children?: Set<Snapshot>;
 	hasStartTime(): boolean;
 	setStartTime(value: number): void;
-	setMergedStartTime(value?: any, snapshot?: any): void;
+	setMergedStartTime(value: undefined | number, snapshot: Snapshot): void;
 	hasFileTimestamps(): boolean;
-	setFileTimestamps(value?: any): void;
+	setFileTimestamps(value: Map<string, null | FileSystemInfoEntry>): void;
 	hasFileHashes(): boolean;
-	setFileHashes(value?: any): void;
+	setFileHashes(value: Map<string, null | string>): void;
 	hasFileTshs(): boolean;
-	setFileTshs(value?: any): void;
+	setFileTshs(value: Map<string, null | string | TimestampAndHash>): void;
 	hasContextTimestamps(): boolean;
-	setContextTimestamps(value?: any): void;
+	setContextTimestamps(
+		value: Map<string, null | ResolvedContextFileSystemInfoEntry>
+	): void;
 	hasContextHashes(): boolean;
-	setContextHashes(value?: any): void;
+	setContextHashes(value: Map<string, null | string>): void;
 	hasContextTshs(): boolean;
-	setContextTshs(value?: any): void;
+	setContextTshs(
+		value: Map<string, null | ResolvedContextTimestampAndHash>
+	): void;
 	hasMissingExistence(): boolean;
-	setMissingExistence(value?: any): void;
+	setMissingExistence(value: Map<string, boolean>): void;
 	hasManagedItemInfo(): boolean;
-	setManagedItemInfo(value?: any): void;
+	setManagedItemInfo(value: Map<string, string>): void;
 	hasManagedFiles(): boolean;
-	setManagedFiles(value?: any): void;
+	setManagedFiles(value?: Set<string>): void;
 	hasManagedContexts(): boolean;
-	setManagedContexts(value?: any): void;
+	setManagedContexts(value: Set<string>): void;
 	hasManagedMissing(): boolean;
-	setManagedMissing(value?: any): void;
+	setManagedMissing(value: Set<string>): void;
 	hasChildren(): boolean;
-	setChildren(value?: any): void;
-	addChild(child?: any): void;
+	setChildren(value: Set<Snapshot>): void;
+	addChild(child: Snapshot): void;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 	getFileIterable(): Iterable<string>;
@@ -13281,7 +13348,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Sort with a comparer function
 	 */
-	sortWith(sortFn: SortFunction<T>): void;
+	sortWith(sortFn?: SortFunction<T>): void;
 	sort(): SortableSet<T>;
 
 	/**
@@ -13653,59 +13720,73 @@ declare class Stats {
 	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
 	toString(options?: string | boolean | StatsOptions): string;
 }
-type StatsAsset = KnownStatsAsset & Record<string, any>;
-type StatsChunk = KnownStatsChunk & Record<string, any>;
-type StatsChunkGroup = KnownStatsChunkGroup & Record<string, any>;
-type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, any>;
-type StatsCompilation = KnownStatsCompilation & Record<string, any>;
-type StatsError = KnownStatsError & Record<string, any>;
+type StatsAsset = Record<string, any> & KnownStatsAsset;
+type StatsChunk = Record<string, any> & KnownStatsChunk;
+type StatsChunkGroup = Record<string, any> & KnownStatsChunkGroup;
+type StatsChunkOrigin = Record<string, any> & KnownStatsChunkOrigin;
+type StatsCompilation = Record<string, any> & KnownStatsCompilation;
+type StatsError = Record<string, any> & KnownStatsError;
 declare abstract class StatsFactory {
-	hooks: Readonly<{
-		extract: HookMap<SyncBailHook<[object, any, StatsFactoryContext], any>>;
-		filter: HookMap<
-			SyncBailHook<[any, StatsFactoryContext, number, number], any>
-		>;
-		sort: HookMap<
-			SyncBailHook<
-				[((arg0?: any, arg1?: any) => number)[], StatsFactoryContext],
-				any
-			>
-		>;
-		filterSorted: HookMap<
-			SyncBailHook<[any, StatsFactoryContext, number, number], any>
-		>;
-		groupResults: HookMap<
-			SyncBailHook<[GroupConfig[], StatsFactoryContext], any>
-		>;
-		sortResults: HookMap<
-			SyncBailHook<
-				[((arg0?: any, arg1?: any) => number)[], StatsFactoryContext],
-				any
-			>
-		>;
-		filterResults: HookMap<
-			SyncBailHook<[any, StatsFactoryContext, number, number], any>
-		>;
-		merge: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
-		result: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
-		getItemName: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
-		getItemFactory: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
-	}>;
+	hooks: StatsFactoryHooks;
 	create(
 		type: string,
 		data: any,
 		baseContext: Omit<StatsFactoryContext, "type">
 	): any;
 }
-type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
-type StatsLogging = KnownStatsLogging & Record<string, any>;
-type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
-type StatsModule = KnownStatsModule & Record<string, any>;
-type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
-type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
-type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
-	Record<string, any>;
-type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
+type StatsFactoryContext = Record<string, any> & KnownStatsFactoryContext;
+declare interface StatsFactoryHooks {
+	extract: HookMap<
+		SyncBailHook<[ObjectForExtract, any, StatsFactoryContext], undefined>
+	>;
+	filter: HookMap<
+		SyncBailHook<
+			[any, StatsFactoryContext, number, number],
+			undefined | boolean
+		>
+	>;
+	sort: HookMap<
+		SyncBailHook<
+			[((arg0?: any, arg1?: any) => 0 | 1 | -1)[], StatsFactoryContext],
+			undefined
+		>
+	>;
+	filterSorted: HookMap<
+		SyncBailHook<
+			[any, StatsFactoryContext, number, number],
+			undefined | boolean
+		>
+	>;
+	groupResults: HookMap<
+		SyncBailHook<[GroupConfig[], StatsFactoryContext], undefined>
+	>;
+	sortResults: HookMap<
+		SyncBailHook<
+			[((arg0?: any, arg1?: any) => 0 | 1 | -1)[], StatsFactoryContext],
+			undefined
+		>
+	>;
+	filterResults: HookMap<
+		SyncBailHook<
+			[any, StatsFactoryContext, number, number],
+			undefined | boolean
+		>
+	>;
+	merge: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+	result: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
+	getItemName: HookMap<SyncBailHook<[any, StatsFactoryContext], string>>;
+	getItemFactory: HookMap<
+		SyncBailHook<[any, StatsFactoryContext], undefined | StatsFactory>
+	>;
+}
+type StatsLogging = Record<string, any> & KnownStatsLogging;
+type StatsLoggingEntry = Record<string, any> & KnownStatsLoggingEntry;
+type StatsModule = Record<string, any> & KnownStatsModule;
+type StatsModuleIssuer = Record<string, any> & KnownStatsModuleIssuer;
+type StatsModuleReason = Record<string, any> & KnownStatsModuleReason;
+type StatsModuleTraceDependency = Record<string, any> &
+	KnownStatsModuleTraceDependency;
+type StatsModuleTraceItem = Record<string, any> & KnownStatsModuleTraceItem;
 
 /**
  * Stats options object.
@@ -14154,22 +14235,28 @@ declare interface StatsOptions {
 	 */
 	warningsSpace?: number;
 }
-declare abstract class StatsPrinter {
-	hooks: Readonly<{
-		sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], true>>;
-		printElements: HookMap<
-			SyncBailHook<[PrintedElement[], StatsPrinterContext], string>
-		>;
-		sortItems: HookMap<SyncBailHook<[any[], StatsPrinterContext], true>>;
-		getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string>>;
-		printItems: HookMap<SyncBailHook<[string[], StatsPrinterContext], string>>;
-		print: HookMap<SyncBailHook<[{}, StatsPrinterContext], string>>;
-		result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
-	}>;
-	print(type: string, object: object, baseContext?: object): string;
+declare interface StatsPrintHooks {
+	sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], void>>;
+	printElements: HookMap<
+		SyncBailHook<[PrintedElement[], StatsPrinterContext], undefined | string>
+	>;
+	sortItems: HookMap<SyncBailHook<[any[], StatsPrinterContext], true>>;
+	getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string>>;
+	printItems: HookMap<
+		SyncBailHook<[string[], StatsPrinterContext], undefined | string>
+	>;
+	print: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 }
-type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
-type StatsProfile = KnownStatsProfile & Record<string, any>;
+declare abstract class StatsPrinter {
+	hooks: StatsPrintHooks;
+	print(type: string, object?: any, baseContext?: StatsPrinterContext): string;
+}
+type StatsPrinterContext = Record<string, any> &
+	KnownStatsPrinterColorFn &
+	KnownStatsPrinterFormaters &
+	KnownStatsPrinterContext;
+type StatsProfile = Record<string, any> & KnownStatsProfile;
 type StatsValue =
 	| boolean
 	| StatsOptions
@@ -14198,7 +14285,7 @@ declare class SyncModuleIdsPlugin {
 		/**
 		 * operation mode (defaults to merge)
 		 */
-		mode?: "read" | "merge" | "create" | "update";
+		mode?: "read" | "create" | "merge" | "update";
 	});
 
 	/**
@@ -14306,6 +14393,7 @@ declare interface UpdateHashContextGenerator {
 	runtimeTemplate?: RuntimeTemplate;
 }
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
+type Value = string | number | boolean | RegExp;
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
@@ -14987,14 +15075,7 @@ declare namespace exports {
 		export let processArguments: (
 			args: Record<string, Argument>,
 			config: any,
-			values: Record<
-				string,
-				| string
-				| number
-				| boolean
-				| RegExp
-				| (string | number | boolean | RegExp)[]
-			>
+			values: Record<string, Value[]>
 		) => null | Problem[];
 	}
 	export namespace ModuleFilenameHelpers {
@@ -15576,7 +15657,7 @@ declare namespace exports {
 		LoaderDefinitionFunction,
 		PitchLoaderDefinitionFunction,
 		RawLoaderDefinitionFunction,
-		LoaderContext
+		LoaderContextDeclarationsIndex as LoaderContext
 	};
 }
 declare const topLevelSymbolTag: unique symbol;
