@@ -1,9 +1,11 @@
 import * as staticPkg from "./static-package.json" with { type: "json" };
 import * as staticPkgStr from "./static-package-str.json" with { "type": "json" };
+import * as staticPkgModuleImport from "./static-package-module-import.json" with { "type": "json" };
 
 it("should allow async externals", async () => {
 	expect(staticPkg.default.foo).toBe("static");
 	expect(staticPkgStr.default.foo).toBe("static-str");
+	expect(staticPkgModuleImport.default.foo).toBe("static");
 
 	const dynamicPkg = await import("./dynamic-package.json", {
 		with: { type: "json" }
@@ -42,6 +44,12 @@ it("should allow async externals", async () => {
 	const reExportPkg = await import("./re-export.js");
 
 	expect(reExportPkg.foo).toBe("re-export");
+
+	const dynamicPkgModuleImport = await import("./dynamic-package-module-import.json", {
+		with: { type: "json" }
+	})
+
+	expect(dynamicPkgModuleImport.default.foo).toBe("dynamic");
 });
 
 export * from "./re-export-directly.json" with { type: "json" }

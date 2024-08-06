@@ -60,6 +60,10 @@ module.exports = {
 		"./pkg.json": "import ./pkg.json",
 		"./pkg": "import ./pkg",
 		"./re-export.json": "module ./re-export.json",
-		"./re-export-directly.json": "module ./re-export-directly.json"
+		"./re-export-directly.json": "module ./re-export-directly.json",
+		"./static-package-module-import.json":
+			"module-import ./static-package.json",
+		"./dynamic-package-module-import.json":
+			"module-import ./dynamic-package.json"
 	}
 };
