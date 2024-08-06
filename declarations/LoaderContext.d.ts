@@ -1,4 +1,5 @@
 import type { SourceMap } from "../lib/NormalModule";
+import type Module from "../lib/Module";
 import type { validate } from "schema-utils";
 import type { AssetInfo } from "../lib/Compilation";
 import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory";
@@ -70,15 +71,15 @@ export interface LoaderPluginLoaderContext {
 		request: string,
 		callback: (
 			err: Error | null,
-			source: string,
-			sourceMap: any,
-			module: NormalModule
+			source?: string | Buffer,
+			sourceMap?: object | null,
+			module?: Module
 		) => void
 	): void;
 
 	importModule(
 		request: string,
-		options: ImportModuleOptions,
+		options: ImportModuleOptions | undefined,
 		callback: ImportModuleCallback
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
