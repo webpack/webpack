@@ -191,15 +191,15 @@
   );
 }
 
-/* .class {
+.class {
   background-image: image-set(
-      webpackIgnore:  true
+      /* webpackIgnore:  true */
       './url/img.png' 2x,
       './url/img.png' 3x,
-      webpackIgnore:  true
+      /* webpackIgnore:  true */
       './url/img.png' 5x
   );
-} */
+}
 
 .class {
   /*webpackIgnore:  true*/

@@ -4458,15 +4458,15 @@ Array [
   );
 }
 
-/* .class {
+.class {
   background-image: image-set(
-      webpackIgnore:  true
+      /* webpackIgnore:  true */
       './url/img.png' 2x,
-      './url/img.png' 3x,
-      webpackIgnore:  true
+      url(89a353e9c515885abd8e.png) 3x,
+      /* webpackIgnore:  true */
       './url/img.png' 5x
   );
-} */
+}
 
 .class {
   /*webpackIgnore:  true*/
