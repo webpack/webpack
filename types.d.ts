@@ -13240,7 +13240,7 @@ declare abstract class Snapshot {
 	hasManagedItemInfo(): boolean;
 	setManagedItemInfo(value: Map<string, string>): void;
 	hasManagedFiles(): boolean;
-	setManagedFiles(value?: Set<string>): void;
+	setManagedFiles(value: Set<string>): void;
 	hasManagedContexts(): boolean;
 	setManagedContexts(value: Set<string>): void;
 	hasManagedMissing(): boolean;
