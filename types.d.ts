@@ -452,7 +452,7 @@ declare class AutomaticPrefetchPlugin {
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare interface BackendApi {
-	dispose: (arg0?: Error) => void;
+	dispose: (arg0: (arg0?: null | Error) => void) => void;
 	module: (arg0: Module) => { client: string; data: string; active: boolean };
 }
 declare class BannerPlugin {
@@ -578,6 +578,7 @@ declare abstract class BasicEvaluatedExpression {
 		| ThisExpression
 		| UpdateExpression
 		| YieldExpression
+		| SpreadElement
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -615,7 +616,6 @@ declare abstract class BasicEvaluatedExpression {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern
-		| SpreadElement
 		| Property
 		| AssignmentProperty
 		| ClassBody
@@ -801,6 +801,7 @@ declare abstract class BasicEvaluatedExpression {
 			| ThisExpression
 			| UpdateExpression
 			| YieldExpression
+			| SpreadElement
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -838,7 +839,6 @@ declare abstract class BasicEvaluatedExpression {
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| SpreadElement
 			| Property
 			| AssignmentProperty
 			| ClassBody
@@ -1334,7 +1334,11 @@ declare abstract class ChunkGroup {
 	hasBlock(block: AsyncDependenciesBlock): boolean;
 	get blocksIterable(): Iterable<AsyncDependenciesBlock>;
 	addBlock(block: AsyncDependenciesBlock): boolean;
-	addOrigin(module: Module, loc: DependencyLocation, request: string): void;
+	addOrigin(
+		module: null | Module,
+		loc: DependencyLocation,
+		request: string
+	): void;
 	getFiles(): string[];
 	remove(): void;
 	sortItems(): void;
@@ -2118,7 +2122,7 @@ declare class Compilation {
 	executeModule(
 		module: Module,
 		options: ExecuteModuleOptions,
-		callback: (err?: null | WebpackError, result?: ExecuteModuleResult) => void
+		callback: (err: null | WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
 	factorizeModule: {
@@ -2281,7 +2285,7 @@ declare class Compiler {
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
 		shutdown: AsyncSeriesHook<[]>;
-		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
+		infrastructureLog: SyncBailHook<[string, string, undefined | any[]], true>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
 		afterPlugins: SyncHook<[Compiler]>;
@@ -2313,7 +2317,11 @@ declare class Compiler {
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
-	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
+	infrastructureLogger?: (
+		arg0: string,
+		arg1: LogTypeEnum,
+		arg2?: any[]
+	) => void;
 	platform: Readonly<PlatformTargetProperties>;
 	options: WebpackOptionsNormalized;
 	context: string;
@@ -2773,9 +2781,7 @@ declare interface ConsumesConfig {
 declare interface ConsumesObject {
 	[index: string]: string | ConsumesConfig;
 }
-type ContainerOptionsFormat<T> =
-	| Record<string, string | string[] | T>
-	| (string | Record<string, string | string[] | T>)[];
+type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
 
@@ -2839,8 +2845,12 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	shareScope?: string;
 }
+declare interface ContextAlternativeRequest {
+	context: string;
+	request: string;
+}
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports?: string[][];
+	referencedExports?: null | string[][];
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2876,12 +2886,12 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: FakeHook<
 			Pick<
-				AsyncSeriesWaterfallHook<[any[]]>,
+				AsyncSeriesWaterfallHook<[ContextAlternativeRequest[]]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
-			[any[], ContextModuleOptions]
+			[ContextAlternativeRequest[], ContextModuleOptions]
 		>;
 	}>;
 	resolverFactory: ResolverFactory;
@@ -2889,7 +2899,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		fs: InputFileSystem,
 		options: ContextModuleOptions,
 		callback: (
-			err?: null | Error,
+			err: null | Error,
 			dependencies?: ContextElementDependency[]
 		) => any
 	): void;
@@ -5509,6 +5519,9 @@ declare interface IntermediateFileSystemExtras {
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
+declare interface Item<T> {
+	[index: string]: string | string[] | T;
+}
 declare abstract class ItemCacheFacade {
 	get<T>(callback: CallbackCacheCacheFacade<T>): void;
 	getPromise<T>(): Promise<T>;
@@ -5590,7 +5603,39 @@ declare class JavascriptParser extends Parser {
 			>
 		>;
 		evaluate: HookMap<
-			SyncBailHook<[Expression], undefined | null | BasicEvaluatedExpression>
+			SyncBailHook<
+				[
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| ImportExpression
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+				],
+				undefined | null | BasicEvaluatedExpression
+			>
 		>;
 		evaluateIdentifier: HookMap<
 			SyncBailHook<
@@ -6426,7 +6471,37 @@ declare class JavascriptParser extends Parser {
 	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
 	enterRestElement(pattern: RestElement, onIdent?: any): void;
 	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
-	evaluateExpression(expression?: any): BasicEvaluatedExpression;
+	evaluateExpression(
+		expression:
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
+	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression: Expression): any;
 	evaluate(source: string): BasicEvaluatedExpression;
@@ -8178,8 +8253,7 @@ declare class Module extends DependenciesBlock {
 	used: any;
 }
 declare class ModuleConcatenationPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor();
 
 	/**
 	 * Apply the plugin
@@ -8948,10 +9022,15 @@ declare interface NormalModuleCompilationHooks {
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
-		AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+		FakeHook<
+			AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<[LoaderContextNormalModule<any>], string | Buffer>
+		AsyncSeriesBailHook<
+			[LoaderContextNormalModule<any>],
+			null | string | Buffer
+		>
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
@@ -9743,7 +9822,7 @@ declare abstract class OptionsApply {
 	process(options?: any, compiler?: any): void;
 }
 declare interface OriginRecord {
-	module: Module;
+	module: null | Module;
 	loc: DependencyLocation;
 	request: string;
 }
@@ -14667,7 +14746,7 @@ declare abstract class WebpackLogger {
 	status(...args: any[]): void;
 	group(...args: any[]): void;
 	groupCollapsed(...args: any[]): void;
-	groupEnd(...args: any[]): void;
+	groupEnd(): void;
 	profile(label?: string): void;
 	profileEnd(label?: string): void;
 	time(label: string): void;
