@@ -99,10 +99,12 @@ import {
 	AsyncSeriesHook,
 	AsyncSeriesWaterfallHook,
 	HookMap,
+	IfSet,
 	MultiHook,
 	SyncBailHook,
 	SyncHook,
-	SyncWaterfallHook
+	SyncWaterfallHook,
+	TapOptions
 } from "tapable";
 import { SecureContextOptions, TlsOptions } from "tls";
 import { URL } from "url";
@@ -850,6 +852,13 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
+declare interface Bootstrap {
+	header: string[];
+	beforeStartup: string[];
+	startup: string[];
+	afterStartup: string[];
+	allowInlineStartup: boolean;
+}
 type BufferEncoding =
 	| "ascii"
 	| "utf8"
@@ -1489,7 +1498,7 @@ declare interface ChunkRenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 declare interface ChunkSizeOptions {
 	/**
@@ -1504,12 +1513,57 @@ declare interface ChunkSizeOptions {
 }
 declare abstract class ChunkTemplate {
 	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: (options?: any, fn?: any) => void };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
+		renderManifest: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: RenderManifestEntry[],
+					arg1: RenderManifestOptions
+				) => RenderManifestEntry[]
+			) => void;
+		};
+		modules: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+			) => void;
+		};
+		render: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+			) => void;
+		};
+		renderWithEntry: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: Chunk) => Source
+			) => void;
+		};
+		hash: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash) => void
+			) => void;
+		};
+		hashForChunk: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash, arg1: Chunk, arg2: ChunkHashContext) => void
+			) => void;
+		};
 	}>;
 	get outputOptions(): Output;
 }
@@ -2087,20 +2141,14 @@ declare class Compilation {
 	createModuleAssets(): void;
 	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
 	createChunkAssets(callback: (err?: null | WebpackError) => void): void;
-	getPath(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
-		data?: PathData
-	): string;
+	getPath(filename: TemplatePath, data?: PathData): string;
 	getPathWithInfo(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		filename: TemplatePath,
 		data?: PathData
 	): { path: string; info: AssetInfo };
-	getAssetPath(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
-		data: PathData
-	): string;
+	getAssetPath(filename: TemplatePath, data: PathData): string;
 	getAssetPathWithInfo(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		filename: TemplatePath,
 		data: PathData
 	): { path: string; info: AssetInfo };
 	getWarnings(): WebpackError[];
@@ -4207,7 +4255,7 @@ declare abstract class ExportInfo {
 	setTarget(
 		key: any,
 		connection: ModuleGraphConnection,
-		exportName?: string[],
+		exportName?: null | string[],
 		priority?: number
 	): boolean;
 	getUsed(runtime: RuntimeSpec): UsageStateType;
@@ -5054,16 +5102,12 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		contentType: string,
 		name: string,
 		global: string,
-		getFilenameForChunk: (
-			arg0: Chunk
-		) => string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		getFilenameForChunk: (arg0: Chunk) => TemplatePath,
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
-	getFilenameForChunk: (
-		arg0: Chunk
-	) => string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	getFilenameForChunk: (arg0: Chunk) => TemplatePath;
 	allChunks: boolean;
 
 	/**
@@ -5546,7 +5590,7 @@ declare class JavascriptModulesPlugin {
 		renderContext: ChunkRenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		factory: boolean
-	): Source;
+	): null | Source;
 	renderChunk(
 		renderContext: RenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -5564,13 +5608,7 @@ declare class JavascriptModulesPlugin {
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
-	): {
-		header: string[];
-		beforeStartup: string[];
-		startup: string[];
-		afterStartup: string[];
-		allowInlineStartup: boolean;
-	};
+	): Bootstrap;
 	renderRequire(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -5590,7 +5628,14 @@ declare class JavascriptModulesPlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
-	static getChunkFilenameTemplate(chunk?: any, outputOptions?: any): any;
+	static getChunkFilenameTemplate(
+		chunk: Chunk,
+		outputOptions: Output
+	):
+		| undefined
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string)
+		| ((arg0: PathData, arg1?: AssetInfo) => string);
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends Parser {
@@ -7961,7 +8006,7 @@ declare interface MainRenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 declare abstract class MainTemplate {
 	hooks: Readonly<{
@@ -11554,7 +11599,7 @@ declare interface RenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 type RenderManifestEntry =
 	| RenderManifestEntryTemplated
@@ -11569,7 +11614,7 @@ declare interface RenderManifestEntryStatic {
 }
 declare interface RenderManifestEntryTemplated {
 	render: () => Source;
-	filenameTemplate: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filenameTemplate: TemplatePath;
 	pathOptions?: PathData;
 	info?: AssetInfo;
 	identifier: string;
@@ -13598,7 +13643,7 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filename: TemplatePath;
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
@@ -14410,7 +14455,7 @@ declare class Template {
 	static renderChunkModules(
 		renderContext: ChunkRenderContext,
 		modules: Module[],
-		renderModule: (arg0: Module) => Source,
+		renderModule: (arg0: Module) => null | Source,
 		prefix?: string
 	): null | Source;
 	static renderRuntimeModules(
@@ -14426,6 +14471,7 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 }
+type TemplatePath = string | ((arg0: PathData, arg1?: AssetInfo) => string);
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
