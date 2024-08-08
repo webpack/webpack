@@ -221,6 +221,7 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
+type Algorithm = string | typeof Hash;
 type Alias = string | false | string[];
 declare interface AliasOption {
 	alias: Alias;
@@ -2145,12 +2146,12 @@ declare class Compilation {
 	getPathWithInfo(
 		filename: TemplatePath,
 		data?: PathData
-	): { path: string; info: AssetInfo };
+	): InterpolatedPathAndAssetInfo;
 	getAssetPath(filename: TemplatePath, data: PathData): string;
 	getAssetPathWithInfo(
 		filename: TemplatePath,
 		data: PathData
-	): { path: string; info: AssetInfo };
+	): InterpolatedPathAndAssetInfo;
 	getWarnings(): WebpackError[];
 	getErrors(): WebpackError[];
 
@@ -5563,6 +5564,10 @@ declare interface IntermediateFileSystemExtras {
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
+declare interface InterpolatedPathAndAssetInfo {
+	path: string;
+	info: AssetInfo;
+}
 declare interface Item<T> {
 	[index: string]: string | string[] | T;
 }
@@ -5631,11 +5636,7 @@ declare class JavascriptModulesPlugin {
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: Output
-	):
-		| undefined
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
+	): TemplatePath;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends Parser {
@@ -8010,21 +8011,77 @@ declare interface MainRenderContext {
 }
 declare abstract class MainTemplate {
 	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
+		renderManifest: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: RenderManifestEntry[],
+					arg1: RenderManifestOptions
+				) => RenderManifestEntry[]
+			) => void;
+		};
 		modules: { tap: () => never };
 		moduleObj: { tap: () => never };
-		require: { tap: (options?: any, fn?: any) => void };
+		require: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: string, arg1: RenderBootstrapContext) => string
+			) => void;
+		};
 		beforeStartup: { tap: () => never };
 		startup: { tap: () => never };
 		afterStartup: { tap: () => never };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		assetPath: {
-			tap: (options?: any, fn?: any) => void;
-			call: (filename?: any, options?: any) => string;
+		render: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Chunk,
+					arg2: undefined | string,
+					arg3: ModuleTemplate,
+					arg4: DependencyTemplates
+				) => Source
+			) => void;
 		};
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
+		renderWithEntry: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: Chunk, arg2?: string) => Source
+			) => void;
+		};
+		assetPath: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: string, arg1: object, arg2?: AssetInfo) => string
+			) => void;
+			call: (filename: TemplatePath, options: PathData) => string;
+		};
+		hash: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash) => void
+			) => void;
+		};
+		hashForChunk: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash, arg1: Chunk) => void
+			) => void;
+		};
 		globalHashPaths: { tap: () => void };
 		globalHash: { tap: () => void };
 		hotBootstrap: { tap: () => never };
@@ -8039,12 +8096,12 @@ declare abstract class MainTemplate {
 		get linkPreload(): SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: object) => string;
-	getAssetPath: (path?: any, options?: any) => string;
+	getPublicPath: (options: PathData) => string;
+	getAssetPath: (path: TemplatePath, options: PathData) => string;
 	getAssetPathWithInfo: (
-		path?: any,
-		options?: any
-	) => { path: string; info: AssetInfo };
+		path: TemplatePath,
+		options: PathData
+	) => InterpolatedPathAndAssetInfo;
 	get requireFn(): "__webpack_require__";
 	get outputOptions(): Output;
 }
@@ -14546,10 +14603,10 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			arg0: null | Error,
-			arg1: Map<string, FileSystemInfoEntry | "ignore">,
-			arg2: Map<string, FileSystemInfoEntry | "ignore">,
-			arg3: Set<string>,
-			arg4: Set<string>
+			arg1?: Map<string, FileSystemInfoEntry | "ignore">,
+			arg2?: Map<string, FileSystemInfoEntry | "ignore">,
+			arg3?: Set<string>,
+			arg4?: Set<string>
 		) => void,
 		callbackUndelayed: (arg0: string, arg1: number) => void
 	) => Watcher;
@@ -14664,28 +14721,7 @@ declare abstract class Watching {
 	closed: boolean;
 	suspended: boolean;
 	blocked: boolean;
-	watchOptions: {
-		/**
-		 * Delay the rebuilt after the first change. Value is a time in ms.
-		 */
-		aggregateTimeout?: number;
-		/**
-		 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
-		 */
-		followSymlinks?: boolean;
-		/**
-		 * Ignore some files from watching (glob pattern or regexp).
-		 */
-		ignored?: string | RegExp | string[];
-		/**
-		 * Enable polling mode for watching.
-		 */
-		poll?: number | boolean;
-		/**
-		 * Stop watching when stdin stream has ended.
-		 */
-		stdin?: boolean;
-	};
+	watchOptions: WatchOptions;
 	compiler: Compiler;
 	running: boolean;
 	watcher?: null | Watcher;
@@ -15501,7 +15537,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm: string | typeof Hash) => Hash;
+		export const createHash: (algorithm: Algorithm) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (
