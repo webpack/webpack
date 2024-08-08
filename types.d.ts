@@ -99,10 +99,12 @@ import {
 	AsyncSeriesHook,
 	AsyncSeriesWaterfallHook,
 	HookMap,
+	IfSet,
 	MultiHook,
 	SyncBailHook,
 	SyncHook,
-	SyncWaterfallHook
+	SyncWaterfallHook,
+	TapOptions
 } from "tapable";
 import { SecureContextOptions, TlsOptions } from "tls";
 import { URL } from "url";
@@ -219,6 +221,7 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
+type Algorithm = string | typeof Hash;
 type Alias = string | false | string[];
 declare interface AliasOption {
 	alias: Alias;
@@ -452,7 +455,7 @@ declare class AutomaticPrefetchPlugin {
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare interface BackendApi {
-	dispose: (arg0?: Error) => void;
+	dispose: (arg0: (arg0?: null | Error) => void) => void;
 	module: (arg0: Module) => { client: string; data: string; active: boolean };
 }
 declare class BannerPlugin {
@@ -578,6 +581,7 @@ declare abstract class BasicEvaluatedExpression {
 		| ThisExpression
 		| UpdateExpression
 		| YieldExpression
+		| SpreadElement
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -615,7 +619,6 @@ declare abstract class BasicEvaluatedExpression {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern
-		| SpreadElement
 		| Property
 		| AssignmentProperty
 		| ClassBody
@@ -801,6 +804,7 @@ declare abstract class BasicEvaluatedExpression {
 			| ThisExpression
 			| UpdateExpression
 			| YieldExpression
+			| SpreadElement
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -838,7 +842,6 @@ declare abstract class BasicEvaluatedExpression {
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| SpreadElement
 			| Property
 			| AssignmentProperty
 			| ClassBody
@@ -849,6 +852,13 @@ declare abstract class BasicEvaluatedExpression {
 			| Super
 			| TemplateElement
 	): BasicEvaluatedExpression;
+}
+declare interface Bootstrap {
+	header: string[];
+	beforeStartup: string[];
+	startup: string[];
+	afterStartup: string[];
+	allowInlineStartup: boolean;
 }
 type BufferEncoding =
 	| "ascii"
@@ -1334,7 +1344,11 @@ declare abstract class ChunkGroup {
 	hasBlock(block: AsyncDependenciesBlock): boolean;
 	get blocksIterable(): Iterable<AsyncDependenciesBlock>;
 	addBlock(block: AsyncDependenciesBlock): boolean;
-	addOrigin(module: Module, loc: DependencyLocation, request: string): void;
+	addOrigin(
+		module: null | Module,
+		loc: DependencyLocation,
+		request: string
+	): void;
 	getFiles(): string[];
 	remove(): void;
 	sortItems(): void;
@@ -1485,7 +1499,7 @@ declare interface ChunkRenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 declare interface ChunkSizeOptions {
 	/**
@@ -1500,12 +1514,57 @@ declare interface ChunkSizeOptions {
 }
 declare abstract class ChunkTemplate {
 	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: (options?: any, fn?: any) => void };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
+		renderManifest: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: RenderManifestEntry[],
+					arg1: RenderManifestOptions
+				) => RenderManifestEntry[]
+			) => void;
+		};
+		modules: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+			) => void;
+		};
+		render: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+			) => void;
+		};
+		renderWithEntry: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: Chunk) => Source
+			) => void;
+		};
+		hash: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash) => void
+			) => void;
+		};
+		hashForChunk: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash, arg1: Chunk, arg2: ChunkHashContext) => void
+			) => void;
+		};
 	}>;
 	get outputOptions(): Output;
 }
@@ -2083,22 +2142,16 @@ declare class Compilation {
 	createModuleAssets(): void;
 	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
 	createChunkAssets(callback: (err?: null | WebpackError) => void): void;
-	getPath(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
-		data?: PathData
-	): string;
+	getPath(filename: TemplatePath, data?: PathData): string;
 	getPathWithInfo(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		filename: TemplatePath,
 		data?: PathData
-	): { path: string; info: AssetInfo };
-	getAssetPath(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
-		data: PathData
-	): string;
+	): InterpolatedPathAndAssetInfo;
+	getAssetPath(filename: TemplatePath, data: PathData): string;
 	getAssetPathWithInfo(
-		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		filename: TemplatePath,
 		data: PathData
-	): { path: string; info: AssetInfo };
+	): InterpolatedPathAndAssetInfo;
 	getWarnings(): WebpackError[];
 	getErrors(): WebpackError[];
 
@@ -2118,7 +2171,7 @@ declare class Compilation {
 	executeModule(
 		module: Module,
 		options: ExecuteModuleOptions,
-		callback: (err?: null | WebpackError, result?: ExecuteModuleResult) => void
+		callback: (err: null | WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
 	factorizeModule: {
@@ -2281,7 +2334,7 @@ declare class Compiler {
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
 		shutdown: AsyncSeriesHook<[]>;
-		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
+		infrastructureLog: SyncBailHook<[string, string, undefined | any[]], true>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
 		afterPlugins: SyncHook<[Compiler]>;
@@ -2313,7 +2366,11 @@ declare class Compiler {
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
-	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
+	infrastructureLogger?: (
+		arg0: string,
+		arg1: LogTypeEnum,
+		arg2?: any[]
+	) => void;
 	platform: Readonly<PlatformTargetProperties>;
 	options: WebpackOptionsNormalized;
 	context: string;
@@ -2773,9 +2830,7 @@ declare interface ConsumesConfig {
 declare interface ConsumesObject {
 	[index: string]: string | ConsumesConfig;
 }
-type ContainerOptionsFormat<T> =
-	| Record<string, string | string[] | T>
-	| (string | Record<string, string | string[] | T>)[];
+type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
 
@@ -2839,8 +2894,12 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	shareScope?: string;
 }
+declare interface ContextAlternativeRequest {
+	context: string;
+	request: string;
+}
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports?: string[][];
+	referencedExports?: null | string[][];
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2876,12 +2935,12 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: FakeHook<
 			Pick<
-				AsyncSeriesWaterfallHook<[any[]]>,
+				AsyncSeriesWaterfallHook<[ContextAlternativeRequest[]]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
-			[any[], ContextModuleOptions]
+			[ContextAlternativeRequest[], ContextModuleOptions]
 		>;
 	}>;
 	resolverFactory: ResolverFactory;
@@ -2889,7 +2948,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		fs: InputFileSystem,
 		options: ContextModuleOptions,
 		callback: (
-			err?: null | Error,
+			err: null | Error,
 			dependencies?: ContextElementDependency[]
 		) => any
 	): void;
@@ -4197,7 +4256,7 @@ declare abstract class ExportInfo {
 	setTarget(
 		key: any,
 		connection: ModuleGraphConnection,
-		exportName?: string[],
+		exportName?: null | string[],
 		priority?: number
 	): boolean;
 	getUsed(runtime: RuntimeSpec): UsageStateType;
@@ -5044,16 +5103,12 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		contentType: string,
 		name: string,
 		global: string,
-		getFilenameForChunk: (
-			arg0: Chunk
-		) => string | ((arg0: PathData, arg1?: AssetInfo) => string),
+		getFilenameForChunk: (arg0: Chunk) => TemplatePath,
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
-	getFilenameForChunk: (
-		arg0: Chunk
-	) => string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	getFilenameForChunk: (arg0: Chunk) => TemplatePath;
 	allChunks: boolean;
 
 	/**
@@ -5509,6 +5564,13 @@ declare interface IntermediateFileSystemExtras {
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
+declare interface InterpolatedPathAndAssetInfo {
+	path: string;
+	info: AssetInfo;
+}
+declare interface Item<T> {
+	[index: string]: string | string[] | T;
+}
 declare abstract class ItemCacheFacade {
 	get<T>(callback: CallbackCacheCacheFacade<T>): void;
 	getPromise<T>(): Promise<T>;
@@ -5533,7 +5595,7 @@ declare class JavascriptModulesPlugin {
 		renderContext: ChunkRenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		factory: boolean
-	): Source;
+	): null | Source;
 	renderChunk(
 		renderContext: RenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -5551,13 +5613,7 @@ declare class JavascriptModulesPlugin {
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
-	): {
-		header: string[];
-		beforeStartup: string[];
-		startup: string[];
-		afterStartup: string[];
-		allowInlineStartup: boolean;
-	};
+	): Bootstrap;
 	renderRequire(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -5577,7 +5633,10 @@ declare class JavascriptModulesPlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
-	static getChunkFilenameTemplate(chunk?: any, outputOptions?: any): any;
+	static getChunkFilenameTemplate(
+		chunk: Chunk,
+		outputOptions: Output
+	): TemplatePath;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends Parser {
@@ -5590,7 +5649,39 @@ declare class JavascriptParser extends Parser {
 			>
 		>;
 		evaluate: HookMap<
-			SyncBailHook<[Expression], undefined | null | BasicEvaluatedExpression>
+			SyncBailHook<
+				[
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| ImportExpression
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+				],
+				undefined | null | BasicEvaluatedExpression
+			>
 		>;
 		evaluateIdentifier: HookMap<
 			SyncBailHook<
@@ -6426,7 +6517,37 @@ declare class JavascriptParser extends Parser {
 	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
 	enterRestElement(pattern: RestElement, onIdent?: any): void;
 	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
-	evaluateExpression(expression?: any): BasicEvaluatedExpression;
+	evaluateExpression(
+		expression:
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
+	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression: Expression): any;
 	evaluate(source: string): BasicEvaluatedExpression;
@@ -7886,25 +8007,81 @@ declare interface MainRenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 declare abstract class MainTemplate {
 	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
+		renderManifest: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: RenderManifestEntry[],
+					arg1: RenderManifestOptions
+				) => RenderManifestEntry[]
+			) => void;
+		};
 		modules: { tap: () => never };
 		moduleObj: { tap: () => never };
-		require: { tap: (options?: any, fn?: any) => void };
+		require: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: string, arg1: RenderBootstrapContext) => string
+			) => void;
+		};
 		beforeStartup: { tap: () => never };
 		startup: { tap: () => never };
 		afterStartup: { tap: () => never };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		assetPath: {
-			tap: (options?: any, fn?: any) => void;
-			call: (filename?: any, options?: any) => string;
+		render: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Chunk,
+					arg2: undefined | string,
+					arg3: ModuleTemplate,
+					arg4: DependencyTemplates
+				) => Source
+			) => void;
 		};
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
+		renderWithEntry: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Source, arg1: Chunk, arg2?: string) => Source
+			) => void;
+		};
+		assetPath: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: string, arg1: object, arg2?: AssetInfo) => string
+			) => void;
+			call: (filename: TemplatePath, options: PathData) => string;
+		};
+		hash: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash) => void
+			) => void;
+		};
+		hashForChunk: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash, arg1: Chunk) => void
+			) => void;
+		};
 		globalHashPaths: { tap: () => void };
 		globalHash: { tap: () => void };
 		hotBootstrap: { tap: () => never };
@@ -7919,12 +8096,12 @@ declare abstract class MainTemplate {
 		get linkPreload(): SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: object) => string;
-	getAssetPath: (path?: any, options?: any) => string;
+	getPublicPath: (options: PathData) => string;
+	getAssetPath: (path: TemplatePath, options: PathData) => string;
 	getAssetPathWithInfo: (
-		path?: any,
-		options?: any
-	) => { path: string; info: AssetInfo };
+		path: TemplatePath,
+		options: PathData
+	) => InterpolatedPathAndAssetInfo;
 	get requireFn(): "__webpack_require__";
 	get outputOptions(): Output;
 }
@@ -8178,8 +8355,7 @@ declare class Module extends DependenciesBlock {
 	used: any;
 }
 declare class ModuleConcatenationPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor();
 
 	/**
 	 * Apply the plugin
@@ -8948,10 +9124,15 @@ declare interface NormalModuleCompilationHooks {
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
-		AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+		FakeHook<
+			AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<[LoaderContextNormalModule<any>], string | Buffer>
+		AsyncSeriesBailHook<
+			[LoaderContextNormalModule<any>],
+			null | string | Buffer
+		>
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
@@ -9743,7 +9924,7 @@ declare abstract class OptionsApply {
 	process(options?: any, compiler?: any): void;
 }
 declare interface OriginRecord {
-	module: Module;
+	module: null | Module;
 	loc: DependencyLocation;
 	request: string;
 }
@@ -11475,7 +11656,7 @@ declare interface RenderContext {
 	/**
 	 * rendering in strict context
 	 */
-	strictMode: boolean;
+	strictMode?: boolean;
 }
 type RenderManifestEntry =
 	| RenderManifestEntryTemplated
@@ -11490,7 +11671,7 @@ declare interface RenderManifestEntryStatic {
 }
 declare interface RenderManifestEntryTemplated {
 	render: () => Source;
-	filenameTemplate: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filenameTemplate: TemplatePath;
 	pathOptions?: PathData;
 	info?: AssetInfo;
 	identifier: string;
@@ -13519,7 +13700,7 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filename: TemplatePath;
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
@@ -14331,7 +14512,7 @@ declare class Template {
 	static renderChunkModules(
 		renderContext: ChunkRenderContext,
 		modules: Module[],
-		renderModule: (arg0: Module) => Source,
+		renderModule: (arg0: Module) => null | Source,
 		prefix?: string
 	): null | Source;
 	static renderRuntimeModules(
@@ -14347,6 +14528,7 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 }
+type TemplatePath = string | ((arg0: PathData, arg1?: AssetInfo) => string);
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -14421,10 +14603,10 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			arg0: null | Error,
-			arg1: Map<string, FileSystemInfoEntry | "ignore">,
-			arg2: Map<string, FileSystemInfoEntry | "ignore">,
-			arg3: Set<string>,
-			arg4: Set<string>
+			arg1?: Map<string, FileSystemInfoEntry | "ignore">,
+			arg2?: Map<string, FileSystemInfoEntry | "ignore">,
+			arg3?: Set<string>,
+			arg4?: Set<string>
 		) => void,
 		callbackUndelayed: (arg0: string, arg1: number) => void
 	) => Watcher;
@@ -14539,28 +14721,7 @@ declare abstract class Watching {
 	closed: boolean;
 	suspended: boolean;
 	blocked: boolean;
-	watchOptions: {
-		/**
-		 * Delay the rebuilt after the first change. Value is a time in ms.
-		 */
-		aggregateTimeout?: number;
-		/**
-		 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
-		 */
-		followSymlinks?: boolean;
-		/**
-		 * Ignore some files from watching (glob pattern or regexp).
-		 */
-		ignored?: string | RegExp | string[];
-		/**
-		 * Enable polling mode for watching.
-		 */
-		poll?: number | boolean;
-		/**
-		 * Stop watching when stdin stream has ended.
-		 */
-		stdin?: boolean;
-	};
+	watchOptions: WatchOptions;
 	compiler: Compiler;
 	running: boolean;
 	watcher?: null | Watcher;
@@ -14667,7 +14828,7 @@ declare abstract class WebpackLogger {
 	status(...args: any[]): void;
 	group(...args: any[]): void;
 	groupCollapsed(...args: any[]): void;
-	groupEnd(...args: any[]): void;
+	groupEnd(): void;
 	profile(label?: string): void;
 	profileEnd(label?: string): void;
 	time(label: string): void;
@@ -15376,7 +15537,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm: string | typeof Hash) => Hash;
+		export const createHash: (algorithm: Algorithm) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (
