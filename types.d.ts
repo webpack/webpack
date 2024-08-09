@@ -233,13 +233,13 @@ declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
 declare interface Argument {
-	description: string;
-	simpleType: "string" | "number" | "boolean";
+	description?: string;
+	simpleType: SimpleType;
 	multiple: boolean;
 	configs: ArgumentConfig[];
 }
 declare interface ArgumentConfig {
-	description: string;
+	description?: string;
 	negatedDescription?: string;
 	path: string;
 	multiple: boolean;
@@ -456,7 +456,7 @@ declare class AutomaticPrefetchPlugin {
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare interface BackendApi {
 	dispose: (arg0: (arg0?: null | Error) => void) => void;
-	module: (arg0: Module) => { client: string; data: string; active: boolean };
+	module: (arg0: Module) => ModuleResult;
 }
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
@@ -1902,7 +1902,7 @@ declare class Compilation {
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
-	valueCacheVersions: Map<string, string | Set<string>>;
+	valueCacheVersions: Map<string, ValueCacheVersion>;
 	requestShortener: RequestShortener;
 	compilerPath: string;
 	logger: WebpackLogger;
@@ -3179,7 +3179,7 @@ declare class DefinePlugin {
 		fn: (arg0: {
 			module: NormalModule;
 			key: string;
-			readonly version?: string;
+			readonly version: ValueCacheVersion;
 		}) => CodeValuePrimitive,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
@@ -4276,39 +4276,27 @@ declare abstract class ExportInfo {
 	setUsedName(name: string): void;
 	getTerminalBinding(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: {
-			module: Module;
-			export?: string[];
-		}) => boolean
+		resolveTargetFilter?: (arg0: TargetItem) => boolean
 	): undefined | ExportsInfo | ExportInfo;
 	isReexport(): undefined | boolean;
 	findTarget(
 		moduleGraph: ModuleGraph,
 		validTargetModuleFilter: (arg0: Module) => boolean
-	): undefined | null | false | { module: Module; export?: string[] };
+	): undefined | null | false | TargetItem;
 	getTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: {
-			module: Module;
-			export?: string[];
-		}) => boolean
-	): undefined | { module: Module; export?: string[] };
+		resolveTargetFilter?: (arg0: TargetItem) => boolean
+	): undefined | TargetItem;
 
 	/**
 	 * Move the target forward as long resolveTargetFilter is fulfilled
 	 */
 	moveTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter: (arg0: {
-			module: Module;
-			export?: string[];
-		}) => boolean,
-		updateOriginalConnection?: (arg0: {
-			module: Module;
-			export?: string[];
-		}) => ModuleGraphConnection
-	): undefined | { module: Module; export?: string[] };
-	createNestedExportsInfo(): undefined | ExportsInfo;
+		resolveTargetFilter: (arg0: TargetItem) => boolean,
+		updateOriginalConnection?: (arg0: TargetItem) => ModuleGraphConnection
+	): undefined | TargetItem;
+	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): undefined | ExportsInfo;
 	hasInfo(baseInfo: ExportInfo, runtime: RuntimeSpec): boolean;
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
@@ -4399,7 +4387,7 @@ declare abstract class ExportsInfo {
 	getUsedName(
 		name: undefined | string | string[],
 		runtime: RuntimeSpec
-	): string | false | string[];
+	): UsedName;
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
@@ -4963,6 +4951,9 @@ declare interface FileSystemInfoEntry {
 	timestamp?: number;
 }
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
+declare interface Flags {
+	[index: string]: Argument;
+}
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -6995,7 +6986,7 @@ declare interface KnownBuildInfo {
 	contextDependencies?: LazySet<string>;
 	missingDependencies?: LazySet<string>;
 	buildDependencies?: LazySet<string>;
-	valueDependencies?: Map<string, string | Set<string>>;
+	valueDependencies?: Map<string, ValueCacheVersion>;
 	hash?: any;
 	assets?: Record<string, Source>;
 	assetsInfo?: Map<string, undefined | AssetInfo>;
@@ -8839,6 +8830,11 @@ declare interface ModuleReferenceOptions {
 	 */
 	asiSafe?: boolean;
 }
+declare interface ModuleResult {
+	client: string;
+	data: string;
+	active: boolean;
+}
 declare interface ModuleSettings {
 	/**
 	 * Specifies the layer in which the module should be placed in.
@@ -9105,7 +9101,7 @@ declare class NormalModule extends Module {
 	createSource(
 		context: string,
 		content: string | Buffer,
-		sourceMap?: string | SourceMapSource,
+		sourceMap?: null | string | SourceMapSource,
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
@@ -13233,13 +13229,13 @@ declare abstract class RuntimeValue {
 	fn: (arg0: {
 		module: NormalModule;
 		key: string;
-		readonly version?: string;
+		readonly version: ValueCacheVersion;
 	}) => CodeValuePrimitive;
 	options: true | RuntimeValueOptions;
 	get fileDependencies(): true | string[];
 	exec(
 		parser: JavascriptParser,
-		valueCacheVersions: Map<string, string | Set<string>>,
+		valueCacheVersions: Map<string, ValueCacheVersion>,
 		key: string
 	): CodeValuePrimitive;
 	getCacheVersion(): undefined | string;
@@ -13384,6 +13380,7 @@ declare class SideEffectsFlagPlugin {
 		cache: Map<string, RegExp>
 	): undefined | boolean;
 }
+type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
@@ -14496,6 +14493,10 @@ declare interface TagInfo {
 	data: any;
 	next?: TagInfo;
 }
+declare interface TargetItem {
+	module: Module;
+	export?: string[];
+}
 declare class Template {
 	constructor();
 	static getFunctionContent(fn: Function): string;
@@ -14579,7 +14580,9 @@ declare interface UpdateHashContextGenerator {
 	runtimeTemplate?: RuntimeTemplate;
 }
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
+type UsedName = string | false | string[];
 type Value = string | number | boolean | RegExp;
+type ValueCacheVersion = undefined | string | Set<string>;
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
@@ -15237,9 +15240,9 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
-		export let getArguments: (schema?: any) => Record<string, Argument>;
+		export let getArguments: (schema?: any) => Flags;
 		export let processArguments: (
-			args: Record<string, Argument>,
+			args: Flags,
 			config: any,
 			values: Record<string, Value[]>
 		) => null | Problem[];
@@ -15666,7 +15669,10 @@ declare namespace exports {
 			) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
-		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
+		export const cleverMerge: <T, O>(
+			first?: null | T,
+			second?: null | O
+		) => T | O | (T & O);
 		export function compileBooleanMatcher(
 			map: Record<string | number, boolean>
 		): boolean | ((arg0: string) => string);
