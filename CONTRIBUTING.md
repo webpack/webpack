@@ -1,17 +1,10 @@
 # Contributing
 
-From opening a bug report to creating a pull request: every contribution is
-appreciated and welcome. If you're planning to implement a new feature or change
-the api please create an issue first. This way we can ensure that your precious
-work is not in vain.
-
-## Issues
+From opening a bug report to creating a pull request: every contribution is appreciated and welcome. If you're planning to implement a new feature or change the api please create an issue first. This way we can ensure that your precious work is not in vain.
 
 Most of the time, if webpack is not working correctly for you, it is a simple configuration issue.
 
-If you are still having difficulty after looking over your configuration carefully, please post
-a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions
-that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
+If you are still having difficulty after looking over your configuration carefully, please post a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
@@ -35,9 +28,7 @@ If you have created your own loader/plugin please include it on the relevant doc
 
 ## Submitting Changes
 
-After getting some feedback, push to your fork and submit a pull request. We
-may suggest some changes or improvements or alternatives, but for small changes
-your pull request should be accepted quickly.
+After getting some feedback, push to your fork and submit a pull request. We may suggest some changes or improvements or alternatives, but for small changes your pull request should be accepted quickly.
 
 Something that will increase the chance that your pull request is accepted:
 
@@ -50,14 +41,11 @@ Something that will increase the chance that your pull request is accepted:
 
 ## Documentation
 
-webpack is insanely feature rich and documentation is a huge time sink. We
-greatly appreciate any time spent fixing typos or clarifying sections in the
-documentation. [See a list of issues with the documentation tag](https://github.com/webpack/webpack/labels/documentation),
-or [check out the issues on the documentation website's repository](https://github.com/webpack/webpack.js.org/issues).
+Webpack is insanely feature rich and its documentation is a huge time sink. We greatly appreciate any time spent fixing typos or clarifying sections in the documentation. [See a list of issues with the documentation tag](https://github.com/webpack/webpack/labels/documentation), or [check out the issues on the documentation website's repository](https://github.com/webpack/webpack.js.org/issues).
 
 ## Types
 
-webpack is statically typed using JSDoc annotation and TypeScript. If you would like to export a new type which doesn't belong to a public API, then you can do so by declaring it in `webpack/lib/index.js`.
+Webpack is statically typed using JSDoc annotation and TypeScript. If you would like to export a new type which doesn't belong to a public API, then you can do so by declaring it in `webpack/lib/index.js`.
 
 `webpack/lib/index.js`
 
