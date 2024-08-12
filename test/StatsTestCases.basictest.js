@@ -207,7 +207,11 @@ describe("StatsTestCases", () => {
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
-					.replace(/[.0-9]+(\s?(bytes|KiB))/g, "X$1");
+					.replace(/[.0-9]+(\s?(bytes|KiB))/g, "X$1")
+					.replace(
+						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
+						match => `${match.replace(/[0-9a-f]/g, "X")}`
+					);
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();
