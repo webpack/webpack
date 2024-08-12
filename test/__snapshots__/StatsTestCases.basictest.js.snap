@@ -3,54 +3,54 @@
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
 "fitting:
   PublicPath: auto
-  asset fitting-88c67e9a622643e4602f.js X KiB [emitted] [immutable]
-  asset fitting-52d3948410d6d699beab.js X KiB [emitted] [immutable]
-  asset fitting-e8b3e5c8abf4f4ba97f4.js X KiB [emitted] [immutable]
-  asset fitting-afff25c30483e7bf86fd.js X KiB [emitted] [immutable]
-  Entrypoint main X KiB = fitting-e8b3e5c8abf4f4ba97f4.js X KiB fitting-52d3948410d6d699beab.js X KiB fitting-88c67e9a622643e4602f.js X KiB
-  chunk (runtime: main) fitting-e8b3e5c8abf4f4ba97f4.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  Entrypoint main X KiB = fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
     > ./index main
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
-  chunk (runtime: main) fitting-88c67e9a622643e4602f.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
     > ./index main
     runtime modules X KiB 11 modules
     cacheable modules X KiB
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]
       ./index.js X bytes [built] [code generated]
-  chunk (runtime: main) fitting-52d3948410d6d699beab.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
     > ./index main
     ./c.js X bytes [built] [code generated]
     ./d.js X bytes [built] [code generated]
-  chunk (runtime: main) fitting-afff25c30483e7bf86fd.js X bytes [rendered]
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
     > ./g ./index.js 7:0-13
     ./g.js X bytes [built] [code generated]
   fitting (webpack x.x.x) compiled successfully in X ms
 
 content-change:
   PublicPath: auto
-  asset content-change-03bd4a715d93f7c15570.js X KiB [emitted] [immutable]
-  asset content-change-52d3948410d6d699beab.js X KiB [emitted] [immutable]
-  asset content-change-e8b3e5c8abf4f4ba97f4.js X KiB [emitted] [immutable]
-  asset content-change-afff25c30483e7bf86fd.js X KiB [emitted] [immutable]
-  Entrypoint main X KiB = content-change-e8b3e5c8abf4f4ba97f4.js X KiB content-change-52d3948410d6d699beab.js X KiB content-change-03bd4a715d93f7c15570.js X KiB
-  chunk (runtime: main) content-change-e8b3e5c8abf4f4ba97f4.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  Entrypoint main X KiB = content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
     > ./index main
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
-  chunk (runtime: main) content-change-03bd4a715d93f7c15570.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
     > ./index main
     runtime modules X KiB 11 modules
     cacheable modules X KiB
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]
       ./index.js X bytes [built] [code generated]
-  chunk (runtime: main) content-change-52d3948410d6d699beab.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
     > ./index main
     ./c.js X bytes [built] [code generated]
     ./d.js X bytes [built] [code generated]
-  chunk (runtime: main) content-change-afff25c30483e7bf86fd.js X bytes [rendered]
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
     > ./g ./index.js 7:0-13
     ./g.js X bytes [built] [code generated]
   content-change (webpack x.x.x) compiled successfully in X ms"
@@ -58,63 +58,63 @@ content-change:
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
 "PublicPath: auto
-asset bf2a1674f4cf7c432d0d.js X KiB [emitted] [immutable] (name: main)
-asset 4e31ba0003de4d9e6a34.js X KiB [emitted] [immutable]
-asset 4621a1b3e7e9dee5c95e.js X KiB [emitted] [immutable]
-asset 36106fe51c66f112bde8.js X KiB [emitted] [immutable]
-asset 246e7963e7c35857d1f7.js X KiB [emitted] [immutable]
-asset 0d89cc5975645d61d461.js X KiB [emitted] [immutable]
-asset 15ed68d6abf60f27b217.js X KiB [emitted] [immutable]
-asset 52d3948410d6d699beab.js X KiB [emitted] [immutable]
-asset 79faa36c188f17b70a7d.js X KiB [emitted] [immutable]
-asset ba4de2cddb85aadda61c.js X bytes [emitted] [immutable]
-asset ccab63c0f89844ec6d75.js X bytes [emitted] [immutable]
-asset d81e08cf64f052c3f6c9.js X bytes [emitted] [immutable]
-Entrypoint main X KiB = bf2a1674f4cf7c432d0d.js
-chunk (runtime: main) ba4de2cddb85aadda61c.js X bytes [rendered]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+Entrypoint main X KiB = XXXXXXXXXXXXXXXXXXXX.js
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./c ./d ./e ./index.js 3:0-30
   > ./b ./d ./e ./f ./g ./index.js 5:0-44
   ./e.js X bytes [built] [code generated]
-chunk (runtime: main) 0d89cc5975645d61d461.js X KiB [rendered]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
   > ./b ./c ./index.js 2:0-23
   ./b.js X bytes [built] [code generated]
   ./c.js X bytes [built] [code generated]
-chunk (runtime: main) 52d3948410d6d699beab.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./c ./d ./e ./index.js 3:0-30
   ./c.js X bytes [built] [code generated]
   ./d.js X bytes [built] [code generated]
-chunk (runtime: main) ccab63c0f89844ec6d75.js X bytes [rendered]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./k.js X bytes [built] [code generated]
-chunk (runtime: main) 15ed68d6abf60f27b217.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
   ./h.js X bytes [built] [code generated]
   ./i.js X bytes [built] [code generated]
-chunk (runtime: main) 246e7963e7c35857d1f7.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./i.js X bytes [built] [code generated]
   ./j.js X bytes [built] [code generated]
-chunk (runtime: main) 4e31ba0003de4d9e6a34.js X KiB [rendered]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
   > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
   ./j.js X bytes [built] [code generated]
   ./k.js X bytes [built] [code generated]
-chunk (runtime: main) d81e08cf64f052c3f6c9.js X bytes [rendered]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./a ./index.js 1:0-16
   ./a.js X bytes [built] [code generated]
-chunk (runtime: main) 4621a1b3e7e9dee5c95e.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./e.js X bytes [built] [code generated]
   ./h.js X bytes [built] [code generated]
-chunk (runtime: main) 79faa36c188f17b70a7d.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./b ./d ./e ./f ./g ./index.js 5:0-44
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./b.js X bytes [built] [code generated]
   ./d.js X bytes [built] [code generated]
-chunk (runtime: main) bf2a1674f4cf7c432d0d.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
   > ./index main
   runtime modules X KiB 7 modules
   ./index.js X bytes [built] [code generated]
-chunk (runtime: main) 36106fe51c66f112bde8.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
   > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
   > ./b ./d ./e ./f ./g ./index.js 5:0-44
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
@@ -152,11 +152,11 @@ webpack/runtime/make namespace object X bytes {main} [code generated]
   [no exports]
   [used exports unknown]
   
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (64df70d049be415e3e5e)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (XXXXXXXXXXXXXXXXXXXX)"
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+"asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset bundle.js X KiB [emitted] (name: main)
 asset static/file.html X bytes [emitted] [from: static/file.html] (auxiliary name: main)
 runtime modules X KiB 2 modules
@@ -178,7 +178,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for asset-concat 1`] = `
-"asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+"asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset bundle.js X KiB [emitted] (name: main)
 asset static/file.html X bytes [emitted] [from: static/file.html] (auxiliary name: main)
 orphan modules X KiB [orphan] 7 modules
@@ -709,9 +709,9 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"asset app.48e429216e0893bd9794-1.js X KiB [emitted] [immutable] (name: app)
-asset vendor.ffd8f46aef708713412d-1.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
-Entrypoint app X KiB = vendor.ffd8f46aef708713412d-1.js X bytes app.48e429216e0893bd9794-1.js X KiB
+"asset app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB [emitted] [immutable] (name: app)
+asset vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
+Entrypoint app X KiB = vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB
 runtime modules X KiB 4 modules
 orphan modules X bytes [orphan] 2 modules
 cacheable modules X bytes
@@ -719,9 +719,9 @@ cacheable modules X bytes
   ./constants.js X bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset app.c3b5c1b67e97388633da-2.js X KiB [emitted] [immutable] (name: app)
-asset vendor.ffd8f46aef708713412d-2.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
-Entrypoint app X KiB = vendor.ffd8f46aef708713412d-2.js X bytes app.c3b5c1b67e97388633da-2.js X KiB
+asset app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB [emitted] [immutable] (name: app)
+asset vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
+Entrypoint app X KiB = vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB
 runtime modules X KiB 4 modules
 orphan modules X bytes [orphan] 2 modules
 cacheable modules X bytes
@@ -751,10 +751,10 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"asset main-ca1a74034b366de49c9b.js X KiB [emitted] [immutable] (name: main)
-  sourceMap main-ca1a74034b366de49c9b.js.map X KiB [emitted] [dev] (auxiliary name: main)
-asset 977-0d034101f87f8fa73545.js X bytes [emitted] [immutable]
-  sourceMap 977-0d034101f87f8fa73545.js.map X bytes [emitted] [dev]
+"asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+  sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+  sourceMap 977-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -767,10 +767,10 @@ built modules X bytes [built]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-ca1a74034b366de49c9b.js X KiB [emitted] [immutable] (name: main)
-  sourceMap main-ca1a74034b366de49c9b.js.map X KiB [emitted] [dev] (auxiliary name: main)
-asset 977-0d034101f87f8fa73545.js X bytes [emitted] [immutable]
-  sourceMap 977-0d034101f87f8fa73545.js.map X bytes [emitted] [dev]
+asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+  sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+  sourceMap 977-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -783,8 +783,8 @@ built modules X bytes [built]
   ./b/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-1a22a9efdea25febc014.js X KiB [emitted] [immutable] (name: main)
-asset 977-e5e90d6b226bc2f54dcd.js X KiB [emitted] [immutable]
+asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -797,8 +797,8 @@ built modules X bytes [built]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-1a22a9efdea25febc014.js X KiB [emitted] [immutable] (name: main)
-asset 977-e5e90d6b226bc2f54dcd.js X KiB [emitted] [immutable]
+asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -811,8 +811,8 @@ built modules X bytes [built]
   ./b/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-5309722c0fef9e0be101.js X KiB [emitted] [immutable] (name: main)
-asset 977-f918f071346b7b0f2bf2.js X bytes [emitted] [immutable]
+asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -825,8 +825,8 @@ built modules X bytes [built]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-5309722c0fef9e0be101.js X KiB [emitted] [immutable] (name: main)
-asset 977-f918f071346b7b0f2bf2.js X bytes [emitted] [immutable]
+asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
 runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
@@ -1290,8 +1290,8 @@ webpack x.x.x compiled with 2 warnings in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
-"asset 90957ef1deba173967c9.js X KiB [emitted] [immutable] (name: main)
-asset 22c24a3b26d46118dc06.js X bytes [emitted] [immutable]"
+"asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -1358,19 +1358,19 @@ webpack x.x.x compiled with 3 warnings"
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"asset a-runtime~main-92872ba8425c7f1a75a6.js X KiB [emitted] [immutable] (name: runtime~main)
-asset a-main-5b238661c342d3c63636.js X bytes [emitted] [immutable] (name: main)
-asset a-all-a_js-52fb35892f514e05c220.js X bytes [emitted] [immutable] (id hint: all)
-Entrypoint main X KiB = a-runtime~main-92872ba8425c7f1a75a6.js X KiB a-all-a_js-52fb35892f514e05c220.js X bytes a-main-5b238661c342d3c63636.js X bytes
+"asset a-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset a-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset a-all-a_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+Entrypoint main X KiB = a-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB a-all-a_js-XXXXXXXXXXXXXXXXXXXX.js X bytes a-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
 runtime modules X KiB 3 modules
 ./a.js X bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset b-runtime~main-b6957ac1c3a86ce8164e.js X KiB [emitted] [immutable] (name: runtime~main)
-asset b-all-b_js-1ccae3120aa8d62e9877.js X bytes [emitted] [immutable] (id hint: all)
-asset b-main-503688157f1b1be3d9ac.js X bytes [emitted] [immutable] (name: main)
-asset b-vendors-node_modules_vendor_js-7320f018dbab7e34ead5.js X bytes [emitted] [immutable] (id hint: vendors)
-Entrypoint main X KiB = b-runtime~main-b6957ac1c3a86ce8164e.js X KiB b-vendors-node_modules_vendor_js-7320f018dbab7e34ead5.js X bytes b-all-b_js-1ccae3120aa8d62e9877.js X bytes b-main-503688157f1b1be3d9ac.js X bytes
+asset b-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset b-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+asset b-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset b-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: vendors)
+Entrypoint main X KiB = b-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB b-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes b-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes b-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
 runtime modules X KiB 5 modules
 cacheable modules X bytes
   ./b.js X bytes [built] [code generated]
@@ -1378,12 +1378,12 @@ cacheable modules X bytes
 webpack x.x.x compiled successfully in X ms
 
 assets by chunk X bytes (id hint: all)
-  asset c-all-b_js-d2d64fdaadbf1936503b.js X bytes [emitted] [immutable] (id hint: all)
-  asset c-all-c_js-0552c7cbb8c1a12b6b9c.js X bytes [emitted] [immutable] (id hint: all)
-asset c-runtime~main-0e3441ca5aef7c119130.js X KiB [emitted] [immutable] (name: runtime~main)
-asset c-main-463838c803f48fe97bb6.js X bytes [emitted] [immutable] (name: main)
-asset c-vendors-node_modules_vendor_js-7320f018dbab7e34ead5.js X bytes [emitted] [immutable] (id hint: vendors)
-Entrypoint main X KiB = c-runtime~main-0e3441ca5aef7c119130.js X KiB c-all-c_js-0552c7cbb8c1a12b6b9c.js X bytes c-main-463838c803f48fe97bb6.js X bytes
+  asset c-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+  asset c-all-c_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+asset c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset c-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: vendors)
+Entrypoint main X KiB = c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB c-all-c_js-XXXXXXXXXXXXXXXXXXXX.js X bytes c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
 runtime modules X KiB 13 modules
 cacheable modules X bytes
   ./c.js X bytes [built] [code generated]
@@ -2346,7 +2346,7 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (2379d71c20ffb2206353)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (XXXXXXXXXXXXXXXXXXXX)"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
@@ -2722,23 +2722,23 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (2379d71c20ffb2206353)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (XXXXXXXXXXXXXXXXXXXX)"
 `;
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
   assets by path *.js X KiB
-    asset 8a1546203e080a4f6ef7-8a1546.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset 1b48b6222bb1ec5c3c23-1b48b6.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-    asset fdf80674ac46a61ff9fe-fdf806.js X bytes [emitted] [immutable] [minimized] (name: index)
-    asset 666f2b8847021ccc7608-666f2b.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset 7382fad5b015914e0811.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset 7382fad5b015914e0811.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = 8a1546203e080a4f6ef7-8a1546.js X KiB fdf80674ac46a61ff9fe-fdf806.js X bytes 1 auxiliary asset
-  Entrypoint a X bytes = 666f2b8847021ccc7608-666f2b.js
-  Entrypoint b X bytes = 666f2b8847021ccc7608-666f2b.js
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -2755,17 +2755,17 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 
 b-normal:
   assets by path *.js X KiB
-    asset e46444d575748038d69c-e46444.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset 1b48b6222bb1ec5c3c23-1b48b6.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-    asset fdf80674ac46a61ff9fe-fdf806.js X bytes [emitted] [immutable] [minimized] (name: index)
-    asset 666f2b8847021ccc7608-666f2b.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset 7382fad5b015914e0811.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset 7382fad5b015914e0811.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = e46444d575748038d69c-e46444.js X KiB fdf80674ac46a61ff9fe-fdf806.js X bytes 1 auxiliary asset
-  Entrypoint a X bytes = 666f2b8847021ccc7608-666f2b.js
-  Entrypoint b X bytes = 666f2b8847021ccc7608-666f2b.js
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -2782,21 +2782,21 @@ b-normal:
 
 a-source-map:
   assets by path *.js X KiB
-    asset 480b0c27db49c79825c2-480b0c.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 480b0c27db49c79825c2-480b0c.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
-    asset 4c0746c98a23357bfa90-4c0746.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap 4c0746c98a23357bfa90-4c0746.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
-    asset 46504ddf1bd748642c76-46504d.js X bytes [emitted] [immutable] [minimized] (name: index)
-      sourceMap 46504ddf1bd748642c76-46504d.js.map X bytes [emitted] [dev] (auxiliary name: index)
-    asset 222c2acc68675174e6b2-222c2a.js X bytes [emitted] [immutable] [minimized] (name: a, b)
-      sourceMap 222c2acc68675174e6b2-222c2a.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset 7382fad5b015914e0811.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset 7382fad5b015914e0811.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = 480b0c27db49c79825c2-480b0c.js X KiB 46504ddf1bd748642c76-46504d.js X bytes 3 auxiliary assets
-  Entrypoint a X bytes (X bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
-  Entrypoint b X bytes (X bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -2813,21 +2813,21 @@ a-source-map:
 
 b-source-map:
   assets by path *.js X KiB
-    asset c4b5695436b4d66bc485-c4b569.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap c4b5695436b4d66bc485-c4b569.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
-    asset 4c0746c98a23357bfa90-4c0746.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap 4c0746c98a23357bfa90-4c0746.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
-    asset 46504ddf1bd748642c76-46504d.js X bytes [emitted] [immutable] [minimized] (name: index)
-      sourceMap 46504ddf1bd748642c76-46504d.js.map X bytes [emitted] [dev] (auxiliary name: index)
-    asset 222c2acc68675174e6b2-222c2a.js X bytes [emitted] [immutable] [minimized] (name: a, b)
-      sourceMap 222c2acc68675174e6b2-222c2a.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset 89a353e9c515885abd8e.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset 7382fad5b015914e0811.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset 7382fad5b015914e0811.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = c4b5695436b4d66bc485-c4b569.js X KiB 46504ddf1bd748642c76-46504d.js X bytes 3 auxiliary assets
-  Entrypoint a X bytes (X bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
-  Entrypoint b X bytes (X bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -3771,16 +3771,16 @@ manual:
 
 name-too-long:
   Entrypoint main X KiB = name-too-long/main.js
-  Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/210.js X bytes name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js X KiB
-  Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js X KiB
-  Entrypoint cccccccccccccccccccccccccccccc X KiB = name-too-long/628.js X bytes name-too-long/862.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/cccccccccccccccccccccccccccccc.js X KiB
+  Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/210.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
+  Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
+  Entrypoint cccccccccccccccccccccccccccccc X KiB = name-too-long/628.js X bytes name-too-long/862.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
   chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, main) name-too-long/async-g.js (async-g) X bytes <{210}> <{263}> <{425}> <{505}> <{628}> <{723}> ={935}= [rendered]
     > ./g ./a.js 6:0-47
     ./g.js X bytes [built] [code generated]
   chunk (runtime: main) name-too-long/async-b.js (async-b) X bytes <{792}> ={425}= ={628}= ={723}= ={935}= [rendered]
     > ./b ./index.js 2:0-47
     ./b.js X bytes [built] [code generated]
-  chunk (runtime: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={723}= ={935}= [entry] [rendered]
+  chunk (runtime: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={723}= ={935}= [entry] [rendered]
     > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     runtime modules X KiB 4 modules
     ./b.js X bytes [built] [code generated]
@@ -3791,7 +3791,7 @@ name-too-long:
   chunk (runtime: main) name-too-long/async-a.js (async-a) X bytes <{792}> ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [rendered]
     > ./a ./index.js 1:0-47
     ./a.js X bytes [built] [code generated]
-  chunk (runtime: cccccccccccccccccccccccccccccc) name-too-long/cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={862}= ={935}= [entry] [rendered]
+  chunk (runtime: cccccccccccccccccccccccccccccc) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (cccccccccccccccccccccccccccccc) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={862}= ={935}= [entry] [rendered]
     > ./c cccccccccccccccccccccccccccccc
     runtime modules X KiB 4 modules
     ./c.js X bytes [built] [code generated]
@@ -3803,7 +3803,7 @@ name-too-long:
     > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     > ./c cccccccccccccccccccccccccccccc
     ./d.js X bytes [built] [code generated]
-  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
     > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     runtime modules X KiB 10 modules
     ./a.js X bytes [built] [code generated]
@@ -4182,24 +4182,24 @@ webpack x.x.x compiled successfully"
 exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`] = `
 "production:
   Entrypoint main X KiB = 13 assets
-  chunk (runtime: main) prod-main-6bb16544.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) prod-main-1df31ce3.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./index.js X KiB [built] [code generated]
-  chunk (runtime: main) prod-main-10f51d07.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./big.js?1 X bytes [built] [code generated]
     ./big.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) prod-main-12217e1d.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
     > ./ main
     runtime modules X KiB 5 modules
     ./very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) prod-main-77a8c116.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./very-big.js?2 X KiB [built] [code generated]
-  chunk (runtime: main) prod-main-e7c5ace7.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./small.js?1 X bytes [built] [code generated]
     ./small.js?2 X bytes [built] [code generated]
@@ -4218,18 +4218,18 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
   chunk (runtime: main) prod-273.js (id hint: vendors) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./ main
     ./node_modules/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) prod-main-5cfff2c6.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./subfolder/big.js?1 X bytes [built] [code generated]
     ./subfolder/big.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) prod-main-3c98d7c3.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./in-some-directory/big.js?1 X bytes [built] [code generated]
     ./in-some-directory/small.js?1 X bytes [built] [code generated]
     ./in-some-directory/small.js?2 X bytes [built] [code generated]
     ./in-some-directory/small.js?3 X bytes [built] [code generated]
     ./in-some-directory/small.js?4 X bytes [built] [code generated]
-  chunk (runtime: main) prod-main-2f7dcf2e.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./inner-module/small.js?1 X bytes [built] [code generated]
     ./inner-module/small.js?2 X bytes [built] [code generated]
@@ -4240,7 +4240,7 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
     ./inner-module/small.js?7 X bytes [built] [code generated]
     ./inner-module/small.js?8 X bytes [built] [code generated]
     ./inner-module/small.js?9 X bytes [built] [code generated]
-  chunk (runtime: main) prod-main-1443e336.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
     > ./ main
     ./subfolder/small.js?1 X bytes [built] [code generated]
     ./subfolder/small.js?2 X bytes [built] [code generated]
@@ -4251,7 +4251,7 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
     ./subfolder/small.js?7 X bytes [built] [code generated]
     ./subfolder/small.js?8 X bytes [built] [code generated]
     ./subfolder/small.js?9 X bytes [built] [code generated]
-  chunk (runtime: main) prod-main-89a43a0f.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
     > ./ main
     ./very-big.js?3 X KiB [built] [code generated]
   production (webpack x.x.x) compiled successfully
@@ -4269,10 +4269,10 @@ development:
     ./in-some-directory/small.js?2 X bytes [built] [code generated]
     ./in-some-directory/small.js?3 X bytes [built] [code generated]
     ./in-some-directory/small.js?4 X bytes [built] [code generated]
-  chunk (runtime: main) dev-main-in-some-directory_very-big_js-8d76cf03.js (main-in-some-directory_very-big_js-8d76cf03) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+  chunk (runtime: main) dev-main-in-some-directory_very-big_js-XXXXXXXX.js (main-in-some-directory_very-big_js-8d76cf03) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) dev-main-index_js-41f5a26e.js (main-index_js-41f5a26e) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+  chunk (runtime: main) dev-main-index_js-XXXXXXXX.js (main-index_js-41f5a26e) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
     > ./ main
     ./index.js X KiB [built] [code generated]
   chunk (runtime: main) dev-main-inner-module_small_js-3.js (main-inner-module_small_js-3) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
@@ -4312,13 +4312,13 @@ development:
     ./subfolder/small.js?7 X bytes [built] [code generated]
     ./subfolder/small.js?8 X bytes [built] [code generated]
     ./subfolder/small.js?9 X bytes [built] [code generated]
-  chunk (runtime: main) dev-main-very-big_js-08cf55cf.js (main-very-big_js-08cf55cf) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-08cf55cf) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
     > ./ main
     ./very-big.js?2 X KiB [built] [code generated]
-  chunk (runtime: main) dev-main-very-big_js-4647fb9d.js (main-very-big_js-4647fb9d) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-4647fb9d) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
     > ./ main
     ./very-big.js?3 X KiB [built] [code generated]
-  chunk (runtime: main) dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) X KiB (javascript) X KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-62f7f644) X KiB (javascript) X KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
     > ./ main
     runtime modules X KiB 6 modules
     ./very-big.js?1 X KiB [built] [code generated]
@@ -4334,20 +4334,20 @@ development:
 
 switched:
   Entrypoint main X KiB = 9 assets
-  chunk (runtime: main) switched-main-6bb16544.js (main-6bb16544) X KiB ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) switched-main-1df31ce3.js (main-1df31ce3) X KiB ={37}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
     > ./ main
     ./index.js X KiB [built] [code generated]
-  chunk (runtime: main) switched-main-12217e1d.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [entry] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [entry] [rendered]
     > ./ main
     runtime modules X KiB 5 modules
     ./very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) switched-main-77a8c116.js (main-77a8c116) X KiB ={37}= ={59}= ={124}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={124}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
     > ./ main
     ./very-big.js?2 X KiB [built] [code generated]
-  chunk (runtime: main) switched-main-7aeafcb2.js (main-7aeafcb2) X KiB ={37}= ={59}= ={124}= ={161}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-7aeafcb2) X KiB ={37}= ={59}= ={124}= ={161}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
     > ./ main
     modules by path ./inner-module/*.js X bytes
       ./inner-module/small.js?1 X bytes [built] [code generated]
@@ -4359,15 +4359,15 @@ switched:
     modules by path ./*.js X bytes
       ./big.js?1 X bytes [built] [code generated]
       ./big.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) switched-241.js (id hint: vendors) X bytes ={37}= ={59}= ={124}= ={161}= ={210}= ={273}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+  chunk (runtime: main) switchXX-XXX.js (id hint: vendors) X bytes ={37}= ={59}= ={124}= ={161}= ={210}= ={273}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./ main
     ./node_modules/big.js?1 X bytes [built] [code generated]
     ./node_modules/small.js?1 X bytes [built] [code generated]
     ./node_modules/small.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) switched-273.js (id hint: vendors) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+  chunk (runtime: main) switchXX-XXX.js (id hint: vendors) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./ main
     ./node_modules/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) switched-main-879072e3.js (main-879072e3) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={945}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-879072e3) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={945}= [initial] [rendered]
     > ./ main
     modules by path ./subfolder/*.js X KiB
       ./subfolder/big.js?1 X bytes [built] [code generated]
@@ -4379,7 +4379,7 @@ switched:
       ./small.js?2 X bytes [built] [code generated]
       ./small.js?3 X bytes [built] [code generated]
       + 6 modules
-  chunk (runtime: main) switched-main-89a43a0f.js (main-89a43a0f) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= [initial] [rendered]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= [initial] [rendered]
     > ./ main
     ./very-big.js?3 X KiB [built] [code generated]
 
@@ -4397,24 +4397,24 @@ switched:
 
 zero-min:
   Entrypoint main X KiB = 13 assets
-  chunk (runtime: main) zero-min-main-6bb16544.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) zero-min-main-1df31ce3.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./index.js X KiB [built] [code generated]
-  chunk (runtime: main) zero-min-main-10f51d07.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./big.js?1 X bytes [built] [code generated]
     ./big.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) zero-min-main-12217e1d.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
     > ./ main
     runtime modules X KiB 5 modules
     ./very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) zero-min-main-77a8c116.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./very-big.js?2 X KiB [built] [code generated]
-  chunk (runtime: main) zero-min-main-e7c5ace7.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./small.js?1 X bytes [built] [code generated]
     ./small.js?2 X bytes [built] [code generated]
@@ -4433,18 +4433,18 @@ zero-min:
   chunk (runtime: main) zero-min-273.js (id hint: vendors) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./ main
     ./node_modules/very-big.js?1 X KiB [built] [code generated]
-  chunk (runtime: main) zero-min-main-5cfff2c6.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./subfolder/big.js?1 X bytes [built] [code generated]
     ./subfolder/big.js?2 X bytes [built] [code generated]
-  chunk (runtime: main) zero-min-main-3c98d7c3.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./in-some-directory/big.js?1 X bytes [built] [code generated]
     ./in-some-directory/small.js?1 X bytes [built] [code generated]
     ./in-some-directory/small.js?2 X bytes [built] [code generated]
     ./in-some-directory/small.js?3 X bytes [built] [code generated]
     ./in-some-directory/small.js?4 X bytes [built] [code generated]
-  chunk (runtime: main) zero-min-main-2f7dcf2e.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
     > ./ main
     ./inner-module/small.js?1 X bytes [built] [code generated]
     ./inner-module/small.js?2 X bytes [built] [code generated]
@@ -4455,7 +4455,7 @@ zero-min:
     ./inner-module/small.js?7 X bytes [built] [code generated]
     ./inner-module/small.js?8 X bytes [built] [code generated]
     ./inner-module/small.js?9 X bytes [built] [code generated]
-  chunk (runtime: main) zero-min-main-1443e336.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
     > ./ main
     ./subfolder/small.js?1 X bytes [built] [code generated]
     ./subfolder/small.js?2 X bytes [built] [code generated]
@@ -4466,25 +4466,25 @@ zero-min:
     ./subfolder/small.js?7 X bytes [built] [code generated]
     ./subfolder/small.js?8 X bytes [built] [code generated]
     ./subfolder/small.js?9 X bytes [built] [code generated]
-  chunk (runtime: main) zero-min-main-89a43a0f.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
     > ./ main
     ./very-big.js?3 X KiB [built] [code generated]
   zero-min (webpack x.x.x) compiled successfully
 
 max-async-size:
   Entrypoint main X KiB = max-async-size-main.js
-  chunk (runtime: main) max-async-size-async-b-bde52cb3.js (async-b-bde52cb3) X bytes <{792}> ={565}= ={664}= ={901}= [rendered]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-bde52cb3) X bytes <{792}> ={565}= ={664}= ={901}= [rendered]
     > ./b ./async/index.js 10:2-49
     > ./a ./async/index.js 9:2-49
     dependent modules X bytes [dependent] 9 modules
     cacheable modules X bytes
       ./async/a.js X bytes [built] [code generated]
       ./async/b.js X bytes [built] [code generated]
-  chunk (runtime: main) max-async-size-async-b-89a43a0f.js (async-b-89a43a0f) X KiB <{792}> ={265}= ={664}= ={901}= [rendered]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-89a43a0f) X KiB <{792}> ={265}= ={664}= ={901}= [rendered]
     > ./b ./async/index.js 10:2-49
     > ./a ./async/index.js 9:2-49
     ./very-big.js?3 X KiB [built] [code generated]
-  chunk (runtime: main) max-async-size-async-b-12217e1d.js (async-b-12217e1d) X KiB <{792}> ={265}= ={565}= ={901}= [rendered]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-12217e1d) X KiB <{792}> ={265}= ={565}= ={901}= [rendered]
     > ./b ./async/index.js 10:2-49
     > ./a ./async/index.js 9:2-49
     ./very-big.js?1 X KiB [built] [code generated]
@@ -4493,7 +4493,7 @@ max-async-size:
     runtime modules X KiB 10 modules
     dependent modules X KiB [dependent] 6 modules
     ./async/index.js X bytes [built] [code generated]
-  chunk (runtime: main) max-async-size-async-b-77a8c116.js (async-b-77a8c116) X KiB <{792}> ={265}= ={565}= ={664}= [rendered]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-77a8c116) X KiB <{792}> ={265}= ={565}= ={664}= [rendered]
     > ./b ./async/index.js 10:2-49
     > ./a ./async/index.js 9:2-49
     ./very-big.js?2 X KiB [built] [code generated]
@@ -4767,12 +4767,12 @@ exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sy
   asset 672.bundle.js X bytes [emitted]
   asset 989.bundle.js X bytes [emitted]
 assets by path *.wasm X KiB
-  asset e1527dcfebc470eb04bc.module.wasm X bytes [emitted] [immutable]
-  asset 2cbe6ce83117ed67f4f5.module.wasm X bytes [emitted] [immutable]
-  asset a5af96dad00b07242c9d.module.wasm X bytes [emitted] [immutable]
-  asset e3561de65684e530d698.module.wasm X bytes [emitted] [immutable]
-  asset f3a44d9771697ed7a52a.module.wasm X bytes [emitted] [immutable]
-  asset c63174dd4e2ffd7ad76d.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
 chunk (runtime: main) 573.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
   ./Q_rsqrt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
 chunk (runtime: main) 672.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
@@ -4807,8 +4807,8 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for worker-public-path 1`] = `
-"asset main-2e89d929757fa581c506.js X KiB [emitted] [immutable] (name: main)
-asset 447-c9c491291b40347cb83b.js X bytes [emitted] [immutable]
+"asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 447-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
 runtime modules X KiB 5 modules
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated]
