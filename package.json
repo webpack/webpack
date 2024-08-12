@@ -5,7 +5,6 @@
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
-    "@types/eslint-scope": "^3.7.3",
     "@types/estree": "^1.0.5",
     "@webassemblyjs/ast": "^1.12.1",
     "@webassemblyjs/wasm-edit": "^1.12.1",
@@ -40,6 +39,7 @@
     "@babel/preset-react": "^7.24.7",
     "@eslint/js": "^9.5.0",
     "@stylistic/eslint-plugin": "^2.4.0",
+    "@types/eslint-scope": "^3.7.7",
     "@types/glob-to-regexp": "^0.4.4",
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
