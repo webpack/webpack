@@ -10239,7 +10239,7 @@ declare interface Output {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string;
+	hotUpdateGlobal?: string | ((chunk: Chunk) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
@@ -10538,7 +10538,7 @@ declare interface OutputNormalized {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string;
+	hotUpdateGlobal?: string | ((chunk: Chunk) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
@@ -13695,6 +13695,11 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 */
 	getFromUnorderedCache<R>(fn: (arg0: SortableSet<T>) => R): R;
 	toJSON(): T[];
+
+	/**
+	 * Iterates over values in the set.
+	 */
+	[Symbol.iterator](): IterableIterator<T>;
 }
 declare class Source {
 	constructor();

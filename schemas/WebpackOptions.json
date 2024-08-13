@@ -1585,7 +1585,16 @@
     },
     "HotUpdateGlobal": {
       "description": "The global variable used by webpack for loading of hot update chunks.",
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((chunk: import('../lib/Chunk')) => string)"
+        }
+      ]
     },
     "HotUpdateMainFilename": {
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
