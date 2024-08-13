@@ -577,7 +577,15 @@ export type HotUpdateChunkFilename = string;
 /**
  * The global variable used by webpack for loading of hot update chunks.
  */
-export type HotUpdateGlobal = string;
+export type HotUpdateGlobal =
+	| string
+	| (({
+			chunk,
+			contentHashType
+	  }: {
+			chunk: import("../lib/Chunk");
+			contentHashType: string;
+	  }) => string);
 /**
  * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
  */
