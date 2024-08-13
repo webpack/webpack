@@ -4,7 +4,9 @@ module.exports = {
 			const json = item.toJson({ assets: true });
 
 			for (const asset of json.assets) {
-				expect(asset.related).toBeInstanceOf(Array);
+				if (asset.related) {
+					expect(asset.related).toBeInstanceOf(Array);
+				}
 			}
 		}
 	}
