@@ -35,7 +35,7 @@ const base = name => ({
 	entry: "./index",
 	output: {
 		filename: `${name}-[name].js`,
-		assetModuleFilename: "[name][ext]",
+		assetModuleFilename: `${name}-[name][ext]`,
 		pathinfo: false
 	},
 	module: {
