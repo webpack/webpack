@@ -207,23 +207,26 @@ class FakeSheet {
 						.replace(/^https:\/\/example\.com\//, "")
 				);
 		let css = fs.readFileSync(filepath, "utf-8");
-		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
-			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
-				return url;
-			}
+		css = css
+			// Remove comments
+			.replace(/\/\*.*?\*\//gms, "")
+			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+					return url;
+				}
 
-			if (url.startsWith("#")) {
-				return url;
-			}
+				if (url.startsWith("#")) {
+					return url;
+				}
 
-			return fs.readFileSync(
-				path.resolve(
-					this._basePath,
-					url.replace(/^https:\/\/test\.cases\/path\//, "")
-				),
-				"utf-8"
-			);
-		});
+				return fs.readFileSync(
+					path.resolve(
+						this._basePath,
+						url.replace(/^https:\/\/test\.cases\/path\//, "")
+					),
+					"utf-8"
+				);
+			});
 		walkCssTokens(css, {
 			isSelector() {
 				return selector === undefined;
