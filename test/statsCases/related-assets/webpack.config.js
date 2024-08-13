@@ -11,6 +11,9 @@ const compression = exts => compiler => {
 			() => {
 				for (const asset of compilation.getAssets()) {
 					for (const ext of exts) {
+						if (asset.name.endsWith(".jpg")) {
+							continue;
+						}
 						const newFile = `${asset.name}${ext}`;
 						compilation.emitAsset(newFile, asset.source);
 						compilation.updateAsset(asset.name, asset.source, {
@@ -32,6 +35,7 @@ const base = name => ({
 	entry: "./index",
 	output: {
 		filename: `${name}-[name].js`,
+		assetModuleFilename: "[name][ext]",
 		pathinfo: false
 	},
 	module: {
