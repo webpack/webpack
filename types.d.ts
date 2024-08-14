@@ -1195,7 +1195,7 @@ declare class ChunkGraph {
 	connectChunkAndEntryModule(
 		chunk: Chunk,
 		module: Module,
-		entrypoint?: Entrypoint
+		entrypoint: Entrypoint
 	): void;
 	connectChunkAndRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
 	addFullHashModuleToChunk(chunk: Chunk, module: RuntimeModule): void;
@@ -1955,7 +1955,7 @@ declare class Compilation {
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DepConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
-	childrenCounters: object;
+	childrenCounters: Record<string, number>;
 	usedChunkIds: Set<string | number>;
 	usedModuleIds: Set<number>;
 	needAdditionalPass: boolean;
@@ -1980,7 +1980,7 @@ declare class Compilation {
 	getLogger(name: string | (() => string)): WebpackLogger;
 	addModule(
 		module: Module,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 
 	/**
@@ -1998,21 +1998,21 @@ declare class Compilation {
 	 */
 	buildModule(
 		module: Module,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	processModuleDependencies(
 		module: Module,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	addModuleChain(
 		context: string,
 		dependency: Dependency,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	addModuleTree(
 		__0: {
@@ -2029,23 +2029,23 @@ declare class Compilation {
 			 */
 			contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 		},
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	addEntry(
 		context: string,
 		entry: Dependency,
 		optionsOrName: string | EntryOptions,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	addInclude(
 		context: string,
 		dependency: Dependency,
 		options: EntryOptions,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	rebuildModule(
 		module: Module,
-		callback: (err?: null | WebpackError, result?: Module) => void
+		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	finish(callback: (err?: null | WebpackError) => void): void;
 	unseal(): void;
@@ -2177,7 +2177,7 @@ declare class Compilation {
 	factorizeModule: {
 		(
 			options: FactorizeModuleOptions & { factoryResult?: false },
-			callback: (err?: null | WebpackError, result?: Module) => void
+			callback: (err?: null | WebpackError, result?: null | Module) => void
 		): void;
 		(
 			options: FactorizeModuleOptions & { factoryResult: true },
@@ -2983,14 +2983,14 @@ declare class ContextReplacementPlugin {
 		resourceRegExp: RegExp,
 		newContentResource?: any,
 		newContentRecursive?: any,
-		newContentRegExp?: any
+		newContentRegExp?: RegExp
 	);
 	resourceRegExp: RegExp;
 	newContentCallback: any;
 	newContentResource: any;
 	newContentCreateContextMap: any;
 	newContentRecursive: any;
-	newContentRegExp: any;
+	newContentRegExp?: RegExp;
 
 	/**
 	 * Apply the plugin
@@ -4282,7 +4282,7 @@ declare abstract class ExportInfo {
 	findTarget(
 		moduleGraph: ModuleGraph,
 		validTargetModuleFilter: (arg0: Module) => boolean
-	): undefined | null | false | TargetItem;
+	): undefined | null | false | TargetItemWithoutConnection;
 	getTarget(
 		moduleGraph: ModuleGraph,
 		resolveTargetFilter?: (arg0: TargetItem) => boolean
@@ -4384,12 +4384,9 @@ declare abstract class ExportsInfo {
 	getUsageKey(runtime: RuntimeSpec): string;
 	isEquallyUsed(runtimeA: RuntimeSpec, runtimeB: RuntimeSpec): boolean;
 	getUsed(name: string | string[], runtime: RuntimeSpec): UsageStateType;
-	getUsedName(
-		name: undefined | string | string[],
-		runtime: RuntimeSpec
-	): UsedName;
+	getUsedName(name: string | string[], runtime: RuntimeSpec): UsedName;
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
-	getRestoreProvidedData(): any;
+	getRestoreProvidedData(): RestoreProvidedData;
 	restoreProvided(__0: {
 		otherProvided: any;
 		otherCanMangleProvide: any;
@@ -4411,7 +4408,7 @@ declare interface ExportsSpec {
 	/**
 	 * list of maybe prior exposed, but now hidden exports
 	 */
-	hideExports?: Set<string>;
+	hideExports?: null | Set<string>;
 
 	/**
 	 * when reexported: from which module
@@ -7940,7 +7937,7 @@ declare class LoaderTargetPlugin {
 }
 declare interface LogEntry {
 	type: string;
-	args: any[];
+	args?: any[];
 	time: number;
 	trace?: string[];
 }
@@ -8871,13 +8868,68 @@ declare interface ModuleSettings {
 declare abstract class ModuleTemplate {
 	type: string;
 	hooks: Readonly<{
-		content: { tap: (options?: any, fn?: any) => void };
-		module: { tap: (options?: any, fn?: any) => void };
-		render: { tap: (options?: any, fn?: any) => void };
-		package: { tap: (options?: any, fn?: any) => void };
-		hash: { tap: (options?: any, fn?: any) => void };
+		content: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Module,
+					arg2: ChunkRenderContext,
+					arg3: DependencyTemplates
+				) => Source
+			) => void;
+		};
+		module: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Module,
+					arg2: ChunkRenderContext,
+					arg3: DependencyTemplates
+				) => Source
+			) => void;
+		};
+		render: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Module,
+					arg2: ChunkRenderContext,
+					arg3: DependencyTemplates
+				) => Source
+			) => void;
+		};
+		package: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (
+					arg0: Source,
+					arg1: Module,
+					arg2: ChunkRenderContext,
+					arg3: DependencyTemplates
+				) => Source
+			) => void;
+		};
+		hash: {
+			tap: <AdditionalOptions>(
+				options:
+					| string
+					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+				fn: (arg0: Hash) => void
+			) => void;
+		};
 	}>;
-	get runtimeTemplate(): any;
+	get runtimeTemplate(): RuntimeTemplate;
 }
 declare interface ModuleTemplates {
 	javascript: ModuleTemplate;
@@ -12284,6 +12336,13 @@ declare interface ResourceDataWithData {
 	context?: string;
 	data: Record<string, any>;
 }
+declare abstract class RestoreProvidedData {
+	exports: any;
+	otherProvided: any;
+	otherCanMangleProvide: any;
+	otherTerminalBinding: any;
+	serialize(__0: ObjectSerializerContext): void;
+}
 declare interface RmDirOptions {
 	maxRetries?: number;
 	recursive?: boolean;
@@ -14497,7 +14556,12 @@ declare interface TagInfo {
 }
 declare interface TargetItem {
 	module: Module;
+	connection: ModuleGraphConnection;
 	export?: string[];
+}
+declare interface TargetItemWithoutConnection {
+	module: Module;
+	export: string[];
 }
 declare class Template {
 	constructor();
