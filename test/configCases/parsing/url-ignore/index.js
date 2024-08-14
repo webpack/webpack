@@ -20,4 +20,8 @@ it("should ignore", function() {
 	expect(url8.toString()).toBe(document.baseURI || self.location.href);
 	const url9 = new URL(self.location.href);
 	expect(url9.toString()).toBe(self.location.href);
+	const url10 = new URL(/* webpackIgnore: true */ self.location.href);
+	expect(url10.toString()).toBe(self.location.href);
+	const url11 = new URL(/* webpackIgnore: true */ ...args);
+	expect(url11.pathname.endsWith("file3.css")).toBe(true);
 });
