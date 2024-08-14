@@ -449,7 +449,10 @@ const describeCases = config => {
 										let runInNewContext = false;
 										if (
 											options.target === "web" ||
-											options.target === "webworker"
+											options.target === "webworker" ||
+											(Array.isArray(options.target) &&
+												(options.target.includes("web") ||
+													options.target.includes("webworker")))
 										) {
 											baseModuleScope.window = globalContext;
 											baseModuleScope.self = globalContext;
