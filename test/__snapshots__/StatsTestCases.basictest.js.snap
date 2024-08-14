@@ -1812,6 +1812,18 @@ You may need an appropriate loader to handle this file type, currently no loader
 webpack x.x.x compiled with 2 errors in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for name 1`] = `
+"./app.js:
+  asset bundle1.js X bytes [emitted] (name: main)
+  ./app.js X bytes [built] [code generated]
+  Xdir/name/app.js (webpack x.x.x) compiled successfully in X ms
+
+./server.js:
+  asset bundle2.js X bytes [emitted] (name: main)
+  ./server.js X bytes [built] [code generated]
+  Xdir/name/server.js (webpack x.x.x) compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = `
 "Chunk Group main X KiB = a-main.js
 Chunk Group async-a X KiB = a-48.js X bytes a-async-a.js X bytes
