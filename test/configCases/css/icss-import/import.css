@@ -1,0 +1,7 @@
+:import('./export.css') {
+    IMPORTED_NAME: green;
+}
+
+body {
+    background: IMPORTED_NAME;
+}
