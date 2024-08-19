@@ -1,0 +1,14 @@
+:import("./export.css") {
+    constructor: primary-color;
+    toString: secondary-color;
+}
+
+.className {
+    color: constructor;
+    display: toString;
+}
+
+:export {
+    primary-color: constructor;
+    secondary-color: toString;
+}

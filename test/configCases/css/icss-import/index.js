@@ -1,9 +1,19 @@
 import './import.css';
 
-it("should compile", (done) => {
+it("should compile", () => {
 	const style = getComputedStyle(document.body);
 	expect(style.getPropertyValue("background")).toBe(" red");
-
-	done();
 });
 
+it("should re-export", (done) => {
+    import("./reexport.module.css").then((module) => {
+        try{
+            expect(module).toEqual(nsObj({
+                ["primary-color"]: "red",
+                ['secondary-color']: "block"
+            }));
+        }catch(e) {
+        }
+       done() 
+    }, done)
+})
