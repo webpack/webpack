@@ -5396,7 +5396,6 @@ type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
 	externalType?: "import" | "module";
-	externalsPresets?: ExternalsPresets;
 }
 declare interface ImportModuleOptions {
 	/**
