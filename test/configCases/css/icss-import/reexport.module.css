@@ -1,4 +1,4 @@
-:import("./export.css") {
+:import("./vars.css") {
     constructor: primary-color;
     toString: secondary-color;
 }
@@ -12,3 +12,4 @@
     primary-color: constructor;
     secondary-color: toString;
 }
+  

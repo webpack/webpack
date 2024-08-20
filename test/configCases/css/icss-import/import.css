@@ -1,7 +1,9 @@
-:import('./export.css') {
-    IMPORTED_NAME: green;
+:import("./export.css") {
+    IMPORTED_NAME: primary-color;
 }
-
+  
 body {
+    color: IMPORTED_NAME;
     background: IMPORTED_NAME;
 }
+  
