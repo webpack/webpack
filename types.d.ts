@@ -4582,6 +4582,7 @@ declare class ExternalModule extends Module {
 	externalType: string;
 	userRequest: string;
 	dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta;
+	getModuleImportType(externalType: string): string;
 
 	/**
 	 * restore unsafe cache data
