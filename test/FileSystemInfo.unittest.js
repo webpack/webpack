@@ -5,12 +5,14 @@ const util = require("util");
 const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");
 
-const fs = require("fs");
-const path = require("path");
-const { lstatReadlinkAbsolute } = require("../lib/util/fs");
 jest.mock("fs");
 
 describe("FileSystemInfo", () => {
+	afterEach(() => {
+		// restore the spy created with spyOn
+		jest.restoreAllMocks();
+	});
+
 	const files = [
 		"/path/file.txt",
 		"/path/nested/deep/file.txt",
@@ -438,40 +440,66 @@ ${details(snapshot)}`)
 			});
 		});
 	});
-});
 
-describe("lstatReadlinkAbsolute", () => {
-	it("should call the callback with an error if fs.readlink fails", done => {
-		// We will mock fs.readlink to always return this error
-		const mockError = new Error("Mocked error");
+	describe("symlinks", () => {
+		it("should work with symlinks with errors", done => {
+			const fs = createFs();
 
-		// Mock fs.lstat to always return a symbolic link
-		const fsLstat = jest
-			.spyOn(fs, "lstat")
-			.mockImplementation((_, callback) => {
-				callback(null, { isSymbolicLink: () => true });
+			fs.symlinkSync(
+				"/path/folder/context",
+				"/path/context/sub/symlink-error",
+				"dir"
+			);
+
+			const originalReadlink = fs.readlink;
+
+			let i = 0;
+
+			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
+				if (path === "/path/context/sub/symlink-error" && i < 2) {
+					i += 1;
+					callback(new Error("test"));
+					return;
+				}
+
+				originalReadlink(path, callback);
 			});
 
-		// Mock fs.readlink to always return the error above
-		const fsReadlink = jest
-			.spyOn(fs, "readlink")
-			.mockImplementation((_, callback) => {
-				callback(mockError);
+			createSnapshot(
+				fs,
+				["timestamp", { timestamp: true }],
+				(err, snapshot, snapshot2) => {
+					if (err) return done(err);
+					expectSnapshotsState(fs, snapshot, snapshot2, true, done);
+				}
+			);
+		});
+
+		it("should work with symlinks with errors #1", done => {
+			const fs = createFs();
+
+			fs.symlinkSync(
+				"/path/folder/context",
+				"/path/context/sub/symlink-error",
+				"dir"
+			);
+
+			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
+				callback(new Error("test"));
 			});
 
-		const callback = (err, result) => {
-			try {
-				expect(err).toBe(mockError);
-				expect(result).toBeUndefined();
-				done();
-			} catch (err_) {
-				done(err_);
-			}
-		};
-
-		lstatReadlinkAbsolute(fs, path.resolve("/some/path"), callback);
-
-		fsLstat.mockReset();
-		fsReadlink.mockReset();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					expect(snapshot).toBe(null);
+					done();
+				}
+			);
+		});
 	});
 });
