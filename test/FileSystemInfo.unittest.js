@@ -5,8 +5,6 @@ const util = require("util");
 const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");
 
-jest.mock("fs");
-
 describe("FileSystemInfo", () => {
 	afterEach(() => {
 		// restore the spy created with spyOn
