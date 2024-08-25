@@ -1,5 +1,6 @@
 :import("./export.css") {
     IMPORTED_NAME: primary-color;
+    NONE_IMPORT: ;
 }
 
 body {
