@@ -4049,7 +4049,7 @@ declare interface Environment {
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: (string | string[] | Record<string, any>)[]);
-	keys: any[];
+	keys: string[];
 	defaultValues: Record<string, any>;
 
 	/**
