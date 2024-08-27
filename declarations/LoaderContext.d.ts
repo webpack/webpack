@@ -48,6 +48,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	fs: InputFileSystem;
 	sourceMap?: boolean;
 	mode: "development" | "production" | "none";
+	virtualResource: string | undefined;
 	webpack?: boolean;
 	_module?: NormalModule;
 	_compilation?: Compilation;
