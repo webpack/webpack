@@ -15,6 +15,7 @@ module.exports = class FakeDocument {
 			["body", [this.body]]
 		]);
 		this._basePath = basePath;
+		this.adoptedStyleSheets = [];
 	}
 
 	createElement(type) {
@@ -45,6 +46,7 @@ module.exports = class FakeDocument {
 	getComputedStyle(element) {
 		const style = { getPropertyValue };
 		const links = this.getElementsByTagName("link");
+		const styleSheets = this.adoptedStyleSheets;
 		for (const link of links) {
 			for (const rule of link.sheet.cssRules) {
 				if (rule.selectorText === element._type) {
@@ -52,6 +54,14 @@ module.exports = class FakeDocument {
 				}
 			}
 		}
+		for (const sheet of styleSheets) {
+			for (const rule of sheet.cssRules) {
+				if (rule.selectorText === element._type) {
+					Object.assign(style, rule.style);
+				}
+			}
+		}
+
 		return style;
 	}
 };
@@ -149,6 +159,11 @@ class FakeSheet {
 	constructor(element, basePath) {
 		this._element = element;
 		this._basePath = basePath;
+		this._css = "";
+	}
+
+	replaceSync(css) {
+		this._css = css;
 	}
 
 	get css() {
@@ -197,37 +212,40 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		const filepath = /file:\/\//.test(this._element.href)
-			? new URL(this._element.href)
-			: path.resolve(
-					this._basePath,
-					this._element.href
-						.replace(/^https:\/\/test\.cases\/path\//, "")
-						.replace(/^https:\/\/example\.com\/public\/path\//, "")
-						.replace(/^https:\/\/example\.com\//, "")
-				);
-		let css = fs.readFileSync(filepath, "utf-8");
-		css = css
-			// Remove comments
-			.replace(/\/\*.*?\*\//gms, "")
-			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
-				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
-					return url;
-				}
-
-				if (url.startsWith("#")) {
-					return url;
-				}
-
-				return fs.readFileSync(
-					path.resolve(
+		if (this._element && this._basePath) {
+			const filepath = /file:\/\//.test(this._element.href)
+				? new URL(this._element.href)
+				: path.resolve(
 						this._basePath,
-						url.replace(/^https:\/\/test\.cases\/path\//, "")
-					),
-					"utf-8"
-				);
-			});
-		walkCssTokens(css, {
+						this._element.href
+							.replace(/^https:\/\/test\.cases\/path\//, "")
+							.replace(/^https:\/\/example\.com\/public\/path\//, "")
+							.replace(/^https:\/\/example\.com\//, "")
+					);
+			let css = fs.readFileSync(filepath, "utf-8");
+			css = css
+				// Remove comments
+				.replace(/\/\*.*?\*\//gms, "")
+				.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+					if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+						return url;
+					}
+
+					if (url.startsWith("#")) {
+						return url;
+					}
+
+					return fs.readFileSync(
+						path.resolve(
+							this._basePath,
+							url.replace(/^https:\/\/test\.cases\/path\//, "")
+						),
+						"utf-8"
+					);
+				});
+			this._css = css;
+		}
+		walkCssTokens(this._css, {
 			isSelector() {
 				return selector === undefined;
 			},
@@ -255,3 +273,4 @@ class FakeSheet {
 		return rules;
 	}
 }
+module.exports.FakeSheet = FakeSheet;

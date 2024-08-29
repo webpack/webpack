@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+
+/* Comment */
+
+.class {
+  color: red;
+  background: url("./img.png");
+}
+
+.class-duplicate-url {
+  background: url("./img.png");
+}

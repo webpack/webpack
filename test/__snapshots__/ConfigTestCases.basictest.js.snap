@@ -1944,6 +1944,23 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 ]
 `;
 
+exports[`ConfigTestCases css css-module-scripts exported tests should compile url 1`] = `
+"@charset \\"UTF-8\\";
+
+
+/* Comment */
+
+.class {
+  color: red;
+  background: url(09a1a1112c577c279435.png);
+}
+
+.class-duplicate-url {
+  background: url(09a1a1112c577c279435.png);
+}
+"
+`;
+
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules 1`] = `
 "/*!******************************!*\\\\
   !*** css ./style.module.css ***!

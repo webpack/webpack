@@ -424,7 +424,8 @@ const describeCases = config => {
 												toString() {
 													return "https://test.cases/path/index.html";
 												}
-											}
+											},
+											CSSStyleSheet: FakeDocument.FakeSheet
 										};
 
 										const requireCache = Object.create(null);
