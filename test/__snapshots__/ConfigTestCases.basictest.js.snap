@@ -1944,7 +1944,7 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 ]
 `;
 
-exports[`ConfigTestCases css css-module-scripts exported tests should compile 1`] = `
+exports[`ConfigTestCases css css-module-scripts exported tests should compile basic sheet 1`] = `
 "@charset \\"UTF-8\\";
 
 
