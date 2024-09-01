@@ -8,7 +8,7 @@ it('should adopt sheet', () => {
 	expect(style.getPropertyValue("color")).toBe(" red");
 })
 
-it('should compile url', (done) => {
+it('should compile basic sheet', (done) => {
 	expect(basicSheet._css).toMatchSnapshot()
 	done()
 })
