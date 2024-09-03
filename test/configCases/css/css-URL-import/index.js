@@ -1,13 +1,9 @@
 it("should compile", done => {
     const url = new URL('./style.css', import.meta.url);
-	const links = document.getElementsByTagName("link");
-    links[0].href = url;
-	const css = [];
+	const link = document.createElement("link");
+	link.rel = "stylesheet";
+    link.href = url;
 
-	for (const link of links) {
-		css.push(link.sheet.css);
-	}
-
-	expect(css).toMatchSnapshot();
+	expect(link.sheet.css).toMatchSnapshot();
 	done();
 });
