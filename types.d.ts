@@ -4048,9 +4048,9 @@ declare interface Environment {
 	templateLiteral?: boolean;
 }
 declare class EnvironmentPlugin {
-	constructor(...keys: (string | string[] | Record<string, string>)[]);
+	constructor(...keys: (string | string[] | Record<string, any>)[]);
 	keys: string[];
-	defaultValues: Record<string, string>;
+	defaultValues: Record<string, any>;
 
 	/**
 	 * Apply the plugin
