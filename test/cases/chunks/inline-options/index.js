@@ -203,6 +203,23 @@ if (process.env.NODE_ENV === "production") {
 		expect(a.a).toBe(1);
 		expect(a.b).toBe(2);
 	})
+
+	it("should not tree-shake default export for exportsType=default context module", async function () {
+		const dir = "json";
+		const jsonObject = await import(/* webpackExports: ["default"] */ `./dir16/${dir}/object.json`);
+		const jsonArray = await import(/* webpackExports: ["default"] */ `./dir16/${dir}/array.json`);
+		const jsonPrimitive = await import(/* webpackExports: ["default"] */ `./dir16/${dir}/primitive.json`);
+		expect(jsonObject.default).toEqual({ a: 1 });
+		expect(jsonObject.a).toEqual(1);
+		expect(jsonArray.default).toEqual(["a"]);
+		expect(jsonArray[0]).toBe("a");
+		expect(jsonPrimitive.default).toBe("a");
+		const file = "a";
+		const a = await import(/* webpackExports: ["default"] */`./dir16/${file}`);
+		expect(a.default).toEqual({ a: 1, b: 2 });
+		expect(a.a).toBe(1);
+		expect(a.b).toBe(2);
+	})
 }
 
 function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {
