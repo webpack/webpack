@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ConfigTestCases css css-URL-import exported tests should compile 1`] = `
+"/*!*******************************************!*\\\\
+  !*** css ./style2.css (URL: ./style.css) ***!
+  \\\\*******************************************/
+.class {
+    color: blue;
+}
+/*!******************************************!*\\\\
+  !*** css ./style.css (URL: ./style.css) ***!
+  \\\\******************************************/
+
+body {
+    color: red;
+}
+head{--webpack-main:&\\\\.\\\\/style2\\\\.css,&\\\\.\\\\/style\\\\.css;}"
+`;
+
+exports[`ConfigTestCases css css-URL-import exported tests should compile 2`] = `true`;
+
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `
 Array [
   "/*!**********************************************************************************************!*\\\\
