@@ -1,24 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ConfigTestCases css css-URL-import exported tests should compile 1`] = `
-"/*!*******************************************!*\\\\
-  !*** css ./style2.css (URL: ./style.css) ***!
-  \\\\*******************************************/
-.class {
-    color: blue;
-}
-/*!******************************************!*\\\\
-  !*** css ./style.css (URL: ./style.css) ***!
-  \\\\******************************************/
-
-body {
-    color: red;
-}
-head{--webpack-main:&\\\\.\\\\/style2\\\\.css,&\\\\.\\\\/style\\\\.css;}"
-`;
-
-exports[`ConfigTestCases css css-URL-import exported tests should compile 2`] = `true`;
-
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `
 Array [
   "/*!**********************************************************************************************!*\\\\
@@ -3928,6 +3909,51 @@ Object {
   "simple": "./style.module.less__simple",
 }
 `;
+
+exports[`ConfigTestCases css new-url exported tests new URL should not affect chunk css module 1`] = `
+Array [
+  "/*!************************!*\\\\
+  !*** css ./style2.css ***!
+  \\\\************************/
+.class {
+    color: blue;
+}
+/*!************************!*\\\\
+  !*** css ./style3.css ***!
+  \\\\************************/
+
+body {
+    color: blue;
+}
+head{--webpack-main:&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style3\\\\.css;}",
+]
+`;
+
+exports[`ConfigTestCases css new-url exported tests should compile 1`] = `
+"/*!********************************************************************************************!*\\\\
+  !*** external \\"https://test.cases/path/../../../../configCases/css/external/external.css\\" ***!
+  \\\\********************************************************************************************/
+body {
+	color: green;
+}
+
+/*!*******************************************!*\\\\
+  !*** css ./style2.css (URL: ./style.css) ***!
+  \\\\*******************************************/
+.class {
+    color: blue;
+}
+/*!******************************************!*\\\\
+  !*** css ./style.css (URL: ./style.css) ***!
+  \\\\******************************************/
+
+body {
+    color: red;
+}
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/external\\\\/external\\\\.css,&\\\\.\\\\/style2\\\\.css\\\\?6c2d,&\\\\.\\\\/style\\\\.css;}"
+`;
+
+exports[`ConfigTestCases css new-url exported tests should compile 2`] = `"https://test.cases/path/cd34510addabff9c8864.css"`;
 
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
 Array [
