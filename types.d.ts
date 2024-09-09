@@ -3111,6 +3111,7 @@ declare interface CssImportDependencyMeta {
 	layer?: string;
 	supports?: string;
 	media?: string;
+	URLRequest?: string;
 }
 
 /**
