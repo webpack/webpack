@@ -7449,16 +7449,16 @@ declare class LazySet<T> {
 	addAll(iterable: LazySet<T> | Iterable<T>): LazySet<T>;
 	clear(): void;
 	delete(value: T): boolean;
-	entries(): SetIterator<[T, T]>;
+	entries(): IterableIterator<[T, T]>;
 	forEach(
 		callbackFn: (arg0: T, arg1: T, arg2: Set<T>) => void,
 		thisArg?: any
 	): void;
 	has(item: T): boolean;
-	keys(): SetIterator<T>;
-	values(): SetIterator<T>;
+	keys(): IterableIterator<T>;
+	values(): IterableIterator<T>;
 	serialize(__0: ObjectSerializerContext): void;
-	[Symbol.iterator](): SetIterator<T>;
+	[Symbol.iterator](): IterableIterator<T>;
 	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
 }
 declare interface LibIdentOptions {
@@ -12863,7 +12863,7 @@ declare class RuntimeSpecMap<T> {
 	delete(runtime: RuntimeSpec): void;
 	update(runtime: RuntimeSpec, fn: (arg0?: T) => T): void;
 	keys(): RuntimeSpec[];
-	values(): ArrayIterator<T>;
+	values(): IterableIterator<T>;
 	get size(): number;
 }
 declare class RuntimeSpecSet {
@@ -12871,7 +12871,7 @@ declare class RuntimeSpecSet {
 	add(runtime: RuntimeSpec): void;
 	has(runtime: RuntimeSpec): boolean;
 	get size(): number;
-	[Symbol.iterator](): MapIterator<RuntimeSpec>;
+	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 }
 declare abstract class RuntimeTemplate {
 	compilation: Compilation;
@@ -13604,11 +13604,6 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 */
 	getFromUnorderedCache<R>(fn: (arg0: SortableSet<T>) => R): R;
 	toJSON(): T[];
-
-	/**
-	 * Iterates over values in the set.
-	 */
-	[Symbol.iterator](): SetIterator<T>;
 }
 declare class Source {
 	constructor();
