@@ -4724,6 +4724,29 @@ global:
   global (webpack x.x.x) compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-dedup 1`] = `
+"asset main.js X KiB [emitted] (name: main) (id hint: main)
+asset table--shared X bytes [emitted]
+asset row-359--shared X bytes [emitted]
+asset cell--shared X bytes [emitted]
+asset templater--shared X bytes [emitted]
+runtime modules X KiB 11 modules
+built modules X bytes (javascript) X bytes (share-init) X bytes (consume-shared) [built]
+  cacheable modules X bytes
+    modules by path ./node_modules/ X bytes 4 modules
+    modules by path ./*.js X bytes 2 modules
+  provide-module modules X bytes
+    provide shared module (default) cell@1.0.0 = ./node_modules/cell/index.js X bytes [built] [code generated]
+    provide shared module (default) row@1.0.0 = ./node_modules/row/index.js X bytes [built] [code generated]
+    + 2 modules
+  consume-shared-module modules X bytes
+    consume shared module (default) table@=1.0.0 (strict) (fallback: ./node_modules/...(truncated) X bytes [built] [code generated]
+    consume shared module (default) row@=1.0.0 (strict) (fallback: ./node_modules...(truncated) X bytes [built] [code generated]
+    consume shared module (default) templater@=1.0.0 (strict) (fallback: ./node_modu...(truncated) X bytes [built] [code generated]
+    consume shared module (default) cell@=1.0.0 (strict) (fallback: ./node_modules/...(truncated) X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
 "asset bundle.js X KiB [emitted] (name: main)
 runtime modules X bytes 3 modules
