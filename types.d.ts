@@ -13604,11 +13604,6 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 */
 	getFromUnorderedCache<R>(fn: (arg0: SortableSet<T>) => R): R;
 	toJSON(): T[];
-
-	/**
-	 * Iterates over values in the set.
-	 */
-	[Symbol.iterator](): IterableIterator<T>;
 }
 declare class Source {
 	constructor();
