@@ -3955,6 +3955,8 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 
 exports[`ConfigCacheTestCases css new-url exported tests should compile 2`] = `"https://test.cases/path/cd34510addabff9c8864.css"`;
 
+exports[`ConfigCacheTestCases css new-url exported tests should compile 3`] = `"https://test.cases/path/cd34510addabff9c8864.css?foo=1"`;
+
 exports[`ConfigCacheTestCases css pure-css exported tests should compile 1`] = `
 Array [
   "/*!*******************************************!*\\\\
