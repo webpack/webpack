@@ -167,6 +167,7 @@ class FakeSheet {
 	}
 
 	get css() {
+		if (this._css) return this._css;
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
@@ -212,6 +213,7 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
+		let css = this._css;
 		if (this._element && this._basePath) {
 			const filepath = /file:\/\//.test(this._element.href)
 				? new URL(this._element.href)
@@ -222,7 +224,7 @@ class FakeSheet {
 							.replace(/^https:\/\/example\.com\/public\/path\//, "")
 							.replace(/^https:\/\/example\.com\//, "")
 					);
-			let css = fs.readFileSync(filepath, "utf-8");
+			css = fs.readFileSync(filepath, "utf-8");
 			css = css
 				// Remove comments
 				.replace(/\/\*.*?\*\//gms, "")
@@ -243,9 +245,8 @@ class FakeSheet {
 						"utf-8"
 					);
 				});
-			this._css = css;
 		}
-		walkCssTokens(this._css, {
+		walkCssTokens(css, {
 			isSelector() {
 				return selector === undefined;
 			},

@@ -9,6 +9,6 @@ it('should adopt sheet', () => {
 })
 
 it('should compile basic sheet', (done) => {
-	expect(basicSheet._css).toMatchSnapshot()
+	expect(basicSheet.css).toMatchSnapshot()
 	done()
 })
