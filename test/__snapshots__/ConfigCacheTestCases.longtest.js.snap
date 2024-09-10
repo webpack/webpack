@@ -3912,15 +3912,9 @@ Object {
 
 exports[`ConfigCacheTestCases css new-url exported tests new URL should not affect chunk css module 1`] = `
 Array [
-  "/*!************************!*\\\\
-  !*** css ./style2.css ***!
-  \\\\************************/
-.class {
+  ".class {
     color: blue;
 }
-/*!************************!*\\\\
-  !*** css ./style3.css ***!
-  \\\\************************/
 
 body {
     color: blue;
@@ -3930,22 +3924,13 @@ head{--webpack-main:&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style3\\\\.css
 `;
 
 exports[`ConfigCacheTestCases css new-url exported tests should compile 1`] = `
-"/*!********************************************************************************************!*\\\\
-  !*** external \\"https://test.cases/path/../../../../configCases/css/external/external.css\\" ***!
-  \\\\********************************************************************************************/
-body {
+"body {
 	color: green;
 }
 
-/*!*******************************************!*\\\\
-  !*** css ./style2.css (URL: ./style.css) ***!
-  \\\\*******************************************/
 .class {
     color: blue;
 }
-/*!******************************************!*\\\\
-  !*** css ./style.css (URL: ./style.css) ***!
-  \\\\******************************************/
 
 body {
     color: red;
