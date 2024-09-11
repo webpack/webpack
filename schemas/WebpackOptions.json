@@ -2603,6 +2603,10 @@
           "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
           "type": "boolean"
         },
+        "entryIife": {
+          "description": "Avoid wrapping the entry module in an IIFE.",
+          "enum": ["development", "production", true, false]
+        },
         "flagIncludedChunks": {
           "description": "Also flag chunks as loaded which contain a subset of the modules.",
           "type": "boolean"

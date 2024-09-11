@@ -5290,6 +5290,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-entry-iife": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid wrapping the entry module in an IIFE.",
+        "multiple": false,
+        "path": "optimization.entryIife",
+        "type": "enum",
+        "values": Array [
+          "development",
+          "production",
+          true,
+          false,
+        ],
+      },
+    ],
+    "description": "Avoid wrapping the entry module in an IIFE.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-flag-included-chunks": Object {
     "configs": Array [
       Object {

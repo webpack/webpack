@@ -5607,13 +5607,15 @@ declare class JavascriptModulesPlugin {
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): string;
-	renameInlineModule(
+	getRenamedInlineModule(
 		allModules: Module[],
 		renderContext: MainRenderContext,
 		inlinedModules: Set<Module>,
 		chunkRenderContext: ChunkRenderContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
-	): Map<Module, Source>;
+		hooks: CompilationHooksJavascriptModulesPlugin,
+		allStrict: boolean,
+		hasChunkModules: boolean
+	): false | Map<Module, Source>;
 	findNewName(
 		oldName: string,
 		usedName: Set<string>,
@@ -9569,6 +9571,11 @@ declare interface Optimization {
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
 	emitOnErrors?: boolean;
+
+	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	entryIife?: boolean | "development" | "production";
 
 	/**
 	 * Also flag chunks as loaded which contain a subset of the modules.

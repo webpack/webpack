@@ -1719,6 +1719,10 @@ export interface Optimization {
 	 */
 	emitOnErrors?: boolean;
 	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	entryIife?: "development" | "production" | true | false;
+	/**
 	 * Also flag chunks as loaded which contain a subset of the modules.
 	 */
 	flagIncludedChunks?: boolean;
