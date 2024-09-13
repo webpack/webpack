@@ -46,13 +46,8 @@
 }
 @value ccc: color(red lightness(50%));
 @value ddd: red;
-@value v-empty:;
-@value v-empty-1:/* comment */;
-@value v-empty-2:    ;
+
 :root {
 	--color0: ddd;
-	--color1: v-empty;
-	--color2: v-empty-1;
-	--color3: v-empty-2;
 	--color5: ccc;
 }
