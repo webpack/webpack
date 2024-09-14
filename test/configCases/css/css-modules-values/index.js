@@ -1,6 +1,6 @@
-import './style.css';
+import * as styles from './style.css';
 
-it("should compile", () => {
+it("should compile", (done) => {
 	const links = document.getElementsByTagName("link");
 	const css = [];
 
@@ -9,19 +9,6 @@ it("should compile", () => {
 	}
 
 	expect(css).toMatchSnapshot();
+	expect(styles).toMatchSnapshot();
+	done()
 })
-
-it("should export constants ",  (done)=> {
-	import("./exports.module.css").then(x => {
-		try{
-			expect(x).toEqual(nsObj({
-				small: "(max-width: 599px)",
-				red: "blue",
-				aaa: "color(red lightness(50%))"
-			}))
-		} catch(e) {
-			done(e)
-		}
-		done()
-	}, done);
-});

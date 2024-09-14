@@ -1,3 +1,0 @@
-@value small: (max-width: 599px);
-@value red: blue;
-@value aaa: color(red lightness(50%));
