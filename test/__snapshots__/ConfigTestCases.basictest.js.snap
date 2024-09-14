@@ -3549,8 +3549,7 @@ exports[`ConfigTestCases css css-modules-in-node exported tests should allow to 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
 
 exports[`ConfigTestCases css css-modules-values exported tests should compile 1`] = `
-Array [
-  "/*!***********************!*\\\\
+"/*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/
 .a {
@@ -3592,8 +3591,7 @@ Array [
 	--color3: ;
 	--color5: color(red lightness(50%));
 }
-head{--webpack-main:small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue:red/aaa:red/bbb:aaa/test-t:_40px/test_q:_36px/named:red/char-1:\\\\#0f0/char-2:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/class:red/id:blue/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/ccc:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/empty-1:/empty-2:/ddd:red/&\\\\.\\\\/style\\\\.css;}",
-]
+head{--webpack-main:small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue:red/aaa:red/bbb:aaa/test-t:_40px/test_q:_36px/named:red/char-1:\\\\#0f0/char-2:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/class:red/id:blue/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/ccc:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/empty-1:/empty-2:/ddd:red/&\\\\.\\\\/style\\\\.css;}"
 `;
 
 exports[`ConfigTestCases css css-modules-values exported tests should compile 2`] = `
