@@ -45,9 +45,15 @@
 	box-shadow: coolShadow;
 }
 @value ccc: color(red lightness(50%));
+@value empty;
+@value empty-1: /* Comment */;
+@value empty-2: 	;
 @value ddd: red;
 
 :root {
 	--color0: ddd;
+	--color1: empty;
+	--color2: empty-1;
+	--color3: empty-2;
 	--color5: ccc;
 }
