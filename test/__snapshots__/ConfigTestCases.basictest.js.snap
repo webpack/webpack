@@ -3911,16 +3911,14 @@ Object {
 `;
 
 exports[`ConfigTestCases css new-url exported tests new URL should not affect chunk css module 1`] = `
-Array [
-  ".class {
+".class {
     color: blue;
 }
 
 body {
     color: blue;
 }
-head{--webpack-main:&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style3\\\\.css;}",
-]
+head{--webpack-main:&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style3\\\\.css;}"
 `;
 
 exports[`ConfigTestCases css new-url exported tests should compile 1`] = `
