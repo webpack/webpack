@@ -4928,8 +4928,7 @@ Object {
 `;
 
 exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = `
-Array [
-  "/*!***********************!*\\\\
+"/*!***********************!*\\\\
   !*** css ./basic.css ***!
   \\\\***********************/
 .class {
@@ -5171,6 +5170,5 @@ Array [
     url(//at.alicdn.com/t/font_1434092639_4910953.woff) format(\\"woff\\");
 }
 
-head{--webpack-main:&\\\\.\\\\/basic\\\\.css,&\\\\.\\\\/style\\\\.css;}",
-]
+head{--webpack-main:&\\\\.\\\\/basic\\\\.css,&\\\\.\\\\/style\\\\.css;}"
 `;
