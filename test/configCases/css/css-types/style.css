@@ -1,0 +1,11 @@
+body {
+    color: red;
+}
+
+:local(.foo) {
+    color: red;
+}
+
+:global(.bar) {
+    color: green;
+}
