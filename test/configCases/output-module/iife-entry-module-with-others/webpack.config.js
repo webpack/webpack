@@ -1,4 +1,4 @@
-/** @type {import("../../../../").Configuration} */
+/** @type {import("../../../../types").Configuration} */
 const base = {
 	output: {
 		module: true
@@ -12,7 +12,7 @@ const base = {
 	target: "es2020"
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {import("../../../../types").Configuration[]} */
 module.exports = [
 	{
 		...base,
@@ -40,7 +40,7 @@ module.exports = [
 		name: "test-output",
 		entry: "./test.js",
 		output: {
-			filename: "bundle0.js"
+			filename: "test.js"
 		}
 	}
 ];

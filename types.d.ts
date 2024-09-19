@@ -9549,7 +9549,7 @@ declare interface Optimization {
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
-	avoidEntryIife?: boolean | "development" | "production";
+	avoidEntryIife?: boolean;
 
 	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM.

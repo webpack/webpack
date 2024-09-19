@@ -1699,7 +1699,7 @@ export interface Optimization {
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
-	avoidEntryIife?: "development" | "production" | true | false;
+	avoidEntryIife?: boolean;
 	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM.
 	 */
