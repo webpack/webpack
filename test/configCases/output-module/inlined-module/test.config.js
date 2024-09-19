@@ -1,5 +1,9 @@
 module.exports = {
 	findBundle: function (i, options) {
-		return ["module-entryIife-false.mjs", "module-entryIife-true.mjs"];
+		return [
+			"module-avoidEntryIife-false.mjs",
+			"module-avoidEntryIife-true.mjs",
+			"bundle0.js"
+		];
 	}
 };

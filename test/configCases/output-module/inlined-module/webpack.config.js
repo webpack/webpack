@@ -16,24 +16,31 @@ const base = {
 module.exports = [
 	{
 		...base,
-		name: "module-entryIife-false",
+		name: "module-avoidEntryIife-false",
 		output: {
-			filename: "module-entryIife-false.mjs"
+			filename: "module-avoidEntryIife-false.mjs"
 		},
 		optimization: {
 			...base.optimization,
-			entryIife: false
+			avoidEntryIife: false
 		}
 	},
 	{
 		...base,
-		name: "module-entryIife-true",
+		name: "module-avoidEntryIife-true",
 		output: {
-			filename: "module-entryIife-true.mjs"
+			filename: "module-avoidEntryIife-true.mjs"
 		},
 		optimization: {
 			...base.optimization,
-			entryIife: true
+			avoidEntryIife: true
+		}
+	},
+	{
+		name: "test-output",
+		entry: "./test.js",
+		output: {
+			filename: "bundle0.js"
 		}
 	}
 ];

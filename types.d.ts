@@ -9547,6 +9547,11 @@ declare interface Open {
  */
 declare interface Optimization {
 	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	avoidEntryIife?: boolean | "development" | "production";
+
+	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM.
 	 */
 	checkWasmTypes?: boolean;
@@ -9571,11 +9576,6 @@ declare interface Optimization {
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
 	emitOnErrors?: boolean;
-
-	/**
-	 * Avoid wrapping the entry module in an IIFE.
-	 */
-	entryIife?: boolean | "development" | "production";
 
 	/**
 	 * Also flag chunks as loaded which contain a subset of the modules.
