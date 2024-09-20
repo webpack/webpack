@@ -36,7 +36,7 @@ module.exports = {
 								chunk.id
 							) {
 								if (chunkIdChunkNameMap.has(chunk.id)) {
-									return chunkIdChunkNameMap.get(chunk.id);
+									return `${chunkIdChunkNameMap.get(chunk.id)}.js`;
 								}
 
 								// @ts-expect-error
@@ -49,13 +49,13 @@ module.exports = {
 								usedSharedModuleNames.add(sharedModuleName);
 								chunkIdChunkNameMap.set(chunk.id, chunkName);
 
-								return chunkName;
+								return `${chunkName}.js`;
 							}
 						}
 					}
 				}
 			}
-			return "[id]--chunk";
+			return "[id]--chunk.js";
 		}
 	},
 	plugins: [
