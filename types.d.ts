@@ -9134,6 +9134,7 @@ declare class NormalModule extends Module {
 	resource: string;
 	resourceResolveData?: Record<string, any>;
 	matchResource?: string;
+	virtualResource?: string;
 	loaders: LoaderItem[];
 	error: null | WebpackError;
 
@@ -9379,6 +9380,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	fs: InputFileSystem;
 	sourceMap?: boolean;
 	mode: "none" | "development" | "production";
+	virtualResource?: string;
 	webpack?: boolean;
 	_module?: NormalModule;
 	_compilation?: Compilation;
