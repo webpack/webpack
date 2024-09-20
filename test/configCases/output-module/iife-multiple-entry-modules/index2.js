@@ -1,0 +1,1 @@
+var value = 42

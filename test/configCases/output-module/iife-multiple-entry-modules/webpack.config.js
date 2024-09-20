@@ -1,7 +1,7 @@
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		entry: ["./index-1.js", "./index-2.js"],
+		entry: ["./index1.js", "./index2.js"],
 		output: {
 			module: true
 		},

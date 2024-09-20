@@ -1,20 +1,16 @@
-import { value as v1 } from "./module1";
-const v2 = require("./module2")
-const module3Inc = require("./module3")
+import { value as value1 } from './module1'
+const value2 = require('./module2')
+const value3 = require('./module3')
 
-const index_value = 10;
-let value = 42;
+let value = 42
+let src_value = 43
+let src_src_value = 44
 
-function inc() {
-	value++;
-}
-
-it("single inlined module should not be wrapped in IIFE", () => {
-	expect(value).toBe(42);
-	expect(v1).toBe(undefined);
-	expect(v2).toBe(undefined);
-	expect(module3Inc).toBe(undefined);
-	inc();
-	expect(value).toBe(43);
-	expect(index_value).toBe(10);
-});
+it('inlined module should not leak to non-inlined modules', () => {
+  expect(value1).toBe(undefined)
+  expect(value).toBe(42)
+  expect(src_value).toBe(43)
+  expect(src_src_value).toBe(44)
+  expect(value2).toBe("undefined") // should not touch leaked `value` variable
+  expect(value3).toBe("undefined") // should not touch leaked `src_value` variable
+})

@@ -1,3 +1,1 @@
-let value
-
-module.exports = value
+module.exports = typeof value

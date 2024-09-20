@@ -1,3 +1,3 @@
-let value;
+let value
 
-export { value };
+export { value }

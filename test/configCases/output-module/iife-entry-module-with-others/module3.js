@@ -1,3 +1,1 @@
-let inc
-
-module.exports = inc
+module.exports = typeof src_value
