@@ -4798,52 +4798,52 @@ webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"assets by path *.js 22.4 KiB
-  asset bundle.js 16.9 KiB [emitted] (name: main)
-  asset 836.bundle.js 3.89 KiB [emitted]
-  asset 946.bundle.js 557 bytes [emitted]
-  asset 787.bundle.js 364 bytes [emitted] (id hint: vendors)
-  asset 573.bundle.js 243 bytes [emitted]
-  asset 672.bundle.js 243 bytes [emitted]
-  asset 989.bundle.js 243 bytes [emitted]
-assets by path *.wasm 1.37 KiB
-  asset e1527dcfebc470eb04bc.module.wasm 531 bytes [emitted] [immutable]
-  asset 2cbe6ce83117ed67f4f5.module.wasm 290 bytes [emitted] [immutable]
-  asset a5af96dad00b07242c9d.module.wasm 156 bytes [emitted] [immutable]
-  asset e3561de65684e530d698.module.wasm 154 bytes [emitted] [immutable]
-  asset f3a44d9771697ed7a52a.module.wasm 154 bytes [emitted] [immutable]
-  asset c63174dd4e2ffd7ad76d.module.wasm 120 bytes [emitted] [immutable]
-chunk (runtime: main) 573.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
-  ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
-chunk (runtime: main) 672.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
-  ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built] [code generated]
-chunk (runtime: main) 787.bundle.js (id hint: vendors) 34 bytes [rendered] split chunk (cache group: defaultVendors)
-  ./node_modules/env.js 34 bytes [built] [code generated]
-chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 9.69 KiB (runtime) [entry] [rendered]
-  runtime modules 9.69 KiB 11 modules
-  ./index.js 586 bytes [built] [code generated]
-chunk (runtime: main) 836.bundle.js 1.45 KiB (javascript) 154 bytes (webassembly) [rendered]
-  ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [dependent] [built] [code generated]
-  ./tests.js 1.4 KiB [built] [code generated]
-chunk (runtime: main) 946.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
-  ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built] [code generated]
-  ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built] [code generated]
-chunk (runtime: main) 989.bundle.js 50 bytes (javascript) 120 bytes (webassembly) [rendered]
-  ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) [built] [code generated]
-runtime modules 9.69 KiB 11 modules
-cacheable modules 2.31 KiB (javascript) 1.37 KiB (webassembly)
-  webassembly modules 310 bytes (javascript) 1.37 KiB (webassembly)
-    ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
-    ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [built] [code generated]
-    ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built] [code generated]
-    ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) [built] [code generated]
-    ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built] [code generated]
-    ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built] [code generated]
-  javascript modules 2.01 KiB
-    ./index.js 586 bytes [built] [code generated]
-    ./tests.js 1.4 KiB [built] [code generated]
-    ./node_modules/env.js 34 bytes [built] [code generated]
-webpack 5.94.0 compiled successfully in X ms"
+"assets by path *.js X KiB
+  asset bundle.js X KiB [emitted] (name: main)
+  asset 836.bundle.js X KiB [emitted]
+  asset 946.bundle.js X bytes [emitted]
+  asset 787.bundle.js X bytes [emitted] (id hint: vendors)
+  asset 573.bundle.js X bytes [emitted]
+  asset 672.bundle.js X bytes [emitted]
+  asset 989.bundle.js X bytes [emitted]
+assets by path *.wasm X KiB
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+  asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
+chunk (runtime: main) 573.bundle.js X bytes (javascript) X bytes (webassembly) [rendered] reused as split chunk (cache group: default)
+  ./Q_rsqrt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+chunk (runtime: main) 672.bundle.js X bytes (javascript) X bytes (webassembly) [rendered] reused as split chunk (cache group: default)
+  ./duff.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+chunk (runtime: main) 787.bundle.js (id hint: vendors) X bytes [rendered] split chunk (cache group: defaultVendors)
+  ./node_modules/env.js X bytes [built] [code generated]
+chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 11 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) 836.bundle.js X KiB (javascript) X bytes (webassembly) [rendered] reused as split chunk (cache group: default)
+  ./testFunction.wasm X bytes (javascript) X bytes (webassembly) [dependent] [built] [code generated]
+  ./tests.js X KiB [built] [code generated]
+chunk (runtime: main) 946.bundle.js X bytes (javascript) X bytes (webassembly) [rendered] reused as split chunk (cache group: default)
+  ./fact.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+  ./fast-math.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+chunk (runtime: main) 989.bundle.js X bytes (javascript) X bytes (webassembly) [rendered] reused as split chunk (cache group: default)
+  ./popcnt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+runtime modules X KiB 11 modules
+cacheable modules X KiB (javascript) X KiB (webassembly)
+  webassembly modules X bytes (javascript) X KiB (webassembly)
+    ./Q_rsqrt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+    ./testFunction.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+    ./fact.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+    ./popcnt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+    ./fast-math.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+    ./duff.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+  javascript modules X KiB
+    ./index.js X bytes [built] [code generated]
+    ./tests.js X KiB [built] [code generated]
+    ./node_modules/env.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for worker-public-path 1`] = `
