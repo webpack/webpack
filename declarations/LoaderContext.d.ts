@@ -14,7 +14,13 @@ import type {
 	ImportModuleOptions
 } from "../lib/dependencies/LoaderPlugin";
 import type { Resolver } from "enhanced-resolve";
-import type { Environment } from "./WebpackOptions";
+import type {
+	Environment,
+	HashDigestLength,
+	HashSalt,
+	HashDigest,
+	HashFunction
+} from "./WebpackOptions";
 
 type ResolveCallback = Parameters<Resolver["resolve"]>[4];
 type Schema = Parameters<typeof validate>[0];
@@ -49,6 +55,10 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	sourceMap?: boolean;
 	mode: "development" | "production" | "none";
 	webpack?: boolean;
+	hashFunction: HashFunction,
+	hashDigest: HashDigest,
+	hashDigestLength: HashDigestLength,
+	hashSalt: HashSalt,
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
