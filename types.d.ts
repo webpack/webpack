@@ -5205,6 +5205,7 @@ declare class Hash {
 	 */
 	digest(encoding?: string): string | Buffer;
 }
+type HashFunction = string | typeof Hash;
 declare interface HashableObject {
 	updateHash: (arg0: Hash) => void;
 }
@@ -9380,6 +9381,10 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	sourceMap?: boolean;
 	mode: "none" | "development" | "production";
 	webpack?: boolean;
+	hashFunction: HashFunction;
+	hashDigest: string;
+	hashDigestLength: number;
+	hashSalt: string;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
