@@ -4938,6 +4938,7 @@ exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = 
   !*** css ./style.css ***!
   \\\\***********************/
 /* webpackIgnore: true */
+@import url(./basic.css);
 @import /*    webpackIgnore:   true    */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: true */ url(./basic.css);
@@ -5128,10 +5129,10 @@ exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = 
 .class {
   background-image: image-set(
       /* webpackIgnore:  true */
-      './url/img.png' 2x,
+      url(89a353e9c515885abd8e.png) 2x,
       url(89a353e9c515885abd8e.png) 3x,
       /* webpackIgnore:  true */
-      './url/img.png' 5x
+      url(89a353e9c515885abd8e.png) 5x
   );
 }
 
