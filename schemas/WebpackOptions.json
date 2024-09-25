@@ -2580,6 +2580,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "avoidEntryIife": {
+          "description": "Avoid wrapping the entry module in an IIFE.",
+          "type": "boolean"
+        },
         "checkWasmTypes": {
           "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
           "type": "boolean"

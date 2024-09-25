@@ -265,6 +265,7 @@ describe("snapshots", () => {
 		    "global": true,
 		  },
 		  "optimization": Object {
+		    "avoidEntryIife": false,
 		    "checkWasmTypes": false,
 		    "chunkIds": "natural",
 		    "concatenateModules": false,
@@ -697,6 +698,7 @@ describe("snapshots", () => {
 		-   "mode": "none",
 		+   "mode": undefined,
 		@@ ... @@
+		-     "avoidEntryIife": false,
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
@@ -704,6 +706,7 @@ describe("snapshots", () => {
 		-     "flagIncludedChunks": false,
 		-     "innerGraph": false,
 		-     "mangleExports": false,
+		+     "avoidEntryIife": true,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
@@ -764,6 +767,7 @@ describe("snapshots", () => {
 		-   "mode": "none",
 		+   "mode": "production",
 		@@ ... @@
+		-     "avoidEntryIife": false,
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
@@ -771,6 +775,7 @@ describe("snapshots", () => {
 		-     "flagIncludedChunks": false,
 		-     "innerGraph": false,
 		-     "mangleExports": false,
+		+     "avoidEntryIife": true,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,

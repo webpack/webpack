@@ -1697,6 +1697,10 @@ export interface NodeOptions {
  */
 export interface Optimization {
 	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	avoidEntryIife?: boolean;
+	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM.
 	 */
 	checkWasmTypes?: boolean;

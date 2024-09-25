@@ -5607,13 +5607,15 @@ declare class JavascriptModulesPlugin {
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): string;
-	renameInlineModule(
+	getRenamedInlineModule(
 		allModules: Module[],
 		renderContext: MainRenderContext,
 		inlinedModules: Set<Module>,
 		chunkRenderContext: ChunkRenderContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
-	): Map<Module, Source>;
+		hooks: CompilationHooksJavascriptModulesPlugin,
+		allStrict: boolean,
+		hasChunkModules: boolean
+	): false | Map<Module, Source>;
 	findNewName(
 		oldName: string,
 		usedName: Set<string>,
@@ -9548,6 +9550,11 @@ declare interface Open {
  * Enables/Disables integrated optimizations.
  */
 declare interface Optimization {
+	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	avoidEntryIife?: boolean;
+
 	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM.
 	 */
