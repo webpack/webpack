@@ -582,10 +582,10 @@ declare abstract class BasicEvaluatedExpression {
 		| UpdateExpression
 		| YieldExpression
 		| SpreadElement
+		| PrivateIdentifier
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
-		| PrivateIdentifier
 		| ExpressionStatement
 		| BlockStatement
 		| StaticBlock
@@ -805,10 +805,10 @@ declare abstract class BasicEvaluatedExpression {
 			| UpdateExpression
 			| YieldExpression
 			| SpreadElement
+			| PrivateIdentifier
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
-			| PrivateIdentifier
 			| ExpressionStatement
 			| BlockStatement
 			| StaticBlock
@@ -5670,6 +5670,7 @@ declare class JavascriptParser extends Parser {
 					| UpdateExpression
 					| YieldExpression
 					| SpreadElement
+					| PrivateIdentifier
 				],
 				undefined | null | BasicEvaluatedExpression
 			>
@@ -5732,10 +5733,10 @@ declare class JavascriptParser extends Parser {
 						| ThisExpression
 						| UpdateExpression
 						| YieldExpression
+						| PrivateIdentifier
 						| FunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
-						| PrivateIdentifier
 					),
 					number
 				],
@@ -6538,9 +6539,15 @@ declare class JavascriptParser extends Parser {
 			| UpdateExpression
 			| YieldExpression
 			| SpreadElement
+			| PrivateIdentifier
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
-	parseCalculatedString(expression: Expression): any;
+	parseCalculatedString(expression: Expression): {
+		range: [number, number];
+		value: string;
+		code: boolean;
+		conditional: any;
+	};
 	evaluate(source: string): BasicEvaluatedExpression;
 	isPure(
 		expr:
@@ -6573,10 +6580,10 @@ declare class JavascriptParser extends Parser {
 			| ThisExpression
 			| UpdateExpression
 			| YieldExpression
+			| PrivateIdentifier
 			| FunctionDeclaration
 			| VariableDeclaration
-			| ClassDeclaration
-			| PrivateIdentifier,
+			| ClassDeclaration,
 		commentsStartPos: number
 	): boolean;
 	getComments(range: [number, number]): Comment[];
@@ -14662,7 +14669,7 @@ declare abstract class VariableInfo {
 }
 declare interface VariableInfoInterface {
 	declaredScope: ScopeInfo;
-	freeName: string | true;
+	freeName?: string | true;
 	tagInfo?: TagInfo;
 }
 type WarningFilterItemTypes =

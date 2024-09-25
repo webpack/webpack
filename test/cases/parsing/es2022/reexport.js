@@ -1,1 +1,1 @@
-export { add as "\0 add" } from "./counter";
+export { add as "\0 add", "test name" as "string name" } from "./counter";
