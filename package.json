@@ -5,7 +5,7 @@
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
-    "@types/estree": "^1.0.5",
+    "@types/estree": "^1.0.6",
     "@webassemblyjs/ast": "^1.12.1",
     "@webassemblyjs/wasm-edit": "^1.12.1",
     "@webassemblyjs/wasm-parser": "^1.12.1",

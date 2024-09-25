@@ -1,4 +1,4 @@
-import { "\0 add" as add } from './reexport';
+import { "\0 add" as add, "string name" as variable } from './reexport';
 
 export default class Foo {
 	static {
@@ -16,5 +16,9 @@ export default class Foo {
 		if (#foo in this && this.#foo) {
 			this.#foo();
 		}
+	}
+
+	static getVar() {
+		return variable;
 	}
 }
