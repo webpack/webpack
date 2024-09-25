@@ -2577,7 +2577,7 @@ declare interface Configuration {
 		| "system"
 		| {
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				amd?:
 					| "import"
@@ -2603,7 +2603,7 @@ declare interface Configuration {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				commonjs?:
 					| "import"
@@ -2629,7 +2629,7 @@ declare interface Configuration {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"dynamic-import"?:
 					| "import"
@@ -2655,7 +2655,7 @@ declare interface Configuration {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				fallback?:
 					| "import"
@@ -2681,7 +2681,7 @@ declare interface Configuration {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"static-import"?:
 					| "import"
@@ -4764,7 +4764,7 @@ declare class ExternalsPlugin {
 			| "system"
 			| {
 					/**
-					 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+					 * Literal strings of the possible external types.
 					 */
 					amd?:
 						| "import"
@@ -4790,7 +4790,7 @@ declare class ExternalsPlugin {
 						| "script"
 						| "node-commonjs";
 					/**
-					 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+					 * Literal strings of the possible external types.
 					 */
 					commonjs?:
 						| "import"
@@ -4816,7 +4816,7 @@ declare class ExternalsPlugin {
 						| "script"
 						| "node-commonjs";
 					/**
-					 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+					 * Literal strings of the possible external types.
 					 */
 					"dynamic-import"?:
 						| "import"
@@ -4842,7 +4842,7 @@ declare class ExternalsPlugin {
 						| "script"
 						| "node-commonjs";
 					/**
-					 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+					 * Literal strings of the possible external types.
 					 */
 					fallback?:
 						| "import"
@@ -4868,7 +4868,7 @@ declare class ExternalsPlugin {
 						| "script"
 						| "node-commonjs";
 					/**
-					 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+					 * Literal strings of the possible external types.
 					 */
 					"static-import"?:
 						| "import"
@@ -4921,7 +4921,7 @@ declare class ExternalsPlugin {
 		| "system"
 		| {
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				amd?:
 					| "import"
@@ -4947,7 +4947,7 @@ declare class ExternalsPlugin {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				commonjs?:
 					| "import"
@@ -4973,7 +4973,7 @@ declare class ExternalsPlugin {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"dynamic-import"?:
 					| "import"
@@ -4999,7 +4999,7 @@ declare class ExternalsPlugin {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				fallback?:
 					| "import"
@@ -5025,7 +5025,7 @@ declare class ExternalsPlugin {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"static-import"?:
 					| "import"
@@ -5132,7 +5132,7 @@ type ExternalsType =
 	| "node-commonjs"
 	| {
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			amd?:
 				| "import"
@@ -5158,7 +5158,7 @@ type ExternalsType =
 				| "script"
 				| "node-commonjs";
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			commonjs?:
 				| "import"
@@ -5184,7 +5184,7 @@ type ExternalsType =
 				| "script"
 				| "node-commonjs";
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			"dynamic-import"?:
 				| "import"
@@ -5210,7 +5210,7 @@ type ExternalsType =
 				| "script"
 				| "node-commonjs";
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			fallback?:
 				| "import"
@@ -5236,7 +5236,7 @@ type ExternalsType =
 				| "script"
 				| "node-commonjs";
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			"static-import"?:
 				| "import"
@@ -9036,7 +9036,7 @@ declare interface ModuleFederationPluginOptions {
 		| "node-commonjs"
 		| {
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				amd?:
 					| "import"
@@ -9062,7 +9062,7 @@ declare interface ModuleFederationPluginOptions {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				commonjs?:
 					| "import"
@@ -9088,7 +9088,7 @@ declare interface ModuleFederationPluginOptions {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"dynamic-import"?:
 					| "import"
@@ -9114,7 +9114,7 @@ declare interface ModuleFederationPluginOptions {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				fallback?:
 					| "import"
@@ -9140,7 +9140,7 @@ declare interface ModuleFederationPluginOptions {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"static-import"?:
 					| "import"
@@ -15718,7 +15718,7 @@ declare interface WebpackOptionsNormalized {
 		| "system"
 		| {
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				amd?:
 					| "import"
@@ -15744,7 +15744,7 @@ declare interface WebpackOptionsNormalized {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				commonjs?:
 					| "import"
@@ -15770,7 +15770,7 @@ declare interface WebpackOptionsNormalized {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"dynamic-import"?:
 					| "import"
@@ -15796,7 +15796,7 @@ declare interface WebpackOptionsNormalized {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				fallback?:
 					| "import"
@@ -15822,7 +15822,7 @@ declare interface WebpackOptionsNormalized {
 					| "script"
 					| "node-commonjs";
 				/**
-				 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+				 * Literal strings of the possible external types.
 				 */
 				"static-import"?:
 					| "import"

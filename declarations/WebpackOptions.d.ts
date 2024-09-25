@@ -202,29 +202,29 @@ export type ExternalItem =
 export type ExternalsType =
 	| {
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			amd?: ExternalsTypeLiteral;
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			commonjs?: ExternalsTypeLiteral;
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			"dynamic-import"?: ExternalsTypeLiteral;
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			fallback?: ExternalsTypeLiteral;
 			/**
-			 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+			 * Literal strings of the possible external types.
 			 */
 			"static-import"?: ExternalsTypeLiteral;
 	  }
 	| ExternalsTypeLiteral;
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+ * Literal strings of the possible external types.
  */
 export type ExternalsTypeLiteral =
 	| "var"
