@@ -1006,7 +1006,7 @@ Object {
   "externals-type": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType",
         "type": "enum",
@@ -1036,14 +1036,14 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
   "externals-type-amd": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType.amd",
         "type": "enum",
@@ -1073,14 +1073,14 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
   "externals-type-commonjs": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType.commonjs",
         "type": "enum",
@@ -1110,14 +1110,14 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
   "externals-type-dynamic-import": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType.dynamic-import",
         "type": "enum",
@@ -1147,14 +1147,14 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
   "externals-type-fallback": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType.fallback",
         "type": "enum",
@@ -1184,14 +1184,14 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
   "externals-type-static-import": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+        "description": "Literal strings of the possible external types.",
         "multiple": false,
         "path": "externalsType.static-import",
         "type": "enum",
@@ -1221,7 +1221,7 @@ Object {
         ],
       },
     ],
-    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "description": "Literal strings of the possible external types.",
     "multiple": false,
     "simpleType": "string",
   },
