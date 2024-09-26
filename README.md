@@ -13,35 +13,15 @@
 [![dependency-review][dependency-review]][dependency-review-url]
 [![coverage][cover]][cover-url]
 [![PR's welcome][prs]][prs-url]
-
-  <br>
-  <a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores">
-    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0">
-  </a>
-	<a href="https://npmcharts.com/compare/webpack?minimal=true">
-		<img src="https://img.shields.io/npm/dm/webpack.svg">
-	</a>
-	<a href="https://packagephobia.com/result?p=webpack">
-		<img src="https://packagephobia.com/badge?p=webpack" alt="install size">
-	</a>
-	<a href="https://opencollective.com/webpack#backer">
-		<img src="https://opencollective.com/webpack/backers/badge.svg">
-	</a>
-	<a href="https://opencollective.com/webpack#sponsors">
-		<img src="https://opencollective.com/webpack/sponsors/badge.svg">
-	</a>
-	<a href="https://github.com/webpack/webpack/graphs/contributors">
-		<img src="https://img.shields.io/github/contributors/webpack/webpack.svg">
-	</a>
-	<a href="https://github.com/webpack/webpack/discussions">
-		<img src="https://img.shields.io/github/discussions/webpack/webpack">
-	</a>
-  <a href="https://twitter.com/Webpack">
-		<img src="https://img.shields.io/twitter/follow/Webpack?style=social">
-	</a>
-  <a href="https://discord.gg/Tt5cKVwx">
-		<img src="https://img.shields.io/discord/1180618526436888586?label=discord&logo=discord&logoColor=white&style=flat">
-	</a>
+	
+[![compatibility-score](https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0)](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores)
+[![downloads](https://img.shields.io/npm/dm/webpack.svg)](https://npmcharts.com/compare/webpack?minimal=true)
+[![install-size](https://packagephobia.com/badge?p=webpack)](https://packagephobia.com/result?p=webpack)
+[![backers](https://opencollective.com/webpack/backers/badge.svg)](https://opencollective.com/webpack#backer)
+[![sponsors](https://opencollective.com/webpack/sponsors/badge.svg)](https://opencollective.com/webpack#sponsors)
+[![contributors](https://img.shields.io/github/contributors/webpack/webpack.svg)](https://github.com/webpack/webpack/graphs/contributors)
+[![discussions](https://img.shields.io/github/discussions/webpack/webpack)](https://github.com/webpack/webpack/discussions)
+ 
   <h1>webpack</h1>
   <p>
     Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
@@ -50,22 +30,24 @@
 
 ## Table of Contents
 
-1. [Install](#install)
-2. [Introduction](#introduction)
-3. [Concepts](#concepts)
-4. [Contributing](#contributing)
-5. [Support](#support)
-6. [Core Team](#core-team)
-7. [Sponsoring](#sponsoring)
-8. [Premium Partners](#premium-partners)
-9. [Other Backers and Sponsors](#other-backers-and-sponsors)
-10. [Gold Sponsors](#gold-sponsors)
-11. [Silver Sponsors](#silver-sponsors)
-12. [Bronze Sponsors](#bronze-sponsors)
-13. [Backers](#backers)
-14. [Special Thanks](#special-thanks-to)
+- [Install](#install)
+- [Introduction](#introduction)
+- [Concepts](#concepts)
+- [Contributing](#contributing)
+- [Support](#support)
+- [Current project members](#current-project-members)
+  - [TSC (Technical Steering Committee)](#tsc-technical-steering-committee)
+  - [Core Collaborators](#core-collaborators)
+- [Sponsoring](#sponsoring)
+  - [Premium Partners](#premium-partners)
+  - [Other Backers and Sponsors](#other-backers-and-sponsors)
+  - [Gold Sponsors](#gold-sponsors)
+  - [Silver Sponsors](#silver-sponsors)
+  - [Bronze Sponsors](#bronze-sponsors)
+  - [Backers](#backers)
+- [Special Thanks](#special-thanks-to)
 
-<h2 align="center">Install</h2>
+<h2>Install</h2>
 
 Install with npm:
 
@@ -79,7 +61,7 @@ Install with yarn:
 yarn add webpack --dev
 ```
 
-<h2 align="center">Introduction</h2>
+<h2>Introduction</h2>
 
 Webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -102,7 +84,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
-<h2 align="center">Concepts</h2>
+<h2>Concepts</h2>
 
 ### [Plugins](https://webpack.js.org/plugins/)
 
@@ -273,7 +255,7 @@ you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
 friendly** by using hashes.
 
-<h2 align="center">Contributing</h2>
+<h2>Contributing</h2>
 
 **We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](https://github.com/webpack) or [webpack-contrib organization](https://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
@@ -288,86 +270,51 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - Teaching others how to contribute to one of the many webpack's repos!
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
+- [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home)
 
 To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
-If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
-
-We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
-
-_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!!
-
-<h3 align="center">Creating your own plugins and loaders</h3>
+<h3>Creating your own plugins and loaders</h3>
 
 If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
 
-<h2 align="center">Support</h2>
+<h2>Support</h2>
 
 We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
 
-Looking for webpack 1 docs? Please check out the old [wiki](https://github.com/webpack/docs/wiki/contents), but note that this deprecated version is no longer supported.
-
-If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out!
-
-If you are still having difficulty, we would love for you to post
-a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). It is much easier to answer questions that include your webpack.config.js and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
-
-If you are twitter savvy you can tweet #webpack with your question and someone should be able to reach out and help also.
-
 If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on GitHub.
 
-### License
+<h2>Current project members</h2>
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_large)
+For information about the governance of the Node.js project, see [GOVERNANCE.md](./GOVERNANCE.md).
 
-<h2 align="center">Core Team</h2>
+<h3>TSC (Technical Steering Committee)</h3>
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/sokra.png?s=150">
-        <br>
-        <a href="https://github.com/sokra">Tobias Koppers</a>
-        <p>Core</p>
-        <br>
-        <p>Founder of webpack</p>
-      </td>
-      <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/jhnns.png?s=150">
-        <br>
-        <a href="https://github.com/jhnns">Johannes Ewald</a>
-        <p>Loaders &amp; Plugins</p>
-        <br>
-        <p>Early adopter of webpack</p>
-      </td>
-      <td align="center" width="20%" valign="top">
-        <img width="150" height="150" src="https://github.com/TheLarkInn.png?s=150">
-        <br>
-        <a href="https://github.com/TheLarkInn">Sean T. Larkin</a>
-        <p>Public Relations</p>
-        <br>
-        <p>Founder of the core team</p>
-      </td>
-      <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">
-        <br>
-        <a href="https://github.com/spacek33z">Kees Kluskens</a>
-        <p>Development</p>
-        <br>
-        <p>Sponsor</p>
-        <a href="https://codeyellow.nl/">
-          <img height="15px" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png">
-        </a>
-		<br>
-      </td>
-     </tr>
-  </tbody>
-</table>
+* [alexander-akait](https://github.com/alexander-akait) -
+  **Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
+* [ematipico](https://github.com/ematipico) -
+  **Emanuele Stoppa** <<my.burning@gmail.com>> (he/him)
+* [evenstensberg](https://github.com/evenstensberg) -
+  **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
+* [ovflowd](https://github.com/ovflowd) -
+  **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
+* [snitin315](https://github.com/snitin315) -
+  **Nitin Kumarr** <<snitin315@gmail.com>> (he/him)
 
-<h2 align="center">Sponsoring</h2>
+<h3>Core Collaborators</h3>
+
+* [jhnns](https://github.com/jhnns) -
+  **Johannes Ewald** <<mail@johannesewald.de>>
+* [sokra](https://github.com/sokra) -
+  **Tobias Koppers** <<jackworks@protonmail.co>>
+* [spacek33z](https://github.com/spacek33z) -
+  **Kees Kluskens** <<kees@webduck.nl>>
+* [TheLarkInn](https://github.com/TheLarkInn) -
+  **Sean T. Larkin** <<selarkin@microsoft.com>>
+
+<h2>Sponsoring</h2>
 
 Most of the core team members, webpack contributors and contributors in the ecosystem do this open source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
 
@@ -380,7 +327,7 @@ This is how we use the donations:
 - Infrastructure cost
 - Fees for money handling
 
-<h2 align="center">Premium Partners</h2>
+<h3>Premium Partners</h3>
 
 <div align="center">
 
@@ -389,7 +336,7 @@ This is how we use the donations:
 
 </div>
 
-<h2 align="center">Other Backers and Sponsors</h2>
+<h3>Other Backers and Sponsors</h3>
 
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
@@ -404,7 +351,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>
 
-<h2 align="center">Gold Sponsors</h2>
+<h3>Gold Sponsors</h3>
 
 [Become a gold sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
@@ -443,7 +390,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>
 
-<h2 align="center">Silver Sponsors</h2>
+<h3>Silver Sponsors</h3>
 
 [Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
@@ -482,7 +429,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>
 
-<h2 align="center">Bronze Sponsors</h2>
+<h3>Bronze Sponsors</h3>
 
 [Become a bronze sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on GitHub with a link to your site.
 
@@ -592,7 +539,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>
 
-<h2 align="center">Backers</h2>
+<h3>Backers</h3>
 
 [Become a backer](https://opencollective.com/webpack#backer) and get your image on our README on GitHub with a link to your site.
 
@@ -698,18 +645,19 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/backer/99/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/99/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/100/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/100/avatar.svg?requireActive=false"></a>
 
-<h2 align="center">Special Thanks to</h2>
-<p align="center">(In chronological order)</p>
+<h2>Special Thanks to</h2>
+<p>(In chronological order)</p>
 
 - [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
-- [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
+- [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because of the desire for code splitting for modules such as Webmake. Interestingly, the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 - [@substack](https://github.com/substack) for [browserify](https://browserify.org/), which is a similar project and source for many ideas.
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 - [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
-- Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
-- [@shama](https://github.com/shama), [@jhnns](https://github.com/jhnns) and [@sokra](https://github.com/sokra) for maintaining this project
+- [@sokra](https://github.com/sokra) for creating webpack.
+- Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction.
+- All past and current webpack maintainers and collaborators.
 - Everyone who has written a loader for webpack. You are the ecosystem...
-- Everyone I forgot to mention here, but also influenced webpack.
+- Everyone not mentioned here but that has also influenced webpack.
 
 [npm]: https://img.shields.io/npm/v/webpack.svg
 [npm-url]: https://npmjs.com/package/webpack
