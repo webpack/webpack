@@ -407,6 +407,8 @@ declare abstract class AsyncQueue<T, K, R> {
 			[T, undefined | null | WebpackError, undefined | null | R]
 		>;
 	};
+	getContext(): string;
+	setContext(value: string): void;
 	add(item: T, callback: CallbackAsyncQueue<R>): void;
 	invalidate(item: T): void;
 
