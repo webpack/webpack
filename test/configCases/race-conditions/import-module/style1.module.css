@@ -1,0 +1,5 @@
+@value someBottom from "./inner.module.css";
+
+.cold {
+	bottom: someBottom;
+}
