@@ -1,4 +1,4 @@
-# webpack Project Governance 
+# webpack Project Governance
 
 The webpack Technical Steering Committee (TSC) is the technical governing body of webpack It is described in the [TSC Charter](https://github.com/webpack/webpack-governance/blob/main/TSC_CHARTER.md).
 
@@ -14,22 +14,22 @@ The TSC exercises autonomy in setting up and maintaining procedures, policies, a
 
 Included in the responsibilities of the TSC are:
 
-* Managing code and documentation creation and changes for the listed projects
+- Managing code and documentation creation and changes for the listed projects
   and resources
-* Setting and maintaining standards covering contributions of code,
+- Setting and maintaining standards covering contributions of code,
   documentation, and other materials
-* Managing code and binary releases: types, schedules, frequency, delivery
+- Managing code and binary releases: types, schedules, frequency, delivery
   mechanisms
-* Making decisions regarding dependencies of the webpack/webpack project,
+- Making decisions regarding dependencies of the webpack/webpack project,
   including what those dependencies are and how they are bundled with source
   code and releases
-* Creating new repositories and projects under the webpack GitHub organization
+- Creating new repositories and projects under the webpack GitHub organization
   as required
-* Setting overall technical direction for the webpack/webpack project, including
+- Setting overall technical direction for the webpack/webpack project, including
   high-level goals and low-level specifics regarding features and functionality
-* Setting and maintaining appropriate standards for community discourse via the
+- Setting and maintaining appropriate standards for community discourse via the
   various mediums under TSC control
-* Setting and maintaining governance rules for the conduct and make-up of the
+- Setting and maintaining governance rules for the conduct and make-up of the
   TSC, Working Groups and other bodies within the TSC's domain
 
 Many of these responsibilities will be delegated by the TSC to appropriate bodies such as the Working Groups.

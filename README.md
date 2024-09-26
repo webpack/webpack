@@ -13,7 +13,6 @@
 [![dependency-review][dependency-review]][dependency-review-url]
 [![coverage][cover]][cover-url]
 [![PR's welcome][prs]][prs-url]
-	
 [![compatibility-score](https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0)](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores)
 [![downloads](https://img.shields.io/npm/dm/webpack.svg)](https://npmcharts.com/compare/webpack?minimal=true)
 [![install-size](https://packagephobia.com/badge?p=webpack)](https://packagephobia.com/result?p=webpack)
@@ -21,7 +20,7 @@
 [![sponsors](https://opencollective.com/webpack/sponsors/badge.svg)](https://opencollective.com/webpack#sponsors)
 [![contributors](https://img.shields.io/github/contributors/webpack/webpack.svg)](https://github.com/webpack/webpack/graphs/contributors)
 [![discussions](https://img.shields.io/github/discussions/webpack/webpack)](https://github.com/webpack/webpack/discussions)
- 
+
   <h1>webpack</h1>
   <p>
     Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
@@ -292,26 +291,26 @@ For information about the governance of the Node.js project, see [GOVERNANCE.md]
 
 <h3>TSC (Technical Steering Committee)</h3>
 
-* [alexander-akait](https://github.com/alexander-akait) -
+- [alexander-akait](https://github.com/alexander-akait) -
   **Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
-* [ematipico](https://github.com/ematipico) -
+- [ematipico](https://github.com/ematipico) -
   **Emanuele Stoppa** <<my.burning@gmail.com>> (he/him)
-* [evenstensberg](https://github.com/evenstensberg) -
+- [evenstensberg](https://github.com/evenstensberg) -
   **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
-* [ovflowd](https://github.com/ovflowd) -
+- [ovflowd](https://github.com/ovflowd) -
   **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
-* [snitin315](https://github.com/snitin315) -
+- [snitin315](https://github.com/snitin315) -
   **Nitin Kumarr** <<snitin315@gmail.com>> (he/him)
 
 <h3>Core Collaborators</h3>
 
-* [jhnns](https://github.com/jhnns) -
+- [jhnns](https://github.com/jhnns) -
   **Johannes Ewald** <<mail@johannesewald.de>>
-* [sokra](https://github.com/sokra) -
+- [sokra](https://github.com/sokra) -
   **Tobias Koppers** <<jackworks@protonmail.co>>
-* [spacek33z](https://github.com/spacek33z) -
+- [spacek33z](https://github.com/spacek33z) -
   **Kees Kluskens** <<kees@webduck.nl>>
-* [TheLarkInn](https://github.com/TheLarkInn) -
+- [TheLarkInn](https://github.com/TheLarkInn) -
   **Sean T. Larkin** <<selarkin@microsoft.com>>
 
 <h2>Sponsoring</h2>
