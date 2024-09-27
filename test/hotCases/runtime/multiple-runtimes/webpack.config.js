@@ -6,6 +6,6 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js",
-		hotUpdateGlobal: chunk => `webpackHotUpdate_${chunk.id}`
+		hotUpdateGlobal: ({ chunk }) => `webpackHotUpdate_${chunk.id}`
 	}
 };

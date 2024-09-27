@@ -552,7 +552,13 @@ export type HotUpdateChunkFilename = string;
  */
 export type HotUpdateGlobal =
 	| string
-	| ((chunk: import("../lib/Chunk")) => string);
+	| (({
+			chunk,
+			contentHashType
+	  }: {
+			chunk: import("../lib/Chunk");
+			contentHashType: string;
+	  }) => string);
 /**
  * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
  */
