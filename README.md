@@ -39,7 +39,7 @@
   <a href="https://twitter.com/Webpack">
 		<img src="https://img.shields.io/twitter/follow/Webpack?style=social">
 	</a>
-  <a href="https://discord.gg/Tt5cKVwx">
+  <a href="https://discord.gg/5sxFZPdx2k">
 		<img src="https://img.shields.io/discord/1180618526436888586?label=discord&logo=discord&logoColor=white&style=flat">
 	</a>
   <h1>webpack</h1>
