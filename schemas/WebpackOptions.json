@@ -1620,7 +1620,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((chunk: import('../lib/Chunk')) => string)"
+          "tsType": "(({chunk, contentHashType}: {chunk: import('../lib/Chunk'), contentHashType: string}) => string)"
         }
       ]
     },

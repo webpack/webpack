@@ -248,19 +248,20 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: any[];
 }
+type ArrayBufferLike = ArrayBuffer | SharedArrayBuffer;
 type ArrayBufferView =
-	| Uint8Array
-	| Uint8ClampedArray
-	| Uint16Array
-	| Uint32Array
-	| Int8Array
-	| Int16Array
-	| Int32Array
-	| BigUint64Array
-	| BigInt64Array
-	| Float32Array
-	| Float64Array
-	| DataView;
+	| Uint8Array<ArrayBufferLike>
+	| Uint8ClampedArray<ArrayBufferLike>
+	| Uint16Array<ArrayBufferLike>
+	| Uint32Array<ArrayBufferLike>
+	| Int8Array<ArrayBufferLike>
+	| Int16Array<ArrayBufferLike>
+	| Int32Array<ArrayBufferLike>
+	| BigUint64Array<ArrayBufferLike>
+	| BigInt64Array<ArrayBufferLike>
+	| Float32Array<ArrayBufferLike>
+	| Float64Array<ArrayBufferLike>
+	| DataView<ArrayBufferLike>;
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -10714,7 +10715,9 @@ declare interface Output {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string | ((chunk: Chunk) => string);
+	hotUpdateGlobal?:
+		| string
+		| ((__0: { chunk: Chunk; contentHashType: string }) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
@@ -11008,7 +11011,9 @@ declare interface OutputNormalized {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string | ((chunk: Chunk) => string);
+	hotUpdateGlobal?:
+		| string
+		| ((__0: { chunk: Chunk; contentHashType: string }) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
@@ -15464,6 +15469,7 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string);
+	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
@@ -15755,18 +15761,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+			| Uint8Array<ArrayBufferLike>
+			| Uint8ClampedArray<ArrayBufferLike>
+			| Uint16Array<ArrayBufferLike>
+			| Uint32Array<ArrayBufferLike>
+			| Int8Array<ArrayBufferLike>
+			| Int16Array<ArrayBufferLike>
+			| Int32Array<ArrayBufferLike>
+			| BigUint64Array<ArrayBufferLike>
+			| BigInt64Array<ArrayBufferLike>
+			| Float32Array<ArrayBufferLike>
+			| Float64Array<ArrayBufferLike>
+			| DataView<ArrayBufferLike>,
 		options: WriteFileOptions,
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
@@ -15774,18 +15780,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+			| Uint8Array<ArrayBufferLike>
+			| Uint8ClampedArray<ArrayBufferLike>
+			| Uint16Array<ArrayBufferLike>
+			| Uint32Array<ArrayBufferLike>
+			| Int8Array<ArrayBufferLike>
+			| Int16Array<ArrayBufferLike>
+			| Int32Array<ArrayBufferLike>
+			| BigUint64Array<ArrayBufferLike>
+			| BigInt64Array<ArrayBufferLike>
+			| Float32Array<ArrayBufferLike>
+			| Float64Array<ArrayBufferLike>
+			| DataView<ArrayBufferLike>,
 		callback: (arg0: null | NodeJS.ErrnoException) => void
 	): void;
 }

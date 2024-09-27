@@ -2486,7 +2486,7 @@ describe("snapshots", () => {
 		"hotUpdateGlobal function",
 		{
 			output: {
-				hotUpdateGlobal: chunk => `__myUpdateGlobal_${chunk.id}`
+				hotUpdateGlobal: ({ chunk }) => `__myUpdateGlobal_${chunk.id}`
 			}
 		},
 		e => {
