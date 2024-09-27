@@ -2306,6 +2306,10 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
+declare interface CompilationHooksModuleFederationPlugin {
+	addContainerEntryModule: SyncHook<any>;
+	addFederationRuntimeModule: SyncHook<any>;
+}
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string>;
 }
@@ -8483,6 +8487,13 @@ declare class ModuleFederationPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+
+	/**
+	 * Get the compilation hooks associated with this plugin.
+	 */
+	static getCompilationHooks(
+		compilation: Compilation
+	): CompilationHooksModuleFederationPlugin;
 }
 declare interface ModuleFederationPluginOptions {
 	/**
