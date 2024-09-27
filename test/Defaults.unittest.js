@@ -2317,9 +2317,17 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			@@ ... @@
+			+         },
 			+         "type": "css",
-			+       },
+			@@ ... @@
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
@@ -2341,7 +2349,8 @@ describe("snapshots", () => {
 			+       },
 			+     },
 			@@ ... @@
-			+       },
+			+         },
+			@@ ... @@
 			+       "css": Object {
 			+         "namedExports": true,
 			@@ ... @@

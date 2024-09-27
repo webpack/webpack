@@ -3910,6 +3910,36 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css new-url exported tests new URL should not affect chunk css module 1`] = `
+".class {
+    color: blue;
+}
+
+body {
+    color: blue;
+}
+head{--webpack-main:&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style3\\\\.css;}"
+`;
+
+exports[`ConfigTestCases css new-url exported tests should compile 1`] = `
+"body {
+	color: green;
+}
+
+.class {
+    color: blue;
+}
+
+body {
+    color: red;
+}
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/external\\\\/external\\\\.css,&\\\\.\\\\/style2\\\\.css\\\\?6c2d,&\\\\.\\\\/style\\\\.css;}"
+`;
+
+exports[`ConfigTestCases css new-url exported tests should compile 2`] = `"https://test.cases/path/cd34510addabff9c8864.css"`;
+
+exports[`ConfigTestCases css new-url exported tests should compile 3`] = `"https://test.cases/path/cd34510addabff9c8864.css?foo=1"`;
+
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
 Array [
   "/*!*******************************************!*\\\\
