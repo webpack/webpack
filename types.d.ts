@@ -1494,6 +1494,11 @@ declare interface ChunkRenderContext {
 	codeGenerationResults: CodeGenerationResults;
 
 	/**
+	 * hash to be used for render call
+	 */
+	hash: string;
+
+	/**
 	 * init fragments for the chunk
 	 */
 	chunkInitFragments: InitFragment<ChunkRenderContext>[];
@@ -11722,6 +11727,11 @@ declare interface RenderContext {
 	 * results of code generation
 	 */
 	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * hash to be used for render call
+	 */
+	hash: string;
 
 	/**
 	 * rendering in strict context
