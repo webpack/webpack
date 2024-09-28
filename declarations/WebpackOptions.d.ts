@@ -200,6 +200,33 @@ export type ExternalItem =
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
+	| {
+			/**
+			 * Literal strings of the possible external types.
+			 */
+			amd?: ExternalsTypeLiteral;
+			/**
+			 * Literal strings of the possible external types.
+			 */
+			commonjs?: ExternalsTypeLiteral;
+			/**
+			 * Literal strings of the possible external types.
+			 */
+			"dynamic-import"?: ExternalsTypeLiteral;
+			/**
+			 * Literal strings of the possible external types.
+			 */
+			fallback?: ExternalsTypeLiteral;
+			/**
+			 * Literal strings of the possible external types.
+			 */
+			"static-import"?: ExternalsTypeLiteral;
+	  }
+	| ExternalsTypeLiteral;
+/**
+ * Literal strings of the possible external types.
+ */
+export type ExternalsTypeLiteral =
 	| "var"
 	| "module"
 	| "assign"
@@ -801,6 +828,14 @@ export type ExternalItemValue =
 	| {
 			[k: string]: any;
 	  };
+/**
+ * Specifies the category of externals.
+ */
+export type ExternalsCategory =
+	| "amd"
+	| "commonjs"
+	| "static-import"
+	| "dynamic-import";
 /**
  * List of allowed URIs for building http resources.
  */
