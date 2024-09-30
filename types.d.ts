@@ -2307,8 +2307,8 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
 declare interface CompilationHooksModuleFederationPlugin {
-	addContainerEntryModule: SyncHook<any>;
-	addFederationRuntimeModule: SyncHook<any>;
+	addContainerEntryDependency: SyncHook<any>;
+	addFederationRuntimeDependency: SyncHook<any>;
 }
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string>;
