@@ -1687,7 +1687,7 @@ declare abstract class CodeGenerationResults {
 	getRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec
-	): ReadonlySet<string>;
+	): null | ReadonlySet<string>;
 	getData(module: Module, runtime: RuntimeSpec, key: string): any;
 	getHash(module: Module, runtime: RuntimeSpec): any;
 	add(module: Module, runtime: RuntimeSpec, result: CodeGenerationResult): void;
@@ -5861,7 +5861,7 @@ declare class JavascriptParser extends Parser {
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
 		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
 		importSpecifier: SyncBailHook<
-			[ImportDeclaration, ImportSource, string, string],
+			[ImportDeclaration, ImportSource, null | string, string],
 			boolean | void
 		>;
 		export: SyncBailHook<
@@ -5904,8 +5904,8 @@ declare class JavascriptParser extends Parser {
 			[
 				ExportNamedDeclaration | ExportAllDeclaration,
 				ImportSource,
-				string,
-				string,
+				null | string,
+				null | string,
 				undefined | number
 			],
 			boolean | void
@@ -6314,7 +6314,10 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
 	blockPreWalkImportDeclaration(statement: ImportDeclaration): void;
-	enterDeclaration(declaration: Declaration, onIdent?: any): void;
+	enterDeclaration(
+		declaration: Declaration,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
 	blockPreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	blockPreWalkExportDefaultDeclaration(statement?: any): void;
@@ -6493,7 +6496,7 @@ declare class JavascriptParser extends Parser {
 			| AssignmentPattern
 			| Property
 		)[],
-		onIdent?: any
+		onIdent: (arg0: string, arg1: Identifier) => void
 	): void;
 	enterPattern(
 		pattern:
@@ -6504,13 +6507,28 @@ declare class JavascriptParser extends Parser {
 			| RestElement
 			| AssignmentPattern
 			| Property,
-		onIdent?: any
+		onIdent: (arg0: string, arg1: Identifier) => void
 	): void;
-	enterIdentifier(pattern: Identifier, onIdent?: any): void;
-	enterObjectPattern(pattern: ObjectPattern, onIdent?: any): void;
-	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
-	enterRestElement(pattern: RestElement, onIdent?: any): void;
-	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
+	enterIdentifier(
+		pattern: Identifier,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterObjectPattern(
+		pattern: ObjectPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterArrayPattern(
+		pattern: ArrayPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterRestElement(
+		pattern: RestElement,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterAssignmentPattern(
+		pattern: AssignmentPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
 	evaluateExpression(
 		expression:
 			| UnaryExpression
@@ -6545,7 +6563,7 @@ declare class JavascriptParser extends Parser {
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression: Expression): {
-		range: [number, number];
+		range?: [number, number];
 		value: string;
 		code: boolean;
 		conditional: any;
@@ -6601,7 +6619,10 @@ declare class JavascriptParser extends Parser {
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
-	parseCommentOptions(range: [number, number]): any;
+	parseCommentOptions(range: [number, number]): {
+		options: null | Record<string, any>;
+		errors: any;
+	};
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
 		object:
