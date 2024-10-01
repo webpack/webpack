@@ -2164,7 +2164,7 @@ declare class Compilation {
 	 */
 	createChildCompiler(
 		name: string,
-		outputOptions?: OutputNormalized,
+		outputOptions?: Partial<OutputNormalized>,
 		plugins?: (
 			| ((this: Compiler, compiler: Compiler) => void)
 			| WebpackPluginInstance
@@ -2412,7 +2412,7 @@ declare class Compiler {
 		compilation: Compilation,
 		compilerName: string,
 		compilerIndex: number,
-		outputOptions?: OutputNormalized,
+		outputOptions?: Partial<OutputNormalized>,
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
