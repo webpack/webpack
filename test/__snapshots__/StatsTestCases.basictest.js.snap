@@ -1967,7 +1967,7 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for output-module 1`] = `
 "asset main.mjs X KiB [emitted] [javascript module] (name: main)
 asset 936.mjs X bytes [emitted] [javascript module]
-runtime modules X KiB 7 modules
+runtime modules X KiB 5 modules
 orphan modules X bytes [orphan] 1 module
 cacheable modules X bytes
   ./index.js + 1 modules X bytes [built] [code generated]
