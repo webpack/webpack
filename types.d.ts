@@ -6015,7 +6015,7 @@ declare class JavascriptParser extends Parser {
 	state: ParserState;
 	comments?: Comment[];
 	semicolons?: Set<number>;
-	statementPath: StatementPathItem[];
+	statementPath?: StatementPathItem[];
 	prevStatement?:
 		| UnaryExpression
 		| ArrayExpression
@@ -6080,7 +6080,35 @@ declare class JavascriptParser extends Parser {
 		node: Expression
 	): undefined | Set<DestructuringAssignmentProperty>;
 	getRenameIdentifier(
-		expr: Expression
+		expr:
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
 	): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 
@@ -6440,7 +6468,7 @@ declare class JavascriptParser extends Parser {
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
 		fallback: undefined | ((arg0: string) => any),
-		defined: undefined | (() => any),
+		defined: undefined | ((arg0?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForNameWithFallback<T, R>(
@@ -6451,8 +6479,20 @@ declare class JavascriptParser extends Parser {
 		...args: AsArray<T>
 	): undefined | R;
 	inScope(params: any, fn: () => void): void;
-	inClassScope(hasThis: boolean, params: any, fn: () => void): void;
-	inFunctionScope(hasThis: boolean, params: any, fn: () => void): void;
+	inClassScope(hasThis: boolean, params: Identifier[], fn: () => void): void;
+	inFunctionScope(
+		hasThis: boolean,
+		params: (
+			| string
+			| Identifier
+			| MemberExpression
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+		)[],
+		fn: () => void
+	): void;
 	inBlockScope(fn: () => void): void;
 	detectMode(
 		statements: (
@@ -6496,7 +6536,7 @@ declare class JavascriptParser extends Parser {
 			| AssignmentPattern
 			| Property
 		)[],
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (arg0: string) => void
 	): void;
 	enterPattern(
 		pattern:
@@ -10433,22 +10473,22 @@ declare interface OutputNormalized {
 	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
-	enabledChunkLoadingTypes?: string[];
+	enabledChunkLoadingTypes: string[];
 
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: string[];
+	enabledLibraryTypes: string[];
 
 	/**
 	 * List of wasm loading types enabled for use by entry points.
 	 */
-	enabledWasmLoadingTypes?: string[];
+	enabledWasmLoadingTypes: string[];
 
 	/**
 	 * The abilities of the environment where the webpack generated code should run.
 	 */
-	environment?: Environment;
+	environment: Environment;
 
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -14775,12 +14815,12 @@ declare interface Watcher {
 	/**
 	 * get current aggregated changes that have not yet send to callback
 	 */
-	getAggregatedChanges?: () => Set<string>;
+	getAggregatedChanges?: () => null | Set<string>;
 
 	/**
 	 * get current aggregated removals that have not yet send to callback
 	 */
-	getAggregatedRemovals?: () => Set<string>;
+	getAggregatedRemovals?: () => null | Set<string>;
 
 	/**
 	 * get info about files
@@ -14801,12 +14841,12 @@ declare interface WatcherInfo {
 	/**
 	 * get current aggregated changes that have not yet send to callback
 	 */
-	changes: Set<string>;
+	changes: null | Set<string>;
 
 	/**
 	 * get current aggregated removals that have not yet send to callback
 	 */
-	removals: Set<string>;
+	removals: null | Set<string>;
 
 	/**
 	 * get info about files

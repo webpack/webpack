@@ -3661,7 +3661,13 @@
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
-      }
+      },
+      "required": [
+        "environment",
+        "enabledChunkLoadingTypes",
+        "enabledLibraryTypes",
+        "enabledWasmLoadingTypes"
+      ]
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
