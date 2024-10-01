@@ -412,3 +412,26 @@ type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| Array<RecursiveArrayOrRecord<T>>
 	| T;
+
+declare module "acorn-import-attributes" {
+	export function importAttributesOrAssertions(BaseParser: typeof import("acorn").Parser): typeof import("acorn").Parser;
+}
+
+declare module "loader-runner" {
+	export function getContext(resource: string) : string;
+	export function runLoaders(options: any, callback: (err: Error | null, result: any) => void): void;
+}
+
+declare module "watchpack" {
+	class Watchpack {
+		aggregatedChanges: Set<string>;
+		aggregatedRemovals: Set<string>;
+		constructor(options: import("./declarations/WebpackOptions").WatchOptions);
+		once(eventName: string, callback: any): void;
+		watch(options: any): void;
+		collectTimeInfoEntries(fileTimeInfoEntries: Map<string, number>, contextTimeInfoEntries: Map<string, number>): void;
+		pause(): void;
+		close(): void;
+	}
+	export = Watchpack;
+}

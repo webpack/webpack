@@ -3480,19 +3480,19 @@ export interface OutputNormalized {
 	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
-	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
+	enabledChunkLoadingTypes: EnabledChunkLoadingTypes;
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: EnabledLibraryTypes;
+	enabledLibraryTypes: EnabledLibraryTypes;
 	/**
 	 * List of wasm loading types enabled for use by entry points.
 	 */
-	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	enabledWasmLoadingTypes: EnabledWasmLoadingTypes;
 	/**
 	 * The abilities of the environment where the webpack generated code should run.
 	 */
-	environment?: Environment;
+	environment: Environment;
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */

@@ -1687,7 +1687,7 @@ declare abstract class CodeGenerationResults {
 	getRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec
-	): ReadonlySet<string>;
+	): null | ReadonlySet<string>;
 	getData(module: Module, runtime: RuntimeSpec, key: string): any;
 	getHash(module: Module, runtime: RuntimeSpec): any;
 	add(module: Module, runtime: RuntimeSpec, result: CodeGenerationResult): void;
@@ -2164,7 +2164,7 @@ declare class Compilation {
 	 */
 	createChildCompiler(
 		name: string,
-		outputOptions?: OutputNormalized,
+		outputOptions?: Partial<OutputNormalized>,
 		plugins?: (
 			| ((this: Compiler, compiler: Compiler) => void)
 			| WebpackPluginInstance
@@ -2412,7 +2412,7 @@ declare class Compiler {
 		compilation: Compilation,
 		compilerName: string,
 		compilerIndex: number,
-		outputOptions?: OutputNormalized,
+		outputOptions?: Partial<OutputNormalized>,
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
@@ -5861,7 +5861,7 @@ declare class JavascriptParser extends Parser {
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
 		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
 		importSpecifier: SyncBailHook<
-			[ImportDeclaration, ImportSource, string, string],
+			[ImportDeclaration, ImportSource, null | string, string],
 			boolean | void
 		>;
 		export: SyncBailHook<
@@ -5904,8 +5904,8 @@ declare class JavascriptParser extends Parser {
 			[
 				ExportNamedDeclaration | ExportAllDeclaration,
 				ImportSource,
-				string,
-				string,
+				null | string,
+				null | string,
 				undefined | number
 			],
 			boolean | void
@@ -6015,7 +6015,7 @@ declare class JavascriptParser extends Parser {
 	state: ParserState;
 	comments?: Comment[];
 	semicolons?: Set<number>;
-	statementPath: StatementPathItem[];
+	statementPath?: StatementPathItem[];
 	prevStatement?:
 		| UnaryExpression
 		| ArrayExpression
@@ -6080,7 +6080,35 @@ declare class JavascriptParser extends Parser {
 		node: Expression
 	): undefined | Set<DestructuringAssignmentProperty>;
 	getRenameIdentifier(
-		expr: Expression
+		expr:
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
 	): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 
@@ -6314,7 +6342,10 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
 	blockPreWalkImportDeclaration(statement: ImportDeclaration): void;
-	enterDeclaration(declaration: Declaration, onIdent?: any): void;
+	enterDeclaration(
+		declaration: Declaration,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
 	blockPreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	blockPreWalkExportDefaultDeclaration(statement?: any): void;
@@ -6437,7 +6468,7 @@ declare class JavascriptParser extends Parser {
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
 		fallback: undefined | ((arg0: string) => any),
-		defined: undefined | (() => any),
+		defined: undefined | ((arg0?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForNameWithFallback<T, R>(
@@ -6448,8 +6479,20 @@ declare class JavascriptParser extends Parser {
 		...args: AsArray<T>
 	): undefined | R;
 	inScope(params: any, fn: () => void): void;
-	inClassScope(hasThis: boolean, params: any, fn: () => void): void;
-	inFunctionScope(hasThis: boolean, params: any, fn: () => void): void;
+	inClassScope(hasThis: boolean, params: Identifier[], fn: () => void): void;
+	inFunctionScope(
+		hasThis: boolean,
+		params: (
+			| string
+			| Identifier
+			| MemberExpression
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+		)[],
+		fn: () => void
+	): void;
 	inBlockScope(fn: () => void): void;
 	detectMode(
 		statements: (
@@ -6493,7 +6536,7 @@ declare class JavascriptParser extends Parser {
 			| AssignmentPattern
 			| Property
 		)[],
-		onIdent?: any
+		onIdent: (arg0: string) => void
 	): void;
 	enterPattern(
 		pattern:
@@ -6504,13 +6547,28 @@ declare class JavascriptParser extends Parser {
 			| RestElement
 			| AssignmentPattern
 			| Property,
-		onIdent?: any
+		onIdent: (arg0: string, arg1: Identifier) => void
 	): void;
-	enterIdentifier(pattern: Identifier, onIdent?: any): void;
-	enterObjectPattern(pattern: ObjectPattern, onIdent?: any): void;
-	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
-	enterRestElement(pattern: RestElement, onIdent?: any): void;
-	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
+	enterIdentifier(
+		pattern: Identifier,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterObjectPattern(
+		pattern: ObjectPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterArrayPattern(
+		pattern: ArrayPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterRestElement(
+		pattern: RestElement,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
+	enterAssignmentPattern(
+		pattern: AssignmentPattern,
+		onIdent: (arg0: string, arg1: Identifier) => void
+	): void;
 	evaluateExpression(
 		expression:
 			| UnaryExpression
@@ -6545,7 +6603,7 @@ declare class JavascriptParser extends Parser {
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression: Expression): {
-		range: [number, number];
+		range?: [number, number];
 		value: string;
 		code: boolean;
 		conditional: any;
@@ -6601,7 +6659,10 @@ declare class JavascriptParser extends Parser {
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
-	parseCommentOptions(range: [number, number]): any;
+	parseCommentOptions(range: [number, number]): {
+		options: null | Record<string, any>;
+		errors: any;
+	};
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
 		object:
@@ -10412,22 +10473,22 @@ declare interface OutputNormalized {
 	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
-	enabledChunkLoadingTypes?: string[];
+	enabledChunkLoadingTypes: string[];
 
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: string[];
+	enabledLibraryTypes: string[];
 
 	/**
 	 * List of wasm loading types enabled for use by entry points.
 	 */
-	enabledWasmLoadingTypes?: string[];
+	enabledWasmLoadingTypes: string[];
 
 	/**
 	 * The abilities of the environment where the webpack generated code should run.
 	 */
-	environment?: Environment;
+	environment: Environment;
 
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -14754,12 +14815,12 @@ declare interface Watcher {
 	/**
 	 * get current aggregated changes that have not yet send to callback
 	 */
-	getAggregatedChanges?: () => Set<string>;
+	getAggregatedChanges?: () => null | Set<string>;
 
 	/**
 	 * get current aggregated removals that have not yet send to callback
 	 */
-	getAggregatedRemovals?: () => Set<string>;
+	getAggregatedRemovals?: () => null | Set<string>;
 
 	/**
 	 * get info about files
@@ -14780,12 +14841,12 @@ declare interface WatcherInfo {
 	/**
 	 * get current aggregated changes that have not yet send to callback
 	 */
-	changes: Set<string>;
+	changes: null | Set<string>;
 
 	/**
 	 * get current aggregated removals that have not yet send to callback
 	 */
-	removals: Set<string>;
+	removals: null | Set<string>;
 
 	/**
 	 * get info about files
