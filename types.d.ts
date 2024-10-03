@@ -1106,6 +1106,12 @@ declare class Chunk {
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, Record<string, (string | number)[]>>;
+	hasChildByOrder(
+		chunkGraph: ChunkGraph,
+		type: string,
+		includeDirectChildren?: boolean,
+		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
+	): boolean;
 }
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
