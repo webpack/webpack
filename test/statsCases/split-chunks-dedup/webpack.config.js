@@ -41,11 +41,7 @@ module.exports = {
 
 								// @ts-expect-error
 								const sharedModuleName = origin.module._name;
-								let suffix = "";
-								if (usedSharedModuleNames.has(sharedModuleName)) {
-									suffix = `-${chunk.id}`;
-								}
-								const chunkName = `${sharedModuleName}${suffix}--shared`;
+								const chunkName = `${sharedModuleName}-${chunk.id}--shared`;
 								usedSharedModuleNames.add(sharedModuleName);
 								chunkIdChunkNameMap.set(chunk.id, chunkName);
 

@@ -5099,12 +5099,16 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		contentType: string,
 		name: string,
 		global: string,
-		getFilenameForChunk: (arg0: Chunk) => TemplatePath,
+		getFilenameForChunk: (
+			arg0: Chunk
+		) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string),
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
-	getFilenameForChunk: (arg0: Chunk) => TemplatePath;
+	getFilenameForChunk: (
+		arg0: Chunk
+	) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string);
 	allChunks: boolean;
 
 	/**

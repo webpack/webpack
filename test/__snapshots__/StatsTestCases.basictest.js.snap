@@ -4101,8 +4101,8 @@ exports[`StatsTestCases should print correct stats for split-chunks-dedup 1`] = 
 "asset main.js X KiB [emitted] (name: main) (id hint: main)
 asset table-643--shared.js X bytes [emitted]
 asset row-359--shared.js X bytes [emitted]
-asset cell--shared.js X bytes [emitted]
-asset templater--shared.js X bytes [emitted]
+asset cell-221--shared.js X bytes [emitted]
+asset templater-743--shared.js X bytes [emitted]
 runtime modules X KiB 11 modules
 built modules X bytes (javascript) X bytes (share-init) X bytes (consume-shared) [built]
   cacheable modules X bytes
