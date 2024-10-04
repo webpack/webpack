@@ -1,0 +1,6 @@
+.class3 {
+    color: red;
+}
+:global(.class4) {
+    background: green;
+}
