@@ -1,0 +1,59 @@
+@value small: (max-width: 599px);
+@value blue: red;
+@value aaa: red;
+@value bbb: aaa;
+@value test-t: 40px;
+@value test_q: 36px;
+.a {
+	color: bbb;
+}
+.foo {
+	color: blue;
+	width: test-t;
+	height: test_q;
+	&.bar {
+		color: blue;
+	}
+	@media (min-width: 1024px) {
+		background-color: blue;
+		&.baz {
+			@media (min-width: 1024px) {
+				color: blue;
+			}
+		}
+	}
+}
+
+@value named: red;
+@value char-1: #0f0;
+@value char-2: #00ff00;
+@value rgba: rgba(34, 12, 64, 0.3);
+@value hsla: hsla(220, 13.0%, 18.0%, 1);
+@value class: red;
+.class { color: class; }
+.class > .class { color: class; }
+@value id: blue;
+#id { color: id; }
+
+@value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+.foo {
+	color: named;
+	background-color: char-1;
+	border-top-color: char-2;
+	border-bottom-color: rgba;
+	outline-color: hsla;
+	box-shadow: coolShadow;
+}
+@value ccc: color(red lightness(50%));
+@value empty;
+@value empty-1: /* Comment */;
+@value empty-2: 	;
+@value ddd: red;
+
+:root {
+	--color0: ddd;
+	--color1: empty;
+	--color2: empty-1;
+	--color3: empty-2;
+	--color5: ccc;
+}
