@@ -1,0 +1,615 @@
+div {
+	transform: rotate(45deg);
+	transform: rotate(-50grad);
+	transform: rotate(3.1416rad);
+	transform: rotate(1.75turn);
+}
+
+.hex-color {
+	color: #00ff00;
+	color: #0000ffcc;
+	color: #123;
+	color: #123c;
+}
+
+.rgb {
+	color: rgb(255, 165, 0);
+	color: rgb(255,165,0);
+	color: rGb(255,165,0);
+	color: rgb(0 255 0);
+	color: rgb(0%100%0%);
+	color: rgb(29 164 192 / 95%);
+	color: rgb(123 255 255 / .5);
+	color: rgb(123 255 255 / 50%);
+	color: rgb(48% 100% 100% / 50%);
+	color: rgb(48% none 100% / 50%);
+	color: rgb(48% 100% 100% / none);
+	color: rgb(var(--red), var(--green), var(--blue));
+	color: rgb(var(--red) var(--green) var(--blue));
+	color: rgb(var(--red) var(--green) var(--blue) / var(--alpha));
+}
+
+.rgba {
+	color: rgba(255, 0, 0, 100%);
+	color: rgba(255, 255, 0, 1);
+	color: rgba(255, 255, 0, 0.8);
+	color: rgba(255, 165, 0);
+	color: rgba(255,165,0);
+	color: rGbA(255,165,0);
+	color: rgba(0 255 0);
+	color: rgba(0%100%0%);
+	color: rgba(29 164 192 / 95%);
+	color: rgba(123 255 255 / .5);
+	color: rgba(123 255 255 / 50%);
+	color: rgba(48% 100% 100% / 50%);
+	color: rgba(48% none 100% / 50%);
+	color: rgba(48% 100% 100% / none);
+	color: rgba(123 none 123 / 50%);
+	color: rgba(123 123 123 / none);
+	color: rgb(var(--red), var(--green), var(--blue), var(--alpha));
+}
+
+.hsl {
+	color: hsl(38.824 100% 50%);
+	color: HsL(39 100% 50%);
+	color: hsl(100deg, 100%, 50%);
+	color: hsl(100, 100%, 50%);
+	color: hsl(100 100% 50%);
+	color: hsl(100, 100%, 50%, .8);
+	color: hsl(100 100% 50% / .8);
+	color: hsl(var(--a), var(--b), var(--c));
+	color: hsl(var(--a), var(--b), var(--c), var(--d));
+	color: hsl(var(--a) var(--b) var(--c));
+	color: hsl(var(--a) var(--b) var(--c) / var(--d));
+}
+
+.hsla {
+	color: hsla(100, 100%, 50%, .8);
+	color: hsla(100 100% 50% / .8);
+	color: hsla(var(--a), var(--b), var(--c), var(--d));
+}
+
+.hwb {
+	color: hwb(194 0% 0%);
+	color: hwb(194 0% 0% / 50%);
+	color: hwb(194 0% 50%);
+	color: hwb(194 50% 0%);
+	color: hwb(194 50% 50%);
+	color: hwb(var(--a) var(--b) var(--c));
+	color: hwb(var(--a) var(--b) var(--c) / var(--d));
+}
+
+.lab {
+	color: lab(29.2345% 39.3825 20.0664);
+	color: lab(29.2345% 39.3825 20.0664 / 100%);
+	color: lab(29.2345% 39.3825 20.0664 / 50%);
+	color: lab(var(--a) var(--b) var(--c));
+	color: lab(var(--a) var(--b) var(--c) / var(--d));
+}
+
+.lch {
+	color: lch(52.2345% 72.2 56.2 / 1);
+	color: lch(29.2345% 44.2 27);
+	color: lch(29.2345% 44.2 45deg);
+	color: lch(29.2345% 44.2 .5turn);
+	color: lch(29.2345% 44.2 27 / 100%);
+	color: lch(29.2345% 44.2 27 / 50%);
+	color: lch(var(--a) var(--b) var(--c));
+	color: lch(var(--a) var(--b) var(--c) / var(--d));
+}
+
+.oklab {
+	color: oklab(40.101% 0.1147 0.0453);
+	color: oklab(var(--a) var(--b) var(--c));
+}
+
+.oklch {
+	color: oklch(42.1% 0.192 328.6 / 1);
+	color: oklch(42.1% 0.192 328.6);
+	color: oklch(var(--a) var(--b) var(--c));
+	color: oklch(var(--a) var(--b) var(--c) / var(--d));
+}
+
+.color {
+	color: color(sRGB 0 1 0);
+	color: color(srgb-linear 0 1 0);
+	color: color(display-p3 0 1 0);
+	color: color(a98-rgb 0 1 0);
+	color: color(prophoto-rgb 0 1 0);
+	color: color(rec2020 0 1 0);
+	color: color(sRGB 0 none 0);
+	color: color(display-p3 0.823 0.6554 0.2537 /1);
+	color: color(display-p3 0.823 0.6554 0.2537 / 1);
+	color: color(display-p3 0.823 0.6554 0.2537/1);
+	color: color(display-p3 0.823 0.6554 0.2537);
+	color: color(xyz 0.472 0.372 0.131);
+	color: color(xyz-d50 0.472 0.372 0.131);
+	color: color(xyz-d65 0.472 0.372 0.131);
+	color: color(display-p3 -0.6112 1.0079 -0.2192);
+	color: color(sRGB 0.41587 0.503670 0.36664);
+	color: color(display-p3 0.43313 0.50108 0.37950);
+	color: color(a98-rgb 0.44091 0.49971 0.37408);
+	color: color(prophoto-rgb 0.36589 0.41717 0.31333);
+	color: color(rec2020 0.42210 0.47580 0.35605);
+	color: color(profoto-rgb 0.4835 0.9167 0.2188);
+	color: color(var(--a) var(--b) var(--c) var(--d));
+	color: color(var(--a) var(--b) var(--c) var(--d) / var(--e));
+}
+
+@color-profile --fogra55beta {
+	src: url('https://example.org/2020_13.003_FOGRA55beta_CL_Profile.icc');
+}
+
+.dark_skin {
+	background-color: color(--fogra55beta 0.183596 0.464444 0.461729 0.612490 0.156903 0.000000 0.000000);
+	background-color: color(--fogra55beta 0.070804 0.334971 0.321802 0.215606 0.103107 0.000000 0.000000);
+	background-color: color(--fogra55beta 0.572088 0.229346 0.081708 0.282044 0.000000 0.000000 0.168260);
+	background-color: color(--fogra55beta 0.314566 0.145687 0.661941 0.582879 0.000000 0.234362 0.000000);
+	background-color: color(--fogra55beta 0.375515 0.259934 0.034849 0.107161 0.000000 0.000000 0.308200);
+	background-color: color(--fogra55beta 0.397575 0.010047 0.223682 0.031140 0.000000 0.317066 0.000000);
+}
+
+.device-cmyk {
+	color: device-cmyk(0 81% 81% 30%);
+	color: device-cmyk(0% 70% 20% 0%);
+	color: device-cmyk(0% 70% 20% 0%);
+	color: device-cmyk(0 0.7 0.2 0);
+	color: device-cmyk(var(--a) var(--b) var(--c) var(--d));
+}
+
+.color-mix {
+	color: color-mix(in lch, purple 50%, plum 50%);
+	color: color-mix(in lch, purple 50%, plum);
+	color: color-mix(in lch, purple, plum 50%);
+	color: color-mix(in lch, purple, plum);
+	color: color-mix(in lch, plum, purple);
+	color: color-mix(in lch, purple 80%, plum 80%);
+}
+
+.color-contrast {
+	color: color-contrast(currentColor vs hsl(200 83% 23%), purple to AA);
+	color: color-contrast(currentColor vs rgb(10 75 107), rgb(128 0 128) to 4.5);
+}
+
+.foo {
+	color: device-cmyk(0 81% 81% 30%);
+	color: rgb(178 34 34);
+	color: firebrick;
+}
+
+.bar {
+	color: device-cmyk(0 81% 81% 30%);
+	color: lab(45.060% 45.477 35.459);
+	color: rgb(70.690% 26.851% 19.724%);
+}
+
+.calc {
+	color: rgba(calc(255 - 1), 255, 255, 1);
+	color: rgba(255, calc(255 - 1), 255, 1);
+	color: rgba(255, 255, calc(255 - 1), 1);
+	color: rgba(255, 255, 255, calc(1 - 1));
+	color: hsla(calc(120deg + 16deg) 100% 50%);
+	color: hsla(120deg calc(20% + 10%) 50%);
+	color: hsla(120deg 40% calc(20% + 10%));
+	color: hsl(120deg 40% 20% / calc(20% + 10%));
+	color: hwb(194 calc(20% + 10%) 0% / .5);
+	color: device-cmyk(0 calc(20%) 81% 30%);
+	color: color(display-p3 calc(1 + 2) 0.5 0);
+}
+
+.relative {
+	color: rgb(from indianred 255 255 255);
+	color: rgb(from transparent 255 255 255);
+	color: lch(from var(--mygray) 62% 30 -34);
+	color: rgb(from Canvas 255 255 255);
+	color: rgb(from canvas 255 255 255);
+	color: rgb(from ActiveBorder 255 255 255);
+	color: rgb(from -moz-buttondefault 255 255 255);
+	color: rgb(from -moz-activehyperlinktext 255 255 255);
+	color: rgb(from currentColor 255 255 255);
+}
+
+
+.var {
+	color: rgb(var(--red) var(--green) var(--blue));
+	color: rgb(var(--red) var(--green) var(--blue) / var(--alpha));
+
+	color: rgb(env(--red) env(--green) env(--blue));
+	color: rgb(env(--red) env(--green) env(--blue) / env(--alpha));
+
+	color: rgb(constant(--red) constant(--green) constant(--blue));
+	color: rgb(constant(--red) constant(--green) constant(--blue) / constant(--alpha));
+}
+
+div {
+	color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
+	color: lab(var(--mycolor));
+	color: rgba(var(--bg-color) 1);
+	color: rgba(var(--bg-color) / 1);
+	color: lab(var(--mycolor) 0);
+	color: lab(var(--mycolor) var(--mycolor));
+	color: lab(from var(--mycolor) 0 0 0);
+	color: lab(from var(--mycolor) var(--color));
+	color: rgb(var(--bg-color));
+	color: rgb(var(--bg-color), var(--bg-color-a));
+	color: rgb(var(--bg-color) var(--bg-color-a));
+	color: rgba(var(--bg-color) 1);
+	color: rgb(var(--mycolor) var(--mycolor) var(--mycolor));
+	color: lab(var(--mycolor) var(--mycolor) var(--mycolor));
+	color: color(from var(--bg-color) var(--bg-color));
+	color: color(from var(--bg-color) var(--bg-color) var(--bg-color));
+	color: color(var(--bg-color) var(--bg-color));
+	color: color(var(--bg-color));
+	color: color(from var(--base) mi calc(pi * 2) calc(pi / 2));
+	color: color(var(--bg-color));
+	color: color(--unwise 35% 20% 8%);
+	color: color(--unwise var(--bg-color));
+	color: color(--unwise var(--bg-color) var(--bg-color));
+	color: device-cmyk(var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color) var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color) var(--bg-color) var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color) var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: device-cmyk(var(--bg-color) / var(--bg-color));
+	color: device-cmyk(var(--bg-color) var(--bg-color));
+	color: rgb(var(--bg-color));
+	color: rgb(var(--bg-color) var(--bg-color));
+	color: rgb(var(--bg-color) var(--bg-color) var(--bg-color));
+	color: rgb(var(--bg-color) var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: rgb(var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: rgb(var(--bg-color) / var(--bg-color));
+	color: rgb(var(--bg-color) var(--bg-color));
+	color: rgb(var(--bg-color));
+	color: rgb(var(--bg-color), var(--bg-color));
+	color: rgb(var(--bg-color), var(--bg-color), var(--bg-color));
+	color: rgb(var(--bg-color), var(--bg-color), var(--bg-color), var(--bg-color));
+	color: rgb(var(--bg-color), var(--bg-color), var(--bg-color));
+	color: hwb(var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color) var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color) / var(--bg-color));
+	color: hwb(var(--bg-color) / var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color));
+	color: hwb(var(--bg-color));
+	color: hwb(120 0% 49.8039%);
+	color: hwb(120 var(--bg-color) 49.8039%);
+	color: hwb(120 var(--bg-color) 49.8039% / 1);
+	color: hwb(120 var(--bg-color) 49.8039% / 100);
+	color: hwb(120 var(--bg-color) var(--bg-color));
+	color: hwb(var(--bg-color) var(--bg-color) var(--bg-color));
+	color: color(rec2020 0.42053 0.979780 0.00579);
+	color: color(rec2020 0.42053 0.979780 0.00579 / var(--color));
+	color: color(rec2020 0.42053 var(--color));
+	color: color(rec2020 0.42053 var(--color) / 100%);
+	color: color(rec2020 var(--color));
+	color: color(rec2020 var(--color) / var(--color));
+	color: color(var(--color) var(--color));
+	color: color(var(--color));
+	color: color(xyz-d50 0.2005 0.14089 0.4472);
+	color: color(sRGB 0.41587 0.503670 0.36664);
+	color: color(display-p3 0.43313 0.50108 0.37950);
+	color: color(a98-rgb 0.44091 0.49971 0.37408);
+	color: color(prophoto-rgb 0.36589 0.41717 0.31333);
+	color: color(rec2020 0.42210 0.47580 0.35605);
+}
+
+:root {
+	---:value;
+
+	--important:value!important;
+	--important1: value!important;
+	--important2: value !important;
+	--important3:value !important;
+	--important4: calc(1)!important;
+
+	--empty: ;
+	--empty2: /**/;
+	--empty3: !important;
+	--empty4:/**/ !important;
+	--empty5:/* 1 */ /* 2 */;
+
+	--no-whitespace:ident;
+	--number: 1;
+	--unit: 100vw;
+	--color: #06c;
+
+	--function: calc(1 + 1);
+	--variable: var(--unit);
+
+	--string: 'single quoted string';
+	--string: "double quoted string";
+
+	--square-block: [1, 2, 3];
+	--square-block1: [];
+	--square-block2:[];
+	--round-block: (1, 2, 3);
+	--round-block1: ();
+	--round-block2:();
+	--bracket-block: {1, 2, 3};
+	--bracket-block1: {};
+	--bracket-block2:{};
+
+
+	--JSON: [1, "2", {"three": {"a":1}}, [4]];
+--javascript: function(rule) { console.log(rule) };
+
+--CDO: <!--;
+--CDC: -->;
+
+--complex-balanced:{[({()})()()[({})]]}[{()}]([]);
+--fake-important:{!important};
+--semicolon-not-top-level: (;);
+--delim-not-top-level: (!);
+--zero-size: {
+width: 0;
+height: 0;
+};
+--small-icon: {
+width: 16px;
+height: 16px;
+}
+;
+}
+
+:root{--a:1}
+:root {--foo: }
+:root {
+	--foo:
+}
+
+:root {
+	--var:  value;
+}
+
+div {
+	width: 100\%;
+	width: 100px2p;
+	width: 100px;
+	width: 100PX;
+	width: 100UNKNOWN;
+	width: 100НЕИЗВЕСТНО;
+}
+
+table {
+	color: \red;
+}
+
+a {
+	background: \;a;
+}
+:not([foo=")"]) { }
+:not(div/*)*/) { }
+:not(:nth-child(2n of [foo=")"])) { }
+[foo=\"] { }
+[foo=\{] { }
+[foo=\(] { }
+[foo=yes\:\(it\'s\ work\)] { }
+
+\@noat { }
+
+h1\\{
+	color: \\;
+}
+
+[attr="\;"] { }
+
+.prop {
+	\62 olor: red
+}
+
+div {
+	prop: 1Hz;
+	prop: 1kHz;
+}
+
+a { animation: test; }
+a { animation: тест; }
+a { animation: т\ест; }
+a { animation: 😋; }
+a { animation: \\😋; }
+a { animation: \😋; }
+
+div {
+	z-index: 12;
+	z-index: +123;
+	z-index: -456;
+	z-index: 0;
+	z-index: +0;
+	z-index: -0;
+}
+
+div {
+	width: 100e\x;
+	width: 100ex;
+	width: 100px;
+	width: 100PX;
+	width: 100pX;
+}
+
+div {
+	width: 0%;
+	width: 0.1%;
+	width: 100%;
+	width: 100.5%;
+	width: 100.1000%;
+	width: 1e0%;
+	width: 1e1%;
+	width: 1e2%;
+	width: 10e-1%;
+	width: 10e-5%;
+	width: 10e+2%;
+}
+
+div {
+	margin: -5%;
+	margin: -5.5%;
+}
+
+a::before {
+	content: "This string is demarcated by double quotes.";
+	content: 'This string is demarcated by single quotes.';
+	content: "This is a string with \" an escaped double quote.";
+	content: "This string also has \22 an escaped double quote.";
+	content: 'This is a string with \' an escaped single quote.';
+	content: 'This string also has \27 an escaped single quote.';
+	content: "This is a string with \\ an escaped backslash.";
+	content: "This string also has \22an escaped double quote.";
+	content: "This string also has \22  an escaped double quote.";
+	content: "This string has a \Aline break in it.";
+	content: "A really long \
+awesome string";
+	content: ";'@ /**/\"";
+	content: '\'"\\';
+	content: "a\
+b";
+	content: "a\
+b";
+	content: "a\
+b";
+	content: "a\b";
+	content: "a\
+\
+\
+\\
+b";
+	content: 'a\62 c';
+}
+
+a[title="a not s\
+o very long title"] {
+	color: red;
+}
+a[title="a not so very long title"] {
+	color: red;
+}
+
+div {
+	family-name: "A;' /**/";
+}
+
+
+.foo {
+	content: ";'@ /**/\"";
+	content: '\'"\\';
+}
+
+@media print and (min-resolution: 300dpi) {}
+@media print and (min-resolution: 300dpcm) {}
+@media print and (min-resolution: 300dppx) {}
+@media print and (min-resolution: 300x) {}
+
+div {
+	prop:  [];
+	prop:  [ ];
+	prop:  [row1-start];
+	prop:  [   row1-start-with-spaces-around   ];
+	prop:  [red #fff 12px];
+	prop: [row1-start] 25% [row1-end row2-start] 25% [row2-end];
+}
+
+#delay {
+	font-size: 14px;
+	transition-property: font-size;
+	transition-duration: 4s;
+	transition-delay: 2s;
+}
+
+.box {
+	transition: width 2s, height 2s, background-color 2s, transform 2s;
+}
+
+.time {
+	transition-duration: 4s;
+	transition-duration: 4000ms;
+}
+
+@font-face {
+	font-family: 'Ampersand';
+	src: local('Times New Roman');
+	unicode-range: U+26;               /* single codepoint */
+	unicode-range: u+26;
+	unicode-range: U+0-7F;
+	unicode-range: U+0025-00FF;        /* codepoint range */
+	unicode-range: U+4??;              /* wildcard range */
+	unicode-range: U+0025-00FF, U+4??; /* multiple values */
+	unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF00-FF9F; /* multiple values */
+	unicode-range: U+????;
+	unicode-range: U+??????;
+	unicode-range: U+12;
+	unicode-range: U+12e112;
+	unicode-range: U+1e1ee1;
+	unicode-range: U+1e1ee1-FFFFFF;
+	unicode-range: U+1e1ee?;
+	unicode-range: U+12-13;
+}
+
+div {
+	background: url(https://example.com/image.png);
+	background: URL(https://example.com/image.png);
+	background: \URL(https://example.com/image.png);
+	background: url("https://example.com/image.png");
+	background: url('https://example.com/image.png');
+	background: URL('https://example.com/image.png');
+	background: \URL('https://example.com/image.png');
+	background: url(data:image/png;base64,iRxVB0);
+	background: url(#IDofSVGpath);
+
+	/* A <url-modifier> is either an <ident> or a functional notation. */
+	background: url("//aa.com/img.svg" prefetch);
+	background: url("//aa.com/img.svg" foo bar baz func(test));
+	background: url("http://example.com/image.svg" param(--color var(--primary-color)));
+
+	background: url();
+	background: url("");
+	background: url('');
+
+	--foo: "http://www.example.com/pinkish.gif";
+
+	background: src("http://www.example.com/pinkish.gif");
+	background: SRC("http://www.example.com/pinkish.gif");
+	background: src(var(--foo));
+	background: url(   https://example.com/image.png   );
+	background: u\rl(   https://example.com/image.png   );
+	background: url(
+	https://example.com/image.png
+	);
+	background: url(
+
+
+	https://example.com/image.png
+
+
+	);
+	background: URL(https://example.com/ima\)ge.png);
+	background: url(   "https://example.com/image.png"   );
+}
+
+.delim {
+	a1: @ 12;
+	a2: 1 # 1;
+	a3: ( 1 2 3 );
+	a4: 1 + 1;
+	a5: +s1;
+	a6: "test", "test";
+	a7: 1 - 2 - 3;
+	a8: fn("test");;;;;
+	a9: < >;
+	a10: \ ;
+	a11: $ ;
+	a12: --1;
+	a13: -+1;
+	a14: ident1<!-- abc -->ident2;
+	a15: --fn("test");
+	a16: +3.4e2;
+	a17: +3.4e-2;
+	a18: +3.4e+2;
+	a19: 12.1.1;
+	a20: +-12.2;
+	a21: 12.;
+	a22: \A;
+	a23: \00000A;
+	a23: \00000AB;
+	a24: \123456 B;
+}

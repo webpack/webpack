@@ -1,0 +1,19 @@
+.a {
+	prop: important;
+	color: red important;
+	width: 1px!important;
+	color: red!important;
+	color: red !important;
+	color: red  !important;
+	color: red !   important   ;
+	color: blue !IMPORTANT;
+	color: white !   IMPORTANT   ;
+	margin: 10px      !      important;
+	padding: 20px     !  /* test */   important;
+	width: 100px ! /*! test */ important;
+	height: 100px /*! test */ important;
+	z-index: 1 ""! important;
+	padding: 1px/* sep */!important;
+	prop: red !iMpOrTaNt;
+	color: red !imp\ortant;
+}
