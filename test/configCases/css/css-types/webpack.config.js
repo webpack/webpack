@@ -15,6 +15,14 @@ module.exports = {
 			{
 				test: /\.global\.css$/i,
 				type: "css/global"
+			},
+			{
+				test: /\.auto\.css$/i,
+				type: "css/auto"
+			},
+			{
+				test: /\.modules\.css$/i,
+				type: "css/auto"
 			}
 		]
 	},
