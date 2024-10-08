@@ -1,0 +1,40 @@
+div {
+	prop: value;
+	prop: (value);
+	prop: {value};
+	prop: [value];
+	prop: fn(value);
+	prop: fn(value)fn(value);
+	prop: value, value;
+	prop: value ,value;
+	prop: value,value;
+	prop: value , value;
+	prop: 100%100%;
+	prop: "string""string";
+	prop: #ccc#ccc;
+	prop: url(img.png)url(img.png);
+	prop: (value)(value);
+	prop: {value}{value};
+	prop: [value][value];
+	prop: center/1em;
+	prop: center/ 1em;
+	prop: center /1em;
+	prop: center / 1em;
+	c\olor: red;
+	prop/**/: big;
+	prop: (;);
+	prop: [;];
+	prop: {;};
+}
+
+a { color: a/* ; */ b  ; }
+a{color:black}
+
+a {;;
+	color: black;
+	; ;
+}
+
+a {
+	color: \\ red \\ blue;
+}

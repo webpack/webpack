@@ -1,0 +1,28 @@
+a {
+	background-image: url(   ./image.jpg  a  );
+}
+
+div {
+	background: url(image.png\
+	);
+}
+
+a {
+	background: \url(te st);
+}
+
+div {
+	background: url(image(.png);
+	color: red;
+}
+
+div {
+	background: url(image.
+	png);
+	color: red;
+}
+
+p::before {
+	content: "tes
+	t";
+}
