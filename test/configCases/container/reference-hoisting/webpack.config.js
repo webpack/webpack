@@ -19,7 +19,6 @@ const common = {
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		entry: {},
 		output: {
 			filename: "[name].js",
 			uniqueName: "0-container-full"
