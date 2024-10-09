@@ -1944,7 +1944,55 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 ]
 `;
 
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 1`] = `
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "UsedClassName": "-_identifiers_module_css-UsedClassName",
+  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
+  "animation": "-_style_module_css-animation",
+  "animationName": "-_style_module_css-animationName",
+  "class": "-_style_module_css-class",
+  "classInContainer": "-_style_module_css-class-in-container",
+  "classLocalScope": "-_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
+  "currentWmultiParams": "-_style_module_css-local12",
+  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "-_style_module_css-local14",
+  "global": undefined,
+  "hasWmultiParams": "-_style_module_css-local11",
+  "ident": "-_style_module_css-ident",
+  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
+  "inSupportScope": "-_style_module_css-inSupportScope",
+  "isWmultiParams": "-_style_module_css-local8",
+  "keyframes": "-_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
+  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
+  "local2": "-_style_module_css-local5 -_style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "-_style_module_css-local9",
+  "media": "-_style_module_css-wideScreenClass",
+  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
+  "mozAnimationName": "-_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "-_style_module_css-local15",
+  "myColor": "---_style_module_css-my-color",
+  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "-_style_module_css-local7",
+  "paddingLg": "-_style_module_css-padding-lg",
+  "paddingSm": "-_style_module_css-padding-sm",
+  "pastWmultiParams": "-_style_module_css-local13",
+  "supports": "-_style_module_css-displayGridInSupports",
+  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
+  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
+  "webkitAnyWmultiParams": "-_style_module_css-local16",
+  "whereWmultiParams": "-_style_module_css-local10",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 2`] = `
 "/*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -2664,7 +2712,55 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/c0ffee:_-_style_module_css-c0ffee/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:---_style_module_css-test/baz:---_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:---_style_module_css-foo/broken:_-_style_module_css-broken/comments:_-_style_module_css-comments/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 2`] = `
 "/*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -3384,102 +3480,6 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtƞɀƢ-Ʉ/KRȞɁČɋ/FǰǶɒ/&_Ė,ɓǼ6ɝ-kɖ_ɝ6,ɗ81ɤRƨɆĈ194-ɪȏLĻɮɰZLȧŀɬ-ɶ-cńɗɶ;}"
 `;
 
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
-Object {
-  "UsedClassName": "-_identifiers_module_css-UsedClassName",
-  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
-  "animation": "-_style_module_css-animation",
-  "animationName": "-_style_module_css-animationName",
-  "class": "-_style_module_css-class",
-  "classInContainer": "-_style_module_css-class-in-container",
-  "classLocalScope": "-_style_module_css-class-local-scope",
-  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
-  "currentWmultiParams": "-_style_module_css-local12",
-  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
-  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
-  "exportLocalVarsShouldCleanup": "false false",
-  "futureWmultiParams": "-_style_module_css-local14",
-  "global": undefined,
-  "hasWmultiParams": "-_style_module_css-local11",
-  "ident": "-_style_module_css-ident",
-  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
-  "inSupportScope": "-_style_module_css-inSupportScope",
-  "isWmultiParams": "-_style_module_css-local8",
-  "keyframes": "-_style_module_css-localkeyframes",
-  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
-  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
-  "local2": "-_style_module_css-local5 -_style_module_css-local6",
-  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
-  "matchesWmultiParams": "-_style_module_css-local9",
-  "media": "-_style_module_css-wideScreenClass",
-  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
-  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
-  "mozAnimationName": "-_style_module_css-mozAnimationName",
-  "mozAnyWmultiParams": "-_style_module_css-local15",
-  "myColor": "---_style_module_css-my-color",
-  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
-  "notAValidCssModuleExtension": true,
-  "notWmultiParams": "-_style_module_css-local7",
-  "paddingLg": "-_style_module_css-padding-lg",
-  "paddingSm": "-_style_module_css-padding-sm",
-  "pastWmultiParams": "-_style_module_css-local13",
-  "supports": "-_style_module_css-displayGridInSupports",
-  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
-  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
-  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
-  "webkitAnyWmultiParams": "-_style_module_css-local16",
-  "whereWmultiParams": "-_style_module_css-local10",
-}
-`;
-
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
-Object {
-  "UsedClassName": "my-app-194-ZL",
-  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
-  "animation": "my-app-235-lY",
-  "animationName": "my-app-235-iZ",
-  "class": "my-app-235-zg",
-  "classInContainer": "my-app-235-bK",
-  "classLocalScope": "my-app-235-Ci",
-  "cssModuleWithCustomFileExtension": "my-app-666-k",
-  "currentWmultiParams": "my-app-235-Hq",
-  "deepClassInContainer": "my-app-235-Y1",
-  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
-  "exportLocalVarsShouldCleanup": "false false",
-  "futureWmultiParams": "my-app-235-Hb",
-  "global": undefined,
-  "hasWmultiParams": "my-app-235-AO",
-  "ident": "my-app-235-bD",
-  "inLocalGlobalScope": "my-app-235-V0",
-  "inSupportScope": "my-app-235-nc",
-  "isWmultiParams": "my-app-235-aq",
-  "keyframes": "my-app-235-$t",
-  "keyframesUPPERCASE": "my-app-235-zG",
-  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
-  "local2": "my-app-235-Vj my-app-235-OH",
-  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
-  "matchesWmultiParams": "my-app-235-VN",
-  "media": "my-app-235-a7",
-  "mediaInSupports": "my-app-235-aY",
-  "mediaWithOperator": "my-app-235-uf",
-  "mozAnimationName": "my-app-235-M6",
-  "mozAnyWmultiParams": "my-app-235-OP",
-  "myColor": "--my-app-235-rX",
-  "nested": "my-app-235-nb undefined my-app-235-$Q",
-  "notAValidCssModuleExtension": true,
-  "notWmultiParams": "my-app-235-H5",
-  "paddingLg": "my-app-235-cD",
-  "paddingSm": "my-app-235-dW",
-  "pastWmultiParams": "my-app-235-O4",
-  "supports": "my-app-235-sW",
-  "supportsInMedia": "my-app-235-II",
-  "supportsWithOperator": "my-app-235-TZ",
-  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
-  "webkitAnyWmultiParams": "my-app-235-Hw",
-  "whereWmultiParams": "my-app-235-VM",
-}
-`;
-
 exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
 Object {
   "class": "my-app-235-z",
@@ -3659,6 +3659,45 @@ exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allo
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
+
+exports[`ConfigCacheTestCases css css-modules-no-space exported tests should allow to create css modules 1`] = `
+Object {
+  "class": "-_style_module_css-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules-no-space exported tests should allow to create css modules 2`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+._-_style_module_css-no-space {
+	.class {
+		color: red;
+	}
+
+	/** test **/.class {
+		color: red;
+	}
+
+	._-_style_module_css-class {
+		color: red;
+	}
+
+	/** test **/._-_style_module_css-class {
+		color: red;
+	}
+
+	/** test **/#_-_style_module_css-hash {
+		color: red;
+	}
+
+	/** test **/{
+		color: red;
+	}
+}
+
+head{--webpack-use-style_js:no-space:_-_style_module_css-no-space/class:_-_style_module_css-class/hash:_-_style_module_css-hash/&\\\\.\\\\/style\\\\.module\\\\.css;}"
+`;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
 Object {
