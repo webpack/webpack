@@ -625,3 +625,59 @@
 		}
 	}
 }
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	: local(.class) {
+		color: red;
+	}
+
+	: local .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.comments {
+	:/** test */global(.class) {
+		color: red;
+	}
+
+	:/** test */global .class {
+		color: red;
+	}
+
+	:/** test */local(.class) {
+		color: red;
+	}
+
+	:/** test */local .class {
+		color: red;
+	}
+
+	./** test **/class {
+		color: red;
+	}
+
+	:local(./** test **/class) {
+		color: red;
+	}
+
+	:local ./** test **/class {
+		color: red;
+	}
+}
