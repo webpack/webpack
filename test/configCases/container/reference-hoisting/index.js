@@ -1,6 +1,5 @@
 it("should have the hoisted container references", () => {
 	const wpm = __webpack_modules__;
-	debugger;
 	expect(wpm).toHaveProperty("webpack/container/reference/containerA");
 	expect(wpm).toHaveProperty("webpack/container/reference/containerB");
 });
