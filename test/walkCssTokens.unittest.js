@@ -7,7 +7,6 @@ describe("walkCssTokens", () => {
 		it(`should parse ${name}`, () => {
 			const results = [];
 			walkCssTokens(content, {
-				isSelector: () => true,
 				url: (input, s, e, cs, ce) => {
 					results.push(["url", input.slice(s, e), input.slice(cs, ce)]);
 					return e;
@@ -36,20 +35,16 @@ describe("walkCssTokens", () => {
 					results.push(["comma", input.slice(s, e)]);
 					return e;
 				},
-				pseudoClass: (input, s, e) => {
-					results.push(["pseudoClass", input.slice(s, e)]);
-					return e;
-				},
-				pseudoFunction: (input, s, e) => {
-					results.push(["pseudoFunction", input.slice(s, e)]);
-					return e;
-				},
 				atKeyword: (input, s, e) => {
 					results.push(["atKeyword", input.slice(s, e)]);
 					return e;
 				},
-				class: (input, s, e) => {
-					results.push(["class", input.slice(s, e)]);
+				colon: (input, s, e) => {
+					results.push(["colon", input.slice(s, e)]);
+					return e;
+				},
+				delim: (input, s, e) => {
+					results.push(["delim", input.slice(s, e)]);
 					return e;
 				},
 				identifier: (input, s, e) => {
