@@ -1,0 +1,392 @@
+.foo {
+	color: green;
+	.bar {
+		font-size: 1.4rem;
+	}
+}
+
+main {
+	div { color: red }
+	.bar { color: red }
+	#baz { color: red }
+	:has(p) { color: red }
+	::backdrop { color: red }
+	[lang|="zh"] { color: red }
+	* { color: red }
+}
+
+main {
+	+ article { color: red }
+	> p { color: red }
+	~ main { color: red }
+}
+
+main {
+	& + article { color: red }
+	& > p { color: red }
+	& ~ main { color: red }
+}
+
+ul {
+	padding-left: 1em;
+	.component & {
+		padding-left: 0;
+	}
+}
+
+a {
+	color: blue;
+	&:hover {
+		color: lightblue;
+	}
+}
+
+/* & can be used on its own */
+.foo {
+	color: blue;
+	& > .bar { color: red; }
+	> .baz { color: green; }
+}
+/* equivalent to
+  .foo { color: blue; }
+  .foo > .bar { color: red; }
+  .foo > .baz { color: green; }
+*/
+
+
+/* or in a compound selector,
+   refining the parent’s selector */
+.foo {
+	color: blue;
+	&.bar { color: red; }
+}
+/* equivalent to
+  .foo { color: blue; }
+  .foo.bar { color: red; }
+*/
+
+/* multiple selectors in the list are all
+   relative to the parent */
+.foo, .bar {
+	color: blue;
+	+ .baz, &.qux { color: red; }
+}
+/* equivalent to
+  .foo, .bar { color: blue; }
+  :is(.foo, .bar) + .baz,
+  :is(.foo, .bar).qux { color: red; }
+*/
+
+/* & can be used multiple times in a single selector */
+.foo {
+	color: blue;
+	& .bar & .baz & .qux { color: red; }
+}
+/* equivalent to
+  .foo { color: blue; }
+  .foo .bar .foo .baz .foo .qux { color: red; }
+*/
+
+/* & doesn’t have to be at the beginning of the selector */
+
+.foo {
+	color: red;
+	.parent & {
+		color: blue;
+	}
+}
+/* equivalent to
+  .foo { color: red; }
+  .parent .foo { color: blue; }
+*/
+
+.foo {
+	color: red;
+	:not(&) {
+		color: blue;
+	}
+}
+/* equivalent to
+  .foo { color: red; }
+  :not(.foo) { color: blue; }
+*/
+
+/* But if you use a relative selector,
+  an initial & is implied automatically */
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+/* equivalent to
+  .foo { color: red; }
+  .foo + .bar + .foo { color: blue; }
+*/
+
+/* Somewhat silly, but & can be used all on its own, as well. */
+.foo {
+	color: blue;
+	& { padding: 2ch; }
+}
+/* equivalent to
+  .foo { color: blue; }
+  .foo { padding: 2ch; }
+
+  // or
+
+  .foo {
+    color: blue;
+    padding: 2ch;
+  }
+*/
+
+/* Again, silly, but can even be doubled up. */
+.foo {
+	color: blue;
+	&& { padding: 2ch; }
+}
+/* equivalent to
+  .foo { color: blue; }
+  .foo.foo { padding: 2ch; }
+*/
+
+/* The parent selector can be arbitrarily complicated */
+.error, #404 {
+	&:hover > .baz { color: red; }
+}
+/* equivalent to
+  :is(.error, #404):hover > .baz { color: red; }
+*/
+
+.ancestor .el {
+	.other-ancestor & { color: red; }
+}
+/* equivalent to
+  .other-ancestor :is(.ancestor .el) { color: red; }
+
+/* As can the nested selector */
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+/* equivalent to
+  .foo :is(.bar, .foo.baz) { color: red; }
+*/
+
+/* Multiple levels of nesting "stack up" the selectors */
+figure {
+	margin: 0;
+
+	> figcaption {
+		background: hsl(0 0% 0% / 50%);
+
+		> p {
+			font-size: .9rem;
+		}
+	}
+}
+/* equivalent to
+  figure { margin: 0; }
+  figure > figcaption { background: hsl(0 0% 0% / 50%); }
+  figure > figcaption > p { font-size: .9rem; }
+*/
+
+/* Example usage with Cascade Layers */
+@layer base {
+	html {
+		block-size: 100%;
+
+		body {
+			min-block-size: 100%;
+		}
+	}
+}
+/* equivalent to
+  @layer base {
+    html { block-size: 100%; }
+    html body { min-block-size: 100%; }
+  }
+*/
+
+/* Example nesting Cascade Layers */
+@layer base {
+	html {
+		block-size: 100%;
+
+		@layer support {
+			body {
+				min-block-size: 100%;
+			}
+		}
+	}
+}
+/* equivalent to
+  @layer base {
+    html { block-size: 100%; }
+  }
+  @layer base.support {
+    html body { min-block-size: 100%; }
+  }
+*/
+
+/* Example usage with Scoping */
+@scope (.card) to (> header) {
+	:scope {
+		inline-size: 40ch;
+		aspect-ratio: 3/4;
+
+		> header {
+			border-block-end: 1px solid white;
+		}
+	}
+}
+/* equivalent to
+  @scope (.card) to (> header) {
+    :scope { inline-size: 40ch; aspect-ratio: 3/4; }
+    :scope > header { border-block-end: 1px solid white; }
+  }
+*/
+
+/* Example nesting Scoping */
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) to (> header > *) {
+		:scope > header {
+			border-block-end: 1px solid white;
+		}
+	}
+}
+
+/* equivalent to
+  .card { inline-size: 40ch; aspect-ratio: 3/4; }
+  @scope (.card) to (> header > *) {
+    :scope > header { border-block-end: 1px solid white; }
+  }
+*/
+
+/* Properties can be directly used */
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+	}
+}
+
+/* equivalent to: */
+.foo {
+	display: grid;
+}
+@media (orientation: landscape) {
+	.foo {
+		grid-auto-flow: column
+	}
+}
+
+/* and also equivalent to the unnested: */
+.foo { display: grid; }
+
+@media (orientation: landscape) {
+	.foo {
+		grid-auto-flow: column;
+	}
+}
+
+/* Conditionals can be further nested */
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+
+		@media (min-width > 1024px) {
+			max-inline-size: 1024px;
+		}
+	}
+}
+
+/* equivalent to */
+.foo { display: grid; }
+
+@media (orientation: landscape) {
+	.foo {
+		grid-auto-flow: column;
+	}
+}
+
+@media (orientation: landscape) and (min-width > 1024px) {
+	.foo {
+		max-inline-size: 1024px;
+	}
+}
+
+/* Example nesting Cascade Layers */
+html {
+	@layer base {
+		block-size: 100%;
+
+		@layer support {
+			& body {
+				min-block-size: 100%;
+			}
+		}
+	}
+}
+
+/* equivalent to */
+@layer base {
+	html { block-size: 100%; }
+}
+@layer base.support {
+	html body { min-block-size: 100%; }
+}
+
+/* Example nesting Scoping */
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+/* equivalent to */
+.card { inline-size: 40ch; aspect-ratio: 3/4; }
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+article {
+	color: green;
+	& { color: blue; }
+	color: red;
+}
+
+a, b {
+	& c { color: blue; }
+}
+
+.foo, .foo::before, .foo::after {
+	color: black;
+	@media (prefers-color-scheme: dark) {
+		& {
+			color: white;
+		}
+	}
+}

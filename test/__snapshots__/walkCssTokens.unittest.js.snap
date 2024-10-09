@@ -1404,14 +1404,6 @@ Array [
     "background",
   ],
   Array [
-    "class",
-    ".png",
-  ],
-  Array [
-    "rightParenthesis",
-    ")",
-  ],
-  Array [
     "semicolon",
     ";",
   ],
@@ -6520,6 +6512,2479 @@ Array [
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+]
+`;
+
+exports[`walkCssTokens should parse nesting.css 1`] = `
+Array [
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "green",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "font-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "main",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "id",
+    "#baz",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "pseudoFunction",
+    ":has(",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "pseudoClass",
+    ":backdrop",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "lang",
+  ],
+  Array [
+    "string",
+    "\\"zh\\"",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "main",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "article",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "main",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "main",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "article",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "main",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "ul",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "padding-left",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".component",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "padding-left",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "pseudoClass",
+    ":hover",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "lightblue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".baz",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "green",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".baz",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "class",
+    ".qux",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "class",
+    ".baz",
+  ],
+  Array [
+    "class",
+    ".qux",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".parent",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "pseudoFunction",
+    ":not(",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "padding",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "padding",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".error",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoClass",
+    ":hover",
+  ],
+  Array [
+    "class",
+    ".baz",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".ancestor",
+  ],
+  Array [
+    "class",
+    ".el",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".other-ancestor",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoFunction",
+    ":is(",
+  ],
+  Array [
+    "class",
+    ".bar",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "class",
+    ".baz",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "figure",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "margin",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "figcaption",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "background",
+  ],
+  Array [
+    "function",
+    "hsl(",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "font-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "base",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "html",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "body",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "min-block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "base",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "html",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "support",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "body",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "min-block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@scope",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "class",
+    ".card",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "identifier",
+    "to",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "header",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoClass",
+    ":scope",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "aspect-ratio",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "header",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "border-block-end",
+  ],
+  Array [
+    "identifier",
+    "solid",
+  ],
+  Array [
+    "identifier",
+    "white",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".card",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "aspect-ratio",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@scope",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "identifier",
+    "to",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "header",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoClass",
+    ":scope",
+  ],
+  Array [
+    "identifier",
+    "header",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "border-block-end",
+  ],
+  Array [
+    "identifier",
+    "solid",
+  ],
+  Array [
+    "identifier",
+    "white",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "min-width",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "max-inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "identifier",
+    "and",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "min-width",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "max-inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "html",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "base",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "support",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "body",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "min-block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "base",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "html",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@layer",
+  ],
+  Array [
+    "identifier",
+    "base",
+  ],
+  Array [
+    "class",
+    ".support",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "html",
+  ],
+  Array [
+    "identifier",
+    "body",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "min-block-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".card",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "aspect-ratio",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@scope",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoClass",
+    ":scope",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "border",
+  ],
+  Array [
+    "identifier",
+    "solid",
+  ],
+  Array [
+    "identifier",
+    "white",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".card",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "inline-size",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "aspect-ratio",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@scope",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "class",
+    ".card",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "pseudoClass",
+    ":scope",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "border-block-end",
+  ],
+  Array [
+    "identifier",
+    "solid",
+  ],
+  Array [
+    "identifier",
+    "white",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".parent",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@scope",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "class",
+    ".scope",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "identifier",
+    "to",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "class",
+    ".limit",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "class",
+    ".content",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "article",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "green",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "c",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "pseudoClass",
+    ":before",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "class",
+    ".foo",
+  ],
+  Array [
+    "pseudoClass",
+    ":after",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "black",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "prefers-color-scheme",
+  ],
+  Array [
+    "identifier",
+    "dark",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "white",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
   ],
   Array [
     "rightCurlyBracket",
