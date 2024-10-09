@@ -19686,6 +19686,142 @@ Array [
     "rightCurlyBracket",
     "}",
   ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "a200",
+  ],
+  Array [
+    "pseudoFunction",
+    ":-webkit-image-set(",
+  ],
+  Array [
+    "string",
+    "\\"img.png\\"",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "a201",
+  ],
+  Array [
+    "pseudoFunction",
+    ":url(",
+  ],
+  Array [
+    "string",
+    "\\"img.png\\"",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "a202",
+  ],
+  Array [
+    "pseudoFunction",
+    ":url(",
+  ],
+  Array [
+    "identifier",
+    "img",
+  ],
+  Array [
+    "class",
+    ".png",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
 ]
 `;
 
