@@ -1,3 +1,10 @@
+it("should have the hoisted container references", () => {
+	const wpm = __webpack_modules__;
+	debugger;
+	expect(wpm).toHaveProperty("webpack/container/reference/containerA");
+	expect(wpm).toHaveProperty("webpack/container/reference/containerB");
+});
+
 it("should load the component from container", () => {
 	return import("./App").then(({ default: App }) => {
 		const rendered = App();

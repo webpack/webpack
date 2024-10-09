@@ -19,20 +19,29 @@ const common = {
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
+		entry: {
+			main: "./index.js",
+			other: "./index-2.js"
+		},
 		output: {
 			filename: "[name].js",
-			uniqueName: "0-container-full"
+			uniqueName: "ref-hoist"
 		},
 		optimization: {
-			runtimeChunk: "single"
+			runtimeChunk: "single",
+			moduleIds: "named"
 		},
 		plugins: [
 			new ModuleFederationPlugin({
+				runtime: false,
 				library: { type: "commonjs-module" },
 				filename: "container.js",
 				remotes: {
 					containerA: {
 						external: "./container.js"
+					},
+					containerB: {
+						external: "../0-container-full/container.js"
 					}
 				},
 				...common
@@ -40,23 +49,32 @@ module.exports = [
 		]
 	},
 	{
+		entry: {
+			main: "./index.js",
+			other: "./index-2.js"
+		},
 		experiments: {
 			outputModule: true
 		},
 		optimization: {
-			runtimeChunk: "single"
+			runtimeChunk: "single",
+			moduleIds: "named"
 		},
 		output: {
 			filename: "module/[name].mjs",
-			uniqueName: "0-container-full-mjs"
+			uniqueName: "ref-hoist-mjs"
 		},
 		plugins: [
 			new ModuleFederationPlugin({
+				runtime: false,
 				library: { type: "module" },
 				filename: "module/container.mjs",
 				remotes: {
 					containerA: {
 						external: "./container.mjs"
+					},
+					containerB: {
+						external: "../../0-container-full/module/container.mjs"
 					}
 				},
 				...common
