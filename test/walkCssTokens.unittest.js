@@ -56,8 +56,8 @@ describe("walkCssTokens", () => {
 					results.push(["identifier", input.slice(s, e)]);
 					return e;
 				},
-				id: (input, s, e) => {
-					results.push(["id", input.slice(s, e)]);
+				hash: (input, s, e, isID) => {
+					results.push(["hash", input.slice(s, e), isID]);
 					return e;
 				},
 				string: (input, s, e) => {

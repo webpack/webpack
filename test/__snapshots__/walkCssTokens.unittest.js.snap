@@ -1707,12 +1707,22 @@ Array [
     "--main-color",
   ],
   Array [
+    "hash",
+    "#06c",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
   Array [
     "identifier",
     "--accent-color",
+  ],
+  Array [
+    "hash",
+    "#006",
+    false,
   ],
   Array [
     "semicolon",
@@ -1747,8 +1757,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "identifier",
@@ -2076,12 +2087,14 @@ Array [
     "prop",
   ],
   Array [
-    "id",
+    "hash",
     "#ccc",
+    true,
   ],
   Array [
-    "id",
+    "hash",
     "#ccc",
+    true,
   ],
   Array [
     "semicolon",
@@ -4816,8 +4829,9 @@ Array [
     "element(",
   ],
   Array [
-    "id",
+    "hash",
     "#css-source",
+    true,
   ],
   Array [
     "rightParenthesis",
@@ -4872,8 +4886,9 @@ Array [
     "-moz-element(",
   ],
   Array [
-    "id",
+    "hash",
     "#css-source",
+    true,
   ],
   Array [
     "rightParenthesis",
@@ -5226,6 +5241,11 @@ Array [
   Array [
     "comma",
     ",",
+  ],
+  Array [
+    "hash",
+    "#0f0",
+    false,
   ],
   Array [
     "rightParenthesis",
@@ -6093,6 +6113,11 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#000000",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -6101,8 +6126,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#ffffff",
+    true,
   ],
   Array [
     "semicolon",
@@ -6113,8 +6139,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#FFFFFF",
+    true,
   ],
   Array [
     "semicolon",
@@ -6125,12 +6152,9 @@ Array [
     "color",
   ],
   Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "identifier",
-    "color",
+    "hash",
+    "#0000ffcc",
+    false,
   ],
   Array [
     "semicolon",
@@ -6141,6 +6165,11 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#0000FFCC",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -6149,8 +6178,22 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
+    "#000",
+    false,
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "hash",
     "#fff",
+    true,
   ],
   Array [
     "semicolon",
@@ -6161,8 +6204,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#FFF",
+    true,
   ],
   Array [
     "semicolon",
@@ -6173,6 +6217,11 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#0000",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -6181,8 +6230,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#ffff",
+    true,
   ],
   Array [
     "semicolon",
@@ -6193,8 +6243,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#FFFF",
+    true,
   ],
   Array [
     "semicolon",
@@ -6205,6 +6256,11 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#1",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -6213,8 +6269,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#FF",
+    true,
   ],
   Array [
     "semicolon",
@@ -6225,6 +6282,11 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#123456789",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -6233,8 +6295,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#abc",
+    true,
   ],
   Array [
     "semicolon",
@@ -6245,8 +6308,9 @@ Array [
     "color",
   ],
   Array [
-    "id",
+    "hash",
     "#aa\\\\61",
+    true,
   ],
   Array [
     "semicolon",
@@ -9477,8 +9541,9 @@ Array [
     ".class",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "comma",
@@ -10042,8 +10107,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -10062,8 +10128,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -10838,8 +10905,9 @@ Array [
     ".foo",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -10870,8 +10938,9 @@ Array [
     ".class",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -11650,8 +11719,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -11670,8 +11740,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -11682,12 +11753,14 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -11810,8 +11883,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -11830,8 +11904,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -11842,12 +11917,14 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -11970,8 +12047,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -11990,8 +12068,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -12002,172 +12081,14 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
-    "id",
+    "hash",
     "#id",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "attribute",
-  ],
-  Array [
-    "identifier",
-    "p",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "div",
-  ],
-  Array [
-    "identifier",
-    "attribute",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "attribute",
-  ],
-  Array [
-    "identifier",
-    "src",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "div",
-  ],
-  Array [
-    "identifier",
-    "p",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "identifier",
-    "p",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "div",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "id",
-    "#id",
-  ],
-  Array [
-    "identifier",
-    "p",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "div",
-  ],
-  Array [
-    "id",
-    "#id",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "id",
-    "#id",
-  ],
-  Array [
-    "id",
-    "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -12227,6 +12148,170 @@ Array [
   ],
   Array [
     "identifier",
+    "div",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".class",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "class",
+    ".class",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "class",
+    ".class",
+  ],
+  Array [
+    "class",
+    ".class",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "hash",
+    "#id",
+    true,
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "hash",
+    "#id",
+    true,
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "hash",
+    "#id",
+    true,
+  ],
+  Array [
+    "hash",
+    "#id",
+    true,
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "attribute",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "identifier",
+    "attribute",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "attribute",
+  ],
+  Array [
+    "identifier",
+    "src",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
     "a",
   ],
   Array [
@@ -12254,8 +12339,9 @@ Array [
     ":hover",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -12298,8 +12384,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -12582,8 +12669,9 @@ Array [
     "type",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -12598,8 +12686,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -12994,8 +13083,9 @@ Array [
     ".foo",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13026,8 +13116,9 @@ Array [
     ".class",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "identifier",
@@ -13042,8 +13133,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -13058,8 +13150,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -13082,8 +13175,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "pseudoClass",
@@ -13102,8 +13196,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "pseudoClass",
@@ -13202,8 +13297,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#z98y",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13214,12 +13310,14 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#one",
+    true,
   ],
   Array [
-    "id",
+    "hash",
     "#two",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13230,8 +13328,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#one",
+    true,
   ],
   Array [
     "class",
@@ -13250,8 +13349,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13262,8 +13362,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#♥",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13274,8 +13375,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#©",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13286,8 +13388,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#“‘’”",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13298,8 +13401,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#☺☃",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13310,8 +13414,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#⌘⌥",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13322,8 +13427,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#𝄞♪♩♫♬",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13334,8 +13440,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#💩",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13346,8 +13453,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\?",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13358,8 +13466,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\@",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13370,8 +13479,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\.",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13382,8 +13492,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A \\\\)",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13394,8 +13505,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A \\\\\`\\\\(",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13406,8 +13518,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\31 23",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13418,8 +13531,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\31 a2b3c",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13430,8 +13544,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\<p\\\\>",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13442,8 +13557,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13454,8 +13570,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<\\\\-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13466,8 +13583,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13478,8 +13596,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13490,8 +13609,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#\\\\.\\\\#\\\\.\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13502,8 +13622,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\_",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13514,8 +13635,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\{\\\\}",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13526,8 +13648,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\.fake\\\\-class",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13538,8 +13661,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo\\\\.bar",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13550,8 +13674,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A hover",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13562,8 +13687,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A hover\\\\3A focus\\\\3A active",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13574,8 +13700,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\[attr\\\\=value\\\\]",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13586,8 +13713,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\/o\\\\/o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13598,8 +13726,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\\\\\o\\\\\\\\o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13610,8 +13739,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\*o\\\\*o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13622,8 +13752,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\!o\\\\!o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13634,8 +13765,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\'o\\\\'o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13646,8 +13778,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\~o\\\\~o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13658,8 +13791,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\+o\\\\+o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13670,8 +13804,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13682,8 +13817,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -13698,8 +13834,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "class",
@@ -13722,8 +13859,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "pseudoClass",
@@ -13742,8 +13880,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "pseudoFunction",
@@ -13766,8 +13905,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "pseudoClass",
@@ -13782,8 +13922,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "identifier",
@@ -13802,8 +13943,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\;",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13814,8 +13956,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#u-m\\\\00002b ",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13826,8 +13969,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#♥",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13838,8 +13982,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#“‘’”",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13850,8 +13995,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#☺☃",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13862,8 +14008,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\@",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13874,8 +14021,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\.",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13886,8 +14034,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A \\\\)",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13898,8 +14047,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A \\\\\`\\\\(",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13910,8 +14060,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\31 23",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13922,8 +14073,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\31 a2b3c",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13934,8 +14086,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\<p\\\\>",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13946,8 +14099,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13958,8 +14112,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13970,8 +14125,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13982,8 +14138,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\#\\\\.\\\\#\\\\.\\\\#",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -13994,8 +14151,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\_",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14006,8 +14164,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\{\\\\}",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14018,8 +14177,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\.fake\\\\-class",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14030,8 +14190,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo\\\\.bar",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14042,8 +14203,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A hover",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14054,8 +14216,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\3A hover\\\\3A focus\\\\3A active",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14066,8 +14229,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#\\\\[attr\\\\=value\\\\]",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14078,8 +14242,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\/o\\\\/o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14090,8 +14255,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\\\\\o\\\\\\\\o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14102,8 +14268,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\*o\\\\*o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14114,8 +14281,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\!o\\\\!o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14126,8 +14294,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\\\\\\\\\'o\\\\\\\\\\\\'o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14138,8 +14307,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\~o\\\\~o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14150,8 +14320,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#f\\\\+o\\\\+o",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -14254,8 +14425,9 @@ Array [
     "a",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "identifier",
@@ -14582,16 +14754,18 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#id",
+    true,
   ],
   Array [
     "comma",
     ",",
   ],
   Array [
-    "id",
+    "hash",
     "#id2",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -15086,8 +15260,9 @@ Array [
     ",",
   ],
   Array [
-    "id",
+    "hash",
     "#test",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -18983,8 +19158,9 @@ Array [
     ":cue-region(",
   ],
   Array [
-    "id",
+    "hash",
     "#scroll",
+    true,
   ],
   Array [
     "rightParenthesis",
@@ -19403,8 +19579,9 @@ Array [
     "div",
   ],
   Array [
-    "id",
+    "hash",
     "#thing",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -19423,8 +19600,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -19435,8 +19613,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -19447,8 +19626,9 @@ Array [
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#foo",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -19643,8 +19823,9 @@ Array [
     "name",
   ],
   Array [
-    "id",
+    "hash",
     "#_id",
+    true,
   ],
   Array [
     "leftCurlyBracket",
@@ -19916,12 +20097,9 @@ Array [
     "color",
   ],
   Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "identifier",
-    "color",
+    "hash",
+    "#00ff00",
+    false,
   ],
   Array [
     "semicolon",
@@ -19932,12 +20110,35 @@ Array [
     "color",
   ],
   Array [
+    "hash",
+    "#0000ffcc",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
   Array [
     "identifier",
     "color",
+  ],
+  Array [
+    "hash",
+    "#123",
+    false,
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "hash",
+    "#123c",
+    false,
   ],
   Array [
     "semicolon",
@@ -27400,6 +27601,11 @@ Array [
     "--color",
   ],
   Array [
+    "hash",
+    "#06c",
+    false,
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -29309,8 +29515,9 @@ o very long title\\"",
     "red",
   ],
   Array [
-    "id",
+    "hash",
     "#fff",
+    true,
   ],
   Array [
     "semicolon",
@@ -29345,8 +29552,9 @@ o very long title\\"",
     "}",
   ],
   Array [
-    "id",
+    "hash",
     "#delay",
+    true,
   ],
   Array [
     "leftCurlyBracket",
