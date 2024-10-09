@@ -19778,6 +19778,34 @@ Array [
     "rightCurlyBracket",
     "}",
   ],
+  Array [
+    "delim",
+    ".",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
 ]
 `;
 

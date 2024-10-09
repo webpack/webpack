@@ -625,3 +625,21 @@
 		}
 	}
 }
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
