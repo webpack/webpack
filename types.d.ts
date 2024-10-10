@@ -5628,11 +5628,6 @@ declare class JavascriptModulesPlugin {
 		allStrict: boolean,
 		hasChunkModules: boolean
 	): false | Map<Module, Source>;
-	findNewName(
-		oldName: string,
-		usedName: Set<string>,
-		extraInfo: string
-	): string;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
