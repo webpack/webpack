@@ -12,7 +12,8 @@ module.exports = {
 		module: true,
 		filename: "bundle0.mjs",
 		chunkFilename: "[name].js",
-		crossOriginLoading: "anonymous"
+		crossOriginLoading: "anonymous",
+		chunkFormat: "array-push"
 	},
 	performance: {
 		hints: false
