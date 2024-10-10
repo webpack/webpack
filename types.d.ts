@@ -10239,7 +10239,9 @@ declare interface Output {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string;
+	hotUpdateGlobal?:
+		| string
+		| ((__0: { chunk: Chunk; contentHashType: string }) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
@@ -10538,7 +10540,9 @@ declare interface OutputNormalized {
 	/**
 	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateGlobal?: string;
+	hotUpdateGlobal?:
+		| string
+		| ((__0: { chunk: Chunk; contentHashType: string }) => string);
 
 	/**
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
