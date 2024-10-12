@@ -5,24 +5,6 @@ const common = {
 	devtool: false,
 	experiments: {
 		css: true
-	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				assetFixHack: {
-					type: "asset/resource",
-					chunks: "all",
-					name: "main",
-					enforce: true
-				},
-				assetFixHack1: {
-					type: "asset/inline",
-					chunks: "all",
-					name: "main",
-					enforce: true
-				}
-			}
-		}
 	}
 };
 
