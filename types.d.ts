@@ -13362,20 +13362,6 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
-	assetUrl(__0: {
-		/**
-		 * the module
-		 */
-		module: Module;
-		/**
-		 * runtime
-		 */
-		runtime?: RuntimeSpec;
-		/**
-		 * the code generation results
-		 */
-		codeGenerationResults: CodeGenerationResults;
-	}): string;
 }
 declare abstract class RuntimeValue {
 	fn: (arg0: {

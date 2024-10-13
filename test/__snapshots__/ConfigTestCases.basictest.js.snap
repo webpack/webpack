@@ -4061,6 +4061,28 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css no-extra-runtime-in-js exported tests should compile 1`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class {
+	color: red;
+	background:
+		url(img.png),
+		url(img.png),
+		url(data:image/png;base64,AAA);
+		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
+		url(resource.png),
+		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
+		url(7976064b7fcb4f6b3916.html),
+		url(https://example.com/img.png);
+}
+
+head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
 Array [
   "/*!*******************************************!*\\\\

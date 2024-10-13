@@ -160,15 +160,15 @@ exports[`StatsTestCases should print correct stats for asset 1`] = `
 asset bundle.js X KiB [emitted] (name: main)
 asset static/file.html X bytes [emitted] [from: static/file.html] (auxiliary name: main)
 runtime modules X KiB 2 modules
-modules by path ./ X KiB (javascript) X KiB (asset)
-  modules by path ./images/ X KiB (javascript) X KiB (asset)
-    ./images/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
+modules by path ./ X KiB (asset) X KiB (javascript)
+  modules by path ./images/ X KiB (asset) X KiB (javascript)
+    ./images/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
     ./images/file.svg X bytes [built] [code generated]
     ./images/file.jpg X KiB [built] [code generated]
   modules by path ./*.js X bytes
     ./index.js X bytes [built] [code generated]
     ./a.source.js X bytes [built] [code generated]
-  ./static/file.html X bytes (javascript) X bytes (asset) [built] [code generated]
+  ./static/file.html X bytes (asset) X bytes (javascript) [built] [code generated]
   ./a.css X bytes [built] [code generated]
 modules by mime type text/plain X bytes
   data:text/plain;base64,szsaAAdsadasdfaf.. X bytes [built] [code generated]
@@ -185,8 +185,8 @@ orphan modules X KiB [orphan] 7 modules
 runtime modules X KiB 2 modules
 cacheable modules X KiB (javascript) X KiB (asset)
   ./index.js + 9 modules X KiB [built] [code generated]
-  ./images/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
-  ./static/file.html X bytes (javascript) X bytes (asset) [built] [code generated]
+  ./images/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+  ./static/file.html X bytes (asset) X bytes (javascript) [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -2759,10 +2759,10 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
       ./a/a.js X bytes [built] [code generated]
       ./a/b.js X bytes [built] [code generated]
       ./a/lazy.js + 2 modules X bytes [built] [code generated]
-    asset modules X bytes (javascript) X KiB (asset)
-      ./a/file.jpg X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./a/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./a/file.jpg?query X bytes (javascript) X KiB (asset) [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
   a-normal (webpack x.x.x) compiled successfully in X ms
 
 b-normal:
@@ -2786,10 +2786,10 @@ b-normal:
       ./b/a.js X bytes [built] [code generated]
       ./b/b.js X bytes [built] [code generated]
       ./b/lazy.js + 2 modules X bytes [built] [code generated]
-    asset modules X bytes (javascript) X KiB (asset)
-      ./b/file.jpg X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./b/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./b/file.jpg?query X bytes (javascript) X KiB (asset) [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
   b-normal (webpack x.x.x) compiled successfully in X ms
 
 a-source-map:
@@ -2817,10 +2817,10 @@ a-source-map:
       ./a/a.js X bytes [built] [code generated]
       ./a/b.js X bytes [built] [code generated]
       ./a/lazy.js + 2 modules X bytes [built] [code generated]
-    asset modules X bytes (javascript) X KiB (asset)
-      ./a/file.jpg X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./a/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./a/file.jpg?query X bytes (javascript) X KiB (asset) [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
   a-source-map (webpack x.x.x) compiled successfully in X ms
 
 b-source-map:
@@ -2848,10 +2848,10 @@ b-source-map:
       ./b/a.js X bytes [built] [code generated]
       ./b/b.js X bytes [built] [code generated]
       ./b/lazy.js + 2 modules X bytes [built] [code generated]
-    asset modules X bytes (javascript) X KiB (asset)
-      ./b/file.jpg X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./b/file.png X bytes (javascript) X KiB (asset) [built] [code generated]
-      ./b/file.jpg?query X bytes (javascript) X KiB (asset) [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
   b-source-map (webpack x.x.x) compiled successfully in X ms"
 `;
 
