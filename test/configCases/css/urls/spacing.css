@@ -601,3 +601,11 @@ div {
 	a199: \-webk\it-image-set("img.png"1x);
 	a200:-webkit-image-set("img.png"1x);
 }
+
+div {
+	a201: src("http://www.example.com/pinkish.gif");
+	--foo: "http://www.example.com/pinkish.gif";
+	a202: src(var(--foo));
+	a203: src("./img.png");
+	a204: src("img.png");
+}
