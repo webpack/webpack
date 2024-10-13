@@ -4817,7 +4817,7 @@ head{--webpack-main:local4:_-_css-modules_style_module_css-local4/nested1:_-_css
 
 exports[`ConfigTestCases css urls exported tests should be able to handle styles in div.css 1`] = `
 Object {
-  "--foo": " url(img.09a1a1112c577c279435.png)",
+  "--foo": " \\"http://www.example.com/pinkish.gif\\"",
   "--foo-bar": " \\"http://www.example.com/pinkish.gif\\"",
   "a": " url(img.09a1a1112c577c279435.png)",
   "a1": " url(img.09a1a1112c577c279435.png)",
@@ -4883,11 +4883,11 @@ Object {
   "a155": " url(img.09a1a1112c577c279435.png)",
   "a156": " url(\\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e\\")",
   "a157": " url('data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"10\\" height=\\"10\\"><rect fill=\\"gray\\" width=\\"5\\" height=\\"5\\" y=\\"0\\" x=\\"0\\" /></svg>')",
-  "a158": " src(\\"http://www.example.com/pinkish.gif\\")",
+  "a158": " src(http://www.example.com/pinkish.gif)",
   "a159": " src(var(--foo))",
   "a16": " url('data:image/svg+xml;charset=utf-8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><filter id=\\"filter\\"><feGaussianBlur in=\\"SourceAlpha\\" stdDeviation=\\"0\\" /><feOffset dx=\\"1\\" dy=\\"2\\" result=\\"offsetblur\\" /><feFlood flood-color=\\"rgba(255,255,255,1)\\" /><feComposite in2=\\"offsetblur\\" operator=\\"in\\" /><feMerge><feMergeNode /><feMergeNode in=\\"SourceGraphic\\" /></feMerge></filter></svg>#filter')",
   "a160": " url(img.09a1a1112c577c279435.png param(--color var(--primary-color)))",
-  "a161": " src(\\"img.png\\" param(--color var(--primary-color)))",
+  "a161": " src(img.09a1a1112c577c279435.png param(--color var(--primary-color)))",
   "a162": " url(img\\\\ img.09a1a1112c577c279435.png)",
   "a163": " url(img.09a1a1112c577c279435.png)",
   "a164": " url( img.png bug)",
@@ -4935,11 +4935,11 @@ Object {
   "a180": " -webkit-image-set(
 		url(img.09a1a1112c577c279435.png var(--foo, \\"test.png\\")) 1x
 	)",
-  "a181": " src(   \\"img.png\\"   )",
-  "a182": " src('img.png')",
-  "a183": " src('img.png' var(--foo, \\"test.png\\"))",
+  "a181": " src(   img.09a1a1112c577c279435.png   )",
+  "a182": " src(img.09a1a1112c577c279435.png)",
+  "a183": " src(img.09a1a1112c577c279435.png var(--foo, \\"test.png\\"))",
   "a184": " src(var(--foo, \\"test.png\\"))",
-  "a185": " src(\\"   img.png   \\")",
+  "a185": " src(img.09a1a1112c577c279435.png)",
   "a186": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
   "a187": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
   "a188": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
@@ -4952,6 +4952,10 @@ Object {
   "a199": " \\\\-webk\\\\it-image-set(url(img.09a1a1112c577c279435.png)1x)",
   "a2": " url(img.09a1a1112c577c279435.png)",
   "a200": "-webkit-image-set(url(img.09a1a1112c577c279435.png)1x)",
+  "a201": " src(http://www.example.com/pinkish.gif)",
+  "a202": " src(var(--foo))",
+  "a203": " src(img.09a1a1112c577c279435.png)",
+  "a204": " src(img.09a1a1112c577c279435.png)",
   "a22": " \\"do not use url(path)\\"",
   "a23": " 'do not \\"use\\" url(path)'",
   "a24": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)
