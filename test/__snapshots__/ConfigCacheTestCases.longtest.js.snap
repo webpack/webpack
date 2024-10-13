@@ -2782,38 +2782,38 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: blue;
 }
 
-.my-app-235-H5 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-H5 div:not(.my-app-235-disabled, .my-app-235-mButtonDisabled, .my-app-235-tipOnly) {
     pointer-events: initial !important;
 }
 
-.my-app-235-aq :is(div.parent1.child1.vertical-tiny,
-    div.parent1.child1.vertical-small,
-    div.otherDiv.horizontal-tiny,
-    div.otherDiv.horizontal-small div.description) {
+.my-app-235-aq :is(div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-tiny,
+    div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-small,
+    div.my-app-235-otherDiv.my-app-235-horizontal-tiny,
+    div.my-app-235-otherDiv.my-app-235-horizontal-small div.my-app-235-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
-    div.parent1.child1.vertical-small,
-    div.otherDiv.horizontal-tiny,
-    div.otherDiv.horizontal-small div.description) {
+.my-app-235-VN :matches(div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-tiny,
+    div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-small,
+    div.my-app-235-otherDiv.my-app-235-horizontal-tiny,
+    div.my-app-235-otherDiv.my-app-235-horizontal-small div.my-app-235-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.my-app-235-VM :where(div.parent1.child1.vertical-tiny,
-    div.parent1.child1.vertical-small,
-    div.otherDiv.horizontal-tiny,
-    div.otherDiv.horizontal-small div.description) {
+.my-app-235-VM :where(div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-tiny,
+    div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-small,
+    div.my-app-235-otherDiv.my-app-235-horizontal-tiny,
+    div.my-app-235-otherDiv.my-app-235-horizontal-small div.my-app-235-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.my-app-235-AO div:has(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-AO div:has(.my-app-235-disabled, .my-app-235-mButtonDisabled, .my-app-235-tipOnly) {
     pointer-events: initial !important;
 }
 
@@ -2837,10 +2837,10 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	background-color: aquamarine;
 }
 
-.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
-    div.parent1.child1.vertical-small,
-    div.otherDiv.horizontal-tiny,
-    div.otherDiv.horizontal-small div.description) {
+.my-app-235-VN :matches(div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-tiny,
+    div.my-app-235-parent1.my-app-235-child1.my-app-235-vertical-small,
+    div.my-app-235-otherDiv.my-app-235-horizontal-tiny,
+    div.my-app-235-otherDiv.my-app-235-horizontal-small div.my-app-235-description) {
 	max-height: 0;
 	margin: 0;
 	overflow: hidden;
@@ -2950,7 +2950,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.animationUpperCase {
+.my-app-235-animationUpperCase {
 	ANIMATION-NAME: my-app-235-zG;
 	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-235-zG, my-app-235-Dk;
 	--my-app-235-qi: 0px;
@@ -2981,7 +2981,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.globalUpperCase .localUpperCase {
+.globalUpperCase .my-app-235-localUpperCase {
 	color: yellow;
 }
 
@@ -3001,22 +3001,22 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.a {
+.my-app-235-a {
 	animation: 3s my-app-235-iZ;
 	-webkit-animation: 3s my-app-235-iZ;
 }
 
-.b {
+.my-app-235-b {
 	animation: my-app-235-iZ 3s;
 	-webkit-animation: my-app-235-iZ 3s;
 }
 
-.c {
+.my-app-235-c {
 	animation-name: my-app-235-iZ;
 	-webkit-animation-name: my-app-235-iZ;
 }
 
-.d {
+.my-app-235-d {
 	--my-app-235-ZP: animationName;
 }
 
@@ -3069,7 +3069,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 @property --my-app-235-rX{
 	syntax: \\"<color>\\";
 	inherits: false;
-	initial-value: #c0ffee;
+	initial-value: #my-app-235-c0ffee;
 }
 
 .my-app-235-zg {
@@ -3089,14 +3089,14 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 .my-app-235-zg {
 	color: red;
 
-	.nested-pure {
+	.my-app-235-nested-pure {
 		color: red;
 	}
 
 	@media screen and (min-width: 200px) {
 		color: blue;
 
-		.nested-media {
+		.my-app-235-nested-media {
 			color: blue;
 		}
 	}
@@ -3104,7 +3104,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@supports (display: flex) {
 		display: flex;
 
-		.nested-supports {
+		.my-app-235-nested-supports {
 			display: flex;
 		}
 	}
@@ -3112,7 +3112,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@layer foo {
 		background: red;
 
-		.nested-layer {
+		.my-app-235-nested-layer {
 			background: red;
 		}
 	}
@@ -3120,13 +3120,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@container foo {
 		background: red;
 
-		.nested-layer {
+		.my-app-235-nested-layer {
 			background: red;
 		}
 	}
 }
 
-.not-selector-inside {
+.my-app-235-not-selector-inside {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
@@ -3145,16 +3145,16 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.nested-var {
-	.again {
+.my-app-235-nested-var {
+	.my-app-235-again {
 		color: var(--my-app-235-uz);
 	}
 }
 
-.nested-with-local-pseudo {
+.my-app-235-nested-with-local-pseudo {
 	color: red;
 
-	.local-nested {
+	.my-app-235-local-nested {
 		color: red;
 	}
 
@@ -3162,7 +3162,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.local-nested {
+	.my-app-235-local-nested {
 		color: red;
 	}
 
@@ -3170,29 +3170,29 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.local-nested, .global-nested-next {
+	.my-app-235-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.local-nested, .global-nested-next {
+	.my-app-235-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.foo, .bar {
+	.foo, .my-app-235-bar {
 		color: red;
 	}
 }
 
-#id-foo {
+#my-app-235-id-foo {
 	color: red;
 
-	#id-bar {
+	#my-app-235-id-bar {
 		color: red;
 	}
 }
 
-.nested-parens {
-	.my-app-235-VN div:has(.vertical-tiny, .vertical-small) {
+.my-app-235-nested-parens {
+	.my-app-235-VN div:has(.my-app-235-vertical-tiny, .my-app-235-vertical-small) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -3204,7 +3204,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.local-in-global {
+	.my-app-235-local-in-global {
 		color: blue;
 	}
 }
@@ -3241,17 +3241,17 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.placeholder-gray-700:-ms-input-placeholder {
+.my-app-235-placeholder-gray-700:-ms-input-placeholder {
 	--my-app-235-Y: 1;
 	color: #4a5568;
 	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
-.placeholder-gray-700::-ms-input-placeholder {
+.my-app-235-placeholder-gray-700::-ms-input-placeholder {
 	--my-app-235-Y: 1;
 	color: #4a5568;
 	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
-.placeholder-gray-700::placeholder {
+.my-app-235-placeholder-gray-700::placeholder {
 	--my-app-235-Y: 1;
 	color: #4a5568;
 	color: rgba(74, 85, 104, var(--my-app-235-Y));
@@ -3295,28 +3295,28 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	bar: env(foo, var(--my-app-235-KR));
 }
 
-.global-foo, .bar {
-	.local-in-global       {
+.global-foo, .my-app-235-bar {
+	.my-app-235-local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
 		.my-global-class-again,
-		.my-global-class-again {
+		.my-app-235-my-global-class-again {
 			color: red;
 		}
 	}
 }
 
-.first-nested {
-	.first-nested-nested {
+.my-app-235-first-nested {
+	.my-app-235-first-nested-nested {
 		color: red;
 	}
 }
 
-.first-nested-at-rule {
+.my-app-235-first-nested-at-rule {
 	@media screen {
-		.first-nested-nested-at-rule-deep {
+		.my-app-235-first-nested-nested-at-rule-deep {
 			color: red;
 		}
 	}
@@ -3333,7 +3333,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 :root {
-	--foo: red;
+	--my-app-235-foo: red;
 }
 
 .again-again-global {
@@ -3392,7 +3392,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.broken {
+.my-app-235-broken {
 	. global(.my-app-235-zg) {
 		color: red;
 	}
@@ -3418,7 +3418,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.comments {
+.my-app-235-comments {
 	.class {
 		color: red;
 	}
@@ -3465,7 +3465,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 /*!************************************!*\\\\
   !*** css ./identifiers.module.css ***!
   \\\\************************************/
-.UnusedClassName{
+.my-app-194-UnusedClassName{
     color: red;
     padding: var(--my-app-194-RJ);
     --my-app-194-RJ: 10px;
@@ -3714,10 +3714,10 @@ exports[`ConfigCacheTestCases css exports-convention exported tests should have 
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btnInfoIsDisabled1",
   "foo": "bar",
-  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-fooBar",
   "foo_bar": "-_style_module_css_camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
@@ -3740,8 +3740,8 @@ exports[`ConfigCacheTestCases css exports-convention exported tests should have 
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
   "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btnInfo_isDisabled_1",
   "foo": "bar",
   "foo_bar": "-_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
@@ -3787,10 +3787,10 @@ exports[`ConfigCacheTestCases css exports-convention exported tests should have 
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btnInfoIsDisabled1",
   "foo": "bar",
-  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-fooBar",
   "foo_bar": "-_style_module_css_camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
@@ -3813,8 +3813,8 @@ exports[`ConfigCacheTestCases css exports-convention exported tests should have 
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
   "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btnInfo_isDisabled_1",
   "foo": "bar",
   "foo_bar": "-_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
