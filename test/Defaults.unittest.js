@@ -936,7 +936,16 @@ describe("snapshots", () => {
 		+       "module": true,
 		@@ ... @@
 		-     "chunkFilename": "[name].js",
+		-     "chunkFormat": "array-push",
 		+     "chunkFilename": "[name].mjs",
+		+     "chunkFormat": "module",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "import",
 		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
@@ -960,6 +969,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "scriptType": false,
 		+     "scriptType": "module",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "import",
 	`)
 	);
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
