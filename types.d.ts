@@ -5632,11 +5632,6 @@ declare class JavascriptModulesPlugin {
 		allStrict: boolean,
 		hasChunkModules: boolean
 	): false | Map<Module, Source>;
-	findNewName(
-		oldName: string,
-		usedName: Set<string>,
-		extraInfo: string
-	): string;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
@@ -13372,20 +13367,6 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
-	}): string;
-	assetUrl(__0: {
-		/**
-		 * the module
-		 */
-		module: Module;
-		/**
-		 * runtime
-		 */
-		runtime?: RuntimeSpec;
-		/**
-		 * the code generation results
-		 */
-		codeGenerationResults: CodeGenerationResults;
 	}): string;
 }
 declare abstract class RuntimeValue {
