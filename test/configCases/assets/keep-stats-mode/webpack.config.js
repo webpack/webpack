@@ -23,7 +23,7 @@ module.exports = {
 							"file.text",
 							compilation.assets["file.text"],
 							{
-								stats: { mode: 0x755 }
+								stats: { mode: 33276 }
 							}
 						);
 					}
@@ -45,7 +45,7 @@ module.exports = {
 					throw new Error("Can't read stats for `file.text`");
 				}
 
-				if (stats.mode !== 0x755) {
+				if (stats.mode !== 33276) {
 					throw new Error("Invalid stats for `file.text`");
 				}
 			});
