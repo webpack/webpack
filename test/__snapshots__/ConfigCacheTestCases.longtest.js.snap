@@ -2301,7 +2301,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 @property ---_style_module_css-my-color{
 	syntax: \\"<color>\\";
 	inherits: false;
-	initial-value: #_-_style_module_css-c0ffee;
+	initial-value: #c0ffee;
+}
+
+@property ---_style_module_css-my-color-1{
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property ---_style_module_css-my-color-2{
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
 }
 
 ._-_style_module_css-class {
@@ -2444,7 +2456,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 @unknown .class {
 	color: red;
 
-	.class {
+	._-_style_module_css-class {
 		color: red;
 	}
 }
@@ -2589,7 +2601,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@unknown var(--foo) {
+@unknown var(---_style_module_css-foo) {
 	color: red;
 }
 
@@ -2680,6 +2692,321 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
+._-_style_module_css-foo {
+	color: red;
+	+ ._-_style_module_css-bar + & { color: blue; }
+}
+
+._-_style_module_css-error, #_-_style_module_css-err-404 {
+	&:hover > ._-_style_module_css-baz { color: red; }
+}
+
+._-_style_module_css-foo {
+	& :is(._-_style_module_css-bar, &._-_style_module_css-baz) { color: red; }
+}
+
+._-_style_module_css-qqq {
+	color: green;
+	& ._-_style_module_css-a { color: blue; }
+	color: red;
+}
+
+._-_style_module_css-parent {
+	color: blue;
+
+	@scope (& > ._-_style_module_css-scope) to (& > ._-_style_module_css-limit) {
+		& ._-_style_module_css-content {
+			color: red;
+		}
+	}
+}
+
+._-_style_module_css-parent {
+	color: blue;
+
+	@scope (& > ._-_style_module_css-scope) to (& > ._-_style_module_css-limit) {
+		._-_style_module_css-content {
+			color: red;
+		}
+	}
+
+	._-_style_module_css-a {
+		color: red;
+	}
+}
+
+@scope (._-_style_module_css-card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+._-_style_module_css-card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+._-_style_module_css-foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		._-_style_module_css-bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				._-_style_module_css-baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				._-_style_module_css-baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	._-_style_module_css-class {
+		font-size: 1.5em;
+	}
+}
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+._-_style_module_css-my-class {
+	font-palette: --identifier;
+}
+
+@keyframes _-_style_module_css-foo{ /* ... */ }
+@keyframes _-_style_module_css-\\\\\\"foo\\\\\\"{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	._-_style_module_css-class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+._-_style_module_css-class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (._-_style_module_css-feature) {
+	._-_style_module_css-class { opacity: 0; }
+
+	:scope ._-_style_module_css-class-1 { opacity: 0; }
+
+	& ._-_style_module_css-class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+._-_style_module_css-infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+._-_style_module_css-header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+._-_style_module_css-test {
+	test: (1, 2) [3, 4], { 1: 2};
+	._-_style_module_css-a {
+		width: 200px;
+	}
+}
+
+._-_style_module_css-test {
+	._-_style_module_css-test {
+		width: 200px;
+	}
+}
+
+._-_style_module_css-test {
+	width: 200px;
+
+	._-_style_module_css-test {
+		width: 200px;
+	}
+}
+
+._-_style_module_css-test {
+	width: 200px;
+
+	._-_style_module_css-test {
+		._-_style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+._-_style_module_css-test {
+	width: 200px;
+
+	._-_style_module_css-test {
+		width: 200px;
+
+		._-_style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+._-_style_module_css-test {
+	._-_style_module_css-test {
+		width: 200px;
+
+		._-_style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+._-_style_module_css-test {
+	._-_style_module_css-test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+._-_style_module_css-test {
+	._-_style_module_css-test {
+		width: 200px;
+	}
+	._-_style_module_css-test {
+		width: 200px;
+	}
+}
+
+._-_style_module_css-test {
+	._-_style_module_css-test {
+		width: 200px;
+	}
+	width: 200px;
+	._-_style_module_css-test {
+		width: 200px;
+	}
+}
+
+#_-_style_module_css-test {
+	c: 1;
+
+	#_-_style_module_css-test {
+		c: 2;
+	}
+}
+
+@property ---_style_module_css-item-size{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+._-_style_module_css-container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	---_style_module_css-item-size: 20%;
+	---_style_module_css-item-color: orange;
+}
+
+._-_style_module_css-item {
+	width: var(---_style_module_css-item-size);
+	height: var(---_style_module_css-item-size);
+	background-color: var(---_style_module_css-item-color);
+}
+
+._-_style_module_css-two {
+	---_style_module_css-item-size: initial;
+	---_style_module_css-item-color: inherit;
+}
+
+._-_style_module_css-three {
+	/* invalid values */
+	---_style_module_css-item-size: 1000px;
+	---_style_module_css-item-color: xyz;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -2709,7 +3036,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     ---_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/c0ffee:_-_style_module_css-c0ffee/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:---_style_module_css-test/baz:---_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:---_style_module_css-foo/broken:_-_style_module_css-broken/comments:_-_style_module_css-comments/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/my-color-1:---_style_module_css-my-color-1/my-color-2:---_style_module_css-my-color-2/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:_-_style_module_css-test/baz:_-_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:_-_style_module_css-foo/broken:_-_style_module_css-broken/comments:_-_style_module_css-comments/error:_-_style_module_css-error/err-404:_-_style_module_css-err-404/qqq:_-_style_module_css-qqq/parent:_-_style_module_css-parent/scope:_-_style_module_css-scope/limit:_-_style_module_css-limit/content:_-_style_module_css-content/card:_-_style_module_css-card/baz-1:_-_style_module_css-baz-1/baz-2:_-_style_module_css-baz-2/my-class:_-_style_module_css-my-class/\\\\\\"foo\\\\\\":_-_style_module_css-\\\\\\"foo\\\\\\"/feature:_-_style_module_css-feature/class-1:_-_style_module_css-class-1/infobox:_-_style_module_css-infobox/header:_-_style_module_css-header/item-size:---_style_module_css-item-size/container:_-_style_module_css-container/item-color:---_style_module_css-item-color/item:_-_style_module_css-item/two:_-_style_module_css-two/three:_-_style_module_css-three/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -3069,7 +3396,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 @property --my-app-235-rX{
 	syntax: \\"<color>\\";
 	inherits: false;
-	initial-value: #my-app-235-c0ffee;
+	initial-value: #c0ffee;
+}
+
+@property --my-app-235-my-color-1{
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-app-235-my-color-2{
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
 }
 
 .my-app-235-zg {
@@ -3212,7 +3551,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 @unknown .class {
 	color: red;
 
-	.class {
+	.my-app-235-zg {
 		color: red;
 	}
 }
@@ -3333,7 +3672,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 :root {
-	--my-app-235-foo: red;
+	--my-app-235-pr: red;
 }
 
 .again-again-global {
@@ -3357,7 +3696,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@unknown var(--foo) {
+@unknown var(--my-app-235-pr) {
 	color: red;
 }
 
@@ -3448,6 +3787,321 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
+.my-app-235-pr {
+	color: red;
+	+ .my-app-235-bar + & { color: blue; }
+}
+
+.my-app-235-error, #my-app-235-err-404 {
+	&:hover > .my-app-235-KR { color: red; }
+}
+
+.my-app-235-pr {
+	& :is(.my-app-235-bar, &.my-app-235-KR) { color: red; }
+}
+
+.my-app-235-qqq {
+	color: green;
+	& .my-app-235-a { color: blue; }
+	color: red;
+}
+
+.my-app-235-parent {
+	color: blue;
+
+	@scope (& > .my-app-235-scope) to (& > .my-app-235-limit) {
+		& .my-app-235-content {
+			color: red;
+		}
+	}
+}
+
+.my-app-235-parent {
+	color: blue;
+
+	@scope (& > .my-app-235-scope) to (& > .my-app-235-limit) {
+		.my-app-235-content {
+			color: red;
+		}
+	}
+
+	.my-app-235-a {
+		color: red;
+	}
+}
+
+@scope (.my-app-235-card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.my-app-235-card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.my-app-235-pr {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.my-app-235-bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.my-app-235-baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.my-app-235-baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.my-app-235-zg {
+		font-size: 1.5em;
+	}
+}
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-app-235-my-class {
+	font-palette: --identifier;
+}
+
+@keyframes my-app-235-pr{ /* ... */ }
+@keyframes my-app-235-\\\\\\"foo\\\\\\"{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.my-app-235-zg {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.my-app-235-zg {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.my-app-235-feature) {
+	.my-app-235-zg { opacity: 0; }
+
+	:scope .my-app-235-class-1 { opacity: 0; }
+
+	& .my-app-235-zg { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.my-app-235-infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.my-app-235-header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.my-app-235-t6 {
+	test: (1, 2) [3, 4], { 1: 2};
+	.my-app-235-a {
+		width: 200px;
+	}
+}
+
+.my-app-235-t6 {
+	.my-app-235-t6 {
+		width: 200px;
+	}
+}
+
+.my-app-235-t6 {
+	width: 200px;
+
+	.my-app-235-t6 {
+		width: 200px;
+	}
+}
+
+.my-app-235-t6 {
+	width: 200px;
+
+	.my-app-235-t6 {
+		.my-app-235-t6 {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-235-t6 {
+	width: 200px;
+
+	.my-app-235-t6 {
+		width: 200px;
+
+		.my-app-235-t6 {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-235-t6 {
+	.my-app-235-t6 {
+		width: 200px;
+
+		.my-app-235-t6 {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-235-t6 {
+	.my-app-235-t6 {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.my-app-235-t6 {
+	.my-app-235-t6 {
+		width: 200px;
+	}
+	.my-app-235-t6 {
+		width: 200px;
+	}
+}
+
+.my-app-235-t6 {
+	.my-app-235-t6 {
+		width: 200px;
+	}
+	width: 200px;
+	.my-app-235-t6 {
+		width: 200px;
+	}
+}
+
+#my-app-235-t6 {
+	c: 1;
+
+	#my-app-235-t6 {
+		c: 2;
+	}
+}
+
+@property --my-app-235-sD{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.my-app-235-container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--my-app-235-sD: 20%;
+	--my-app-235-gz: orange;
+}
+
+.my-app-235-item {
+	width: var(--my-app-235-sD);
+	height: var(--my-app-235-sD);
+	background-color: var(--my-app-235-gz);
+}
+
+.my-app-235-two {
+	--my-app-235-sD: initial;
+	--my-app-235-gz: inherit;
+}
+
+.my-app-235-three {
+	/* invalid values */
+	--my-app-235-sD: 1000px;
+	--my-app-235-gz: xyz;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -3477,7 +4131,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtƞɀƢ-Ʉ/KRȞɁČɋ/FǰǶɒ/&_Ė,ɓǼ6ɝ-kɖ_ɝ6,ɗ81ɤRƨɆĈ194-ɪȏLĻɮɰZLȧŀɬ-ɶ-cńɗɶ;}"
+head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtȘǼįɄ/KRŒɊ/FǰǶɏ/prŒɔ/sƄɀƢ-əƦƼɛƬz/&_Ė,ɐǼ6ɫ-kɤ_ɫ6,ɥ81ɲRƨɡ-194-ɸȏLĻɼɾZLȧŀɺʄ-cńɥʄ;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
@@ -4396,6 +5050,18 @@ Array [
 	initial-value: #c0ffee;
 }
 
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
+}
+
 .class {
 	color: var(--my-color);
 }
@@ -4770,6 +5436,321 @@ Array [
 	./** test **/_-_css-modules_style_module_css-class {
 		color: red;
 	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.error, #err-404 {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+.qqq {
+	color: green;
+	& .a { color: blue; }
+	color: red;
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		.content {
+			color: red;
+		}
+	}
+
+	.a {
+		color: red;
+	}
+}
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.class {
+		font-size: 1.5em;
+	}
+}
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.feature) {
+	.class { opacity: 0; }
+
+	:scope .class-1 { opacity: 0; }
+
+	& .class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.a {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+	.test {
+		width: 200px;
+	}
+}
+
+#test {
+	c: 1;
+
+	#test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
 }
 
 /*!***********************!*\\\\
