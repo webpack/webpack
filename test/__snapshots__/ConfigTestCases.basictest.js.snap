@@ -1102,12 +1102,12 @@ a {
 	}
 }
 
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
-  !*** css ./style6.css?foo=9 (layer: /* Comment *_/default/* Comment *_/) (supports: /* Comment *_/display/* Comment *_/:/* Comment *_/ flex/* Comment *_/) (media: /* Comment *_/ screen/* Comment *_/ and/* Comment *_/ (/* Comment *_/min-width/* Comment *_/: /* Comment *_/400px/* Comment *_/)) ***!
-  \\\\*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** css ./style6.css?foo=9 (layer: /* Comment *_/default/* Comment *_/) (supports: /* Comment *_/display/* Comment *_/:/* Comment *_/ flex/* Comment *_/) (media: screen/* Comment *_/ and/* Comment *_/ (/* Comment *_/min-width/* Comment *_/: /* Comment *_/400px/* Comment *_/)) ***!
+  \\\\****************************************************************************************************************************************************************************************************************************************************************************************/
 @layer /* Comment */default/* Comment */ {
 	@supports (/* Comment */display/* Comment */:/* Comment */ flex/* Comment */) {
-		@media /* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */) {
+		@media screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */) {
 			.class {
 				content: \\"style6.css\\";
 			}
@@ -1157,28 +1157,28 @@ a {
 	content: \\"style6.css\\";
 }
 
-/*!*****************************************************************************************!*\\\\
-  !*** css ./style6.css?foo=16 (media: /* Comment *_/ print and (orientation:landscape)) ***!
-  \\\\*****************************************************************************************/
-@media /* Comment */ print and (orientation:landscape) {
+/*!**************************************************************************!*\\\\
+  !*** css ./style6.css?foo=16 (media: print and (orientation:landscape)) ***!
+  \\\\**************************************************************************/
+@media print and (orientation:landscape) {
 	.class {
 		content: \\"style6.css\\";
 	}
 }
 
-/*!******************************************************************************************************!*\\\\
-  !*** css ./style6.css?foo=17 (media: /* Comment *_/print and (orientation:landscape)/* Comment *_/) ***!
-  \\\\******************************************************************************************************/
-@media /* Comment */print and (orientation:landscape)/* Comment */ {
+/*!****************************************************************************************!*\\\\
+  !*** css ./style6.css?foo=17 (media: print and (orientation:landscape)/* Comment *_/) ***!
+  \\\\****************************************************************************************/
+@media print and (orientation:landscape)/* Comment */ {
 	.class {
 		content: \\"style6.css\\";
 	}
 }
 
-/*!*****************************************************************************************!*\\\\
-  !*** css ./style6.css?foo=18 (media: /* Comment *_/ print and (orientation:landscape)) ***!
-  \\\\*****************************************************************************************/
-@media /* Comment */ print and (orientation:landscape) {
+/*!**************************************************************************!*\\\\
+  !*** css ./style6.css?foo=18 (media: print and (orientation:landscape)) ***!
+  \\\\**************************************************************************/
+@media print and (orientation:landscape) {
 	.class {
 		content: \\"style6.css\\";
 	}
@@ -1857,6 +1857,17 @@ div{color: red;}
 	}
 }
 
+/*!**********************************************************************************************************************************!*\\\\
+  !*** css ./style2.css?wrong-order-but-valid=6 (supports: display: flex) (media: layer(super.foo) screen and (min-width: 400px)) ***!
+  \\\\**********************************************************************************************************************************/
+@supports (display: flex) {
+	@media layer(super.foo) screen and (min-width: 400px) {
+		a {
+			color: red;
+		}
+	}
+}
+
 /*!****************************************!*\\\\
   !*** css ./style2.css?after-namespace ***!
   \\\\****************************************/
@@ -1873,18 +1884,22 @@ a {
 	}
 }
 
-/*!***********************************!*\\\\
-  !*** css ./style2.css?multiple=3 ***!
-  \\\\***********************************/
-a {
-	color: red;
+/*!***************************************************************************!*\\\\
+  !*** css ./style2.css?multiple=3 (media: url(\\"./style2.css?multiple=4\\")) ***!
+  \\\\***************************************************************************/
+@media url(\\"./style2.css?multiple=4\\") {
+	a {
+		color: red;
+	}
 }
 
-/*!**********************************!*\\\\
-  !*** css ./style2.css?strange=3 ***!
-  \\\\**********************************/
-a {
-	color: red;
+/*!**************************************************************************!*\\\\
+  !*** css ./style2.css?strange=3 (media: url(\\"./style2.css?multiple=4\\")) ***!
+  \\\\**************************************************************************/
+@media url(\\"./style2.css?multiple=4\\") {
+	a {
+		color: red;
+	}
 }
 
 /*!***********************!*\\\\
@@ -1924,14 +1939,13 @@ a {
 @import layer(super.foo) \\"./style2.css?warning=1\\" supports(display: flex) screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) \\"./style2.css?warning=2\\" screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) screen and (min-width: 400px) \\"./style2.css?warning=3\\";
-@import layer(super.foo) url(\\"./style2.css?warning=4\\") supports(display: flex) screen and (min-width: 400px);
-@import layer(super.foo) supports(display: flex) url(\\"./style2.css?warning=5\\") screen and (min-width: 400px);
-@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(\\"./style2.css?warning=6\\");
-@import url(\\"/style2.css?warning=6\\") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
+@import layer(super.foo) url(fae7e602dbe59a260308.css?warning=4) supports(display: flex) screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) url(fae7e602dbe59a260308.css?warning=5) screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(fae7e602dbe59a260308.css?warning=6);
 @namespace url(http://www.w3.org/1999/xhtml);
-@import supports(background: url(\\"./img.png\\"));
-@import supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);
-@import layer(test) supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);
+@import supports(background: url(09a1a1112c577c279435.png));
+@import supports(background: url(09a1a1112c577c279435.png)) screen and (min-width: 400px);
+@import layer(test) supports(background: url(09a1a1112c577c279435.png)) screen and (min-width: 400px);
 @import screen and (min-width: 400px);
 
 
@@ -1940,7 +1954,7 @@ body {
 	background: red;
 }
 
-head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,&\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,&\\\\.\\\\/extensions-imported\\\\.mycss,&\\\\.\\\\/file\\\\.less,&\\\\.\\\\/with-less-import\\\\.css,&\\\\.\\\\/prefer-relative\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,&\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,&\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,&\\\\.\\\\/style-import\\\\.css,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,&\\\\.\\\\/imported\\\\.css\\\\?1832,&\\\\.\\\\/imported\\\\.css\\\\?e0bb,&\\\\.\\\\/imported\\\\.css\\\\?769a,&\\\\.\\\\/imported\\\\.css\\\\?d4d6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style2\\\\.css\\\\?cf0d,&\\\\.\\\\/style2\\\\.css\\\\?dfe6,&\\\\.\\\\/style2\\\\.css\\\\?7d49,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,&\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,&\\\\.\\\\/styl\\\\'le7\\\\.css,&\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/test\\\\.css,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/style8\\\\.css\\\\?b84b,&\\\\.\\\\/style8\\\\.css\\\\?5dc5,&\\\\.\\\\/style8\\\\.css\\\\?71be,&\\\\.\\\\/style8\\\\.css\\\\?386a,&\\\\.\\\\/style8\\\\.css\\\\?568a,&\\\\.\\\\/style8\\\\.css\\\\?b9af,&\\\\.\\\\/style8\\\\.css\\\\?7300,&\\\\.\\\\/style8\\\\.css\\\\?6efd,&\\\\.\\\\/style8\\\\.css\\\\?288c,&\\\\.\\\\/style8\\\\.css\\\\?1094,&\\\\.\\\\/style8\\\\.css\\\\?38bf,&\\\\.\\\\/style8\\\\.css\\\\?d697,&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style9\\\\.css\\\\?8e91,&\\\\.\\\\/style9\\\\.css\\\\?71b5,&\\\\.\\\\/style11\\\\.css,&\\\\.\\\\/style12\\\\.css,&\\\\.\\\\/style13\\\\.css,&\\\\.\\\\/style10\\\\.css,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,&\\\\.\\\\/media-deep-nested\\\\.css,&\\\\.\\\\/media-nested\\\\.css,&\\\\.\\\\/supports-deep-deep-nested\\\\.css,&\\\\.\\\\/supports-deep-nested\\\\.css,&\\\\.\\\\/supports-nested\\\\.css,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,&\\\\.\\\\/layer-nested\\\\.css,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,&\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,&\\\\.\\\\/mixed-deep-deep-nested\\\\.css,&\\\\.\\\\/mixed-deep-nested\\\\.css,&\\\\.\\\\/mixed-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,&\\\\.\\\\/style8\\\\.css\\\\?8af1,&\\\\.\\\\/duplicate-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,&\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,&\\\\.\\\\/style2\\\\.css\\\\?unknown3,&\\\\.\\\\/style2\\\\.css\\\\?after-namespace,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,&\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,&\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,&\\\\.\\\\/extensions-imported\\\\.mycss,&\\\\.\\\\/file\\\\.less,&\\\\.\\\\/with-less-import\\\\.css,&\\\\.\\\\/prefer-relative\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,&\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,&\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,&\\\\.\\\\/style-import\\\\.css,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,&\\\\.\\\\/imported\\\\.css\\\\?1832,&\\\\.\\\\/imported\\\\.css\\\\?e0bb,&\\\\.\\\\/imported\\\\.css\\\\?769a,&\\\\.\\\\/imported\\\\.css\\\\?d4d6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style2\\\\.css\\\\?cf0d,&\\\\.\\\\/style2\\\\.css\\\\?dfe6,&\\\\.\\\\/style2\\\\.css\\\\?7d49,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,&\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,&\\\\.\\\\/styl\\\\'le7\\\\.css,&\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/test\\\\.css,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/style8\\\\.css\\\\?b84b,&\\\\.\\\\/style8\\\\.css\\\\?5dc5,&\\\\.\\\\/style8\\\\.css\\\\?71be,&\\\\.\\\\/style8\\\\.css\\\\?386a,&\\\\.\\\\/style8\\\\.css\\\\?568a,&\\\\.\\\\/style8\\\\.css\\\\?b9af,&\\\\.\\\\/style8\\\\.css\\\\?7300,&\\\\.\\\\/style8\\\\.css\\\\?6efd,&\\\\.\\\\/style8\\\\.css\\\\?288c,&\\\\.\\\\/style8\\\\.css\\\\?1094,&\\\\.\\\\/style8\\\\.css\\\\?38bf,&\\\\.\\\\/style8\\\\.css\\\\?d697,&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style9\\\\.css\\\\?8e91,&\\\\.\\\\/style9\\\\.css\\\\?71b5,&\\\\.\\\\/style11\\\\.css,&\\\\.\\\\/style12\\\\.css,&\\\\.\\\\/style13\\\\.css,&\\\\.\\\\/style10\\\\.css,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,&\\\\.\\\\/media-deep-nested\\\\.css,&\\\\.\\\\/media-nested\\\\.css,&\\\\.\\\\/supports-deep-deep-nested\\\\.css,&\\\\.\\\\/supports-deep-nested\\\\.css,&\\\\.\\\\/supports-nested\\\\.css,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,&\\\\.\\\\/layer-nested\\\\.css,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,&\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,&\\\\.\\\\/mixed-deep-deep-nested\\\\.css,&\\\\.\\\\/mixed-deep-nested\\\\.css,&\\\\.\\\\/mixed-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,&\\\\.\\\\/style8\\\\.css\\\\?8af1,&\\\\.\\\\/duplicate-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,&\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6\\\\?ab94,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,&\\\\.\\\\/style2\\\\.css\\\\?unknown3,&\\\\.\\\\/style2\\\\.css\\\\?wrong-order-but-valid\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?after-namespace,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
@@ -2086,7 +2100,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	color: purple;
 }
 
-@keyframes _-_style_module_css-localkeyframes{
+@keyframes _-_style_module_css-localkeyframes {
 	0% {
 		left: var(---_style_module_css-pos1x);
 		top: var(---_style_module_css-pos1y);
@@ -2099,7 +2113,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@keyframes _-_style_module_css-localkeyframes2{
+@keyframes _-_style_module_css-localkeyframes2 {
 	0% {
 		left: 0;
 	}
@@ -2191,7 +2205,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	---_style_module_css-pos2y: 20px;
 }
 
-@KEYFRAMES _-_style_module_css-localkeyframesUPPERCASE{
+@KEYFRAMES _-_style_module_css-localkeyframesUPPERCASE {
 	0% {
 		left: VAR(---_style_module_css-pos1x);
 		top: VAR(---_style_module_css-pos1y);
@@ -2204,7 +2218,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@KEYframes _-_style_module_css-localkeyframes2UPPPERCASE{
+@KEYframes _-_style_module_css-localkeyframes2UPPPERCASE {
 	0% {
 		left: 0;
 	}
@@ -2252,7 +2266,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	---_style_module_css-animation-name: animationName;
 }
 
-@keyframes _-_style_module_css-animationName{
+@keyframes _-_style_module_css-animationName {
 	0% {
 		background: white;
 	}
@@ -2261,7 +2275,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@-webkit-keyframes _-_style_module_css-animationName{
+@-webkit-keyframes _-_style_module_css-animationName {
 	0% {
 		background: white;
 	}
@@ -2270,7 +2284,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@-moz-keyframes _-_style_module_css-mozAnimationName{
+@-moz-keyframes _-_style_module_css-mozAnimationName {
 	0% {
 		background: white;
 	}
@@ -2298,19 +2312,19 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@property ---_style_module_css-my-color{
+@property ---_style_module_css-my-color {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-@property ---_style_module_css-my-color-1{
+@property ---_style_module_css-my-color-1 {
 	initial-value: #c0ffee;
 	syntax: \\"<color>\\";
 	inherits: false;
 }
 
-@property ---_style_module_css-my-color-2{
+@property ---_style_module_css-my-color-2 {
 	syntax: \\"<color>\\";
 	initial-value: #c0ffee;
 	inherits: false;
@@ -2511,7 +2525,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@keyframes _-_style_module_css-slidein{
+@keyframes _-_style_module_css-slidein {
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -2802,8 +2816,10 @@ ul {
 	font-palette: --identifier;
 }
 
-@keyframes _-_style_module_css-foo{ /* ... */ }
-@keyframes _-_style_module_css-\\\\\\"foo\\\\\\"{ /* ... */ }
+@keyframes _-_style_module_css-foo { /* ... */ }
+@keyframes _-_style_module_css-foo { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
 
 @supports (display: flex) {
 	@media screen and (min-width: 900px) {
@@ -2974,7 +2990,7 @@ ul {
 	}
 }
 
-@property ---_style_module_css-item-size{
+@property ---_style_module_css-item-size {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
@@ -3007,6 +3023,65 @@ ul {
 	---_style_module_css-item-color: xyz;
 }
 
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes _-_style_module_css-initial { /* ... */ }
+@keyframes/**test**/_-_style_module_css-initial { /* ... */ }
+@keyframes/**test**/_-_style_module_css-initial/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/_-_style_module_css-initial/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ _-_style_module_css-initial /**test**/ /**test**/ { /* ... */ }
+@keyframes _-_style_module_css-None { /* ... */ }
+
+div {
+	animation-name: _-_style_module_css-\\\\ \\\\\\"initia;
+	animation-duration: 2s;
+}
+
+._-_style_module_css-item-1 {
+	width: var(   ---_style_module_css-item-size   );
+	height: var(/**comment**/---_style_module_css-item-size);
+	background-color: var( /**comment**/---_style_module_css-item-color);
+	background-color-1: var(/**comment**/ ---_style_module_css-item-color);
+	background-color-2: var( /**comment**/ ---_style_module_css-item-color);
+	background-color-3: var( /**comment**/ ---_style_module_css-item-color /**comment**/ );
+	background-color-3: var( /**comment**/---_style_module_css-item-color/**comment**/ );
+	background-color-3: var(/**comment**/---_style_module_css-item-color/**comment**/);
+}
+
+@keyframes/**test**/_-_style_module_css-foo { /* ... */ }
+@keyframes /**test**/_-_style_module_css-foo { /* ... */ }
+@keyframes/**test**/ _-_style_module_css-foo { /* ... */ }
+@keyframes /**test**/ _-_style_module_css-foo { /* ... */ }
+@keyframes /**test**//**test**/ _-_style_module_css-foo { /* ... */ }
+@keyframes /**test**/ /**test**/ _-_style_module_css-foo { /* ... */ }
+@keyframes /**test**/ /**test**/_-_style_module_css-foo { /* ... */ }
+@keyframes /**test**//**test**/_-_style_module_css-foo { /* ... */ }
+@keyframes/**test**//**test**/_-_style_module_css-foo { /* ... */ }
+@keyframes/**test**//**test**/_-_style_module_css-foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ _-_style_module_css-foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/_-_style_module_css-class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -3036,7 +3111,7 @@ ul {
     ---_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/my-color-1:---_style_module_css-my-color-1/my-color-2:---_style_module_css-my-color-2/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:_-_style_module_css-test/baz:_-_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:_-_style_module_css-foo/broken:_-_style_module_css-broken/comments:_-_style_module_css-comments/error:_-_style_module_css-error/err-404:_-_style_module_css-err-404/qqq:_-_style_module_css-qqq/parent:_-_style_module_css-parent/scope:_-_style_module_css-scope/limit:_-_style_module_css-limit/content:_-_style_module_css-content/card:_-_style_module_css-card/baz-1:_-_style_module_css-baz-1/baz-2:_-_style_module_css-baz-2/my-class:_-_style_module_css-my-class/\\\\\\"foo\\\\\\":_-_style_module_css-\\\\\\"foo\\\\\\"/feature:_-_style_module_css-feature/class-1:_-_style_module_css-class-1/infobox:_-_style_module_css-infobox/header:_-_style_module_css-header/item-size:---_style_module_css-item-size/container:_-_style_module_css-container/item-color:---_style_module_css-item-color/item:_-_style_module_css-item/two:_-_style_module_css-two/three:_-_style_module_css-three/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/my-color-1:---_style_module_css-my-color-1/my-color-2:---_style_module_css-my-color-2/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:_-_style_module_css-test/baz:_-_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:_-_style_module_css-foo/broken:_-_style_module_css-broken/comments:_-_style_module_css-comments/error:_-_style_module_css-error/err-404:_-_style_module_css-err-404/qqq:_-_style_module_css-qqq/parent:_-_style_module_css-parent/scope:_-_style_module_css-scope/limit:_-_style_module_css-limit/content:_-_style_module_css-content/card:_-_style_module_css-card/baz-1:_-_style_module_css-baz-1/baz-2:_-_style_module_css-baz-2/my-class:_-_style_module_css-my-class/feature:_-_style_module_css-feature/class-1:_-_style_module_css-class-1/infobox:_-_style_module_css-infobox/header:_-_style_module_css-header/item-size:---_style_module_css-item-size/container:_-_style_module_css-container/item-color:---_style_module_css-item-color/item:_-_style_module_css-item/two:_-_style_module_css-two/three:_-_style_module_css-three/initial:_-_style_module_css-initial/None:_-_style_module_css-None/\\\\ \\\\\\"initia:_-_style_module_css-\\\\ \\\\\\"initia/item-1:_-_style_module_css-item-1/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -3181,7 +3256,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	color: purple;
 }
 
-@keyframes my-app-235-\\\\$t{
+@keyframes my-app-235-\\\\$t {
 	0% {
 		left: var(--my-app-235-qi);
 		top: var(--my-app-235-xB);
@@ -3194,7 +3269,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@keyframes my-app-235-x{
+@keyframes my-app-235-x {
 	0% {
 		left: 0;
 	}
@@ -3286,7 +3361,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	--my-app-235-gJ: 20px;
 }
 
-@KEYFRAMES my-app-235-zG{
+@KEYFRAMES my-app-235-zG {
 	0% {
 		left: VAR(--my-app-235-qi);
 		top: VAR(--my-app-235-xB);
@@ -3299,7 +3374,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@KEYframes my-app-235-Dk{
+@KEYframes my-app-235-Dk {
 	0% {
 		left: 0;
 	}
@@ -3347,7 +3422,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	--my-app-235-ZP: animationName;
 }
 
-@keyframes my-app-235-iZ{
+@keyframes my-app-235-iZ {
 	0% {
 		background: white;
 	}
@@ -3356,7 +3431,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@-webkit-keyframes my-app-235-iZ{
+@-webkit-keyframes my-app-235-iZ {
 	0% {
 		background: white;
 	}
@@ -3365,7 +3440,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@-moz-keyframes my-app-235-M6{
+@-moz-keyframes my-app-235-M6 {
 	0% {
 		background: white;
 	}
@@ -3393,19 +3468,19 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@property --my-app-235-rX{
+@property --my-app-235-rX {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-@property --my-app-235-my-color-1{
+@property --my-app-235-my-color-1 {
 	initial-value: #c0ffee;
 	syntax: \\"<color>\\";
 	inherits: false;
 }
 
-@property --my-app-235-my-color-2{
+@property --my-app-235-my-color-2 {
 	syntax: \\"<color>\\";
 	initial-value: #c0ffee;
 	inherits: false;
@@ -3606,7 +3681,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-@keyframes my-app-235-Fk{
+@keyframes my-app-235-Fk {
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -3897,8 +3972,10 @@ ul {
 	font-palette: --identifier;
 }
 
-@keyframes my-app-235-pr{ /* ... */ }
-@keyframes my-app-235-\\\\\\"foo\\\\\\"{ /* ... */ }
+@keyframes my-app-235-pr { /* ... */ }
+@keyframes my-app-235-pr { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
 
 @supports (display: flex) {
 	@media screen and (min-width: 900px) {
@@ -4069,7 +4146,7 @@ ul {
 	}
 }
 
-@property --my-app-235-sD{
+@property --my-app-235-sD {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
@@ -4102,6 +4179,65 @@ ul {
 	--my-app-235-gz: xyz;
 }
 
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes my-app-235-initial { /* ... */ }
+@keyframes/**test**/my-app-235-initial { /* ... */ }
+@keyframes/**test**/my-app-235-initial/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/my-app-235-initial/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ my-app-235-initial /**test**/ /**test**/ { /* ... */ }
+@keyframes my-app-235-None { /* ... */ }
+
+div {
+	animation-name: my-app-235-JT;
+	animation-duration: 2s;
+}
+
+.my-app-235-item-1 {
+	width: var(   --my-app-235-sD   );
+	height: var(/**comment**/--my-app-235-sD);
+	background-color: var( /**comment**/--my-app-235-gz);
+	background-color-1: var(/**comment**/ --my-app-235-gz);
+	background-color-2: var( /**comment**/ --my-app-235-gz);
+	background-color-3: var( /**comment**/ --my-app-235-gz /**comment**/ );
+	background-color-3: var( /**comment**/--my-app-235-gz/**comment**/ );
+	background-color-3: var(/**comment**/--my-app-235-gz/**comment**/);
+}
+
+@keyframes/**test**/my-app-235-pr { /* ... */ }
+@keyframes /**test**/my-app-235-pr { /* ... */ }
+@keyframes/**test**/ my-app-235-pr { /* ... */ }
+@keyframes /**test**/ my-app-235-pr { /* ... */ }
+@keyframes /**test**//**test**/ my-app-235-pr { /* ... */ }
+@keyframes /**test**/ /**test**/ my-app-235-pr { /* ... */ }
+@keyframes /**test**/ /**test**/my-app-235-pr { /* ... */ }
+@keyframes /**test**//**test**/my-app-235-pr { /* ... */ }
+@keyframes/**test**//**test**/my-app-235-pr { /* ... */ }
+@keyframes/**test**//**test**/my-app-235-pr/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ my-app-235-pr /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/my-app-235-zg {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -4131,12 +4267,12 @@ ul {
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtȘǼįɄ/KRŒɊ/FǰǶɏ/prŒɔ/sƄɀƢ-əƦƼɛƬz/&_Ė,ɐǼ6ɫ-kɤ_ɫ6,ɥ81ɲRƨɡ-194-ɸȏLĻɼɾZLȧŀɺʄ-cńɥʄ;}"
+head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtȘǼįɄ/KRŒɊ/FǰǶɏ/prŒɔ/sƄɀƢ-əƦƼɛƬz/JTŒɥ/&_Ė,ɐǼ6ɰ-kɩ_ɰ6,ɪ81ɷRƨɡ-194-ɽȏLĻʁʃZLȧŀɿʉ-cńɪʉ;}"
 `;
 
 exports[`ConfigTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "class": "my-app-235-z",
+  "class": "my-app-235-zg",
 }
 `;
 
@@ -5550,6 +5686,8 @@ ul {
 
 @keyframes foo { /* ... */ }
 @keyframes \\"foo\\" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
 
 @supports (display: flex) {
 	@media screen and (min-width: 900px) {
@@ -5751,6 +5889,65 @@ ul {
 	/* invalid values */
 	--item-size: 1000px;
 	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+
+div {
+	animation-name: \\"initial\\";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
 }
 
 /*!***********************!*\\\\
