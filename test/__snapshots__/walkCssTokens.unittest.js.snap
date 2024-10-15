@@ -19800,8 +19800,8 @@ Array [
   ],
   Array [
     "url",
-    "url(foo.png)",
-    "foo.png",
+    "url(img.png)",
+    "img.png",
   ],
   Array [
     "rightParenthesis",

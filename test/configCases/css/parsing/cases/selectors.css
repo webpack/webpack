@@ -534,7 +534,7 @@ article {
 :unknown("string") {}
 :unknown("string", foo) {}
 :unknown('string') {}
-:unknown(url(foo.png)) {}
+:unknown(url(img.png)) {}
 :unknown({!}) {}
 :unknown(!) {}
 :unknown({;}) {}
