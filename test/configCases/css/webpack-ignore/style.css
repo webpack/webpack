@@ -5,6 +5,9 @@
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 
+/* webpackIgnore: true */
+@import url(./basic.css);
+
 /** Resolved **/
 @import /* webpackIgnore: false */ url(./basic.css);
 @import /****webpackIgnore: false***/ url(./basic.css);
@@ -206,9 +209,9 @@
 	background-image: image-set(
 		/*webpackIgnore:  false*/
 		url(./url/img.png) 2x,
-			/*webpackIgnore:  true*/
+		/*webpackIgnore:  true*/
 		url(./url/img.png) 3x,
-			/*webpackIgnore:  false*/
+		/*webpackIgnore:  false*/
 		url(./url/img.png) 4x,
 		url(./url/img.png) 5x
 	);
