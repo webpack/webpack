@@ -1033,8 +1033,38 @@ ul {
 @keyframes/**test**//**test**/"initial"/**test**//**test**/{ /* ... */ }
 @keyframes /**test**/ /**test**/ "initial" /**test**/ /**test**/ { /* ... */ }
 @keyframes "None" { /* ... */ }
-
+@property/**test**/--item-size {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
 div {
+	animation: 3s ease-in 1s 2 reverse both paused "initial", localkeyframes2;
 	animation-name: "initial";
 	animation-duration: 2s;
 }
