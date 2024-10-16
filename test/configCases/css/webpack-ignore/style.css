@@ -193,10 +193,10 @@
 
 .class {
 	background-image: image-set(
-		/* webpackIgnore:  true */
+		/*webpackIgnore:  true*/
 		'./url/img.png' 2x,
 		'./url/img.png' 3x,
-			/* webpackIgnore:  true */
+		/*webpackIgnore:  true*/
 		'./url/img.png' 5x
 	);
 }
@@ -227,6 +227,24 @@
 .class {
 	color: red;
 	background: url("./url/img.png")/** webpackIgnore: true */, url("./url/img.png");
+}
+
+.class {
+	background-image:
+		image-set(
+			url(./url/img.png) 2x  /*webpackIgnore:  true*/,
+			url(./url/img.png) /*webpackIgnore:  true*/ 3x,
+			url(./url/img.png) 4x /*webpackIgnore:  true*/,
+			/*webpackIgnore:  true*/url(./url/img.png) 5x,
+			/*webpackIgnore:  true*/ url(./url/img.png) 6x,
+			/*webpackIgnore:  true*/
+			url(./url/img.png) 7x,
+			url(./url/img.png) 8x
+		),
+		/*webpackIgnore:  false*/
+		url('./url/img.png'),
+		/*webpackIgnore:  true*/
+		url('./url/img.png');
 }
 
 @font-face {

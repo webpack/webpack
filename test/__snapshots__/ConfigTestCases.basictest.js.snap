@@ -6427,3 +6427,264 @@ Object {
   "same-dir": " url(https://test.cases/path/bundle2/assets/img3.png)",
 }
 `;
+
+exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./basic.css ***!
+  \\\\***********************/
+.class {
+	color: red;
+}
+
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+/* webpackIgnore: true */
+
+/** Resolved **/
+/** Resolved **/
+
+.class {
+	color: red;
+	background: /** webpackIgnore: true */ url(09a1a1112c577c279435.png),  url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background:/** webpackIgnore: true */url(09a1a1112c577c279435.png),  url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: true */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	/** webpackIgnore: true */
+	background: url(09a1a1112c577c279435.png), url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	/** webpackIgnore: true */
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: false */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	/** webpackIgnore: true */
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: false */ url(09a1a1112c577c279435.png), /** webpackIgnore: true */ url(09a1a1112c577c279435.png), /** webpackIgnore: false */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	/** webpackIgnore: true */
+	background: /** webpackIgnore: false */ url(09a1a1112c577c279435.png), /** webpackIgnore: true */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: /** webpackIgnore: true */ /** webpackIgnore: false */ url(09a1a1112c577c279435.png), url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: true */ /** webpackIgnore: false */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: false */ /** webpackIgnore: true */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	background:
+		url(09a1a1112c577c279435.png),
+		url(09a1a1112c577c279435.png),
+		/** webpackIgnore: true **/ url(09a1a1112c577c279435.png),
+		url(09a1a1112c577c279435.png),
+		/** webpackIgnore: true **/ url(09a1a1112c577c279435.png),
+		url(09a1a1112c577c279435.png),
+		url(09a1a1112c577c279435.png),
+		url(09a1a1112c577c279435.png),
+		/** webpackIgnore: true **/
+		url(09a1a1112c577c279435.png);
+}
+
+@font-face {
+	font-family: \\"Roboto\\";
+	src: /** webpackIgnore: true **/ url(19ce07bdb1cb5ba16ea8.eot);
+	src:
+		/** webpackIgnore: true **/
+		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
+		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
+		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
+		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
+		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: \\"Roboto\\";
+	src: /** webpackIgnore: true **/ url(19ce07bdb1cb5ba16ea8.eot);
+	/** webpackIgnore: true **/
+	src:
+		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
+		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
+		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
+		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
+		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: \\"Roboto\\";
+	src: url(19ce07bdb1cb5ba16ea8.eot);
+	src:
+		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
+		/** webpackIgnore: true **/
+		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
+		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
+		/** webpackIgnore: true **/
+		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
+		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+	font-weight: 400;
+	font-style: normal;
+}
+
+.class {
+	/*webpackIgnore:  true*/
+	background-image: image-set(
+		url(09a1a1112c577c279435.png) 2x,
+		url(09a1a1112c577c279435.png) 3x,
+		url(09a1a1112c577c279435.png) 4x
+	);
+}
+
+.class {
+	/*webpackIgnore:  true*/
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(09a1a1112c577c279435.png) 2x,
+			/*webpackIgnore:  true*/
+			url(09a1a1112c577c279435.png) 3x,
+			url(09a1a1112c577c279435.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(09a1a1112c577c279435.png) 5x
+		),
+		url(09a1a1112c577c279435.png);
+}
+
+.class {
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(09a1a1112c577c279435.png) 2x,
+			/*webpackIgnore:  true*/
+			url(09a1a1112c577c279435.png) 3x,
+			url(09a1a1112c577c279435.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(09a1a1112c577c279435.png) 5x
+		),
+		/*webpackIgnore:  false*/
+		url(09a1a1112c577c279435.png),
+		/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png);;
+}
+
+.class {
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(09a1a1112c577c279435.png) 2x,
+			/*webpackIgnore:  true*/
+			url(09a1a1112c577c279435.png) 3x,
+			url(09a1a1112c577c279435.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(09a1a1112c577c279435.png) 5x
+		),
+		url(09a1a1112c577c279435.png);
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png) 2x,
+		url(09a1a1112c577c279435.png) 3x,
+			/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png) 5x
+	);
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png) 2x,
+		url(09a1a1112c577c279435.png) 3x,
+		/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png) 5x
+	);
+}
+
+.class {
+	/*webpackIgnore:  true*/
+	background-image: image-set(
+		/*webpackIgnore:  false*/
+		url(09a1a1112c577c279435.png) 2x,
+			/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png) 3x,
+			/*webpackIgnore:  false*/
+		url(09a1a1112c577c279435.png) 4x,
+		url(09a1a1112c577c279435.png) 5x
+	);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: true */url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png), /** webpackIgnore: true */ url(09a1a1112c577c279435.png);
+}
+
+.class {
+	color: red;
+	background: url(09a1a1112c577c279435.png)/** webpackIgnore: true */, url(09a1a1112c577c279435.png);
+}
+
+.class {
+	background-image:
+		image-set(
+			url(09a1a1112c577c279435.png) 2x  /*webpackIgnore:  true*/,
+			url(09a1a1112c577c279435.png) /*webpackIgnore:  true*/ 3x,
+			url(09a1a1112c577c279435.png) 4x /*webpackIgnore:  true*/,
+			/*webpackIgnore:  true*/url(09a1a1112c577c279435.png) 5x,
+			/*webpackIgnore:  true*/ url(09a1a1112c577c279435.png) 6x,
+			/*webpackIgnore:  true*/
+			url(09a1a1112c577c279435.png) 7x,
+			url(09a1a1112c577c279435.png) 8x
+		),
+		/*webpackIgnore:  false*/
+		url(09a1a1112c577c279435.png),
+		/*webpackIgnore:  true*/
+		url(09a1a1112c577c279435.png);
+}
+
+@font-face {
+	font-family: \\"anticon\\";
+	src: url(//at.alicdn.com/t/font_1434092639_4910953.eot?#iefix) format(\\"embedded-opentype\\"),
+	/* this comment is required */
+	url(//at.alicdn.com/t/font_1434092639_4910953.woff) format(\\"woff\\");
+}
+
+head{--webpack-main:&\\\\.\\\\/basic\\\\.css,&\\\\.\\\\/style\\\\.css;}"
+`;
