@@ -273,3 +273,21 @@
 	background-image: /* webpackIgnore:  1 */ url(./url/img.png);
 	background-image: image-set(/* webpackIgnore:  1 */ url("./url/img.png") 2x)
 }
+
+.class {
+	/*webpackIgnore:  true*/
+	background-image: url(./url/img.png);
+	/*webpackIgnore:  true*/
+	background-image: url('./url/img.png');
+}
+
+.class {
+	/*webpackIgnore:  true*/
+	background-image: url(./url/img.png);
+}
+
+.class {
+	background-image: /***webpackIgnore:  true***/ url(./url/img.png);
+	background-image: /***webpackIgnore:  true***/ url("./url/img.png");
+	background-image: image-set(/***webpackIgnore:  true***/ url("./url/img.png") 2x)
+}
