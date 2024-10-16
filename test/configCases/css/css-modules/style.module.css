@@ -806,6 +806,8 @@ ul {
 
 @keyframes foo { /* ... */ }
 @keyframes "foo" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
 
 @supports (display: flex) {
 	@media screen and (min-width: 900px) {
@@ -1007,4 +1009,93 @@ ul {
 	/* invalid values */
 	--item-size: 1000px;
 	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes "initial" { /* ... */ }
+@keyframes/**test**/"initial" { /* ... */ }
+@keyframes/**test**/"initial"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/"initial"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ "initial" /**test**/ /**test**/ { /* ... */ }
+@keyframes "None" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused "initial", localkeyframes2;
+	animation-name: "initial";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
 }
