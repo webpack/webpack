@@ -55,6 +55,10 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -63,8 +67,16 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "identifier",
     "x",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
@@ -291,20 +303,40 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "p",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "colon",
     ":",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "identifier",
     "v",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "rightCurlyBracket",
@@ -315,28 +347,152 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "identifier",
     "x",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "y",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "p",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "colon",
     ":",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "identifier",
     "v",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@unknown",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "x",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "y",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "function",
+    "x(",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "v",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "rightCurlyBracket",
@@ -711,32 +867,64 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "s",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "p",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "colon",
     ":",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "v",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "rightCurlyBracket",
@@ -747,40 +935,200 @@ Array [
     "@unknown",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "identifier",
     "x",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "y",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "s",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "p",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "colon",
     ":",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "identifier",
     "v",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@unknown",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "x",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comma",
+    ",",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "y",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "function",
+    "f(",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "s",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "p",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "identifier",
+    "v",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "rightCurlyBracket",
@@ -1758,16 +2106,104 @@ Array [
 exports[`walkCssTokens should parse comment.css 1`] = `
 Array [
   Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
     "identifier",
     "a",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
   ],
   Array [
     "leftCurlyBracket",
     "{",
   ],
   Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
     "identifier",
     "color",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "identifier",
+    "red",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "comment",
+    "/* a { color: black } */",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/* */",
+  ],
+  Array [
+    "identifier",
+    "div",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "comment",
+    "/* inside */",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "black",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "comment",
+    "/* between */",
+  ],
+  Array [
+    "identifier",
+    "background",
   ],
   Array [
     "colon",
@@ -1782,12 +2218,20 @@ Array [
     ";",
   ],
   Array [
+    "comment",
+    "/* end */",
+  ],
+  Array [
     "rightCurlyBracket",
     "}",
   ],
   Array [
+    "comment",
+    "/* b */",
+  ],
+  Array [
     "identifier",
-    "div",
+    "a",
   ],
   Array [
     "leftCurlyBracket",
@@ -1808,6 +2252,179 @@ Array [
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "comment",
+    "/* c */",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "identifier",
+    "screen",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "identifier",
+    "screen",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "comment",
+    "/*!test*/",
+  ],
+  Array [
+    "comment",
+    "/*!te
+st*/",
+  ],
+  Array [
+    "comment",
+    "/*!te
+
+
+st*/",
+  ],
+  Array [
+    "comment",
+    "/*!te**st*/",
+  ],
+  Array [
+    "comment",
+    "/****************************/",
+  ],
+  Array [
+    "comment",
+    "/*************** FOO *****************/",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "comment",
+    "/* comment */",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/*a*/",
+  ],
+  Array [
+    "comment",
+    "/*
+*/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/*a*/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/* a */",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
+    "delim",
+    ".",
+  ],
+  Array [
+    "comment",
+    "/**test*/",
+  ],
+  Array [
+    "comment",
+    "/**test**/",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
   ],
   Array [
     "identifier",
@@ -1830,68 +2447,10 @@ Array [
     "}",
   ],
   Array [
-    "identifier",
-    "a",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "color",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "identifier",
-    "black",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "atKeyword",
-    "@media",
-  ],
-  Array [
-    "identifier",
-    "screen",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "atKeyword",
-    "@media",
-  ],
-  Array [
-    "identifier",
-    "screen",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
     "comment",
+    "/**
+
+ */",
   ],
 ]
 `;
@@ -2587,6 +3146,10 @@ Array [
     "prop",
   ],
   Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
     "colon",
     ":",
   ],
@@ -2685,6 +3248,10 @@ Array [
   Array [
     "identifier",
     "a",
+  ],
+  Array [
+    "comment",
+    "/* ; */",
   ],
   Array [
     "identifier",
@@ -3905,6 +4472,14 @@ Array [
     "{",
   ],
   Array [
+    "comment",
+    "/*height: -webkit-calc(9/16 * 100%)!important;*/",
+  ],
+  Array [
+    "comment",
+    "/*width: -moz-calc((50px - 50%)*2);*/",
+  ],
+  Array [
     "rightCurlyBracket",
     "}",
   ],
@@ -4105,6 +4680,11 @@ Array [
     "{",
   ],
   Array [
+    "comment",
+    "/* Set font-size to 10x the average of vw and vh,
+		 but don’t let it go below 12px. */",
+  ],
+  Array [
     "identifier",
     "font-size",
   ],
@@ -4151,6 +4731,10 @@ Array [
   Array [
     "leftCurlyBracket",
     "{",
+  ],
+  Array [
+    "comment",
+    "/* Force the font-size to stay between 12px and 100px */",
   ],
   Array [
     "identifier",
@@ -6280,6 +6864,10 @@ Array [
     "{",
   ],
   Array [
+    "comment",
+    "/*   mix( [ <timeline> && [ by <easing-function> ]? ] ; <start-value> ; <end-value>) */",
+  ],
+  Array [
     "identifier",
     "opacity",
   ],
@@ -6924,6 +7512,10 @@ Array [
     "html",
   ],
   Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
     "identifier",
     "body",
   ],
@@ -6946,6 +7538,10 @@ Array [
   Array [
     "identifier",
     "head",
+  ],
+  Array [
+    "comment",
+    "/**/",
   ],
   Array [
     "identifier",
@@ -7078,6 +7674,10 @@ Array [
   Array [
     "identifier",
     "property",
+  ],
+  Array [
+    "comment",
+    "/*\\\\**/",
   ],
   Array [
     "colon",
@@ -7598,6 +8198,10 @@ Array [
     ":",
   ],
   Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
     "identifier",
     "important",
   ],
@@ -7614,6 +8218,10 @@ Array [
     ":",
   ],
   Array [
+    "comment",
+    "/*! test */",
+  ],
+  Array [
     "identifier",
     "important",
   ],
@@ -7628,6 +8236,10 @@ Array [
   Array [
     "colon",
     ":",
+  ],
+  Array [
+    "comment",
+    "/*! test */",
   ],
   Array [
     "identifier",
@@ -7664,6 +8276,10 @@ Array [
   Array [
     "colon",
     ":",
+  ],
+  Array [
+    "comment",
+    "/* sep */",
   ],
   Array [
     "identifier",
@@ -8268,6 +8884,10 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* & can be used on its own */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -8364,6 +8984,19 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: blue; }
+  .foo > .bar { color: red; }
+  .foo > .baz { color: green; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* or in a compound selector,
+   refining the parent’s selector */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -8426,6 +9059,18 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: blue; }
+  .foo.bar { color: red; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* multiple selectors in the list are all
+   relative to the parent */",
   ],
   Array [
     "delim",
@@ -8516,6 +9161,18 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  .foo, .bar { color: blue; }
+  :is(.foo, .bar) + .baz,
+  :is(.foo, .bar).qux { color: red; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* & can be used multiple times in a single selector */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -8594,6 +9251,17 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: blue; }
+  .foo .bar .foo .baz .foo .qux { color: red; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* & doesn’t have to be at the beginning of the selector */",
   ],
   Array [
     "delim",
@@ -8658,6 +9326,13 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: red; }
+  .parent .foo { color: blue; }
+*/",
   ],
   Array [
     "delim",
@@ -8728,6 +9403,18 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: red; }
+  :not(.foo) { color: blue; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* But if you use a relative selector,
+  an initial & is implied automatically */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -8792,56 +9479,15 @@ Array [
     "}",
   ],
   Array [
-    "delim",
-    ".",
+    "comment",
+    "/* equivalent to
+  .foo { color: red; }
+  .foo + .bar + .foo { color: blue; }
+*/",
   ],
   Array [
-    "identifier",
-    "foo",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "color",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "identifier",
-    "blue",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "padding",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
+    "comment",
+    "/* Somewhat silly, but & can be used all on its own, as well. */",
   ],
   Array [
     "delim",
@@ -8894,6 +9540,87 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: blue; }
+  .foo { padding: 2ch; }
+
+  // or
+
+  .foo {
+    color: blue;
+    padding: 2ch;
+  }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Again, silly, but can even be doubled up. */",
+  ],
+  Array [
+    "delim",
+    ".",
+  ],
+  Array [
+    "identifier",
+    "foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "blue",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "padding",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo { color: blue; }
+  .foo.foo { padding: 2ch; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* The parent selector can be arbitrarily complicated */",
   ],
   Array [
     "delim",
@@ -8961,6 +9688,12 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  :is(.error, #404):hover > .baz { color: red; }
+*/",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -9015,6 +9748,13 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .other-ancestor :is(.ancestor .el) { color: red; }
+
+/* As can the nested selector */",
   ],
   Array [
     "delim",
@@ -9087,6 +9827,16 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  .foo :is(.bar, .foo.baz) { color: red; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Multiple levels of nesting \\"stack up\\" the selectors */",
   ],
   Array [
     "identifier",
@@ -9169,6 +9919,18 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  figure { margin: 0; }
+  figure > figcaption { background: hsl(0 0% 0% / 50%); }
+  figure > figcaption > p { font-size: .9rem; }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Example usage with Cascade Layers */",
+  ],
+  Array [
     "atKeyword",
     "@layer",
   ],
@@ -9231,6 +9993,19 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to
+  @layer base {
+    html { block-size: 100%; }
+    html body { min-block-size: 100%; }
+  }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Example nesting Cascade Layers */",
   ],
   Array [
     "atKeyword",
@@ -9313,6 +10088,21 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  @layer base {
+    html { block-size: 100%; }
+  }
+  @layer base.support {
+    html body { min-block-size: 100%; }
+  }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Example usage with Scoping */",
+  ],
+  Array [
     "atKeyword",
     "@scope",
   ],
@@ -9429,6 +10219,19 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  @scope (.card) to (> header) {
+    :scope { inline-size: 40ch; aspect-ratio: 3/4; }
+    :scope > header { border-block-end: 1px solid white; }
+  }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Example nesting Scoping */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -9545,6 +10348,19 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* equivalent to
+  .card { inline-size: 40ch; aspect-ratio: 3/4; }
+  @scope (.card) to (> header > *) {
+    :scope > header { border-block-end: 1px solid white; }
+  }
+*/",
+  ],
+  Array [
+    "comment",
+    "/* Properties can be directly used */",
+  ],
+  Array [
     "delim",
     ".",
   ],
@@ -9625,96 +10441,8 @@ Array [
     "}",
   ],
   Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "foo",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "display",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "identifier",
-    "grid",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "atKeyword",
-    "@media",
-  ],
-  Array [
-    "leftParenthesis",
-    "(",
-  ],
-  Array [
-    "identifier",
-    "orientation",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "identifier",
-    "landscape",
-  ],
-  Array [
-    "rightParenthesis",
-    ")",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "foo",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "grid-auto-flow",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "identifier",
-    "column",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
+    "comment",
+    "/* equivalent to: */",
   ],
   Array [
     "delim",
@@ -9801,6 +10529,102 @@ Array [
     "column",
   ],
   Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "comment",
+    "/* and also equivalent to the unnested: */",
+  ],
+  Array [
+    "delim",
+    ".",
+  ],
+  Array [
+    "identifier",
+    "foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "display",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "grid",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "atKeyword",
+    "@media",
+  ],
+  Array [
+    "leftParenthesis",
+    "(",
+  ],
+  Array [
+    "identifier",
+    "orientation",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "landscape",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "delim",
+    ".",
+  ],
+  Array [
+    "identifier",
+    "foo",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "grid-auto-flow",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "column",
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -9811,6 +10635,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* Conditionals can be further nested */",
   ],
   Array [
     "delim",
@@ -9927,6 +10755,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to */",
   ],
   Array [
     "delim",
@@ -10101,6 +10933,10 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* Example nesting Cascade Layers */",
+  ],
+  Array [
     "identifier",
     "html",
   ],
@@ -10179,6 +11015,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to */",
   ],
   Array [
     "atKeyword",
@@ -10271,6 +11111,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* Example nesting Scoping */",
   ],
   Array [
     "delim",
@@ -10367,6 +11211,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* equivalent to */",
   ],
   Array [
     "delim",
@@ -12359,6 +13207,10 @@ Array [
     "div",
   ],
   Array [
+    "comment",
+    "/*)*/",
+  ],
+  Array [
     "rightParenthesis",
     ")",
   ],
@@ -13457,20 +14309,8 @@ Array [
     "}",
   ],
   Array [
-    "identifier",
-    "a",
-  ],
-  Array [
-    "identifier",
-    "b",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
+    "comment",
+    "/* { } */",
   ],
   Array [
     "identifier",
@@ -13489,20 +14329,8 @@ Array [
     "}",
   ],
   Array [
-    "identifier",
-    "a",
-  ],
-  Array [
-    "identifier",
-    "b",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
+    "comment",
+    "/* test */",
   ],
   Array [
     "identifier",
@@ -13521,6 +14349,10 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* { } */",
+  ],
+  Array [
     "identifier",
     "a",
   ],
@@ -13535,6 +14367,10 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* test */",
   ],
   Array [
     "identifier",
@@ -13557,20 +14393,8 @@ Array [
     "a",
   ],
   Array [
-    "identifier",
-    "b",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "a",
+    "comment",
+    "/* { } */",
   ],
   Array [
     "identifier",
@@ -13589,20 +14413,8 @@ Array [
     "a",
   ],
   Array [
-    "identifier",
-    "b",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "a",
+    "comment",
+    "/* test */",
   ],
   Array [
     "identifier",
@@ -13621,20 +14433,8 @@ Array [
     "a",
   ],
   Array [
-    "identifier",
-    "b",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "a",
+    "comment",
+    "/* { } */",
   ],
   Array [
     "identifier",
@@ -13651,6 +14451,10 @@ Array [
   Array [
     "identifier",
     "a",
+  ],
+  Array [
+    "comment",
+    "/* test */",
   ],
   Array [
     "identifier",
@@ -13673,6 +14477,10 @@ Array [
     "b",
   ],
   Array [
+    "comment",
+    "/* { } */",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
   ],
@@ -13683,12 +14491,120 @@ Array [
   Array [
     "identifier",
     "a",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "comment",
+    "/* { } */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "comment",
+    "/* { } */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "identifier",
+    "b",
+  ],
+  Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "comment",
+    "/* test */",
   ],
   Array [
     "comma",
     ",",
   ],
   Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
     "identifier",
     "b",
   ],
@@ -13705,8 +14621,16 @@ Array [
     "a",
   ],
   Array [
+    "comment",
+    "/* test */",
+  ],
+  Array [
     "comma",
     ",",
+  ],
+  Array [
+    "comment",
+    "/* test */",
   ],
   Array [
     "identifier",
@@ -17414,6 +18338,10 @@ Array [
     "a",
   ],
   Array [
+    "comment",
+    "/* { } */",
+  ],
+  Array [
     "identifier",
     "b",
   ],
@@ -17956,6 +18884,26 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* TODO fix me */",
+  ],
+  Array [
+    "comment",
+    "/*.foo {*/",
+  ],
+  Array [
+    "comment",
+    "/*    color: blue;*/",
+  ],
+  Array [
+    "comment",
+    "/*    && { padding: 2ch; }*/",
+  ],
+  Array [
+    "comment",
+    "/*}*/",
   ],
   Array [
     "delim",
@@ -18507,6 +19455,10 @@ Array [
     "}",
   ],
   Array [
+    "comment",
+    "/* valid, no longer starts with an identifier */",
+  ],
+  Array [
     "colon",
     ":",
   ],
@@ -18541,6 +19493,11 @@ Array [
   Array [
     "rightCurlyBracket",
     "}",
+  ],
+  Array [
+    "comment",
+    "/* valid, starts with a colon,
+		 and equivalent to the previous rule. */",
   ],
   Array [
     "rightCurlyBracket",
@@ -21492,6 +22449,22 @@ Array [
     "nth-child(",
   ],
   Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
     "rightParenthesis",
     ")",
   ],
@@ -21510,6 +22483,22 @@ Array [
   Array [
     "function",
     "nth-last-child(",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
+  ],
+  Array [
+    "comment",
+    "/*test*/",
   ],
   Array [
     "rightParenthesis",
@@ -23589,6 +24578,10 @@ Array [
     "a",
   ],
   Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
     "leftCurlyBracket",
     "{",
   ],
@@ -23599,6 +24592,10 @@ Array [
   Array [
     "identifier",
     "a",
+  ],
+  Array [
+    "comment",
+    "/**/",
   ],
   Array [
     "leftCurlyBracket",
@@ -32472,6 +33469,10 @@ Array [
     ":",
   ],
   Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
     "semicolon",
     ";",
   ],
@@ -32500,6 +33501,10 @@ Array [
     ":",
   ],
   Array [
+    "comment",
+    "/**/",
+  ],
+  Array [
     "identifier",
     "important",
   ],
@@ -32514,6 +33519,14 @@ Array [
   Array [
     "colon",
     ":",
+  ],
+  Array [
+    "comment",
+    "/* 1 */",
+  ],
+  Array [
+    "comment",
+    "/* 2 */",
   ],
   Array [
     "semicolon",
@@ -33511,6 +34524,10 @@ Array [
   Array [
     "identifier",
     "div",
+  ],
+  Array [
+    "comment",
+    "/*)*/",
   ],
   Array [
     "rightParenthesis",
@@ -35228,6 +36245,10 @@ o very long title\\"",
     ";",
   ],
   Array [
+    "comment",
+    "/* single codepoint */",
+  ],
+  Array [
     "identifier",
     "unicode-range",
   ],
@@ -35276,6 +36297,10 @@ o very long title\\"",
     ";",
   ],
   Array [
+    "comment",
+    "/* codepoint range */",
+  ],
+  Array [
     "identifier",
     "unicode-range",
   ],
@@ -35290,6 +36315,10 @@ o very long title\\"",
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "comment",
+    "/* wildcard range */",
   ],
   Array [
     "identifier",
@@ -35314,6 +36343,10 @@ o very long title\\"",
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "comment",
+    "/* multiple values */",
   ],
   Array [
     "identifier",
@@ -35362,6 +36395,10 @@ o very long title\\"",
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "comment",
+    "/* multiple values */",
   ],
   Array [
     "identifier",
@@ -35718,6 +36755,10 @@ o very long title\\"",
   Array [
     "semicolon",
     ";",
+  ],
+  Array [
+    "comment",
+    "/* A <url-modifier> is either an <ident> or a functional notation. */",
   ],
   Array [
     "identifier",
