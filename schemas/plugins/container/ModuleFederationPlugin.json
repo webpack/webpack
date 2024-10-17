@@ -104,8 +104,41 @@
         ]
       }
     },
+    "ExternalsCategory": {
+      "description": "Specifies the category of externals.",
+      "enum": ["amd", "commonjs", "static-import", "dynamic-import"]
+    },
     "ExternalsType": {
       "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "amd": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "commonjs": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "dynamic-import": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "fallback": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "static-import": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/ExternalsTypeLiteral"
+        }
+      ]
+    },
+    "ExternalsTypeLiteral": {
+      "description": "Literal string values of the supported external types.",
       "enum": [
         "var",
         "module",
