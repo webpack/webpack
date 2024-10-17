@@ -7,6 +7,10 @@ describe("walkCssTokens", () => {
 		it(`should parse ${name}`, () => {
 			const results = [];
 			walkCssTokens(content, {
+				comment: (input, s, e) => {
+					results.push(["comment", input.slice(s, e)]);
+					return e;
+				},
 				url: (input, s, e, cs, ce) => {
 					results.push(["url", input.slice(s, e), input.slice(cs, ce)]);
 					return e;

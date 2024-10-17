@@ -1,0 +1,313 @@
+@import/* webpackIgnore: true */url(./basic.css);
+@import /*    webpackIgnore:   true    */ url(./basic.css);
+@import /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
+@import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: true */ url(./basic.css);
+@import /* webpackIgnore: false */ /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
+
+
+@import      /* webpackIgnore: true */         url(./basic.css);
+
+/** Resolved **/
+@import /* webpackIgnore: false */ url(./basic.css);
+@import /****webpackIgnore: false***/ url(./basic.css);
+@import /*   *   *   *   webpackIgnore:   false   *   *   */ url(./basic.css);
+@import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: false */ url(./basic.css);
+@import /* webpackIgnore: 1 */ url(./basic.css);
+/** Resolved **/
+
+.class {
+	color: red;
+	background: /* webpackIgnore: true */ url("./url/img.png"),  url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background:/* webpackIgnore: true */url("./url/img.png"),  url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background:
+		/* webpackIgnore: true */
+		url("./url/img.png"),
+		url("./url/img.png");
+}
+
+
+.class {
+	color: red;
+	background:
+		url("./url/img.png"),
+			/* webpackIgnore: true */
+		url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: 	/* webpackIgnore: true */ url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: /* webpackIgnore: false */ url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: /* webpackIgnore: true */ /* webpackIgnore: false */ url("./url/img.png"), url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: true */ /* webpackIgnore: false */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: false */ /* webpackIgnore: true */ url("./url/img.png");
+}
+
+.class {
+	background:
+		url("./url/img.png"),
+		url("./url/img.png"),
+		/* webpackIgnore: true */ url("./url/img.png"),
+		url("./url/img.png"),
+		/* webpackIgnore: true */ url("./url/img.png"),
+		url("./url/img.png"),
+		url("./url/img.png"),
+		url("./url/img.png"),
+		/* webpackIgnore: true */
+		url("./url/img.png");
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: /* webpackIgnore: true */ url("./fonts/Roboto-Regular.eot");
+	src:
+		/* webpackIgnore: true */
+		url("./fonts/Roboto-Regular.eot#iefix") format("embedded-opentype"),
+		url("./fonts/Roboto-Regular.woff2") format("woff"),
+		url("./fonts/Roboto-Regular.woff") format("woff"),
+		url("./fonts/Roboto-Regular.ttf") format("truetype"),
+		url("./fonts/Roboto-Regular.svg#Roboto-Regular") format("svg");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: /* webpackIgnore: true */ url("./fonts/Roboto-Regular.eot");
+	src:
+		url("./fonts/Roboto-Regular.eot#iefix") format("embedded-opentype"),
+		url("./fonts/Roboto-Regular.woff2") format("woff"),
+		/* webpackIgnore: true */
+		url("./fonts/Roboto-Regular.woff")
+		format("woff"),
+		url("./fonts/Roboto-Regular.ttf") format("truetype"),
+		url("./fonts/Roboto-Regular.svg#Roboto-Regular") format("svg");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url("./fonts/Roboto-Regular.eot");
+	src:
+		url("./fonts/Roboto-Regular.eot#iefix") format("embedded-opentype"),
+		/* webpackIgnore: true */
+		url("./fonts/Roboto-Regular.woff2") format("woff"),
+		url("./fonts/Roboto-Regular.woff") format("woff"),
+		/* webpackIgnore: true */
+		url("./fonts/Roboto-Regular.ttf") format("truetype"),
+		url("./fonts/Roboto-Regular.svg#Roboto-Regular") format("svg");
+	font-weight: 400;
+	font-style: normal;
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+
+
+		url(./url/img.png) 2x,
+		url(./url/img.png) 3x,
+		url(./url/img.png) 4x
+	);
+}
+
+.class {
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(./url/img.png) 2x,
+			/*webpackIgnore:  true*/
+			url(./url/img.png) 3x,
+			url(./url/img.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(./url/img.png) 5x
+		),/*webpackIgnore:  true*/url('./url/img.png');
+}
+
+.class {
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(./url/img.png) 2x,
+			/*webpackIgnore:  true*/
+			url(./url/img.png) 3x,
+			url(./url/img.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(./url/img.png) 5x
+		),
+		/*webpackIgnore:  false*/
+		url('./url/img.png'),
+		/*webpackIgnore:  true*/
+		url('./url/img.png');
+}
+
+.class {
+	background-image:
+		image-set(
+			/*webpackIgnore:  false*/
+			url(./url/img.png) 2x,
+			/*webpackIgnore:  true*/
+			url(./url/img.png) 3x,
+			url(./url/img.png) 4x,
+			/*webpackIgnore:  false */
+			/*webpackIgnore:  true */
+			url(./url/img.png) 5x
+		),
+		url('./url/img.png');
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+		url(./url/img.png) 2x,
+		url(./url/img.png) 3x,
+		/*webpackIgnore:  true*/
+		url(./url/img.png) 5x
+	);
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+		'./url/img.png' 2x,
+		'./url/img.png' 3x,
+		/*webpackIgnore:  true*/
+		'./url/img.png' 5x
+	);
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  false*/
+		url(./url/img.png) 2x,
+		/*webpackIgnore:  true*/
+		url(./url/img.png) 3x,
+		/*webpackIgnore:  false*/
+		url(./url/img.png) 4x,
+
+
+		/*webpackIgnore:  true*/
+
+
+		url(./url/img.png) 5x
+	);
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: true */url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png");
+}
+
+.class {
+	color: red;
+	background: url("./url/img.png")/* webpackIgnore: true */, url("./url/img.png");
+}
+
+.class {
+	background-image:
+		image-set(
+			url(./url/img.png) 2x  /*webpackIgnore:  true*/,
+			url(./url/img.png) /*webpackIgnore:  true*/ 3x,
+			url(./url/img.png) 4x /*webpackIgnore:  true*/,
+			/*webpackIgnore:  true*/url(./url/img.png) 5x,
+			/*webpackIgnore:  true*/ url(./url/img.png) 6x,
+			/*webpackIgnore:  true*/
+			url(./url/img.png) 7x,
+			url(./url/img.png) 8x
+		),
+		/*webpackIgnore:  false*/
+		url('./url/img.png'),
+		/*webpackIgnore:  true*/
+		url('./url/img.png');
+}
+
+@font-face {
+	font-family: "anticon";
+	src: url("//at.alicdn.com/t/font_1434092639_4910953.eot?#iefix") format("embedded-opentype"),
+	/* this comment is required */
+	url("//at.alicdn.com/t/font_1434092639_4910953.woff") format("woff");
+}
+
+.class {
+	background-image: image-set(
+		/*webpackIgnore:  true*/
+		url("./url/img.png") 2x,
+		url("./url/img.png") 3x,
+		/*webpackIgnore:  true*/
+		url("./url/img.png") 4x
+	);
+}
+
+.class {
+	background-image: /* webpackIgnore:  1 */ url("./url/img.png");
+	background-image: /* webpackIgnore:  1 */ url(./url/img.png);
+	background-image: image-set(/* webpackIgnore:  1 */ url("./url/img.png") 2x)
+}
+
+.class {
+	background-image /*webpackIgnore:  true*/ : url(./url/img.png);
+	/*webpackIgnore:  true*/ background-image: url('./url/img.png');
+}
+
+.class {
+	background-image:/*webpackIgnore:  true*/
+
+
+
+
+
+
+
+
+
+
+		url(./url/img.png);
+}
+
+.class {
+	background-image: /***webpackIgnore:  true***/ url(./url/img.png);
+	background-image: /***webpackIgnore:  true***/ url("./url/img.png");
+	background-image: image-set(/***webpackIgnore:  true***/ url("./url/img.png") 2x)
+}

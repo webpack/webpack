@@ -16,7 +16,7 @@
 @unknown x, y x(1+2) {p:v}
 @unknown/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}
 @unknown /*test*/x/*test*/ y/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}
-/*@unknown !*test*!x!*test*!,!*test*!y!*test*! x(!*test*!1!*test*!+!*test*!2!*test*!)!*test*!{!*test*!p!*test*!:!*test*!v!*test*!}*/
+@unknown /*test*/x/*test*/,/*test*/y/*test*/ x(/*test*/1/*test*/+/*test*/2/*test*/)/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}
 @unknown  {  p  :  v  }
 @unknown  x  y  {  p  :  v  }
 @unknown  x  ,  y  x(  1  +  2  )  {  p  :  v  }
@@ -28,7 +28,7 @@
 @unknown { .a { p: v; } .b { p: v } }
 @unknown/*test*/{/*test*/s/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}/*test*/}
 @unknown /*test*/x/*test*/ y/*test*/{/*test*/s/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}/*test*/}
-/*@unknown !*test*!x!*test*!,!*test*!y!*test*! f(!*test*!1!*test*!+!*test*!2!*test*!)!*test*!{!*test*!s!*test*!{!*test*!p!*test*!:!*test*!v!*test*!}!*test*!}*/
+@unknown /*test*/x/*test*/,/*test*/y/*test*/ f(/*test*/1/*test*/+/*test*/2/*test*/)/*test*/{/*test*/s/*test*/{/*test*/p/*test*/:/*test*/v/*test*/}/*test*/}
 @unknown  {  s  {  p  :  v  }  }
 @unknown  x  y  {  s  {  p  :  v  }  }
 @unknown  x  ,  y  f(  1  )  {  s  {  p  :  v  }  }

@@ -2969,8 +2969,8 @@ declare interface ContextModuleOptions {
 	namespaceObject?: boolean | "strict";
 	addon?: string;
 	chunkName?: string;
-	include?: RegExp;
-	exclude?: RegExp;
+	include?: null | RegExp;
+	exclude?: null | RegExp;
 	groupOptions?: RawChunkGroupOptions;
 	typePrefix?: string;
 	category?: string;
@@ -6666,7 +6666,7 @@ declare class JavascriptParser extends Parser {
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
 	parseCommentOptions(range: [number, number]): {
 		options: null | Record<string, any>;
-		errors: any;
+		errors: null | (Error & { comment: Comment })[];
 	};
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
