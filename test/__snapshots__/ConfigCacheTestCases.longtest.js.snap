@@ -6439,15 +6439,14 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 /*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/
-/* webpackIgnore: true */
-@import url(./basic.css);
+@import/* webpackIgnore: true */url(./basic.css);
 @import /*    webpackIgnore:   true    */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 
-/* webpackIgnore: true */
-@import url(./basic.css);
+
+@import      /* webpackIgnore: true */         url(./basic.css);
 
 /** Resolved **/
 /** Resolved **/
@@ -6469,25 +6468,33 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
-	background: url(\\"./url/img.png\\"), url(09a1a1112c577c279435.png);
+	background:
+		/* webpackIgnore: true */
+		url(\\"./url/img.png\\"),
+		url(09a1a1112c577c279435.png);
+}
+
+
+.class {
+	color: red;
+	background:
+		url(09a1a1112c577c279435.png),
+			/* webpackIgnore: true */
+		url(\\"./url/img.png\\");
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
-	background: url(\\"./url/img.png\\"), /* webpackIgnore: false */ url(09a1a1112c577c279435.png);
+	background: 	/* webpackIgnore: true */ url(\\"./url/img.png\\"), /* webpackIgnore: false */ url(09a1a1112c577c279435.png);
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
-	background: url(\\"./url/img.png\\"), /* webpackIgnore: false */ url(09a1a1112c577c279435.png), /* webpackIgnore: true */ url(\\"./url/img.png\\"), /* webpackIgnore: false */ url(09a1a1112c577c279435.png);
+	background: url(09a1a1112c577c279435.png), /* webpackIgnore: false */ url(09a1a1112c577c279435.png), /* webpackIgnore: true */ url(\\"./url/img.png\\"), /* webpackIgnore: false */ url(09a1a1112c577c279435.png);
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
 	background: /* webpackIgnore: false */ url(09a1a1112c577c279435.png), /* webpackIgnore: true */ url(\\"./url/img.png\\");
 }
 
@@ -6537,11 +6544,12 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 @font-face {
 	font-family: \\"Roboto\\";
 	src: /* webpackIgnore: true */ url(\\"./fonts/Roboto-Regular.eot\\");
-	/* webpackIgnore: true */
 	src:
-		url(\\"./fonts/Roboto-Regular.eot#iefix\\") format(\\"embedded-opentype\\"),
+		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
 		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
-		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
+		/* webpackIgnore: true */
+		url(\\"./fonts/Roboto-Regular.woff\\")
+		format(\\"woff\\"),
 		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
 		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
 	font-weight: 400;
@@ -6564,16 +6572,17 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image: image-set(
-		url(09a1a1112c577c279435.png) 2x,
+		/*webpackIgnore:  true*/
+
+
+		url(./url/img.png) 2x,
 		url(09a1a1112c577c279435.png) 3x,
 		url(09a1a1112c577c279435.png) 4x
 	);
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image:
 		image-set(
 			/*webpackIgnore:  false*/
@@ -6584,8 +6593,7 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 			/*webpackIgnore:  false */
 			/*webpackIgnore:  true */
 			url(./url/img.png) 5x
-		),
-		url(09a1a1112c577c279435.png);
+		),/*webpackIgnore:  true*/url('./url/img.png');
 }
 
 .class {
@@ -6642,7 +6650,6 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image: image-set(
 		/*webpackIgnore:  false*/
 		url(09a1a1112c577c279435.png) 2x,
@@ -6650,7 +6657,12 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 		url(./url/img.png) 3x,
 		/*webpackIgnore:  false*/
 		url(09a1a1112c577c279435.png) 4x,
-		url(09a1a1112c577c279435.png) 5x
+
+
+		/*webpackIgnore:  true*/
+
+
+		url(./url/img.png) 5x
 	);
 }
 
@@ -6711,15 +6723,23 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 }
 
 .class {
-	/*webpackIgnore:  true*/
-	background-image: url(./url/img.png);
-	/*webpackIgnore:  true*/
-	background-image: url('./url/img.png');
+	background-image /*webpackIgnore:  true*/ : url(09a1a1112c577c279435.png);
+	/*webpackIgnore:  true*/ background-image: url(09a1a1112c577c279435.png);
 }
 
 .class {
-	/*webpackIgnore:  true*/
-	background-image: url(./url/img.png);
+	background-image:/*webpackIgnore:  true*/
+
+
+
+
+
+
+
+
+
+
+		url(./url/img.png);
 }
 
 .class {

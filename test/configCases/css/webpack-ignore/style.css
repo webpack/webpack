@@ -1,12 +1,11 @@
-/* webpackIgnore: true */
-@import url(./basic.css);
+@import/* webpackIgnore: true */url(./basic.css);
 @import /*    webpackIgnore:   true    */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: true */ /* webpackIgnore: true */ url(./basic.css);
 @import /* webpackIgnore: false */ /* webpackIgnore: false */ /* webpackIgnore: true */ url(./basic.css);
 
-/* webpackIgnore: true */
-@import url(./basic.css);
+
+@import      /* webpackIgnore: true */         url(./basic.css);
 
 /** Resolved **/
 @import /* webpackIgnore: false */ url(./basic.css);
@@ -33,25 +32,33 @@
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
-	background: url("./url/img.png"), url("./url/img.png");
+	background:
+		/* webpackIgnore: true */
+		url("./url/img.png"),
+		url("./url/img.png");
+}
+
+
+.class {
+	color: red;
+	background:
+		url("./url/img.png"),
+			/* webpackIgnore: true */
+		url("./url/img.png");
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
-	background: url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png");
+	background: 	/* webpackIgnore: true */ url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png");
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
 	background: url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png"), /* webpackIgnore: false */ url("./url/img.png");
 }
 
 .class {
 	color: red;
-	/* webpackIgnore: true */
 	background: /* webpackIgnore: false */ url("./url/img.png"), /* webpackIgnore: true */ url("./url/img.png");
 }
 
@@ -101,11 +108,12 @@
 @font-face {
 	font-family: "Roboto";
 	src: /* webpackIgnore: true */ url("./fonts/Roboto-Regular.eot");
-	/* webpackIgnore: true */
 	src:
 		url("./fonts/Roboto-Regular.eot#iefix") format("embedded-opentype"),
 		url("./fonts/Roboto-Regular.woff2") format("woff"),
-		url("./fonts/Roboto-Regular.woff") format("woff"),
+		/* webpackIgnore: true */
+		url("./fonts/Roboto-Regular.woff")
+		format("woff"),
 		url("./fonts/Roboto-Regular.ttf") format("truetype"),
 		url("./fonts/Roboto-Regular.svg#Roboto-Regular") format("svg");
 	font-weight: 400;
@@ -128,8 +136,10 @@
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image: image-set(
+		/*webpackIgnore:  true*/
+
+
 		url(./url/img.png) 2x,
 		url(./url/img.png) 3x,
 		url(./url/img.png) 4x
@@ -137,7 +147,6 @@
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image:
 		image-set(
 			/*webpackIgnore:  false*/
@@ -148,8 +157,7 @@
 			/*webpackIgnore:  false */
 			/*webpackIgnore:  true */
 			url(./url/img.png) 5x
-		),
-		url('./url/img.png');
+		),/*webpackIgnore:  true*/url('./url/img.png');
 }
 
 .class {
@@ -206,7 +214,6 @@
 }
 
 .class {
-	/*webpackIgnore:  true*/
 	background-image: image-set(
 		/*webpackIgnore:  false*/
 		url(./url/img.png) 2x,
@@ -214,6 +221,11 @@
 		url(./url/img.png) 3x,
 		/*webpackIgnore:  false*/
 		url(./url/img.png) 4x,
+
+
+		/*webpackIgnore:  true*/
+
+
 		url(./url/img.png) 5x
 	);
 }
@@ -275,15 +287,23 @@
 }
 
 .class {
-	/*webpackIgnore:  true*/
-	background-image: url(./url/img.png);
-	/*webpackIgnore:  true*/
-	background-image: url('./url/img.png');
+	background-image /*webpackIgnore:  true*/ : url(./url/img.png);
+	/*webpackIgnore:  true*/ background-image: url('./url/img.png');
 }
 
 .class {
-	/*webpackIgnore:  true*/
-	background-image: url(./url/img.png);
+	background-image:/*webpackIgnore:  true*/
+
+
+
+
+
+
+
+
+
+
+		url(./url/img.png);
 }
 
 .class {
