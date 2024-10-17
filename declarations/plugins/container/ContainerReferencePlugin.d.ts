@@ -8,6 +8,33 @@
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
+	| {
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			amd?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			commonjs?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"dynamic-import"?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			fallback?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"static-import"?: ExternalsTypeLiteral;
+	  }
+	| ExternalsTypeLiteral;
+/**
+ * Literal string values of the supported external types.
+ */
+export type ExternalsTypeLiteral =
 	| "var"
 	| "module"
 	| "assign"
@@ -42,6 +69,14 @@ export type RemotesItem = string;
  * Container locations from which modules should be resolved and loaded at runtime.
  */
 export type RemotesItems = RemotesItem[];
+/**
+ * Specifies the category of externals.
+ */
+export type ExternalsCategory =
+	| "amd"
+	| "commonjs"
+	| "static-import"
+	| "dynamic-import";
 
 export interface ContainerReferencePluginOptions {
 	/**
