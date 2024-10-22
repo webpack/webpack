@@ -102,5 +102,19 @@ module.exports = [
 				import: "./entry.css"
 			}
 		}
+	}),
+	common(5, {
+		entry: {
+			"mixed-entry": {
+				import: ["./entry.js", "../_images/file.png"]
+			}
+		}
+	}),
+	common(6, {
+		entry: {
+			"mixed-entry": {
+				import: ["../_images/file.png", "./entry.js"]
+			}
+		}
 	})
 ];

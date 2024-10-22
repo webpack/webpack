@@ -72,5 +72,25 @@ it("should work", () => {
 			expect(Boolean(cssEntryInJs)).toBe(true);
 			break;
 		}
+		case 5: {
+			expect(stats.assets.length).toBe(3);
+
+			const jsEntry = stats.assets.find(
+				a => a.name.endsWith("mixed-entry.js")
+			);
+			expect(Boolean(jsEntry)).toBe(true);
+
+			break;
+		}
+		case 6: {
+			expect(stats.assets.length).toBe(3);
+
+			const jsEntry = stats.assets.find(
+				a => a.name.endsWith("mixed-entry.js")
+			);
+			expect(Boolean(jsEntry)).toBe(true);
+
+			break;
+		}
 	}
 });
