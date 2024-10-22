@@ -4,12 +4,13 @@ const webpack = require("../../../../");
 
 /** @type {(number, any) => import("../../../../").Configuration} */
 const common = (i, options) => ({
+	target: "web",
 	output: {
 		filename: `${i}/[name].js`,
 		chunkFilename: `${i}/[name].js`,
 		cssFilename: `${i}/[name].css`,
 		cssChunkFilename: `${i}/[name].css`,
-		assetModuleFilename: `${i}/[hash][ext][query]`
+		assetModuleFilename: `${i}/[name][ext][query]`
 	},
 	module: {
 		rules: [
@@ -76,6 +77,20 @@ module.exports = [
 		}
 	}),
 	common(3, {
+		entry: {
+			"asset-entry": {
+				import: "../_images/file.png"
+			},
+			"js-entry": {
+				import: "./entry.js"
+			},
+			"css-entry": {
+				import: "./entry.css"
+			}
+		}
+	}),
+	common(4, {
+		target: "node",
 		entry: {
 			"asset-entry": {
 				import: "../_images/file.png"
