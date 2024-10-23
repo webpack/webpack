@@ -4921,12 +4921,28 @@ Array [
 	background:
 		url(img.png),
 		url(img.png),
-		url(data:image/png;base64,AAA);
+		url(d4da020aedcd249a7a41.png);
 		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
 		url(resource.png),
 		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
 		url(7976064b7fcb4f6b3916.html),
 		url(https://example.com/img.png);
+}
+
+.class-2 {
+	background: url(shared.png);
+}
+
+.class-3 {
+	background: url(shared-external.png);
+}
+
+.class-4 {
+	background: url(cde81354a9a8ce8d5f51.gif);
+}
+
+.class-5 {
+	background: url(5649e83cc54c4b57bc28.png);
 }
 
 head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
