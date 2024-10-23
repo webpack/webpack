@@ -4117,7 +4117,7 @@ declare class EvalSourceMapDevToolPlugin {
 }
 declare interface ExecuteModuleArgument {
 	module: Module;
-	moduleObject?: { id: string; exports: any; loaded: boolean };
+	moduleObject?: ModuleObject;
 	preparedInfo: any;
 	codeGenerationResult: CodeGenerationResult;
 }
@@ -5027,7 +5027,7 @@ declare class Generator {
 	constructor();
 	getTypes(module: NormalModule): Set<string>;
 	getSize(module: NormalModule, type?: string): number;
-	generate(module: NormalModule, __1: GenerateContext): Source;
+	generate(module: NormalModule, __1: GenerateContext): null | Source;
 	getConcatenationBailoutReason(
 		module: NormalModule,
 		context: ConcatenationBailoutReasonContext
@@ -5638,7 +5638,7 @@ declare class JavascriptModulesPlugin {
 		inlinedModules: Set<Module>,
 		chunkRenderContext: ChunkRenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin,
-		allStrict: boolean,
+		allStrict: undefined | boolean,
 		hasChunkModules: boolean
 	): false | Map<Module, Source>;
 	static getCompilationHooks(
@@ -8723,6 +8723,11 @@ declare class ModuleGraphConnection {
 }
 type ModuleId = string | number;
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
+declare interface ModuleObject {
+	id: string;
+	exports: any;
+	loaded: boolean;
+}
 
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
@@ -9383,8 +9388,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Module,
 				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
 				ResolveData
-			],
-			Module
+			]
 		>;
 		createParser: HookMap<SyncBailHook<[ParserOptions], Parser>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;

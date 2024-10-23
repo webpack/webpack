@@ -160,6 +160,7 @@
     "mynamespace",
     "navigations",
     "nmodule",
+    "nocheck",
     "noimport",
     "nonexistentfile",
     "nonrecursive",
