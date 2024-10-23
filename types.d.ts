@@ -2570,6 +2570,8 @@ declare interface Configuration {
 	 */
 	externalsType?:
 		| "import"
+		| "amd"
+		| "commonjs"
 		| "var"
 		| "module"
 		| "assign"
@@ -2577,16 +2579,146 @@ declare interface Configuration {
 		| "window"
 		| "self"
 		| "global"
-		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
 		| "commonjs-static"
-		| "amd"
 		| "amd-require"
 		| "umd"
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| {
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				amd?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				commonjs?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"dynamic-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				fallback?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"static-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+		  }
 		| "promise"
 		| "module-import"
 		| "script"
@@ -3564,15 +3696,15 @@ type DllReferencePluginOptions =
 			 * How the dll is exposed (libraryTarget, defaults to manifest.type).
 			 */
 			sourceType?:
+				| "amd"
+				| "commonjs"
 				| "var"
 				| "assign"
 				| "this"
 				| "window"
 				| "global"
-				| "commonjs"
 				| "commonjs2"
 				| "commonjs-module"
-				| "amd"
 				| "amd-require"
 				| "umd"
 				| "umd2"
@@ -3608,15 +3740,15 @@ type DllReferencePluginOptions =
 			 * How the dll is exposed (libraryTarget).
 			 */
 			sourceType?:
+				| "amd"
+				| "commonjs"
 				| "var"
 				| "assign"
 				| "this"
 				| "window"
 				| "global"
-				| "commonjs"
 				| "commonjs2"
 				| "commonjs-module"
-				| "amd"
 				| "amd-require"
 				| "umd"
 				| "umd2"
@@ -3666,15 +3798,15 @@ declare interface DllReferencePluginOptionsManifest {
 	 * The type how the dll is exposed (external type).
 	 */
 	type?:
+		| "amd"
+		| "commonjs"
 		| "var"
 		| "assign"
 		| "this"
 		| "window"
 		| "global"
-		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
-		| "amd"
 		| "amd-require"
 		| "umd"
 		| "umd2"
@@ -4541,9 +4673,14 @@ declare interface ExternalItemFunctionData {
 	contextInfo?: ModuleFactoryCreateDataContextInfo;
 
 	/**
-	 * The category of the referencing dependencies.
+	 * The type of the referencing dependencies.
 	 */
 	dependencyType?: string;
+
+	/**
+	 * Specifies the category of externals.
+	 */
+	externalCategory?: "amd" | "commonjs" | "static-import" | "dynamic-import";
 
 	/**
 	 * Get a resolve function with the current resolver options.
@@ -4621,8 +4758,320 @@ type Externals =
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
 declare class ExternalsPlugin {
-	constructor(type: undefined | string, externals: Externals);
-	type?: string;
+	constructor(
+		type:
+			| undefined
+			| "import"
+			| "amd"
+			| "commonjs"
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs2"
+			| "commonjs-module"
+			| "commonjs-static"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+			| {
+					/**
+					 * Literal string values of the supported external types.
+					 */
+					amd?:
+						| "import"
+						| "amd"
+						| "commonjs"
+						| "var"
+						| "module"
+						| "assign"
+						| "this"
+						| "window"
+						| "self"
+						| "global"
+						| "commonjs2"
+						| "commonjs-module"
+						| "commonjs-static"
+						| "amd-require"
+						| "umd"
+						| "umd2"
+						| "jsonp"
+						| "system"
+						| "promise"
+						| "module-import"
+						| "script"
+						| "node-commonjs";
+					/**
+					 * Literal string values of the supported external types.
+					 */
+					commonjs?:
+						| "import"
+						| "amd"
+						| "commonjs"
+						| "var"
+						| "module"
+						| "assign"
+						| "this"
+						| "window"
+						| "self"
+						| "global"
+						| "commonjs2"
+						| "commonjs-module"
+						| "commonjs-static"
+						| "amd-require"
+						| "umd"
+						| "umd2"
+						| "jsonp"
+						| "system"
+						| "promise"
+						| "module-import"
+						| "script"
+						| "node-commonjs";
+					/**
+					 * Literal string values of the supported external types.
+					 */
+					"dynamic-import"?:
+						| "import"
+						| "amd"
+						| "commonjs"
+						| "var"
+						| "module"
+						| "assign"
+						| "this"
+						| "window"
+						| "self"
+						| "global"
+						| "commonjs2"
+						| "commonjs-module"
+						| "commonjs-static"
+						| "amd-require"
+						| "umd"
+						| "umd2"
+						| "jsonp"
+						| "system"
+						| "promise"
+						| "module-import"
+						| "script"
+						| "node-commonjs";
+					/**
+					 * Literal string values of the supported external types.
+					 */
+					fallback?:
+						| "import"
+						| "amd"
+						| "commonjs"
+						| "var"
+						| "module"
+						| "assign"
+						| "this"
+						| "window"
+						| "self"
+						| "global"
+						| "commonjs2"
+						| "commonjs-module"
+						| "commonjs-static"
+						| "amd-require"
+						| "umd"
+						| "umd2"
+						| "jsonp"
+						| "system"
+						| "promise"
+						| "module-import"
+						| "script"
+						| "node-commonjs";
+					/**
+					 * Literal string values of the supported external types.
+					 */
+					"static-import"?:
+						| "import"
+						| "amd"
+						| "commonjs"
+						| "var"
+						| "module"
+						| "assign"
+						| "this"
+						| "window"
+						| "self"
+						| "global"
+						| "commonjs2"
+						| "commonjs-module"
+						| "commonjs-static"
+						| "amd-require"
+						| "umd"
+						| "umd2"
+						| "jsonp"
+						| "system"
+						| "promise"
+						| "module-import"
+						| "script"
+						| "node-commonjs";
+			  }
+			| "promise"
+			| "module-import"
+			| "script"
+			| "node-commonjs",
+		externals: Externals
+	);
+	type?:
+		| "import"
+		| "amd"
+		| "commonjs"
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs2"
+		| "commonjs-module"
+		| "commonjs-static"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| {
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				amd?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				commonjs?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"dynamic-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				fallback?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"static-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+		  }
+		| "promise"
+		| "module-import"
+		| "script"
+		| "node-commonjs";
 	externals: Externals;
 
 	/**
@@ -4677,6 +5126,8 @@ declare interface ExternalsPresets {
 }
 type ExternalsType =
 	| "import"
+	| "amd"
+	| "commonjs"
 	| "var"
 	| "module"
 	| "assign"
@@ -4684,11 +5135,9 @@ type ExternalsType =
 	| "window"
 	| "self"
 	| "global"
-	| "commonjs"
 	| "commonjs2"
 	| "commonjs-module"
 	| "commonjs-static"
-	| "amd"
 	| "amd-require"
 	| "umd"
 	| "umd2"
@@ -4697,7 +5146,139 @@ type ExternalsType =
 	| "promise"
 	| "module-import"
 	| "script"
-	| "node-commonjs";
+	| "node-commonjs"
+	| {
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			amd?:
+				| "import"
+				| "amd"
+				| "commonjs"
+				| "var"
+				| "module"
+				| "assign"
+				| "this"
+				| "window"
+				| "self"
+				| "global"
+				| "commonjs2"
+				| "commonjs-module"
+				| "commonjs-static"
+				| "amd-require"
+				| "umd"
+				| "umd2"
+				| "jsonp"
+				| "system"
+				| "promise"
+				| "module-import"
+				| "script"
+				| "node-commonjs";
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			commonjs?:
+				| "import"
+				| "amd"
+				| "commonjs"
+				| "var"
+				| "module"
+				| "assign"
+				| "this"
+				| "window"
+				| "self"
+				| "global"
+				| "commonjs2"
+				| "commonjs-module"
+				| "commonjs-static"
+				| "amd-require"
+				| "umd"
+				| "umd2"
+				| "jsonp"
+				| "system"
+				| "promise"
+				| "module-import"
+				| "script"
+				| "node-commonjs";
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"dynamic-import"?:
+				| "import"
+				| "amd"
+				| "commonjs"
+				| "var"
+				| "module"
+				| "assign"
+				| "this"
+				| "window"
+				| "self"
+				| "global"
+				| "commonjs2"
+				| "commonjs-module"
+				| "commonjs-static"
+				| "amd-require"
+				| "umd"
+				| "umd2"
+				| "jsonp"
+				| "system"
+				| "promise"
+				| "module-import"
+				| "script"
+				| "node-commonjs";
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			fallback?:
+				| "import"
+				| "amd"
+				| "commonjs"
+				| "var"
+				| "module"
+				| "assign"
+				| "this"
+				| "window"
+				| "self"
+				| "global"
+				| "commonjs2"
+				| "commonjs-module"
+				| "commonjs-static"
+				| "amd-require"
+				| "umd"
+				| "umd2"
+				| "jsonp"
+				| "system"
+				| "promise"
+				| "module-import"
+				| "script"
+				| "node-commonjs";
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"static-import"?:
+				| "import"
+				| "amd"
+				| "commonjs"
+				| "var"
+				| "module"
+				| "assign"
+				| "this"
+				| "window"
+				| "self"
+				| "global"
+				| "commonjs2"
+				| "commonjs-module"
+				| "commonjs-static"
+				| "amd-require"
+				| "umd"
+				| "umd2"
+				| "jsonp"
+				| "system"
+				| "promise"
+				| "module-import"
+				| "script"
+				| "node-commonjs";
+	  };
 declare interface FSImplementation {
 	open?: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -5412,7 +5993,7 @@ type IgnorePluginOptions =
 type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
-	externalType?: "import" | "module";
+	externalCategory?: "amd" | "commonjs" | "static-import" | "dynamic-import";
 }
 declare interface ImportModuleOptions {
 	/**
@@ -7968,7 +8549,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 		data?: object;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
-		type?: "module" | "commonjs";
+		type?: "commonjs" | "module";
 	}[];
 
 	/**
@@ -8439,6 +9020,12 @@ declare class ModuleDependency extends Dependency {
 	userRequest: string;
 	range: any;
 	assertions?: ImportAttributes;
+	getExternalCategory():
+		| undefined
+		| "amd"
+		| "commonjs"
+		| "static-import"
+		| "dynamic-import";
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -8516,6 +9103,8 @@ declare interface ModuleFederationPluginOptions {
 	 */
 	remoteType?:
 		| "import"
+		| "amd"
+		| "commonjs"
 		| "var"
 		| "module"
 		| "assign"
@@ -8523,11 +9112,9 @@ declare interface ModuleFederationPluginOptions {
 		| "window"
 		| "self"
 		| "global"
-		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
 		| "commonjs-static"
-		| "amd"
 		| "amd-require"
 		| "umd"
 		| "umd2"
@@ -8536,7 +9123,139 @@ declare interface ModuleFederationPluginOptions {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| {
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				amd?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				commonjs?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"dynamic-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				fallback?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"static-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+		  };
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -15057,6 +15776,8 @@ declare interface WebpackOptionsNormalized {
 	 */
 	externalsType?:
 		| "import"
+		| "amd"
+		| "commonjs"
 		| "var"
 		| "module"
 		| "assign"
@@ -15064,16 +15785,146 @@ declare interface WebpackOptionsNormalized {
 		| "window"
 		| "self"
 		| "global"
-		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
 		| "commonjs-static"
-		| "amd"
 		| "amd-require"
 		| "umd"
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| {
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				amd?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				commonjs?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"dynamic-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				fallback?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+				/**
+				 * Literal string values of the supported external types.
+				 */
+				"static-import"?:
+					| "import"
+					| "amd"
+					| "commonjs"
+					| "var"
+					| "module"
+					| "assign"
+					| "this"
+					| "window"
+					| "self"
+					| "global"
+					| "commonjs2"
+					| "commonjs-module"
+					| "commonjs-static"
+					| "amd-require"
+					| "umd"
+					| "umd2"
+					| "jsonp"
+					| "system"
+					| "promise"
+					| "module-import"
+					| "script"
+					| "node-commonjs";
+		  }
 		| "promise"
 		| "module-import"
 		| "script"

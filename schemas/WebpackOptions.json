@@ -1172,8 +1172,11 @@
           "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
         },
         "dependencyType": {
-          "description": "The category of the referencing dependencies.",
+          "description": "The type of the referencing dependencies.",
           "type": "string"
+        },
+        "externalCategory": {
+          "$ref": "#/definitions/ExternalsCategory"
         },
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
@@ -1224,6 +1227,10 @@
         }
       ]
     },
+    "ExternalsCategory": {
+      "description": "Specifies the category of externals.",
+      "enum": ["amd", "commonjs", "static-import", "dynamic-import"]
+    },
     "ExternalsPresets": {
       "description": "Enable presets of externals for specific targets.",
       "type": "object",
@@ -1265,6 +1272,35 @@
     },
     "ExternalsType": {
       "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "amd": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "commonjs": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "dynamic-import": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "fallback": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            },
+            "static-import": {
+              "$ref": "#/definitions/ExternalsTypeLiteral"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/ExternalsTypeLiteral"
+        }
+      ]
+    },
+    "ExternalsTypeLiteral": {
+      "description": "Literal string values of the supported external types.",
       "enum": [
         "var",
         "module",
