@@ -3354,7 +3354,7 @@ export interface LazyCompilationOptions {
 				| ((
 						compiler: import("../lib/Compiler"),
 						callback: (
-							err?: Error,
+							err: Error | null,
 							api?: import("../lib/hmr/LazyCompilationPlugin").BackendApi
 						) => void
 				  ) => void)

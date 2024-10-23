@@ -2310,8 +2310,8 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
 declare interface CompilationHooksModuleFederationPlugin {
-	addContainerEntryDependency: SyncHook<any>;
-	addFederationRuntimeDependency: SyncHook<any>;
+	addContainerEntryDependency: SyncHook<Dependency>;
+	addFederationRuntimeDependency: SyncHook<Dependency>;
 }
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string>;
@@ -7512,7 +7512,7 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err?: Error, api?: BackendApi) => void
+				callback: (err: null | Error, api?: BackendApi) => void
 		  ) => void)
 		| ((compiler: Compiler) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;

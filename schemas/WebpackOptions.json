@@ -2066,7 +2066,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err?: Error, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err: Error | null, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
