@@ -11940,6 +11940,7 @@ declare interface ResolveData {
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
+	ignoredModule?: Module;
 
 	/**
 	 * allow to use the unsafe cache
