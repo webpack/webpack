@@ -275,6 +275,9 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
+declare interface AssetDependencyMeta {
+	sourceType: "css-url";
+}
 declare interface AssetEmittedInfo {
 	content: Buffer;
 	source: Source;
@@ -4588,12 +4591,18 @@ declare class ExternalModule extends Module {
 		request: string | string[] | RequestRecord,
 		type: string,
 		userRequest: string,
-		dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta
+		dependencyMeta?:
+			| ImportDependencyMeta
+			| CssImportDependencyMeta
+			| AssetDependencyMeta
 	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
-	dependencyMeta?: ImportDependencyMeta | CssImportDependencyMeta;
+	dependencyMeta?:
+		| ImportDependencyMeta
+		| CssImportDependencyMeta
+		| AssetDependencyMeta;
 
 	/**
 	 * restore unsafe cache data

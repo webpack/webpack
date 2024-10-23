@@ -23,10 +23,25 @@ module.exports = {
 			{
 				mimetype: "text/html",
 				type: "asset/resource"
+			},
+			{
+				mimetype: "image/svg",
+				type: "asset/resource"
+			},
+			{
+				mimetype: "image/gif",
+				type: "asset/resource"
+			},
+			{
+				mimetype: "image/png",
+				type: "asset/resource"
 			}
 		]
 	},
 	output: {
 		assetModuleFilename: "[name][ext]"
+	},
+	externals: {
+		"shared-external.png": "asset shared-external.png"
 	}
 };
