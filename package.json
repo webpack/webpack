@@ -103,7 +103,7 @@
     "style-loader": "^4.0.0",
     "terser": "^5.31.1",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.23.4",
+    "tooling": "github:webpack/tooling#v1.23.4",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.2",
     "url-loader": "^4.1.0",
@@ -119,14 +119,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webpack/webpack.git"
+    "url": "git+https://github.com/webpack/webpack.git"
   },
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/webpack"
   },
   "homepage": "https://github.com/webpack/webpack",
-  "bugs": "https://github.com/webpack/webpack/issues",
+  "bugs": {
+    "url": "https://github.com/webpack/webpack/issues"
+  },
   "main": "lib/index.js",
   "bin": {
     "webpack": "bin/webpack.js"
@@ -189,5 +191,11 @@
       "node node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown",
       "cspell --cache --no-must-find-files"
     ]
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "test"
+  },
+  "keywords": []
 }

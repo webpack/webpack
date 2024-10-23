@@ -1,0 +1,72 @@
+{
+  "name": "enhanced-resolve",
+  "version": "5.17.1",
+  "author": "Tobias Koppers @sokra",
+  "description": "Offers a async require.resolve function. It's highly configurable.",
+  "files": [
+    "lib",
+    "types.d.ts",
+    "LICENSE"
+  ],
+  "browser": {
+    "process": "./lib/util/process-browser.js",
+    "module": "./lib/util/module-browser.js"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.4",
+    "tapable": "^2.2.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/graceful-fs": "^4.1.6",
+    "@types/jest": "^27.5.1",
+    "@types/node": "20.9.5",
+    "cspell": "4.2.8",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jsdoc": "^30.5.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^6.0.0",
+    "jest": "^27.5.1",
+    "lint-staged": "^10.4.0",
+    "memfs": "^3.2.0",
+    "prettier": "^2.1.2",
+    "tooling": "webpack/tooling#v1.23.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "main": "lib/index.js",
+  "types": "types.d.ts",
+  "homepage": "http://github.com/webpack/enhanced-resolve",
+  "scripts": {
+    "lint": "yarn run code-lint && yarn run type-lint && yarn typings-test && yarn run special-lint && yarn run spelling",
+    "fix": "yarn run code-lint-fix && yarn run special-lint-fix",
+    "code-lint": "eslint --cache lib test",
+    "code-lint-fix": "eslint --cache lib test --fix",
+    "type-lint": "tsc",
+    "typings-test": "tsc -p tsconfig.types.test.json",
+    "type-report": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
+    "special-lint": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-file-header && node node_modules/tooling/generate-types",
+    "special-lint-fix": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/generate-types --write",
+    "pretty": "prettier --loglevel warn --write \"lib/**/*.{js,json}\" \"test/*.js\"",
+    "pretest": "yarn lint",
+    "spelling": "cspell \"**\"",
+    "test:only": "node_modules/.bin/jest",
+    "test:watch": "yarn test:only -- --watch",
+    "test:coverage": "yarn test:only -- --collectCoverageFrom=\"lib/**/*.js\" --coverage",
+    "test": "yarn test:coverage",
+    "precover": "yarn lint",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*": "cspell --no-must-find-files",
+    "*.js": "eslint --cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webpack/enhanced-resolve.git"
+  }
+}
