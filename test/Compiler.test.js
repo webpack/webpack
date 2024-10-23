@@ -948,7 +948,7 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
-				expect(capture.toString()).toMatchInlineSnapshot(`""`);
+				expect(capture.toString()).toMatchInlineSnapshot('""');
 				done();
 			});
 		});

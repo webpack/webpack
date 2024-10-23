@@ -1,0 +1,12 @@
+.class {
+	color: red;
+	background:
+		url("./img.png"),
+		url("./img.png"),
+		url("data:image/png;base64,AAA");
+		url('./inline.png'),
+		url('./resource.png'),
+		url('./source.text'),
+		url('data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E'),
+		url('https://example.com/img.png');
+}

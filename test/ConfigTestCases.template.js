@@ -438,6 +438,7 @@ const describeCases = config => {
 											expect,
 											jest,
 											__STATS__: jsonStats,
+											__STATS_I__: i,
 											nsObj: m => {
 												Object.defineProperty(m, Symbol.toStringTag, {
 													value: "Module"

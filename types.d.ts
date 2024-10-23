@@ -1106,6 +1106,12 @@ declare class Chunk {
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, Record<string, (string | number)[]>>;
+	hasChildByOrder(
+		chunkGraph: ChunkGraph,
+		type: string,
+		includeDirectChildren?: boolean,
+		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
+	): boolean;
 }
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
@@ -2300,6 +2306,10 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
+declare interface CompilationHooksModuleFederationPlugin {
+	addContainerEntryDependency: SyncHook<any>;
+	addFederationRuntimeDependency: SyncHook<any>;
+}
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string>;
 }
@@ -2963,8 +2973,8 @@ declare interface ContextModuleOptions {
 	namespaceObject?: boolean | "strict";
 	addon?: string;
 	chunkName?: string;
-	include?: RegExp;
-	exclude?: RegExp;
+	include?: null | RegExp;
+	exclude?: null | RegExp;
 	groupOptions?: RawChunkGroupOptions;
 	typePrefix?: string;
 	category?: string;
@@ -5093,12 +5103,16 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		contentType: string,
 		name: string,
 		global: string,
-		getFilenameForChunk: (arg0: Chunk) => TemplatePath,
+		getFilenameForChunk: (
+			arg0: Chunk
+		) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string),
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
-	getFilenameForChunk: (arg0: Chunk) => TemplatePath;
+	getFilenameForChunk: (
+		arg0: Chunk
+	) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string);
 	allChunks: boolean;
 
 	/**
@@ -5618,11 +5632,6 @@ declare class JavascriptModulesPlugin {
 		allStrict: boolean,
 		hasChunkModules: boolean
 	): false | Map<Module, Source>;
-	findNewName(
-		oldName: string,
-		usedName: Set<string>,
-		extraInfo: string
-	): string;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
@@ -6661,7 +6670,7 @@ declare class JavascriptParser extends Parser {
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
 	parseCommentOptions(range: [number, number]): {
 		options: null | Record<string, any>;
-		errors: any;
+		errors: null | (Error & { comment: Comment })[];
 	};
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
@@ -8473,6 +8482,13 @@ declare class ModuleFederationPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+
+	/**
+	 * Get the compilation hooks associated with this plugin.
+	 */
+	static getCompilationHooks(
+		compilation: Compilation
+	): CompilationHooksModuleFederationPlugin;
 }
 declare interface ModuleFederationPluginOptions {
 	/**
@@ -11924,6 +11940,7 @@ declare interface ResolveData {
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
+	ignoredModule?: Module;
 
 	/**
 	 * allow to use the unsafe cache
@@ -13351,20 +13368,6 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
-	}): string;
-	assetUrl(__0: {
-		/**
-		 * the module
-		 */
-		module: Module;
-		/**
-		 * runtime
-		 */
-		runtime?: RuntimeSpec;
-		/**
-		 * the code generation results
-		 */
-		codeGenerationResults: CodeGenerationResults;
 	}): string;
 }
 declare abstract class RuntimeValue {

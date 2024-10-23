@@ -229,7 +229,7 @@ url(style6.css?foo=14)
 @import layer(super.foo) url("./style2.css?warning=4") supports(display: flex) screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) url("./style2.css?warning=5") screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url("./style2.css?warning=6");
-@import url("/style2.css?warning=6") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
+@import url("/style2.css?wrong-order-but-valid=6") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
 @namespace url(http://www.w3.org/1999/xhtml);
 @import url("./style2.css?after-namespace");
 @import supports(background: url("./img.png"));

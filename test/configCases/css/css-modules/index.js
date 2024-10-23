@@ -17,7 +17,7 @@ it("should allow to create css modules", done => {
 				"utf-8"
 			);
 			expect(cssContent).not.toContain(".my-app--");
-			expect(cssContent).toMatchSnapshot();
+			expect(cssContent).toMatchSnapshot(prod ? "prod" : "dev");
 		} catch (e) {
 			return done(e);
 		}
