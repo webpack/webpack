@@ -2310,8 +2310,8 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
 declare interface CompilationHooksModuleFederationPlugin {
-	addContainerEntryDependency: SyncHook<any>;
-	addFederationRuntimeDependency: SyncHook<any>;
+	addContainerEntryDependency: SyncHook<Dependency>;
+	addFederationRuntimeDependency: SyncHook<Dependency>;
 }
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string>;
@@ -4117,7 +4117,7 @@ declare class EvalSourceMapDevToolPlugin {
 }
 declare interface ExecuteModuleArgument {
 	module: Module;
-	moduleObject?: { id: string; exports: any; loaded: boolean };
+	moduleObject?: ModuleObject;
 	preparedInfo: any;
 	codeGenerationResult: CodeGenerationResult;
 }
@@ -5027,7 +5027,7 @@ declare class Generator {
 	constructor();
 	getTypes(module: NormalModule): Set<string>;
 	getSize(module: NormalModule, type?: string): number;
-	generate(module: NormalModule, __1: GenerateContext): Source;
+	generate(module: NormalModule, __1: GenerateContext): null | Source;
 	getConcatenationBailoutReason(
 		module: NormalModule,
 		context: ConcatenationBailoutReasonContext
@@ -5638,7 +5638,7 @@ declare class JavascriptModulesPlugin {
 		inlinedModules: Set<Module>,
 		chunkRenderContext: ChunkRenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin,
-		allStrict: boolean,
+		allStrict: undefined | boolean,
 		hasChunkModules: boolean
 	): false | Map<Module, Source>;
 	static getCompilationHooks(
@@ -7512,7 +7512,7 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err?: Error, api?: BackendApi) => void
+				callback: (err: null | Error, api?: BackendApi) => void
 		  ) => void)
 		| ((compiler: Compiler) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
@@ -8723,6 +8723,11 @@ declare class ModuleGraphConnection {
 }
 type ModuleId = string | number;
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
+declare interface ModuleObject {
+	id: string;
+	exports: any;
+	loaded: boolean;
+}
 
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
@@ -9261,7 +9266,7 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context?: any): NormalModule;
+	static deserialize(context: ObjectDeserializerContext): any;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
@@ -9383,8 +9388,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Module,
 				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
 				ResolveData
-			],
-			Module
+			]
 		>;
 		createParser: HookMap<SyncBailHook<[ParserOptions], Parser>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
@@ -10077,7 +10081,10 @@ declare interface Options {
 	associatedObjectForCache?: object;
 }
 declare abstract class OptionsApply {
-	process(options?: any, compiler?: any): void;
+	process(
+		options: WebpackOptionsNormalized,
+		compiler: Compiler
+	): WebpackOptionsNormalized;
 }
 declare interface OriginRecord {
 	module: null | Module;
@@ -15386,7 +15393,7 @@ declare namespace exports {
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
-	export const validate: (options?: any) => void;
+	export const validate: (arg0: Configuration) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],

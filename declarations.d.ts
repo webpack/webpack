@@ -407,6 +407,7 @@ interface ImportAttributeNode {
 }
 
 type TODO = any;
+type EXPECTED_ANY = any;
 
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
