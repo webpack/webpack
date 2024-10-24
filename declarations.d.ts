@@ -436,3 +436,8 @@ declare module "watchpack" {
 	}
 	export = Watchpack;
 }
+
+declare module "eslint-scope/lib/referencer" {
+	class Referencer {}
+	export = Referencer;
+}
