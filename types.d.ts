@@ -9266,7 +9266,7 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context?: any): NormalModule;
+	static deserialize(context: ObjectDeserializerContext): any;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
@@ -10081,7 +10081,10 @@ declare interface Options {
 	associatedObjectForCache?: object;
 }
 declare abstract class OptionsApply {
-	process(options?: any, compiler?: any): void;
+	process(
+		options: WebpackOptionsNormalized,
+		compiler: Compiler
+	): WebpackOptionsNormalized;
 }
 declare interface OriginRecord {
 	module: null | Module;
@@ -15390,7 +15393,7 @@ declare namespace exports {
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
-	export const validate: (options?: any) => void;
+	export const validate: (arg0: Configuration) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
