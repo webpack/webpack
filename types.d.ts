@@ -7064,6 +7064,11 @@ declare interface KnownAssetInfo {
 	javascriptModule?: boolean;
 
 	/**
+	 * fs stats
+	 */
+	stats?: Partial<IStats>;
+
+	/**
 	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
 	 */
 	related?: Record<string, string | string[]>;
