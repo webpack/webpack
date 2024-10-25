@@ -118,6 +118,12 @@ jobs:
             use_main_branches: 1
           # Test on the latest version of Node.js
           - os: ubuntu-latest
+            node-version: 23.x
+            part: a
+          - os: ubuntu-latest
+            node-version: 23.x
+            part: b
+          - os: ubuntu-latest
             node-version: 22.x
             part: a
           - os: ubuntu-latest
