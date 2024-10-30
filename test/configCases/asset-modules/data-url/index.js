@@ -15,6 +15,11 @@ const helloWorldBase64 = new URL(
 	import.meta.url
 );
 
+const urlSvg3 = new URL(
+	"data:image/svg+xml;,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 aria-hidden=%27true%27 fill=%27%23535A60%27 width=%2718%27 height=%2718%27 viewBox=%270 0 18 18%27%3E%3Cpath d=%27M3 3a2 2 0 012-2h6l4 4v10a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm7-1.5V6h4.5L10 1.5z%27%3E%3C/path%3E%3C/svg%3E",
+	import.meta.url
+);
+
 it("should generate various data-url types", () => {
 	expect(png).toContain("data:image/png;base64,");
 	expect(svg).toContain("data:image/svg+xml;base64");
@@ -24,6 +29,7 @@ it("should generate various data-url types", () => {
 	expect(urlSvg2.href).toContain(
 		"data:image/svg+xml;p=1;q=2,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke=\"%23343a40\" stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"
 	);
+	expect(urlSvg3.href).toContain("data:image/svg+xml,");
 	expect(helloWorld.href).toContain("data:text/plain,Hello%2C%20World%21");
 	expect(helloWorldBase64.href).toContain(
 		"data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=="
