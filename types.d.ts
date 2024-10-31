@@ -1155,8 +1155,8 @@ declare class ChunkGraph {
 		module: Module,
 		sourceTypes: Set<string>
 	): void;
-	getChunkModuleSourceTypes(chunk: Chunk, module: Module): Set<string>;
-	getModuleSourceTypes(module: Module): Set<string>;
+	getChunkModuleSourceTypes(chunk: Chunk, module: Module): ReadonlySet<string>;
+	getModuleSourceTypes(module: Module): ReadonlySet<string>;
 	getOrderedChunkModulesIterable(
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
@@ -5181,7 +5181,7 @@ declare interface GenerateContext {
 }
 declare class Generator {
 	constructor();
-	getTypes(module: NormalModule): Set<string>;
+	getTypes(module: NormalModule): ReadonlySet<string>;
 	getSize(module: NormalModule, type?: string): number;
 	generate(module: NormalModule, __1: GenerateContext): null | Source;
 	getConcatenationBailoutReason(
@@ -8763,7 +8763,7 @@ declare class Module extends DependenciesBlock {
 		fs: InputFileSystem,
 		callback: (arg0?: WebpackError) => void
 	): void;
-	getSourceTypes(): Set<string>;
+	getSourceTypes(): ReadonlySet<string>;
 	source(
 		dependencyTemplates: DependencyTemplates,
 		runtimeTemplate: RuntimeTemplate,
