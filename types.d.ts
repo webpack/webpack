@@ -1472,7 +1472,13 @@ declare class ChunkPrefetchPreloadPlugin {
 	constructor();
 	apply(compiler: Compiler): void;
 }
-declare interface ChunkRenderContext {
+declare interface ChunkRenderContextCssModulesPlugin {
+	/**
+	 * runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+}
+declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
 	 */
@@ -1506,7 +1512,7 @@ declare interface ChunkRenderContext {
 	/**
 	 * init fragments for the chunk
 	 */
-	chunkInitFragments: InitFragment<ChunkRenderContext>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * rendering in strict context
@@ -2289,12 +2295,22 @@ declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 		[Source, Module, WebAssemblyRenderContext]
 	>;
 }
-declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<[Source, Module, ChunkRenderContext]>;
-	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContext]
+declare interface CompilationHooksCssModulesPlugin {
+	renderModulePackage: SyncWaterfallHook<
+		[Source, Module, ChunkRenderContextCssModulesPlugin]
 	>;
-	renderModulePackage: SyncWaterfallHook<[Source, Module, ChunkRenderContext]>;
+	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+}
+declare interface CompilationHooksJavascriptModulesPlugin {
+	renderModuleContent: SyncWaterfallHook<
+		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
+	>;
+	renderModuleContainer: SyncWaterfallHook<
+		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
+	>;
+	renderModulePackage: SyncWaterfallHook<
+		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
+	>;
 	renderChunk: SyncWaterfallHook<[Source, RenderContext]>;
 	renderMain: SyncWaterfallHook<[Source, RenderContext]>;
 	renderContent: SyncWaterfallHook<[Source, RenderContext]>;
@@ -2450,7 +2466,7 @@ declare interface ConcatenatedModuleInfo {
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;
-	chunkInitFragments?: InitFragment<ChunkRenderContext>[];
+	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 	runtimeRequirements?: ReadonlySet<string>;
 	globalScope?: Scope;
 	moduleScope?: Scope;
@@ -3132,6 +3148,44 @@ declare interface CssImportDependencyMeta {
 	supports?: string;
 	media?: string;
 }
+type CssLayer = undefined | string;
+declare class CssLoadingRuntimeModule extends RuntimeModule {
+	constructor(runtimeRequirements: ReadonlySet<string>);
+	static getCompilationHooks(
+		compilation: Compilation
+	): CssLoadingRuntimeModulePluginHooks;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
+declare interface CssLoadingRuntimeModulePluginHooks {
+	createStylesheet: SyncWaterfallHook<[string, Chunk]>;
+	linkPreload: SyncWaterfallHook<[string, Chunk]>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
+}
+declare abstract class CssModule extends NormalModule {
+	cssLayer: CssLayer;
+	supports: Supports;
+	media: Media;
+	inheritance: [CssLayer, Supports, Media][];
+}
 
 /**
  * Generator options for css/module modules.
@@ -3172,6 +3226,104 @@ declare interface CssModuleParserOptions {
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+}
+declare class CssModulesPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	getModulesInOrder(
+		chunk: Chunk,
+		modules: Iterable<Module>,
+		compilation: Compilation
+	): Module[];
+	getOrderedChunkCssModules(
+		chunk: Chunk,
+		chunkGraph: ChunkGraph,
+		compilation: Compilation
+	): Module[];
+	renderModule(__0: {
+		/**
+		 * meta data
+		 */
+		metaData: string[];
+		/**
+		 * undo path for public path auto
+		 */
+		undoPath: string;
+		/**
+		 * chunk
+		 */
+		chunk: Chunk;
+		/**
+		 * chunk graph
+		 */
+		chunkGraph: ChunkGraph;
+		/**
+		 * code generation results
+		 */
+		codeGenerationResults: CodeGenerationResults;
+		/**
+		 * css module
+		 */
+		module: CssModule;
+		/**
+		 * runtime template
+		 */
+		runtimeTemplate: RuntimeTemplate;
+		/**
+		 * hooks
+		 */
+		hooks: CompilationHooksCssModulesPlugin;
+	}): Source;
+	renderChunk(__0: {
+		/**
+		 * unique name
+		 */
+		uniqueName?: string;
+		/**
+		 * compress css head data
+		 */
+		cssHeadDataCompression?: boolean;
+		/**
+		 * undo path for public path auto
+		 */
+		undoPath: string;
+		/**
+		 * chunk
+		 */
+		chunk: Chunk;
+		/**
+		 * chunk graph
+		 */
+		chunkGraph: ChunkGraph;
+		/**
+		 * code generation results
+		 */
+		codeGenerationResults: CodeGenerationResults;
+		/**
+		 * ordered css modules
+		 */
+		modules: CssModule[];
+		/**
+		 * runtime template
+		 */
+		runtimeTemplate: RuntimeTemplate;
+		/**
+		 * hooks
+		 */
+		hooks: CompilationHooksCssModulesPlugin;
+	}): Source;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CompilationHooksCssModulesPlugin;
+	static getChunkFilenameTemplate(
+		chunk: Chunk,
+		outputOptions: OutputNormalized
+	): TemplatePath;
+	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
 
 /**
@@ -5655,7 +5807,7 @@ declare class JavascriptModulesPlugin {
 	apply(compiler: Compiler): void;
 	renderModule(
 		module: Module,
-		renderContext: ChunkRenderContext,
+		renderContext: ChunkRenderContextJavascriptModulesPlugin,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		factory: boolean
 	): null | Source;
@@ -5685,7 +5837,7 @@ declare class JavascriptModulesPlugin {
 		allModules: Module[],
 		renderContext: MainRenderContext,
 		inlinedModules: Set<Module>,
-		chunkRenderContext: ChunkRenderContext,
+		chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		allStrict: undefined | boolean,
 		hasChunkModules: boolean
@@ -8362,6 +8514,7 @@ declare interface MatchObject {
 	exclude?: string | RegExp | (string | RegExp)[];
 }
 type Matcher = string | RegExp | (string | RegExp)[];
+type Media = undefined | string;
 
 /**
  * Options object for in-memory caching.
@@ -8596,6 +8749,32 @@ declare class Module extends DependenciesBlock {
 	get errors(): any;
 	get warnings(): any;
 	used: any;
+}
+declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
+	constructor(runtimeRequirements: ReadonlySet<string>);
+	static getCompilationHooks(
+		compilation: Compilation
+	): JsonpCompilationPluginHooks;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
 }
 declare class ModuleConcatenationPlugin {
 	constructor();
@@ -9146,7 +9325,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					arg0: Source,
 					arg1: Module,
-					arg2: ChunkRenderContext,
+					arg2: ChunkRenderContextJavascriptModulesPlugin,
 					arg3: DependencyTemplates
 				) => Source
 			) => void;
@@ -9159,7 +9338,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					arg0: Source,
 					arg1: Module,
-					arg2: ChunkRenderContext,
+					arg2: ChunkRenderContextJavascriptModulesPlugin,
 					arg3: DependencyTemplates
 				) => Source
 			) => void;
@@ -9172,7 +9351,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					arg0: Source,
 					arg1: Module,
-					arg2: ChunkRenderContext,
+					arg2: ChunkRenderContextJavascriptModulesPlugin,
 					arg3: DependencyTemplates
 				) => Source
 			) => void;
@@ -9185,7 +9364,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					arg0: Source,
 					arg1: Module,
-					arg2: ChunkRenderContext,
+					arg2: ChunkRenderContextJavascriptModulesPlugin,
 					arg3: DependencyTemplates
 				) => Source
 			) => void;
@@ -14769,6 +14948,7 @@ type StatsValue =
 	| "minimal"
 	| "normal"
 	| "detailed";
+type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	constructor(__0: {
 		/**
@@ -14835,7 +15015,7 @@ declare class Template {
 	static asString(str: string | string[]): string;
 	static getModulesArrayBounds(modules: WithId[]): false | [number, number];
 	static renderChunkModules(
-		renderContext: ChunkRenderContext,
+		renderContext: ChunkRenderContextJavascriptModulesPlugin,
 		modules: Module[],
 		renderModule: (arg0: Module) => null | Source,
 		prefix?: string
@@ -15818,8 +15998,12 @@ declare namespace exports {
 			FetchCompileAsyncWasmPlugin,
 			FetchCompileWasmPlugin,
 			JsonpChunkLoadingRuntimeModule,
-			JsonpTemplatePlugin
+			JsonpTemplatePlugin,
+			CssLoadingRuntimeModule
 		};
+	}
+	export namespace esm {
+		export { ModuleChunkLoadingRuntimeModule };
 	}
 	export namespace webworker {
 		export { WebWorkerTemplatePlugin };
@@ -15838,6 +16022,9 @@ declare namespace exports {
 	}
 	export namespace wasm {
 		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
+	}
+	export namespace css {
+		export { CssModulesPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
