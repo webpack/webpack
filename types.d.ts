@@ -141,11 +141,11 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	embedInRuntimeBailout(
 		module: Module,
-		renderContext: RenderContext,
+		renderContext: RenderContextJavascriptModulesPlugin,
 		libraryContext: LibraryContext<T>
 	): undefined | string;
 	strictRuntimeBailout(
-		renderContext: RenderContext,
+		renderContext: RenderContextJavascriptModulesPlugin,
 		libraryContext: LibraryContext<T>
 	): undefined | string;
 	runtimeRequirements(
@@ -155,7 +155,7 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	render(
 		source: Source,
-		renderContext: RenderContext,
+		renderContext: RenderContextJavascriptModulesPlugin,
 		libraryContext: LibraryContext<T>
 	): Source;
 	renderStartup(
@@ -1474,9 +1474,34 @@ declare class ChunkPrefetchPreloadPlugin {
 }
 declare interface ChunkRenderContextCssModulesPlugin {
 	/**
-	 * runtime template
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * the runtime template
 	 */
 	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * meta data for runtime
+	 */
+	metaData: string[];
+
+	/**
+	 * undo path to css file
+	 */
+	undoPath: string;
 }
 declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
@@ -1548,7 +1573,11 @@ declare abstract class ChunkTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+				fn: (
+					arg0: Source,
+					arg1: ModuleTemplate,
+					arg2: RenderContextJavascriptModulesPlugin
+				) => Source
 			) => void;
 		};
 		render: {
@@ -1556,7 +1585,11 @@ declare abstract class ChunkTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Source, arg1: ModuleTemplate, arg2: RenderContext) => Source
+				fn: (
+					arg0: Source,
+					arg1: ModuleTemplate,
+					arg2: RenderContextJavascriptModulesPlugin
+				) => Source
 			) => void;
 		};
 		renderWithEntry: {
@@ -2311,20 +2344,33 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderModulePackage: SyncWaterfallHook<
 		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
 	>;
-	renderChunk: SyncWaterfallHook<[Source, RenderContext]>;
-	renderMain: SyncWaterfallHook<[Source, RenderContext]>;
-	renderContent: SyncWaterfallHook<[Source, RenderContext]>;
-	render: SyncWaterfallHook<[Source, RenderContext]>;
+	renderChunk: SyncWaterfallHook<
+		[Source, RenderContextJavascriptModulesPlugin]
+	>;
+	renderMain: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
+	renderContent: SyncWaterfallHook<
+		[Source, RenderContextJavascriptModulesPlugin]
+	>;
+	render: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
 	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	inlineInRuntimeBailout: SyncBailHook<
 		[Module, RenderBootstrapContext],
 		string | void
 	>;
-	embedInRuntimeBailout: SyncBailHook<[Module, RenderContext], string | void>;
-	strictRuntimeBailout: SyncBailHook<[RenderContext], string | void>;
+	embedInRuntimeBailout: SyncBailHook<
+		[Module, RenderContextJavascriptModulesPlugin],
+		string | void
+	>;
+	strictRuntimeBailout: SyncBailHook<
+		[RenderContextJavascriptModulesPlugin],
+		string | void
+	>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean | void>;
+	useSourceMap: SyncBailHook<
+		[Chunk, RenderContextJavascriptModulesPlugin],
+		boolean | void
+	>;
 }
 declare interface CompilationHooksModuleFederationPlugin {
 	addContainerEntryDependency: SyncHook<Dependency>;
@@ -3244,78 +3290,15 @@ declare class CssModulesPlugin {
 		chunkGraph: ChunkGraph,
 		compilation: Compilation
 	): Module[];
-	renderModule(__0: {
-		/**
-		 * meta data
-		 */
-		metaData: string[];
-		/**
-		 * undo path for public path auto
-		 */
-		undoPath: string;
-		/**
-		 * chunk
-		 */
-		chunk: Chunk;
-		/**
-		 * chunk graph
-		 */
-		chunkGraph: ChunkGraph;
-		/**
-		 * code generation results
-		 */
-		codeGenerationResults: CodeGenerationResults;
-		/**
-		 * css module
-		 */
-		module: CssModule;
-		/**
-		 * runtime template
-		 */
-		runtimeTemplate: RuntimeTemplate;
-		/**
-		 * hooks
-		 */
-		hooks: CompilationHooksCssModulesPlugin;
-	}): Source;
-	renderChunk(__0: {
-		/**
-		 * unique name
-		 */
-		uniqueName?: string;
-		/**
-		 * compress css head data
-		 */
-		cssHeadDataCompression?: boolean;
-		/**
-		 * undo path for public path auto
-		 */
-		undoPath: string;
-		/**
-		 * chunk
-		 */
-		chunk: Chunk;
-		/**
-		 * chunk graph
-		 */
-		chunkGraph: ChunkGraph;
-		/**
-		 * code generation results
-		 */
-		codeGenerationResults: CodeGenerationResults;
-		/**
-		 * ordered css modules
-		 */
-		modules: CssModule[];
-		/**
-		 * runtime template
-		 */
-		runtimeTemplate: RuntimeTemplate;
-		/**
-		 * hooks
-		 */
-		hooks: CompilationHooksCssModulesPlugin;
-	}): Source;
+	renderModule(
+		module: CssModule,
+		renderContext: ChunkRenderContextCssModulesPlugin,
+		hooks: CompilationHooksCssModulesPlugin
+	): Source;
+	renderChunk(
+		__0: RenderContextCssModulesPlugin,
+		hooks: CompilationHooksCssModulesPlugin
+	): Source;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksCssModulesPlugin;
@@ -5812,7 +5795,7 @@ declare class JavascriptModulesPlugin {
 		factory: boolean
 	): null | Source;
 	renderChunk(
-		renderContext: RenderContext,
+		renderContext: RenderContextJavascriptModulesPlugin,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): Source;
 	renderMain(
@@ -12134,7 +12117,48 @@ declare interface RenderBootstrapContext {
 	 */
 	hash: string;
 }
-declare interface RenderContext {
+declare interface RenderContextCssModulesPlugin {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the unique name
+	 */
+	uniqueName: string;
+
+	/**
+	 * need compress
+	 */
+	cssHeadDataCompression: boolean;
+
+	/**
+	 * undo path to css file
+	 */
+	undoPath: string;
+
+	/**
+	 * modules
+	 */
+	modules: CssModule[];
+}
+declare interface RenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
 	 */
@@ -14242,7 +14266,9 @@ declare abstract class StackedMap<K, V> {
 	get size(): number;
 	createChild(): StackedMap<K, V>;
 }
-type StartupRenderContext = RenderContext & { inlined: boolean };
+type StartupRenderContext = RenderContextJavascriptModulesPlugin & {
+	inlined: boolean;
+};
 declare interface StatFs {
 	(
 		path: PathLikeFs,
@@ -15022,13 +15048,13 @@ declare class Template {
 	): null | Source;
 	static renderRuntimeModules(
 		runtimeModules: RuntimeModule[],
-		renderContext: RenderContext & {
+		renderContext: RenderContextJavascriptModulesPlugin & {
 			codeGenerationResults?: CodeGenerationResults;
 		}
 	): Source;
 	static renderChunkRuntimeModules(
 		runtimeModules: RuntimeModule[],
-		renderContext: RenderContext
+		renderContext: RenderContextJavascriptModulesPlugin
 	): Source;
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
