@@ -14,6 +14,7 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
+	BaseNode,
 	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
@@ -30,9 +31,9 @@ import {
 	Directive,
 	DoWhileStatement,
 	EmptyStatement,
-	ExportAllDeclaration,
+	ExportAllDeclaration as ExportAllDeclarationImport,
 	ExportDefaultDeclaration,
-	ExportNamedDeclaration,
+	ExportNamedDeclaration as ExportNamedDeclarationImport,
 	ExportSpecifier,
 	ExpressionStatement,
 	ForInStatement,
@@ -42,9 +43,9 @@ import {
 	FunctionExpression,
 	Identifier,
 	IfStatement,
-	ImportDeclaration,
+	ImportDeclaration as ImportDeclarationImport,
 	ImportDefaultSpecifier,
-	ImportExpression,
+	ImportExpression as ImportExpressionImport,
 	ImportNamespaceSpecifier,
 	ImportSpecifier,
 	LabeledStatement,
@@ -561,6 +562,10 @@ declare abstract class BasicEvaluatedExpression {
 	getMemberRanges?: () => [number, number][];
 	expression?:
 		| Program
+		| ImportDeclarationImport
+		| ExportNamedDeclarationImport
+		| ExportAllDeclarationImport
+		| ImportExpressionImport
 		| UnaryExpression
 		| ArrayExpression
 		| ArrowFunctionExpression
@@ -574,7 +579,6 @@ declare abstract class BasicEvaluatedExpression {
 		| ConditionalExpression
 		| FunctionExpression
 		| Identifier
-		| ImportExpression
 		| SimpleLiteral
 		| RegExpLiteral
 		| BigIntLiteral
@@ -612,10 +616,7 @@ declare abstract class BasicEvaluatedExpression {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
-		| ImportDeclaration
-		| ExportNamedDeclaration
 		| ExportDefaultDeclaration
-		| ExportAllDeclaration
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
@@ -784,6 +785,10 @@ declare abstract class BasicEvaluatedExpression {
 	setExpression(
 		expression?:
 			| Program
+			| ImportDeclarationImport
+			| ExportNamedDeclarationImport
+			| ExportAllDeclarationImport
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -797,7 +802,6 @@ declare abstract class BasicEvaluatedExpression {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -835,10 +839,7 @@ declare abstract class BasicEvaluatedExpression {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
@@ -4366,6 +4367,9 @@ declare interface ExperimentsNormalizedExtra {
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 }
+type ExportAllDeclarationJavascriptParser = ExportAllDeclarationImport & {
+	attributes?: ImportAttribute[];
+};
 declare abstract class ExportInfo {
 	name: string;
 
@@ -4463,6 +4467,9 @@ declare abstract class ExportInfo {
 		| "not provided";
 	getRenameInfo(): string;
 }
+type ExportNamedDeclarationJavascriptParser = ExportNamedDeclarationImport & {
+	attributes?: ImportAttribute[];
+};
 declare interface ExportSpec {
 	/**
 	 * the name of the export
@@ -4614,6 +4621,7 @@ declare interface ExposesObject {
 	[index: string]: string | ExposesConfig | string[];
 }
 type Expression =
+	| ImportExpressionImport
 	| UnaryExpression
 	| ArrayExpression
 	| ArrowFunctionExpression
@@ -4627,7 +4635,6 @@ type Expression =
 	| ConditionalExpression
 	| FunctionExpression
 	| Identifier
-	| ImportExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
@@ -5307,6 +5314,7 @@ declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<
 		[
 			(
+				| ImportExpressionImport
 				| UnaryExpression
 				| ArrayExpression
 				| ArrowFunctionExpression
@@ -5320,7 +5328,6 @@ declare interface HMRJavascriptParserHooks {
 				| ConditionalExpression
 				| FunctionExpression
 				| Identifier
-				| ImportExpression
 				| SimpleLiteral
 				| RegExpLiteral
 				| BigIntLiteral
@@ -5602,11 +5609,50 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
+type ImportAttribute = BaseNode & {
+	type: "ImportAttribute";
+	key: Identifier | SimpleLiteral | RegExpLiteral | BigIntLiteral;
+	value: Literal;
+};
 type ImportAttributes = Record<string, string> & {};
+type ImportDeclarationJavascriptParser = ImportDeclarationImport & {
+	attributes?: ImportAttribute[];
+};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
 	externalType?: "import" | "module";
 }
+type ImportExpressionJavascriptParser = ImportExpressionImport & {
+	options?:
+		| null
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression;
+};
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -5846,6 +5892,7 @@ declare class JavascriptParser extends Parser {
 		evaluate: HookMap<
 			SyncBailHook<
 				[
+					| ImportExpressionImport
 					| UnaryExpression
 					| ArrayExpression
 					| ArrowFunctionExpression
@@ -5859,7 +5906,6 @@ declare class JavascriptParser extends Parser {
 					| ConditionalExpression
 					| FunctionExpression
 					| Identifier
-					| ImportExpression
 					| SimpleLiteral
 					| RegExpLiteral
 					| BigIntLiteral
@@ -5910,6 +5956,7 @@ declare class JavascriptParser extends Parser {
 			SyncBailHook<
 				[
 					(
+						| ImportExpressionImport
 						| UnaryExpression
 						| ArrayExpression
 						| ArrowFunctionExpression
@@ -5923,7 +5970,6 @@ declare class JavascriptParser extends Parser {
 						| ConditionalExpression
 						| FunctionExpression
 						| Identifier
-						| ImportExpression
 						| SimpleLiteral
 						| RegExpLiteral
 						| BigIntLiteral
@@ -5949,6 +5995,9 @@ declare class JavascriptParser extends Parser {
 		>;
 		preStatement: SyncBailHook<
 			[
+				| ImportDeclarationJavascriptParser
+				| ExportNamedDeclarationJavascriptParser
+				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
@@ -5971,15 +6020,15 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| ImportDeclaration
-				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
-				| ExportAllDeclaration
 			],
 			boolean | void
 		>;
 		blockPreStatement: SyncBailHook<
 			[
+				| ImportDeclarationJavascriptParser
+				| ExportNamedDeclarationJavascriptParser
+				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
@@ -6002,15 +6051,15 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| ImportDeclaration
-				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
-				| ExportAllDeclaration
 			],
 			boolean | void
 		>;
 		statement: SyncBailHook<
 			[
+				| ImportDeclarationJavascriptParser
+				| ExportNamedDeclarationJavascriptParser
+				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
@@ -6033,10 +6082,7 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| ImportDeclaration
-				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
-				| ExportAllDeclaration
 			],
 			boolean | void
 		>;
@@ -6061,25 +6107,34 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
+		import: SyncBailHook<
+			[ImportDeclarationJavascriptParser, ImportSource],
+			boolean | void
+		>;
 		importSpecifier: SyncBailHook<
-			[ImportDeclaration, ImportSource, null | string, string],
+			[ImportDeclarationJavascriptParser, ImportSource, null | string, string],
 			boolean | void
 		>;
 		export: SyncBailHook<
-			[ExportNamedDeclaration | ExportDefaultDeclaration],
+			[ExportNamedDeclarationJavascriptParser | ExportDefaultDeclaration],
 			boolean | void
 		>;
 		exportImport: SyncBailHook<
-			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+			[
+				(
+					| ExportNamedDeclarationJavascriptParser
+					| ExportAllDeclarationJavascriptParser
+				),
+				ImportSource
+			],
 			boolean | void
 		>;
 		exportDeclaration: SyncBailHook<
 			[
 				(
-					| ExportNamedDeclaration
+					| ExportNamedDeclarationJavascriptParser
+					| ExportAllDeclarationJavascriptParser
 					| ExportDefaultDeclaration
-					| ExportAllDeclaration
 				),
 				Declaration
 			],
@@ -6092,9 +6147,9 @@ declare class JavascriptParser extends Parser {
 		exportSpecifier: SyncBailHook<
 			[
 				(
-					| ExportNamedDeclaration
+					| ExportNamedDeclarationJavascriptParser
+					| ExportAllDeclarationJavascriptParser
 					| ExportDefaultDeclaration
-					| ExportAllDeclaration
 				),
 				string,
 				string,
@@ -6104,7 +6159,10 @@ declare class JavascriptParser extends Parser {
 		>;
 		exportImportSpecifier: SyncBailHook<
 			[
-				ExportNamedDeclaration | ExportAllDeclaration,
+				(
+					| ExportNamedDeclarationJavascriptParser
+					| ExportAllDeclarationJavascriptParser
+				),
 				ImportSource,
 				null | string,
 				null | string,
@@ -6129,9 +6187,13 @@ declare class JavascriptParser extends Parser {
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		importCall: SyncBailHook<[ImportExpression], boolean | void>;
+		importCall: SyncBailHook<
+			[ImportExpressionJavascriptParser],
+			boolean | void
+		>;
 		topLevelAwait: SyncBailHook<
 			[
+				| ImportExpressionImport
 				| UnaryExpression
 				| ArrayExpression
 				| ArrowFunctionExpression
@@ -6145,7 +6207,6 @@ declare class JavascriptParser extends Parser {
 				| ConditionalExpression
 				| FunctionExpression
 				| Identifier
-				| ImportExpression
 				| SimpleLiteral
 				| RegExpLiteral
 				| BigIntLiteral
@@ -6219,6 +6280,10 @@ declare class JavascriptParser extends Parser {
 	semicolons?: Set<number>;
 	statementPath?: StatementPathItem[];
 	prevStatement?:
+		| ImportDeclarationJavascriptParser
+		| ExportNamedDeclarationJavascriptParser
+		| ExportAllDeclarationJavascriptParser
+		| ImportExpressionImport
 		| UnaryExpression
 		| ArrayExpression
 		| ArrowFunctionExpression
@@ -6232,7 +6297,6 @@ declare class JavascriptParser extends Parser {
 		| ConditionalExpression
 		| FunctionExpression
 		| Identifier
-		| ImportExpression
 		| SimpleLiteral
 		| RegExpLiteral
 		| BigIntLiteral
@@ -6268,10 +6332,7 @@ declare class JavascriptParser extends Parser {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportDefaultDeclaration
-		| ExportAllDeclaration;
+		| ExportDefaultDeclaration;
 	destructuringAssignmentProperties?: WeakMap<
 		Expression,
 		Set<DestructuringAssignmentProperty>
@@ -6283,6 +6344,7 @@ declare class JavascriptParser extends Parser {
 	): undefined | Set<DestructuringAssignmentProperty>;
 	getRenameIdentifier(
 		expr:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6296,7 +6358,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6319,6 +6380,9 @@ declare class JavascriptParser extends Parser {
 	 */
 	preWalkStatements(
 		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6341,10 +6405,7 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 		)[]
 	): void;
 
@@ -6353,6 +6414,9 @@ declare class JavascriptParser extends Parser {
 	 */
 	blockPreWalkStatements(
 		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6375,10 +6439,7 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 		)[]
 	): void;
 
@@ -6387,6 +6448,9 @@ declare class JavascriptParser extends Parser {
 	 */
 	walkStatements(
 		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6409,10 +6473,7 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 		)[]
 	): void;
 
@@ -6421,6 +6482,9 @@ declare class JavascriptParser extends Parser {
 	 */
 	preWalkStatement(
 		statement:
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6443,13 +6507,13 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 	): void;
 	blockPreWalkStatement(
 		statement:
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6472,13 +6536,13 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 	): void;
 	walkStatement(
 		statement:
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6501,10 +6565,7 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 	): void;
 
 	/**
@@ -6543,16 +6604,24 @@ declare class JavascriptParser extends Parser {
 	walkFunctionDeclaration(statement: FunctionDeclaration): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
-	blockPreWalkImportDeclaration(statement: ImportDeclaration): void;
+	blockPreWalkImportDeclaration(
+		statement: ImportDeclarationJavascriptParser
+	): void;
 	enterDeclaration(
 		declaration: Declaration,
 		onIdent: (arg0: string, arg1: Identifier) => void
 	): void;
-	blockPreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
-	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
+	blockPreWalkExportNamedDeclaration(
+		statement: ExportNamedDeclarationJavascriptParser
+	): void;
+	walkExportNamedDeclaration(
+		statement: ExportNamedDeclarationJavascriptParser
+	): void;
 	blockPreWalkExportDefaultDeclaration(statement?: any): void;
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
-	blockPreWalkExportAllDeclaration(statement: ExportAllDeclaration): void;
+	blockPreWalkExportAllDeclaration(
+		statement: ExportAllDeclarationJavascriptParser
+	): void;
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
 	blockPreWalkVariableDeclaration(statement: VariableDeclaration): void;
 	preWalkVariableDeclarator(declarator: VariableDeclarator): void;
@@ -6571,6 +6640,7 @@ declare class JavascriptParser extends Parser {
 	walkExpressions(
 		expressions: (
 			| null
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6584,7 +6654,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6625,7 +6694,7 @@ declare class JavascriptParser extends Parser {
 	walkTaggedTemplateExpression(expression: TaggedTemplateExpression): void;
 	walkClassExpression(expression: ClassExpression): void;
 	walkChainExpression(expression: ChainExpression): void;
-	walkImportExpression(expression: ImportExpression): void;
+	walkImportExpression(expression: ImportExpressionJavascriptParser): void;
 	walkCallExpression(expression: CallExpression): void;
 	walkMemberExpression(expression: MemberExpression): void;
 	walkMemberExpressionWithExpressionName(
@@ -6641,6 +6710,7 @@ declare class JavascriptParser extends Parser {
 	callHooksForExpression<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		expr:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6654,7 +6724,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6674,6 +6743,7 @@ declare class JavascriptParser extends Parser {
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		expr:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6687,7 +6757,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6754,6 +6823,9 @@ declare class JavascriptParser extends Parser {
 	inBlockScope(fn: () => void): void;
 	detectMode(
 		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -6776,10 +6848,7 @@ declare class JavascriptParser extends Parser {
 			| ForStatement
 			| ForInStatement
 			| ForOfStatement
-			| ImportDeclaration
-			| ExportNamedDeclaration
 			| ExportDefaultDeclaration
-			| ExportAllDeclaration
 			| Directive
 		)[]
 	): void;
@@ -6829,6 +6898,7 @@ declare class JavascriptParser extends Parser {
 	): void;
 	evaluateExpression(
 		expression:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6842,7 +6912,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6871,6 +6940,7 @@ declare class JavascriptParser extends Parser {
 		expr:
 			| undefined
 			| null
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6884,7 +6954,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6923,6 +6992,7 @@ declare class JavascriptParser extends Parser {
 	};
 	extractMemberExpressionChain(
 		expression:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6936,7 +7006,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6954,6 +7023,7 @@ declare class JavascriptParser extends Parser {
 	): {
 		members: string[];
 		object:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -6967,7 +7037,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -6990,6 +7059,7 @@ declare class JavascriptParser extends Parser {
 	): undefined | { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression:
+			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
 			| ArrowFunctionExpression
@@ -7003,7 +7073,6 @@ declare class JavascriptParser extends Parser {
 			| ConditionalExpression
 			| FunctionExpression
 			| Identifier
-			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
@@ -7032,6 +7101,13 @@ declare class JavascriptParser extends Parser {
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
+	static getImportAttributes: (
+		node:
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
+			| ImportExpressionJavascriptParser
+	) => undefined | ImportAttributes;
 }
 
 /**
@@ -8029,6 +8105,7 @@ declare interface LimitChunkCountPluginOptions {
 	 */
 	maxChunks: number;
 }
+type Literal = SimpleLiteral | RegExpLiteral | BigIntLiteral;
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
@@ -14369,6 +14446,10 @@ type Statement =
 	| ForInStatement
 	| ForOfStatement;
 type StatementPathItem =
+	| ImportDeclarationJavascriptParser
+	| ExportNamedDeclarationJavascriptParser
+	| ExportAllDeclarationJavascriptParser
+	| ImportExpressionImport
 	| UnaryExpression
 	| ArrayExpression
 	| ArrowFunctionExpression
@@ -14382,7 +14463,6 @@ type StatementPathItem =
 	| ConditionalExpression
 	| FunctionExpression
 	| Identifier
-	| ImportExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
@@ -14418,10 +14498,7 @@ type StatementPathItem =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportDefaultDeclaration
-	| ExportAllDeclaration;
+	| ExportDefaultDeclaration;
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
