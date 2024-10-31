@@ -30,7 +30,7 @@ module.exports = [
 		optimization: {
 			runtimeChunk: "single",
 			moduleIds: "named",
-			chunkIds: "named",
+			chunkIds: "named"
 		},
 		plugins: [
 			new ModuleFederationPlugin({
@@ -60,7 +60,7 @@ module.exports = [
 		optimization: {
 			runtimeChunk: "single",
 			moduleIds: "named",
-			chunkIds: "named",
+			chunkIds: "named"
 		},
 		output: {
 			filename: "module/[name].mjs",
