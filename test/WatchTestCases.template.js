@@ -241,6 +241,7 @@ const describeCases = config => {
 												jsonStats,
 												"error",
 												"Error",
+												options,
 												compilationFinished
 											)
 										)
@@ -251,6 +252,7 @@ const describeCases = config => {
 												jsonStats,
 												"warning",
 												"Warning",
+												options,
 												compilationFinished
 											)
 										)
@@ -378,6 +380,7 @@ const describeCases = config => {
 															{ deprecations },
 															"deprecation",
 															"Deprecation",
+															options,
 															done
 														)
 													) {

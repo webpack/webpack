@@ -109,6 +109,7 @@ const describeCases = config => {
 										jsonStats,
 										"error",
 										"Error",
+										options,
 										done
 									)
 								) {
@@ -120,6 +121,7 @@ const describeCases = config => {
 										jsonStats,
 										"warning",
 										"Warning",
+										options,
 										done
 									)
 								) {
@@ -221,6 +223,7 @@ const describeCases = config => {
 												"error",
 												`errors${fakeUpdateLoaderOptions.updateIndex}`,
 												"Error",
+												options,
 												callback
 											)
 										) {
@@ -233,6 +236,7 @@ const describeCases = config => {
 												"warning",
 												`warnings${fakeUpdateLoaderOptions.updateIndex}`,
 												"Warning",
+												options,
 												callback
 											)
 										) {
