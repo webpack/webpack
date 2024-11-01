@@ -200,6 +200,33 @@ export type ExternalItem =
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
+	| {
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			amd?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			commonjs?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"dynamic-import"?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			fallback?: ExternalsTypeLiteral;
+			/**
+			 * Literal string values of the supported external types.
+			 */
+			"static-import"?: ExternalsTypeLiteral;
+	  }
+	| ExternalsTypeLiteral;
+/**
+ * Literal string values of the supported external types.
+ */
+export type ExternalsTypeLiteral =
 	| "var"
 	| "module"
 	| "assign"
@@ -791,6 +818,14 @@ export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
  */
 export type ExperimentsNormalized = ExperimentsCommon &
 	ExperimentsNormalizedExtra;
+/**
+ * Specifies the category of externals.
+ */
+export type ExternalsCategory =
+	| "amd"
+	| "commonjs"
+	| "static-import"
+	| "dynamic-import";
 /**
  * The dependency used for the external.
  */
@@ -3109,9 +3144,13 @@ export interface ExternalItemFunctionData {
 	 */
 	contextInfo?: import("../lib/ModuleFactory").ModuleFactoryCreateDataContextInfo;
 	/**
-	 * The category of the referencing dependencies.
+	 * The type of the referencing dependencies.
 	 */
 	dependencyType?: string;
+	/**
+	 * Specifies the category of externals.
+	 */
+	externalCategory?: ExternalsCategory;
 	/**
 	 * Get a resolve function with the current resolver options.
 	 */
