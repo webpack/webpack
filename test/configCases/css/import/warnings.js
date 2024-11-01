@@ -12,5 +12,6 @@ module.exports = [
 	/Expected URL in '@import layer\(test\) supports\(background: url\("\.\/img\.png"\)\) screen and \(min-width: 400px\);'/,
 	/Expected URL in '@import screen and \(min-width: 400px\);'/,
 	/Expected URL in '@import supports\(background: url\("\.\/img\.png"\)\) screen and \(min-width: 400px\);'/,
-	/Expected URL in '@import supports\(background: url\("\.\/img\.png"\)\);'/
+	/Expected URL in '@import supports\(background: url\("\.\/img\.png"\)\);'/,
+	/'@namespace' is not supported in bundled CSS/
 ];

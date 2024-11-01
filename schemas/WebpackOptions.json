@@ -395,8 +395,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
     },
@@ -483,8 +489,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
     },
@@ -516,10 +528,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserImport": {
+      "description": "Enable/disable `@import` at-rules handling.",
+      "type": "boolean"
     },
     "CssParserNamedExports": {
       "description": "Use ES modules named export for css exports.",
@@ -530,10 +552,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserUrl": {
+      "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
+      "type": "boolean"
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",

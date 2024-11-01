@@ -3130,9 +3130,19 @@ declare interface CssAutoGeneratorOptions {
  */
 declare interface CssAutoParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: boolean;
+
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: boolean;
 }
 
 /**
@@ -3186,9 +3196,19 @@ declare interface CssGlobalGeneratorOptions {
  */
 declare interface CssGlobalParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: boolean;
+
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: boolean;
 }
 declare interface CssImportDependencyMeta {
 	layer?: string;
@@ -3270,9 +3290,19 @@ declare interface CssModuleGeneratorOptions {
  */
 declare interface CssModuleParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: boolean;
+
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: boolean;
 }
 declare class CssModulesPlugin {
 	constructor();
@@ -3315,9 +3345,19 @@ declare class CssModulesPlugin {
  */
 declare interface CssParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: boolean;
+
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare class DefinePlugin {

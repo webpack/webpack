@@ -775,9 +775,17 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName = string;
 /**
+ * Enable/disable `@import` at-rules handling.
+ */
+export type CssParserImport = boolean;
+/**
  * Use ES modules named export for css exports.
  */
 export type CssParserNamedExports = boolean;
+/**
+ * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+ */
+export type CssParserUrl = boolean;
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -2907,9 +2915,17 @@ export interface CssAutoGeneratorOptions {
  */
 export interface CssAutoParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Generator options for css modules.
@@ -2950,9 +2966,17 @@ export interface CssGlobalGeneratorOptions {
  */
 export interface CssGlobalParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Generator options for css/module modules.
@@ -2980,18 +3004,34 @@ export interface CssModuleGeneratorOptions {
  */
 export interface CssModuleParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Parser options for css modules.
  */
 export interface CssParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * No generator options are supported for this module type.
