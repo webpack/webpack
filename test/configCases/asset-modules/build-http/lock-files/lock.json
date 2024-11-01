@@ -1,0 +1,4 @@
+{
+  "https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/asset-modules/_images/file.svg": { "integrity": "sha512-ncmj1otv+/Hu0YMJTrkNR+Tnzm9oQZt4PAKpmch4P73Gle2YoMdjhG5lAFxRurztcA/tRy5d8aI5gOet9D1Kag==", "contentType": "image/svg+xml" },
+  "version": 1
+}

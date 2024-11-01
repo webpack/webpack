@@ -1,0 +1,5 @@
+@import "https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/import/print.css";
+
+div {
+	background: url(https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/url/img.png)
+}

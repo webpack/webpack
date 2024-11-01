@@ -1,0 +1,6 @@
+{
+  "https://github.com/webpack/webpack/blob/main/test/configCases/css/url/img1x.png?raw=true": "no-cache",
+  "https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/import/print.css": { "integrity": "sha512-/myPbDE4wFl8iP0bC1CXR+X+TOscaPV9+NbYoBGSQC+isfd0aenGk15EijukV04CW61CXR+c22ZgG0dp7ldntw==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/url/img.png": { "integrity": "sha512-bHqIPBYwzPsVLYcTDqJzwgvIaxLjmezufiCVXAMI0Naelf3eWVdydMA40hXbSuB0dZCGjCepuGaI7Ze8kLM+Ew==", "contentType": "image/png" },
+  "version": 1
+}

@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ConfigCacheTestCases css build-http exported tests should work with URLs in CSS 1`] = `
+Array [
+  "/*!*******************************************************************************************************************!*\\\\
+  !*** css https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/import/print.css ***!
+  \\\\*******************************************************************************************************************/
+body {
+	background: black;
+}
+
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+
+div {
+	background: url(09a1a1112c577c279435.png)
+}
+
+head{--webpack-main:&https\\\\:\\\\/\\\\/raw\\\\.githubusercontent\\\\.com\\\\/webpack\\\\/webpack\\\\/refs\\\\/heads\\\\/main\\\\/test\\\\/configCases\\\\/css\\\\/import\\\\/print\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
 Object {
   "UsedClassName": "_identifiers_module_css-UsedClassName",
