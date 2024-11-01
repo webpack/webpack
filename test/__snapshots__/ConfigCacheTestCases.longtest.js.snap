@@ -7081,6 +7081,16 @@ div {
 	a204: src(img.09a1a1112c577c279435.png);
 }
 
+div {
+	a205: url(img.09a1a1112c577c279435.png);
+	a206: url(data:,);
+	a208: url(./img.png);
+	a208: url(data:,);
+	a209: url(data:,);
+	a210: url(data:,);
+	a211: url(\\\\'img.png\\\\');
+}
+
 head{--webpack-main:\\\\#test,&\\\\.\\\\/nested\\\\.css,&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
@@ -7711,6 +7721,16 @@ div {
 	a202: src(var(--foo));
 	a203: src(\\"./img.png\\");
 	a204: src(\\"img.png\\");
+}
+
+div {
+	a205: url(alias-url.png);
+	a206: url(alias-url-1.png);
+	a208: url(external-url.png);
+	a208: url(external-url-2.png);
+	a209: url(unresolved.png);
+	a210: url(ignore.png);
+	a211: url(\\"schema:test\\");
 }
 
 head{--webpack-main:\\\\#test,&\\\\.\\\\/nested\\\\.css,&\\\\.\\\\/style\\\\.css;}",
