@@ -1,5 +1,6 @@
-/** @type {import("../../../../").Configuration} */
 const path = require("path");
+
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	experiments: {
