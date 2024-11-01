@@ -1,3 +1,5 @@
+const webpack = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = [
 	{
@@ -7,6 +9,9 @@ module.exports = [
 			css: true
 		},
 		resolve: {
+			alias: {
+				"/alias.css": false
+			},
 			byDependency: {
 				"css-import": {
 					conditionNames: ["custom-name", "..."],
@@ -43,7 +48,8 @@ module.exports = [
 			"external-12.css": "css-import external-12.css",
 			"external-13.css": "css-import external-13.css",
 			"external-14.css": "css-import external-14.css"
-		}
+		},
+		plugins: [new webpack.IgnorePlugin({ resourceRegExp: /ignore\.css/ })]
 	},
 	{
 		target: "web",
