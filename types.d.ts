@@ -15839,7 +15839,7 @@ declare namespace exports {
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
-	export const validate: (arg0: Configuration) => void;
+	export const validate: (arg0: Configuration | Configuration[]) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
