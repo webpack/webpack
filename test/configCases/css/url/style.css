@@ -609,3 +609,13 @@ div {
 	a203: src("./img.png");
 	a204: src("img.png");
 }
+
+div {
+	a205: url(alias-url.png);
+	a206: url(alias-url-1.png);
+	a208: url(external-url.png);
+	a208: url(external-url-2.png);
+	a209: url(unresolved.png);
+	a210: url(ignore.png);
+	a211: url("schema:test");
+}

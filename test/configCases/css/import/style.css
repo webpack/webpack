@@ -257,6 +257,13 @@ url(style6.css?foo=14)
 @import url("external-13.css") supports(not (display: flex));
 @import url("external-14.css") layer(default) supports(display: grid) screen and (max-width: 400px);
 
+@import url("ignore.css");
+@import url("list-of-media-queries.css");
+@import url("/alias.css");
+@import url("circular.css");
+/* FIXME */
+/*@import url("webpackIgnore-order.css");*/
+
 body {
 	background: red;
 }
