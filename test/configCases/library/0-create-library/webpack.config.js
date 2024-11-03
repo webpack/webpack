@@ -155,6 +155,22 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "false-iife-umd",
+			filename: "false-iife-umd.js",
+			library: {
+				type: "umd"
+			},
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		ignoreWarnings: [error => error.name === "FalseIifeUmdWarning"]
+	},
+	{
+		output: {
 			uniqueName: "umd-default",
 			filename: "umd-default.js",
 			libraryTarget: "umd",
