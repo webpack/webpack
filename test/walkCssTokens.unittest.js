@@ -6,7 +6,7 @@ describe("walkCssTokens", () => {
 	const test = (name, content, fn) => {
 		it(`should parse ${name}`, () => {
 			const results = [];
-			walkCssTokens(content, {
+			walkCssTokens(content, 0, {
 				comment: (input, s, e) => {
 					results.push(["comment", input.slice(s, e)]);
 					return e;
