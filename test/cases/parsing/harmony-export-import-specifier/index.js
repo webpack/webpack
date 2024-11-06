@@ -6,12 +6,16 @@ import { b1, usedB1, usedB2, usedB3, usedB4 } from "./b.js";
 import { usedE1, usedE2 } from "./e.js";
 import { h } from "./h.js";
 import * as m from "./m";
-import {object as obj} from "./m";
+import { object as obj } from "./m";
+import cjs from "./cjs2";
 import * as o from "./o";
 import * as p from "./p";
 import * as q from "./q";
 import * as so from "./side-effect-free/o";
 import * as sm from "./side-effect-free/m";
+import json1 from "./some.json";
+import json2 from "./some1.json";
+import weirdCjs from "./weird-cjs";
 
 it("namespace export as from commonjs should override named export", function () {
 	expect(x).toBe(1);
@@ -48,6 +52,16 @@ it("should handle 'm in n' case", () => {
 	expect(obj.aaa).toBe(true);
 	expect("not_here" in m.object).toBe(false);
 	expect("not_here" in obj).toBe(false);
+	expect("__esModule" in q).toBe(true);
+	expect(() => "value" in q.__esModule).toThrow();
+	expect(() => "not_here" in json1).toThrow();
+	expect("not_here" in json2).toBe(false);
+	expect("a" in json2).toBe(true);
+	expect("a" in cjs).toBe(true);
+	expect("not_here" in cjs).toBe(false);
+	expect("not_here" in weirdCjs).toBe(false);
+	expect("a" in weirdCjs).toBe(true);
+	expect(() => "a" in weirdCjs.a).toThrow();
 	expect("aaa" in o).toBe(true);
 	expect("aaa" in p).toBe(false);
 	expect("ccc" in m).toBe(false);
@@ -64,4 +78,13 @@ it("should handle 'm in n' case", () => {
 		expect(m.usedA).toBe(true);
 		expect(m.canMangleA).toBe(true);
 	}
+});
+
+it("issue-15759", () => {
+	function foo() {
+		// PLEASE CONFIRM there is no space after return
+		// prettier-ignore
+		return"usedA"in m;
+	}
+	expect(foo.call()).toBe(true);
 });

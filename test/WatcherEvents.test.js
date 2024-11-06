@@ -10,24 +10,23 @@ const createCompiler = config => {
 	return compiler;
 };
 
-const createSingleCompiler = () => {
-	return createCompiler({
+const createSingleCompiler = () =>
+	createCompiler({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js"
 	});
-};
 
-const createMultiCompiler = () => {
-	return createCompiler([
+const createMultiCompiler = () =>
+	createCompiler([
 		{
 			context: path.join(__dirname, "fixtures"),
 			entry: "./a.js"
 		}
 	]);
-};
 
 describe("WatcherEvents", () => {
 	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
 		return;
 	}

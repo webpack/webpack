@@ -7,8 +7,7 @@ module.exports = {
 		};
 	},
 	output: {
-		filename: data => {
-			return data.chunk.name === "a" ? `${data.chunk.name}.js` : "[name].js";
-		}
+		filename: data =>
+			data.chunk.name === "a" ? `${data.chunk.name}.js` : "[name].js"
 	}
 };

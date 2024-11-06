@@ -6,7 +6,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "vendor",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		entry: ["./vendor", "./vendor2"],
 		output: {
 			path: path.resolve(__dirname, "dist"),
@@ -23,7 +23,7 @@ module.exports = [
 
 	{
 		name: "app",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		dependencies: ["vendor"],
 		entry: {
 			pageA: "./pageA",
@@ -46,7 +46,7 @@ module.exports = [
 # dist/vendor.js
 
 ```javascript
-var vendor_5993716ff0c3ad2aef3c;
+var vendor_3fdea2c5a4937b737605;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -126,7 +126,7 @@ module.exports = "Vendor2";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_5993716ff0c3ad2aef3c = __webpack_exports__;
+/******/ 	vendor_3fdea2c5a4937b737605 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -152,18 +152,18 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_5993716ff0c3ad2aef3c ***!
+  !*** delegated ./vendor.js from dll-reference vendor_3fdea2c5a4937b737605 ***!
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_5993716ff0c3ad2aef3c */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_3fdea2c5a4937b737605 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_5993716ff0c3ad2aef3c" ***!
+  !*** external "vendor_3fdea2c5a4937b737605" ***!
   \**********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -171,7 +171,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_5993716ff0c3ad2ae
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_5993716ff0c3ad2aef3c;
+module.exports = vendor_3fdea2c5a4937b737605;
 
 /***/ })
 /******/ 	]);
@@ -235,7 +235,7 @@ vendor:
       [used exports unknown]
       dll entry
       used as library export
-  vendor (webpack 5.51.1) compiled successfully
+  vendor (webpack 5.78.0) compiled successfully
 
 app:
   asset pageB.js 2.63 KiB [emitted] (name: pageB)
@@ -261,7 +261,7 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.51.1) compiled successfully
+  app (webpack 5.78.0) compiled successfully
 ```
 
 ## Production mode
@@ -275,7 +275,7 @@ vendor:
     dll main 12 bytes [built] [code generated]
       dll entry
       used as library export
-  vendor (webpack 5.51.1) compiled successfully
+  vendor (webpack 5.78.0) compiled successfully
 
 app:
   asset pageA.js 297 bytes [emitted] [minimized] (name: pageA)
@@ -301,5 +301,5 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageA.js 2:0-14
       entry ./pageA pageA
-  app (webpack 5.51.1) compiled successfully
+  app (webpack 5.78.0) compiled successfully
 ```

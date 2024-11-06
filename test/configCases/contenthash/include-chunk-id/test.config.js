@@ -4,7 +4,7 @@ const allFilenameHashes = new Set();
 const allChunkHashes = new Set();
 
 module.exports = {
-	findBundle: function(i, options) {
+	findBundle: function (i, options) {
 		const filename = findOutputFiles(options, new RegExp(`^bundle${i}`))[0];
 		const filenameHash = /\.([a-f0-9]+)\.js$/.exec(filename)[1];
 		allFilenameHashes.add(filenameHash);
@@ -13,7 +13,7 @@ module.exports = {
 		const chunkHash = /\.([a-f0-9]+)\.js$/.exec(chunk)[1];
 		allChunkHashes.add(chunkHash);
 
-		return "./" + filename;
+		return `./${filename}`;
 	},
 	afterExecute: () => {
 		expect(allFilenameHashes.size).toBe(2);

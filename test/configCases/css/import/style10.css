@@ -1,0 +1,9 @@
+@import url(./style11.css);
+@import url(https://test.cases/path/../../../../configCases/css/import/external1.css);
+@import url(./style12.css);
+@import url(./style13.css);
+
+
+.style10 {
+	color: red;
+}

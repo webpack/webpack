@@ -6,6 +6,11 @@ const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");
 
 describe("FileSystemInfo", () => {
+	afterEach(() => {
+		// restore the spy created with spyOn
+		jest.restoreAllMocks();
+	});
+
 	const files = [
 		"/path/file.txt",
 		"/path/nested/deep/file.txt",
@@ -19,7 +24,10 @@ describe("FileSystemInfo", () => {
 		"/path/nested/deep/symlink/file.txt",
 		"/path/context+files/sub/symlink/file.txt",
 		"/path/context/sub/symlink/file.txt",
-		"/path/missing.txt"
+		"/path/missing.txt",
+		"/path/node_modules/@foo/package1/index.js",
+		"/path/node_modules/@foo/package2/index.js",
+		"/path/node_modules/bar-package3/index.js"
 	];
 	const directories = [
 		"/path/context+files",
@@ -27,6 +35,10 @@ describe("FileSystemInfo", () => {
 		"/path/missing",
 		"/path/node_modules/package",
 		"/path/node_modules/missing",
+		"/path/node_modules/@foo",
+		"/path/node_modules/@foo/package1",
+		"/path/node_modules/@foo/package2",
+		"/path/node_modules/bar-package3",
 		"/path/cache/package-1234",
 		"/path/cache/package-missing"
 	];
@@ -48,18 +60,27 @@ describe("FileSystemInfo", () => {
 		"/path/node_modules/package/ignored.txt",
 		"/path/cache/package-1234/ignored.txt"
 	];
+	const unmanagedPaths = [
+		"/path/node_modules/@foo/package1",
+		"/path/node_modules/@foo/package2",
+		"/path/node_modules/bar-package3"
+	];
 	const managedPaths = ["/path/node_modules"];
 	const immutablePaths = ["/path/cache"];
 	const createFs = () => {
 		const fs = createFsFromVolume(new Volume());
-		fs.mkdirpSync("/path/context+files/sub");
-		fs.mkdirpSync("/path/context/sub");
-		fs.mkdirpSync("/path/nested/deep");
-		fs.mkdirpSync("/path/node_modules/package");
-		fs.mkdirpSync("/path/cache/package-1234");
-		fs.mkdirpSync("/path/folder/context");
-		fs.mkdirpSync("/path/folder/context+files");
-		fs.mkdirpSync("/path/folder/nested");
+		fs.mkdirSync("/path/context+files/sub", { recursive: true });
+		fs.mkdirSync("/path/context/sub", { recursive: true });
+		fs.mkdirSync("/path/nested/deep", { recursive: true });
+		fs.mkdirSync("/path/node_modules/package", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo/package1", { recursive: true });
+		fs.mkdirSync("/path/node_modules/@foo/package2", { recursive: true });
+		fs.mkdirSync("/path/node_modules/bar-package3", { recursive: true });
+		fs.mkdirSync("/path/cache/package-1234", { recursive: true });
+		fs.mkdirSync("/path/folder/context", { recursive: true });
+		fs.mkdirSync("/path/folder/context+files", { recursive: true });
+		fs.mkdirSync("/path/folder/nested", { recursive: true });
 		fs.writeFileSync("/path/file.txt", "Hello World");
 		fs.writeFileSync("/path/file2.txt", "Hello World2");
 		fs.writeFileSync("/path/nested/deep/file.txt", "Hello World");
@@ -92,6 +113,15 @@ describe("FileSystemInfo", () => {
 		fs.writeFileSync("/path/folder/context/file.txt", "Hello World");
 		fs.writeFileSync("/path/folder/context+files/file.txt", "Hello World");
 		fs.writeFileSync("/path/folder/nested/file.txt", "Hello World");
+		fs.writeFileSync(
+			"/path/node_modules/@foo/package1/index.js",
+			"Hello World"
+		);
+		fs.writeFileSync(
+			"/path/node_modules/@foo/package2/index.js",
+			"Hello World"
+		);
+		fs.writeFileSync("/path/node_modules/bar-package3/index.js", "Hello World");
 		fs.symlinkSync("/path/folder/context", "/path/context/sub/symlink", "dir");
 		fs.symlinkSync(
 			"/path/folder/context+files",
@@ -110,6 +140,7 @@ describe("FileSystemInfo", () => {
 		};
 		const fsInfo = new FileSystemInfo(fs, {
 			logger,
+			unmanagedPaths,
 			managedPaths,
 			immutablePaths,
 			hashFunction: "sha256"
@@ -218,18 +249,13 @@ ${details(snapshot)}`)
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
 				filename,
-
 				JSON.stringify({
 					...data,
-					version: data.version + ".1"
+					version: `${data.version}.1`
 				})
 			);
 		} else {
-			fs.writeFileSync(
-				filename,
-
-				oldContent + "!"
-			);
+			fs.writeFileSync(filename, `${oldContent}!`);
 		}
 	};
 
@@ -287,6 +313,9 @@ ${details(snapshot)}`)
 				"/path/folder/context/file.txt",
 				"/path/folder/context+files/file.txt",
 				"/path/folder/nested/file.txt",
+				"/path/node_modules/@foo/package1/index.js",
+				"/path/node_modules/@foo/package2/index.js",
+				"/path/node_modules/bar-package3/index.js",
 				...(name !== "timestamp" ? ignoredFileChanges : []),
 				...(name === "hash" ? ["/path/context/sub/ignored.txt"] : [])
 			]) {
@@ -363,4 +392,112 @@ ${details(snapshot)}`)
 			}
 		});
 	}
+
+	describe("stable iterables identity", () => {
+		const options = { timestamp: true };
+
+		/**
+		 * @param {function((WebpackError | null)=, (Snapshot | null)=): void} callback callback function
+		 */
+		function getSnapshot(callback) {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				options,
+				callback
+			);
+		}
+
+		it("should return same iterable for getFileIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				done();
+			});
+		});
+
+		it("should return same iterable for getContextIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getContextIterable()).toEqual(
+					snapshot.getContextIterable()
+				);
+				done();
+			});
+		});
+
+		it("should return same iterable for getMissingIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				done();
+			});
+		});
+	});
+
+	describe("symlinks", () => {
+		it("should work with symlinks with errors", done => {
+			const fs = createFs();
+
+			fs.symlinkSync(
+				"/path/folder/context",
+				"/path/context/sub/symlink-error",
+				"dir"
+			);
+
+			const originalReadlink = fs.readlink;
+
+			let i = 0;
+
+			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
+				if (path === "/path/context/sub/symlink-error" && i < 2) {
+					i += 1;
+					callback(new Error("test"));
+					return;
+				}
+
+				originalReadlink(path, callback);
+			});
+
+			createSnapshot(
+				fs,
+				["timestamp", { timestamp: true }],
+				(err, snapshot, snapshot2) => {
+					if (err) return done(err);
+					expectSnapshotsState(fs, snapshot, snapshot2, true, done);
+				}
+			);
+		});
+
+		it("should work with symlinks with errors #1", done => {
+			const fs = createFs();
+
+			fs.symlinkSync(
+				"/path/folder/context",
+				"/path/context/sub/symlink-error",
+				"dir"
+			);
+
+			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
+				callback(new Error("test"));
+			});
+
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					expect(snapshot).toBe(null);
+					done();
+				}
+			);
+		});
+	});
 });

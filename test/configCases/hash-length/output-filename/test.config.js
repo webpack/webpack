@@ -1,15 +1,16 @@
 var fs = require("fs");
 
-var findFile = function (files, regex) {
-	return files.find(function (file) {
+const findFile = (files, regex) =>
+	files.find(function (file) {
 		if (regex.test(file)) {
 			return true;
 		}
-	});
-};
 
-var verifyFilenameLength = function (filename, expectedNameLength) {
-	expect(filename).toMatch(new RegExp("^.{" + expectedNameLength + "}$"));
+		return false;
+	});
+
+const verifyFilenameLength = (filename, expectedNameLength) => {
+	expect(filename).toMatch(new RegExp(`^.{${expectedNameLength}}$`));
 };
 
 module.exports = {
@@ -18,11 +19,11 @@ module.exports = {
 
 		var bundleDetects = [
 			options.amd.expectedChunkFilenameLength && {
-				regex: new RegExp("^\\d+.bundle" + i, "i"),
+				regex: new RegExp(`^\\d+.bundle${i}`, "i"),
 				expectedNameLength: options.amd.expectedChunkFilenameLength
 			},
 			{
-				regex: new RegExp("^bundle" + i, "i"),
+				regex: new RegExp(`^bundle${i}`, "i"),
 				expectedNameLength: options.amd.expectedFilenameLength
 			}
 		].filter(Boolean);
@@ -45,7 +46,7 @@ module.exports = {
 			);
 		}
 
-		return "./" + filename;
+		return `./${filename}`;
 	},
 	afterExecute: () => {
 		delete global.webpackChunk;

@@ -1,5 +1,5 @@
-var supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
+const supports = require("webassembly-feature");
 
-module.exports = function(config) {
-	return supportsWebAssembly();
+module.exports = function (config) {
+	return supports.simd();
 };

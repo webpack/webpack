@@ -6,7 +6,7 @@ const { ItemCacheFacade, MultiItemCache } = require("../lib/CacheFacade");
 describe("MultiItemCache", () => {
 	it("Throws when getting items from an empty Cache", () => {
 		const multiItemCache = new MultiItemCache(generateItemCaches(0));
-		expect(() => multiItemCache.get(_ => _())).toThrowError();
+		expect(() => multiItemCache.get(_ => _())).toThrow();
 	});
 
 	it("Returns the single ItemCacheFacade when passed an array of length 1", () => {
@@ -45,11 +45,7 @@ describe("MultiItemCache", () => {
 		for (let i = 0; i < howMany; ++i) {
 			const name = `ItemCache${i}`;
 			const tag = `ItemTag${i}`;
-			const dataGen =
-				dataGenerator ||
-				(() => {
-					return { name: tag };
-				});
+			const dataGen = dataGenerator || (() => ({ name: tag }));
 			const cache = new Cache();
 			cache.hooks.get.tapAsync(
 				"DataReturner",

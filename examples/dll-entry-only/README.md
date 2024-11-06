@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_c76e18f6e067cdcb6208;
+var dll_3f097cf91db05865c656;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -208,7 +208,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_c76e18f6e067cdcb6208 = __webpack_exports__;
+/******/ 	dll_3f097cf91db05865c656 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -217,7 +217,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_c76e18f6e067cdcb6208","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_3f097cf91db05865c656","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -234,7 +234,7 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [en
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -248,5 +248,5 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [en
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

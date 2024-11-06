@@ -1,0 +1,10 @@
+{
+  "chunks": {
+    "byName": {
+      "vendors~async": 123
+    },
+    "bySource": {
+      "1 index.js ./async": 123
+    }
+  }
+}

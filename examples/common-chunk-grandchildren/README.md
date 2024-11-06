@@ -86,7 +86,7 @@ module.exports = function() {
 const path = require("path");
 
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		main: ["./example.js"]
 	},
@@ -207,7 +207,6 @@ module.exports = {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -300,7 +299,7 @@ module.exports = {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -327,11 +326,11 @@ var main = function() {
 	Promise.all(/*! require.ensure */[__webpack_require__.e(421), __webpack_require__.e(366)]).then((() => {
 		const page = __webpack_require__(/*! ./pageA */ 1);
 		page();
-	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 	__webpack_require__.e(/*! require.ensure */ 588).then((() => {
 		const page = __webpack_require__(/*! ./pageB */ 3);
 		page();
-	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 };
 
 main();
@@ -385,7 +384,7 @@ module.exports = function() {
 	Promise.all(/*! require.ensure */[__webpack_require__.e(421), __webpack_require__.e(145)]).then((()=>{
 		const page = __webpack_require__(/*! ./pageC */ 4);
 		page();
-	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 };
 
 
@@ -450,8 +449,8 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.11 KiB [emitted] (name: main)
-asset 588.output.js 736 bytes [emitted]
+asset output.js 9.09 KiB [emitted] (name: main)
+asset 588.output.js 739 bytes [emitted]
 asset 366.output.js 558 bytes [emitted]
 asset 145.output.js 552 bytes [emitted]
 asset 421.output.js 434 bytes [emitted]
@@ -461,9 +460,9 @@ chunk (runtime: main) 145.output.js 136 bytes [rendered]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -487,13 +486,13 @@ chunk (runtime: main) 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.8 KiB [emitted] [minimized] (name: main)
+asset output.js 1.79 KiB [emitted] [minimized] (name: main)
 asset 588.output.js 198 bytes [emitted] [minimized]
 asset 145.output.js 134 bytes [emitted] [minimized]
 asset 366.output.js 134 bytes [emitted] [minimized]
@@ -504,9 +503,9 @@ chunk (runtime: main) 145.output.js 136 bytes [rendered]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -530,5 +529,5 @@ chunk (runtime: main) 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

@@ -1,45 +1,55 @@
 declare namespace webpack {
-	type HotEvent =
-		| {
-				type: "disposed";
-				/** The module in question. */
-				moduleId: number;
-		  }
-		| {
-				type: "self-declined" | "unaccepted";
-				/** The module in question. */
-				moduleId: number;
-				/** the chain from where the update was propagated. */
-				chain: number[];
-		  }
+	type DeclinedEvent =
 		| {
 				type: "declined";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the chain from where the update was propagated. */
-				chain: number[];
+				chain: (number | string)[];
 				/** the module id of the declining parent */
-				parentId: number;
+				parentId: number | string;
 		  }
 		| {
-				type: "accepted";
+				type: "self-declined";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the chain from where the update was propagated. */
-				chain: number[];
-				/** the modules that are outdated and will be disposed */
-				outdatedModules: number[];
-				/** the accepted dependencies that are outdated */
-				outdatedDependencies: {
-					[id: number]: number[];
-				};
-		  }
+				chain: (number | string)[];
+		  };
+
+	type UnacceptedEvent = {
+		type: "unaccepted";
+		/** The module in question. */
+		moduleId: number | string;
+		/** the chain from where the update was propagated. */
+		chain: (number | string)[];
+	};
+
+	type AcceptedEvent = {
+		type: "accepted";
+		/** The module in question. */
+		moduleId: number | string;
+		/** the modules that are outdated and will be disposed */
+		outdatedModules: (number | string)[];
+		/** the accepted dependencies that are outdated */
+		outdatedDependencies: {
+			[id: number]: (number | string)[];
+		};
+	};
+
+	type DisposedEvent = {
+		type: "disposed";
+		/** The module in question. */
+		moduleId: number | string;
+	};
+
+	type ErroredEvent =
 		| {
 				type: "accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -48,7 +58,7 @@ declare namespace webpack {
 		| {
 				type: "self-accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -57,29 +67,36 @@ declare namespace webpack {
 		| {
 				type: "accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 		  }
 		| {
 				type: "self-accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 		  };
+
+	type HotEvent =
+		| DeclinedEvent
+		| UnacceptedEvent
+		| AcceptedEvent
+		| DisposedEvent
+		| ErroredEvent;
 
 	interface ApplyOptions {
 		ignoreUnaccepted?: boolean;
 		ignoreDeclined?: boolean;
 		ignoreErrored?: boolean;
-		onDeclined?(callback: (info: HotEvent) => void): void;
-		onUnaccepted?(callback: (info: HotEvent) => void): void;
-		onAccepted?(callback: (info: HotEvent) => void): void;
-		onDisposed?(callback: (info: HotEvent) => void): void;
-		onErrored?(callback: (info: HotEvent) => void): void;
+		onDeclined?: (event: DeclinedEvent) => void;
+		onUnaccepted?: (event: UnacceptedEvent) => void;
+		onAccepted?: (event: AcceptedEvent) => void;
+		onDisposed?: (event: DisposedEvent) => void;
+		onErrored?: (event: ErroredEvent) => void;
 	}
 
 	const enum HotUpdateStatus {
@@ -157,6 +174,7 @@ interface ImportMeta {
 			exclude?: RegExp;
 			preload?: boolean | number;
 			prefetch?: boolean | number;
+			fetchPriority?: "low" | "high" | "auto";
 			chunkName?: string;
 			exports?: string | string[][];
 			mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";

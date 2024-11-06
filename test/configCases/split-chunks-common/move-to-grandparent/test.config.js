@@ -1,8 +1,5 @@
 module.exports = {
-	findBundle: function(i, options) {
-		return [
-			"./main.js",
-			"./misc.js",
-		];
+	findBundle: function (i, options) {
+		return ["./main.js", "./misc.js"];
 	}
 };

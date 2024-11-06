@@ -50,8 +50,6 @@
 [two-explicit-vendor-chunks](two-explicit-vendor-chunks)
 
 ## Code Splitted
-[code-splitted-css-bundle](code-splitted-css-bundle)
-
 [code-splitted-require.context-amd](code-splitted-require.context-amd) example demonstrating contexts in a code-split environment with AMD.
 
 [code-splitted-require.context](code-splitted-require.context) example demonstrating contexts in a code-split environment.
@@ -59,7 +57,7 @@
 ## Code Splitting
 [code-splitting](code-splitting) example demonstrating a very simple case of Code Splitting.
 
-[code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the builder loader
+[code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the bundle loader
 
 [code-splitting-harmony](code-splitting-harmony)
 

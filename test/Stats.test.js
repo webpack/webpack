@@ -4,8 +4,8 @@ require("./helpers/warmup-webpack");
 
 const { createFsFromVolume, Volume } = require("memfs");
 
-const compile = options => {
-	return new Promise((resolve, reject) => {
+const compile = options =>
+	new Promise((resolve, reject) => {
 		const webpack = require("..");
 		const compiler = webpack(options);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
@@ -17,7 +17,6 @@ const compile = options => {
 			}
 		});
 	});
-};
 
 describe("Stats", () => {
 	it("should print env string in stats", async () => {
@@ -61,6 +60,22 @@ describe("Stats", () => {
 				all: false
 			})
 		).toEqual({});
+	});
+	it("should the results of hasWarnings() be affected by ignoreWarnings", async () => {
+		const stats = await compile({
+			mode: "development",
+			context: __dirname,
+			entry: "./fixtures/ignoreWarnings/index",
+			module: {
+				rules: [
+					{
+						loader: "./fixtures/ignoreWarnings/loader"
+					}
+				]
+			},
+			ignoreWarnings: [/__mocked__warning__/]
+		});
+		expect(stats.hasWarnings()).toBeFalsy();
 	});
 	describe("chunkGroups", () => {
 		it("should be empty when there is no additional chunks", async () => {
@@ -175,10 +190,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2961,
+			          "size": 3060,
 			        },
 			      ],
-			      "assetsSize": 2961,
+			      "assetsSize": 3060,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -223,10 +238,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2961,
+			        "size": 3060,
 			      },
 			      "name": "entryB.js",
-			      "size": 2961,
+			      "size": 3060,
 			      "type": "asset",
 			    },
 			    Object {

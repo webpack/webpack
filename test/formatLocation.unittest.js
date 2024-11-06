@@ -73,9 +73,9 @@ describe("formatLocation", () => {
 			result: ""
 		}
 	];
-	testCases.forEach(testCase => {
+	for (const testCase of testCases) {
 		it(`should format location correctly for ${testCase.name}`, () => {
 			expect(formatLocation(testCase.loc)).toEqual(testCase.result);
 		});
-	});
+	}
 });

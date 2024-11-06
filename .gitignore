@@ -19,4 +19,5 @@
 .vscode
 .cache
 .eslintcache
+.cspellcache
 package-lock.json

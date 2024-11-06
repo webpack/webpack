@@ -50,7 +50,7 @@ module.exports = {
 					for (const module of [
 						...chunkModules["other-vendors"],
 						...chunkModules["react-vendors"],
-						...chunkModules["app"]
+						...chunkModules.app
 					]) {
 						expect(chunkModules.page1).not.toContain(module);
 						expect(chunkModules.page2).not.toContain(module);
@@ -58,7 +58,7 @@ module.exports = {
 
 					for (const module of [
 						...chunkModules["other-vendors"],
-						...chunkModules["app"]
+						...chunkModules.app
 					]) {
 						expect([...chunkModules.page3]).not.toContain(module);
 					}

@@ -8,7 +8,9 @@ const config = o => ({
 			? ["node-commonjs fs", "promises"]
 			: "node-commonjs fs/promises",
 		"module-path": "module path",
-		path: "node-commonjs path"
+		path: "node-commonjs path",
+		"module-import-url": "module-import url",
+		url: "node-commonjs url"
 	},
 	optimization: {
 		concatenateModules: true,

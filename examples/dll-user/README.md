@@ -10,7 +10,7 @@ This is the _user_ bundle, which uses the manifest from [dll-reference example](
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),
@@ -46,18 +46,18 @@ console.log(require("module"));
 /* 0 */,
 /* 1 */
 /*!**************************************************************************!*\
-  !*** delegated ./alpha.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  !*** delegated ./alpha.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
   \**************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!*********************************************!*\
-  !*** external "alpha_32ae439e7568b31a353c" ***!
+  !*** external "alpha_a53f6ab3ecd4de18316c" ***!
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -65,34 +65,34 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a35
 /***/ ((module) => {
 
 "use strict";
-module.exports = alpha_32ae439e7568b31a353c;
+module.exports = alpha_a53f6ab3ecd4de18316c;
 
 /***/ }),
 /* 3 */
 /*!**********************************************************************!*\
-  !*** delegated ./a.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  !*** delegated ./a.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(2);
+module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(2);
 
 /***/ }),
 /* 4 */
 /*!************************************************************************!*\
-  !*** delegated ./beta.js from dll-reference beta_32ae439e7568b31a353c ***!
+  !*** delegated ./beta.js from dll-reference beta_a53f6ab3ecd4de18316c ***!
   \************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(5);
+module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(5);
 
 /***/ }),
 /* 5 */
 /*!********************************************!*\
-  !*** external "beta_32ae439e7568b31a353c" ***!
+  !*** external "beta_a53f6ab3ecd4de18316c" ***!
   \********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -100,40 +100,40 @@ module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353
 /***/ ((module) => {
 
 "use strict";
-module.exports = beta_32ae439e7568b31a353c;
+module.exports = beta_a53f6ab3ecd4de18316c;
 
 /***/ }),
 /* 6 */
 /*!*********************************************************************!*\
-  !*** delegated ./b.js from dll-reference beta_32ae439e7568b31a353c ***!
+  !*** delegated ./b.js from dll-reference beta_a53f6ab3ecd4de18316c ***!
   \*********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(6);
+module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(6);
 
 /***/ }),
 /* 7 */
 /*!**********************************************************************!*\
-  !*** delegated ./c.jsx from dll-reference beta_32ae439e7568b31a353c ***!
+  !*** delegated ./c.jsx from dll-reference beta_a53f6ab3ecd4de18316c ***!
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(7);
+module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(7);
 
 /***/ }),
 /* 8 */
 /*!*****************************************************************************************!*\
-  !*** delegated ../node_modules/module.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  !*** delegated ../node_modules/module.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
   \*****************************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(3);
+module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(3);
 
 /***/ })
 /******/ 	]);
@@ -174,7 +174,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a35
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -208,7 +208,7 @@ chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -221,5 +221,5 @@ chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

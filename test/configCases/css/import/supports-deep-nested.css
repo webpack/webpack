@@ -1,0 +1,5 @@
+@import "./supports-deep-deep-nested.css" supports(display: table);
+
+.class {
+	deep-nested: 1;
+}

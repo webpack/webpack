@@ -7,6 +7,6 @@ it("should replace ! with %21 in the module id string of the context module", fu
 	).id;
 	if (typeof moduleId !== "number")
 		expect(moduleId).toBe(
-			"./context/issue-10969/folder lazy recursive ^(?%21file1\\.js$).*$/"
+			"./context/issue-10969/folder lazy recursive ^(?%21file1\\.js$).*$i"
 		);
 });

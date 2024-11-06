@@ -42,6 +42,10 @@ module.exports = {
 				options: {
 					value: "entry"
 				}
+			},
+			{
+				test: /dynamic-module-layer/,
+				layer: "dynamic-layer"
 			}
 		]
 	},

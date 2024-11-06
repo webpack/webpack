@@ -1,0 +1,5 @@
+@import "./layer-deep-deep-nested.css" layer(baz);
+
+.class {
+	deep-nested: 1;
+}

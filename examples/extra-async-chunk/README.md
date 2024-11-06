@@ -148,7 +148,6 @@ require.ensure(["./a"], function(require) {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -241,7 +240,7 @@ require.ensure(["./a"], function(require) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -264,13 +263,13 @@ var __webpack_exports__ = {};
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe, __webpack_require__.* */
 // a chunks with a, b, c
-Promise.all(/*! AMD require */[__webpack_require__.e(394), __webpack_require__.e(460)]).then(function() {[__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)];}).catch(__webpack_require__.oe);
+Promise.all(/*! AMD require */[__webpack_require__.e(394), __webpack_require__.e(460)]).then(function() {[__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)];})['catch'](__webpack_require__.oe);
 
 // a chunk with a, b, d
 Promise.all(/*! require.ensure */[__webpack_require__.e(394), __webpack_require__.e(767)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 2);
 	__webpack_require__(/*! ./d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 /******/ })()
 ;
@@ -355,13 +354,13 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.18 KiB [emitted] (name: main)
+asset output.js 9.17 KiB [emitted] (name: main)
 asset 394.output.js 610 bytes [emitted]
 asset 460.output.js 338 bytes [emitted]
 asset 767.output.js 338 bytes [emitted]
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -390,7 +389,7 @@ chunk (runtime: main) 767.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -400,9 +399,9 @@ asset output.js 1.81 KiB [emitted] [minimized] (name: main)
 asset 394.output.js 104 bytes [emitted] [minimized]
 asset 460.output.js 81 bytes [emitted] [minimized]
 asset 767.output.js 81 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -431,5 +430,5 @@ chunk (runtime: main) 767.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

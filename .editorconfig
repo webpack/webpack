@@ -15,5 +15,11 @@ indent_size = 2
 [test/cases/parsing/bom/bomfile.{css,js}]
 charset = utf-8-bom
 
+[test/configCases/css/no-extra-runtime-in-js/source.text]
+insert_final_newline = false
+
 [*.md]
+trim_trailing_whitespace = false
+
+[*.snap]
 trim_trailing_whitespace = false

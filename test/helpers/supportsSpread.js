@@ -1,10 +1,10 @@
 module.exports = function supportsSpread() {
 	try {
-		var x = { a: true },
-			y; // eslint-disable-line no-unused-vars
+		var x = { a: true };
+		var y;
 		eval("y = { ...x }");
 		return y !== x && y.a;
-	} catch (e) {
+	} catch (_err) {
 		return false;
 	}
 };

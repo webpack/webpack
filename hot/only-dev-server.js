@@ -2,11 +2,12 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-/*globals __webpack_hash__ */
+/* globals __webpack_hash__ */
 if (module.hot) {
+	/** @type {undefined|string} */
 	var lastHash;
 	var upToDate = function upToDate() {
-		return lastHash.indexOf(__webpack_hash__) >= 0;
+		return /** @type {string} */ (lastHash).indexOf(__webpack_hash__) >= 0;
 	};
 	var log = require("./log");
 	var check = function check() {

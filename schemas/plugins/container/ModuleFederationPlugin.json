@@ -1,5 +1,10 @@
 {
   "definitions": {
+    "AmdContainer": {
+      "description": "Add a container for define/require functions in the AMD module.",
+      "type": "string",
+      "minLength": 1
+    },
     "AuxiliaryComment": {
       "description": "Add a comment in the UMD wrapper.",
       "anyOf": [
@@ -121,6 +126,7 @@
         "system",
         "promise",
         "import",
+        "module-import",
         "script",
         "node-commonjs"
       ]
@@ -225,6 +231,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "$ref": "#/definitions/AmdContainer"
+        },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
         },

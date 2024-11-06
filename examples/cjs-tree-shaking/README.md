@@ -65,7 +65,7 @@ exports.multiply = function multiply() {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 var __webpack_unused_export__;
-const add = __webpack_require__(/*! ./math */ 2)/* .add */ .I;
+const add = (__webpack_require__(/*! ./math */ 2)/* .add */ .I);
 exports.nP = function increment(val) {
 	return add(val, 1);
 };
@@ -151,14 +151,14 @@ __webpack_unused_export__ = function multiply() {
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
-const inc = __webpack_require__(/*! ./increment */ 1)/* .increment */ .nP;
+const inc = (__webpack_require__(/*! ./increment */ 1)/* .increment */ .nP);
 var a = 1;
 inc(a); // 2
 
@@ -187,14 +187,14 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.93 KiB [emitted] (name: main)
+asset output.js 2.94 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 
 asset without.js 3.08 KiB [emitted] (name: main)
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
@@ -203,7 +203,7 @@ chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -216,7 +216,7 @@ chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 
 asset without.js 551 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
@@ -225,5 +225,5 @@ chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

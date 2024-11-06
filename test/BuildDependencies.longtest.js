@@ -9,8 +9,8 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-const exec = (n, options = {}) => {
-	return new Promise((resolve, reject) => {
+const exec = (n, options = {}) =>
+	new Promise((resolve, reject) => {
 		const webpack = require("../");
 		const coverageEnabled = webpack.toString().includes("++");
 
@@ -25,7 +25,7 @@ const exec = (n, options = {}) => {
 							"--cache-dir",
 							".jest-cache/nyc",
 							process.execPath
-					  ]
+						]
 					: []),
 				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
 				n,
@@ -93,9 +93,8 @@ const exec = (n, options = {}) => {
 			reject(err);
 		});
 	});
-};
 
-const supportsEsm = +process.versions.modules >= 83;
+const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
 	beforeEach(done => {
@@ -133,7 +132,18 @@ describe("BuildDependencies", () => {
 		);
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-			'import path from "node:path"; import vm from "vm"; export default 0;'
+			`import path from "node:path";
+import vm from "vm";
+
+async function preload() {
+  await import(\`markdown-wasm/dist/markdown-node.js\`);
+  await import("markdown-wasm/dist/markdown-node.js");
+  await import('markdown-wasm/dist/markdown-node.js');
+  await import('test-"/test');
+  await import(\`test-"/test\`);
+}
+
+export default 0;`
 		);
 		await exec("0", {
 			invalidBuildDependencies: true,
@@ -207,7 +217,8 @@ describe("BuildDependencies", () => {
 		await exec("7", {
 			definedValue: "other"
 		});
-		let now4, now5;
+		let now4;
+		let now5;
 		if (supportsEsm) {
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),

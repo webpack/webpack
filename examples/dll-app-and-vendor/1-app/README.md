@@ -53,7 +53,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_51062e5e93ee3a0507e7 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_bef1463383efb1c65306 ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -61,12 +61,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_51062e5e93ee3a0507e7 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_bef1463383efb1c65306 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_51062e5e93ee3a0507e7" ***!
+  !*** external "vendor_lib_bef1463383efb1c65306" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -74,7 +74,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_51062e5e93ee3
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_51062e5e93ee3a0507e7;
+module.exports = vendor_lib_bef1463383efb1c65306;
 
 /***/ })
 /******/ 	]);
@@ -127,7 +127,7 @@ module.exports = vendor_lib_51062e5e93ee3a0507e7;
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!************************!*\
@@ -163,7 +163,7 @@ chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -177,7 +177,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 <!-- @TODO:

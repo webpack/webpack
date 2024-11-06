@@ -1,0 +1,26 @@
+body {
+	background: url(
+	https://example\2f4a8f.com\image.png
+	)
+}
+
+--element name.class name#_id {
+	background:
+		url(  "https://example.com/some url \"with\" 'spaces'.png"   )
+		url('https://example.com/\'"quotes"\'.png');
+}
+
+div {
+	color: red;
+	a200:-webkit-image-set("img.png"1x);
+}
+
+div {
+	color: red;
+	a201:url("img.png");
+}
+
+div {
+	color: red;
+	a202:url(img.png);
+}

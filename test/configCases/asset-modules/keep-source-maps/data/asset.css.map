@@ -1,0 +1,1 @@
+{"version":3,"sourceRoot":"","sources":["asset.scss", "data:;charset=utf-8,@import%20%22base%22;%0A%0Aa%20%7B%0A%20%20color:%20red;%0A%7D%0A", "http://example.com/index.js.map", "https://example.com/index.js.map"],"names":[],"mappings":"AAAA","file":"asset.css"}

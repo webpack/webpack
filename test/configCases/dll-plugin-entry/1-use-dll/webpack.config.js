@@ -7,7 +7,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			manifest: require("../../../js/config/dll-plugin-entry/manifest0.json"), // eslint-disable-line node/no-missing-require
+			manifest: require("../../../js/config/dll-plugin-entry/manifest0.json"),
 			name: "../0-create-dll/dll.js",
 			scope: "dll",
 			sourceType: "commonjs2"

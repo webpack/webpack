@@ -53,6 +53,19 @@ const isInstalled = packageName => {
 		}
 	} while (dir !== (dir = path.dirname(dir)));
 
+	// https://github.com/nodejs/node/blob/v18.9.1/lib/internal/modules/cjs/loader.js#L1274
+	// eslint-disable-next-line no-warning-comments
+	// @ts-ignore
+	for (const internalPath of require("module").globalPaths) {
+		try {
+			if (fs.statSync(path.join(internalPath, packageName)).isDirectory()) {
+				return true;
+			}
+		} catch (_error) {
+			// Nothing
+		}
+	}
+
 	return false;
 };
 
@@ -63,14 +76,22 @@ const isInstalled = packageName => {
 const runCli = cli => {
 	const path = require("path");
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
-	// eslint-disable-next-line node/no-missing-require
 	const pkg = require(pkgPath);
-	// eslint-disable-next-line node/no-missing-require
-	require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+
+	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
+		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
+			err => {
+				console.error(err);
+				process.exitCode = 1;
+			}
+		);
+	} else {
+		require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+	}
 };
 
 /**
- * @typedef {Object} CliOption
+ * @typedef {object} CliOption
  * @property {string} name display name
  * @property {string} package npm package name
  * @property {string} binName name of the executable file
@@ -92,11 +113,11 @@ if (!cli.installed) {
 	const fs = require("graceful-fs");
 	const readLine = require("readline");
 
-	const notify =
-		"CLI for webpack must be installed.\n" + `  ${cli.name} (${cli.url})\n`;
+	const notify = `CLI for webpack must be installed.\n  ${cli.name} (${cli.url})\n`;
 
 	console.error(notify);
 
+	/** @type {string | undefined} */
 	let packageManager;
 
 	if (fs.existsSync(path.resolve(process.cwd(), "yarn.lock"))) {
@@ -115,7 +136,7 @@ if (!cli.installed) {
 		)} ${cli.package}".`
 	);
 
-	const question = `Do you want to install 'webpack-cli' (yes/no): `;
+	const question = "Do you want to install 'webpack-cli' (yes/no): ";
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
@@ -149,12 +170,15 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(packageManager, installOptions.concat(cli.package))
+		runCommand(
+			/** @type {string} */ (packageManager),
+			installOptions.concat(cli.package)
+		)
 			.then(() => {
 				runCli(cli);
 			})
-			.catch(error => {
-				console.error(error);
+			.catch(err => {
+				console.error(err);
 				process.exitCode = 1;
 			});
 	});

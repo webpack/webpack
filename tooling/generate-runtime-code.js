@@ -24,7 +24,9 @@ const files = ["lib/util/semver.js"];
 		while (match) {
 			const [fullMatch, name] = match;
 			const originalCode = exports[name].toString();
-			const header = /^\(?([^=)]+)\)?\s=> \{/.exec(originalCode);
+			const header =
+				/** @type {RegExpExecArray} */
+				(/^\(?([^=)]+)\)?\s=> \{/.exec(originalCode));
 			const body = originalCode.slice(header[0].length, -1);
 			const result = await terser.minify(
 				{
@@ -36,10 +38,15 @@ const files = ["lib/util/semver.js"];
 					ecma: 5,
 					toplevel: true,
 					parse: {
+						// eslint-disable-next-line camelcase
 						bare_returns: true
 					}
 				}
 			);
+
+			if (!result.code) {
+				throw new Error(`No code generated for ${name} in ${file}`);
+			}
 
 			const args = header[1];
 			if (/`|const|let|=>|\.\.\./.test(result.code)) {
@@ -59,6 +66,10 @@ const files = ["lib/util/semver.js"];
 				fullMatch,
 				`
 //#region runtime code: ${name}
+/**
+ * @param {RuntimeTemplate} runtimeTemplate
+ * @returns {string}
+ */
 exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
 	"// see webpack/${file} for original code",
 	${templateLiteral ? `\`${code}\`` : `'${code}'`}
@@ -69,8 +80,8 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 			match = regexp.exec(content);
 		}
 
-		const prettierConfig = prettier.resolveConfig.sync(filePath);
-		const newContent = prettier.format(
+		const prettierConfig = await prettier.resolveConfig(filePath);
+		const newContent = await prettier.format(
 			content.replace(regexp, match => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);

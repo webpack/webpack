@@ -37,8 +37,8 @@ describe("SizeFormatHelpers", () => {
 		});
 
 		it("should handle undefined/NaN", () => {
-			expect(formatSize(undefined)).toBe("unknown size");
-			expect(formatSize(NaN)).toBe("unknown size");
+			expect(formatSize()).toBe("unknown size");
+			expect(formatSize(Number.NaN)).toBe("unknown size");
 		});
 	});
 });

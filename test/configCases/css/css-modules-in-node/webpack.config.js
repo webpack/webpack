@@ -10,6 +10,18 @@ module.exports = (env, { testPath }) => [
 		mode: "development",
 		experiments: {
 			css: true
+		},
+		module: {
+			rules: [
+				{
+					test: /\.my-css$/i,
+					type: "css/auto"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/auto"
+				}
+			]
 		}
 	},
 	{
@@ -30,7 +42,19 @@ module.exports = (env, { testPath }) => [
 				fixedLength: true,
 				test: m => m.type.startsWith("css")
 			})
-		]
+		],
+		module: {
+			rules: [
+				{
+					test: /\.my-css$/i,
+					type: "css/auto"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/auto"
+				}
+			]
+		}
 	},
 	{
 		context: path.join(__dirname, "../css-modules"),
@@ -49,6 +73,18 @@ module.exports = (env, { testPath }) => [
 				path: path.resolve(testPath, "../css-modules/module-ids.json"),
 				mode: "read"
 			})
-		]
+		],
+		module: {
+			rules: [
+				{
+					test: /\.my-css$/i,
+					type: "css/auto"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/auto"
+				}
+			]
+		}
 	}
 ];

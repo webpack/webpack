@@ -1,1 +1,1 @@
-exports.step = undefined;
+module.exports.step = undefined;

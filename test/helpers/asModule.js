@@ -4,6 +4,7 @@ const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
 
 module.exports = async (something, context, unlinked) => {
 	if (
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		something instanceof (vm.Module || /* node.js 10 */ vm.SourceTextModule)
 	) {
 		return something;

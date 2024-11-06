@@ -248,3 +248,50 @@ it("should expand properly", function() {
 	expect(require("./dir/" + (tmp + A_DOT_J + tmp) + "s")).toBe(a);
 	expect(require("./dir/" + (tmp + A_DOT_J) + tmp + "s")).toBe(a);
 });
+
+it("destructuring assignment", () => {
+	const {used} = OBJECT2;
+	const {['used']: used2, used: used3} = OBJECT2.sub;
+	expect(used).toBe(used2);
+	expect(used).toBe(used3);
+});
+
+it('should allow shorthand property (issue #16764)', () => {
+	const simple = { ONE, TRUE, NULL, STRING, BIGINT, NEGATIVE_NUMBER };
+	expect(simple).toStrictEqual({ 
+		ONE: 1, 
+		TRUE: true,
+		NULL: null, 
+		STRING: "string", 
+		BIGINT: BigInt("9007199254740993"), 
+		NEGATIVE_NUMBER: -100.25 
+	})
+
+	const func = { FUNCTION };
+	expect(func.FUNCTION(3)).toBe(4);
+	expect(typeof func.FUNCTION).toBe("function");
+	
+	const code = { CODE };
+	expect(code.CODE).toBe(3);
+	expect(typeof code.CODE).toBe("number");
+	
+	
+	const regex = { REGEXP };
+	expect(regex.REGEXP.toString()).toBe("/abc/i");
+	expect(typeof regex.REGEXP).toBe("object");
+	
+	const nested = { OBJECT }
+	expect(nested.OBJECT.SUB.FUNCTION(7)).toBe(8);
+	expect(nested.OBJECT.SUB.CODE).toBe(3);
+	expect(nested.OBJECT.SUB.UNDEFINED).toBeUndefined();
+	expect(nested.OBJECT.SUB.REGEXP.toString()).toBe("/abc/i");
+	expect(nested.OBJECT.SUB.STRING).toBe("string");
+
+
+	const array = { ARRAY }
+	expect(array).toStrictEqual({ ARRAY: [2, ['six']] })
+})
+
+it("fails for unknown property", () => {
+	expect(() => ({ UNKNOWN })).toThrowError("UNKNOWN is not defined")
+})

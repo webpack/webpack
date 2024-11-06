@@ -11,7 +11,7 @@ module.exports = function PluginEnvironment() {
 	function getEventName(hookName) {
 		// Convert a hook name to an event name.
 		// e.g. `buildModule` -> `build-module`
-		return hookName.replace(/[A-Z]/g, c => "-" + c.toLowerCase());
+		return hookName.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`);
 	}
 
 	this.getEnvironmentStub = function () {

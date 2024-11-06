@@ -1,0 +1,6 @@
+@import url("./style8.css") supports(display: flex);
+@import url("./style8.css") supports(display: flex);
+
+.class {
+	duplicate-nested: true;
+}

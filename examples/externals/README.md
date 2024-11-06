@@ -28,7 +28,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ```javascript
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	output: {
 		libraryTarget: "umd"
 	},
@@ -58,7 +58,7 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(self, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
+})(self, (__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
@@ -126,7 +126,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
 /*!********************!*\
@@ -153,7 +153,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Unoptimized
 
 ```
-asset output.js 3.28 KiB [emitted] (name: main)
+asset output.js 3.27 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -162,13 +162,13 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 679 bytes [emitted] [minimized] (name: main)
+asset output.js 665 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -176,5 +176,5 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [exports: exampleValue]
     entry ./example.js main
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

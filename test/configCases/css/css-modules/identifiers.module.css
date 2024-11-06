@@ -1,0 +1,11 @@
+.UnusedClassName{
+    color: red;
+    padding: var(--variable-unused-class);
+    --variable-unused-class: 10px;
+}
+
+.UsedClassName {
+    color: green;
+    padding: var(--variable-used-class);
+    --variable-used-class: 10px;
+}

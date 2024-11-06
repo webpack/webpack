@@ -51,7 +51,7 @@ require.ensure(["./shared"], function(require) {
 
 ```javascript
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB"
@@ -120,7 +120,7 @@ module.exports = "Common";
 var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 3)]; (function(shared) {
 	shared("This is page A");
-}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
 
 /***/ })
 /******/ 	]);
@@ -255,7 +255,6 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -348,7 +347,7 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -393,7 +392,7 @@ var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 	var shared = __webpack_require__(/*! ./shared */ 3);
 	shared("This is page B");
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 /***/ })
 
@@ -529,7 +528,6 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -622,7 +620,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -694,9 +692,9 @@ chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
       cjs require ./shared ./pageB.js 3:14-33
     amd require ./shared ./pageA.js 2:0-4:2
     cjs self exports reference ./shared.js 2:0-14
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.91 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.92 KiB 7 modules
+  runtime modules 5.91 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageB pageB
@@ -709,13 +707,13 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.91 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.92 KiB 7 modules
+  runtime modules 5.91 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageA pageA
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -726,7 +724,7 @@ asset pageB.js 2.13 KiB [emitted] [minimized] (name: pageB)
 asset 52.js 116 bytes [emitted] [minimized]
 asset commons.js 86 bytes [emitted] [minimized] (name: commons) (id hint: commons)
 Entrypoint pageA 2.24 KiB = commons.js 86 bytes pageA.js 2.16 KiB
-Entrypoint pageB 2.22 KiB = commons.js 86 bytes pageB.js 2.13 KiB
+Entrypoint pageB 2.21 KiB = commons.js 86 bytes pageB.js 2.13 KiB
 chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
   > ./shared ./pageA.js 2:0-4:2
   > ./pageB.js 2:0-5:2
@@ -737,9 +735,9 @@ chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
       cjs require ./shared ./pageB.js 3:14-33
     amd require ./shared ./pageA.js 2:0-4:2
     cjs self exports reference ./shared.js 2:0-14
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.91 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.92 KiB 7 modules
+  runtime modules 5.91 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [no exports used]
     entry ./pageB pageB
@@ -752,11 +750,11 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.91 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.92 KiB 7 modules
+  runtime modules 5.91 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [no exports used]
     entry ./pageA pageA
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

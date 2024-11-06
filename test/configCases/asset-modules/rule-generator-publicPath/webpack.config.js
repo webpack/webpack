@@ -10,9 +10,7 @@ module.exports = {
 				test: /\.png$/,
 				type: "asset",
 				generator: {
-					publicPath: () => {
-						return "assets/";
-					}
+					publicPath: () => "assets/"
 				}
 			}
 		]

@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function() {
+	findBundle: function () {
 		return ["./app.js", "./react-vendors.js"];
 	}
 };

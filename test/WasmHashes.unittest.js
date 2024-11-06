@@ -25,7 +25,7 @@ const wasmHashes = {
 		return {
 			createHash: createMd4Hash,
 			createReferenceHash:
-				parseInt(process.version.slice(1), 10) < 17
+				Number.parseInt(process.version.slice(1), 10) < 17
 					? async () => createHash("md4")
 					: createMd4Hash,
 			regExp: /^[0-9a-f]{32}$/
@@ -77,7 +77,7 @@ for (const name of Object.keys(wasmHashes)) {
 		];
 
 		const test = (name, sizes) => {
-			it(name + " should generate a hash from binary data", async () => {
+			it(`${name} should generate a hash from binary data`, async () => {
 				const hash = createHash();
 				const hashString = createHash();
 				const reference = await createReferenceHash();
@@ -109,13 +109,13 @@ for (const name of Object.keys(wasmHashes)) {
 				test(`two updates ${size1} + ${size2} bytes`, [size1, size2]);
 			}
 		}
-		test(`many updates 1`, sizes);
-		test(`many updates 2`, sizes.slice().reverse());
-		test(`many updates 3`, sizes.concat(sizes.slice().reverse()));
-		test(`many updates 4`, sizes.slice().reverse().concat(sizes));
+		test("many updates 1", sizes);
+		test("many updates 2", sizes.slice().reverse());
+		test("many updates 3", sizes.concat(sizes.slice().reverse()));
+		test("many updates 4", sizes.slice().reverse().concat(sizes));
 
 		const unicodeTest = (name, codePoints) => {
-			it(name + " should hash unicode chars correctly", async () => {
+			it(`${name} should hash unicode chars correctly`, async () => {
 				const hash = createHash();
 				const reference = await createReferenceHash();
 				const str =

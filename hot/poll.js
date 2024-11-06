@@ -2,11 +2,14 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-/*globals __resourceQuery */
+/* globals __resourceQuery */
 if (module.hot) {
 	var hotPollInterval = +__resourceQuery.slice(1) || 10 * 60 * 1000;
 	var log = require("./log");
 
+	/**
+	 * @param {boolean=} fromUpdate true when called from update
+	 */
 	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		if (module.hot.status() === "idle") {
 			module.hot

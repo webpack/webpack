@@ -29,21 +29,22 @@ describe("Profiling Plugin", function () {
 					{
 						apply(compiler) {
 							const hook = compiler.hooks.make;
-							[
+							for (const { stage, order } of [
 								{ stage: 0, order: 1 },
 								{ stage: 1, order: 2 },
 								{ stage: -1, order: 0 }
-							].forEach(({ stage, order }) => {
+							]) {
 								hook.tap(
 									{
 										name: "RespectStageCheckerPlugin",
 										stage
 									},
+									// eslint-disable-next-line no-loop-func
 									() => {
 										expect(counter++).toBe(order);
 									}
 								);
-							});
+							}
 						}
 					}
 				],

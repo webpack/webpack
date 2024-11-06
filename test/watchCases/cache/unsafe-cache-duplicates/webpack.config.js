@@ -22,7 +22,6 @@ module.exports = (env, { srcPath }) => ({
 					if (identifier.includes(path.join(srcPath, "module.js"))) {
 						return null;
 					}
-					return;
 				}
 			);
 		}

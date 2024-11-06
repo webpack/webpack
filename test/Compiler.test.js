@@ -163,9 +163,9 @@ describe("Compiler", () => {
 	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
-			expect(Object.keys(files)).toEqual(["/main.js", "/394.js"]);
+			expect(Object.keys(files)).toEqual(["/main.js", "/78.js"]);
 			const bundle = files["/main.js"];
-			const chunk = files["/394.js"];
+			const chunk = files["/78.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
 			expect(bundle).toMatch("__webpack_require__(/*! ./b */");
 			expect(chunk).not.toMatch("__webpack_require__(/* ./b */");
@@ -226,6 +226,12 @@ describe("Compiler", () => {
 				callback();
 			}
 		});
+		it("default platform info", done => {
+			const platform = compiler.platform;
+			expect(platform.web).toBe(true);
+			expect(platform.node).toBe(false);
+			done();
+		});
 		describe("purgeInputFileSystem", () => {
 			it("invokes purge() if inputFileSystem.purge", done => {
 				const mockPurge = jest.fn();
@@ -280,13 +286,36 @@ describe("Compiler", () => {
 				const response8 = compiler.isChild();
 				expect(response8).toBe(false);
 
-				compiler.parentCompilation = NaN;
+				compiler.parentCompilation = Number.NaN;
 				const response9 = compiler.isChild();
 				expect(response9).toBe(false);
 				done();
 			});
 		});
 	});
+
+	it("PlatformPlugin", done => {
+		const webpack = require("..");
+		const compiler = webpack({
+			entry: "./c",
+			context: path.join(__dirname, "fixtures"),
+			output: {
+				path: "/directory"
+			},
+			plugins: [
+				new (require("../lib/PlatformPlugin"))({ node: true }),
+				compiler => {
+					compiler.hooks.afterEnvironment.tap("test", () => {
+						const platform = compiler.platform;
+						expect(platform.node).toBe(true);
+						expect(platform.web).toBe(true);
+					});
+				}
+			]
+		});
+		compiler.close(done);
+	});
+
 	it("should not emit on errors", done => {
 		const webpack = require("..");
 		compiler = webpack({
@@ -308,8 +337,8 @@ describe("Compiler", () => {
 	});
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		try {
-			const createCompiler = options => {
-				return new Promise((resolve, reject) => {
+			const createCompiler = options =>
+				new Promise((resolve, reject) => {
 					const webpack = require("..");
 					const c = webpack(options);
 					c.run((err, stats) => {
@@ -322,9 +351,7 @@ describe("Compiler", () => {
 							resolve(stats);
 						}
 					});
-					return c;
 				});
-			};
 			compiler = await createCompiler({
 				context: __dirname,
 				mode: "production",
@@ -342,8 +369,8 @@ describe("Compiler", () => {
 		}
 	});
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = options => {
-			return new Promise((resolve, reject) => {
+		const createStats = options =>
+			new Promise((resolve, reject) => {
 				const webpack = require("..");
 				const c = webpack(options);
 				c.outputFileSystem = createFsFromVolume(new Volume());
@@ -354,7 +381,6 @@ describe("Compiler", () => {
 					});
 				});
 			});
-		};
 		const stats = await createStats({
 			context: __dirname,
 			mode: "production",
@@ -821,10 +847,10 @@ describe("Compiler", () => {
 		});
 		const escapeAnsi = stringRaw =>
 			stringRaw
-				.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-				.replace(/\u001b\[1m/g, "<CLR=BOLD>")
-				.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
-				.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>");
+				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
+				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
+				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");
@@ -922,7 +948,7 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
-				expect(capture.toString()).toMatchInlineSnapshot(`""`);
+				expect(capture.toString()).toMatchInlineSnapshot('""');
 				done();
 			});
 		});

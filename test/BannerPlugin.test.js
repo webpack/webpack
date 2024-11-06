@@ -16,7 +16,7 @@ it("should cache assets", done => {
 		fs.mkdirSync(path.join(pluginDir), {
 			recursive: true
 		});
-	} catch (e) {
+	} catch (_err) {
 		// empty
 	}
 	const compiler = webpack({
@@ -53,7 +53,7 @@ it("can place banner as footer", done => {
 		fs.mkdirSync(path.join(pluginDir), {
 			recursive: true
 		});
-	} catch (e) {
+	} catch (_err) {
 		// empty
 	}
 	const compiler = webpack({
@@ -76,6 +76,41 @@ it("can place banner as footer", done => {
 		if (err) return done(err);
 		const footerFileResults = fs.readFileSync(outputFile, "utf8").split("\n");
 		expect(footerFileResults.pop()).toBe("/*! banner is a string */");
+		done();
+	});
+});
+
+it("should allow to change stage", done => {
+	const entryFile = path.join(pluginDir, "entry3.js");
+	const outputFile = path.join(outputDir, "entry3.js");
+	try {
+		fs.mkdirSync(path.join(pluginDir), {
+			recursive: true
+		});
+	} catch (_err) {
+		// empty
+	}
+	const compiler = webpack({
+		mode: "production",
+		entry: {
+			entry3: entryFile
+		},
+		output: {
+			path: outputDir
+		},
+		plugins: [
+			new webpack.BannerPlugin({
+				raw: true,
+				banner: "/* banner is a string */",
+				stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT
+			})
+		]
+	});
+	fs.writeFileSync(entryFile, "console.log(1 + 1);", "utf-8");
+	compiler.run(err => {
+		if (err) return done(err);
+		const fileResult = fs.readFileSync(outputFile, "utf8").split("\n");
+		expect(fileResult[0]).toBe("/* banner is a string */");
 		done();
 	});
 });

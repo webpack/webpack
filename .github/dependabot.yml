@@ -1,12 +1,31 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "04:00"
-    timezone: Europe/Berlin
-  open-pull-requests-limit: 20
-  labels:
-  - dependencies
-  versioning-strategy: widen
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 20
+    labels:
+      - dependencies
+    versioning-strategy: widen
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "eslint-scope"
+          - "json-parse-even-better-errors"
+          - "schema-utils"
+          - "strip-ansi"
+          - "rimraf"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 20
+    labels:
+      - dependencies

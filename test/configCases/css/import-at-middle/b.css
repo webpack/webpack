@@ -1,0 +1,10 @@
+body {
+	background: blue;
+}
+
+@import "./a.css";
+@import url(./a.css);
+
+body {
+	color: green;
+}

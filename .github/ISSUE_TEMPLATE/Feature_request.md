@@ -1,7 +1,6 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-
 ---
 
 <!-- Please don't delete this template or we'll close your issue -->
@@ -16,12 +15,9 @@ about: Suggest an idea for this project
 
 **What is the expected behavior?**
 
-
 **What is motivation or use case for adding/changing the behavior?**
 
-
 **How should this be implemented in your opinion?**
-
 
 **Are you willing to work on this yourself?**
 yes

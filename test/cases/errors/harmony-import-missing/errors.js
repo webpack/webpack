@@ -1,5 +1,1 @@
-module.exports = [
-	[
-		/Can't resolve '.\/missing'/
-	]
-];
+module.exports = [[/Can't resolve '.\/missing'/]];

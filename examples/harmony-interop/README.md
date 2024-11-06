@@ -235,7 +235,7 @@ var named = "named";
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!********************!*\
@@ -286,7 +286,7 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 937 bytes (runtime)
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -301,5 +301,5 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 670 bytes (runtime)
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

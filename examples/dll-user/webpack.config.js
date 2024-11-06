@@ -1,15 +1,16 @@
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),
-			manifest: require("../dll/dist/alpha-manifest.json") // eslint-disable-line
+			manifest: require("../dll/dist/alpha-manifest.json")
 		}),
 		new webpack.DllReferencePlugin({
 			scope: "beta",
-			manifest: require("../dll/dist/beta-manifest.json"), // eslint-disable-line
+			manifest: require("../dll/dist/beta-manifest.json"),
 			extensions: [".js", ".jsx"]
 		})
 	]

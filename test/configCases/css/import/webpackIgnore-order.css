@@ -1,0 +1,6 @@
+@import /* webpackIgnore: true */ url("/assets/themes.css");
+@import "./style2.css";
+
+body {
+	background: red;
+}

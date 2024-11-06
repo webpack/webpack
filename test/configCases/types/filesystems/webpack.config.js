@@ -5,8 +5,14 @@ const fs = require("fs");
 module.exports = {
 	plugins: [
 		compiler => {
+			// eslint-disable-next-line no-warning-comments
+			// @ts-ignore
 			compiler.outputFileSystem = memfs.fs;
+			// eslint-disable-next-line no-warning-comments
+			// @ts-ignore
 			compiler.inputFileSystem = memfs.fs;
+			// eslint-disable-next-line no-warning-comments
+			// @ts-ignore
 			compiler.intermediateFileSystem = memfs.fs;
 
 			compiler.outputFileSystem = fs;

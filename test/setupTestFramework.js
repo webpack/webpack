@@ -5,15 +5,13 @@ expect.extend({
 
 		const message = pass
 			? () =>
-					this.utils.matcherHint(".not.toBeTypeOf") +
-					"\n\n" +
+					`${this.utils.matcherHint(".not.toBeTypeOf")}\n\n` +
 					"Expected value to not be (using typeof):\n" +
 					`  ${this.utils.printExpected(expected)}\n` +
 					"Received:\n" +
 					`  ${this.utils.printReceived(objType)}`
 			: () =>
-					this.utils.matcherHint(".toBeTypeOf") +
-					"\n\n" +
+					`${this.utils.matcherHint(".toBeTypeOf")}\n\n` +
 					"Expected value to be (using typeof):\n" +
 					`  ${this.utils.printExpected(expected)}\n` +
 					"Received:\n" +
@@ -26,15 +24,13 @@ expect.extend({
 
 		const message = pass
 			? () =>
-					this.utils.matcherHint(".not.toEndWith") +
-					"\n\n" +
+					`${this.utils.matcherHint(".not.toEndWith")}\n\n` +
 					"Expected value to not end with:\n" +
 					`  ${this.utils.printExpected(expected)}\n` +
 					"Received:\n" +
 					`  ${this.utils.printReceived(received)}`
 			: () =>
-					this.utils.matcherHint(".toEndWith") +
-					"\n\n" +
+					`${this.utils.matcherHint(".toEndWith")}\n\n` +
 					"Expected value to end with:\n" +
 					`  ${this.utils.printExpected(expected)}\n` +
 					"Received:\n" +
@@ -73,54 +69,52 @@ if (process.env.ALTERNATIVE_SORT) {
 
 // Setup debugging info for tests
 if (process.env.DEBUG_INFO) {
-	const addDebugInfo = it => {
-		return (name, fn, timeout) => {
-			if (fn.length === 0) {
-				it(
-					name,
-					() => {
-						process.stdout.write(`START1 ${name}\n`);
-						try {
-							const promise = fn();
-							if (promise && promise.then) {
-								return promise.then(
-									r => {
-										process.stdout.write(`DONE OK ${name}\n`);
-										return r;
-									},
-									e => {
-										process.stdout.write(`DONE FAIL ${name}\n`);
-										throw e;
-									}
-								);
-							} else {
-								process.stdout.write(`DONE OK ${name}\n`);
-							}
-						} catch (e) {
-							process.stdout.write(`DONE FAIL ${name}\n`);
-							throw e;
+	const addDebugInfo = it => (name, fn, timeout) => {
+		if (fn.length === 0) {
+			it(
+				name,
+				() => {
+					process.stdout.write(`START1 ${name}\n`);
+					try {
+						const promise = fn();
+						if (promise && promise.then) {
+							return promise.then(
+								r => {
+									process.stdout.write(`DONE OK ${name}\n`);
+									return r;
+								},
+								err => {
+									process.stdout.write(`DONE FAIL ${name}\n`);
+									throw err;
+								}
+							);
 						}
-					},
-					timeout
-				);
-			} else {
-				it(
-					name,
-					done => {
-						process.stdout.write(`START2 ${name}\n`);
-						return fn(err => {
-							if (err) {
-								process.stdout.write(`DONE FAIL ${name}\n`);
-							} else {
-								process.stdout.write(`DONE OK ${name}\n`);
-							}
-							return done(err);
-						});
-					},
-					timeout
-				);
-			}
-		};
+
+						process.stdout.write(`DONE OK ${name}\n`);
+					} catch (err) {
+						process.stdout.write(`DONE FAIL ${name}\n`);
+						throw err;
+					}
+				},
+				timeout
+			);
+		} else {
+			it(
+				name,
+				done => {
+					process.stdout.write(`START2 ${name}\n`);
+					return fn(err => {
+						if (err) {
+							process.stdout.write(`DONE FAIL ${name}\n`);
+						} else {
+							process.stdout.write(`DONE OK ${name}\n`);
+						}
+						return done(err);
+					});
+				},
+				timeout
+			);
+		}
 	};
 	// eslint-disable-next-line no-global-assign
 	it = addDebugInfo(it);

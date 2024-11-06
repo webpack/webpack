@@ -1,3 +1,1 @@
-module.exports = [
-	[/SplitChunksPlugin/, /Both have the same name "vendors"/]
-];
+module.exports = [[/SplitChunksPlugin/, /Both have the same name "vendors"/]];

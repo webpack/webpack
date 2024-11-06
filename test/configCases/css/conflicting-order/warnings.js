@@ -1,1 +1,3 @@
-module.exports = [[/Conflicting order between \.\/b\.css and \.\/c\.css/]];
+module.exports = [
+	[/Conflicting order between css \.\/b\.css and css \.\/c\.css/]
+];

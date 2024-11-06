@@ -4,7 +4,12 @@ import {
 	exportsInfoForC as declC,
 	exportsInfoForD as declD,
 	exportsInfoForE as declE,
-	exportsInfoForF as declF
+	exportsInfoForF as declF,
+	exportsInfoForFoo as declFoo,
+	exportsInfoForPure as declPure,
+	exportsInfoForDateFormatter as declDateFormatter,
+	exportsInfoForConditionalExpression as declConditionalExpression,
+	exportsInfoForLogicalExpression as declLogicalExpression
 } from "./dep2?decl";
 import {
 	exportsInfoForA as exprA,
@@ -12,7 +17,11 @@ import {
 	exportsInfoForC as exprC,
 	exportsInfoForD as exprD,
 	exportsInfoForE as exprE,
-	exportsInfoForF as exprF
+	exportsInfoForF as exprF,
+	exportsInfoForPure as exprPure,
+	exportsInfoForDateFormatter as exprDateFormatter,
+	exportsInfoForConditionalExpression as exprConditionalExpression,
+	exportsInfoForLogicalExpression as exprLogicalExpression
 } from "./dep2?expr";
 
 it("should load module correctly", () => {
@@ -50,7 +59,19 @@ it("E should be used", () => {
 });
 
 it("F should be used", () => {
+	if (process.env.NODE_ENV === "production") {
+		expect(declPure).toBe(false);
+		expect(exprPure).toBe(false);
+		expect(declConditionalExpression).toBe(false);
+		expect(exprConditionalExpression).toBe(false);
+		expect(declLogicalExpression).toBe(false);
+		expect(exprLogicalExpression).toBe(false);
+	}
+
 	// Note: it has side-effects and is not affected by usage of the class
 	expect(declF).toBe(true);
+	expect(declFoo).toBe(true);
 	expect(exprF).toBe(true);
+	expect(declDateFormatter).toBe(true);
+	expect(exprDateFormatter).toBe(true);
 });

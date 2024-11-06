@@ -47,7 +47,15 @@ module.exports = {
 					return module instanceof Module;
 				}
 			),
-			A_DOT_J: '"a.j"'
+			A_DOT_J: '"a.j"',
+			OBJECT2: {
+				used: 1,
+				unused: "(() => throw new Error('unused property was rendered'))()",
+				sub: {
+					used: 1,
+					unused: "(() => throw new Error('unused property was rendered'))()"
+				}
+			}
 		})
 	]
 };

@@ -1,7 +1,8 @@
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},

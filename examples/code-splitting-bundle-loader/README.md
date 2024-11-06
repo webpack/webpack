@@ -44,7 +44,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 	for(var i = 0, l = callbacks.length; i < l; i++) {
 		callbacks[i](data);
 	}
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 /***/ })
 /******/ 	]);
@@ -147,7 +147,6 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -240,7 +239,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -257,7 +256,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -300,11 +299,11 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.7 KiB [emitted] (name: main)
+asset output.js 9.68 KiB [emitted] (name: main)
 asset 929.output.js 354 bytes [emitted]
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [used exports unknown]
@@ -315,7 +314,7 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -323,9 +322,9 @@ webpack 5.51.1 compiled successfully
 ```
 asset output.js 1.85 KiB [emitted] [minimized] (name: main)
 asset 929.output.js 88 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [no exports used]
@@ -336,5 +335,5 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

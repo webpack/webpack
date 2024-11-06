@@ -1,0 +1,6 @@
+@import "./anonymous-deep-nested.css" layer;
+@import "./layer-deep-nested.css" layer(base);
+
+.class {
+	deep-nested: 1;
+}

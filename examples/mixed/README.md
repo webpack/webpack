@@ -76,7 +76,7 @@ module.exports = 123;
 Promise.resolve(/*! AMD require */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 2), __webpack_require__(/*! ./harmony */ 3)]; (function(amd1, harmony) {
 		var amd2 = __webpack_require__(/*! ./amd */ 2);
 		var harmony2 = __webpack_require__(/*! ./harmony */ 3);
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
 
 /***/ }),
 /* 2 */
@@ -249,7 +249,6 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -353,7 +352,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -370,7 +369,7 @@ __webpack_require__.r(__webpack_exports__);
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -388,7 +387,7 @@ __webpack_require__.e(/*! AMD require */ 635).then(function() { var __WEBPACK_AM
 	__webpack_require__(4)("./"+amd1+".js"),
 	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 1) : __webpack_require__(/*! ./amd */ 2)]; (function(commonjs2, amd2, template, randModule) {
 		// Do something with it...
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
 
 })();
 
@@ -492,9 +491,9 @@ module.exports = function() {
 ```
 asset output.js 13.8 KiB [emitted] (name: main)
 asset 635.output.js 2.24 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.81 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.81 KiB 9 modules
+  runtime modules 5.8 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -506,17 +505,17 @@ chunk (runtime: main) 635.output.js 433 bytes [rendered]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 7:0-14:1
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.5 KiB [emitted] [minimized] (name: main)
+asset output.js 2.49 KiB [emitted] [minimized] (name: main)
 asset 635.output.js 580 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.81 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.81 KiB 9 modules
+  runtime modules 5.8 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]
@@ -527,5 +526,5 @@ chunk (runtime: main) 635.output.js 433 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 7:0-14:1
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

@@ -1,0 +1,3 @@
+.myCssClass {
+    color: red;
+}

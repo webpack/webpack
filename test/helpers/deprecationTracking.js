@@ -7,7 +7,7 @@
 
 const util = require("util");
 
-let interception = undefined;
+let interception;
 
 const originalDeprecate = util.deprecate;
 util.deprecate = (fn, message, code) => {
@@ -21,13 +21,13 @@ util.deprecate = (fn, message, code) => {
 				stack: new Error(message).stack
 			});
 			return fn.apply(this, args);
-		} else {
-			return original.apply(this, args);
 		}
+
+		return original.apply(this, args);
 	};
 };
 
-exports.start = handler => {
+module.exports.start = handler => {
 	interception = new Map();
 
 	return () => {

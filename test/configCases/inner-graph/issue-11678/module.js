@@ -89,7 +89,7 @@ const _positionSettings = {
 			headerStatus: ""
 		},
 		settings: {
-			[SETTINGS.CREATEABLE]: false,
+			[SETTINGS.CREATABLE]: false,
 			[SETTINGS.DELETABLE]: false
 		}
 	},
@@ -466,7 +466,7 @@ async function _createToolbarTable(setEvent) {
 							_staticData,
 							privileges.PRIVILEGE.SICONNECTPOSITION
 						) &&
-						_positionSettings.settings[SETTINGS.CREATEABLE]
+						_positionSettings.settings[SETTINGS.CREATABLE]
 					) {
 						toolbar.add(_buttonConnectPosition(onConnectPosition));
 					}
@@ -507,7 +507,7 @@ async function _createToolbarTable(setEvent) {
 							_staticData,
 							privileges.PRIVILEGE.COPYORDERPOS
 						) &&
-						_positionSettings.settings[SETTINGS.CREATEABLE]
+						_positionSettings.settings[SETTINGS.CREATABLE]
 					) {
 						toolbar.add(
 							buttonCopyJobToOrderPos(onJobToOrderPos.bind(this, true))
@@ -525,7 +525,7 @@ async function _createToolbarTable(setEvent) {
 					{
 						const s = {
 							canBeCreated:
-								_positionSettings.settings[SETTINGS.CREATEABLE] || false
+								_positionSettings.settings[SETTINGS.CREATABLE] || false
 						};
 						if (s.canBeCreated) {
 							if (
@@ -685,7 +685,7 @@ async function _createToolbarTable(setEvent) {
 					_staticData,
 					privileges.PRIVILEGE.SICONNECTPOSITION
 				) &&
-				_positionSettings.settings[SETTINGS.CREATEABLE]
+				_positionSettings.settings[SETTINGS.CREATABLE]
 			) {
 				toolbar.add(_buttonConnectPosition(onConnectPosition));
 			}
@@ -765,7 +765,7 @@ async function _createToolbarTable(setEvent) {
 					_staticData,
 					privileges.PRIVILEGE.COPYORDERPOS
 				) &&
-				_positionSettings.settings[SETTINGS.CREATEABLE]
+				_positionSettings.settings[SETTINGS.CREATABLE]
 			) {
 				toolbar.add(buttonCopyJobToOrderPos(onJobToOrderPos.bind(this, true)));
 			}
@@ -806,7 +806,7 @@ async function _createToolbarTable(setEvent) {
 		case buttons.STATE.ciPositionTableMenu:
 			{
 				const s = {
-					canBeCreated: _positionSettings.settings[SETTINGS.CREATEABLE] || false
+					canBeCreated: _positionSettings.settings[SETTINGS.CREATABLE] || false
 				};
 				if (s.canBeCreated) {
 					if (
@@ -843,7 +843,7 @@ async function _createToolbarTable(setEvent) {
 		case buttons.STATE.ciPositionTableMenuMultiple:
 			{
 				const s = {
-					canBeCreated: _positionSettings.settings[SETTINGS.CREATEABLE] || false
+					canBeCreated: _positionSettings.settings[SETTINGS.CREATABLE] || false
 				};
 				if (s.canBeCreated) {
 					if (
@@ -1017,7 +1017,7 @@ export async function getDataAndShowTable(
 		default:
 			break;
 	}
-	_positionSettings.settings[SETTINGS.CREATEABLE] = settingsData.canBeCreated;
+	_positionSettings.settings[SETTINGS.CREATABLE] = settingsData.canBeCreated;
 	_positionSettings.settings[SETTINGS.DELETABLE] = settingsData.canBeDeleted;
 	_positionSettings.settings[SETTINGS.MULTIPLEDELETE] =
 		settingsData.showButtonDeleteAndMoveNCH;
@@ -2720,7 +2720,7 @@ function _showFormButtons(manualSetEvent) {
 	if (manualSetEvent) {
 		_formEvent = manualSetEvent;
 	}
-	s.canBeCreated = _positionSettings.settings[SETTINGS.CREATEABLE];
+	s.canBeCreated = _positionSettings.settings[SETTINGS.CREATABLE];
 	s.canBeDeleted = _positionSettings.settings[SETTINGS.DELETABLE];
 	if (
 		_formData &&
@@ -3003,7 +3003,7 @@ function _showParentTable(forceReload = true) {
 		}
 	}
 }
-function _setParentModulSettings(moduleName) {
+function _setParentModuleSettings(moduleName) {
 	switch (moduleName) {
 		case ModuleNameEnum.JOB:
 			_parentModuleSettings = {
@@ -3051,7 +3051,7 @@ export async function initialize(
 	moduleName,
 	previousTableTitle
 ) {
-	_setParentModulSettings(moduleName);
+	_setParentModuleSettings(moduleName);
 	_tableContainerId = "#" + newContainerId;
 	_formIdName = moduleName + "_" + newContainerId + "-form";
 	_previousTableTitle = previousTableTitle;
@@ -3075,7 +3075,7 @@ export async function renderFormInDialog(contentId, data, addTask = false) {
 		jpos_headertype: 1,
 		jpos_subposno: 1
 	};
-	_setParentModulSettings(ModuleNameEnum.JOB);
+	_setParentModuleSettings(ModuleNameEnum.JOB);
 	_isFormInDialog = true;
 	_isFormInDialogSelector = contentId;
 	_isFormInDialogJobPK = pkForJobService;
@@ -3089,7 +3089,7 @@ export async function renderFormInDialog(contentId, data, addTask = false) {
 		getPKfromModule(),
 		_getModuleType()
 	);
-	_positionSettings.settings[SETTINGS.CREATEABLE] = settings.canBeCreated;
+	_positionSettings.settings[SETTINGS.CREATABLE] = settings.canBeCreated;
 	_positionSettings.settings[SETTINGS.DELETABLE] = settings.canBeDeleted;
 	const emailOfCurrentUser = await employeeData.getEmplList();
 	_generalDataEmplLists = {

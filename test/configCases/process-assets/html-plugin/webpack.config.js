@@ -65,8 +65,8 @@ class HtmlPlugin {
 								contenthash: Array.isArray(assetInfo.contenthash)
 									? [...new Set([...assetInfo.contenthash, integrity])]
 									: assetInfo.contenthash
-									? [assetInfo.contenthash, integrity]
-									: integrity
+										? [assetInfo.contenthash, integrity]
+										: integrity
 							})
 						);
 						return `<script src="${

@@ -1,0 +1,5 @@
+@import "./media-deep-nested.css" screen and (max-width: 500px);
+
+.class {
+	nested: 1;
+}

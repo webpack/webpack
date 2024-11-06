@@ -6,7 +6,7 @@ describe("util/identifier", () => {
 	describe("makePathsRelative", () => {
 		describe("given a context and a pathConstruct", () => {
 			it("computes the correct relative results for the path construct", () => {
-				[
+				for (const [context, pathConstruct, expected] of [
 					[
 						"/some/dir/",
 						"/some/dir/to/somewhere|some/other/dir!../more/dir",
@@ -43,11 +43,11 @@ describe("util/identifier", () => {
 						"./to/somewhere|some/other/dir!../more/dir"
 					],
 					["/dir", "/dir/to/somewhere??ref-123", "./to/somewhere??ref-123"]
-				].forEach(([context, pathConstruct, expected]) => {
+				]) {
 					expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
 						expected
 					);
-				});
+				}
 			});
 		});
 	});
@@ -109,7 +109,7 @@ describe("util/identifier", () => {
 			],
 			["/Users/\0#/repo/loader-\0#.js", "/Users/#/repo/loader-#.js", ""]
 		];
-		cases.forEach(case_ => {
+		for (const case_ of cases) {
 			it(case_[0], () => {
 				const { resource, path, query } =
 					identifierUtil.parseResourceWithoutFragment(case_[0]);
@@ -117,6 +117,6 @@ describe("util/identifier", () => {
 				expect(case_[1]).toBe(path);
 				expect(case_[2]).toBe(query);
 			});
-		});
+		}
 	});
 });

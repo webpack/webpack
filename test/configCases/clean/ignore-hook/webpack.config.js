@@ -17,7 +17,7 @@ module.exports = {
 					"Test",
 					asset => {
 						if (/[/\\]ignored[/\\]dir[/\\]/.test(asset)) return true;
-						if (asset.includes(`ignored/too`)) return true;
+						if (asset.includes("ignored/too")) return true;
 					}
 				);
 				compilation.hooks.processAssets.tap("Test", assets => {

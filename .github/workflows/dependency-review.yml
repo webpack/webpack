@@ -1,0 +1,60 @@
+name: "Dependency Review"
+
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+      - name: "Dependency Review"
+        uses: actions/dependency-review-action@v4
+        with:
+          allow-licenses: |
+            0BSD,
+            AFL-1.1,
+            AFL-1.2,
+            AFL-2.0,
+            AFL-2.1,
+            AFL-3.0,
+            AGPL-3.0-only,
+            AGPL-3.0-or-later,
+            Apache-1.1,
+            Apache-2.0,
+            APSL-2.0,
+            Artistic-2.0,
+            BlueOak-1.0.0,
+            BSD-2-Clause,
+            BSD-3-Clause-Clear,
+            BSD-3-Clause,
+            BSL-1.0,
+            CAL-1.0,
+            CC-BY-3.0,
+            CC-BY-4.0,
+            CC-BY-SA-4.0,
+            CDDL-1.0,
+            CC0-1.0,
+            EPL-2.0,
+            GPL-2.0-only,
+            GPL-2.0-or-later,
+            GPL-2.0,
+            GPL-3.0-or-later,
+            ISC,
+            LGPL-2.0-only,
+            LGPL-2.1-only,
+            LGPL-2.1-or-later,
+            LGPL-2.1,
+            LGPL-3.0-only,
+            LGPL-3.0,
+            MIT,
+            MPL-2.0,
+            OFL-1.1,
+            PSF-2.0,
+            Python-2.0,
+            Python-2.0.1,
+            Unicode-DFS-2016,
+            Unlicense

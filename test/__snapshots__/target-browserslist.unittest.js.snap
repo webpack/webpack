@@ -3,6 +3,7 @@
 exports[`browserslist target ["and_chr 80"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -20,6 +21,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": true,
   "require": false,
@@ -32,6 +34,7 @@ Object {
 exports[`browserslist target ["and_ff 68"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -49,6 +52,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -61,6 +65,7 @@ Object {
 exports[`browserslist target ["and_qq 10.4"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -78,6 +83,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -90,6 +96,7 @@ Object {
 exports[`browserslist target ["and_uc 12.12"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -107,6 +114,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -119,6 +127,7 @@ Object {
 exports[`browserslist target ["android 4"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -136,6 +145,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -148,6 +158,7 @@ Object {
 exports[`browserslist target ["android 4.1"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -165,6 +176,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -177,6 +189,7 @@ Object {
 exports[`browserslist target ["android 4.4.3-4.4.4"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -194,6 +207,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -206,6 +220,7 @@ Object {
 exports[`browserslist target ["android 81"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -223,6 +238,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": true,
   "require": false,
@@ -235,6 +251,7 @@ Object {
 exports[`browserslist target ["baidu 7.12"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -252,6 +269,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -264,6 +282,7 @@ Object {
 exports[`browserslist target ["bb 10"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -281,6 +300,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -293,6 +313,7 @@ Object {
 exports[`browserslist target ["chrome 80","node 12.19.0"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": null,
   "const": true,
@@ -310,6 +331,7 @@ Object {
   "module": true,
   "node": null,
   "nodeBuiltins": null,
+  "nodePrefixForCoreModules": null,
   "nwjs": false,
   "optionalChaining": false,
   "require": null,
@@ -322,6 +344,7 @@ Object {
 exports[`browserslist target ["chrome 80"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -339,6 +362,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": true,
   "require": false,
@@ -351,6 +375,7 @@ Object {
 exports[`browserslist target ["edge 79"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -368,6 +393,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -380,6 +406,7 @@ Object {
 exports[`browserslist target ["firefox 68"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -397,6 +424,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -409,6 +437,7 @@ Object {
 exports[`browserslist target ["firefox 80","chrome 80"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -426,6 +455,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": true,
   "require": false,
@@ -438,6 +468,7 @@ Object {
 exports[`browserslist target ["ie 11"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -455,6 +486,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -467,6 +499,7 @@ Object {
 exports[`browserslist target ["ie_mob 11"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -484,6 +517,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -496,6 +530,7 @@ Object {
 exports[`browserslist target ["ios_saf 12.0-12.1"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -513,6 +548,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -525,10 +561,11 @@ Object {
 exports[`browserslist target ["kaios 2.5"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
-  "destructuring": false,
+  "destructuring": true,
   "document": true,
   "dynamicImport": false,
   "dynamicImportInWorker": false,
@@ -542,6 +579,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -554,6 +592,7 @@ Object {
 exports[`browserslist target ["node 0.10.0"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": false,
   "const": false,
@@ -571,6 +610,7 @@ Object {
   "module": false,
   "node": true,
   "nodeBuiltins": true,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": true,
@@ -583,6 +623,7 @@ Object {
 exports[`browserslist target ["node 0.12.0"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": false,
   "const": false,
@@ -600,6 +641,7 @@ Object {
   "module": false,
   "node": true,
   "nodeBuiltins": true,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": true,
@@ -612,6 +654,7 @@ Object {
 exports[`browserslist target ["node 10.0.0"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": false,
   "const": true,
@@ -629,6 +672,7 @@ Object {
   "module": false,
   "node": true,
   "nodeBuiltins": true,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": true,
@@ -641,6 +685,7 @@ Object {
 exports[`browserslist target ["node 10.17.0"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": false,
   "const": true,
@@ -658,6 +703,7 @@ Object {
   "module": false,
   "node": true,
   "nodeBuiltins": true,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": true,
@@ -670,6 +716,7 @@ Object {
 exports[`browserslist target ["node 12.19.0"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": false,
   "const": true,
@@ -687,6 +734,7 @@ Object {
   "module": true,
   "node": true,
   "nodeBuiltins": true,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": true,
@@ -699,6 +747,7 @@ Object {
 exports[`browserslist target ["op_mini all"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -716,6 +765,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -728,6 +778,7 @@ Object {
 exports[`browserslist target ["op_mob 54"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -745,6 +796,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -757,6 +809,7 @@ Object {
 exports[`browserslist target ["opera 54"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -774,6 +827,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -786,6 +840,7 @@ Object {
 exports[`browserslist target ["safari 10"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -803,6 +858,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -815,6 +871,7 @@ Object {
 exports[`browserslist target ["safari 11"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -832,6 +889,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -844,6 +902,7 @@ Object {
 exports[`browserslist target ["safari 12.0"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -861,6 +920,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -873,6 +933,7 @@ Object {
 exports[`browserslist target ["safari 12.1"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -890,6 +951,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -902,6 +964,7 @@ Object {
 exports[`browserslist target ["safari 13"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
@@ -919,6 +982,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -931,6 +995,7 @@ Object {
 exports[`browserslist target ["safari TP"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -948,6 +1013,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": true,
   "require": false,
@@ -960,6 +1026,7 @@ Object {
 exports[`browserslist target ["samsung 4"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -977,6 +1044,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -989,6 +1057,7 @@ Object {
 exports[`browserslist target ["samsung 9.2"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -1006,6 +1075,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -1018,6 +1088,7 @@ Object {
 exports[`browserslist target ["samsung 11.1-11.2"] 1`] = `
 Object {
   "arrowFunction": true,
+  "asyncFunction": true,
   "bigIntLiteral": true,
   "browser": true,
   "const": true,
@@ -1035,6 +1106,7 @@ Object {
   "module": true,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,
@@ -1047,6 +1119,7 @@ Object {
 exports[`browserslist target ["unknown 50"] 1`] = `
 Object {
   "arrowFunction": false,
+  "asyncFunction": false,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -1064,6 +1137,7 @@ Object {
   "module": false,
   "node": false,
   "nodeBuiltins": false,
+  "nodePrefixForCoreModules": false,
   "nwjs": false,
   "optionalChaining": false,
   "require": false,

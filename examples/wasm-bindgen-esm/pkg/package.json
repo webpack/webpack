@@ -1,0 +1,14 @@
+{
+  "name": "hi-wasm",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "hi_wasm_bg.wasm",
+    "hi_wasm.js",
+    "hi_wasm_bg.js",
+    "hi_wasm.d.ts"
+  ],
+  "main": "hi_wasm.js",
+  "types": "hi_wasm.d.ts",
+  "sideEffects": false
+}

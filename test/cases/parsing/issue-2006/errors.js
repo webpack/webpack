@@ -1,3 +1,1 @@
-module.exports = [
-	[/Empty dependency/]
-];
+module.exports = [[/Empty dependency/]];

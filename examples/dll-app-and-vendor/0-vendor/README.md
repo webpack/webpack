@@ -13,7 +13,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_51062e5e93ee3a0507e7;
+var vendor_lib_bef1463383efb1c65306;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -147,7 +147,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_51062e5e93ee3a0507e7 = __webpack_exports__;
+/******/ 	vendor_lib_bef1463383efb1c65306 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -156,7 +156,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_51062e5e93ee3a0507e7","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_bef1463383efb1c65306","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -173,7 +173,7 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime)
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -187,5 +187,5 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime)
   dll main 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

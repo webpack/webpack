@@ -296,7 +296,7 @@ module.exports = "utility1";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -462,7 +462,7 @@ module.exports = "pageB";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -626,7 +626,7 @@ module.exports = "pageC";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
@@ -661,11 +661,11 @@ module.exports = "pageC";
 assets by chunk 768 bytes (id hint: commons)
   asset commons-utility2_js.js 384 bytes [emitted] (id hint: commons)
   asset commons-utility3_js.js 384 bytes [emitted] (id hint: commons)
-asset pageA.js 6.08 KiB [emitted] (name: pageA)
+asset pageA.js 6.07 KiB [emitted] (name: pageA)
 asset pageB.js 5.8 KiB [emitted] (name: pageB)
 asset pageC.js 5.74 KiB [emitted] (name: pageC)
 asset vendor.js 737 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.17 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 6.08 KiB
+Entrypoint pageA 7.17 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 6.07 KiB
 Entrypoint pageB 7.27 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageB.js 5.8 KiB
 Entrypoint pageC 6.49 KiB = commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageC.js 5.74 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
@@ -719,7 +719,7 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -728,12 +728,12 @@ webpack 5.51.1 compiled successfully
 assets by chunk 212 bytes (id hint: commons)
   asset commons-utility2_js.js 106 bytes [emitted] [minimized] (id hint: commons)
   asset commons-utility3_js.js 106 bytes [emitted] [minimized] (id hint: commons)
-asset pageA.js 1.01 KiB [emitted] [minimized] (name: pageA)
-asset pageB.js 1 KiB [emitted] [minimized] (name: pageB)
+asset pageA.js 1 KiB [emitted] [minimized] (name: pageA)
+asset pageB.js 1020 bytes [emitted] [minimized] (name: pageB)
 asset pageC.js 1010 bytes [emitted] [minimized] (name: pageC)
 asset vendor.js 121 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.23 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 1.01 KiB
-Entrypoint pageB 1.33 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageB.js 1 KiB
+Entrypoint pageA 1.23 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 1 KiB
+Entrypoint pageB 1.32 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageB.js 1020 bytes
 Entrypoint pageC 1.19 KiB = commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageC.js 1010 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
@@ -786,5 +786,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

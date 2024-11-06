@@ -1,0 +1,39 @@
+@import url("../css-modules/style.module.css");
+
+.class {
+	color: red;
+	background: var(--color);
+}
+
+@keyframes test {
+	0% {
+		color: red;
+	}
+	100% {
+		color: blue;
+	}
+}
+
+:local(.class) {
+	color: red;
+}
+
+:local .class {
+	color: green;
+}
+
+:global(.class) {
+	color: blue;
+}
+
+:global .class {
+	color: white;
+}
+
+:export {
+	foo: bar;
+}
+
+.class {
+	animation: test 1s, test;
+}

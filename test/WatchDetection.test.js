@@ -8,6 +8,7 @@ const webpack = require("..");
 
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
 		return;
 	}
@@ -31,7 +32,7 @@ describe("WatchDetection", () => {
 			const fixturePath = path.join(
 				__dirname,
 				"fixtures",
-				"temp-" + changeTimeout
+				`temp-${changeTimeout}`
 			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
@@ -40,7 +41,7 @@ describe("WatchDetection", () => {
 			beforeAll(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch (e) {
+				} catch (_err) {
 					// empty
 				}
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
@@ -51,17 +52,17 @@ describe("WatchDetection", () => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch (e) {
+					} catch (_err) {
 						// empty
 					}
 					try {
 						fs.unlinkSync(file2Path);
-					} catch (e) {
+					} catch (_err) {
 						// empty
 					}
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch (e) {
+					} catch (_err) {
 						// empty
 					}
 					done();
@@ -71,7 +72,7 @@ describe("WatchDetection", () => {
 			it("should build the bundle correctly", done => {
 				const compiler = webpack({
 					mode: "development",
-					entry: loaderPath + "!" + filePath,
+					entry: `${loaderPath}!${filePath}`,
 					output: {
 						path: "/directory",
 						filename: "bundle.js"
@@ -96,7 +97,7 @@ describe("WatchDetection", () => {
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
-								.indexOf("original") >= 0
+								.includes("original")
 						)
 							step2();
 					};
@@ -140,7 +141,7 @@ describe("WatchDetection", () => {
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
-								.indexOf("correct") >= 0
+								.includes("correct")
 						)
 							step5();
 					};

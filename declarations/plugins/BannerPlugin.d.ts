@@ -12,7 +12,7 @@ export type BannerPluginArgument =
  * The banner as function, it will be wrapped in a comment.
  */
 export type BannerFunction = (data: {
-	hash: string;
+	hash?: string;
 	chunk: import("../../lib/Chunk");
 	filename: string;
 }) => string;
@@ -50,6 +50,10 @@ export interface BannerPluginOptions {
 	 * If true, banner will not be wrapped in a comment.
 	 */
 	raw?: boolean;
+	/**
+	 * Specifies the banner.
+	 */
+	stage?: number;
 	/**
 	 * Include all modules that pass test assertion.
 	 */

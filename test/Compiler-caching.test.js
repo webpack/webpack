@@ -70,11 +70,9 @@ describe("Compiler (caching)", () => {
 				expect(Array.isArray(stats.errors)).toBe(true);
 				if (options.expectErrors) {
 					expect(stats.errors).toHaveLength(options.expectErrors);
-				} else {
-					if (stats.errors.length > 0) {
-						expect(typeof stats.errors[0]).toBe("string");
-						throw new Error(stats.errors[0]);
-					}
+				} else if (stats.errors.length > 0) {
+					expect(typeof stats.errors[0]).toBe("string");
+					throw new Error(stats.errors[0]);
 				}
 				stats.logs = logs;
 				callback(stats, files, compilerIteration++);
@@ -123,7 +121,7 @@ describe("Compiler (caching)", () => {
 		};
 	}
 
-	it("should cache single file (with manual 1s wait) ", done => {
+	it("should cache single file (with manual 1s wait)", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
@@ -157,7 +155,7 @@ describe("Compiler (caching)", () => {
 		});
 	});
 
-	it("should cache single file (even with no timeout) ", done => {
+	it("should cache single file (even with no timeout)", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 

@@ -1,6 +1,5 @@
 const path = require("path");
 const fs = require("fs");
-const asc = require("assemblyscript/cli/asc");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -9,13 +8,18 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	await asc.ready;
+	// TODO: fix me after update typescript to v5
+	// eslint-disable-next-line no-warning-comments
+	// @ts-ignore
+	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+	const asc = (await import("assemblyscript/asc")).default;
+
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf-8");
 
 		const regexp =
-			/\n\/\/#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/#endregion\n/g;
+			/\n\/\/[\s]*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
 
 		const replaces = new Map();
 
@@ -29,38 +33,35 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 				path.basename(sourcePath)
 			);
 
-			await new Promise((resolve, reject) => {
-				asc.main(
-					[
-						sourcePath,
-						// cspell:word Ospeed
-						"-Ospeed",
-						"--noAssert",
-						"--converge",
-						"--textFile",
-						sourcePathBase + ".wat",
-						"--binaryFile",
-						sourcePathBase + ".wasm",
-						...flags.split(" ").filter(Boolean)
-					],
-					{
-						stdout: process.stdout,
-						stderr: process.stderr
-					},
-					err => {
-						if (err) return reject(err), 0;
-						resolve();
-						return 0;
-					}
-				);
-			});
+			const { error } = await asc.main(
+				[
+					sourcePath,
+					// cspell:word Ospeed
+					"-Ospeed",
+					"--noAssert",
+					"--converge",
+					"--textFile",
+					`${sourcePathBase}.wat`,
+					"--outFile",
+					`${sourcePathBase}.wasm`,
+					...flags.split(" ").filter(Boolean)
+				],
+				{
+					stdout: process.stdout,
+					stderr: process.stderr
+				}
+			);
 
-			const wasm = fs.readFileSync(sourcePathBase + ".wasm");
+			if (error) {
+				throw error;
+			}
+
+			const wasm = fs.readFileSync(`${sourcePathBase}.wasm`);
 
 			replaces.set(
 				fullMatch,
 				`
-//#region wasm code: ${identifier} (${name})${flags}
+// #region wasm code: ${identifier} (${name})${flags}
 const ${identifier} = new WebAssembly.Module(
 	Buffer.from(
 		// ${wasm.length} bytes
@@ -68,7 +69,7 @@ const ${identifier} = new WebAssembly.Module(
 		"base64"
 	)
 );
-//#endregion
+// #endregion
 `
 			);
 			match = regexp.exec(content);

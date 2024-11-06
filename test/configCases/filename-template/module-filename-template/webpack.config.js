@@ -3,7 +3,7 @@ module.exports = {
 	mode: "development",
 	output: {
 		devtoolModuleFilenameTemplate: function (info) {
-			return "dummy:///" + info.resourcePath;
+			return `dummy:///${info.resourcePath}`;
 		}
 	},
 	node: {

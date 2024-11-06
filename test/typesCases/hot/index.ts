@@ -16,4 +16,10 @@ module.hot.apply({
 	ignoreDeclined: true,
 	ignoreErrored: true,
 }).then(() => {});
+module.hot.apply({
+	ignoreUnaccepted: true,
+	ignoreDeclined: true,
+	ignoreErrored: true,
+	onDeclined: (event) => { console.log(event.moduleId) },
+}).then(() => {});
 module.hot.apply().then(() => {});

@@ -140,7 +140,6 @@ require.ensure(["b"], function(require) {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -233,7 +232,7 @@ require.ensure(["b"], function(require) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -250,7 +249,7 @@ require.ensure(["b"], function(require) {
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -262,21 +261,21 @@ var a = __webpack_require__(/*! a */ 1);
 __webpack_require__.e(/*! require.ensure | my own chunk */ 666).then((function(require) {
 	// a named chunk
 	var c = __webpack_require__(/*! c */ 3);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 __webpack_require__.e(/*! require.ensure | my own chunk */ 666).then((function(require) {
 	// another chunk with the same name
 	var d = __webpack_require__(/*! d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 __webpack_require__.e(/*! require.ensure | my own chunk */ 666).then((function(require) {
 	// the same again
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 __webpack_require__.e(/*! require.ensure */ 885).then((function(require) {
 	// chunk without name
 	var d = __webpack_require__(/*! d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
 })();
 
@@ -366,9 +365,9 @@ __webpack_require__.e(/*! require.ensure */ 885).then((function(require) {
 asset output.js 9.83 KiB [emitted] (name: main)
 asset 666.output.js 735 bytes [emitted] (name: my own chunk)
 asset 885.output.js 528 bytes [emitted]
-chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [used exports unknown]
@@ -400,7 +399,7 @@ chunk (runtime: main) 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -409,9 +408,9 @@ webpack 5.51.1 compiled successfully
 asset output.js 1.88 KiB [emitted] [minimized] (name: main)
 asset 666.output.js 95 bytes [emitted] [minimized] (name: my own chunk)
 asset 885.output.js 80 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [no exports used]
@@ -443,5 +442,5 @@ chunk (runtime: main) 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

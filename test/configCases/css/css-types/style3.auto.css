@@ -1,0 +1,11 @@
+body {
+    background: red;
+}
+
+:local(.baz) {
+    color: red;
+}
+
+:global(.qux) {
+    color: green;
+}

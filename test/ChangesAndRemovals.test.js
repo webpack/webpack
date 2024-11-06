@@ -18,15 +18,14 @@ const tempFolderPath = path.join(__dirname, "ChangesAndRemovalsTemp");
 const tempFilePath = path.join(tempFolderPath, "temp-file.js");
 const tempFile2Path = path.join(tempFolderPath, "temp-file2.js");
 
-const createSingleCompiler = () => {
-	return createCompiler({
+const createSingleCompiler = () =>
+	createCompiler({
 		entry: tempFilePath,
 		output: {
 			path: tempFolderPath,
 			filename: "bundle.js"
 		}
 	});
-};
 
 const onceDone = (compiler, action) => {
 	let initial = true;
@@ -68,6 +67,7 @@ function createFiles() {
 
 describe("ChangesAndRemovals", () => {
 	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("watch tests excluded", () => {});
 		return;
 	}
@@ -87,7 +87,6 @@ describe("ChangesAndRemovals", () => {
 
 	it("should not track modified/removed files during initial watchRun", done => {
 		const compiler = createSingleCompiler();
-		let watcher;
 		const watchRunFinished = new Promise(resolve => {
 			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 				expect(getChanges(compiler)).toEqual({
@@ -97,7 +96,7 @@ describe("ChangesAndRemovals", () => {
 				resolve();
 			});
 		});
-		watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
+		const watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
 			if (err) done(err);
 		});
 

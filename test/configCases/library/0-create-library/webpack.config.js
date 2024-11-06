@@ -20,6 +20,22 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "modern-module",
+			filename: "modern-module.js",
+			libraryTarget: "modern-module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
 			uniqueName: "esm-runtimeChunk",
 			filename: "esm-runtimeChunk/[name].js",
 			libraryTarget: "module"

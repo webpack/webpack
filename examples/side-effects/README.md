@@ -1,4 +1,4 @@
-This example shows how the `sideEffects` flag for library authors works.
+This example shows how the `sideEffects` flag works for library authors.
 
 The example contains a large library, `big-module`. `big-module` contains multiple child modules: `a`, `b` and `c`. The exports from the child modules are re-exported in the entry module (`index.js`) of the library. A consumer uses **some** of the exports, importing them from the library via `import { a, b } from "big-module"`. According to the EcmaScript spec, all child modules _must_ be evaluated because they could contain side effects.
 
@@ -248,7 +248,7 @@ const b = "b";
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -291,7 +291,7 @@ chunk (runtime: main) output.js (main) 354 bytes (javascript) 670 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -304,5 +304,5 @@ chunk (runtime: main) output.js (main) 332 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

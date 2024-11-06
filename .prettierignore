@@ -1,14 +1,34 @@
 package.json
 
-# Ignore test fixtures
-test/*.*
+# Ignore some test files
+test/**/*.*
 !test/*.js
 !test/**/webpack.config.js
+!test/**/test.config.js
+!test/**/test.filter.js
+!test/**/errors.js
+!test/**/warnings.js
 !test/**/deprecations.js
+!test/**/infrastructure-log.js
+!test/*.md
+!test/helpers/*.*
 
-# Ignore example fixtures
-examples/*.*
-!examples/**/webpack.config.js
+# Ignore some folders
+benchmark/
+coverage/
 
 # Ignore generated files
 *.check.js
+
+# Ignore not supported files
+*.d.ts
+!module.d.ts
+
+# Ignore precompiled schemas
+schemas/**/*.check.js
+
+# Ignore example fixtures
+examples/
+!examples/**/webpack.config.js
+
+.vscode/**/*.*

@@ -20,6 +20,14 @@ module.exports = {
 			exclude: ["vendors.js"]
 		}),
 		new webpack.BannerPlugin({
+			banner: "A test value in single file",
+			include: ["vendors.js"]
+		}),
+		new webpack.BannerPlugin({
+			banner: "Match test file",
+			test: /vendors\.js$/
+		}),
+		new webpack.BannerPlugin({
 			banner: ({ chunk }) => `multiline\nbanner\n${chunk.name}`
 		}),
 		new webpack.BannerPlugin(

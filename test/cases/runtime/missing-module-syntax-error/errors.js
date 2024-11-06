@@ -1,3 +1,1 @@
-module.exports = [
-	[/Module not found/, /Can't resolve '\.\/someModule' /],
-];
+module.exports = [[/Module not found/, /Can't resolve '\.\/someModule' /]];

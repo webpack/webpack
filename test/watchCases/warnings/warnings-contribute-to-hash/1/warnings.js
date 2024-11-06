@@ -1,3 +1,1 @@
-module.exports = [
-	[/New Warning/]
-];
+module.exports = [[/New Warning/]];

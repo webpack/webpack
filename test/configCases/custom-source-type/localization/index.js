@@ -4,13 +4,13 @@ it("should generate the correct output files", () => {
 		__STATS__.children[INDEX].assets.map(asset => asset.name).sort()
 	).toEqual(
 		[
-			NORMAL1 && `634.bundle${INDEX}.js`,
-			NORMAL2 && `882.bundle${INDEX}.js`,
+			NORMAL1 && `286.bundle${INDEX}.js`,
+			NORMAL2 && `678.bundle${INDEX}.js`,
 			`bundle${INDEX}.js`,
-			CONTENT2 && "localization-264.js",
-			"localization-530.js",
-			NORMAL1 && "localization-634.js",
-			NORMAL2 && "localization-882.js"
+			"localization-248.js",
+			NORMAL1 && "localization-286.js",
+			NORMAL2 && "localization-678.js",
+			CONTENT2 && "localization-702.js"
 		].filter(Boolean)
 	);
 });
@@ -37,7 +37,7 @@ if (NORMAL1) {
 	it("should still load normal chunks", () => {
 		if (TARGET === "web") {
 			Promise.resolve().then(() => {
-				__non_webpack_require__(`./634.bundle${INDEX}.js`);
+				__non_webpack_require__(`./286.bundle${INDEX}.js`);
 			});
 		}
 
@@ -51,7 +51,7 @@ if (NORMAL2) {
 	it("should still another load normal chunks", () => {
 		if (TARGET === "web") {
 			Promise.resolve().then(() => {
-				__non_webpack_require__(`./882.bundle${INDEX}.js`);
+				__non_webpack_require__(`./678.bundle${INDEX}.js`);
 			});
 		}
 

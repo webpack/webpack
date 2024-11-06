@@ -1,3 +1,1 @@
-module.exports = [
-	[/Critical dependency/]
-];
+module.exports = [[/Critical dependency/]];

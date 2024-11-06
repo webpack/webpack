@@ -211,7 +211,7 @@ module.exports = JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Prest
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -255,5 +255,5 @@ chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

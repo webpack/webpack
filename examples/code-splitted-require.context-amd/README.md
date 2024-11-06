@@ -118,7 +118,6 @@ getTemplate("b", function(b) {
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -211,7 +210,7 @@ getTemplate("b", function(b) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -236,7 +235,7 @@ var __webpack_exports__ = {};
 function getTemplate(templateName, callback) {
 	__webpack_require__.e(/*! AMD require */ 577).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1)("./"+templateName)]; (function(tmpl) {
 		callback(tmpl());
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
 }
 getTemplate("a", function(a) {
 	console.log(a);
@@ -342,11 +341,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.05 KiB [emitted] (name: main)
+asset output.js 9.04 KiB [emitted] (name: main)
 asset 577.output.js 2.23 KiB [emitted]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -357,7 +356,7 @@ chunk (runtime: main) 577.output.js 457 bytes [rendered]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 2:1-4:3
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -365,9 +364,9 @@ webpack 5.51.1 compiled successfully
 ```
 asset output.js 1.82 KiB [emitted] [minimized] (name: main)
 asset 577.output.js 609 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.98 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.98 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -377,5 +376,5 @@ chunk (runtime: main) 577.output.js 457 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 2:1-4:3
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

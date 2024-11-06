@@ -1,0 +1,28 @@
+.class {
+	color: red;
+	background:
+		url("./img.png"),
+		url("./img.png"),
+		url("data:image/png;base64,AAA");
+		url('./inline.png'),
+		url('./resource.png'),
+		url('./source.text'),
+		url('data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E'),
+		url('https://example.com/img.png');
+}
+
+.class-2 {
+	background: url("./shared.png");
+}
+
+.class-3 {
+	background: url("./shared-external.png");
+}
+
+.class-4 {
+	background: url("data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=");
+}
+
+.class-5 {
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAABNJREFUCB1jZGBg+A/EDEwgAgQADigBA//q6GsAAAAASUVORK5CYII%3D");
+}

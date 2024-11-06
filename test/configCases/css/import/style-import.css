@@ -1,0 +1,28 @@
+@import "style-library";
+@import "main-field";
+@import "package-with-exports";
+@import "./extensions-imported.mycss";
+@import "./with-less-import.css";
+@import "prefer-relative.css";
+@import "condition-names-style";
+@import "condition-names-style-mode";
+@import "condition-names-subpath/custom.css";
+@import "condition-names-subpath-extra/custom.css";
+@import "condition-names-style-less";
+@import "condition-names-custom-name";
+@import "style-and-main-library";
+@import "condition-names-webpack";
+@import "condition-names-style-nested";
+
+/* Technically, this is not entirely true, but we allow it because the final file can be processed by the loader and return the CSS code */
+
+@import "js-import";
+@import "condition-names-webpack-js";
+@import url("some-file.js");
+
+/* Failed */
+
+@import "non-exported-css";
+@import "./directory";
+@import "condition-names-subpath/non-valid.css";
+@import "./no-extension-in-request";

@@ -1,5 +1,5 @@
-var path = require("path");
-var { AggressiveMergingPlugin } = require("../../").optimize;
+const path = require("path");
+const { AggressiveMergingPlugin } = require("../..").optimize;
 
 module.exports = {
 	// mode: "development" || "production",

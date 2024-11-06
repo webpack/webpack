@@ -4,17 +4,17 @@ This is the dependency graph for the example: (solid lines express sync imports,
 
 ![](graph.png)
 
-All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJs module.
+All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJS module.
 
-The interesting thing here is that putting all modules in single scope won't work, because of multiple reasons:
+The interesting thing here is that putting all modules in a single scope won't work, because of multiple reasons:
 
 - Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
 - Module `shared` is accessed by two chunks (different scopes)
-- Module `cjs` is a CommonJs module
+- Module `cjs` is a CommonJS module
 
 ![](graph2.png)
 
-webpack therefore uses a approach called **"Partial Scope Hoisting"** or "Module concatenation", which chooses the largest possible subsets of ES modules which can be scope hoisted and combines them with the default webpack primitives.
+Webpack, therefore, uses an approach called **"Partial Scope Hoisting"** or "Module concatenation", which chooses the largest possible subsets of ES modules which can be scope hoisted and combines them with the default webpack primitives.
 
 ![](graph3.png)
 
@@ -256,7 +256,6 @@ var x = "x";
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -360,7 +359,7 @@ var x = "x";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -377,7 +376,7 @@ var x = "x";
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
@@ -523,7 +522,7 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -545,5 +544,5 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

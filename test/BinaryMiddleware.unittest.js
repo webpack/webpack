@@ -108,14 +108,14 @@ describe("BinaryMiddleware", () => {
 			for (const prepend of items) {
 				for (const append of items) {
 					if (c > 1 && append !== undefined) continue;
-					let data = [prepend, ...caseData, append].filter(
+					const data = [prepend, ...caseData, append].filter(
 						x => x !== undefined
 					);
 					if (data.length * c > 200000) continue;
 					if (data.length === 0) continue;
 					let key = JSON.stringify(data.map(resolveLazy));
 					if (key.length > 100)
-						key = key.slice(0, 50) + " ... " + key.slice(-50);
+						key = `${key.slice(0, 50)} ... ${key.slice(-50)}`;
 					it(`should serialize ${c} x ${key} (${data.length}) correctly`, () => {
 						// process.stderr.write(
 						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`

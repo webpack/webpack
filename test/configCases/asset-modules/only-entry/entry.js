@@ -1,0 +1,5 @@
+function test() {
+	run();
+}
+
+test();

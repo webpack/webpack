@@ -1,4 +1,4 @@
-// eslint-disable-next-line node/no-unpublished-require
+// eslint-disable-next-line n/no-unpublished-require
 const { ProvideSharedPlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */

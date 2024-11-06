@@ -241,7 +241,6 @@ module.exports = webpackAsyncContext;
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			;
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -345,7 +344,7 @@ module.exports = webpackAsyncContext;
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -362,7 +361,7 @@ module.exports = webpackAsyncContext;
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!********************!*\
@@ -410,9 +409,9 @@ chunk (runtime: main) 98.output.js 13 bytes [rendered]
     [used exports unknown]
     import() context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     import() context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.92 KiB 10 modules
+  runtime modules 6.91 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -430,7 +429,7 @@ chunk (runtime: main) 644.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
@@ -447,9 +446,9 @@ chunk (runtime: main) 98.output.js 13 bytes [rendered]
     [used exports unknown]
     import() context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     import() context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.66 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.66 KiB 9 modules
+  runtime modules 6.65 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -467,5 +466,5 @@ chunk (runtime: main) 644.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

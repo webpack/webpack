@@ -1,0 +1,6 @@
+// emit to esm module
+{
+    "compilerOptions": {
+        "target": "ES2015",
+    }
+}

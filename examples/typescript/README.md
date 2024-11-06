@@ -25,9 +25,6 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = (env = "development") => ({
 	mode: env,
-	entry: {
-		output: "./index.ts"
-	},
 	module: {
 		rules: [
 			{
@@ -61,10 +58,14 @@ module.exports = (env = "development") => ({
 /*! CommonJS bailout: this is used directly at 1:21-25 */
 /***/ (function() {
 
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var myName = "Junya";
 var age = 22;
@@ -73,7 +74,7 @@ function getArray() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    return __spreadArray([], args);
+    return __spreadArray([], args, true);
 }
 console.log(getArray("foo", "bar"));
 console.log(getArray(1, 2, 3));
@@ -118,7 +119,7 @@ console.log(getArray(1, 2, 3));
 
 ``` js
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -138,25 +139,25 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.22 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 513 bytes [entry] [rendered]
+asset output.js 2.4 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 480 bytes [dependent] 1 module
+  dependent modules 663 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 438 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 513 bytes [entry] [rendered]
+asset output.js 553 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 480 bytes [dependent] 1 module
+  dependent modules 663 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

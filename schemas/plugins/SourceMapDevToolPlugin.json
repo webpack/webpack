@@ -47,6 +47,10 @@
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../../lib/Compilation\").PathData, assetInfo?: import(\"../../lib/Compilation\").AssetInfo) => string)"
         }
       ]
     },

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "node",
     "lib": ["esnext", "dom"],
     "allowJs": true,
     "checkJs": true,
@@ -10,5 +11,5 @@
     "types": ["node", "./module"],
     "esModuleInterop": true
   },
-  "include": ["test/typesCases/**/*"]
+  "include": ["hot/**/*", "test/typesCases/**/*"]
 }

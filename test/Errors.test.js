@@ -313,30 +313,30 @@ it("should emit no errors or warnings for no-errors-deprecate", async () => {
 it("should emit errors for missingFile for production", async () => {
 	await expect(compile({ mode: "production", entry: "./missingFile" })).resolves
 		.toMatchInlineSnapshot(`
-					Object {
-					  "errors": Array [
-					    Object {
-					      "loc": "4:0-20",
-					      "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
-					      "moduleId": 814,
-					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
-					      "moduleName": "./missingFile.js",
-					      "moduleTrace": Array [],
-					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
-					    },
-					    Object {
-					      "loc": "12:9-34",
-					      "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
-					      "moduleId": 814,
-					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
-					      "moduleName": "./missingFile.js",
-					      "moduleTrace": Array [],
-					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
-					    },
-					  ],
-					  "warnings": Array [],
-					}
-				`);
+		Object {
+		  "errors": Array [
+		    Object {
+		      "loc": "4:0-20",
+		      "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+		      "moduleId": 915,
+		      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+		      "moduleName": "./missingFile.js",
+		      "moduleTrace": Array [],
+		      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+		    },
+		    Object {
+		      "loc": "12:9-34",
+		      "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+		      "moduleId": 915,
+		      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+		      "moduleName": "./missingFile.js",
+		      "moduleTrace": Array [],
+		      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+		    },
+		  ],
+		  "warnings": Array [],
+		}
+	`);
 });
 
 it("should emit module build errors", async () => {

@@ -5,14 +5,21 @@ const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
+/** @typedef {{ size: number, lazySize: number }} SizeInfo */
+
 const binaryMiddleware = new BinaryMiddleware();
 
 const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
+/** @type {Array<SizeInfo | undefined>} */
 const lazySizes = [];
 
+/**
+ * @param {Array<any>} data data
+ * @returns {Promise<SizeInfo>} size info
+ */
 const captureSize = async data => {
 	let size = 0;
 	let lazySize = 0;
@@ -24,7 +31,6 @@ const captureSize = async data => {
 			lazySizes.push(undefined);
 			const r = await captureSize(await b());
 			lazySize += r.size + r.lazySize;
-			// eslint-disable-next-line require-atomic-updates
 			lazySizes[i] = r;
 		}
 	}
@@ -36,18 +42,23 @@ const ESCAPE_ESCAPE_VALUE = null;
 const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
+/**
+ * @param {Array<any>} data data
+ * @param {string} indent indent
+ * @returns {Promise<void>} promise
+ */
 const printData = async (data, indent) => {
 	if (!Array.isArray(data)) throw new Error("Not an array");
 	if (Buffer.isBuffer(data[0])) {
 		for (const b of data) {
 			if (typeof b === "function") {
 				const innerData = await b();
-				const info = lazySizes.shift();
+				const info = /** @type {SizeInfo} */ (lazySizes.shift());
 				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;
 				console.log(`${indent}= lazy ${sizeInfo} {`);
-				await printData(innerData, indent + "  ");
+				await printData(innerData, `${indent}  `);
 				console.log(`${indent}}`);
 			} else {
 				console.log(`${indent}= ${b.toString("hex")}`);
@@ -61,9 +72,10 @@ const printData = async (data, indent) => {
 	let currentReference = 0;
 	let currentTypeReference = 0;
 	let i = 0;
-	const read = () => {
-		return data[i++];
-	};
+	const read = () => data[i++];
+	/**
+	 * @param {string} content content
+	 */
 	const printLine = content => {
 		console.log(`${indent}${content}`);
 	};
@@ -77,7 +89,7 @@ const printData = async (data, indent) => {
 			} else if (nextItem === ESCAPE_UNDEFINED) {
 				printLine("undefined");
 			} else if (nextItem === ESCAPE_END_OBJECT) {
-				indent = indent.slice(0, indent.length - 2);
+				indent = indent.slice(0, -2);
 				printLine(`} = #${currentReference++}`);
 			} else if (typeof nextItem === "number" && nextItem < 0) {
 				const ref = currentReference + nextItem;
@@ -123,24 +135,22 @@ const printData = async (data, indent) => {
 		} else if (typeof item === "function") {
 			const innerData = await item();
 			if (!SerializerMiddleware.isLazy(item, binaryMiddleware)) {
-				const info = lazySizes.shift();
+				const info = /** @type {SizeInfo} */ (lazySizes.shift());
 				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
 					info.lazySize / 1048576
 				).toFixed(2)} lazy MiB`;
 				printLine(`lazy-file ${sizeInfo} {`);
 			} else {
-				printLine(`lazy-inline {`);
+				printLine("lazy-inline {");
 			}
-			await printData(innerData, indent + "  ");
-			printLine(`}`);
+			await printData(innerData, `${indent}  `);
+			printLine("}");
 		} else {
-			printLine(`${item}`);
+			printLine(String(item));
 		}
 	}
 	const refCounters = Array.from(referencedValuesCounters);
-	refCounters.sort(([a, A], [b, B]) => {
-		return B - A;
-	});
+	refCounters.sort(([a, A], [b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {
 		const value = referencedValues.get(ref);

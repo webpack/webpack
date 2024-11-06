@@ -1,0 +1,5 @@
+@import url("#test");
+
+.nested {
+	background: url('./img.png');
+}

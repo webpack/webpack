@@ -24,31 +24,31 @@ describe("itemsToRegexp", () => {
 	});
 
 	expectCompiled("basic", ["abc", "def", "123", "45", "6"], e =>
-		e.toMatchInlineSnapshot(`(123|45|6|abc|def)`)
+		e.toMatchInlineSnapshot("(123|45|6|abc|def)")
 	);
 
 	expectCompiled("single chars", ["a", "b", "c", "1", "2", "3"], e =>
-		e.toMatchInlineSnapshot(`[123abc]`)
+		e.toMatchInlineSnapshot("[123abc]")
 	);
 
 	expectCompiled(
 		"prefixes",
 		["ab1", "ab2", "ab3", "ab4", "de5", "de6", "de7", "ef8", "ef9", "gh0"],
-		e => e.toMatchInlineSnapshot(`(ab[1234]|de[567]|ef[89]|gh0)`)
+		e => e.toMatchInlineSnapshot("(ab[1234]|de[567]|ef[89]|gh0)")
 	);
 
 	expectCompiled("short prefixes", "a,ab", e =>
-		e.toMatchInlineSnapshot(`a(|b)`)
+		e.toMatchInlineSnapshot("a(|b)")
 	);
 
 	expectCompiled(
 		"nested prefixes",
 		["a", "ab", "abc", "abcd", "abcde", "abcdef"],
-		e => e.toMatchInlineSnapshot(`a(b(c(d(|e|ef)|)|)|)`)
+		e => e.toMatchInlineSnapshot("a(b(c(d(|e|ef)|)|)|)")
 	);
 
 	expectCompiled("suffixes", "a1,b1,c1,d1,e1,a2,b2,c2", e =>
-		e.toMatchInlineSnapshot(`([abcde]1|[abc]2)`)
+		e.toMatchInlineSnapshot("([abcde]1|[abc]2)")
 	);
 
 	expectCompiled(
@@ -56,7 +56,7 @@ describe("itemsToRegexp", () => {
 		"674,542,965,12,942,483,445,943,423,995,434,122,995,248,432,165,436,86,435,221",
 		e =>
 			e.toMatchInlineSnapshot(
-				`(1(2|22|65)|4(3[2456]|23|45|83)|9(42|43|65|95)|221|248|542|674|86)`
+				"(1(2|22|65)|4(3[2456]|23|45|83)|9(42|43|65|95)|221|248|542|674|86)"
 			)
 	);
 
@@ -74,7 +74,7 @@ describe("itemsToRegexp", () => {
 		],
 		e =>
 			e.toMatchInlineSnapshot(
-				`(\\.\\/path\\/to\\/(directory\\/with\\/(file\\.(js(|on)|css)|module\\.css)|file\\.(|m)js|other\\-file\\.js)|webpack\\/runtime\\/module)`
+				"(\\.\\/path\\/to\\/(directory\\/with\\/(file\\.(js(|on)|css)|module\\.css)|file\\.(|m)js|other\\-file\\.js)|webpack\\/runtime\\/module)"
 			)
 	);
 
@@ -86,7 +86,7 @@ describe("itemsToRegexp", () => {
 		],
 		e =>
 			e.toMatchInlineSnapshot(
-				`webpack_sharing_consume_default_(|classnames_classnames\\-webpack_sharing_consume_default_)react_react`
+				"webpack_sharing_consume_default_(|classnames_classnames\\-webpack_sharing_consume_default_)react_react"
 			)
 	);
 });

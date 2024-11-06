@@ -1,6 +1,7 @@
-var path = require("path");
+const path = require("path");
+
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		vendor1: ["./vendor1"],
 		vendor2: ["./vendor2"],
