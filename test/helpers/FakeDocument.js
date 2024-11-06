@@ -227,10 +227,7 @@ class FakeSheet {
 					"utf-8"
 				);
 			});
-		walkCssTokens(css, {
-			isSelector() {
-				return selector === undefined;
-			},
+		walkCssTokens(css, 0, {
 			leftCurlyBracket(source, start, end) {
 				if (selector === undefined) {
 					selector = source.slice(last, start).trim();

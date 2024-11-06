@@ -5347,6 +5347,82 @@ head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
+exports[`ConfigTestCases css pseudo-import exported tests should compile 1`] = `
+Array [
+  "/*!********************************!*\\\\
+  !*** css ./export.modules.css ***!
+  \\\\********************************/
+
+/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./after.modules.css ***!
+  \\\\*******************************/
+
+/*!********************************!*\\\\
+  !*** css ./vars-1.modules.css ***!
+  \\\\********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+
+
+._style_modules_css-class {
+	color: red;
+	background: red;
+}
+
+
+._style_modules_css-class {background: red}
+
+._style_modules_css-class {
+	color: red;
+	color: red;
+	color: red;
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+/* TODO fix me */
+/*:import(\\"reexport.modules.css\\") {
+	primary-color: _my_color;
+}
+
+.class {color: primary-color}*/
+
+
+._style_modules_css-class {
+	color:    red, red, func()   ;
+}
+
+._style_modules_css-nest {
+	:import(\\"./export.modules.css\\") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}
+
+head{--webpack-main:primary-color:red/&\\\\.\\\\/export\\\\.modules\\\\.css,a:red/_-b:red/--c:red/__d:red/&\\\\.\\\\/library\\\\.modules\\\\.css,somevalue:red/&\\\\.\\\\/after\\\\.modules\\\\.css,multile-values:red\\\\,\\\\ red\\\\,\\\\ func\\\\(\\\\)/&\\\\.\\\\/vars-1\\\\.modules\\\\.css,class:__style_modules_css-class/nest:__style_modules_css-nest/&\\\\.\\\\/style\\\\.modules\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
 Array [
   "/*!*******************************************!*\\\\
