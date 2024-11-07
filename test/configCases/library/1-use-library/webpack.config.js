@@ -178,6 +178,18 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/true-iife-umd.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("true-iife-umd")
+			})
+		]
+	},
+	{
 		entry: "./this-test.js",
 		resolve: {
 			alias: {
