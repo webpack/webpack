@@ -142,10 +142,6 @@ const StuffFinalization = (typeof FinalizationRegistry === 'undefined')
 
 export class Stuff {
 
-    constructor() {
-        throw new Error('cannot invoke `new` directly');
-    }
-
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
@@ -156,6 +152,12 @@ export class Stuff {
     free() {
         const ptr = this.__destroy_into_raw();
         wasm.__wbg_stuff_free(ptr, 0);
+    }
+    constructor() {
+        const ret = wasm.stuff_new();
+        this.__wbg_ptr = ret >>> 0;
+        StuffFinalization.register(this, this.__wbg_ptr, this);
+        return this;
     }
     /**
      * @param {any} value
