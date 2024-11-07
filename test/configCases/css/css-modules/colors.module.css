@@ -1,0 +1,11 @@
+@value red blue;
+@value red-i: blue;
+@value blue red;
+@value blue-i: red;
+@value a: "test-a";
+@value b: "test-b";
+@value --red: var(--color);
+@value test-v1: blue;
+@value test-v2: blue;
+@value red-v2: blue;
+@value green-v2: yellow;
