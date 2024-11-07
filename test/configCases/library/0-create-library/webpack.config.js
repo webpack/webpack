@@ -271,6 +271,24 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "startupHelpers",
+			filename: "startupHelpers.js",
+			libraryTarget: "startupHelpers",
+			iife: false
+		},
+		externals: ["external"]
+	},
+	{
+		output: {
+			uniqueName: "StartupChunkDependenciesPlugin",
+			filename: "StartupChunkDependenciesPlugin.js",
+			libraryTarget: "StartupChunkDependenciesPlugin",
+			iife: false
+		},
+		externals: ["external"]
+	},
+	{
+		output: {
 			uniqueName: "commonjs2-external-no-concat",
 			filename: "commonjs2-external-no-concat.js",
 			libraryTarget: "commonjs2",
