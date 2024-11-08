@@ -6,7 +6,7 @@ import { UsedClassName } from "./identifiers.module.css";
 
 // To prevent analysis export
 const isNotACSSModule = typeof notACssModule["c" + "lass"] === "undefined";
-const hasOwnProperty = (obj, p) => Object.hasOwnProperty.call(obj, p)
+const hasOwnProperty = (obj, p) => Object.hasOwnProperty.call(obj, p);
 
 export default {
 	global: style.global,

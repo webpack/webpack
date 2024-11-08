@@ -6,11 +6,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/i,
-				type: "css/global",
-				resolve: {
-					fullySpecified: true,
-					preferRelative: true
-				}
+				type: "css"
 			}
 		]
 	},
