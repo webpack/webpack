@@ -3683,7 +3683,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	devServer?: DevServer;
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map[-debug-id]).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
 	devtool?: DevTool;
 	/**

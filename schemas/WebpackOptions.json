@@ -596,7 +596,7 @@
         },
         {
           "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debug-ids)?$"
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
         }
       ]
     },
