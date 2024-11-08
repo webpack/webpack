@@ -225,3 +225,6 @@ colorValue-v3 {
 @value/* test */(/* test */blue/* test */as/* test */my-name-q/* test */)/* test */from/* test */"./colors.module.css"/* test */;
 
 .foo { color: my-name-q; }
+
+@value;
+@value test;
