@@ -5927,6 +5927,1425 @@ head{--webpack-main:primary-color:red/&\\\\.\\\\/export\\\\.modules\\\\.css,a:re
 ]
 `;
 
+exports[`ConfigCacheTestCases css pure-css exported tests should compile 1`] = `
+Array [
+  "/*!***************************************************!*\\\\
+  !*** css ../css-modules/at-rule-value.module.css ***!
+  \\\\***************************************************/
+@value my-red blue;
+
+.value-in-class {
+	color: my-red;
+}
+
+@value v-comment-broken:;
+@value v-comment-broken-v1:/* comment */;
+
+@value small: (max-width: 599px);
+
+@media small {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+@value blue-v1: red;
+
+.foo { color: blue-v1; }
+
+@value blue-v3: red;
+
+.foo {
+	&.bar { color: blue-v3; }
+}
+
+@value blue-v3: red;
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar { color: blue-v3; }
+	}
+}
+
+@value blue-v4: red;
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar {
+			@media (min-width: 1024px) {
+				color: blue-v4;
+			}
+		}
+	}
+}
+
+@value test-t: 40px;
+@value test_q: 36px;
+
+.foo { height: test-t; height: test_q; }
+
+@value colorValue: red;
+
+.colorValue {
+	color: colorValue;
+}
+
+@value colorValue-v1: red;
+
+#colorValue-v1 {
+	color: colorValue-v1;
+}
+
+@value colorValue-v2: red;
+
+.colorValue-v2 > .colorValue-v2 {
+	color: colorValue-v2;
+}
+
+@value colorValue-v3: .red;
+
+colorValue-v3 {
+	color: colorValue-v3;
+}
+
+@value red-v2 from \\"./colors.module.css\\";
+
+.export {
+	color: red-v2;
+}
+
+@value blue-v1 as green from \\"./colors.module.css\\";
+
+.foo { color: green; }
+
+@value blue-i, green-v2 from \\"./colors.module.css\\";
+
+.foo { color: blue-i; }
+.bar { color: green-v2 }
+
+@value red-v3 from colors;
+@value colors: \\"./colors.module.css\\";
+
+.foo { color: red-v3; }
+
+@value colors: \\"./colors.module.css\\";
+@value red-v4 from colors;
+
+.foo { color: red-v4; }
+
+@value aaa: red;
+@value bbb: aaa;
+
+.class-a { color: bbb; }
+
+@value base: 10px;
+@value large: calc(base * 2);
+
+.class-a { margin: large; }
+
+@value a from \\"./colors.module.css\\";
+@value b from \\"./colors.module.css\\";
+
+.class-a { content: a b; }
+
+@value --red from \\"./colors.module.css\\";
+
+.foo { color: --red; }
+
+@value named: red;
+@value _3char #0f0;
+@value _6char #00ff00;
+@value rgba rgba(34, 12, 64, 0.3);
+@value hsla hsla(220, 13.0%, 18.0%, 1);
+
+.foo {
+	color: named;
+	background-color: _3char;
+	border-top-color: _6char;
+	border-bottom-color: rgba;
+	outline-color: hsla;
+}
+
+@value (blue-i, red-i) from \\"./colors.module.css\\";
+
+.foo { color: red-i; }
+.bar { color: blue-i }
+
+@value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow; }
+
+@value func: color(red lightness(50%));
+
+.foo { color: func; }
+
+@value v-color: red;
+
+:root { --color: v-color; }
+
+@value v-empty: ;
+
+:root { --color:v-empty; }
+
+@value v-empty-v2:   ;
+
+:root { --color:v-empty-v2; }
+
+@value v-empty-v3: /* comment */;
+
+:root { --color:v-empty-v3; }
+
+@value override: blue;
+@value override: red;
+
+.override {
+	color: override;
+}
+
+@value (blue-v1 as my-name) from \\"./colors.module.css\\";
+@value (blue-v1 as my-name-again, red-v1) from \\"./colors.module.css\\";
+
+.class {
+	color: my-name;
+	color: my-name-again;
+	color: red-v1;
+}
+
+@value/* test */blue-v5/* test */:/* test */red/* test */;
+
+.color {
+	color: blue-v5;
+}
+
+@value/* test */blue-v6/* test *//* test */red/* test */;
+
+.color {
+	color: blue-v6;
+}
+
+@value coolShadow-v2   :   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v2; }
+
+@value   /* test */   coolShadow-v3   /* test */   :   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v3; }
+
+@value   /* test */   coolShadow-v4   /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v4; }
+
+@value/* test */coolShadow-v5/* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v5; }
+
+@value/* test */coolShadow-v6/* test */:0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v6; }
+
+@value/* test */coolShadow-v7/* test */:/* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v7; }
+
+@value /* test */ test-v1 /* test */ from /* test */ \\"./colors.module.css\\" /* test */;
+
+.foo { color: test-v1; }
+
+@value/* test */test-v2/* test */from/* test */\\"./colors.module.css\\"/* test */;
+
+.foo { color: test-v2; }
+
+@value/* test */(/* test */blue/* test */as/* test */my-name-q/* test */)/* test */from/* test */\\"./colors.module.css\\"/* test */;
+
+.foo { color: my-name-q; }
+
+@value;
+@value test;
+
+/*!*******************************************!*\\\\
+  !*** css ../css-modules/style.module.css ***!
+  \\\\*******************************************/
+
+.class {
+	color: red;
+}
+
+.local1,
+.local2 :global .global,
+.local3 {
+	color: green;
+}
+
+:global .global :local .local4 {
+	color: yellow;
+}
+
+.local5:global(.global).local6 {
+	color: blue;
+}
+
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local8 :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local10 :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local11 div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.local13 div:past(p, span) {
+	display: none;
+}
+
+.local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+:global(:global(:local(.nested1)).nested2).nested3 {
+	color: pink;
+}
+
+#ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars :global {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
+	color: yellow;
+}
+
+.VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.globalVarsUpperCase :GLOBAL {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.inSupportScope {
+		color: red;
+	}
+}
+
+.a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
+}
+
+.class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	:local .local-nested {
+		color: red;
+	}
+
+	:global .global-nested {
+		color: red;
+	}
+
+	:local(.local-nested) {
+		color: red;
+	}
+
+	:global(.global-nested) {
+		color: red;
+	}
+
+	:local .local-nested, :global .global-nested-next {
+		color: red;
+	}
+
+	:local(.local-nested), :global(.global-nested-next) {
+		color: red;
+	}
+
+	:global .foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+:global .global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	:local .local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+:global .class :local .in-local-global-scope,
+:global .class :local .in-local-global-scope,
+:local .class-local-scope :global .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
+
+:global      .global-foo, :local        .bar {
+	:local      .local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		:global .my-global-class-again,
+		:local .my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+:global .again-global {
+	color:red;
+}
+
+:global .again-again-global {
+	:global .again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+:global .again-again-global {
+	color: var(--foo);
+
+	:global .again-again-global {
+		color: var(--foo);
+	}
+}
+
+:global .again-again-global {
+	animation: slidein 3s;
+
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 :global .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	: local(.class) {
+		color: red;
+	}
+
+	: local .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.comments {
+	:/** test */global(.class) {
+		color: red;
+	}
+
+	:/** test */global .class {
+		color: red;
+	}
+
+	:/** test */local(.class) {
+		color: red;
+	}
+
+	:/** test */local .class {
+		color: red;
+	}
+
+	./** test **/class {
+		color: red;
+	}
+
+	:local(./** test **/class) {
+		color: red;
+	}
+
+	:local ./** test **/class {
+		color: red;
+	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.error, #err-404 {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+.qqq {
+	color: green;
+	& .a { color: blue; }
+	color: red;
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		.content {
+			color: red;
+		}
+	}
+
+	.a {
+		color: red;
+	}
+}
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.class {
+		font-size: 1.5em;
+	}
+}
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.feature) {
+	.class { opacity: 0; }
+
+	:scope .class-1 { opacity: 0; }
+
+	& .class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.a {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+	.test {
+		width: 200px;
+	}
+}
+
+#test {
+	c: 1;
+
+	#test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused \\"initial\\", localkeyframes2;
+	animation-name: \\"initial\\";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
+.var {
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: \\"test\\";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: \\" (\\" var(--external-link) \\")\\";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
+}
+
+.var-order {
+	background-color: var(--test);
+	--test: red;
+}
+
+
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+
+.class {
+	color: red;
+	background: var(--color);
+}
+
+@keyframes test {
+	0% {
+		color: red;
+	}
+	100% {
+		color: blue;
+	}
+}
+
+:local(.class) {
+	color: red;
+}
+
+:local .class {
+	color: green;
+}
+
+:global(.class) {
+	color: blue;
+}
+
+:global .class {
+	color: white;
+}
+
+:export {
+	foo: bar;
+}
+
+.class {
+	animation: test 1s, test;
+}
+
+head{--webpack-main:&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigCacheTestCases css url exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!************************!*\\\\
