@@ -85,6 +85,8 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
+
+
 /*!**************************************!*\\\\
   !*** css ./at-rule-value.module.css ***!
   \\\\**************************************/
@@ -99,7 +101,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-@media (max-width {
+@media (max-width: 599px) {
 	abbr:hover {
 		color: limegreen;
 		transition-duration: 1s;
@@ -177,33 +179,33 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-._at-rule-value_module_css-foo { color: blue; }
+._at-rule-value_module_css-foo { color: red; }
 ._at-rule-value_module_css-bar { color: yellow }
 
-@value red-v3 from colors;
 
 
-._at-rule-value_module_css-foo { color: red-v3; }
 
-
-@value red-v4 from colors;
-
-._at-rule-value_module_css-foo { color: red-v4; }
+._at-rule-value_module_css-foo { color: blue; }
 
 
 
 
-._at-rule-value_module_css-a { color: aaa; }
+._at-rule-value_module_css-foo { color: blue; }
 
 
 
 
-._at-rule-value_module_css-a { margin: calc(base * 2); }
+._at-rule-value_module_css-class-a { color: red; }
 
 
 
 
-._at-rule-value_module_css-a { content: \\"test-a\\" \\"test-b\\"; }
+._at-rule-value_module_css-class-a { margin: calc(base * 2); }
+
+
+
+
+._at-rule-value_module_css-class-a { content: \\"test-a\\" \\"test-b\\"; }
 
 
 
@@ -217,10 +219,10 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 ._at-rule-value_module_css-foo {
 	color: red;
-	background-color: 3char;
-	border-top-color: 6char;
-	border-bottom-color: rgba(34,;
-	outline-color: hsla(220,;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
 }
 
 
@@ -242,11 +244,11 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-:root { --_at-rule-value_module_css-color:; }
+:root { --_at-rule-value_module_css-color: ; }
 
 
 
-:root { --_at-rule-value_module_css-color:; }
+:root { --_at-rule-value_module_css-color:   ; }
 
 
 
@@ -271,36 +273,42 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 ._at-rule-value_module_css-color {
-	color: red;
+	color: /* test */red/* test */;
 }
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v2; }
+._at-rule-value_module_css-color {
+	color: /* test *//* test */red/* test */;
+}
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v3; }
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v4; }
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v5; }
+._at-rule-value_module_css-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v6; }
+._at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-._at-rule-value_module_css-foo { box-shadow: coolShadow-v7; }
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
-@value /* test */ test-v1 /* test */ from /* test */ \\"./colors.module.css\\" /* test */;
 
-._at-rule-value_module_css-foo { color: test-v1; }
+
+._at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
 
 
 
@@ -1476,7 +1484,7 @@ div {
     --_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:red:blue/red-i:blue/blue:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/&\\\\.\\\\/colors\\\\.module\\\\.css,red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v2:red/bar:__at-rule-value_module_css-bar/blue-v3:red/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:aaa/a:__at-rule-value_module_css-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/_3char:\\\\#0f0/_6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,/hsla:hsla\\\\(220\\\\,/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:/v-empty-v2:/v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/blue-v1\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2\\\\ \\\\ \\\\ :_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ coolShadow-v3\\\\ \\\\ \\\\ \\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ :_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*:test/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/coolShadow-v6\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/coolShadow-v7\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\/colors\\\\.module\\\\.css,my-red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v3:red/bar:__at-rule-value_module_css-bar/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/class-a:__at-rule-value_module_css-class-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -1543,6 +1551,8 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
+
+
 /*!**************************************!*\\\\
   !*** css ./at-rule-value.module.css ***!
   \\\\**************************************/
@@ -1557,7 +1567,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-@media (max-width {
+@media (max-width: 599px) {
 	abbr:hover {
 		color: limegreen;
 		transition-duration: 1s;
@@ -1635,33 +1645,33 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-foo { color: blue; }
+.my-app-744-foo { color: red; }
 .my-app-744-bar { color: yellow }
 
-@value red-v3 from colors;
 
 
-.my-app-744-foo { color: red-v3; }
 
-
-@value red-v4 from colors;
-
-.my-app-744-foo { color: red-v4; }
+.my-app-744-foo { color: blue; }
 
 
 
 
-.my-app-744-a { color: aaa; }
+.my-app-744-foo { color: blue; }
 
 
 
 
-.my-app-744-a { margin: calc(base * 2); }
+.my-app-744-class-a { color: red; }
 
 
 
 
-.my-app-744-a { content: \\"test-a\\" \\"test-b\\"; }
+.my-app-744-class-a { margin: calc(base * 2); }
+
+
+
+
+.my-app-744-class-a { content: \\"test-a\\" \\"test-b\\"; }
 
 
 
@@ -1675,10 +1685,10 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 .my-app-744-foo {
 	color: red;
-	background-color: 3char;
-	border-top-color: 6char;
-	border-bottom-color: rgba(34,;
-	outline-color: hsla(220,;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
 }
 
 
@@ -1700,11 +1710,11 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-:root { --my-app-744-color:; }
+:root { --my-app-744-color: ; }
 
 
 
-:root { --my-app-744-color:; }
+:root { --my-app-744-color:   ; }
 
 
 
@@ -1729,36 +1739,42 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 .my-app-744-color {
-	color: red;
+	color: /* test */red/* test */;
 }
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v2; }
+.my-app-744-color {
+	color: /* test *//* test */red/* test */;
+}
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v3; }
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v4; }
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v5; }
+.my-app-744-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v6; }
+.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: coolShadow-v7; }
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
-@value /* test */ test-v1 /* test */ from /* test */ \\"./colors.module.css\\" /* test */;
 
-.my-app-744-foo { color: test-v1; }
+
+.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { color: blue; }
 
 
 
@@ -2934,7 +2950,7 @@ div {
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:red:blue/Ād-iăąćĄĆ:ĉ/ĐeċĒā/a:\\\\\\"test-aĝĔĜĞĠĢbĥ--ĉ:var\\\\(ĭcoloĳ)/ğġ-v1čĆĽĩŀ2ŃćĉŇŉ/gĀenŌyelĹw/&_220,įĕ/ıĎċŒclass:myģpp-744ŀaŤiŦŨŪŢ-ķmmőĪrokő:ŽſƁntĜ/\\\\*\\\\ ƊƂƒƐ\\\\//smŷlĜ(Ɯx-widthĔŤŁĘd/fooŬŮaŰŲŴ-ƯoƩĆŌēbĲƲůűųŵƿrƻĖv3Ƭǈŀ4ǌľĢƍ_40pxŅġ_q:_36Ǘ/ķĹrVŷđēǣĺǦƪłǩĸǫǧǉňǯǤǬƼǊĜ.ēexpĺƍŭǂƶŵǽǿrtǢǰrūĝ\\\\.ƘǪȌȏmoduleȏcŪĥaȟǌbȢ:ȟaĚǁƴǃƷȦƿseǝ1ǖǘŨrgȯcŷcĴȭȚ Ɨ 2\\\\ļnaƁĂēǞchǀ\\\\#0f0/_6ɊɌɎɏɐɑȵƿĒgƿĴ34\\\\,/hsŨ:ɦŨĴŜ0ɣȊĸSɋdowǝɮ 11Ǘƒ15ɼ ŲʀɛĤ(ɮ,ʇʇȏɁ)ɣɸ24ʀ38ʒʃɞʅʉʎɣȏ1ɢļfunc:ȒĴĉƒlightnĠsĴ5ɮ%ɂɂƉȋǌȒȨƵǄžȋŽemptyƈv-ˁ˃Ůvňˀ˂˄ŀǋƘȿƔƌƖƑƙoverrƥȯǩŻūȂȩȄžˢƏƏƑ Ǒ˗Ƙĕŀ1˓˫˭Ⱦ˘Ǝȿ˵ƗĈā˳ƒ˺˘ɰlɲaɴwŇƖȾ ɷɽɻxɽɿ̏ʁ7ʖɟʆʚʈʛ.ʌʚɀʑ̒ʓʕ̒ʄĴʙ̙,ʜʞ˩˹ĩˮƏ̊ƒķɱɳɵˑ̉Ɩ˪˿̭˶˓̰̋_ɸɺʀɾʀʂ̣ʗ̥̘ʊ̛ʵ̙̞ʒʔ̠̕ʘ͊̚ʝʶ˳:Ǒ̫˴̻˻̴̲̃̇v6˾ˬ͞˷̀̍̓̑ƒ͆ƒ̧̤̗̜͎͋ʐ̢͐Ͱ͈Ͳ̦̩̹ͧ͘ġ̮̄̆͠ŀ7ͦ̀Ƙ˸͝΂̼/͇̖̦́̎̐̔ͅʹ͍ʏ̟ƒ̡͒Ζ͔ͳ͖̪ŚǄ,zgʻű235-Ψ/HČˤƵάήβ/OBΪ-ζ-κ/VEμξςιňδΫέο2ρjτϋVjιHϐήOHα5ϖ-H5ĚǜωνϋaqρNϜVNρMϩM/AOϜϱαϡƳεϋHϦOǏϢξϼαbϜHbιPϜOPαɶϾϹŘnЂЍήАƏ$QϜ\\\\ЖĔDϜbDЕȁϷϊήЙȉqČĭВ-Ч/xλЩТϣήЮЕ6:аȃξЙ6ŎJз-ЪgJЭϜȳYϜlYƮϜf/uzпЪяĚKϜaKĚ7і7юfϜuэsWϜѢ/TZϜѧĚчЪaъIIϜѰ/iϏЪѵ/zGϜѺ/DkϜѿ/XσЪ҄/I0ёбξ҉/wСйϋҐ/ʢϜʢѴѨѷZ/ZЇи˥ξҞ/MжЪҥĈXҋҒήrX/dѣЪұǢМЪcПMҊҠϸήҺρҊЪVɑCγҌϋӅĔѕЪbјYłЪӏ/чҼУ-ъtжӕв-ә/KRϜӠ/FҀЪӥ/prҫҡϋӪƚМӛξsПgѐӲϋӶρhϩƨ˛ӬҽŀďΩӸήbg/Bѣԅ-Ԋ/WѱԌԐ/CӫԌԕѴǋԌi3ĽvԀӖtvřśέ,Ӧб6Ԫ-kԤԪ6,Ś81԰Rоӛ19ŵԶҝLμԹŵZLǢϛԸԺžϟŚՀ;}"
+head{--webpack-my-app-226:red-v1:blue/ĀĂiĆĈĊćĉăąČ/Ēe-ĎĖa:\\\\\\"test-ağėĞĠĢĤbħ--Č:var\\\\(įcoloĵ)/ġģĔďĉĿīă2ŃĊČŇŉ/gĀenŌyelĻwċāă3ōŋv4ō&_220,myİāōĳĐĚŒclass:Ũĥpp-744ăaŮiŰŲŴ/v-ĹmmőĬrokő:ƆƈoƊƌ-bƎƐŒĄĞ/\\\\*\\\\ ƉƋntƢƠ\\\\//smƀlĞ(Ʈx-width\\\\Ğ 599px\\\\ľĘłĖfooŶũaŹŻŽ-ǈoėŮvŜĖbĴǋŸźżžǙrǔēş:ĖŀĤt:_40ǁŅģ_qǪ36ǮĹĻrVƀĉǥā/ǷļǺǕĕǾȀǹǻęvňĖȆȂǣŜ\\\\.ĖexpļǩŷǍǝǐȔȖrtǿĺļŵğȑƪȆsȑmoduleȑcŴħaȵǽdėbbȷǿƄsĥǛȚǏžűųȿaėųeǪ1ǭx/ŲrgɋcƀcĶǙsȰ Ʃ 2ǃ/naƋdȼ__3chǚ\\\\#0f0/ɧ6ɪɬɮɯɰɱɒǙǥgǙĶ34\\\\,Ƣ1ɟʄ 6ʂʈ0ȑ3ɠhsŲ:ʑŲĶŤʍʈ1ʏ.ʍ%ʃʅ8ȑʞʠ 1ɠĹĺSɫdowǪʍʦ1ǁʅ5ʴ ŻʷɻĦ(ʙʾʠ.ɟ)ʃʱ24ʷ38ˈʺɾʼʿ,ʙȑ1ʂľfunc:ȆĶČƢlightnĢȩ(5ʤ˃ľƇȆȼ˭șǎǞƔǸƓemptyƼ˵˷˹Ōƨɜ ˼˸ũǖƞɝƤƌƨơƫoverrƷɋȌȾɁ˱ǐɅƅǅv5̇ơ ǧ̋ƪ˝Ɵ̢̠ɜ̌Ǣȉ6̟Ƣ̨ƩƟ̦̯ị̄řdƪɝ̰̪ʩlʫaʭwŌ_ʱ1ʳǂʦʶ͈ʹ͈ʻĶˏˑˁǃ˄Ƣˆˈˊ͈3ˌɿʽ͔ːˀ˓ʨǉ̾ʬʮśʰʅ͇ʵʷ͌Ƣ͎͟͝ͱȑ˂͔ɞˇ͙͘Ƣ͚͍ˍ͏͑͞͡ľ̽̿́ăŞ̵̹̩̹̌́Ƣ͉ͪͬͅ7͛ˎͿˀʹ͟Ͷ͗ˋͼ͐͜͠˔ȡʪ̡̝̮ͥ͂Ί̱Ώʷ1͊Ƣͭ ͯΟʄ͒˃Ι͖͸ΜͮͽͰˏ˒Ρ΃Τă̭̈́ͩάήʸΓΝΕͱ͑Θ˅ͷͺ͹ ͻλΞΖδ΁΢ͤ̀ͦv7Χ̻ƪΫ͈έΒΔ;ύΗ͓ηϑϔϓϕαμγοɠŢǞ,zg̗ź235-Ϻ/HĎ˰ϽϿ-Є/OBϼ-ϾЀЌ/VEЎА-ДЋňІЏЈO2ГjЖЈVjЋHУБHЃ̞МЗH5/aǲЮЈгГNЩИNГMкVM/AOкуЃдǌǎЯqЋŠеБ4ЃȻяЉbЋPкOPЃʯєHŘnѓщЇЀѡƟ$Qк\\\\ѨėDкbDѧȘѣНЀѫȠqĎįєѹ/xЍѻѴЗѿѧ̭ҁǜѵ-ѫ6ŎJ:҇ɂЗgJѾкɏlYкҘ/fкf/uzҏ-єҡвKкaKвϠєa7ҠҝҥҟsWкҵ/TZкҺвҙҮY/IIкӃ/iТєӈ/zGкӍ/DkкӒ/XЕєӗӂ0ңєIɱwѳ҈Зӡɡ˙є˘ӇһӊZ/ZјҐъЈӯ/M̭єӶċXӝ҂ЈrX/dҶєԂǿѮєcѱMӜӱѤ-ԋГӜєVɱCЅӽЀԖėҨєbҫYąєԠ/ҙԍ҉Ӂt҆ҤԘ-ԩ/KRк԰/FӓєԵ/prӼӣЈԺƬѮԦЗsѱgҢՂЈՆГhпhƆɋՈЀ̏ėϻՑƘg/BҶՖ՚/WӄՖ՟/CԻՖդӇŜՖi3ĿvԼґЈtv/ŢА,ԶѴ6պ-kմ_պ6,Ţ81ցRҎԦ19žևӮLЎ֊žZLǿ̞։֋ƈбŢ֑;}"
 `;
 
 exports[`ConfigTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
@@ -5922,6 +5938,8 @@ Array [
 
 
 
+
+
 /*!***************************************************!*\\\\
   !*** css ../css-modules/at-rule-value.module.css ***!
   \\\\***************************************************/
@@ -5936,7 +5954,7 @@ Array [
 
 
 
-@media (max-width {
+@media (max-width: 599px) {
 	abbr:hover {
 		color: limegreen;
 		transition-duration: 1s;
@@ -6014,33 +6032,33 @@ Array [
 
 
 
-.foo { color: blue; }
+.foo { color: red; }
 .bar { color: yellow }
 
-@value red-v3 from colors;
 
 
-.foo { color: red-v3; }
 
-
-@value red-v4 from colors;
-
-.foo { color: red-v4; }
+.foo { color: blue; }
 
 
 
 
-.a { color: aaa; }
+.foo { color: blue; }
 
 
 
 
-.a { margin: calc(base * 2); }
+.class-a { color: red; }
 
 
 
 
-.\\"test-a\\" { content: \\"test-a\\" \\"test-b\\"; }
+.class-a { margin: calc(base * 2); }
+
+
+
+
+.class-a { content: \\"test-a\\" \\"test-b\\"; }
 
 
 
@@ -6054,10 +6072,10 @@ Array [
 
 .foo {
 	color: red;
-	background-color: 3char;
-	border-top-color: 6char;
-	border-bottom-color: rgba(34,;
-	outline-color: hsla(220,;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
 }
 
 
@@ -6079,11 +6097,11 @@ Array [
 
 
 
-:root { --color:; }
+:root { --color: ; }
 
 
 
-:root { --color:; }
+:root { --color:   ; }
 
 
 
@@ -6108,36 +6126,42 @@ Array [
 
 
 .color {
-	color: red;
+	color: /* test */red/* test */;
 }
 
 
 
-.foo { box-shadow: coolShadow-v2; }
+.color {
+	color: /* test *//* test */red/* test */;
+}
 
 
 
-.foo { box-shadow: coolShadow-v3; }
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.foo { box-shadow: coolShadow-v4; }
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.foo { box-shadow: coolShadow-v5; }
+.foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.foo { box-shadow: coolShadow-v6; }
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.foo { box-shadow: coolShadow-v7; }
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
-@value /* test */ test-v1 /* test */ from /* test */ \\"./colors.module.css\\" /* test */;
 
-.foo { color: test-v1; }
+
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { color: blue; }
 
 
 
@@ -7323,7 +7347,7 @@ div {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:red:blue/red-i:blue/blue:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/&\\\\.\\\\.\\\\/css-modules\\\\/colors\\\\.module\\\\.css,red:blue/v-comment-broken:/v-comment:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width/blue-v1:red/blue-v2:red/blue-v3:red/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:aaa/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/_3char:\\\\#0f0/_6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,/hsla:hsla\\\\(220\\\\,/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/v-empty:/v-empty-v2:/v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/blue-v1\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2\\\\ \\\\ \\\\ :_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ coolShadow-v3\\\\ \\\\ \\\\ \\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ :_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*:test/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/coolShadow-v6\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/coolShadow-v7\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,local4:__css-modules_style_module_css-local4/nested1:__css-modules_style_module_css-nested1/localUpperCase:__css-modules_style_module_css-localUpperCase/local-nested:__css-modules_style_module_css-local-nested/local-in-global:__css-modules_style_module_css-local-in-global/in-local-global-scope:__css-modules_style_module_css-in-local-global-scope/class-local-scope:__css-modules_style_module_css-class-local-scope/bar:__css-modules_style_module_css-bar/my-global-class-again:__css-modules_style_module_css-my-global-class-again/class:__css-modules_style_module_css-class/&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,class:__style_css-class/foo:bar/&\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\.\\\\/css-modules\\\\/colors\\\\.module\\\\.css,my-red:blue/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/blue-v3:red/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,local4:__css-modules_style_module_css-local4/nested1:__css-modules_style_module_css-nested1/localUpperCase:__css-modules_style_module_css-localUpperCase/local-nested:__css-modules_style_module_css-local-nested/local-in-global:__css-modules_style_module_css-local-in-global/in-local-global-scope:__css-modules_style_module_css-in-local-global-scope/class-local-scope:__css-modules_style_module_css-class-local-scope/bar:__css-modules_style_module_css-bar/my-global-class-again:__css-modules_style_module_css-my-global-class-again/class:__css-modules_style_module_css-class/&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,class:__style_css-class/foo:bar/&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
