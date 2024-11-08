@@ -76,4 +76,8 @@ export interface SourceMapDevToolPluginOptions {
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
 	test?: Rules;
+	/**
+	 * Include debugIds in sources and sourcemaps.
+	 */
+	debugIds?: boolean;
 }

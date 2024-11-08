@@ -140,6 +140,10 @@
       "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap.",
       "type": "string"
     },
+    "debugIds": {
+      "description": "Emit debug IDs into source and SourceMap.",
+      "type": "boolean"
+    },
     "test": {
       "$ref": "#/definitions/rules"
     }
