@@ -29,6 +29,10 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	columns?: boolean;
 	/**
+	 * Emit debug IDs into source and SourceMap.
+	 */
+	debugIds?: boolean;
+	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
 	exclude?: Rules;
@@ -76,8 +80,4 @@ export interface SourceMapDevToolPluginOptions {
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
 	test?: Rules;
-	/**
-	 * Include debugIds in sources and sourcemaps.
-	 */
-	debugIds?: boolean;
 }
