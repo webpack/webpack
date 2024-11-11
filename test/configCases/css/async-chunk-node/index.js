@@ -1,12 +1,12 @@
 it("should allow to dynamic import a css module", done => {
-	import("../exports/style.module.css").then(x => {
+	import("../pseudo-export/style.module.css").then(x => {
 		try {
 			expect(x).toEqual(
 				nsObj({
 					a: "a",
 					abc: "a b c",
-					comments: "abc      def",
-					"white space": "abc\n\tdef",
+					comments: "abc/****/   /* hello world *//****/   def",
+					whitespace: "abc\n\tdef",
 					default: "default"
 				})
 			);

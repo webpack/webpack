@@ -1,14 +1,14 @@
-import * as style from "../exports/style.module.css?ns";
-import { a, abc } from "../exports/style.module.css?picked";
-import def from "../exports/style.module.css?default";
+import * as style from "../pseudo-export/style.module.css?ns";
+import { a, abc } from "../pseudo-export/style.module.css?picked";
+import def from "../pseudo-export/style.module.css?default";
 
 it("should allow to import a css module", () => {
 	expect(style).toEqual(
 		nsObj({
 			a: "a",
 			abc: "a b c",
-			comments: "abc      def",
-			"white space": "abc\n\tdef",
+			comments: "abc/****/   /* hello world *//****/   def",
+			whitespace: "abc\n\tdef",
 			default: "default"
 		})
 	);
@@ -18,14 +18,14 @@ it("should allow to import a css module", () => {
 });
 
 it("should allow to dynamic import a css module", done => {
-	import("../exports/style.module.css").then(x => {
+	import("../pseudo-export/style.module.css").then(x => {
 		try {
 			expect(x).toEqual(
 				nsObj({
 					a: "a",
 					abc: "a b c",
-					comments: "abc      def",
-					"white space": "abc\n\tdef",
+					comments: "abc/****/   /* hello world *//****/   def",
+					whitespace: "abc\n\tdef",
 					default: "default"
 				})
 			);
@@ -37,14 +37,14 @@ it("should allow to dynamic import a css module", done => {
 });
 
 it("should allow to reexport a css module", done => {
-	import("../exports/reexported").then(x => {
+	import("../pseudo-export/reexported").then(x => {
 		try {
 			expect(x).toEqual(
 				nsObj({
 					a: "a",
 					abc: "a b c",
-					comments: "abc      def",
-					"white space": "abc\n\tdef"
+					comments: "abc/****/   /* hello world *//****/   def",
+					whitespace: "abc\n\tdef",
 				})
 			);
 		} catch (e) {
@@ -55,14 +55,14 @@ it("should allow to reexport a css module", done => {
 });
 
 it("should allow to import a css module", done => {
-	import("../exports/imported").then(({ default: x }) => {
+	import("../pseudo-export/imported").then(({ default: x }) => {
 		try {
 			expect(x).toEqual(
 				nsObj({
 					a: "a",
 					abc: "a b c",
-					comments: "abc      def",
-					"white space": "abc\n\tdef",
+					comments: "abc/****/   /* hello world *//****/   def",
+					whitespace: "abc\n\tdef",
 					default: "default"
 				})
 			);

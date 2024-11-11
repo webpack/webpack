@@ -1,3 +1,5 @@
+@import "at-rule-value.module.css";
+
 .class {
 	color: red;
 }

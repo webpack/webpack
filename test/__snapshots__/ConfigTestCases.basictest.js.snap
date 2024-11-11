@@ -70,9 +70,261 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: dev 2`] = `
-"/*!******************************!*\\\\
+"/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./at-rule-value.module.css ***!
+  \\\\**************************************/
+
+
+._at-rule-value_module_css-value-in-class {
+	color: blue;
+}
+
+
+
+
+
+
+@media (max-width: 599px) {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+
+
+._at-rule-value_module_css-foo { color: red; }
+
+
+
+._at-rule-value_module_css-foo {
+	&._at-rule-value_module_css-bar { color: red; }
+}
+
+
+
+._at-rule-value_module_css-foo {
+	@media (min-width: 1024px) {
+		&._at-rule-value_module_css-bar { color: red; }
+	}
+}
+
+
+
+._at-rule-value_module_css-foo {
+	@media (min-width: 1024px) {
+		&._at-rule-value_module_css-bar {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+
+
+
+._at-rule-value_module_css-foo { height: 40px; height: 36px; }
+
+
+
+._at-rule-value_module_css-colorValue {
+	color: red;
+}
+
+
+
+#_at-rule-value_module_css-colorValue-v1 {
+	color: red;
+}
+
+
+
+._at-rule-value_module_css-colorValue-v2 > ._at-rule-value_module_css-colorValue-v2 {
+	color: red;
+}
+
+
+
+.red {
+	color: .red;
+}
+
+
+
+._at-rule-value_module_css-export {
+	color: blue;
+}
+
+
+
+._at-rule-value_module_css-foo { color: red; }
+
+
+
+._at-rule-value_module_css-foo { color: red; }
+._at-rule-value_module_css-bar { color: yellow }
+
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
+
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
+
+
+
+
+._at-rule-value_module_css-class-a { color: red; }
+
+
+
+
+._at-rule-value_module_css-class-a { margin: calc(base * 2); }
+
+
+
+
+._at-rule-value_module_css-class-a { content: \\"test-a\\" \\"test-b\\"; }
+
+
+
+._at-rule-value_module_css-foo { color: var(--color); }
+
+
+
+
+
+
+
+._at-rule-value_module_css-foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
+._at-rule-value_module_css-bar { color: red }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { color: color(red lightness(50%)); }
+
+
+
+:root { --_at-rule-value_module_css-color: red; }
+
+
+
+:root { --_at-rule-value_module_css-color: ; }
+
+
+
+:root { --_at-rule-value_module_css-color:   ; }
+
+
+
+:root { --_at-rule-value_module_css-color:/* comment */; }
+
+
+
+
+._at-rule-value_module_css-override {
+	color: red;
+}
+
+
+
+
+._at-rule-value_module_css-class {
+	color: red;
+	color: red;
+	color: blue;
+}
+
+
+
+._at-rule-value_module_css-color {
+	color: /* test */red/* test */;
+}
+
+
+
+._at-rule-value_module_css-color {
+	color: /* test *//* test */red/* test */;
+}
+
+
+
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
+
+
+
+._at-rule-value_module_css-foo { color: blue; }
+
+
+
+._at-rule-value_module_css-foo { color: my-name-q; }
+
+
+
+
+/*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
+
 ._style_module_css-class {
 	color: red;
 }
@@ -1235,7 +1487,7 @@ div {
     --_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\/colors\\\\.module\\\\.css,my-red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v3:red/bar:__at-rule-value_module_css-bar/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/class-a:__at-rule-value_module_css-class-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/test:/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -1287,9 +1539,261 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 2`] = `
-"/*!******************************!*\\\\
+"/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./at-rule-value.module.css ***!
+  \\\\**************************************/
+
+
+.my-app-744-value-in-class {
+	color: blue;
+}
+
+
+
+
+
+
+@media (max-width: 599px) {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+
+
+.my-app-744-foo { color: red; }
+
+
+
+.my-app-744-foo {
+	&.my-app-744-bar { color: red; }
+}
+
+
+
+.my-app-744-foo {
+	@media (min-width: 1024px) {
+		&.my-app-744-bar { color: red; }
+	}
+}
+
+
+
+.my-app-744-foo {
+	@media (min-width: 1024px) {
+		&.my-app-744-bar {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+
+
+
+.my-app-744-foo { height: 40px; height: 36px; }
+
+
+
+.my-app-744-colorValue {
+	color: red;
+}
+
+
+
+#my-app-744-colorValue-v1 {
+	color: red;
+}
+
+
+
+.my-app-744-colorValue-v2 > .my-app-744-colorValue-v2 {
+	color: red;
+}
+
+
+
+.red {
+	color: .red;
+}
+
+
+
+.my-app-744-export {
+	color: blue;
+}
+
+
+
+.my-app-744-foo { color: red; }
+
+
+
+.my-app-744-foo { color: red; }
+.my-app-744-bar { color: yellow }
+
+
+
+
+.my-app-744-foo { color: blue; }
+
+
+
+
+.my-app-744-foo { color: blue; }
+
+
+
+
+.my-app-744-class-a { color: red; }
+
+
+
+
+.my-app-744-class-a { margin: calc(base * 2); }
+
+
+
+
+.my-app-744-class-a { content: \\"test-a\\" \\"test-b\\"; }
+
+
+
+.my-app-744-foo { color: var(--color); }
+
+
+
+
+
+
+
+.my-app-744-foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+
+
+.my-app-744-foo { color: blue; }
+.my-app-744-bar { color: red }
+
+
+
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { color: color(red lightness(50%)); }
+
+
+
+:root { --my-app-744-color: red; }
+
+
+
+:root { --my-app-744-color: ; }
+
+
+
+:root { --my-app-744-color:   ; }
+
+
+
+:root { --my-app-744-color:/* comment */; }
+
+
+
+
+.my-app-744-override {
+	color: red;
+}
+
+
+
+
+.my-app-744-class {
+	color: red;
+	color: red;
+	color: blue;
+}
+
+
+
+.my-app-744-color {
+	color: /* test */red/* test */;
+}
+
+
+
+.my-app-744-color {
+	color: /* test *//* test */red/* test */;
+}
+
+
+
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-744-foo { color: blue; }
+
+
+
+.my-app-744-foo { color: blue; }
+
+
+
+.my-app-744-foo { color: my-name-q; }
+
+
+
+
+/*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
+
 .my-app-235-zg {
 	color: red;
 }
@@ -2452,7 +2956,7 @@ div {
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨȖǺȒŸĠMǿVǺǶȳ/CđǶȸƂǂǶbǅY1ŒɁ/ƳȮƢ-ǝtƞɇƚɋ/KRŒɑ/FǰǶɖ/prȞȯČɛ/sƄɍļɢƦƼɤįgzģhŒVh/veɝɈɳƂāɩĠbg/BǑɺČɿ/WǠʁ-ʅȷɜʇCrǣ3ɵƚi3/tvʑļʖ/&_Ė,ɗǼ6ʢ-kʛ_ʢ6,ʜ81ʩRƨɤ194-ʯȏLĻʲʴZLȧŀʱʳ-cńʜʺ;}"
+head{--webpack-my-app-226:red-v1:blue/ĀĂiĆĈĊćĉăąČ/Ēe-ĎĖa:\\\\\\"test-ağėĞĠĢĤbħ--Č:var\\\\(įcoloĵ)/ġģĔďĉĿīă2ŃĊČŇŉ/gĀenŌyelĻwċāă3ōŋv4ō&_220,myİāōĳĐĚŒclass:Ũĥpp-744ăaŮiŰŲŴ/v-ĹmmőĬrokő:ƆƈoƊƌ-bƎƐŒĄĞ/\\\\*\\\\ ƉƋntƢƠ\\\\//smƀlĞ(Ʈx-width\\\\Ğ 599px\\\\ľĘłĖfooŶũaŹŻŽ-ǈoėŮvŜĖbĴǋŸźżžǙrǔēş:ĖŀĤt:_40ǁŅģ_qǪ36ǮĹĻrVƀĉǥā/ǷļǺǕĕǾȀǹǻęvňĖȆȂǣŜ\\\\.ĖexpļǩŷǍǝǐȔȖrtǿĺļŵğȑƪȆsȑmoduleȑcŴħaȵǽdėbbȷǿƄsĥǛȚǏžűųȿaėųeǪ1ǭx/ŲrgɋcƀcĶǙsȰ Ʃ 2ǃ/naƋdȼ__3chǚ\\\\#0f0/ɧ6ɪɬɮɯɰɱɒǙǥgǙĶ34\\\\,Ƣ1ɟʄ 6ʂʈ0ȑ3ɠhsŲ:ʑŲĶŤʍʈ1ʏ.ʍ%ʃʅ8ȑʞʠ 1ɠĹĺSɫdowǪʍʦ1ǁʅ5ʴ ŻʷɻĦ(ʙʾʠ.ɟ)ʃʱ24ʷ38ˈʺɾʼʿ,ʙȑ1ʂľfunc:ȆĶČƢlightnĢȩ(5ʤ˃ľƇȆȼ˭șǎǞƔǸƓemptyƼ˵˷˹Ōƨɜ ˼˸ũǖƞɝƤƌƨơƫoverrƷɋȌȾɁ˱ǐɅƅǅv5̇ơ ǧ̋ƪ˝Ɵ̢̠ɜ̌Ǣȉ6̟Ƣ̨ƩƟ̦̯ị̄řdƪɝ̰̪ʩlʫaʭwŌ_ʱ1ʳǂʦʶ͈ʹ͈ʻĶˏˑˁǃ˄Ƣˆˈˊ͈3ˌɿʽ͔ːˀ˓ʨǉ̾ʬʮśʰʅ͇ʵʷ͌Ƣ͎͟͝ͱȑ˂͔ɞˇ͙͘Ƣ͚͍ˍ͏͑͞͡ľ̽̿́ăŞ̵̹̩̹̌́Ƣ͉ͪͬͅ7͛ˎͿˀʹ͟Ͷ͗ˋͼ͐͜͠˔ȡʪ̡̝̮ͥ͂Ί̱Ώʷ1͊Ƣͭ ͯΟʄ͒˃Ι͖͸ΜͮͽͰˏ˒Ρ΃Τă̭̈́ͩάήʸΓΝΕͱ͑Θ˅ͷͺ͹ ͻλΞΖδ΁΢ͤ̀ͦv7Χ̻ƪΫ͈έΒΔ;ύΗ͓ηϑϔϓϕαμγοɠǧƒŢǞ,zg̗ź235-ϼ/HĎ˰ϿЁ-І/OBϾ-ЀЂЎ/VEАВ-ЖЍňЈБЊO2ЕjИЊVjЍHХГHЅ̞ОЙH5/aǲаЊеЕNЫКNЕMмVM/AOмхЅжǌǎбqЍŠзГ4ЅȻёЋbЍPмOPЅʯіHŘnѕыЉЂѣƟ$Qм\\\\ѪėDмbDѩȘѥПЂѭȠqĎįіѻ/xЏѽѶЙҁѩ̭҃ǜѷ-ѭ6ŎJ:҉ɂЙgJҀмɏlYмҚ/fмf/uzґ-іңдKмaKдϠіa7ҢҟҧҡsWмҷ/TZмҼдқҰY/IIмӅ/iФіӊ/zGмӏ/DkмӔ/XЗіәӄ0ҥіIɱwѵҊЙӣɡ˙і˘ӉҽӌZ/ZњҒьЊӱ/M̭іӸċXӟ҄ЊrX/dҸіԄǿѰіcѳMӞӳѦ-ԍЕӞіVɱCЇӿЂԘėҪіbҭYąіԢ/қԏҋӃt҈ҦԚ-ԫ/KRмԲ/FӕіԷ/prӾӥЊԼƬѰԨЙsѳgҤՄЊՈЕhсhƆɋՊЂ̏ėϽՓƘg/BҸ՘՜/Wӆ՘ա/CԽ՘զӉŜ՘i3ĿvԾғЊtv/ŢВ,ԸѶ6ռ-kն_ռ6,Ţ81փRҐԨ19ž։ӰLА֌žZLǿ̞֋֍ƈгŢ֓;}"
 `;
 
 exports[`ConfigTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
@@ -5347,26 +5851,337 @@ head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
+exports[`ConfigTestCases css pseudo-import exported tests should compile 1`] = `
+Array [
+  "/*!********************************!*\\\\
+  !*** css ./export.modules.css ***!
+  \\\\********************************/
+
+/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./after.modules.css ***!
+  \\\\*******************************/
+
+/*!********************************!*\\\\
+  !*** css ./vars-1.modules.css ***!
+  \\\\********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+
+
+._style_modules_css-class {
+	color: red;
+	background: red;
+}
+
+
+._style_modules_css-class {background: red}
+
+._style_modules_css-class {
+	color: red;
+	color: red;
+	color: red;
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+/* TODO fix me */
+/*:import(\\"reexport.modules.css\\") {
+	primary-color: _my_color;
+}
+
+.class {color: primary-color}*/
+
+
+._style_modules_css-class {
+	color:    red, red, func()   ;
+}
+
+._style_modules_css-nest {
+	:import(\\"./export.modules.css\\") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}
+
+head{--webpack-main:primary-color:red/&\\\\.\\\\/export\\\\.modules\\\\.css,a:red/_-b:red/--c:red/__d:red/&\\\\.\\\\/library\\\\.modules\\\\.css,somevalue:red/&\\\\.\\\\/after\\\\.modules\\\\.css,multile-values:red\\\\,\\\\ red\\\\,\\\\ func\\\\(\\\\)/&\\\\.\\\\/vars-1\\\\.modules\\\\.css,class:__style_modules_css-class/nest:__style_modules_css-nest/&\\\\.\\\\/style\\\\.modules\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
 Array [
-  "/*!*******************************************!*\\\\
+  "/*!***************************************************!*\\\\
+  !*** css ../css-modules/at-rule-value.module.css ***!
+  \\\\***************************************************/
+@value my-red blue;
+
+.value-in-class {
+	color: my-red;
+}
+
+@value v-comment-broken:;
+@value v-comment-broken-v1:/* comment */;
+
+@value small: (max-width: 599px);
+
+@media small {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+@value blue-v1: red;
+
+.foo { color: blue-v1; }
+
+@value blue-v3: red;
+
+.foo {
+	&.bar { color: blue-v3; }
+}
+
+@value blue-v3: red;
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar { color: blue-v3; }
+	}
+}
+
+@value blue-v4: red;
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar {
+			@media (min-width: 1024px) {
+				color: blue-v4;
+			}
+		}
+	}
+}
+
+@value test-t: 40px;
+@value test_q: 36px;
+
+.foo { height: test-t; height: test_q; }
+
+@value colorValue: red;
+
+.colorValue {
+	color: colorValue;
+}
+
+@value colorValue-v1: red;
+
+#colorValue-v1 {
+	color: colorValue-v1;
+}
+
+@value colorValue-v2: red;
+
+.colorValue-v2 > .colorValue-v2 {
+	color: colorValue-v2;
+}
+
+@value colorValue-v3: .red;
+
+colorValue-v3 {
+	color: colorValue-v3;
+}
+
+@value red-v2 from \\"./colors.module.css\\";
+
+.export {
+	color: red-v2;
+}
+
+@value blue-v1 as green from \\"./colors.module.css\\";
+
+.foo { color: green; }
+
+@value blue-i, green-v2 from \\"./colors.module.css\\";
+
+.foo { color: blue-i; }
+.bar { color: green-v2 }
+
+@value red-v3 from colors;
+@value colors: \\"./colors.module.css\\";
+
+.foo { color: red-v3; }
+
+@value colors: \\"./colors.module.css\\";
+@value red-v4 from colors;
+
+.foo { color: red-v4; }
+
+@value aaa: red;
+@value bbb: aaa;
+
+.class-a { color: bbb; }
+
+@value base: 10px;
+@value large: calc(base * 2);
+
+.class-a { margin: large; }
+
+@value a from \\"./colors.module.css\\";
+@value b from \\"./colors.module.css\\";
+
+.class-a { content: a b; }
+
+@value --red from \\"./colors.module.css\\";
+
+.foo { color: --red; }
+
+@value named: red;
+@value _3char #0f0;
+@value _6char #00ff00;
+@value rgba rgba(34, 12, 64, 0.3);
+@value hsla hsla(220, 13.0%, 18.0%, 1);
+
+.foo {
+	color: named;
+	background-color: _3char;
+	border-top-color: _6char;
+	border-bottom-color: rgba;
+	outline-color: hsla;
+}
+
+@value (blue-i, red-i) from \\"./colors.module.css\\";
+
+.foo { color: red-i; }
+.bar { color: blue-i }
+
+@value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow; }
+
+@value func: color(red lightness(50%));
+
+.foo { color: func; }
+
+@value v-color: red;
+
+:root { --color: v-color; }
+
+@value v-empty: ;
+
+:root { --color:v-empty; }
+
+@value v-empty-v2:   ;
+
+:root { --color:v-empty-v2; }
+
+@value v-empty-v3: /* comment */;
+
+:root { --color:v-empty-v3; }
+
+@value override: blue;
+@value override: red;
+
+.override {
+	color: override;
+}
+
+@value (blue-v1 as my-name) from \\"./colors.module.css\\";
+@value (blue-v1 as my-name-again, red-v1) from \\"./colors.module.css\\";
+
+.class {
+	color: my-name;
+	color: my-name-again;
+	color: red-v1;
+}
+
+@value/* test */blue-v5/* test */:/* test */red/* test */;
+
+.color {
+	color: blue-v5;
+}
+
+@value/* test */blue-v6/* test *//* test */red/* test */;
+
+.color {
+	color: blue-v6;
+}
+
+@value coolShadow-v2   :   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v2; }
+
+@value   /* test */   coolShadow-v3   /* test */   :   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v3; }
+
+@value   /* test */   coolShadow-v4   /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+
+.foo { box-shadow: coolShadow-v4; }
+
+@value/* test */coolShadow-v5/* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v5; }
+
+@value/* test */coolShadow-v6/* test */:0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v6; }
+
+@value/* test */coolShadow-v7/* test */:/* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14);
+
+.foo { box-shadow: coolShadow-v7; }
+
+@value /* test */ test-v1 /* test */ from /* test */ \\"./colors.module.css\\" /* test */;
+
+.foo { color: test-v1; }
+
+@value/* test */test-v2/* test */from/* test */\\"./colors.module.css\\"/* test */;
+
+.foo { color: test-v2; }
+
+@value/* test */(/* test */blue/* test */as/* test */my-name-q/* test */)/* test */from/* test */\\"./colors.module.css\\"/* test */;
+
+.foo { color: my-name-q; }
+
+@value;
+@value test;
+
+/*!*******************************************!*\\\\
   !*** css ../css-modules/style.module.css ***!
   \\\\*******************************************/
+
 .class {
 	color: red;
 }
 
 .local1,
-.local2 .global,
+.local2 :global .global,
 .local3 {
 	color: green;
 }
 
-.global ._css-modules_style_module_css-local4 {
+:global .global :local .local4 {
 	color: yellow;
 }
 
-.local5.global.local6 {
+.local5:global(.global).local6 {
 	color: blue;
 }
 
@@ -5434,7 +6249,7 @@ Array [
 	overflow: hidden;
 }
 
-._css-modules_style_module_css-nested1.nested2.nested3 {
+:global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
 }
 
@@ -5483,7 +6298,7 @@ Array [
 	--local-color: red;
 }
 
-.globalVars {
+.globalVars :global {
 	color: var(--global-color);
 	--global-color: red;
 }
@@ -5569,7 +6384,7 @@ Array [
 	}
 }
 
-.globalUpperCase ._css-modules_style_module_css-localUpperCase {
+:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
 	color: yellow;
 }
 
@@ -5578,7 +6393,7 @@ Array [
 	--LOCAL-COLOR: red;
 }
 
-.globalVarsUpperCase {
+.globalVarsUpperCase :GLOBAL {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
@@ -5754,31 +6569,31 @@ Array [
 .nested-with-local-pseudo {
 	color: red;
 
-	._css-modules_style_module_css-local-nested {
+	:local .local-nested {
 		color: red;
 	}
 
-	.global-nested {
+	:global .global-nested {
 		color: red;
 	}
 
-	._css-modules_style_module_css-local-nested {
+	:local(.local-nested) {
 		color: red;
 	}
 
-	.global-nested {
+	:global(.global-nested) {
 		color: red;
 	}
 
-	._css-modules_style_module_css-local-nested, .global-nested-next {
+	:local .local-nested, :global .global-nested-next {
 		color: red;
 	}
 
-	._css-modules_style_module_css-local-nested, .global-nested-next {
+	:local(.local-nested), :global(.global-nested-next) {
 		color: red;
 	}
 
-	.foo, .bar {
+	:global .foo, .bar {
 		color: red;
 	}
 }
@@ -5799,12 +6614,12 @@ Array [
 	}
 }
 
-.global-foo {
+:global .global-foo {
 	.nested-global {
 		color: red;
 	}
 
-	._css-modules_style_module_css-local-in-global {
+	:local .local-in-global {
 		color: blue;
 	}
 }
@@ -5817,9 +6632,9 @@ Array [
 	}
 }
 
-.class ._css-modules_style_module_css-in-local-global-scope,
-.class ._css-modules_style_module_css-in-local-global-scope,
-._css-modules_style_module_css-class-local-scope .in-local-global-scope {
+:global .class :local .in-local-global-scope,
+:global .class :local .in-local-global-scope,
+:local .class-local-scope :global .in-local-global-scope {
 	color: red;
 }
 
@@ -5895,14 +6710,14 @@ Array [
 	bar: env(foo, var(--baz));
 }
 
-.global-foo, ._css-modules_style_module_css-bar {
-	._css-modules_style_module_css-local-in-global       {
+:global      .global-foo, :local        .bar {
+	:local      .local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
-		.my-global-class-again,
-		._css-modules_style_module_css-my-global-class-again {
+		:global .my-global-class-again,
+		:local .my-global-class-again {
 			color: red;
 		}
 	}
@@ -5922,12 +6737,12 @@ Array [
 	}
 }
 
-.again-global {
+:global .again-global {
 	color:red;
 }
 
-.again-again-global {
-	.again-again-global {
+:global .again-again-global {
+	:global .again-again-global {
 		color: red;
 	}
 }
@@ -5936,22 +6751,22 @@ Array [
 	--foo: red;
 }
 
-.again-again-global {
+:global .again-again-global {
 	color: var(--foo);
 
-	.again-again-global {
+	:global .again-again-global {
 		color: var(--foo);
 	}
 }
 
-.again-again-global {
+:global .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .class, ._css-modules_style_module_css-nested1.nested2.nested3 {
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
 		animation: slidein 3s;
 	}
 
-  .local2 .global,
+  .local2 :global .global,
 	.local3 {
 		color: red;
 	}
@@ -6019,19 +6834,19 @@ Array [
 }
 
 .comments {
-	.class {
+	:/** test */global(.class) {
 		color: red;
 	}
 
-	.class {
+	:/** test */global .class {
 		color: red;
 	}
 
-	._css-modules_style_module_css-class {
+	:/** test */local(.class) {
 		color: red;
 	}
 
-	._css-modules_style_module_css-class {
+	:/** test */local .class {
 		color: red;
 	}
 
@@ -6039,11 +6854,11 @@ Array [
 		color: red;
 	}
 
-	./** test **/_css-modules_style_module_css-class {
+	:local(./** test **/class) {
 		color: red;
 	}
 
-	./** test **/_css-modules_style_module_css-class {
+	:local ./** test **/class {
 		color: red;
 	}
 }
@@ -6503,28 +7318,31 @@ div {
 	}
 }
 
-._style_css-class {
+:local(.class) {
 	color: red;
 }
 
-._style_css-class {
+:local .class {
 	color: green;
 }
 
-.class {
+:global(.class) {
 	color: blue;
 }
 
-.class {
+:global .class {
 	color: white;
 }
 
+:export {
+	foo: bar;
+}
 
 .class {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:local4:__css-modules_style_module_css-local4/nested1:__css-modules_style_module_css-nested1/localUpperCase:__css-modules_style_module_css-localUpperCase/local-nested:__css-modules_style_module_css-local-nested/local-in-global:__css-modules_style_module_css-local-in-global/in-local-global-scope:__css-modules_style_module_css-in-local-global-scope/class-local-scope:__css-modules_style_module_css-class-local-scope/bar:__css-modules_style_module_css-bar/my-global-class-again:__css-modules_style_module_css-my-global-class-again/class:__css-modules_style_module_css-class/&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,class:__style_css-class/foo:bar/&\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
