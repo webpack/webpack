@@ -321,6 +321,165 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
+/*!*********************************************!*\\\\
+  !*** css ./var-function-export.modules.css ***!
+  \\\\*********************************************/
+:root {
+	--_var-function-export_modules_css-my-var-u1: red;
+	--_var-function-export_modules_css-my-var-u2: blue;
+	--_var-function-export_modules_css-not-override-class: black;
+	--_var-function-export_modules_css-1: red;
+	--_var-function-export_modules_css---a: red;
+	--_var-function-export_modules_css-main-bg-color: red;
+}
+
+._var-function-export_modules_css-my-var-u1 {
+	color: red;
+}
+
+/*!*************************************!*\\\\
+  !*** css ./var-function.module.css ***!
+  \\\\*************************************/
+:root {
+	--_var-function_module_css-main-bg-color: brown;
+	--_var-function_module_css-my-var: red;
+	--_var-function_module_css-my-background: blue;
+	--_var-function_module_css-my-global: yellow;
+	--: \\"reserved\\";
+	--_var-function_module_css-a: green;
+}
+
+._var-function_module_css-class {
+	color: var(--_var-function_module_css-main-bg-color);
+}
+
+@property --_var-function_module_css-logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+._var-function_module_css-class {
+	color: var(--_var-function_module_css-logo-color);
+}
+
+div {
+	background-color: var(--_var-function_module_css-box-color);
+}
+
+._var-function_module_css-two {
+	--_var-function_module_css-box-color: cornflowerblue;
+}
+
+._var-function_module_css-three {
+	--_var-function_module_css-box-color: aquamarine;
+}
+
+
+._var-function_module_css-one {
+	/* Red if --my-var is not defined */
+	color: var(--_var-function_module_css-my-var, red);
+}
+
+._var-function_module_css-two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--_var-function_module_css-my-var, var(--_var-function_module_css-my-background, pink));
+}
+
+._var-function_module_css-reserved {
+	color: var(--);
+}
+
+._var-function_module_css-green {
+	color: var(--_var-function_module_css-a);
+}
+
+._var-function_module_css-global {
+	color: var(--my-global);
+}
+
+._var-function_module_css-global-and-default {
+	color: var(--my-global, pink);
+}
+
+._var-function_module_css-global-and-default-1 {
+	color: var(--my-global, var(--my-global-background));
+}
+
+._var-function_module_css-global-and-default-2 {
+	color: var(--my-global, var(--my-global-background, pink));
+}
+
+._var-function_module_css-global-and-default-3 {
+	color: var(--my-global, var(--_var-function_module_css-my-background, pink));
+}
+
+._var-function_module_css-global-and-default-5 {
+	color: var(   --my-global,var(--_var-function_module_css-my-background,pink));
+}
+
+._var-function_module_css-global-and-default-6 {
+	background: var(   --_var-function_module_css-main-bg-color   ,   var(   --_var-function_module_css-my-background   ,   pink   )   )   , var(--my-global);
+}
+
+._var-function_module_css-global-and-default-7 {
+	background: var(--_var-function_module_css-main-bg-color,var(--_var-function_module_css-my-background,pink)),var(--my-global);
+}
+
+._var-function_module_css-from {
+	color: var(--_var-function-export_modules_css-my-var-u1);
+}
+
+._var-function_module_css-from-1 {
+	color: var(--_var-function_module_css-main-bg-color, var(--_var-function-export_modules_css-my-var-u1));
+}
+
+._var-function_module_css-from-2 {
+	color: var(--_var-function-export_modules_css-my-var-u1,  var(--_var-function_module_css-main-bg-color));
+}
+
+._var-function_module_css-from-3 {
+	color: var(--_var-function-export_modules_css-my-var-u1,  var(--_var-function-export_modules_css-my-var-u2));
+}
+
+._var-function_module_css-from-4 {
+	color: var(--_var-function-export_modules_css-1);
+}
+
+._var-function_module_css-from-5 {
+	color: var(--_var-function-export_modules_css---a);
+}
+
+._var-function_module_css-from-6 {
+	color: var(--_var-function-export_modules_css-main-bg-color);
+}
+
+._var-function_module_css-mixed {
+	color: var(--_var-function-export_modules_css-my-var-u1, var(--my-global, var(--_var-function_module_css-main-bg-color, red)));
+}
+
+._var-function_module_css-broken {
+	color: var(--my-global from);
+}
+
+._var-function_module_css-broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--_var-function_module_css-not-override-class: red;
+}
+
+._var-function_module_css-not-override-class {
+	color: var(--_var-function-export_modules_css-not-override-class)
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -1487,7 +1646,7 @@ div {
     --_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\/colors\\\\.module\\\\.css,my-red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v3:red/bar:__at-rule-value_module_css-bar/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/class-a:__at-rule-value_module_css-class-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/test:/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\/colors\\\\.module\\\\.css,my-red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v3:red/bar:__at-rule-value_module_css-bar/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/class-a:__at-rule-value_module_css-class-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/test:/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,my-var-u1:__var-function-export_modules_css-my-var-u1/my-var-u2:--_var-function-export_modules_css-my-var-u2/not-override-class:--_var-function-export_modules_css-not-override-class/_1:--_var-function-export_modules_css-1/--a:--_var-function-export_modules_css---a/main-bg-color:--_var-function-export_modules_css-main-bg-color/&\\\\.\\\\/var-function-export\\\\.modules\\\\.css,main-bg-color:--_var-function_module_css-main-bg-color/my-var:--_var-function_module_css-my-var/my-background:--_var-function_module_css-my-background/my-global:--_var-function_module_css-my-global/a:--_var-function_module_css-a/class:__var-function_module_css-class/logo-color:--_var-function_module_css-logo-color/box-color:--_var-function_module_css-box-color/two:__var-function_module_css-two/three:__var-function_module_css-three/one:__var-function_module_css-one/reserved:__var-function_module_css-reserved/green:__var-function_module_css-green/global:__var-function_module_css-global/global-and-default:__var-function_module_css-global-and-default/global-and-default-1:__var-function_module_css-global-and-default-1/global-and-default-2:__var-function_module_css-global-and-default-2/global-and-default-3:__var-function_module_css-global-and-default-3/global-and-default-5:__var-function_module_css-global-and-default-5/global-and-default-6:__var-function_module_css-global-and-default-6/global-and-default-7:__var-function_module_css-global-and-default-7/from:__var-function_module_css-from/from-1:__var-function_module_css-from-1/from-2:__var-function_module_css-from-2/from-3:__var-function_module_css-from-3/from-4:__var-function_module_css-from-4/from-5:__var-function_module_css-from-5/from-6:__var-function_module_css-from-6/mixed:__var-function_module_css-mixed/broken:__var-function_module_css-broken/broken-1:__var-function_module_css-broken-1/not-override-class:__var-function_module_css-not-override-class/&\\\\.\\\\/var-function\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -1789,6 +1948,165 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
+
+/*!*********************************************!*\\\\
+  !*** css ./var-function-export.modules.css ***!
+  \\\\*********************************************/
+:root {
+	--my-app-392-my-var-u1: red;
+	--my-app-392-my-var-u2: blue;
+	--my-app-392-not-override-class: black;
+	--my-app-392-1: red;
+	--my-app-392---a: red;
+	--my-app-392-main-bg-color: red;
+}
+
+.my-app-392-my-var-u1 {
+	color: red;
+}
+
+/*!*************************************!*\\\\
+  !*** css ./var-function.module.css ***!
+  \\\\*************************************/
+:root {
+	--my-app-768-main-bg-color: brown;
+	--my-app-768-my-var: red;
+	--my-app-768-my-background: blue;
+	--my-app-768-my-global: yellow;
+	--: \\"reserved\\";
+	--my-app-768-a: green;
+}
+
+.my-app-768-class {
+	color: var(--my-app-768-main-bg-color);
+}
+
+@property --my-app-768-logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.my-app-768-class {
+	color: var(--my-app-768-logo-color);
+}
+
+div {
+	background-color: var(--my-app-768-box-color);
+}
+
+.my-app-768-two {
+	--my-app-768-box-color: cornflowerblue;
+}
+
+.my-app-768-three {
+	--my-app-768-box-color: aquamarine;
+}
+
+
+.my-app-768-one {
+	/* Red if --my-var is not defined */
+	color: var(--my-app-768-my-var, red);
+}
+
+.my-app-768-two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-app-768-my-var, var(--my-app-768-my-background, pink));
+}
+
+.my-app-768-reserved {
+	color: var(--);
+}
+
+.my-app-768-green {
+	color: var(--my-app-768-a);
+}
+
+.my-app-768-global {
+	color: var(--my-global);
+}
+
+.my-app-768-global-and-default {
+	color: var(--my-global, pink);
+}
+
+.my-app-768-global-and-default-1 {
+	color: var(--my-global, var(--my-global-background));
+}
+
+.my-app-768-global-and-default-2 {
+	color: var(--my-global, var(--my-global-background, pink));
+}
+
+.my-app-768-global-and-default-3 {
+	color: var(--my-global, var(--my-app-768-my-background, pink));
+}
+
+.my-app-768-global-and-default-5 {
+	color: var(   --my-global,var(--my-app-768-my-background,pink));
+}
+
+.my-app-768-global-and-default-6 {
+	background: var(   --my-app-768-main-bg-color   ,   var(   --my-app-768-my-background   ,   pink   )   )   , var(--my-global);
+}
+
+.my-app-768-global-and-default-7 {
+	background: var(--my-app-768-main-bg-color,var(--my-app-768-my-background,pink)),var(--my-global);
+}
+
+.my-app-768-from {
+	color: var(--my-app-392-my-var-u1);
+}
+
+.my-app-768-from-1 {
+	color: var(--my-app-768-main-bg-color, var(--my-app-392-my-var-u1));
+}
+
+.my-app-768-from-2 {
+	color: var(--my-app-392-my-var-u1,  var(--my-app-768-main-bg-color));
+}
+
+.my-app-768-from-3 {
+	color: var(--my-app-392-my-var-u1,  var(--my-app-392-my-var-u2));
+}
+
+.my-app-768-from-4 {
+	color: var(--my-app-392-1);
+}
+
+.my-app-768-from-5 {
+	color: var(--my-app-392---a);
+}
+
+.my-app-768-from-6 {
+	color: var(--my-app-392-main-bg-color);
+}
+
+.my-app-768-mixed {
+	color: var(--my-app-392-my-var-u1, var(--my-global, var(--my-app-768-main-bg-color, red)));
+}
+
+.my-app-768-broken {
+	color: var(--my-global from);
+}
+
+.my-app-768-broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--my-app-768-not-override-class: red;
+}
+
+.my-app-768-not-override-class {
+	color: var(--my-app-392-not-override-class)
+}
 
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
@@ -2956,7 +3274,7 @@ div {
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:red-v1:blue/ĀĂiĆĈĊćĉăąČ/Ēe-ĎĖa:\\\\\\"test-ağėĞĠĢĤbħ--Č:var\\\\(įcoloĵ)/ġģĔďĉĿīă2ŃĊČŇŉ/gĀenŌyelĻwċāă3ōŋv4ō&_220,myİāōĳĐĚŒclass:Ũĥpp-744ăaŮiŰŲŴ/v-ĹmmőĬrokő:ƆƈoƊƌ-bƎƐŒĄĞ/\\\\*\\\\ ƉƋntƢƠ\\\\//smƀlĞ(Ʈx-width\\\\Ğ 599px\\\\ľĘłĖfooŶũaŹŻŽ-ǈoėŮvŜĖbĴǋŸźżžǙrǔēş:ĖŀĤt:_40ǁŅģ_qǪ36ǮĹĻrVƀĉǥā/ǷļǺǕĕǾȀǹǻęvňĖȆȂǣŜ\\\\.ĖexpļǩŷǍǝǐȔȖrtǿĺļŵğȑƪȆsȑmoduleȑcŴħaȵǽdėbbȷǿƄsĥǛȚǏžűųȿaėųeǪ1ǭx/ŲrgɋcƀcĶǙsȰ Ʃ 2ǃ/naƋdȼ__3chǚ\\\\#0f0/ɧ6ɪɬɮɯɰɱɒǙǥgǙĶ34\\\\,Ƣ1ɟʄ 6ʂʈ0ȑ3ɠhsŲ:ʑŲĶŤʍʈ1ʏ.ʍ%ʃʅ8ȑʞʠ 1ɠĹĺSɫdowǪʍʦ1ǁʅ5ʴ ŻʷɻĦ(ʙʾʠ.ɟ)ʃʱ24ʷ38ˈʺɾʼʿ,ʙȑ1ʂľfunc:ȆĶČƢlightnĢȩ(5ʤ˃ľƇȆȼ˭șǎǞƔǸƓemptyƼ˵˷˹Ōƨɜ ˼˸ũǖƞɝƤƌƨơƫoverrƷɋȌȾɁ˱ǐɅƅǅv5̇ơ ǧ̋ƪ˝Ɵ̢̠ɜ̌Ǣȉ6̟Ƣ̨ƩƟ̦̯ị̄řdƪɝ̰̪ʩlʫaʭwŌ_ʱ1ʳǂʦʶ͈ʹ͈ʻĶˏˑˁǃ˄Ƣˆˈˊ͈3ˌɿʽ͔ːˀ˓ʨǉ̾ʬʮśʰʅ͇ʵʷ͌Ƣ͎͟͝ͱȑ˂͔ɞˇ͙͘Ƣ͚͍ˍ͏͑͞͡ľ̽̿́ăŞ̵̹̩̹̌́Ƣ͉ͪͬͅ7͛ˎͿˀʹ͟Ͷ͗ˋͼ͐͜͠˔ȡʪ̡̝̮ͥ͂Ί̱Ώʷ1͊Ƣͭ ͯΟʄ͒˃Ι͖͸ΜͮͽͰˏ˒Ρ΃Τă̭̈́ͩάήʸΓΝΕͱ͑Θ˅ͷͺ͹ ͻλΞΖδ΁΢ͤ̀ͦv7Χ̻ƪΫ͈έΒΔ;ύΗ͓ηϑϔϓϕαμγοɠǧƒŢǞ,zg̗ź235-ϼ/HĎ˰ϿЁ-І/OBϾ-ЀЂЎ/VEАВ-ЖЍňЈБЊO2ЕjИЊVjЍHХГHЅ̞ОЙH5/aǲаЊеЕNЫКNЕMмVM/AOмхЅжǌǎбqЍŠзГ4ЅȻёЋbЍPмOPЅʯіHŘnѕыЉЂѣƟ$Qм\\\\ѪėDмbDѩȘѥПЂѭȠqĎįіѻ/xЏѽѶЙҁѩ̭҃ǜѷ-ѭ6ŎJ:҉ɂЙgJҀмɏlYмҚ/fмf/uzґ-іңдKмaKдϠіa7ҢҟҧҡsWмҷ/TZмҼдқҰY/IIмӅ/iФіӊ/zGмӏ/DkмӔ/XЗіәӄ0ҥіIɱwѵҊЙӣɡ˙і˘ӉҽӌZ/ZњҒьЊӱ/M̭іӸċXӟ҄ЊrX/dҸіԄǿѰіcѳMӞӳѦ-ԍЕӞіVɱCЇӿЂԘėҪіbҭYąіԢ/қԏҋӃt҈ҦԚ-ԫ/KRмԲ/FӕіԷ/prӾӥЊԼƬѰԨЙsѳgҤՄЊՈЕhсhƆɋՊЂ̏ėϽՓƘg/BҸ՘՜/Wӆ՘ա/CԽ՘զӉŜ՘i3ĿvԾғЊtv/ŢВ,ԸѶ6ռ-kն_ռ6,Ţ81փRҐԨ19ž։ӰLА֌žZLǿ̞֋֍ƈгŢ֓;}"
+head{--webpack-my-app-226:red-v1:blue/ĀĂiĆĈĊćĉăąČ/Ēe-ĎĖa:\\\\\\"test-ağėĞĠĢĤbħ--Č:var\\\\(įcoloĵ)/ġģĔďĉĿīă2ŃĊČŇŉ/gĀenŌyelĻwċāă3ōŋv4ō&_220,myİāōĳĐĚŒclass:Ũĥpp-744ăaŮiŰŲŴ/v-ĹmmőĬrokő:ƆƈoƊƌ-bƎƐŒĄĞ/\\\\*\\\\ ƉƋntƢƠ\\\\//smƀlĞ(Ʈx-width\\\\Ğ 599px\\\\ľĘłĖfooŶũaŹŻŽ-ǈoėŮvŜĖbĴǋŸźżžǙrǔēş:ĖŀĤt:_40ǁŅģ_qǪ36ǮĹĻrVƀĉǥā/ǷļǺǕĕǾȀǹǻęvňĖȆȂǣŜ\\\\.ĖexpļǩŷǍǝǐȔȖrtǿĺļŵğȑƪȆsȑmoduleȑcŴħaȵǽdėbbȷǿƄsĥǛȚǏžűųȿaėųeǪ1ǭx/ŲrgɋcƀcĶǙsȰ Ʃ 2ǃ/naƋdȼ__3chǚ\\\\#0f0/ɧ6ɪɬɮɯɰɱɒǙǥgǙĶ34\\\\,Ƣ1ɟʄ 6ʂʈ0ȑ3ɠhsŲ:ʑŲĶŤʍʈ1ʏ.ʍ%ʃʅ8ȑʞʠ 1ɠĹĺSɫdowǪʍʦ1ǁʅ5ʴ ŻʷɻĦ(ʙʾʠ.ɟ)ʃʱ24ʷ38ˈʺɾʼʿ,ʙȑ1ʂľfunc:ȆĶČƢlightnĢȩ(5ʤ˃ľƇȆȼ˭șǎǞƔǸƓemptyƼ˵˷˹Ōƨɜ ˼˸ũǖƞɝƤƌƨơƫoverrƷɋȌȾɁ˱ǐɅƅǅv5̇ơ ǧ̋ƪ˝Ɵ̢̠ɜ̌Ǣȉ6̟Ƣ̨ƩƟ̦̯ị̄řdƪɝ̰̪ʩlʫaʭwŌ_ʱ1ʳǂʦʶ͈ʹ͈ʻĶˏˑˁǃ˄Ƣˆˈˊ͈3ˌɿʽ͔ːˀ˓ʨǉ̾ʬʮśʰʅ͇ʵʷ͌Ƣ͎͟͝ͱȑ˂͔ɞˇ͙͘Ƣ͚͍ˍ͏͑͞͡ľ̽̿́ăŞ̵̹̩̹̌́Ƣ͉ͪͬͅ7͛ˎͿˀʹ͟Ͷ͗ˋͼ͐͜͠˔ȡʪ̡̝̮ͥ͂Ί̱Ώʷ1͊Ƣͭ ͯΟʄ͒˃Ι͖͸ΜͮͽͰˏ˒Ρ΃Τă̭̈́ͩάήʸΓΝΕͱ͑Θ˅ͷͺ͹ ͻλΞΖδ΁΢ͤ̀ͦv7Χ̻ƪΫ͈έΒΔ;ύΗ͓ηϑϔϓϕαμγοɠǧƒŢǞŧ̅Ĵ-uą˰ź392-ŷĳrϾ1/ЇϽuňįЁ-ЃЅЍЉЏɡoĤ̎̐̒dę̚ŵБǌǎД-nК-М̑̓ƈȾɲąУǜГЄ-ЋįĝвɂЦиЌaƂƘg˳ļ:кХеƮрbтȆ/ŢДŧпŒыуrхІФǝ68ІђсѕЌϼіцњќЖѡƘackŏo˗ɥѤŻћјѩѫѭѯѨgĻǙưѱ7ѳŷѺoѼ/йѴɂѿќɈС̗ѥЮɆɐogoѕїВ҉-ĻғѠboƴ˭ѾѳҝҟȢǡtwǊҗѳҧǓƹŐҍѲќҮeĊoˤҰҘҶŊĢ̐̏ɥҪќĀɚrҾŎŐnҸѳŏҴnŎѻƀӉќ҂҄ӓƀĥnĂПfaȮȘљұ-ӕlӗәeӛӝӎ҃ӖaӘ-ӚӜlĤЀӟҘӢӤӮӦӰӲөѼӷӯӝ-ňӀӡӏӣӬӥӧӱԁӼӫӭӿԊŜԃӶԇӸԉĤ3ԌԆԎӹԀ̞ԒԅӾԜԊ5ԙԡԖ-̭ԟӪԚԈӺԨԥԔԏĤϠԪӽԱԢԳ/fƎmӑǑԼԺԼжԾԻƕжՁՆԂӴѳՅmԋՍГՄՂԘՐŠԃՕՈՎԞՋќՐԤՐԩ՜ԿՆ6ЌixūԃmէǾƙƏƑԃծƛėƚőՃձյŒЋШЛ̏ЬПҏŴԾռЪվОРЯϹћ,zgҰ235-֍/HĎВ֐֖֒/OB֏֑-֝/VE֤֟֒֜Պг֙֡2֣j֦-Vj֜HֱOH֕՛֫֠HԤaǲ֘֠׀֣NֱVN֣MׇM/AOֱ׏ׁ֕ӟ֬Hq֜Ֆו֠O4֕Ȼׂ֚b֜PַP֕ʯס-HŘnנכ֒׮Ɵ$Qֱ\\\\״ėDֱbD׳Ӟּ֒׷ȠqĎѱ֬؄/x֞؆֠؊׳̭،؁$եgJҖװӡJ؉ֱɏlYֱ؞Ժֱf/uzؗ؀Ͼz҅KֱaK҅Դؘa7إfֱuؤsWֱػ/TZֱـ҅؟תaY/IIֱي/iְתُ/zGֱٔ/Dkֱٙ/X֥תٞى0بɂ֬Iɱw׿٥֠٩ɡ˙ת˘َفّZ/Zץؑ-ٷ/MաةٽċX٤ǎ֬rX/dؼתډǿ׺תc׽M٣ٹڒ֣٣תVɱCؘ֗ڛėحתbذYӳةڤ/؟ٹوtؐ҇ڄ֠ڬ/KRֱڳ/Fٚתڸ/pѣڮź֬ڽƬ׺ٹs׽gاٹۈ֣hׇhƆɋٹ̏ė֎ٹы/Bؼٹۙ/Wًٹ۞/CھתَۣŜٹiԘtvڃۀڰvюţ֑,ڹӟ6۸-k۲۸6,Ţ81۾Rؖѱ19ž܄ٶLҰ܇žZLǿ̞܆܈ƈԤŢ܎;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
@@ -6163,6 +6481,149 @@ colorValue-v3 {
 @value;
 @value test;
 
+/*!**************************************************!*\\\\
+  !*** css ../css-modules/var-function.module.css ***!
+  \\\\**************************************************/
+:root {
+	--main-bg-color: brown;
+	--my-var: red;
+	--my-background: blue;
+	--my-global: yellow;
+	--: \\"reserved\\";
+	--a: green;
+}
+
+.class {
+	color: var(--main-bg-color);
+}
+
+@property --logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--logo-color);
+}
+
+div {
+	background-color: var(--box-color);
+}
+
+.two {
+	--box-color: cornflowerblue;
+}
+
+.three {
+	--box-color: aquamarine;
+}
+
+
+.one {
+	/* Red if --my-var is not defined */
+	color: var(--my-var, red);
+}
+
+.two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-var, var(--my-background, pink));
+}
+
+.reserved {
+	color: var(--);
+}
+
+.green {
+	color: var(--a);
+}
+
+.global {
+	color: var(--my-global from global);
+}
+
+.global-and-default {
+	color: var(--my-global from global, pink);
+}
+
+.global-and-default-1 {
+	color: var(--my-global from global, var(--my-global-background from global));
+}
+
+.global-and-default-2 {
+	color: var(--my-global from global, var(--my-global-background from global, pink));
+}
+
+.global-and-default-3 {
+	color: var(--my-global from global, var(--my-background, pink));
+}
+
+.global-and-default-5 {
+	color: var(   --my-global   from   global,var(--my-background,pink));
+}
+
+.global-and-default-6 {
+	background: var(   --main-bg-color   ,   var(   --my-background   ,   pink   )   )   , var(--my-global from   global);
+}
+
+.global-and-default-7 {
+	background: var(--main-bg-color,var(--my-background,pink)),var(--my-global from global);
+}
+
+.from {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-1 {
+	color: var(--main-bg-color, var(--my-var-u1 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-2 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--main-bg-color));
+}
+
+.from-3 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--my-var-u2 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-4 {
+	color: var(--1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-5 {
+	color: var(----a from \\"./var-function-export.modules.css\\");
+}
+
+.from-6 {
+	color: var(--main-bg-color from \\"./var-function-export.modules.css\\");
+}
+
+.mixed {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\", var(--my-global from global, var(--main-bg-color, red)));
+}
+
+.broken {
+	color: var(--my-global from);
+}
+
+.broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--not-override-class: red;
+}
+
+.not-override-class {
+	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
+}
+
 /*!*******************************************!*\\\\
   !*** css ../css-modules/style.module.css ***!
   \\\\*******************************************/
@@ -7342,7 +7803,7 @@ div {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/var-function\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,&\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 
