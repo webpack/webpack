@@ -1,0 +1,12 @@
+:root {
+	--my-var-u1: red;
+	--my-var-u2: blue;
+	--not-override-class: black;
+	--1: red;
+	----a: red;
+	--main-bg-color: red;
+}
+
+.my-var-u1 {
+	color: red;
+}
