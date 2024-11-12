@@ -1038,6 +1038,29 @@ It's not allowed to load an initial chunk on demand. The chunk name \\"entry3\\"
 webpack x.x.x compiled with 2 errors in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for dynamic-import 1`] = `
+"asset common.js 1.13 MiB [emitted] (name: common) (id hint: vendors)
+asset runtime.js X KiB [emitted] (name: runtime)
+asset pages/home.js X KiB [emitted] (name: pages/home)
+asset main.js X KiB [emitted] (name: main)
+Entrypoint main 1.14 MiB = runtime.js X KiB common.js 1.13 MiB main.js X KiB
+runtime modules X KiB 12 modules
+built modules 1.14 MiB [built]
+  modules by path ../../../node_modules/ 1.13 MiB
+    modules by path ../../../node_modules/react/ X KiB 4 modules
+    modules by path ../../../node_modules/react-dom/ X KiB
+      ../../../node_modules/react-dom/client.js X bytes [built] [code generated]
+      + 2 modules
+    modules by path ../../../node_modules/scheduler/ X KiB
+      ../../../node_modules/scheduler/index.js X bytes [built] [code generated]
+      ../../../node_modules/scheduler/cjs/scheduler.development.js X KiB [built] [code generated]
+  modules by path ./src/ X KiB
+    ./src/index.js X bytes [built] [code generated]
+    ./src/pages/ lazy ^\\\\.\\\\/.*$ chunkName: pages/[request] namespace object X bytes [built] [code generated]
+    ./src/pages/home.js X KiB [optional] [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for entry-filename 1`] = `
 "PublicPath: auto
 asset a.js X KiB [emitted] (name: a)
