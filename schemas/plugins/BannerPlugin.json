@@ -90,7 +90,7 @@
           "type": "boolean"
         },
         "stage": {
-          "description": "Specifies the banner.",
+          "description": "Specifies the stage when add a banner.",
           "type": "number"
         },
         "test": {
