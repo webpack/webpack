@@ -513,7 +513,7 @@ declare interface BannerPluginOptions {
 	raw?: boolean;
 
 	/**
-	 * Specifies the banner.
+	 * Specifies the stage when add a banner.
 	 */
 	stage?: number;
 
@@ -8643,6 +8643,11 @@ declare class MemoryCachePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare class MergeDuplicateChunksPlugin {
+	constructor(options?: { stage: -10 });
+	options: { stage: -10 };
+	apply(compiler: Compiler): void;
+}
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
 	options: MinChunkSizePluginOptions;
@@ -16122,6 +16127,7 @@ declare namespace exports {
 			AggressiveMergingPlugin,
 			AggressiveSplittingPlugin,
 			LimitChunkCountPlugin,
+			MergeDuplicateChunksPlugin,
 			MinChunkSizePlugin,
 			ModuleConcatenationPlugin,
 			RealContentHashPlugin,
