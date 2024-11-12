@@ -8644,9 +8644,15 @@ declare class MemoryCachePlugin {
 	apply(compiler: Compiler): void;
 }
 declare class MergeDuplicateChunksPlugin {
-	constructor(options?: { stage: -10 });
-	options: { stage: -10 };
+	constructor(options?: MergeDuplicateChunksPluginOptions);
+	options: MergeDuplicateChunksPluginOptions;
 	apply(compiler: Compiler): void;
+}
+declare interface MergeDuplicateChunksPluginOptions {
+	/**
+	 * Specifies the stage for merging duplicate chunks.
+	 */
+	stage?: number;
 }
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
