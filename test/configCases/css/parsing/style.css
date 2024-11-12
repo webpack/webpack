@@ -15,6 +15,7 @@
 @import "./cases/selectors.css";
 @import "./cases/urls.css";
 @import "./cases/values.css";
+@import "./cases/newline-windows.css";
 
 body {
 	background: red;

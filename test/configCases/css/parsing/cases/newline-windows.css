@@ -1,0 +1,23 @@
+a::before {
+	content: "A really long \
+awesome string";
+	color: #00ff00;
+	a24: \123456
+	B;
+	test: url(
+
+
+	"./img.png"
+
+
+	);
+	test: url(
+
+
+	 ./img.png
+
+
+	);
+	test: url(   ""   );
+	test: url(   ''   );
+}

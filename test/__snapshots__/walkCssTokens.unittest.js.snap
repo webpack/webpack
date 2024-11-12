@@ -11687,6 +11687,185 @@ Array [
 ]
 `;
 
+exports[`walkCssTokens should parse newline-windows.css 1`] = `
+Array [
+  Array [
+    "identifier",
+    "a",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "before",
+  ],
+  Array [
+    "leftCurlyBracket",
+    "{",
+  ],
+  Array [
+    "identifier",
+    "content",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "string",
+    "\\"A really long \\\\
+awesome string\\"",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "color",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "hash",
+    "#00ff00",
+    false,
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "a24",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "identifier",
+    "\\\\123456
+",
+  ],
+  Array [
+    "identifier",
+    "B",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "test",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "function",
+    "url(",
+  ],
+  Array [
+    "string",
+    "\\"./img.png\\"",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "test",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "url",
+    "url(
+
+
+	 ./img.png
+
+
+	)",
+    "./img.png",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "test",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "function",
+    "url(",
+  ],
+  Array [
+    "string",
+    "\\"\\"",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "identifier",
+    "test",
+  ],
+  Array [
+    "colon",
+    ":",
+  ],
+  Array [
+    "function",
+    "url(",
+  ],
+  Array [
+    "string",
+    "''",
+  ],
+  Array [
+    "rightParenthesis",
+    ")",
+  ],
+  Array [
+    "semicolon",
+    ";",
+  ],
+  Array [
+    "rightCurlyBracket",
+    "}",
+  ],
+]
+`;
+
 exports[`walkCssTokens should parse number.css 1`] = `
 Array [
   Array [
