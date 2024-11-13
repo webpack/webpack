@@ -7505,6 +7505,7 @@ declare interface KnownBuildMeta {
 	strictHarmonyModule?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
+	exportsFinalName?: Record<string, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
