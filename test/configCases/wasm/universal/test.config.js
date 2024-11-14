@@ -1,4 +1,5 @@
 const fs = require("fs");
+const url = require("url");
 
 module.exports = {
 	moduleScope(scope, options) {
@@ -9,7 +10,7 @@ module.exports = {
 		} else {
 			scope.fetch = resource =>
 				new Promise((resolve, reject) => {
-					fs.readFile(resource, (err, data) => {
+					fs.readFile(url.fileURLToPath(resource), (err, data) => {
 						if (err) {
 							reject(err);
 							return;

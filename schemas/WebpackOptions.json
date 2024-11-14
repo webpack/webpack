@@ -5433,7 +5433,7 @@
       "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["fetch-streaming", "fetch", "async-node"]
+          "enum": ["fetch", "async-node"]
         },
         {
           "type": "string"

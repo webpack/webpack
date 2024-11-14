@@ -1364,10 +1364,8 @@ describe("snapshots", () => {
 		-       "import-scripts",
 		+       "require",
 		@@ ... @@
-		-     "enabledWasmLoadingTypes": Array [
 		-       "fetch",
-		-     ],
-		+     "enabledWasmLoadingTypes": Array [],
+		+       "async-node",
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
@@ -1379,13 +1377,13 @@ describe("snapshots", () => {
 		+     "publicPath": "",
 		@@ ... @@
 		-     "wasmLoading": "fetch",
-		+     "wasmLoading": false,
+		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
 		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-     "workerWasmLoading": "fetch",
-		+     "workerWasmLoading": false,
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1523,10 +1521,8 @@ describe("snapshots", () => {
 		-       "import-scripts",
 		+       "require",
 		@@ ... @@
-		-     "enabledWasmLoadingTypes": Array [
 		-       "fetch",
-		-     ],
-		+     "enabledWasmLoadingTypes": Array [],
+		+       "async-node",
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
@@ -1538,13 +1534,13 @@ describe("snapshots", () => {
 		+     "publicPath": "",
 		@@ ... @@
 		-     "wasmLoading": "fetch",
-		+     "wasmLoading": false,
+		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
 		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-     "workerWasmLoading": "fetch",
-		+     "workerWasmLoading": false,
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1658,10 +1654,8 @@ describe("snapshots", () => {
 		-       "import-scripts",
 		+       "require",
 		@@ ... @@
-		-     "enabledWasmLoadingTypes": Array [
 		-       "fetch",
-		-     ],
-		+     "enabledWasmLoadingTypes": Array [],
+		+       "async-node",
 		@@ ... @@
 		-       "document": true,
 		+       "document": false,
@@ -1673,13 +1667,13 @@ describe("snapshots", () => {
 		+     "publicPath": "",
 		@@ ... @@
 		-     "wasmLoading": "fetch",
-		+     "wasmLoading": false,
+		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
 		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-     "workerWasmLoading": "fetch",
-		+     "workerWasmLoading": false,
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",

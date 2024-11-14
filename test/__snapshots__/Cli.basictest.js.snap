@@ -6446,7 +6446,6 @@ Object {
         "path": "output.enabledWasmLoadingTypes[]",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],
@@ -7360,7 +7359,6 @@ Object {
         "path": "output.wasmLoading",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],
@@ -7454,7 +7452,6 @@ Object {
         "path": "output.workerWasmLoading",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],
