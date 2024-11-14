@@ -159,9 +159,7 @@ export type WasmLoading = false | WasmLoadingType;
 /**
  * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
  */
-export type WasmLoadingType =
-	| ("fetch-streaming" | "fetch" | "async-node")
-	| string;
+export type WasmLoadingType = ("fetch" | "async-node") | string;
 /**
  * An entry point without name.
  */

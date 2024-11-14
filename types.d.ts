@@ -11644,6 +11644,20 @@ declare interface ReadAsyncOptions<TBuffer extends ArrayBufferView> {
 	position?: null | number | bigint;
 	buffer?: TBuffer;
 }
+declare class ReadFileCompileAsyncWasmPlugin {
+	constructor(__0?: ReadFileCompileAsyncWasmPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ReadFileCompileAsyncWasmPluginOptions {
+	/**
+	 * use import?
+	 */
+	import?: boolean;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: ReadFileCompileWasmPluginOptions);
 	options: ReadFileCompileWasmPluginOptions;
@@ -11658,6 +11672,11 @@ declare interface ReadFileCompileWasmPluginOptions {
 	 * mangle imports
 	 */
 	mangleImports?: boolean;
+
+	/**
+	 * use import?
+	 */
+	import?: boolean;
 }
 declare interface ReadFileFs {
 	(
@@ -16151,8 +16170,8 @@ declare namespace exports {
 	}
 	export namespace web {
 		export {
-			FetchCompileAsyncWasmPlugin,
 			FetchCompileWasmPlugin,
+			FetchCompileAsyncWasmPlugin,
 			JsonpChunkLoadingRuntimeModule,
 			JsonpTemplatePlugin,
 			CssLoadingRuntimeModule
@@ -16170,7 +16189,8 @@ declare namespace exports {
 			NodeSourcePlugin,
 			NodeTargetPlugin,
 			NodeTemplatePlugin,
-			ReadFileCompileWasmPlugin
+			ReadFileCompileWasmPlugin,
+			ReadFileCompileAsyncWasmPlugin
 		};
 	}
 	export namespace electron {
