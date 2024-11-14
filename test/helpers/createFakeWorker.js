@@ -1,23 +1,34 @@
 const path = require("path");
+const url = require("url");
 
 module.exports = ({ outputDirectory }) =>
 	class Worker {
-		constructor(url, options = {}) {
-			expect(url).toBeInstanceOf(URL);
-			expect(url.origin).toBe("https://test.cases");
-			expect(url.pathname.startsWith("/path/")).toBe(true);
-			this.url = url;
-			const file = url.pathname.slice(6);
+		constructor(resource, options = {}) {
+			expect(resource).toBeInstanceOf(URL);
+
+			const isFileURL = /file:/i.test(resource);
+
+			if (!isFileURL) {
+				expect(resource.origin).toBe("https://test.cases");
+				expect(resource.pathname.startsWith("/path/")).toBe(true);
+			}
+
+			this.url = resource;
+			const file = isFileURL
+				? url.fileURLToPath(resource)
+				: resource.pathname.slice(6);
+
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");
-const { URL } = require("url");
+const { URL, fileURLToPath } = require("url");
 const path = require("path");
 const fs = require("fs");
 global.self = global;
 self.URL = URL;
-self.location = new URL(${JSON.stringify(url.toString())});
+self.location = new URL(${JSON.stringify(resource.toString())});
 const urlToPath = url => {
-	if(url.startsWith("https://test.cases/path/")) url = url.slice(24);
+  if (/file:/.test(url)) return fileURLToPath(url);
+	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
 };
 self.importScripts = url => {
@@ -35,8 +46,10 @@ self.fetch = async url => {
 			)
 		);
 		return {
+		  headers: { get(name) { } },
 			status: 200,
 			ok: true,
+			arrayBuffer() { return buffer; },
 			json: async () => JSON.parse(buffer.toString("utf-8"))
 		};
 	} catch(err) {
@@ -49,15 +62,26 @@ self.fetch = async url => {
 		throw err;
 	}
 };
-parentPort.on("message", data => {
-	if(self.onmessage) self.onmessage({
-		data
-	});
-});
+
 self.postMessage = data => {
 	parentPort.postMessage(data);
 };
-require(${JSON.stringify(path.resolve(outputDirectory, file))});
+if (${options.type === "module"}) {
+	import(${JSON.stringify(path.resolve(outputDirectory, file))}).then(() => {
+		parentPort.on("message", data => {
+			if(self.onmessage) self.onmessage({
+				data
+			});
+		});
+	});
+} else {
+	parentPort.on("message", data => {
+		if(self.onmessage) self.onmessage({
+			data
+		});
+	});
+	require(${JSON.stringify(path.resolve(outputDirectory, file))});
+}
 `;
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
 				eval: true

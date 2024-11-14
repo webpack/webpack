@@ -11,3 +11,17 @@ it("should allow to run a WebAssembly module (direct)", function() {
 		expect(result).toEqual(42);
 	});
 });
+
+it("should allow to run a WebAssembly module (in Worker)", async function() {
+	const worker = new Worker(new URL("./worker.js", import.meta.url), {
+		type: "module"
+	});
+	worker.postMessage("ok");
+	const result = await new Promise(resolve => {
+		worker.onmessage = event => {
+			resolve(event.data);
+		};
+	});
+	expect(result).toBe("data: 42, thanks");
+	await worker.terminate();
+});
