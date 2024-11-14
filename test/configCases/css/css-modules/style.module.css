@@ -1,4 +1,5 @@
 @import "at-rule-value.module.css";
+@import "var-function.module.css";
 
 .class {
 	color: red;

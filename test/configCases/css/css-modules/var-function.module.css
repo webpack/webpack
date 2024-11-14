@@ -1,0 +1,139 @@
+:root {
+	--main-bg-color: brown;
+	--my-var: red;
+	--my-background: blue;
+	--my-global: yellow;
+	--: "reserved";
+	--a: green;
+}
+
+.class {
+	color: var(--main-bg-color);
+}
+
+@property --logo-color {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--logo-color);
+}
+
+div {
+	background-color: var(--box-color);
+}
+
+.two {
+	--box-color: cornflowerblue;
+}
+
+.three {
+	--box-color: aquamarine;
+}
+
+
+.one {
+	/* Red if --my-var is not defined */
+	color: var(--my-var, red);
+}
+
+.two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-var, var(--my-background, pink));
+}
+
+.reserved {
+	color: var(--);
+}
+
+.green {
+	color: var(--a);
+}
+
+.global {
+	color: var(--my-global from global);
+}
+
+.global-and-default {
+	color: var(--my-global from global, pink);
+}
+
+.global-and-default-1 {
+	color: var(--my-global from global, var(--my-global-background from global));
+}
+
+.global-and-default-2 {
+	color: var(--my-global from global, var(--my-global-background from global, pink));
+}
+
+.global-and-default-3 {
+	color: var(--my-global from global, var(--my-background, pink));
+}
+
+.global-and-default-5 {
+	color: var(   --my-global   from   global,var(--my-background,pink));
+}
+
+.global-and-default-6 {
+	background: var(   --main-bg-color   ,   var(   --my-background   ,   pink   )   )   , var(--my-global from   global);
+}
+
+.global-and-default-7 {
+	background: var(--main-bg-color,var(--my-background,pink)),var(--my-global from global);
+}
+
+.from {
+	color: var(--my-var-u1 from "./var-function-export.modules.css");
+}
+
+.from-1 {
+	color: var(--main-bg-color, var(--my-var-u1 from "./var-function-export.modules.css"));
+}
+
+.from-2 {
+	color: var(--my-var-u1 from "./var-function-export.modules.css",  var(--main-bg-color));
+}
+
+.from-3 {
+	color: var(--my-var-u1 from "./var-function-export.modules.css",  var(--my-var-u2 from "./var-function-export.modules.css"));
+}
+
+.from-4 {
+	color: var(--1 from "./var-function-export.modules.css");
+}
+
+.from-5 {
+	color: var(----a from "./var-function-export.modules.css");
+}
+
+.from-6 {
+	color: var(--main-bg-color from "./var-function-export.modules.css");
+}
+
+.mixed {
+	color: var(--my-var-u1 from "./var-function-export.modules.css", var(--my-global from global, var(--main-bg-color, red)));
+}
+
+.broken {
+	color: var(--my-global from);
+}
+
+.broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--not-override-class: red;
+}
+
+.not-override-class {
+	color: var(--not-override-class from "./var-function-export.modules.css")
+}
