@@ -477,7 +477,7 @@ const describeCases = config => {
 											runInNewContext = true;
 										}
 										if (testConfig.moduleScope) {
-											testConfig.moduleScope(baseModuleScope);
+											testConfig.moduleScope(baseModuleScope, options);
 										}
 										const esmContext = vm.createContext(baseModuleScope, {
 											name: "context for esm"
@@ -636,7 +636,7 @@ const describeCases = config => {
 													_globalAssign: { expect }
 												};
 												if (testConfig.moduleScope) {
-													testConfig.moduleScope(moduleScope);
+													testConfig.moduleScope(moduleScope, options);
 												}
 												if (!runInNewContext)
 													content = `Object.assign(global, _globalAssign); ${content}`;
