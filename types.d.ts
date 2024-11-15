@@ -1495,11 +1495,6 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	runtimeTemplate: RuntimeTemplate;
 
 	/**
-	 * meta data for runtime
-	 */
-	metaData: string[];
-
-	/**
 	 * undo path to css file
 	 */
 	undoPath: string;
@@ -10645,11 +10640,6 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: boolean;
-
-	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: string | Function;
@@ -10942,11 +10932,6 @@ declare interface OutputNormalized {
 	cssFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-
-	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: boolean;
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
@@ -12290,11 +12275,6 @@ declare interface RenderContextCssModulesPlugin {
 	 * the unique name
 	 */
 	uniqueName: string;
-
-	/**
-	 * need compress
-	 */
-	cssHeadDataCompression: boolean;
 
 	/**
 	 * undo path to css file

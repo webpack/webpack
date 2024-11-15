@@ -6295,19 +6295,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-css-head-data-compression": Object {
-    "configs": Array [
-      Object {
-        "description": "Compress the data in the head tag of CSS files.",
-        "multiple": false,
-        "path": "output.cssHeadDataCompression",
-        "type": "boolean",
-      },
-    ],
-    "description": "Compress the data in the head tag of CSS files.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "output-devtool-fallback-module-filename-template": Object {
     "configs": Array [
       Object {

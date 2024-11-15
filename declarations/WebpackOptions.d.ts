@@ -492,10 +492,6 @@ export type CssChunkFilename = FilenameTemplate;
  */
 export type CssFilename = FilenameTemplate;
 /**
- * Compress the data in the head tag of CSS files.
- */
-export type CssHeadDataCompression = boolean;
-/**
  * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
  */
 export type DevtoolFallbackModuleFilenameTemplate = string | Function;
@@ -2112,10 +2108,6 @@ export interface Output {
 	 */
 	cssFilename?: CssFilename;
 	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: CssHeadDataCompression;
-	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -3499,10 +3491,6 @@ export interface OutputNormalized {
 	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	cssFilename?: CssFilename;
-	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: CssHeadDataCompression;
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
