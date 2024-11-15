@@ -1,4 +1,7 @@
 module.exports = {
+	findBundle: function (i, options) {
+		return ["reexport_modules_css.bundle0.js", "bundle0.js"];
+	},
 	moduleScope(scope) {
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";

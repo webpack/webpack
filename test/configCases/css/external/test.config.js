@@ -1,5 +1,5 @@
 module.exports = {
 	findBundle: function (i, options) {
-		return ["style2_css.bundle0.mjs", "bundle0.mjs"];
+		return ["125.bundle0.js", "bundle0.js"];
 	}
 };
