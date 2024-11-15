@@ -52,7 +52,7 @@ module.exports = {
 						"B-2Index": "0: ./B-2.js",
 						BIndex: "0: ./B.js",
 						mainIndex: "0: ./main.js",
-						sharedIndex: "0: ./shared.js, 1: css ./m.css, 2: css ./n.css"
+						sharedIndex: "1: css ./m.css"
 					});
 				});
 			};
