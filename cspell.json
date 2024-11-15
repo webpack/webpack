@@ -85,6 +85,7 @@
     "eval",
     "Ewald",
     "exitance",
+    "externref",
     "fetchpriority",
     "filebase",
     "fileoverview",
