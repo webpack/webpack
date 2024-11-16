@@ -14,14 +14,14 @@ const runCommand = (command, args) => {
 		});
 
 		executedCommand.on("error", error => {
-			reject(error);
+			reject(new Error(`command failed to start:${error.message} `));
 		});
 
 		executedCommand.on("exit", code => {
 			if (code === 0) {
 				resolve();
 			} else {
-				reject();
+				reject(new Error(`command exited with code ${code}`));
 			}
 		});
 	});
