@@ -15975,6 +15975,7 @@ declare namespace exports {
 		export let requireScope: "__webpack_require__.*";
 		export let exports: "__webpack_exports__";
 		export let thisAsExports: "top-level-this-exports";
+		export let federationStartup: "federation-async-startup";
 		export let returnExportsFromRuntime: "return-exports-from-runtime";
 		export let module: "module";
 		export let moduleId: "module.id";

@@ -1,0 +1,1 @@
+exports.id=963,exports.ids=[963],exports.modules={963:(o,t,e)=>{const s=e(560);o.exports=function(){return"ComponentA with "+s}}};
