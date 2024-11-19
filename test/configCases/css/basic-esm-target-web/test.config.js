@@ -1,5 +1,8 @@
 module.exports = {
-	findBundle: function (i, options) {
-		return ["style2_css.bundle0.mjs", "bundle0.mjs"];
+	moduleScope(scope) {
+		const link = scope.window.document.createElement("link");
+		link.rel = "stylesheet";
+		link.href = "bundle0.css";
+		scope.window.document.head.appendChild(link);
 	}
 };
