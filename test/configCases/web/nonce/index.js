@@ -15,6 +15,7 @@ it("should set nonce attributes", () => {
 	expect(script.getAttribute("nonce")).toBe("nonce");
 	expect(script.src).toBe("https://example.com/chunk-js.js");
 
+	__non_webpack_require__('./chunk-css.js');
 	import(/* webpackChunkName: "chunk-css" */ "./chunk.css");
 
 	expect(document.head._children).toHaveLength(2);

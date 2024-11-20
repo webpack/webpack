@@ -25,6 +25,6 @@ module.exports = {
 			throw new Error("The `pathinfo` option doesn't work.");
 		}
 
-		return "./bundle0.js";
+		return ["./style2_css.bundle0.js", "./bundle0.js"];
 	}
 };

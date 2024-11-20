@@ -17,7 +17,7 @@ div {
 	background: url(09a1a1112c577c279435.png)
 }
 
-head{--webpack-main:&https\\\\:\\\\/\\\\/raw\\\\.githubusercontent\\\\.com\\\\/webpack\\\\/webpack\\\\/refs\\\\/heads\\\\/main\\\\/test\\\\/configCases\\\\/css\\\\/import\\\\/print\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -1646,7 +1646,7 @@ div {
     --_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:red-v1:blue/red-i:blue/blue-v1:red/blue-i:red/a:\\\\\\"test-a\\\\\\"/b:\\\\\\"test-b\\\\\\"/--red:var\\\\(--color\\\\)/test-v1:blue/test-v2:blue/red-v2:blue/green-v2:yellow/red-v3:blue/red-v4:blue/&\\\\.\\\\/colors\\\\.module\\\\.css,my-red:blue/value-in-class:__at-rule-value_module_css-value-in-class/v-comment-broken:/v-comment-broken-v1:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//small:\\\\(max-width\\\\:\\\\ 599px\\\\)/blue-v1:red/foo:__at-rule-value_module_css-foo/blue-v3:red/bar:__at-rule-value_module_css-bar/blue-v4:red/test-t:_40px/test_q:_36px/colorValue:red/colorValue-v1:red/colorValue-v2:red/colorValue-v3:\\\\.red/export:__at-rule-value_module_css-export/colors:\\\\\\"\\\\.\\\\/colors\\\\.module\\\\.css\\\\\\"/aaa:red/bbb:red/class-a:__at-rule-value_module_css-class-a/base:_10px/large:calc\\\\(base\\\\ \\\\*\\\\ 2\\\\)/named:red/__3char:\\\\#0f0/__6char:\\\\#00ff00/rgba:rgba\\\\(34\\\\,\\\\ 12\\\\,\\\\ 64\\\\,\\\\ 0\\\\.3\\\\)/hsla:hsla\\\\(220\\\\,\\\\ 13\\\\.0\\\\%\\\\,\\\\ 18\\\\.0\\\\%\\\\,\\\\ 1\\\\)/coolShadow:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/func:color\\\\(red\\\\ lightness\\\\(50\\\\%\\\\)\\\\)/v-color:red/color:__at-rule-value_module_css-color/v-empty:\\\\ /v-empty-v2:\\\\ \\\\ \\\\ /v-empty-v3:\\\\/\\\\*\\\\ comment\\\\ \\\\*\\\\//override:red/class:__at-rule-value_module_css-class/blue-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//blue-v6:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/red\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\//coolShadow-v2:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v3:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v4:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/\\\\ \\\\ \\\\ 0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v5:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v6:_0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/coolShadow-v7:\\\\/\\\\*\\\\ test\\\\ \\\\*\\\\/0\\\\ 11px\\\\ 15px\\\\ -7px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.2\\\\)\\\\,0\\\\ 24px\\\\ 38px\\\\ 3px\\\\ rgba\\\\(0\\\\,0\\\\,0\\\\,\\\\.14\\\\)/test:/&\\\\.\\\\/at-rule-value\\\\.module\\\\.css,my-var-u1:__var-function-export_modules_css-my-var-u1/my-var-u2:--_var-function-export_modules_css-my-var-u2/not-override-class:--_var-function-export_modules_css-not-override-class/_1:--_var-function-export_modules_css-1/--a:--_var-function-export_modules_css---a/main-bg-color:--_var-function-export_modules_css-main-bg-color/&\\\\.\\\\/var-function-export\\\\.modules\\\\.css,main-bg-color:--_var-function_module_css-main-bg-color/my-var:--_var-function_module_css-my-var/my-background:--_var-function_module_css-my-background/my-global:--_var-function_module_css-my-global/a:--_var-function_module_css-a/class:__var-function_module_css-class/logo-color:--_var-function_module_css-logo-color/box-color:--_var-function_module_css-box-color/two:__var-function_module_css-two/three:__var-function_module_css-three/one:__var-function_module_css-one/reserved:__var-function_module_css-reserved/green:__var-function_module_css-green/global:__var-function_module_css-global/global-and-default:__var-function_module_css-global-and-default/global-and-default-1:__var-function_module_css-global-and-default-1/global-and-default-2:__var-function_module_css-global-and-default-2/global-and-default-3:__var-function_module_css-global-and-default-3/global-and-default-5:__var-function_module_css-global-and-default-5/global-and-default-6:__var-function_module_css-global-and-default-6/global-and-default-7:__var-function_module_css-global-and-default-7/from:__var-function_module_css-from/from-1:__var-function_module_css-from-1/from-2:__var-function_module_css-from-2/from-3:__var-function_module_css-from-3/from-4:__var-function_module_css-from-4/from-5:__var-function_module_css-from-5/from-6:__var-function_module_css-from-6/mixed:__var-function_module_css-mixed/broken:__var-function_module_css-broken/broken-1:__var-function_module_css-broken-1/not-override-class:__var-function_module_css-not-override-class/&\\\\.\\\\/var-function\\\\.module\\\\.css,class:__style_module_css-class/local1:__style_module_css-local1/local2:__style_module_css-local2/local3:__style_module_css-local3/local4:__style_module_css-local4/local5:__style_module_css-local5/local6:__style_module_css-local6/local7:__style_module_css-local7/disabled:__style_module_css-disabled/mButtonDisabled:__style_module_css-mButtonDisabled/tipOnly:__style_module_css-tipOnly/local8:__style_module_css-local8/parent1:__style_module_css-parent1/child1:__style_module_css-child1/vertical-tiny:__style_module_css-vertical-tiny/vertical-small:__style_module_css-vertical-small/otherDiv:__style_module_css-otherDiv/horizontal-tiny:__style_module_css-horizontal-tiny/horizontal-small:__style_module_css-horizontal-small/description:__style_module_css-description/local9:__style_module_css-local9/local10:__style_module_css-local10/local11:__style_module_css-local11/local12:__style_module_css-local12/local13:__style_module_css-local13/local14:__style_module_css-local14/local15:__style_module_css-local15/local16:__style_module_css-local16/nested1:__style_module_css-nested1/nested3:__style_module_css-nested3/ident:__style_module_css-ident/localkeyframes:__style_module_css-localkeyframes/pos1x:--_style_module_css-pos1x/pos1y:--_style_module_css-pos1y/pos2x:--_style_module_css-pos2x/pos2y:--_style_module_css-pos2y/localkeyframes2:__style_module_css-localkeyframes2/animation:__style_module_css-animation/vars:__style_module_css-vars/local-color:--_style_module_css-local-color/globalVars:__style_module_css-globalVars/wideScreenClass:__style_module_css-wideScreenClass/narrowScreenClass:__style_module_css-narrowScreenClass/displayGridInSupports:__style_module_css-displayGridInSupports/floatRightInNegativeSupports:__style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:__style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:__style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:__style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:__style_module_css-animationUpperCase/localkeyframesUPPERCASE:__style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:__style_module_css-localkeyframes2UPPPERCASE/localUpperCase:__style_module_css-localUpperCase/VARS:__style_module_css-VARS/LOCAL-COLOR:--_style_module_css-LOCAL-COLOR/globalVarsUpperCase:__style_module_css-globalVarsUpperCase/inSupportScope:__style_module_css-inSupportScope/a:__style_module_css-a/animationName:__style_module_css-animationName/b:__style_module_css-b/c:__style_module_css-c/d:__style_module_css-d/animation-name:--_style_module_css-animation-name/mozAnimationName:__style_module_css-mozAnimationName/my-color:--_style_module_css-my-color/my-color-1:--_style_module_css-my-color-1/my-color-2:--_style_module_css-my-color-2/padding-sm:__style_module_css-padding-sm/padding-lg:__style_module_css-padding-lg/nested-pure:__style_module_css-nested-pure/nested-media:__style_module_css-nested-media/nested-supports:__style_module_css-nested-supports/nested-layer:__style_module_css-nested-layer/not-selector-inside:__style_module_css-not-selector-inside/nested-var:__style_module_css-nested-var/again:__style_module_css-again/nested-with-local-pseudo:__style_module_css-nested-with-local-pseudo/local-nested:__style_module_css-local-nested/bar:--_style_module_css-bar/id-foo:__style_module_css-id-foo/id-bar:__style_module_css-id-bar/nested-parens:__style_module_css-nested-parens/local-in-global:__style_module_css-local-in-global/in-local-global-scope:__style_module_css-in-local-global-scope/class-local-scope:__style_module_css-class-local-scope/class-in-container:__style_module_css-class-in-container/deep-class-in-container:__style_module_css-deep-class-in-container/placeholder-gray-700:__style_module_css-placeholder-gray-700/placeholder-opacity:--_style_module_css-placeholder-opacity/test:--_style_module_css-test/baz:__style_module_css-baz/slidein:__style_module_css-slidein/my-global-class-again:__style_module_css-my-global-class-again/first-nested:__style_module_css-first-nested/first-nested-nested:__style_module_css-first-nested-nested/first-nested-at-rule:__style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:__style_module_css-first-nested-nested-at-rule-deep/foo:--_style_module_css-foo/broken:__style_module_css-broken/comments:__style_module_css-comments/error:__style_module_css-error/err-404:__style_module_css-err-404/qqq:__style_module_css-qqq/parent:__style_module_css-parent/scope:__style_module_css-scope/limit:__style_module_css-limit/content:__style_module_css-content/card:__style_module_css-card/baz-1:__style_module_css-baz-1/baz-2:__style_module_css-baz-2/my-class:__style_module_css-my-class/feature:__style_module_css-feature/class-1:__style_module_css-class-1/infobox:__style_module_css-infobox/header:__style_module_css-header/item-size:--_style_module_css-item-size/container:__style_module_css-container/item-color:--_style_module_css-item-color/item:__style_module_css-item/two:__style_module_css-two/three:__style_module_css-three/initial:__style_module_css-initial/None:__style_module_css-None/item-1:__style_module_css-item-1/var:__style_module_css-var/main-color:--_style_module_css-main-color/FOO:--_style_module_css-FOO/accent-background:--_style_module_css-accent-background/external-link:--_style_module_css-external-link/custom-prop:--_style_module_css-custom-prop/default-value:--_style_module_css-default-value/main-bg-color:--_style_module_css-main-bg-color/backup-bg-color:--_style_module_css-backup-bg-color/var-order:__style_module_css-var-order/&\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:__style_module_my-css-myCssClass/&\\\\.\\\\/style\\\\.module\\\\.my-css,&\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:__identifiers_module_css-UnusedClassName/variable-unused-class:--_identifiers_module_css-variable-unused-class/UsedClassName:__identifiers_module_css-UsedClassName/variable-used-class:--_identifiers_module_css-variable-used-class/&\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -3274,7 +3274,7 @@ div {
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:red-v1:blue/ĀĂiĆĈĊćĉăąČ/Ēe-ĎĖa:\\\\\\"test-ağėĞĠĢĤbħ--Č:var\\\\(įcoloĵ)/ġģĔďĉĿīă2ŃĊČŇŉ/gĀenŌyelĻwċāă3ōŋv4ō&_220,myİāōĳĐĚŒclass:Ũĥpp-744ăaŮiŰŲŴ/v-ĹmmőĬrokő:ƆƈoƊƌ-bƎƐŒĄĞ/\\\\*\\\\ ƉƋntƢƠ\\\\//smƀlĞ(Ʈx-width\\\\Ğ 599px\\\\ľĘłĖfooŶũaŹŻŽ-ǈoėŮvŜĖbĴǋŸźżžǙrǔēş:ĖŀĤt:_40ǁŅģ_qǪ36ǮĹĻrVƀĉǥā/ǷļǺǕĕǾȀǹǻęvňĖȆȂǣŜ\\\\.ĖexpļǩŷǍǝǐȔȖrtǿĺļŵğȑƪȆsȑmoduleȑcŴħaȵǽdėbbȷǿƄsĥǛȚǏžűųȿaėųeǪ1ǭx/ŲrgɋcƀcĶǙsȰ Ʃ 2ǃ/naƋdȼ__3chǚ\\\\#0f0/ɧ6ɪɬɮɯɰɱɒǙǥgǙĶ34\\\\,Ƣ1ɟʄ 6ʂʈ0ȑ3ɠhsŲ:ʑŲĶŤʍʈ1ʏ.ʍ%ʃʅ8ȑʞʠ 1ɠĹĺSɫdowǪʍʦ1ǁʅ5ʴ ŻʷɻĦ(ʙʾʠ.ɟ)ʃʱ24ʷ38ˈʺɾʼʿ,ʙȑ1ʂľfunc:ȆĶČƢlightnĢȩ(5ʤ˃ľƇȆȼ˭șǎǞƔǸƓemptyƼ˵˷˹Ōƨɜ ˼˸ũǖƞɝƤƌƨơƫoverrƷɋȌȾɁ˱ǐɅƅǅv5̇ơ ǧ̋ƪ˝Ɵ̢̠ɜ̌Ǣȉ6̟Ƣ̨ƩƟ̦̯ị̄řdƪɝ̰̪ʩlʫaʭwŌ_ʱ1ʳǂʦʶ͈ʹ͈ʻĶˏˑˁǃ˄Ƣˆˈˊ͈3ˌɿʽ͔ːˀ˓ʨǉ̾ʬʮśʰʅ͇ʵʷ͌Ƣ͎͟͝ͱȑ˂͔ɞˇ͙͘Ƣ͚͍ˍ͏͑͞͡ľ̽̿́ăŞ̵̹̩̹̌́Ƣ͉ͪͬͅ7͛ˎͿˀʹ͟Ͷ͗ˋͼ͐͜͠˔ȡʪ̡̝̮ͥ͂Ί̱Ώʷ1͊Ƣͭ ͯΟʄ͒˃Ι͖͸ΜͮͽͰˏ˒Ρ΃Τă̭̈́ͩάήʸΓΝΕͱ͑Θ˅ͷͺ͹ ͻλΞΖδ΁΢ͤ̀ͦv7Χ̻ƪΫ͈έΒΔ;ύΗ͓ηϑϔϓϕαμγοɠǧƒŢǞŧ̅Ĵ-uą˰ź392-ŷĳrϾ1/ЇϽuňįЁ-ЃЅЍЉЏɡoĤ̎̐̒dę̚ŵБǌǎД-nК-М̑̓ƈȾɲąУǜГЄ-ЋįĝвɂЦиЌaƂƘg˳ļ:кХеƮрbтȆ/ŢДŧпŒыуrхІФǝ68ІђсѕЌϼіцњќЖѡƘackŏo˗ɥѤŻћјѩѫѭѯѨgĻǙưѱ7ѳŷѺoѼ/йѴɂѿќɈС̗ѥЮɆɐogoѕїВ҉-ĻғѠboƴ˭ѾѳҝҟȢǡtwǊҗѳҧǓƹŐҍѲќҮeĊoˤҰҘҶŊĢ̐̏ɥҪќĀɚrҾŎŐnҸѳŏҴnŎѻƀӉќ҂҄ӓƀĥnĂПfaȮȘљұ-ӕlӗәeӛӝӎ҃ӖaӘ-ӚӜlĤЀӟҘӢӤӮӦӰӲөѼӷӯӝ-ňӀӡӏӣӬӥӧӱԁӼӫӭӿԊŜԃӶԇӸԉĤ3ԌԆԎӹԀ̞ԒԅӾԜԊ5ԙԡԖ-̭ԟӪԚԈӺԨԥԔԏĤϠԪӽԱԢԳ/fƎmӑǑԼԺԼжԾԻƕжՁՆԂӴѳՅmԋՍГՄՂԘՐŠԃՕՈՎԞՋќՐԤՐԩ՜ԿՆ6ЌixūԃmէǾƙƏƑԃծƛėƚőՃձյŒЋШЛ̏ЬПҏŴԾռЪվОРЯϹћ,zgҰ235-֍/HĎВ֐֖֒/OB֏֑-֝/VE֤֟֒֜Պг֙֡2֣j֦-Vj֜HֱOH֕՛֫֠HԤaǲ֘֠׀֣NֱVN֣MׇM/AOֱ׏ׁ֕ӟ֬Hq֜Ֆו֠O4֕Ȼׂ֚b֜PַP֕ʯס-HŘnנכ֒׮Ɵ$Qֱ\\\\״ėDֱbD׳Ӟּ֒׷ȠqĎѱ֬؄/x֞؆֠؊׳̭،؁$եgJҖװӡJ؉ֱɏlYֱ؞Ժֱf/uzؗ؀Ͼz҅KֱaK҅Դؘa7إfֱuؤsWֱػ/TZֱـ҅؟תaY/IIֱي/iְתُ/zGֱٔ/Dkֱٙ/X֥תٞى0بɂ֬Iɱw׿٥֠٩ɡ˙ת˘َفّZ/Zץؑ-ٷ/MաةٽċX٤ǎ֬rX/dؼתډǿ׺תc׽M٣ٹڒ֣٣תVɱCؘ֗ڛėحתbذYӳةڤ/؟ٹوtؐ҇ڄ֠ڬ/KRֱڳ/Fٚתڸ/pѣڮź֬ڽƬ׺ٹs׽gاٹۈ֣hׇhƆɋٹ̏ė֎ٹы/Bؼٹۙ/Wًٹ۞/CھתَۣŜٹiԘtvڃۀڰvюţ֑,ڹӟ6۸-k۲۸6,Ţ81۾Rؖѱ19ž܄ٶLҰ܇žZLǿ̞܆܈ƈԤŢ܎;}"
+"
 `;
 
 exports[`ConfigTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
@@ -3493,13 +3493,15 @@ exports[`ConfigTestCases css css-modules-no-space exported tests should allow to
 	}
 }
 
-head{--webpack-use-style_js:no-space:__style_module_css-no-space/class:__style_module_css-class/hash:__style_module_css-hash/&\\\\.\\\\/style\\\\.module\\\\.css;}"
+"
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
+  "class": "_style_module_css_as-is-class",
+  "default": "_style_module_css_as-is-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
@@ -3507,12 +3509,53 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
+Object {
+  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "856-btn-info_is-disabled",
+  "class": "856-class",
+  "default": "856-default",
+  "foo": "bar",
+  "foo_bar": "856-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "856-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 3`] = `
+Object {
+  "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
+  "class": "_style_module_css_as-is-class",
+  "default": "_style_module_css_as-is-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
+Object {
+  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "856-btn-info_is-disabled",
+  "class": "856-class",
+  "default": "856-default",
+  "foo": "bar",
+  "foo_bar": "856-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "856-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "_style_module_css_camel-case-class",
+  "default": "_style_module_css_camel-case-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-foo_bar",
   "foo_bar": "_style_module_css_camel-case-foo_bar",
@@ -3522,70 +3565,31 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
 Object {
-  "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
+  "class": "612-class",
+  "default": "612-default",
   "foo": "bar",
-  "fooBar": "_style_module_css_camel-case-only-fooBar",
+  "fooBar": "612-foo_bar",
+  "foo_bar": "612-foo_bar",
+  "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "_style_module_css_camel-case-only-simple",
+  "simple": "612-simple",
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 4`] = `
-Object {
-  "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_dashes-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "_style_module_css_dashes-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
-Object {
-  "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_dashes-only-foo_bar",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "_style_module_css_dashes-only-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
-Object {
-  "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "FOO": "bar",
-  "FOO_BAR": "_style_module_css_upper-FOO_BAR",
-  "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "_style_module_css_upper-SIMPLE",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
-Object {
-  "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_as-is-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "_style_module_css_as-is-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 3`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "_style_module_css_camel-case-class",
+  "default": "_style_module_css_camel-case-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-foo_bar",
   "foo_bar": "_style_module_css_camel-case-foo_bar",
@@ -3595,10 +3599,29 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
+Object {
+  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
+  "class": "612-class",
+  "default": "612-default",
+  "foo": "bar",
+  "fooBar": "612-foo_bar",
+  "foo_bar": "612-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "612-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 1`] = `
 Object {
   "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "_style_module_css_camel-case-only-class",
+  "default": "_style_module_css_camel-case-only-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-only-fooBar",
   "myBtnInfoIsDisabled": "value",
@@ -3606,12 +3629,53 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 10`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
+Object {
+  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
+  "class": "999-class",
+  "default": "999-default",
+  "foo": "bar",
+  "fooBar": "999-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "999-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 3`] = `
+Object {
+  "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "_style_module_css_camel-case-only-class",
+  "default": "_style_module_css_camel-case-only-default",
+  "foo": "bar",
+  "fooBar": "_style_module_css_camel-case-only-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "_style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
+Object {
+  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
+  "class": "999-class",
+  "default": "999-default",
+  "foo": "bar",
+  "fooBar": "999-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "999-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
   "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
   "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "_style_module_css_dashes-class",
+  "default": "_style_module_css_dashes-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
@@ -3620,10 +3684,60 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
+Object {
+  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
+  "class": "883-class",
+  "default": "883-default",
+  "foo": "bar",
+  "foo_bar": "883-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "883-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 3`] = `
+Object {
+  "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "_style_module_css_dashes-class",
+  "default": "_style_module_css_dashes-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "_style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
+Object {
+  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
+  "class": "883-class",
+  "default": "883-default",
+  "foo": "bar",
+  "foo_bar": "883-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "883-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 1`] = `
 Object {
   "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
   "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "_style_module_css_dashes-only-class",
+  "default": "_style_module_css_dashes-only-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
@@ -3631,14 +3745,94 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
+Object {
+  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
+  "class": "882-class",
+  "default": "882-default",
+  "foo": "bar",
+  "foo_bar": "882-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "882-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 3`] = `
+Object {
+  "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "_style_module_css_dashes-only-class",
+  "default": "_style_module_css_dashes-only-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "_style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
+Object {
+  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
+  "class": "882-class",
+  "default": "882-default",
+  "foo": "bar",
+  "foo_bar": "882-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "882-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 1`] = `
 Object {
   "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
   "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "_style_module_css_upper-CLASS",
+  "DEFAULT": "_style_module_css_upper-DEFAULT",
   "FOO": "bar",
   "FOO_BAR": "_style_module_css_upper-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
   "SIMPLE": "_style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
+  "CLASS": "133-CLASS",
+  "DEFAULT": "133-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "133-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "133-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 3`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "_style_module_css_upper-CLASS",
+  "DEFAULT": "_style_module_css_upper-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "_style_module_css_upper-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "_style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
+  "CLASS": "133-CLASS",
+  "DEFAULT": "133-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "133-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "133-SIMPLE",
 }
 `;
 
@@ -5632,7 +5826,7 @@ body {
 	background: red;
 }
 
-head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/import\\\\/external\\\\.css,\\\\/\\\\/example\\\\.com\\\\/style\\\\.css,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto,https\\\\:\\\\/\\\\/fonts\\\\.googleapis\\\\.com\\\\/css\\\\?family\\\\=Noto\\\\+Sans\\\\+TC\\\\|Roboto\\\\?foo\\\\=1,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/import\\\\/external2\\\\.css,external-1\\\\.css,external-2\\\\.css,external-3\\\\.css,external-4\\\\.css,external-5\\\\.css,external-6\\\\.css,external-7\\\\.css,external-8\\\\.css,external-9\\\\.css,external-10\\\\.css,external-11\\\\.css,external-12\\\\.css,external-13\\\\.css,external-14\\\\.css,&\\\\.\\\\/node_modules\\\\/style-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/main-field\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/package-with-exports\\\\/style\\\\.css,&\\\\.\\\\/extensions-imported\\\\.mycss,&\\\\.\\\\/file\\\\.less,&\\\\.\\\\/with-less-import\\\\.css,&\\\\.\\\\/prefer-relative\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style\\\\/default\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-mode\\\\/mode\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-subpath-extra\\\\/dist\\\\/custom\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-less\\\\/default\\\\.less,&\\\\.\\\\/node_modules\\\\/condition-names-custom-name\\\\/custom-name\\\\.css,&\\\\.\\\\/node_modules\\\\/style-and-main-library\\\\/styles\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-webpack\\\\/webpack\\\\.css,&\\\\.\\\\/node_modules\\\\/condition-names-style-nested\\\\/default\\\\.css,&\\\\.\\\\/style-import\\\\.css,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,&\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,&\\\\.\\\\/imported\\\\.css\\\\?1832,&\\\\.\\\\/imported\\\\.css\\\\?e0bb,&\\\\.\\\\/imported\\\\.css\\\\?769a,&\\\\.\\\\/imported\\\\.css\\\\?d4d6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style2\\\\.css\\\\?cf0d,&\\\\.\\\\/style2\\\\.css\\\\?dfe6,&\\\\.\\\\/style2\\\\.css\\\\?7d49,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?63d2,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1\\\\&bar\\\\=1\\\\#hash\\\\?e75b,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,&\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,&\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,&\\\\.\\\\/styl\\\\'le7\\\\.css,&\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/test\\\\.css,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,&\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?10e0,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/string-loader\\\\.js\\\\?esModule\\\\=false\\\\!\\\\.\\\\/test\\\\.css\\\\?6393,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,&data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\;base64\\\\,YSB7DQogIGNvbG9yOiByZWQ7DQp9,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?1ab5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?19e1,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,&\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,&\\\\.\\\\/style8\\\\.css\\\\?b84b,&\\\\.\\\\/style8\\\\.css\\\\?5dc5,&\\\\.\\\\/style8\\\\.css\\\\?71be,&\\\\.\\\\/style8\\\\.css\\\\?386a,&\\\\.\\\\/style8\\\\.css\\\\?568a,&\\\\.\\\\/style8\\\\.css\\\\?b9af,&\\\\.\\\\/style8\\\\.css\\\\?7300,&\\\\.\\\\/style8\\\\.css\\\\?6efd,&\\\\.\\\\/style8\\\\.css\\\\?288c,&\\\\.\\\\/style8\\\\.css\\\\?1094,&\\\\.\\\\/style8\\\\.css\\\\?38bf,&\\\\.\\\\/style8\\\\.css\\\\?d697,&\\\\.\\\\/style2\\\\.css\\\\?0aae,&\\\\.\\\\/style9\\\\.css\\\\?8e91,&\\\\.\\\\/style9\\\\.css\\\\?71b5,&\\\\.\\\\/style11\\\\.css,&\\\\.\\\\/style12\\\\.css,&\\\\.\\\\/style13\\\\.css,&\\\\.\\\\/style10\\\\.css,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?ef21,&\\\\.\\\\/media-deep-nested\\\\.css,&\\\\.\\\\/media-nested\\\\.css,&\\\\.\\\\/supports-deep-deep-nested\\\\.css,&\\\\.\\\\/supports-deep-nested\\\\.css,&\\\\.\\\\/supports-nested\\\\.css,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?5660,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?9fd1,&\\\\.\\\\/layer-nested\\\\.css,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?af0a,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?4e94,&\\\\.\\\\/all-nested\\\\.css\\\\?c0fa,&\\\\.\\\\/mixed-deep-deep-nested\\\\.css,&\\\\.\\\\/mixed-deep-nested\\\\.css,&\\\\.\\\\/mixed-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?1f16,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?c0a8,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4bce,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?a03f,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?390d,&\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?7047,&\\\\.\\\\/style8\\\\.css\\\\?8af1,&\\\\.\\\\/duplicate-nested\\\\.css,&\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?9cec,&\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?dea4,&\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?4897,&\\\\.\\\\/layer-deep-nested\\\\.css\\\\?4579,&\\\\.\\\\/anonymous-nested\\\\.css\\\\?df05,&\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?55ab,&\\\\.\\\\/all-deep-nested\\\\.css\\\\?1513,&\\\\.\\\\/all-nested\\\\.css\\\\?ccc9,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=6\\\\?ab94,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=7,&\\\\.\\\\/style2\\\\.css\\\\?warning\\\\=8,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown1,&\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=unknown2,&\\\\.\\\\/style2\\\\.css\\\\?unknown3,&\\\\.\\\\/style2\\\\.css\\\\?wrong-order-but-valid\\\\=6,&\\\\.\\\\/style2\\\\.css\\\\?after-namespace,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=1,&\\\\.\\\\/style2\\\\.css\\\\?multiple\\\\=3,&\\\\.\\\\/style2\\\\.css\\\\?strange\\\\=3,&\\\\.\\\\/dark\\\\.css,&\\\\.\\\\/list-of-media-queries\\\\.css,&\\\\.\\\\/circular-nested\\\\.css,&\\\\.\\\\/circular\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -5911,7 +6105,7 @@ body {
 	background: red;
 }
 
-head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -5924,18 +6118,6 @@ Object {
 exports[`ConfigTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
   "placeholder": "144-Oh6j",
-}
-`;
-
-exports[`ConfigTestCases css large-css-head-data-compression exported tests should allow to create css modules: dev 1`] = `
-Object {
-  "placeholder": "my-app-_large_tailwind_module_css-placeholder-gray-700",
-}
-`;
-
-exports[`ConfigTestCases css large-css-head-data-compression exported tests should allow to create css modules: prod 1`] = `
-Object {
-  "placeholder": "658-Oh6j",
 }
 `;
 
@@ -5953,25 +6135,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "b663514f2425ba489b62",
-  "btn-info_is-disabled": "aba8b96a0ac031f537ae",
-  "color-red": "--de89cac8a4c2f23ed3a1",
+  "btn--info_is-disabled_1": "2058b663514f2425ba48",
+  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
+  "color-red": "--0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "d728a7a17547f118b8fe",
+  "foo_bar": "7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "cc02142c55d85df93a2a",
+  "simple": "0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "acd9d8c57311eee97a76-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "acd9d8c57311eee97a76-btn-info_is-disabled",
-  "color-red": "--acd9d8c57311eee97a76-color-red",
+  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "acd9d8c57311eee97a76-foo_bar",
+  "foo_bar": "563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "acd9d8c57311eee97a76-simple",
+  "simple": "563acd9d8c57311eee97-simple",
 }
 `;
 
@@ -6014,10 +6196,10 @@ Object {
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-b49b9b7fd945be4564a4",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ec29062639f5c1130848",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-2ec29062639f5c113084",
   "color-red": "---_style_module_css_uniqueName-id-contenthash-f5073cf3e0954d246c7e",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d31d18648cccfa9d17d2",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-71d31d18648cccfa9d17",
   "my-btn-info_is-disabled": "value",
   "simple": "-_style_module_css_uniqueName-id-contenthash-c93d824ddb3eb05477b2",
 }
@@ -6049,25 +6231,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "b663514f2425ba489b62",
-  "btn-info_is-disabled": "aba8b96a0ac031f537ae",
-  "color-red": "--de89cac8a4c2f23ed3a1",
+  "btn--info_is-disabled_1": "2058b663514f2425ba48",
+  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
+  "color-red": "--0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "d728a7a17547f118b8fe",
+  "foo_bar": "7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "cc02142c55d85df93a2a",
+  "simple": "0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "acd9d8c57311eee97a76-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "acd9d8c57311eee97a76-btn-info_is-disabled",
-  "color-red": "--acd9d8c57311eee97a76-color-red",
+  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "acd9d8c57311eee97a76-foo_bar",
+  "foo_bar": "563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "acd9d8c57311eee97a76-simple",
+  "simple": "563acd9d8c57311eee97-simple",
 }
 `;
 
@@ -6110,10 +6292,10 @@ Object {
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-b49b9b7fd945be4564a4",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ec29062639f5c1130848",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-2ec29062639f5c113084",
   "color-red": "---_style_module_css_uniqueName-id-contenthash-f5073cf3e0954d246c7e",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d31d18648cccfa9d17d2",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-71d31d18648cccfa9d17",
   "my-btn-info_is-disabled": "value",
   "simple": "-_style_module_css_uniqueName-id-contenthash-c93d824ddb3eb05477b2",
 }
@@ -6165,7 +6347,7 @@ Array [
 	background: url(5649e83cc54c4b57bc28.png);
 }
 
-head{--webpack-main:&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -6241,7 +6423,78 @@ Array [
 	unknown: unknown;
 }
 
-head{--webpack-main:primary-color:red/&\\\\.\\\\/export\\\\.modules\\\\.css,a:red/_-b:red/--c:red/__d:red/&\\\\.\\\\/library\\\\.modules\\\\.css,somevalue:red/&\\\\.\\\\/after\\\\.modules\\\\.css,multile-values:red\\\\,\\\\ red\\\\,\\\\ func\\\\(\\\\)/&\\\\.\\\\/vars-1\\\\.modules\\\\.css,class:__style_modules_css-class/nest:__style_modules_css-nest/&\\\\.\\\\/style\\\\.modules\\\\.css;}",
+",
+  "/*!********************************!*\\\\
+  !*** css ./export.modules.css ***!
+  \\\\********************************/
+
+/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./after.modules.css ***!
+  \\\\*******************************/
+
+/*!********************************!*\\\\
+  !*** css ./vars-1.modules.css ***!
+  \\\\********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+
+
+._style_modules_css-class {
+	color: red;
+	background: red;
+}
+
+
+._style_modules_css-class {background: red}
+
+._style_modules_css-class {
+	color: red;
+	color: red;
+	color: red;
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+
+._style_modules_css-class {
+	color: red;
+}
+
+/* TODO fix me */
+/*:import(\\"reexport.modules.css\\") {
+	primary-color: _my_color;
+}
+
+.class {color: primary-color}*/
+
+
+._style_modules_css-class {
+	color:    red, red, func()   ;
+}
+
+._style_modules_css-nest {
+	:import(\\"./export.modules.css\\") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}
+
+",
 ]
 `;
 
@@ -7803,7 +8056,7 @@ div {
 	animation: test 1s, test;
 }
 
-head{--webpack-main:&\\\\.\\\\.\\\\/css-modules\\\\/at-rule-value\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/var-function\\\\.module\\\\.css,&\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -8434,7 +8687,7 @@ div {
 	a211: url(\\\\'img.png\\\\');
 }
 
-head{--webpack-main:\\\\#test,&\\\\.\\\\/nested\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -9076,7 +9329,7 @@ div {
 	a211: url(\\"schema:test\\");
 }
 
-head{--webpack-main:\\\\#test,&\\\\.\\\\/nested\\\\.css,&\\\\.\\\\/style\\\\.css;}",
+",
 ]
 `;
 
@@ -9481,5 +9734,5 @@ exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = 
 	background-image: image-set(/***webpackIgnore:  true***/ url(09a1a1112c577c279435.png) 2x)
 }
 
-head{--webpack-main:&\\\\.\\\\/basic\\\\.css,&\\\\.\\\\/style\\\\.css;}"
+"
 `;

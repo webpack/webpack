@@ -1,4 +1,5 @@
 it("should allow to dynamic import a css module", done => {
+	__non_webpack_require__("./style_module_css.bundle0.js");
 	import("./style.module.css").then(x => {
 		try {
 			expect(x).toEqual(

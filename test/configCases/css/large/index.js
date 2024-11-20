@@ -15,5 +15,8 @@ it("should allow to create css modules", done => {
 });
 
 it("should allow to process tailwind as global css", done => {
+	prod
+		? __non_webpack_require__("./382.bundle1.js")
+	 	: __non_webpack_require__("./tailwind_min_css.bundle0.js");
 	import("./tailwind.min.css").then(() => done(), done);
 });

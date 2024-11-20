@@ -73,16 +73,19 @@ it("should set fetchPriority", () => {
 	const script13 = document.head._children[12];
 	expect(script13._attributes.fetchpriority).toBe("low");
 
+	__non_webpack_require__("./125.js");
 	import(/* webpackFetchPriority: "high" */ "./style.css");
 	expect(document.head._children).toHaveLength(14);
 	const link1 = document.head._children[13];
 	expect(link1._attributes.fetchpriority).toBe("high");
 
+	__non_webpack_require__("./499.js");
 	import("./style-1.css");
 	expect(document.head._children).toHaveLength(15);
 	const link2 = document.head._children[14];
 	expect(link2._attributes.fetchpriority).toBeUndefined();
 
+	__non_webpack_require__("./616.js");
 	import(/* webpackFetchPriority: "low" */ "./style-2.css");
 	expect(document.head._children).toHaveLength(16);
 	const link3 = document.head._children[15];
