@@ -168,6 +168,18 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
+				library: path.resolve(testPath, "../0-create-library/true-iife-umd.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("true-iife-umd")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
 				library: path.resolve(testPath, "../0-create-library/false-iife-umd.js")
 			}
 		},
@@ -180,12 +192,15 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(testPath, "../0-create-library/true-iife-umd.js")
+				library: path.resolve(
+					testPath,
+					"../0-create-library/false-iife-umd2.js"
+				)
 			}
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				NAME: JSON.stringify("true-iife-umd")
+				NAME: JSON.stringify("false-iife-umd2")
 			})
 		]
 	},

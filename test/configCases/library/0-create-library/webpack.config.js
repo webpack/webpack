@@ -155,22 +155,6 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
-			uniqueName: "false-iife-umd",
-			filename: "false-iife-umd.js",
-			library: {
-				type: "umd"
-			},
-			iife: false
-		},
-		resolve: {
-			alias: {
-				external: "./non-external"
-			}
-		},
-		ignoreWarnings: [error => error.name === "FalseIifeUmdWarning"]
-	},
-	{
-		output: {
 			uniqueName: "true-iife-umd",
 			filename: "true-iife-umd.js",
 			library: {
@@ -183,6 +167,38 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external"
 			}
 		}
+	},
+	{
+		output: {
+			uniqueName: "false-iife-umd",
+			filename: "false-iife-umd.js",
+			library: {
+				type: "umd"
+			},
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
+	},
+	{
+		output: {
+			uniqueName: "false-iife-umd2",
+			filename: "false-iife-umd2.js",
+			library: {
+				type: "umd2"
+			},
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
 	},
 	{
 		output: {

@@ -385,8 +385,8 @@ it("should emit warning when 'output.iife'=false is used with 'output.library.ty
 		  "errors": Array [],
 		  "warnings": Array [
 		    Object {
-		      "message": "configuration\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
-		      "stack": "FalseIifeUmdWarning: configuration\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
+		      "message": "Configuration:\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
+		      "stack": "FalseIIFEUmdWarning: Configuration:\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
 		    },
 		  ],
 		}
