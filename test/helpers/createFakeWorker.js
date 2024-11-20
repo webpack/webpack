@@ -1,5 +1,4 @@
 const path = require("path");
-const url = require("url");
 
 module.exports = ({ outputDirectory }) =>
 	class Worker {
@@ -15,13 +14,8 @@ module.exports = ({ outputDirectory }) =>
 
 			this.url = resource;
 			const file = isFileURL
-				? url.fileURLToPath(resource)
-				: resource.pathname.slice(6);
-
-			console.log(resource);
-			console.log(this.url);
-			console.log(file);
-			console.log(JSON.stringify(path.resolve(outputDirectory, file)));
+				? resource
+				: path.resolve(outputDirectory, resource.pathname.slice(6));
 
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");
@@ -32,7 +26,7 @@ global.self = global;
 self.URL = URL;
 self.location = new URL(${JSON.stringify(resource.toString())});
 const urlToPath = url => {
-  if (/file:/.test(url)) return fileURLToPath(url);
+  if (/^file:/i.test(url)) return fileURLToPath(url);
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
 };
@@ -72,7 +66,7 @@ self.postMessage = data => {
 	parentPort.postMessage(data);
 };
 if (${options.type === "module"}) {
-	import(${JSON.stringify(path.resolve(outputDirectory, file))}).then(() => {
+	import(${JSON.stringify(file)}).then(() => {
 		parentPort.on("message", data => {
 			if(self.onmessage) self.onmessage({
 				data
@@ -85,7 +79,7 @@ if (${options.type === "module"}) {
 			data
 		});
 	});
-	require(${JSON.stringify(path.resolve(outputDirectory, file))});
+	require(${JSON.stringify(file)});
 }
 `;
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
