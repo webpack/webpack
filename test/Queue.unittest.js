@@ -2,9 +2,11 @@ const Queue = require("../lib/util/Queue");
 
 describe("Queue", () => {
 	it("constructor", () => {
-		const q = new Queue(["item1", "item2", "item3"]);
+		const q = new Queue();
 
 		q.enqueue("item1");
+		q.enqueue("item2");
+		q.enqueue("item3");
 
 		expect(q.dequeue()).toBe("item1");
 		expect(q.dequeue()).toBe("item2");
