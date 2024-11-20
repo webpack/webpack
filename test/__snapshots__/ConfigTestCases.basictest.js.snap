@@ -3283,6 +3283,180 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "UsedClassName": "_identifiers_module_css-UsedClassName",
+  "VARS": "--_style_module_css-LOCAL-COLOR _style_module_css-VARS undefined _style_module_css-globalVarsUpperCase",
+  "animation": "_style_module_css-animation",
+  "animationName": "_style_module_css-animationName",
+  "class": "_style_module_css-class",
+  "classInContainer": "_style_module_css-class-in-container",
+  "classLocalScope": "_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "_style_module_my-css-myCssClass",
+  "currentWmultiParams": "_style_module_css-local12",
+  "deepClassInContainer": "_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "_style_module_css-displayFlexInSupportsInMediaUpperCase",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "_style_module_css-local14",
+  "global": undefined,
+  "hasWmultiParams": "_style_module_css-local11",
+  "ident": "_style_module_css-ident",
+  "inLocalGlobalScope": "_style_module_css-in-local-global-scope",
+  "inSupportScope": "_style_module_css-inSupportScope",
+  "isWmultiParams": "_style_module_css-local8",
+  "keyframes": "_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "_style_module_css-localkeyframesUPPERCASE",
+  "local": "_style_module_css-local1 _style_module_css-local2 _style_module_css-local3 _style_module_css-local4",
+  "local2": "_style_module_css-local5 _style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "_style_module_css-local9",
+  "media": "_style_module_css-wideScreenClass",
+  "mediaInSupports": "_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "_style_module_css-narrowScreenClass",
+  "mozAnimationName": "_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "_style_module_css-local15",
+  "myColor": "--_style_module_css-my-color",
+  "nested": "_style_module_css-nested1 undefined _style_module_css-nested3",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "_style_module_css-local7",
+  "paddingLg": "_style_module_css-padding-lg",
+  "paddingSm": "_style_module_css-padding-sm",
+  "pastWmultiParams": "_style_module_css-local13",
+  "supports": "_style_module_css-displayGridInSupports",
+  "supportsInMedia": "_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "_style_module_css-floatRightInNegativeSupports",
+  "vars": "--_style_module_css-local-color _style_module_css-vars undefined _style_module_css-globalVars",
+  "webkitAnyWmultiParams": "_style_module_css-local16",
+  "whereWmultiParams": "_style_module_css-local10",
+}
+`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to create css modules: prod 2`] = `
+Object {
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "exportLocalVarsShouldCleanup": "false false",
+  "futureWmultiParams": "my-app-235-Hb",
+  "global": undefined,
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "notAValidCssModuleExtension": true,
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
+}
+`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"_style_module_css-class"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"my-app-235-zg"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"my-app-235-zg"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"_style_module_css-local1"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"my-app-235-Hi"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"my-app-235-Hi"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"_style_module_css-local2"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"my-app-235-OB"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"my-app-235-OB"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"_style_module_css-local3"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"my-app-235-VE"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"my-app-235-VE"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"_style_module_css-local4"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
+
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
+
 exports[`ConfigTestCases css css-modules-no-space exported tests should allow to create css modules 1`] = `
 Object {
   "class": "_style_module_css-class",
@@ -3322,10 +3496,12 @@ exports[`ConfigTestCases css css-modules-no-space exported tests should allow to
 "
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
+  "class": "_style_module_css_as-is-class",
+  "default": "_style_module_css_as-is-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
@@ -3333,12 +3509,53 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
+Object {
+  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "856-btn-info_is-disabled",
+  "class": "856-class",
+  "default": "856-default",
+  "foo": "bar",
+  "foo_bar": "856-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "856-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 3`] = `
+Object {
+  "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
+  "class": "_style_module_css_as-is-class",
+  "default": "_style_module_css_as-is-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
+Object {
+  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "856-btn-info_is-disabled",
+  "class": "856-class",
+  "default": "856-default",
+  "foo": "bar",
+  "foo_bar": "856-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "856-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "_style_module_css_camel-case-class",
+  "default": "_style_module_css_camel-case-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-foo_bar",
   "foo_bar": "_style_module_css_camel-case-foo_bar",
@@ -3348,70 +3565,31 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
 Object {
-  "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
+  "class": "612-class",
+  "default": "612-default",
   "foo": "bar",
-  "fooBar": "_style_module_css_camel-case-only-fooBar",
+  "fooBar": "612-foo_bar",
+  "foo_bar": "612-foo_bar",
+  "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "_style_module_css_camel-case-only-simple",
+  "simple": "612-simple",
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 4`] = `
-Object {
-  "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_dashes-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "_style_module_css_dashes-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
-Object {
-  "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_dashes-only-foo_bar",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "_style_module_css_dashes-only-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
-Object {
-  "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "FOO": "bar",
-  "FOO_BAR": "_style_module_css_upper-FOO_BAR",
-  "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "_style_module_css_upper-SIMPLE",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
-Object {
-  "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_style_module_css_as-is-btn-info_is-disabled",
-  "foo": "bar",
-  "foo_bar": "_style_module_css_as-is-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "_style_module_css_as-is-simple",
-}
-`;
-
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 3`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_camel-case-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled": "_style_module_css_camel-case-btn-info_is-disabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "_style_module_css_camel-case-class",
+  "default": "_style_module_css_camel-case-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-foo_bar",
   "foo_bar": "_style_module_css_camel-case-foo_bar",
@@ -3421,10 +3599,29 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
+Object {
+  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
+  "class": "612-class",
+  "default": "612-default",
+  "foo": "bar",
+  "fooBar": "612-foo_bar",
+  "foo_bar": "612-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "612-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 1`] = `
 Object {
   "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
   "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "_style_module_css_camel-case-only-class",
+  "default": "_style_module_css_camel-case-only-default",
   "foo": "bar",
   "fooBar": "_style_module_css_camel-case-only-fooBar",
   "myBtnInfoIsDisabled": "value",
@@ -3432,12 +3629,53 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 10`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
+Object {
+  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
+  "class": "999-class",
+  "default": "999-default",
+  "foo": "bar",
+  "fooBar": "999-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "999-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 3`] = `
+Object {
+  "btnInfoIsDisabled": "_style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "_style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "_style_module_css_camel-case-only-class",
+  "default": "_style_module_css_camel-case-only-default",
+  "foo": "bar",
+  "fooBar": "_style_module_css_camel-case-only-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "_style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
+Object {
+  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
+  "class": "999-class",
+  "default": "999-default",
+  "foo": "bar",
+  "fooBar": "999-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "999-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
   "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
   "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "_style_module_css_dashes-class",
+  "default": "_style_module_css_dashes-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
@@ -3446,10 +3684,60 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
+Object {
+  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
+  "class": "883-class",
+  "default": "883-default",
+  "foo": "bar",
+  "foo_bar": "883-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "883-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 3`] = `
+Object {
+  "btn--info_is-disabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "_style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "_style_module_css_dashes-class",
+  "default": "_style_module_css_dashes-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "_style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
+Object {
+  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
+  "class": "883-class",
+  "default": "883-default",
+  "foo": "bar",
+  "foo_bar": "883-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "883-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 1`] = `
 Object {
   "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
   "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "_style_module_css_dashes-only-class",
+  "default": "_style_module_css_dashes-only-default",
   "foo": "bar",
   "foo_bar": "_style_module_css_dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
@@ -3457,14 +3745,94 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
+Object {
+  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
+  "class": "882-class",
+  "default": "882-default",
+  "foo": "bar",
+  "foo_bar": "882-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "882-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 3`] = `
+Object {
+  "btnInfo_isDisabled": "_style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "_style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "_style_module_css_dashes-only-class",
+  "default": "_style_module_css_dashes-only-default",
+  "foo": "bar",
+  "foo_bar": "_style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "_style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
+Object {
+  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
+  "class": "882-class",
+  "default": "882-default",
+  "foo": "bar",
+  "foo_bar": "882-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "882-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 1`] = `
 Object {
   "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
   "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "_style_module_css_upper-CLASS",
+  "DEFAULT": "_style_module_css_upper-DEFAULT",
   "FOO": "bar",
   "FOO_BAR": "_style_module_css_upper-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
   "SIMPLE": "_style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
+  "CLASS": "133-CLASS",
+  "DEFAULT": "133-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "133-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "133-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 3`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "_style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "_style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "_style_module_css_upper-CLASS",
+  "DEFAULT": "_style_module_css_upper-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "_style_module_css_upper-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "_style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
+  "CLASS": "133-CLASS",
+  "DEFAULT": "133-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "133-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "133-SIMPLE",
 }
 `;
 
@@ -5767,25 +6135,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "b663514f2425ba489b62",
-  "btn-info_is-disabled": "aba8b96a0ac031f537ae",
-  "color-red": "--de89cac8a4c2f23ed3a1",
+  "btn--info_is-disabled_1": "2058b663514f2425ba48",
+  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
+  "color-red": "--0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "d728a7a17547f118b8fe",
+  "foo_bar": "7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "cc02142c55d85df93a2a",
+  "simple": "0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "acd9d8c57311eee97a76-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "acd9d8c57311eee97a76-btn-info_is-disabled",
-  "color-red": "--acd9d8c57311eee97a76-color-red",
+  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "acd9d8c57311eee97a76-foo_bar",
+  "foo_bar": "563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "acd9d8c57311eee97a76-simple",
+  "simple": "563acd9d8c57311eee97-simple",
 }
 `;
 
@@ -5828,10 +6196,10 @@ Object {
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-b49b9b7fd945be4564a4",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ec29062639f5c1130848",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-2ec29062639f5c113084",
   "color-red": "---_style_module_css_uniqueName-id-contenthash-f5073cf3e0954d246c7e",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d31d18648cccfa9d17d2",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-71d31d18648cccfa9d17",
   "my-btn-info_is-disabled": "value",
   "simple": "-_style_module_css_uniqueName-id-contenthash-c93d824ddb3eb05477b2",
 }
@@ -5863,25 +6231,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "b663514f2425ba489b62",
-  "btn-info_is-disabled": "aba8b96a0ac031f537ae",
-  "color-red": "--de89cac8a4c2f23ed3a1",
+  "btn--info_is-disabled_1": "2058b663514f2425ba48",
+  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
+  "color-red": "--0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "d728a7a17547f118b8fe",
+  "foo_bar": "7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "cc02142c55d85df93a2a",
+  "simple": "0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "acd9d8c57311eee97a76-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "acd9d8c57311eee97a76-btn-info_is-disabled",
-  "color-red": "--acd9d8c57311eee97a76-color-red",
+  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "acd9d8c57311eee97a76-foo_bar",
+  "foo_bar": "563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "acd9d8c57311eee97a76-simple",
+  "simple": "563acd9d8c57311eee97-simple",
 }
 `;
 
@@ -5924,10 +6292,10 @@ Object {
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
 Object {
   "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-b49b9b7fd945be4564a4",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ec29062639f5c1130848",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-2ec29062639f5c113084",
   "color-red": "---_style_module_css_uniqueName-id-contenthash-f5073cf3e0954d246c7e",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d31d18648cccfa9d17d2",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-71d31d18648cccfa9d17",
   "my-btn-info_is-disabled": "value",
   "simple": "-_style_module_css_uniqueName-id-contenthash-c93d824ddb3eb05477b2",
 }
