@@ -44,7 +44,7 @@ module.exports = {
 						data[`${name}Index`] = text;
 					}
 					expect(data).toEqual({
-						dynamicIndex: "0: css ./a.css",
+						dynamicIndex: "0: css ./a.css, 1: css ./b.css",
 						mainIndex: "0: ./index.js"
 					});
 				});
