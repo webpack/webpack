@@ -500,10 +500,6 @@
         }
       }
     },
-    "CssHeadDataCompression": {
-      "description": "Compress the data in the head tag of CSS files.",
-      "type": "boolean"
-    },
     "CssModuleGeneratorOptions": {
       "description": "Generator options for css/module modules.",
       "type": "object",
@@ -3369,9 +3365,6 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
-        "cssHeadDataCompression": {
-          "$ref": "#/definitions/CssHeadDataCompression"
-        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3577,9 +3570,6 @@
         },
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
-        },
-        "cssHeadDataCompression": {
-          "$ref": "#/definitions/CssHeadDataCompression"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"

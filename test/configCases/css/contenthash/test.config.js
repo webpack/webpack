@@ -1,49 +1,17 @@
-const fs = require("fs");
-
-let cssBundle;
+const findOutputFiles = require("../../../helpers/findOutputFiles");
 
 module.exports = {
-	findBundle: function (_, options) {
-		const jsBundleRegex = new RegExp(/^bundle\..+\.js$/, "i");
-		const cssBundleRegex = new RegExp(/^bundle\..+\.css$/, "i");
-		const asyncRegex = new RegExp(/^async\..+\.js$/, "i");
-		const files = fs.readdirSync(options.output.path);
-		const jsBundle = files.find(file => jsBundleRegex.test(file));
-
-		if (!jsBundle) {
-			throw new Error(
-				`No file found with correct name (regex: ${
-					jsBundleRegex.source
-				}, files: ${files.join(", ")})`
-			);
-		}
-
-		const async = files.find(file => asyncRegex.test(file));
-
-		if (!async) {
-			throw new Error(
-				`No file found with correct name (regex: ${
-					asyncRegex.source
-				}, files: ${files.join(", ")})`
-			);
-		}
-
-		cssBundle = files.find(file => cssBundleRegex.test(file));
-
-		if (!cssBundle) {
-			throw new Error(
-				`No file found with correct name (regex: ${
-					cssBundleRegex.source
-				}, files: ${files.join(", ")})`
-			);
-		}
-
-		return [jsBundle, async];
+	findBundle: function (i, options) {
+		const async1 = findOutputFiles(options, /^async.async_js.+.js/)[0];
+		const async2 = findOutputFiles(options, /^async.async_css.+.js/)[0];
+		const bundle = findOutputFiles(options, /^bundle.+.js/)[0];
+		return [async1, async2, bundle];
 	},
-	moduleScope(scope) {
+	moduleScope(scope, options) {
+		const bundle = findOutputFiles(options, /bundle.+.css/)[0];
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";
-		link.href = cssBundle;
+		link.href = bundle;
 		scope.window.document.head.appendChild(link);
 	}
 };

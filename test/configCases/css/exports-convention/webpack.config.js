@@ -1,5 +1,9 @@
+const webpack = require("../../../../");
+
 const common = {
-	mode: "development",
+	optimization: {
+		chunkIds: "named"
+	},
 	module: {
 		rules: [
 			{
@@ -55,10 +59,42 @@ const common = {
 module.exports = [
 	{
 		...common,
-		target: "web"
+		mode: "development",
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				"process.env.TARGET": JSON.stringify("web")
+			})
+		]
 	},
 	{
 		...common,
-		target: "node"
+		mode: "production",
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				"process.env.TARGET": JSON.stringify("web")
+			})
+		]
+	},
+	{
+		...common,
+		mode: "development",
+		target: "node",
+		plugins: [
+			new webpack.DefinePlugin({
+				"process.env.TARGET": JSON.stringify("node")
+			})
+		]
+	},
+	{
+		...common,
+		mode: "production",
+		target: "node",
+		plugins: [
+			new webpack.DefinePlugin({
+				"process.env.TARGET": JSON.stringify("node")
+			})
+		]
 	}
 ];
