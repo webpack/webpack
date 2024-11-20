@@ -6,7 +6,7 @@ module.exports = ({ outputDirectory }) =>
 		constructor(resource, options = {}) {
 			expect(resource).toBeInstanceOf(URL);
 
-			const isFileURL = /file:/i.test(resource);
+			const isFileURL = /^file:/i.test(resource);
 
 			if (!isFileURL) {
 				expect(resource.origin).toBe("https://test.cases");
@@ -17,6 +17,11 @@ module.exports = ({ outputDirectory }) =>
 			const file = isFileURL
 				? url.fileURLToPath(resource)
 				: resource.pathname.slice(6);
+
+			console.log(resource);
+			console.log(this.url);
+			console.log(file);
+			console.log(JSON.stringify(path.resolve(outputDirectory, file)));
 
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");
