@@ -2471,6 +2471,25 @@ describe("snapshots", () => {
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
+
+	test(
+		"hotUpdateGlobal function",
+		{
+			output: {
+				hotUpdateGlobal: ({ chunk }) => `__myUpdateGlobal_${chunk.id}`
+			}
+		},
+		e => {
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": [Function hotUpdateGlobal],
+		`);
+		}
+	);
 });
 
 it("should result in the same target options for same target", () => {
