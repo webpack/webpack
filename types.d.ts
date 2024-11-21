@@ -14226,6 +14226,7 @@ declare interface SourceMap {
 	sourceRoot?: string;
 	sourcesContent?: string[];
 	names?: string[];
+	debugId?: string;
 }
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
@@ -14258,6 +14259,11 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Indicates whether column mappings should be used (defaults to true).
 	 */
 	columns?: boolean;
+
+	/**
+	 * Emit debug IDs into source and SourceMap.
+	 */
+	debugIds?: boolean;
 
 	/**
 	 * Exclude modules that match the given value from source map generation.

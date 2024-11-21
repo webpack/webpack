@@ -58,6 +58,10 @@
       "description": "Indicates whether column mappings should be used (defaults to true).",
       "type": "boolean"
     },
+    "debugIds": {
+      "description": "Emit debug IDs into source and SourceMap.",
+      "type": "boolean"
+    },
     "exclude": {
       "description": "Exclude modules that match the given value from source map generation.",
       "oneOf": [
