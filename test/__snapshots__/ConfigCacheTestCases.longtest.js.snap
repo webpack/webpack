@@ -1670,7 +1670,7 @@ Object {
   "inLocalGlobalScope": "my-app-235-V0",
   "inSupportScope": "my-app-235-nc",
   "isWmultiParams": "my-app-235-aq",
-  "keyframes": "my-app-235-$t",
+  "keyframes": "my-app-235-\\\\$t",
   "keyframesUPPERCASE": "my-app-235-zG",
   "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
   "local2": "my-app-235-Vj my-app-235-OH",
@@ -1682,7 +1682,7 @@ Object {
   "mozAnimationName": "my-app-235-M6",
   "mozAnyWmultiParams": "my-app-235-OP",
   "myColor": "--my-app-235-rX",
-  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "nested": "my-app-235-nb undefined my-app-235-\\\\$Q",
   "notAValidCssModuleExtension": true,
   "notWmultiParams": "my-app-235-H5",
   "paddingLg": "my-app-235-cD",
@@ -3352,7 +3352,7 @@ Object {
   "inLocalGlobalScope": "my-app-235-V0",
   "inSupportScope": "my-app-235-nc",
   "isWmultiParams": "my-app-235-aq",
-  "keyframes": "my-app-235-$t",
+  "keyframes": "my-app-235-\\\\$t",
   "keyframesUPPERCASE": "my-app-235-zG",
   "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
   "local2": "my-app-235-Vj my-app-235-OH",
@@ -3364,7 +3364,7 @@ Object {
   "mozAnimationName": "my-app-235-M6",
   "mozAnyWmultiParams": "my-app-235-OP",
   "myColor": "--my-app-235-rX",
-  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "nested": "my-app-235-nb undefined my-app-235-\\\\$Q",
   "notAValidCssModuleExtension": true,
   "notWmultiParams": "my-app-235-H5",
   "paddingLg": "my-app-235-cD",
@@ -3400,7 +3400,7 @@ Object {
   "inLocalGlobalScope": "my-app-235-V0",
   "inSupportScope": "my-app-235-nc",
   "isWmultiParams": "my-app-235-aq",
-  "keyframes": "my-app-235-$t",
+  "keyframes": "my-app-235-\\\\$t",
   "keyframesUPPERCASE": "my-app-235-zG",
   "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
   "local2": "my-app-235-Vj my-app-235-OH",
@@ -3412,7 +3412,7 @@ Object {
   "mozAnimationName": "my-app-235-M6",
   "mozAnyWmultiParams": "my-app-235-OP",
   "myColor": "--my-app-235-rX",
-  "nested": "my-app-235-nb undefined my-app-235-$Q",
+  "nested": "my-app-235-nb undefined my-app-235-\\\\$Q",
   "notAValidCssModuleExtension": true,
   "notWmultiParams": "my-app-235-H5",
   "paddingLg": "my-app-235-cD",
@@ -3496,6 +3496,408 @@ exports[`ConfigCacheTestCases css css-modules-no-space exported tests should all
 "
 `;
 
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 1`] = `
+Object {
+  "#": "_style_modules_css-\\\\#",
+  "##": "_style_modules_css-\\\\#\\\\#",
+  "#.#.#": "_style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\#",
+  "#fake-id": "_style_modules_css-\\\\#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.",
+  "-a-b-c-": "_style_modules_css--a-b-c-",
+  "-a0-34a___f": "_style_modules_css--a0-34a___f",
+  ".": "_style_modules_css-\\\\.",
+  "123": "_style_modules_css-123",
+  "1a2b3c": "_style_modules_css-1a2b3c",
+  ":)": "_style_modules_css-\\\\:\\\\)",
+  ":\`(": "_style_modules_css-\\\\:\\\\\`\\\\(",
+  ":hover": "_style_modules_css-\\\\:hover",
+  ":hover:focus:active": "_style_modules_css-\\\\:hover\\\\:focus\\\\:active",
+  "<><<<>><>": "_style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>",
+  "<p>": "_style_modules_css-\\\\<p\\\\>",
+  "?": "_style_modules_css-\\\\?",
+  "@": "_style_modules_css-\\\\@",
+  "B&W?": "_style_modules_css-B\\\\&W\\\\?",
+  "[attr=value]": "_style_modules_css-\\\\[attr\\\\=value\\\\]",
+  "_": "_style_modules_css-_",
+  "_test": "_style_modules_css-_test",
+  "class": "_style_modules_css-class",
+  "className": "_style_modules_css-className",
+  "f!o!o": "_style_modules_css-f\\\\!o\\\\!o",
+  "f'o'o": "_style_modules_css-f\\\\'o\\\\'o",
+  "f*o*o": "_style_modules_css-f\\\\*o\\\\*o",
+  "f+o+o": "_style_modules_css-f\\\\+o\\\\+o",
+  "f/o/o": "_style_modules_css-f\\\\/o\\\\/o",
+  "f@oo": "_style_modules_css-f\\\\@oo",
+  "f\\\\o\\\\o": "_style_modules_css-f\\\\\\\\o\\\\\\\\o",
+  "foo.bar": "_style_modules_css-foo\\\\.bar",
+  "foo/bar": "_style_modules_css-foo\\\\/bar",
+  "foo/bar/baz": "_style_modules_css-foo\\\\/bar\\\\/baz",
+  "foo\\\\bar": "_style_modules_css-foo\\\\\\\\bar",
+  "foo\\\\bar\\\\baz": "_style_modules_css-foo\\\\\\\\bar\\\\\\\\baz",
+  "f~o~o": "_style_modules_css-f\\\\~o\\\\~o",
+  "m_x_@": "_style_modules_css-m_x_\\\\@",
+  "main-bg-color": "--_style_modules_css-main-bg-color",
+  "main-bg-color-@2": "--_style_modules_css-main-bg-color-\\\\@2",
+  "someId": "_style_modules_css-someId",
+  "subClass": "_style_modules_css-subClass",
+  "test": "_style_modules_css-test",
+  "{}": "_style_modules_css-\\\\{\\\\}",
+  "©": "_style_modules_css-©",
+  "“‘’”": "_style_modules_css-“‘’”",
+  "⌘⌥": "_style_modules_css-⌘⌥",
+  "☺☃": "_style_modules_css-☺☃",
+  "♥": "_style_modules_css-♥",
+  "𝄞♪♩♫♬": "_style_modules_css-𝄞♪♩♫♬",
+  "💩": "_style_modules_css-💩",
+  "😍": "_style_modules_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 2`] = `
+Object {
+  "#": "_style_modules_css-\\\\#",
+  "##": "_style_modules_css-\\\\#\\\\#",
+  "#.#.#": "_style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\#",
+  "#fake-id": "_style_modules_css-\\\\#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.",
+  "-a-b-c-": "_style_modules_css--a-b-c-",
+  "-a0-34a___f": "_style_modules_css--a0-34a___f",
+  ".": "_style_modules_css-\\\\.",
+  "123": "_style_modules_css-123",
+  "1a2b3c": "_style_modules_css-1a2b3c",
+  ":)": "_style_modules_css-\\\\:\\\\)",
+  ":\`(": "_style_modules_css-\\\\:\\\\\`\\\\(",
+  ":hover": "_style_modules_css-\\\\:hover",
+  ":hover:focus:active": "_style_modules_css-\\\\:hover\\\\:focus\\\\:active",
+  "<><<<>><>": "_style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>",
+  "<p>": "_style_modules_css-\\\\<p\\\\>",
+  "?": "_style_modules_css-\\\\?",
+  "@": "_style_modules_css-\\\\@",
+  "B&W?": "_style_modules_css-B\\\\&W\\\\?",
+  "[attr=value]": "_style_modules_css-\\\\[attr\\\\=value\\\\]",
+  "_": "_style_modules_css-_",
+  "_test": "_style_modules_css-_test",
+  "class": "_style_modules_css-class",
+  "className": "_style_modules_css-className",
+  "f!o!o": "_style_modules_css-f\\\\!o\\\\!o",
+  "f'o'o": "_style_modules_css-f\\\\'o\\\\'o",
+  "f*o*o": "_style_modules_css-f\\\\*o\\\\*o",
+  "f+o+o": "_style_modules_css-f\\\\+o\\\\+o",
+  "f/o/o": "_style_modules_css-f\\\\/o\\\\/o",
+  "f@oo": "_style_modules_css-f\\\\@oo",
+  "f\\\\o\\\\o": "_style_modules_css-f\\\\\\\\o\\\\\\\\o",
+  "foo.bar": "_style_modules_css-foo\\\\.bar",
+  "foo/bar": "_style_modules_css-foo\\\\/bar",
+  "foo/bar/baz": "_style_modules_css-foo\\\\/bar\\\\/baz",
+  "foo\\\\bar": "_style_modules_css-foo\\\\\\\\bar",
+  "foo\\\\bar\\\\baz": "_style_modules_css-foo\\\\\\\\bar\\\\\\\\baz",
+  "f~o~o": "_style_modules_css-f\\\\~o\\\\~o",
+  "m_x_@": "_style_modules_css-m_x_\\\\@",
+  "main-bg-color": "--_style_modules_css-main-bg-color",
+  "main-bg-color-@2": "--_style_modules_css-main-bg-color-\\\\@2",
+  "someId": "_style_modules_css-someId",
+  "subClass": "_style_modules_css-subClass",
+  "test": "_style_modules_css-test",
+  "{}": "_style_modules_css-\\\\{\\\\}",
+  "©": "_style_modules_css-©",
+  "“‘’”": "_style_modules_css-“‘’”",
+  "⌘⌥": "_style_modules_css-⌘⌥",
+  "☺☃": "_style_modules_css-☺☃",
+  "♥": "_style_modules_css-♥",
+  "𝄞♪♩♫♬": "_style_modules_css-𝄞♪♩♫♬",
+  "💩": "_style_modules_css-💩",
+  "😍": "_style_modules_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: css 1`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+._style_modules_css-class {
+	color: red;
+}
+
+._style_modules_css-class {
+	background: blue;
+}
+
+._style_modules_css-test {
+	background: red;
+}
+
+._style_modules_css-_test {
+	background: blue;
+}
+
+._style_modules_css-className {
+	background: red;
+}
+
+#_style_modules_css-someId {
+	background: green;
+}
+
+._style_modules_css-className ._style_modules_css-subClass {
+	color: green;
+}
+
+#_style_modules_css-someId ._style_modules_css-subClass {
+	color: blue;
+}
+
+._style_modules_css--a0-34a___f {
+	color: red;
+}
+
+._style_modules_css-m_x_\\\\@ {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+._style_modules_css-B\\\\&W\\\\? {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._style_modules_css-\\\\:\\\\\`\\\\( {
+	color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._style_modules_css-1a2b3c {
+	color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_style_modules_css-\\\\#fake-id {
+	color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_style_modules_css--a-b-c- {
+	color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_style_modules_css-© {
+	color: black;
+}
+
+._style_modules_css-♥ { background: lime; }
+._style_modules_css-© { background: lime; }
+._style_modules_css-😍 { background: lime; }
+._style_modules_css-“‘’” { background: lime; }
+._style_modules_css-☺☃ { background: lime; }
+._style_modules_css-⌘⌥ { background: lime; }
+._style_modules_css-𝄞♪♩♫♬ { background: lime; }
+._style_modules_css-💩 { background: lime; }
+._style_modules_css-\\\\? { background: lime; }
+._style_modules_css-\\\\@ { background: lime; }
+._style_modules_css-\\\\. { background: lime; }
+._style_modules_css-\\\\:\\\\) { background: lime; }
+._style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
+._style_modules_css-123 { background: lime; }
+._style_modules_css-1a2b3c { background: lime; }
+._style_modules_css-\\\\<p\\\\> { background: lime; }
+._style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._style_modules_css-\\\\# { background: lime; }
+._style_modules_css-\\\\#\\\\# { background: lime; }
+._style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._style_modules_css-_ { background: lime; }
+._style_modules_css-\\\\{\\\\} { background: lime; }
+._style_modules_css-\\\\#fake-id { background: lime; }
+._style_modules_css-foo\\\\.bar { background: lime; }
+._style_modules_css-\\\\:hover { background: lime; }
+._style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
+._style_modules_css-f\\\\/o\\\\/o { background: lime; }
+._style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+._style_modules_css-f\\\\*o\\\\*o { background: lime; }
+._style_modules_css-f\\\\!o\\\\!o { background: lime; }
+._style_modules_css-f\\\\'o\\\\'o { background: lime; }
+._style_modules_css-f\\\\~o\\\\~o { background: lime; }
+._style_modules_css-f\\\\+o\\\\+o { background: lime; }
+
+._style_modules_css-foo\\\\/bar {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\\\\\bar {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\/bar\\\\/baz {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
+	background: hotpink;
+}
+
+:root {
+	--_style_modules_css-main-bg-color: red;
+	--_style_modules_css-main-bg-color-\\\\@2: blue;
+}
+
+details {
+	background-color: var(--_style_modules_css-main-bg-color);
+	background-color: var(--_style_modules_css-main-bg-color-\\\\@2);
+}
+
+@keyframes _style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
+
+",
+]
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: css 2`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+._style_modules_css-class {
+	color: red;
+}
+
+._style_modules_css-class {
+	background: blue;
+}
+
+._style_modules_css-test {
+	background: red;
+}
+
+._style_modules_css-_test {
+	background: blue;
+}
+
+._style_modules_css-className {
+	background: red;
+}
+
+#_style_modules_css-someId {
+	background: green;
+}
+
+._style_modules_css-className ._style_modules_css-subClass {
+	color: green;
+}
+
+#_style_modules_css-someId ._style_modules_css-subClass {
+	color: blue;
+}
+
+._style_modules_css--a0-34a___f {
+	color: red;
+}
+
+._style_modules_css-m_x_\\\\@ {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+._style_modules_css-B\\\\&W\\\\? {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._style_modules_css-\\\\:\\\\\`\\\\( {
+	color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._style_modules_css-1a2b3c {
+	color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_style_modules_css-\\\\#fake-id {
+	color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_style_modules_css--a-b-c- {
+	color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_style_modules_css-© {
+	color: black;
+}
+
+._style_modules_css-♥ { background: lime; }
+._style_modules_css-© { background: lime; }
+._style_modules_css-😍 { background: lime; }
+._style_modules_css-“‘’” { background: lime; }
+._style_modules_css-☺☃ { background: lime; }
+._style_modules_css-⌘⌥ { background: lime; }
+._style_modules_css-𝄞♪♩♫♬ { background: lime; }
+._style_modules_css-💩 { background: lime; }
+._style_modules_css-\\\\? { background: lime; }
+._style_modules_css-\\\\@ { background: lime; }
+._style_modules_css-\\\\. { background: lime; }
+._style_modules_css-\\\\:\\\\) { background: lime; }
+._style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
+._style_modules_css-123 { background: lime; }
+._style_modules_css-1a2b3c { background: lime; }
+._style_modules_css-\\\\<p\\\\> { background: lime; }
+._style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._style_modules_css-\\\\# { background: lime; }
+._style_modules_css-\\\\#\\\\# { background: lime; }
+._style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._style_modules_css-_ { background: lime; }
+._style_modules_css-\\\\{\\\\} { background: lime; }
+._style_modules_css-\\\\#fake-id { background: lime; }
+._style_modules_css-foo\\\\.bar { background: lime; }
+._style_modules_css-\\\\:hover { background: lime; }
+._style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
+._style_modules_css-f\\\\/o\\\\/o { background: lime; }
+._style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+._style_modules_css-f\\\\*o\\\\*o { background: lime; }
+._style_modules_css-f\\\\!o\\\\!o { background: lime; }
+._style_modules_css-f\\\\'o\\\\'o { background: lime; }
+._style_modules_css-f\\\\~o\\\\~o { background: lime; }
+._style_modules_css-f\\\\+o\\\\+o { background: lime; }
+
+._style_modules_css-foo\\\\/bar {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\\\\\bar {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\/bar\\\\/baz {
+	background: hotpink;
+}
+
+._style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
+	background: hotpink;
+}
+
+:root {
+	--_style_modules_css-main-bg-color: red;
+	--_style_modules_css-main-bg-color-\\\\@2: blue;
+}
+
+details {
+	background-color: var(--_style_modules_css-main-bg-color);
+	background-color: var(--_style_modules_css-main-bg-color-\\\\@2);
+}
+
+@keyframes _style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
+
+",
+]
+`;
+
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",
@@ -3511,14 +3913,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
 Object {
-  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "856-btn-info_is-disabled",
-  "class": "856-class",
-  "default": "856-default",
+  "btn--info_is-disabled_1": "_856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_856-btn-info_is-disabled",
+  "class": "_856-class",
+  "default": "_856-default",
   "foo": "bar",
-  "foo_bar": "856-foo_bar",
+  "foo_bar": "_856-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "856-simple",
+  "simple": "_856-simple",
 }
 `;
 
@@ -3537,14 +3939,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
 Object {
-  "btn--info_is-disabled_1": "856-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "856-btn-info_is-disabled",
-  "class": "856-class",
-  "default": "856-default",
+  "btn--info_is-disabled_1": "_856-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_856-btn-info_is-disabled",
+  "class": "_856-class",
+  "default": "_856-default",
   "foo": "bar",
-  "foo_bar": "856-foo_bar",
+  "foo_bar": "_856-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "856-simple",
+  "simple": "_856-simple",
 }
 `;
 
@@ -3567,18 +3969,18 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
 Object {
-  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "612-btn-info_is-disabled",
-  "btnInfoIsDisabled": "612-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
-  "class": "612-class",
-  "default": "612-default",
+  "btn--info_is-disabled_1": "_612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "_612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "_612-btn--info_is-disabled_1",
+  "class": "_612-class",
+  "default": "_612-default",
   "foo": "bar",
-  "fooBar": "612-foo_bar",
-  "foo_bar": "612-foo_bar",
+  "fooBar": "_612-foo_bar",
+  "foo_bar": "_612-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "612-simple",
+  "simple": "_612-simple",
 }
 `;
 
@@ -3601,18 +4003,18 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
 Object {
-  "btn--info_is-disabled_1": "612-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "612-btn-info_is-disabled",
-  "btnInfoIsDisabled": "612-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "612-btn--info_is-disabled_1",
-  "class": "612-class",
-  "default": "612-default",
+  "btn--info_is-disabled_1": "_612-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_612-btn-info_is-disabled",
+  "btnInfoIsDisabled": "_612-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "_612-btn--info_is-disabled_1",
+  "class": "_612-class",
+  "default": "_612-default",
   "foo": "bar",
-  "fooBar": "612-foo_bar",
-  "foo_bar": "612-foo_bar",
+  "fooBar": "_612-foo_bar",
+  "foo_bar": "_612-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "612-simple",
+  "simple": "_612-simple",
 }
 `;
 
@@ -3631,14 +4033,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
 Object {
-  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
-  "class": "999-class",
-  "default": "999-default",
+  "btnInfoIsDisabled": "_999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "_999-btnInfoIsDisabled1",
+  "class": "_999-class",
+  "default": "_999-default",
   "foo": "bar",
-  "fooBar": "999-fooBar",
+  "fooBar": "_999-fooBar",
   "myBtnInfoIsDisabled": "value",
-  "simple": "999-simple",
+  "simple": "_999-simple",
 }
 `;
 
@@ -3657,14 +4059,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
 Object {
-  "btnInfoIsDisabled": "999-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "999-btnInfoIsDisabled1",
-  "class": "999-class",
-  "default": "999-default",
+  "btnInfoIsDisabled": "_999-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "_999-btnInfoIsDisabled1",
+  "class": "_999-class",
+  "default": "_999-default",
   "foo": "bar",
-  "fooBar": "999-fooBar",
+  "fooBar": "_999-fooBar",
   "myBtnInfoIsDisabled": "value",
-  "simple": "999-simple",
+  "simple": "_999-simple",
 }
 `;
 
@@ -3686,17 +4088,17 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
 Object {
-  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "883-btn-info_is-disabled",
-  "btnInfo_isDisabled": "883-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
-  "class": "883-class",
-  "default": "883-default",
+  "btn--info_is-disabled_1": "_883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "_883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "_883-btn--info_is-disabled_1",
+  "class": "_883-class",
+  "default": "_883-default",
   "foo": "bar",
-  "foo_bar": "883-foo_bar",
+  "foo_bar": "_883-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfo_isDisabled": "value",
-  "simple": "883-simple",
+  "simple": "_883-simple",
 }
 `;
 
@@ -3718,17 +4120,17 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
 Object {
-  "btn--info_is-disabled_1": "883-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "883-btn-info_is-disabled",
-  "btnInfo_isDisabled": "883-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "883-btn--info_is-disabled_1",
-  "class": "883-class",
-  "default": "883-default",
+  "btn--info_is-disabled_1": "_883-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_883-btn-info_is-disabled",
+  "btnInfo_isDisabled": "_883-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "_883-btn--info_is-disabled_1",
+  "class": "_883-class",
+  "default": "_883-default",
   "foo": "bar",
-  "foo_bar": "883-foo_bar",
+  "foo_bar": "_883-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfo_isDisabled": "value",
-  "simple": "883-simple",
+  "simple": "_883-simple",
 }
 `;
 
@@ -3747,14 +4149,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
 Object {
-  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
-  "class": "882-class",
-  "default": "882-default",
+  "btnInfo_isDisabled": "_882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "_882-btnInfo_isDisabled_1",
+  "class": "_882-class",
+  "default": "_882-default",
   "foo": "bar",
-  "foo_bar": "882-foo_bar",
+  "foo_bar": "_882-foo_bar",
   "myBtnInfo_isDisabled": "value",
-  "simple": "882-simple",
+  "simple": "_882-simple",
 }
 `;
 
@@ -3773,14 +4175,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
 Object {
-  "btnInfo_isDisabled": "882-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "882-btnInfo_isDisabled_1",
-  "class": "882-class",
-  "default": "882-default",
+  "btnInfo_isDisabled": "_882-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "_882-btnInfo_isDisabled_1",
+  "class": "_882-class",
+  "default": "_882-default",
   "foo": "bar",
-  "foo_bar": "882-foo_bar",
+  "foo_bar": "_882-foo_bar",
   "myBtnInfo_isDisabled": "value",
-  "simple": "882-simple",
+  "simple": "_882-simple",
 }
 `;
 
@@ -3799,14 +4201,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
-  "CLASS": "133-CLASS",
-  "DEFAULT": "133-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "_133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "_133-BTN-INFO_IS-DISABLED",
+  "CLASS": "_133-CLASS",
+  "DEFAULT": "_133-DEFAULT",
   "FOO": "bar",
-  "FOO_BAR": "133-FOO_BAR",
+  "FOO_BAR": "_133-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "133-SIMPLE",
+  "SIMPLE": "_133-SIMPLE",
 }
 `;
 
@@ -3825,14 +4227,14 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "133-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "133-BTN-INFO_IS-DISABLED",
-  "CLASS": "133-CLASS",
-  "DEFAULT": "133-DEFAULT",
+  "BTN--INFO_IS-DISABLED_1": "_133-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "_133-BTN-INFO_IS-DISABLED",
+  "CLASS": "_133-CLASS",
+  "DEFAULT": "_133-DEFAULT",
   "FOO": "bar",
-  "FOO_BAR": "133-FOO_BAR",
+  "FOO_BAR": "_133-FOO_BAR",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "133-SIMPLE",
+  "SIMPLE": "_133-SIMPLE",
 }
 `;
 
@@ -6117,7 +6519,7 @@ Object {
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "placeholder": "144-Oh6j",
+  "placeholder": "_144-Oh6j",
 }
 `;
 
@@ -6135,61 +6537,61 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "2058b663514f2425ba48",
-  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
-  "color-red": "--0de89cac8a4c2f23ed3a",
+  "btn--info_is-disabled_1": "_2058b663514f2425ba48",
+  "btn-info_is-disabled": "_2aba8b96a0ac031f537a",
+  "color-red": "--_0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "7d728a7a17547f118b8f",
+  "foo_bar": "_7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "0536cc02142c55d85df9",
+  "simple": "_0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
-  "color-red": "--563acd9d8c57311eee97-color-red",
+  "btn--info_is-disabled_1": "_563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--_563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "563acd9d8c57311eee97-foo_bar",
+  "foo_bar": "_563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "563acd9d8c57311eee97-simple",
+  "simple": "_563acd9d8c57311eee97-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 4`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
-  "color-red": "--./style.module__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module__simple",
+  "simple": "\\\\.\\\\/style\\\\.module__simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 5`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
-  "color-red": "--./style.module.css__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.css__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.css__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.css__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.css__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.css__simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
-  "color-red": "--./style.module.css?q#f__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.css?q#f__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?q#f__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__simple",
 }
 `;
 
@@ -6207,13 +6609,13 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
-  "color-red": "--./style.module.less__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.less__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.less__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.less__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.less__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.less__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.less__simple",
 }
 `;
 
@@ -6231,61 +6633,61 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "2058b663514f2425ba48",
-  "btn-info_is-disabled": "2aba8b96a0ac031f537a",
-  "color-red": "--0de89cac8a4c2f23ed3a",
+  "btn--info_is-disabled_1": "_2058b663514f2425ba48",
+  "btn-info_is-disabled": "_2aba8b96a0ac031f537a",
+  "color-red": "--_0de89cac8a4c2f23ed3a",
   "foo": "bar",
-  "foo_bar": "7d728a7a17547f118b8f",
+  "foo_bar": "_7d728a7a17547f118b8f",
   "my-btn-info_is-disabled": "value",
-  "simple": "0536cc02142c55d85df9",
+  "simple": "_0536cc02142c55d85df9",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "563acd9d8c57311eee97-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "563acd9d8c57311eee97-btn-info_is-disabled",
-  "color-red": "--563acd9d8c57311eee97-color-red",
+  "btn--info_is-disabled_1": "_563acd9d8c57311eee97-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_563acd9d8c57311eee97-btn-info_is-disabled",
+  "color-red": "--_563acd9d8c57311eee97-color-red",
   "foo": "bar",
-  "foo_bar": "563acd9d8c57311eee97-foo_bar",
+  "foo_bar": "_563acd9d8c57311eee97-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "563acd9d8c57311eee97-simple",
+  "simple": "_563acd9d8c57311eee97-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
-  "color-red": "--./style.module__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module__simple",
+  "simple": "\\\\.\\\\/style\\\\.module__simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
-  "color-red": "--./style.module.css__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.css__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.css__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.css__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.css__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.css__simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
-  "color-red": "--./style.module.css?q#f__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.css?q#f__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?q#f__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.css\\\\?q\\\\#f__simple",
 }
 `;
 
@@ -6303,13 +6705,13 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
-  "color-red": "--./style.module.less__color-red",
+  "btn--info_is-disabled_1": "\\\\.\\\\/style\\\\.module\\\\.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "\\\\.\\\\/style\\\\.module\\\\.less__btn-info_is-disabled",
+  "color-red": "--\\\\.\\\\/style\\\\.module\\\\.less__color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.less__foo_bar",
+  "foo_bar": "\\\\.\\\\/style\\\\.module\\\\.less__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.less__simple",
+  "simple": "\\\\.\\\\/style\\\\.module\\\\.less__simple",
 }
 `;
 
