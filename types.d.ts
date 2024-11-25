@@ -13496,6 +13496,7 @@ declare abstract class RuntimeTemplate {
 	contentHashReplacement: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
+	isNeutralPlatform(): boolean;
 	supportsConst(): undefined | boolean;
 	supportsArrowFunction(): undefined | boolean;
 	supportsAsyncFunction(): undefined | boolean;
