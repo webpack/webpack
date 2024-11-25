@@ -77,12 +77,6 @@ exports.keepAlive = function (options) {
 			"Problem communicating active modules to the server: " + err.message;
 		console.error(err.message);
 		onError(err);
-
-		// Force reload for critical errors
-		if (module.hot) {
-			console.error("Critical error detected. Forcing reload...");
-			throw new Error("Critical error detected. Forcing reload..."); // Throw an error to trigger a restart
-		}
 	}
 
 	// Handle request errors
