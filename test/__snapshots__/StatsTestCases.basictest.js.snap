@@ -3497,10 +3497,10 @@ cacheable modules X KiB
     |   [no exports]
     |   [no exports used]
     |   Statement (ExpressionStatement) with side effects in source code at 4:0-30
-    | ./node_modules/module-with-export/index.js X KiB [built]
-    |   [only some exports used: smallVar]
     | ./node_modules/big-module/a.js X bytes [built]
     |   [only some exports used: a]
+    | ./node_modules/module-with-export/index.js X KiB [built]
+    |   [only some exports used: smallVar]
   ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
     [used exports unknown]
     ModuleConcatenation bailout: Module is not an ECMAScript module
