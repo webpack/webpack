@@ -1,36 +1,18 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./ComponentA.js":
-/*!***********************!*\
-  !*** ./ComponentA.js ***!
-  \***********************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const react = __webpack_require__(/*! react */ "webpack/sharing/consume/default/react/react");
-
-module.exports = function ComponentA() {
-	return "ComponentA with " + react;
-};
-
-
-/***/ }),
-
-/***/ "./index.js":
+/***/ "./other.js":
 /*!******************!*\
-  !*** ./index.js ***!
+  !*** ./other.js ***!
   \******************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-it("should load shared module eagerly", async () => {
-	const reactValue = __webpack_require__(/*! react */ "webpack/sharing/consume/default/react/react");
-	expect(reactValue).toBe("react-value");
-});
-
-it("should load exposed module that uses shared module", async () => {
-	const ComponentA = __webpack_require__(/*! ./ComponentA */ "./ComponentA.js");
-	expect(ComponentA.default()).toBe("ComponentA with react-value");
-});
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("other");
 
 
 /***/ })
@@ -68,6 +50,18 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	__webpack_require__.c = __webpack_module_cache__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
@@ -83,7 +77,7 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
+/******/ 		// This function allow to reference async chunks and sibling chunks for the entrypoint
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
@@ -93,6 +87,17 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
@@ -143,6 +148,18 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 			if(!promises.length) return initPromises[name] = 1;
 /******/ 			return initPromises[name] = Promise.all(promises).then(() => (initPromises[name] = 1));
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/startup entrypoint */
+/******/ 	(() => {
+/******/ 		__webpack_require__.X = (result, chunkIds, fn) => {
+/******/ 			// arguments: chunkIds, moduleId are deprecated
+/******/ 			var moduleId = chunkIds;
+/******/ 			if(!fn) chunkIds = result, fn = () => (__webpack_require__(__webpack_require__.s = moduleId));
+/******/ 			chunkIds.map(__webpack_require__.e, __webpack_require__)
+/******/ 			var r = fn();
+/******/ 			return r === undefined ? result : r;
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
@@ -328,7 +345,7 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 		// object to store loaded chunks
 /******/ 		// "1" means "loaded", otherwise not loaded yet
 /******/ 		var installedChunks = {
-/******/ 			"main": 1
+/******/ 			"somethingElse": 1
 /******/ 		};
 /******/ 		
 /******/ 		// no on chunks loaded
@@ -356,7 +373,8 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 			}
 /******/ 		};
 /******/ 		
-/******/ 		// no external install chunk
+/******/ 		module.exports = __webpack_require__;
+/******/ 		__webpack_require__.C = installChunk;
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
@@ -365,20 +383,10 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	
 /************************************************************************/
 /******/ 	
-/******/ 	var __webpack_exports__ = Promise.all([
-/******/ 		__webpack_require__.f.consumes || function(chunkId, promises) {},
-/******/ 		__webpack_require__.f.remotes || function(chunkId, promises) {}
-/******/ 	].reduce((p, handler) => (handler("main", p), p), [])).then(function() {
-/******/ 		// module cache are used so entry inlining is disabled
-/******/ 	
-/******/ 		// startup
-/******/ 	
-/******/ 		// Load entry module and return exports
-/******/ 	
-/******/ 		var __webpack_exports__ = __webpack_require__("./index.js");
-/******/ 	
-/******/ 		return __webpack_exports__;
-/******/ 	});
+/******/ 	// module cache are used so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	var __webpack_exports__ = __webpack_require__("./other.js");
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()

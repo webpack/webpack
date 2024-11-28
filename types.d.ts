@@ -2371,6 +2371,15 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 declare interface CompilationHooksModuleFederationPlugin {
 	addContainerEntryDependency: SyncHook<Dependency>;
 	addFederationRuntimeDependency: SyncHook<Dependency>;
+	generateFederationStartup: SyncBailHook<
+		[StartupChunkDependencyParams],
+		boolean
+	>;
+	wrapFederationSource: SyncBailHook<
+		[string | Source, Chunk],
+		null | string | Source
+	>;
+	libraryExport: SyncHook<[Set<string>, Module, Chunk, ExportInfo], boolean>;
 }
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string | void>;
@@ -2957,6 +2966,11 @@ declare class ContainerReferencePlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ContainerReferencePluginOptions {
+	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+
 	/**
 	 * The external type of the remote containers.
 	 */
@@ -8950,6 +8964,11 @@ declare class ModuleFederationPlugin {
 }
 declare interface ModuleFederationPluginOptions {
 	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+
+	/**
 	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
 	 */
 	exposes?: (string | ExposesObject)[] | ExposesObject;
@@ -13963,6 +13982,11 @@ declare class SharePlugin {
  */
 declare interface SharePluginOptions {
 	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+
+	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
@@ -14400,6 +14424,15 @@ declare abstract class StackedMap<K, V> {
 	asMap(): Map<K, Cell<V>>;
 	get size(): number;
 	createChild(): StackedMap<K, V>;
+}
+declare interface StartupChunkDependencyParams {
+	chunkIds: (string | number)[];
+	chunk: Chunk;
+	fn: string;
+	final: boolean;
+	passive: boolean;
+	runtime: string[];
+	EXPORT_PREFIX: string;
 }
 type StartupRenderContext = RenderContextJavascriptModulesPlugin & {
 	inlined: boolean;

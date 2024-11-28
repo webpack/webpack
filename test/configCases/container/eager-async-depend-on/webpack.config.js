@@ -5,7 +5,11 @@ module.exports = [
 	{
 		entry: {
 			main: {
-				import: "./index.js"
+				import: "./index.js",
+				dependOn: ["somethingElse"]
+			},
+			somethingElse: {
+				import: ["./other.js"]
 			}
 		},
 		target: "node",
@@ -21,7 +25,6 @@ module.exports = [
 			new ModuleFederationPlugin({
 				name: "container",
 				filename: "container.js",
-				async: true,
 				exposes: {
 					"./ComponentA": "./ComponentA"
 				},

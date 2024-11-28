@@ -1,37 +1,45 @@
+var container;
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./ComponentA.js":
+/***/ "webpack/container/entry/container":
 /*!***********************!*\
-  !*** ./ComponentA.js ***!
+  !*** container entry ***!
   \***********************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-const react = __webpack_require__(/*! react */ "webpack/sharing/consume/default/react/react");
-
-module.exports = function ComponentA() {
-	return "ComponentA with " + react;
+var moduleMap = {
+	"./ComponentA": () => {
+		return __webpack_require__.e("ComponentA_js").then(() => (() => ((__webpack_require__(/*! ./ComponentA */ "./ComponentA.js")))));
+	}
+};
+var get = (module, getScope) => {
+	__webpack_require__.R = getScope;
+	getScope = (
+		__webpack_require__.o(moduleMap, module)
+			? moduleMap[module]()
+			: Promise.resolve().then(() => {
+				throw new Error('Module "' + module + '" does not exist in container.');
+			})
+	);
+	__webpack_require__.R = undefined;
+	return getScope;
+};
+var init = (shareScope, initScope) => {
+	if (!__webpack_require__.S) return;
+	var name = "default"
+	var oldScope = __webpack_require__.S[name];
+	if(oldScope && oldScope !== shareScope) throw new Error("Container initialization failed as it has already been initialized with a different share scope");
+	__webpack_require__.S[name] = shareScope;
+	return __webpack_require__.I(name, initScope);
 };
 
-
-/***/ }),
-
-/***/ "./index.js":
-/*!******************!*\
-  !*** ./index.js ***!
-  \******************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-it("should load shared module eagerly", async () => {
-	const reactValue = __webpack_require__(/*! react */ "webpack/sharing/consume/default/react/react");
-	expect(reactValue).toBe("react-value");
+// This exports getters to disallow modifications
+__webpack_require__.d(exports, {
+	get: () => (get),
+	init: () => (init)
 });
-
-it("should load exposed module that uses shared module", async () => {
-	const ComponentA = __webpack_require__(/*! ./ComponentA */ "./ComponentA.js");
-	expect(ComponentA.default()).toBe("ComponentA with react-value");
-});
-
 
 /***/ })
 
@@ -68,6 +76,18 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	__webpack_require__.c = __webpack_module_cache__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
@@ -272,19 +292,9 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 		var moduleToHandlerMapping = {
 /******/ 			"webpack/sharing/consume/default/react/react": () => (loadStrictVersion("default", "react", false, [4,0,0,0], () => (__webpack_require__.e("node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js")))))))
 /******/ 		};
-/******/ 		var initialConsumes = ["webpack/sharing/consume/default/react/react"];
-/******/ 		initialConsumes.forEach((id) => {
-/******/ 			__webpack_require__.m[id] = (module) => {
-/******/ 				// Handle case when module is used sync
-/******/ 				installedModules[id] = 0;
-/******/ 				delete __webpack_require__.c[id];
-/******/ 				var factory = moduleToHandlerMapping[id]();
-/******/ 				if(typeof factory !== "function") throw new Error("Shared module is not available for eager consumption: " + id);
-/******/ 				module.exports = factory();
-/******/ 			}
-/******/ 		});
+/******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
-/******/ 			"main": [
+/******/ 			"ComponentA_js": [
 /******/ 				"webpack/sharing/consume/default/react/react"
 /******/ 			]
 /******/ 		};
@@ -328,7 +338,7 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 		// object to store loaded chunks
 /******/ 		// "1" means "loaded", otherwise not loaded yet
 /******/ 		var installedChunks = {
-/******/ 			"main": 1
+/******/ 			"container": 1
 /******/ 		};
 /******/ 		
 /******/ 		// no on chunks loaded
@@ -365,21 +375,11 @@ it("should load exposed module that uses shared module", async () => {
 /******/ 	
 /************************************************************************/
 /******/ 	
-/******/ 	var __webpack_exports__ = Promise.all([
-/******/ 		__webpack_require__.f.consumes || function(chunkId, promises) {},
-/******/ 		__webpack_require__.f.remotes || function(chunkId, promises) {}
-/******/ 	].reduce((p, handler) => (handler("main", p), p), [])).then(function() {
-/******/ 		// module cache are used so entry inlining is disabled
-/******/ 	
-/******/ 		// startup
-/******/ 	
-/******/ 		// Load entry module and return exports
-/******/ 	
-/******/ 		var __webpack_exports__ = __webpack_require__("./index.js");
-/******/ 	
-/******/ 		return __webpack_exports__;
-/******/ 	});
-/******/ 	module.exports = __webpack_exports__;
+/******/ 	// module cache are used so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	var __webpack_exports__ = __webpack_require__("webpack/container/entry/container");
+/******/ 	container = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
