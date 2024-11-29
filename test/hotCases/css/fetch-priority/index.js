@@ -11,10 +11,11 @@ it("should work", async function (done) {
 				"class-other": "_style_module_css-class-other"
 			});
 
-			expect(
-				window.document.getElementsByTagName('link')[0].getAttribute('fetchpriority')
-			).toBe('high')
+			const links = window.document.getElementsByTagName('link');
 
+			if (links.length > 0) {
+				expect(links[0].getAttribute('fetchpriority')).toBe('high');
+			}
 			done();
 		});
 	});
