@@ -4546,7 +4546,7 @@ declare interface ExportSpec {
 	 */
 	hidden?: boolean;
 }
-type ExportedVariableInfo = string | ScopeInfo | VariableInfo;
+type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
 declare abstract class ExportsInfo {
 	get ownedExports(): Iterable<ExportInfo>;
 	get orderedOwnedExports(): Iterable<ExportInfo>;
@@ -6810,7 +6810,7 @@ declare class JavascriptParser extends Parser {
 			| undefined
 			| ((
 					arg0: string,
-					arg1: string | ScopeInfo | VariableInfo,
+					arg1: string | VariableInfo | ScopeInfo,
 					arg2: () => string[]
 			  ) => any),
 		defined: undefined | ((arg0: string) => any),
@@ -7143,6 +7143,7 @@ declare class JavascriptParser extends Parser {
 			| ExportAllDeclarationJavascriptParser
 			| ImportExpressionJavascriptParser
 	) => undefined | ImportAttributes;
+	static VariableInfo: typeof VariableInfo;
 }
 
 /**
@@ -13918,7 +13919,7 @@ declare interface RuntimeValueOptions {
  * to create the range of the _parent node_.
  */
 declare interface ScopeInfo {
-	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
+	definitions: StackedMap<string, VariableInfo | ScopeInfo>;
 	topLevelScope: boolean | "arrow";
 	inShorthand: string | boolean;
 	inTaggedTemplateTag: boolean;
@@ -15249,7 +15250,12 @@ type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[];
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
-declare abstract class VariableInfo {
+declare class VariableInfo {
+	constructor(
+		declaredScope: ScopeInfo,
+		freeName?: string | true,
+		tagInfo?: TagInfo
+	);
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
 	tagInfo?: TagInfo;
