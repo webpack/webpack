@@ -500,4 +500,40 @@ ${details(snapshot)}`)
 			);
 		});
 	});
+
+	describe("getFileHash", () => {
+		const fs = createFs();
+		const fsInfo = createFsInfo(fs);
+		it("should error reporting that memfs root is a directory", done => {
+			fsInfo.getFileHash("/", function (err, hash) {
+				// TODO: getFileHash - maybe "directory" should be err
+				expect(hash).toBe("directory");
+				done();
+			});
+		});
+
+		it("should not error on regular files", done => {
+			fsInfo.getFileHash("/path/file.txt", function (err, hash) {
+				expect(err).toBe(null);
+				expect(hash).not.toBe(null);
+				done();
+			});
+		});
+
+		it("should error on missing files", done => {
+			fsInfo.getFileHash("/this/path/does/not.exist", function (err, hash) {
+				expect(hash).toBe(null);
+				done();
+			});
+		});
+
+		it("should error reporting that system root is a directory", done => {
+			const fs = require("fs");
+			const fsInfo = createFsInfo(fs);
+			fsInfo.getFileHash("/", function (err, hash) {
+				expect(hash).toBe("directory");
+				done();
+			});
+		});
+	});
 });
