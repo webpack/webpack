@@ -1,0 +1,3 @@
+.component::before {
+	content: "component - should be second";
+}
