@@ -97,6 +97,17 @@ const describeCases = config => {
 								new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
+							let testConfig = {};
+							try {
+								// try to load a test file
+								testConfig = Object.assign(
+									testConfig,
+									require(path.join(testDirectory, "test.config.js"))
+								);
+							} catch (_err) {
+								// ignored
+							}
+
 							compiler = webpack(options);
 							compiler.run((err, stats) => {
 								if (err) return done(err);
@@ -139,6 +150,7 @@ const describeCases = config => {
 									return `./${url}`;
 								};
 								const window = {
+									_elements: [],
 									fetch: async url => {
 										try {
 											const buffer = await new Promise((resolve, reject) => {
@@ -169,30 +181,67 @@ const describeCases = config => {
 										createElement(type) {
 											return {
 												_type: type,
-												_attrs: {},
+												sheet: {},
+												getAttribute(name) {
+													return this[name];
+												},
 												setAttribute(name, value) {
-													this._attrs[name] = value;
+													this[name] = value;
+												},
+												removeAttribute(name) {
+													delete this[name];
 												},
 												parentNode: {
 													removeChild(node) {
-														// ok
+														window._elements = window._elements.filter(
+															item => item !== node
+														);
 													}
 												}
 											};
 										},
 										head: {
 											appendChild(element) {
+												window._elements.push(element);
+
 												if (element._type === "script") {
 													// run it
 													Promise.resolve().then(() => {
 														_require(urlToRelativePath(element.src));
+													});
+												} else if (element._type === "link") {
+													Promise.resolve().then(() => {
+														if (element.onload) {
+															// run it
+															element.onload({ type: "load" });
+														}
+													});
+												}
+											},
+											insertBefore(element, before) {
+												window._elements.push(element);
+
+												if (element._type === "script") {
+													// run it
+													Promise.resolve().then(() => {
+														_require(urlToRelativePath(element.src));
+													});
+												} else if (element._type === "link") {
+													// run it
+													Promise.resolve().then(() => {
+														element.onload({ type: "load" });
 													});
 												}
 											}
 										},
 										getElementsByTagName(name) {
 											if (name === "head") return [this.head];
-											if (name === "script") return [];
+											if (name === "script" || name === "link") {
+												return window._elements.filter(
+													item => item._type === name
+												);
+											}
+
 											throw new Error("Not supported");
 										}
 									},
@@ -208,6 +257,14 @@ const describeCases = config => {
 										}
 									}
 								};
+
+								const moduleScope = {
+									window
+								};
+
+								if (testConfig.moduleScope) {
+									testConfig.moduleScope(moduleScope, options);
+								}
 
 								function _next(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
@@ -249,6 +306,9 @@ const describeCases = config => {
 								function _require(module) {
 									if (module.startsWith("./")) {
 										const p = path.join(outputDirectory, module);
+										if (module.endsWith(".css")) {
+											return fs.readFileSync(p, "utf-8");
+										}
 										if (module.endsWith(".json")) {
 											return JSON.parse(fs.readFileSync(p, "utf-8"));
 										}
