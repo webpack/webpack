@@ -23,7 +23,7 @@
     "loader-runner": "^4.2.0",
     "mime-types": "^2.1.27",
     "neo-async": "^2.6.2",
-    "schema-utils": "^3.2.0",
+    "schema-utils": "^4.3.0",
     "tapable": "^2.1.1",
     "terser-webpack-plugin": "^5.3.10",
     "watchpack": "^2.4.1",
