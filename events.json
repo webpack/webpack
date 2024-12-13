@@ -1,0 +1,4636 @@
+[
+  {
+    "ts": 18254385436,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "I",
+    "name": "TracingStartedInPage",
+    "id": 1,
+    "cat": "disabled-by-default-devtools.timeline",
+    "args": {
+      "data": {
+        "sessionId": "-1",
+        "page": "0xfff",
+        "frames": [{ "frame": "0xfff", "url": "webpack", "name": "" }]
+      }
+    }
+  },
+  {
+    "ts": 18254385685,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "I",
+    "name": "TracingStartedInBrowser",
+    "id": 2,
+    "cat": "disabled-by-default-devtools.timeline",
+    "args": { "data": { "sessionId": "-1" } }
+  },
+  {
+    "ts": 18254616502,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EntryOptionPlugin",
+    "id": 3,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254616593,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EntryOptionPlugin",
+    "id": 3,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254617687,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExternalsPlugin",
+    "id": 4,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254617748,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExternalsPlugin",
+    "id": 4,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618201,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 5,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618408,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 5,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618445,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 6,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618470,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 6,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618485,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkLoadingPlugin",
+    "id": 7,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618510,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkLoadingPlugin",
+    "id": 7,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618516,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WorkerPlugin",
+    "id": 8,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618535,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WorkerPlugin",
+    "id": 8,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618542,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SplitChunksPlugin",
+    "id": 9,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618568,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SplitChunksPlugin",
+    "id": 9,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618593,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ResolverCachePlugin",
+    "id": 10,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254618696,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ResolverCachePlugin",
+    "id": 10,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625034,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 11,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625129,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 11,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625140,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 12,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625158,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 12,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625163,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 13,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625172,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 13,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625263,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 14,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625361,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 14,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625386,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JsonModulesPlugin",
+    "id": 15,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625402,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JsonModulesPlugin",
+    "id": 15,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625413,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AssetModulesPlugin",
+    "id": 16,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625449,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AssetModulesPlugin",
+    "id": 16,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625469,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EntryPlugin",
+    "id": 17,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625478,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EntryPlugin",
+    "id": 17,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625483,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 18,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625589,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 18,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625594,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "InferAsyncModulesPlugin",
+    "id": 19,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625600,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "InferAsyncModulesPlugin",
+    "id": 19,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625603,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DataUriPlugin",
+    "id": 20,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625623,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DataUriPlugin",
+    "id": 20,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625627,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FileUriPlugin",
+    "id": 21,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625634,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FileUriPlugin",
+    "id": 21,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625637,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 22,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625645,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 22,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625648,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "HarmonyModulesPlugin",
+    "id": 23,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625672,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "HarmonyModulesPlugin",
+    "id": 23,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625675,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AMDPlugin",
+    "id": 24,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625720,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AMDPlugin",
+    "id": 24,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625727,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireJsStuffPlugin",
+    "id": 25,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625733,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireJsStuffPlugin",
+    "id": 25,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625737,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsPlugin",
+    "id": 26,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625761,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsPlugin",
+    "id": 26,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625765,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 27,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625770,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 27,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625777,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 28,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625783,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 28,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625786,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NodeStuffPlugin",
+    "id": 29,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625807,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NodeStuffPlugin",
+    "id": 29,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625816,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "APIPlugin",
+    "id": 30,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625840,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "APIPlugin",
+    "id": 30,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625845,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExportsInfoApiPlugin",
+    "id": 31,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625852,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExportsInfoApiPlugin",
+    "id": 31,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625855,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WebpackIsIncludedPlugin",
+    "id": 32,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625865,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WebpackIsIncludedPlugin",
+    "id": 32,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625868,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ConstPlugin",
+    "id": 33,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625875,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ConstPlugin",
+    "id": 33,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625878,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "UseStrictPlugin",
+    "id": 34,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625883,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "UseStrictPlugin",
+    "id": 34,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625886,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireIncludePlugin",
+    "id": 35,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625892,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireIncludePlugin",
+    "id": 35,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254625994,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireEnsurePlugin",
+    "id": 36,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626021,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireEnsurePlugin",
+    "id": 36,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626027,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireContextPlugin",
+    "id": 37,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626042,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireContextPlugin",
+    "id": 37,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626047,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportPlugin",
+    "id": 38,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626063,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportPlugin",
+    "id": 38,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626069,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportMetaContextPlugin",
+    "id": 39,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626080,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportMetaContextPlugin",
+    "id": 39,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626085,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SystemPlugin",
+    "id": 40,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626100,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SystemPlugin",
+    "id": 40,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626106,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportMetaPlugin",
+    "id": 41,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626113,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportMetaPlugin",
+    "id": 41,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626118,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "URLPlugin",
+    "id": 42,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626128,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "URLPlugin",
+    "id": 42,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626134,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 43,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626174,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 43,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626180,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 44,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626202,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 44,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626206,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 45,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626211,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 45,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626214,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 46,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626222,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 46,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626226,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 47,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626252,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 47,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626259,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 48,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626272,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 48,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626277,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 49,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626282,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 49,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626285,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 50,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626299,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 50,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626302,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 51,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626323,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 51,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626326,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedModuleIdsPlugin",
+    "id": 52,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626333,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedModuleIdsPlugin",
+    "id": 52,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626336,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedChunkIdsPlugin",
+    "id": 53,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626348,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedChunkIdsPlugin",
+    "id": 53,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626352,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefinePlugin",
+    "id": 54,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626392,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefinePlugin",
+    "id": 54,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626396,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 55,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626402,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 55,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626405,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 56,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626414,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 56,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626417,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 57,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626422,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 57,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254626641,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EntryPlugin",
+    "id": 58,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254627525,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExternalModuleFactoryPlugin",
+    "id": 59,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254627686,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExternalModuleFactoryPlugin",
+    "id": 59,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254627717,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NormalModuleFactory",
+    "id": 60,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254627799,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NormalModuleFactory",
+    "id": 61,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254633985,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NormalModuleFactory",
+    "id": 61,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254634514,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 62,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254634562,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 62,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254634571,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 63,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254634577,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 63,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254634594,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NormalModuleFactory",
+    "id": 60,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254635683,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 64,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254635736,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 64,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254636922,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 65,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637007,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 65,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637020,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "HarmonyDetectionParserPlugin",
+    "id": 66,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637027,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "HarmonyDetectionParserPlugin",
+    "id": 66,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637030,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "UseStrictPlugin",
+    "id": 67,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637035,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "UseStrictPlugin",
+    "id": 67,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637039,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefinePlugin",
+    "id": 68,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637045,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefinePlugin",
+    "id": 68,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637135,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 69,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637153,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 69,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637252,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 70,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637264,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 70,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637280,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 71,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637286,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 71,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637436,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 72,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637455,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 72,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637465,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 73,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637468,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 73,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637471,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 74,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637474,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 74,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637477,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 75,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637488,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 75,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254637871,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EntryPlugin",
+    "id": 58,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638037,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ResolverCachePlugin",
+    "id": 76,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638057,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ResolverCachePlugin",
+    "id": 76,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638064,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "InferAsyncModulesPlugin",
+    "id": 77,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638074,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "InferAsyncModulesPlugin",
+    "id": 77,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638082,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 78,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638123,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 78,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638197,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 79,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638212,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 79,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638442,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 80,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638466,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 80,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638929,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 81,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638980,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 81,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254638988,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 82,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639012,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 82,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639020,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 83,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639034,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 83,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639041,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SplitChunksPlugin",
+    "id": 84,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639149,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SplitChunksPlugin",
+    "id": 84,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639161,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 85,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639173,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 85,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639427,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 86,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639456,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 86,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639509,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedModuleIdsPlugin",
+    "id": 87,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639586,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedModuleIdsPlugin",
+    "id": 87,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639732,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 88,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639749,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 88,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639811,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedChunkIdsPlugin",
+    "id": 89,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254639885,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedChunkIdsPlugin",
+    "id": 89,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640074,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 90,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640125,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 90,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640185,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 91,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640203,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 91,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640746,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 92,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640778,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 92,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640784,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 93,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640797,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 93,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640861,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 94,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640883,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 94,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640889,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 95,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640935,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 95,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640943,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 96,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640952,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 96,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640956,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 97,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254640967,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 97,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641142,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 98,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641215,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 99,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641232,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 99,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641238,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 100,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641260,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 100,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641268,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 101,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641276,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 101,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641282,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 102,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641297,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 102,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641409,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 103,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641433,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 103,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641463,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 98,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641540,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 104,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641566,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 105,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641573,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 105,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641587,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 106,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641596,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 106,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641610,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 107,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641642,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 107,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641649,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 108,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641655,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 108,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641661,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 109,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641669,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 109,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641729,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 104,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254641986,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 110,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642030,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 110,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642038,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AssetModulesPlugin",
+    "id": 111,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642047,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AssetModulesPlugin",
+    "id": 111,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642140,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 112,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642171,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 112,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642202,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 113,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642207,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 113,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642394,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 114,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642438,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 115,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642474,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 115,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642531,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 114,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642538,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "APIPlugin",
+    "id": 116,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642546,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "APIPlugin",
+    "id": 116,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642663,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 117,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642695,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 117,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642859,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 118,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254642874,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 118,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254643415,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 119,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254643470,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 119,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254645038,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 120,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254645157,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 120,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254645365,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 121,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254645665,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 121,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254645816,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 122,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254646010,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 122,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254646360,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 123,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254646393,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 123,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651447,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 124,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651598,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 124,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651627,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 125,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651719,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 125,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651815,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 126,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18254651835,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 126,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18256155603,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WatchTestCasesTest",
+    "id": 127,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18256155681,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WatchTestCasesTest",
+    "id": 127,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257155542,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExternalsPlugin",
+    "id": 128,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257155656,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExternalsPlugin",
+    "id": 128,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156018,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 129,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156049,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 129,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156054,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 130,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156064,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 130,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156068,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkLoadingPlugin",
+    "id": 131,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156080,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkLoadingPlugin",
+    "id": 131,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156084,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WorkerPlugin",
+    "id": 132,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156097,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WorkerPlugin",
+    "id": 132,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156101,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SplitChunksPlugin",
+    "id": 133,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156109,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SplitChunksPlugin",
+    "id": 133,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156113,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ResolverCachePlugin",
+    "id": 134,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257156118,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ResolverCachePlugin",
+    "id": 134,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157095,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 135,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157132,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 135,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157138,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 136,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157150,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 136,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157155,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 137,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157163,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 137,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157167,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 138,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157188,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 138,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157192,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JsonModulesPlugin",
+    "id": 139,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157197,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JsonModulesPlugin",
+    "id": 139,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157201,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AssetModulesPlugin",
+    "id": 140,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157215,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AssetModulesPlugin",
+    "id": 140,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157219,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EntryPlugin",
+    "id": 141,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157224,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EntryPlugin",
+    "id": 141,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157227,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 142,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157306,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 142,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157310,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "InferAsyncModulesPlugin",
+    "id": 143,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157314,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "InferAsyncModulesPlugin",
+    "id": 143,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157318,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DataUriPlugin",
+    "id": 144,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157327,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DataUriPlugin",
+    "id": 144,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157331,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FileUriPlugin",
+    "id": 145,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157340,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FileUriPlugin",
+    "id": 145,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157343,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 146,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157350,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 146,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157353,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "HarmonyModulesPlugin",
+    "id": 147,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157370,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "HarmonyModulesPlugin",
+    "id": 147,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157374,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AMDPlugin",
+    "id": 148,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157391,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AMDPlugin",
+    "id": 148,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157395,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireJsStuffPlugin",
+    "id": 149,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157400,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireJsStuffPlugin",
+    "id": 149,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157403,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsPlugin",
+    "id": 150,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157420,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsPlugin",
+    "id": 150,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157424,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 151,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157429,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 151,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157432,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 152,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157442,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 152,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157446,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NodeStuffPlugin",
+    "id": 153,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157453,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NodeStuffPlugin",
+    "id": 153,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157457,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "APIPlugin",
+    "id": 154,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157471,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "APIPlugin",
+    "id": 154,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157474,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExportsInfoApiPlugin",
+    "id": 155,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157480,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExportsInfoApiPlugin",
+    "id": 155,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157483,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WebpackIsIncludedPlugin",
+    "id": 156,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157490,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WebpackIsIncludedPlugin",
+    "id": 156,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157493,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ConstPlugin",
+    "id": 157,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157499,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ConstPlugin",
+    "id": 157,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157502,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "UseStrictPlugin",
+    "id": 158,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157507,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "UseStrictPlugin",
+    "id": 158,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157510,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireIncludePlugin",
+    "id": 159,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157516,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireIncludePlugin",
+    "id": 159,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157519,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireEnsurePlugin",
+    "id": 160,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157526,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireEnsurePlugin",
+    "id": 160,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157529,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RequireContextPlugin",
+    "id": 161,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157544,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RequireContextPlugin",
+    "id": 161,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157548,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportPlugin",
+    "id": 162,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157557,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportPlugin",
+    "id": 162,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157560,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportMetaContextPlugin",
+    "id": 163,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157565,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportMetaContextPlugin",
+    "id": 163,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157568,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SystemPlugin",
+    "id": 164,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157575,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SystemPlugin",
+    "id": 164,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157579,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ImportMetaPlugin",
+    "id": 165,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157583,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ImportMetaPlugin",
+    "id": 165,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157586,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "URLPlugin",
+    "id": 166,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157592,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "URLPlugin",
+    "id": 166,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157595,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 167,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157600,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 167,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157604,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 168,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157621,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 168,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157625,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 169,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157629,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 169,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157633,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 170,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157637,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 170,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157641,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 171,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157647,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 171,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157650,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 172,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157655,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 172,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157659,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 173,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157663,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 173,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157666,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 174,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157673,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 174,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157677,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 175,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157690,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 175,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157694,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedModuleIdsPlugin",
+    "id": 176,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157698,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedModuleIdsPlugin",
+    "id": 176,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157704,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedChunkIdsPlugin",
+    "id": 177,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157708,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedChunkIdsPlugin",
+    "id": 177,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157711,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefinePlugin",
+    "id": 178,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157737,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefinePlugin",
+    "id": 178,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157741,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 179,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157746,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 179,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157749,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 180,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157756,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 180,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157759,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 181,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157764,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 181,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257157783,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EntryPlugin",
+    "id": 182,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257158322,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ExternalModuleFactoryPlugin",
+    "id": 183,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257158362,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ExternalModuleFactoryPlugin",
+    "id": 183,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257158391,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NormalModuleFactory",
+    "id": 184,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257158443,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NormalModuleFactory",
+    "id": 185,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160028,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NormalModuleFactory",
+    "id": 185,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160220,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 186,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160235,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 186,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160240,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 187,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160243,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 187,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160251,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NormalModuleFactory",
+    "id": 184,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160444,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "LoaderPlugin",
+    "id": 188,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257160459,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "LoaderPlugin",
+    "id": 188,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161034,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 189,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161081,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 189,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161089,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "HarmonyDetectionParserPlugin",
+    "id": 190,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161094,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "HarmonyDetectionParserPlugin",
+    "id": 190,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161097,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "UseStrictPlugin",
+    "id": 191,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161101,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "UseStrictPlugin",
+    "id": 191,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161104,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefinePlugin",
+    "id": 192,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161109,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefinePlugin",
+    "id": 192,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161174,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 193,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161182,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 193,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161261,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 194,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161267,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 194,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161270,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CompatibilityPlugin",
+    "id": 195,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161273,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CompatibilityPlugin",
+    "id": 195,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161306,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 196,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161310,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 196,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161313,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 197,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161316,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 197,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161318,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptParser",
+    "id": 198,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161321,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptParser",
+    "id": 198,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161329,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 199,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161335,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptMetaInfoPlugin",
+    "id": 199,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161487,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EntryPlugin",
+    "id": 182,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161587,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ResolverCachePlugin",
+    "id": 200,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161598,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ResolverCachePlugin",
+    "id": 200,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161602,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "InferAsyncModulesPlugin",
+    "id": 201,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161608,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "InferAsyncModulesPlugin",
+    "id": 201,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161618,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 202,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161656,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "FlagDependencyExportsPlugin",
+    "id": 202,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161708,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 203,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161717,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "WarnCaseSensitiveModulesPlugin",
+    "id": 203,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161747,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SideEffectsFlagPlugin",
+    "id": 204,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161756,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SideEffectsFlagPlugin",
+    "id": 204,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161903,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 205,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161914,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EnsureChunkConditionsPlugin",
+    "id": 205,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161918,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 206,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161922,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 206,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161925,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 207,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161931,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "MergeDuplicateChunksPlugin",
+    "id": 207,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161934,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "SplitChunksPlugin",
+    "id": 208,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161976,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "SplitChunksPlugin",
+    "id": 208,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161979,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 209,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257161982,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RemoveEmptyChunksPlugin",
+    "id": 209,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162032,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 210,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162042,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 210,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162067,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedModuleIdsPlugin",
+    "id": 211,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162083,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedModuleIdsPlugin",
+    "id": 211,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162094,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 212,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162111,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 212,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162133,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "NamedChunkIdsPlugin",
+    "id": 213,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162150,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "NamedChunkIdsPlugin",
+    "id": 213,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162168,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 214,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162173,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 214,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162179,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RecordIdsPlugin",
+    "id": 215,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162183,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RecordIdsPlugin",
+    "id": 215,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162342,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 216,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162352,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 216,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162355,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 217,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162362,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 217,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162395,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 218,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162401,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "StartupChunkDependenciesPlugin",
+    "id": 218,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162404,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 219,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162423,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ChunkPrefetchPreloadPlugin",
+    "id": 219,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162427,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 220,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162431,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 220,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162434,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 221,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162439,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 221,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162506,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 222,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162532,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 223,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162537,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 223,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162540,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 224,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162543,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 224,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162550,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 225,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162553,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 225,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162556,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 226,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162561,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 226,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162611,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 227,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162616,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 227,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162627,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 222,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162652,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 228,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162663,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 229,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162666,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 229,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162673,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 230,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162676,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "CommonJsChunkFormatPlugin",
+    "id": 230,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162679,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 231,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162682,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 231,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162684,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 232,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162687,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 232,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162689,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "RuntimePlugin",
+    "id": 233,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162693,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "RuntimePlugin",
+    "id": 233,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162709,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 228,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162812,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "JavascriptModulesPlugin",
+    "id": 234,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162826,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "JavascriptModulesPlugin",
+    "id": 234,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162829,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "AssetModulesPlugin",
+    "id": 235,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162834,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "AssetModulesPlugin",
+    "id": 235,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162868,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 236,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162881,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 236,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162906,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 237,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162910,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 237,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162978,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 238,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257162992,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 239,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163000,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 239,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163030,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 238,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163033,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "APIPlugin",
+    "id": 240,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163037,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "APIPlugin",
+    "id": 240,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163089,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 241,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163098,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "ModuleInfoHeaderPlugin",
+    "id": 241,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163168,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "EvalDevToolModulePlugin",
+    "id": 242,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163174,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "EvalDevToolModulePlugin",
+    "id": 242,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163336,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 243,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257163352,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 243,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164240,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 244,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164336,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 244,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164403,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 245,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164503,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 245,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164539,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 246,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257164782,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 246,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257165059,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 247,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257165078,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 247,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257170945,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 248,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257171021,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 248,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257171044,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 249,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257171135,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 249,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257171209,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 250,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257171226,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 250,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257173692,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 251,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257173754,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 251,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257173772,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 252,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257173909,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 252,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257173924,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 253,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257174109,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 253,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257174213,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 254,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257174228,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 254,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257177847,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 255,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257177955,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPresetPlugin",
+    "id": 255,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257177983,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 256,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257178073,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsFactoryPlugin",
+    "id": 256,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257178082,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 257,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257178255,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "DefaultStatsPrinterPlugin",
+    "id": 257,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257178362,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "B",
+    "name": "TemplatedPathPlugin",
+    "id": 258,
+    "cat": "blink.user_timing"
+  },
+  {
+    "ts": 18257178378,
+    "pid": 76603,
+    "tid": 76603,
+    "ph": "E",
+    "name": "TemplatedPathPlugin",
+    "id": 258,
+    "cat": "blink.user_timing"
+  }
+]
