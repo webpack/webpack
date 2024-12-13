@@ -3,6 +3,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "exportsDepth": {
+      "description": "The depth of json dependency flagged as `exportInfo`.",
+      "type": "number"
+    },
     "parse": {
       "description": "Function that executes for a module source string and should return json-compatible data.",
       "instanceof": "Function",
