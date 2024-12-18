@@ -604,6 +604,13 @@ export type StrictModuleExceptionHandling = boolean;
  */
 export type UniqueName = string;
 /**
+ * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+ */
+export type WasmImportObject =
+	| "plain-object"
+	| "SharedArrayBuffer"
+	| "ArrayBuffer";
+/**
  * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
  */
 export type WebassemblyModuleFilename = string;
@@ -2248,6 +2255,10 @@ export interface Output {
 	 */
 	uniqueName?: UniqueName;
 	/**
+	 * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+	 */
+	wasmImportObject?: WasmImportObject;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
@@ -3619,6 +3630,10 @@ export interface OutputNormalized {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: UniqueName;
+	/**
+	 * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+	 */
+	wasmImportObject?: WasmImportObject;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

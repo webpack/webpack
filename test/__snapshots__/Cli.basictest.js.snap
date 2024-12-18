@@ -7329,6 +7329,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-import-object": Object {
+    "configs": Array [
+      Object {
+        "description": "Controls the memory configuration for the \`importObj\` parameter in \`WebAssembly.instantiate\`.",
+        "multiple": false,
+        "path": "output.wasmImportObject",
+        "type": "enum",
+        "values": Array [
+          "plain-object",
+          "SharedArrayBuffer",
+          "ArrayBuffer",
+        ],
+      },
+    ],
+    "description": "Controls the memory configuration for the \`importObj\` parameter in \`WebAssembly.instantiate\`.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-wasm-loading": Object {
     "configs": Array [
       Object {
