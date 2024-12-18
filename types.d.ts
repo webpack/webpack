@@ -11679,6 +11679,11 @@ declare interface ReadFileCompileWasmPluginOptions {
 	 * use import?
 	 */
 	import?: boolean;
+
+	/**
+	 * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+	 */
+	wasmImportObject?: "plain-object" | "SharedArrayBuffer" | "ArrayBuffer";
 }
 declare interface ReadFileFs {
 	(
