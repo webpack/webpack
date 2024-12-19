@@ -18,6 +18,10 @@ export type SharedItem = string;
  */
 export interface SharePluginOptions {
 	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
