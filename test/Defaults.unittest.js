@@ -391,6 +391,7 @@ describe("snapshots", () => {
 		    "strictModuleExceptionHandling": false,
 		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
+		    "wasmImportObject": "plain-object",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",

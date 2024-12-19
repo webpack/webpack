@@ -1,0 +1,11 @@
+(module
+  (import "./numbers.js" "first" (func $first (result i32) ))
+  (import "./numbers.js" "second" (func $second (result i32) ))
+  (import "js" "mem" (memory 3))
+  (import "./numbers.js" "third" (func $third (result i32) ))
+  (data (i32.const 0) "Hi")
+  (export "bar" (memory 0))
+  (export "first" (func $first))
+  (export "second" (func $second))
+  (export "third" (func $third))
+)
