@@ -1,0 +1,27 @@
+{
+  "depth_1": {
+    "depth_2": {
+      "depth_3": {
+        "depth_4": {
+          "depth_5": {
+            "depth_6": "depth_6"
+          }
+        }
+      }
+    }
+  },
+  "_depth_1": {
+    "_depth_2": {
+      "_depth_3": {
+        "_depth_4": {
+          "_depth_5": {
+            "_depth_6": "_depth_6"
+          }
+        }
+      }
+    }
+  },
+  "__depth_1": [
+    { "__depth_3": [{ "__depth_5": [{ "__depth_7": ["__depth_8"] }] }] }
+  ]
+}
