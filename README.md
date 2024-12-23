@@ -21,7 +21,7 @@
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
-	<a href="https://packagephobia.com/result?p=webpack">
+	<a href="https://packagephobia.com/result?p=webpack">  
 		<img src="https://packagephobia.com/badge?p=webpack" alt="install size">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
@@ -49,7 +49,6 @@
 </div>
 
 ## Table of Contents
-
 1. [Install](#install)
 2. [Introduction](#introduction)
 3. [Concepts](#concepts)
@@ -68,13 +67,11 @@
 <h2 align="center">Install</h2>
 
 Install with npm:
-
 ```bash
 npm install --save-dev webpack
 ```
 
 Install with yarn:
-
 ```bash
 yarn add webpack --dev
 ```
@@ -102,17 +99,15 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
-<h2 align="center">Concepts</h2>
+<h2 align="center">Concepts</h2>  
 
 ### [Plugins](https://webpack.js.org/plugins/)
-
-Webpack has a [rich plugin
-interface](https://webpack.js.org/plugins/). Most of the features
+Webpack has a [rich plugin interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
-|                   Name                    |       Status       |    Install Size     | Description                                                                             |
-| :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
+|                   Name                    |       Status       |    Install Size     |     Description                                                                         |
+| :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------: |
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
@@ -138,16 +133,15 @@ within webpack itself use this plugin interface. This makes webpack very
 ### [Loaders](https://webpack.js.org/loaders/)
 
 Webpack enables the use of loaders to preprocess files. This allows you to bundle
-**any static resource** way beyond JavaScript. You can easily [write your own
-loaders](https://webpack.js.org/api/loaders/) using Node.js.
+**any static resource** way beyond JavaScript. You can easily [write your own loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
-|       Name        |   Status   | Install Size | Description                                              |
-| :---------------: | :--------: | :----------: | :------------------------------------------------------- |
+|       Name        |   Status   | Install Size |                         Description                      |
+| :---------------: | :--------: | :----------: | :------------------------------------------------------: |
 | [val-loader][val] | ![val-npm] | ![val-size]  | Executes code as module and considers exports as JS code |
 
 [val]: https://github.com/webpack-contrib/val-loader
@@ -164,12 +158,11 @@ or are automatically applied via regex from your webpack configuration.
 [cson-size]: https://packagephobia.com/badge?p=cson-loader
 
 #### Transpiling
-
-|                                                                                                                             Name                                                                                                                             |    Status     |  Install Size  | Description                                                                                       |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :------------------------------------------------------------------------------------------------ |
-|                                                  <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>                                                  | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
+|                                                                                                                             Name                                                                                                                             |    Status     |  Install Size  |                                             Description                                           |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :-----------------------------------------------------------------------------------------------: |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>                                                                                                   | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
 | <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://raw.githubusercontent.com/microsoft/TypeScript-Website/f407e1ae19e5e990d9901ac8064a32a8cc60edf0/packages/typescriptlang-org/static/branding/ts-logo-128.svg"></a> |  ![type-npm]  |  ![type-size]  | Loads TypeScript like JavaScript                                                                  |
-|                                                     <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>                                                     | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
+| <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>                                                                                                         | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
 
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
@@ -179,15 +172,14 @@ or are automatically applied via regex from your webpack configuration.
 [type-size]: https://packagephobia.com/badge?p=ts-loader
 
 #### Templating
-
-|                                                                                   Name                                                                                    |     Status      |   Install Size   | Description                                                                             |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
-|               <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5-2.svg"></a>               |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
-|   <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>   |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
-| <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug3-npm]   |   ![pug3-size]   | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
-|                <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>                |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
-|                 <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                 | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
-|             <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>             |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
+|                                                                                   Name                                                                                    |     Status      |   Install Size   |                                      Description                                        |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------: |
+|  <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5-2.svg"></a>                            |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
+|  <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>    |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
+|  <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>|   ![pug3-npm]   |   ![pug3-size]   | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
+|  <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>                              |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
+|  <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                                | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
+|  <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>                        |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
 [html-size]: https://packagephobia.com/badge?p=html-loader
@@ -206,17 +198,17 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Styling
 
-|                                                                     Name                                                                      |     Status     |  Install Size   | Description                                                              |
-| :-------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------- |
-|                                    <a href="https://github.com/webpack-contrib/style-loader">`<style>`</a>                                    |  ![style-npm]  |  ![style-size]  | Add exports of a module as style to DOM                                  |
-|  <a href="https://github.com/webpack-contrib/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>   |   ![css-npm]   |   ![css-size]   | Loads CSS file with resolved imports and returns CSS code                |
+|                                                                     Name                                                                      |     Status     |  Install Size   |                                      Description                         |
+| :-------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------: |
+| <a href="https://github.com/webpack-contrib/style-loader">`<style>`</a>                                                                       |  ![style-npm]  |  ![style-size]  | Add exports of a module as style to DOM                                  |
+| <a href="https://github.com/webpack-contrib/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>    |   ![css-npm]   |   ![css-size]   | Loads CSS file with resolved imports and returns CSS code                |
 | <a href="https://github.com/webpack-contrib/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a> |  ![less-npm]   |  ![less-size]   | Loads and compiles a LESS file                                           |
 | <a href="https://github.com/webpack-contrib/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>  |  ![sass-npm]   |  ![sass-size]   | Loads and compiles a Sass/SCSS file                                      |
-|     <a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>      | ![stylus-npm]  | ![stylus-size]  | Loads and compiles a Stylus file                                         |
-|   <a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>    | ![postcss-npm] | ![postcss-size] | Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org) |
+| <a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>          | ![stylus-npm]  | ![stylus-size]  | Loads and compiles a Stylus file                                         |
+| <a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>      | ![postcss-npm] | ![postcss-size] | Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org) |
 
 [style-npm]: https://img.shields.io/npm/v/style-loader.svg
-[style-size]: https://packagephobia.com/badge?p=style-loader
+[style-size]: https://packagephobia.com/badge?p=style-loader  
 [css-npm]: https://img.shields.io/npm/v/css-loader.svg
 [css-size]: https://packagephobia.com/badge?p=css-loader
 [less-npm]: https://img.shields.io/npm/v/less-loader.svg
@@ -230,13 +222,13 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Frameworks
 
-|                                                                             Name                                                                             |     Status     |  Install Size   | Description                                                                                            |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------------------------------------- |
-|               <a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>               |   ![vue-npm]   |   ![vue-size]   | Loads and compiles Vue Components                                                                      |
-|   <a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>   | ![polymer-npm] | ![polymer-size] | Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules |
+|                                                                             Name                                                                             |     Status     |  Install Size   |                                      Description                                                       |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------------------------------------: |
+| <a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>                             |   ![vue-npm]   |   ![vue-size]   | Loads and compiles Vue Components                                                                      |
+| <a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>     | ![polymer-npm] | ![polymer-size] | Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules |
 | <a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a> | ![angular-npm] | ![angular-size] | Loads and compiles Angular 2 Components                                                                |
-|              <a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>              |  ![riot-npm]   |  ![riot-size]   | Riot official webpack loader                                                                           |
-|          <a href="https://github.com/sveltejs/svelte-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/svelte-1.svg"></a>           | ![svelte-npm]  | ![svelte-size]  | Official Svelte loader                                                                                 |
+| <a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>                           |  ![riot-npm]   |  ![riot-size]   | Riot official webpack loader                                                                           |
+| <a href="https://github.com/sveltejs/svelte-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/svelte-1.svg"></a>                    | ![svelte-npm]  | ![svelte-size]  | Official Svelte loader                                                                                 |
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
 [vue-size]: https://packagephobia.com/badge?p=vue-loader
@@ -290,11 +282,8 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
 To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
-
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
-
 We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
-
 _Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!!
 
 <h3 align="center">Creating your own plugins and loaders</h3>
@@ -304,18 +293,12 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 <h2 align="center">Support</h2>
 
 We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
-
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
-
 Looking for webpack 1 docs? Please check out the old [wiki](https://github.com/webpack/docs/wiki/contents), but note that this deprecated version is no longer supported.
-
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out!
-
 If you are still having difficulty, we would love for you to post
 a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). It is much easier to answer questions that include your webpack.config.js and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
-
 If you are twitter savvy you can tweet #webpack with your question and someone should be able to reach out and help also.
-
 If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on GitHub.
 
 ### License
@@ -372,7 +355,6 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
 Most of the core team members, webpack contributors and contributors in the ecosystem do this open source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
 
 This is how we use the donations:
-
 - Allow the core team to work on webpack
 - Thank contributors if they invested a large amount of time in contributing
 - Support projects in the ecosystem that are of great value for users
@@ -383,10 +365,7 @@ This is how we use the donations:
 <h2 align="center">Premium Partners</h2>
 
 <div align="center">
-
-<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
-</a>
-
+<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png"></a>
 </div>
 
 <h2 align="center">Other Backers and Sponsors</h2>
@@ -394,14 +373,9 @@ This is how we use the donations:
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
 <div align="center">
-
-<a href="https://angular.io/" target="_blank" title="JS framework"><img
-src="https://cdn.worldvectorlogo.com/logos/angular-icon-1.svg" height="30" alt="Angular"></a>
-<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img
-src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
-<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img
-src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
-
+<a href="https://angular.io/" target="_blank" title="JS framework"><img src="https://cdn.worldvectorlogo.com/logos/angular-icon-1.svg" height="30" alt="Angular"></a>
+<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
+<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 </div>
 
 <h2 align="center">Gold Sponsors</h2>
@@ -689,7 +663,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/backer/90/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/90/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/91/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/91/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/92/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/92/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/webpack/backer/93/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/93/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/backer/93/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/93/avatar.svg?requireActive=false"></a>  
 <a href="https://opencollective.com/webpack/backer/94/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/94/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/95/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/95/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/96/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/96/avatar.svg?requireActive=false"></a>
