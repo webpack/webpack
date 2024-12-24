@@ -6,12 +6,12 @@ module.exports = {
 			{
 				test: /\.wat$/,
 				use: "wast-loader",
-				type: "webassembly/sync"
+				type: "webassembly/async"
 			}
 		]
 	},
 	experiments: {
-		syncWebAssembly: true
+		asyncWebAssembly: true
 	},
 	output: {
 		wasmImportObject: "SharedArrayBuffer"
