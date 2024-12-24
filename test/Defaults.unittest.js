@@ -254,6 +254,9 @@ describe("snapshots", () => {
 		        "wrappedContextRecursive": true,
 		        "wrappedContextRegExp": /\\.\\*/,
 		      },
+		      "json": Object {
+		        "exportsDepth": Infinity,
+		      },
 		    },
 		    "rules": Array [],
 		    "unsafeCache": false,
@@ -844,6 +847,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
+		@@ ... @@
+		-         "exportsDepth": Infinity,
+		+         "exportsDepth": 1,
 		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
@@ -1904,6 +1910,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
+			@@ ... @@
+			-         "exportsDepth": Infinity,
+			+         "exportsDepth": 1,
 			@@ ... @@
 			-     "unsafeCache": false,
 			+     "unsafeCache": [Function anonymous],
