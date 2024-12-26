@@ -297,6 +297,11 @@ We have also started a series on our [Medium Publication](https://medium.com/web
 
 _Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!!
 
+### Understanding webpack in a better way
+- [Understanding Webpack - Video 1](https://www.youtube.com/watch?v=xj93pvQIsRo)
+- [Understanding Webpack - Video 2](https://www.youtube.com/watch?v=4tQiJaFzuJ8)
+
+
 <h3 align="center">Creating your own plugins and loaders</h3>
 
 If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
