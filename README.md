@@ -318,6 +318,12 @@ If you are twitter savvy you can tweet #webpack with your question and someone s
 
 If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on GitHub.
 
+### Understand webpack in better way
+
+- [Understanding Webpack - Video 1](https://www.youtube.com/watch?v=xj93pvQIsRo)
+- [Understanding Webpack - Video 2](https://www.youtube.com/watch?v=4tQiJaFzuJ8)
+
+
 ### License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_large)
