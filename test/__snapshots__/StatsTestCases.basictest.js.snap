@@ -4062,10 +4062,10 @@ production (webpack x.x.x) compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-cache-group-filename 1`] = `
-"Entrypoint main X KiB = 587.js X bytes 414.js X bytes 605.vendors.js X bytes main.js X KiB
-chunk (runtime: main) 414.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
+"Entrypoint main X KiB = 587.vendors.js X bytes 414.vendors.js X bytes 605.vendors.js X bytes main.js X KiB
+chunk (runtime: main) 414.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
   ./node_modules/b.js X bytes [built] [code generated]
-chunk (runtime: main) 587.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
+chunk (runtime: main) 587.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
   ./node_modules/a.js X bytes [built] [code generated]
 chunk (runtime: main) 605.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
   ./node_modules/c.js X bytes [built] [code generated]
