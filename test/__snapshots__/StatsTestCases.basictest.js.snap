@@ -2875,7 +2875,123 @@ b-source-map:
       ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
       ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
       ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
-  b-source-map (webpack x.x.x) compiled successfully in X ms"
+  b-source-map (webpack x.x.x) compiled successfully in X ms
+
+a-normal-prefixed:
+  assets by path *.js X KiB
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+  assets by chunk X KiB (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+  runtime modules X KiB 8 modules
+  orphan modules X bytes [orphan] 1 module
+  cacheable modules X bytes (javascript) X KiB (asset)
+    javascript modules X bytes
+      ./a/index.js X bytes [built] [code generated]
+      ./a/a.js X bytes [built] [code generated]
+      ./a/b.js X bytes [built] [code generated]
+      ./a/lazy.js + 2 modules X bytes [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+  a-normal-prefixed (webpack x.x.x) compiled successfully in X ms
+
+b-normal-prefixed:
+  assets by path *.js X KiB
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+  assets by chunk X KiB (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+  runtime modules X KiB 8 modules
+  orphan modules X bytes [orphan] 1 module
+  cacheable modules X bytes (javascript) X KiB (asset)
+    javascript modules X bytes
+      ./b/index.js X bytes [built] [code generated]
+      ./b/a.js X bytes [built] [code generated]
+      ./b/b.js X bytes [built] [code generated]
+      ./b/lazy.js + 2 modules X bytes [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+  b-normal-prefixed (webpack x.x.x) compiled successfully in X ms
+
+a-source-map-prefixed:
+  assets by path *.js X KiB
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+  assets by chunk X KiB (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  runtime modules X KiB 8 modules
+  orphan modules X bytes [orphan] 1 module
+  cacheable modules X bytes (javascript) X KiB (asset)
+    javascript modules X bytes
+      ./a/index.js X bytes [built] [code generated]
+      ./a/a.js X bytes [built] [code generated]
+      ./a/b.js X bytes [built] [code generated]
+      ./a/lazy.js + 2 modules X bytes [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+  a-source-map-prefixed (webpack x.x.x) compiled successfully in X ms
+
+b-source-map-prefixed:
+  assets by path *.js X KiB
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+  assets by chunk X KiB (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  runtime modules X KiB 8 modules
+  orphan modules X bytes [orphan] 1 module
+  cacheable modules X bytes (javascript) X KiB (asset)
+    javascript modules X bytes
+      ./b/index.js X bytes [built] [code generated]
+      ./b/a.js X bytes [built] [code generated]
+      ./b/b.js X bytes [built] [code generated]
+      ./b/lazy.js + 2 modules X bytes [built] [code generated]
+    asset modules X KiB (asset) X bytes (javascript)
+      ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+  b-source-map-prefixed (webpack x.x.x) compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for related-assets 1`] = `

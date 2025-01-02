@@ -9,7 +9,7 @@ const hashedFiles = {
 
 module.exports = {
 	validate(stats) {
-		for (let i = 0; i < 4; i += 2) {
+		for (let i = 0; i < 6; i += 2) {
 			const a = stats.stats[i + 0].toJson({
 				assets: true
 			});

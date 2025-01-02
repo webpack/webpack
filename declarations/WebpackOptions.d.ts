@@ -1775,7 +1775,7 @@ export interface Optimization {
 	/**
 	 * Use real [contenthash] based on final content of the assets.
 	 */
-	realContentHash?: boolean;
+	realContentHash?: "prefixed" | boolean;
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.
 	 */

@@ -84,5 +84,67 @@ module.exports = [
 			),
 			filename: "[contenthash]-[contenthash:6].js"
 		}
+	},
+	{
+		...base,
+		name: "a-normal-prefixed",
+		context: path.resolve(__dirname, "a"),
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/real-content-hash/a-normal"
+			),
+			filename: "[contenthash]-[contenthash:6].js"
+		},
+		experiments: {
+			futureDefaults: true
+		}
+	},
+	{
+		...base,
+		name: "b-normal-prefixed",
+		context: path.resolve(__dirname, "b"),
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/real-content-hash/b-normal"
+			),
+			filename: "[contenthash]-[contenthash:6].js"
+		},
+		experiments: {
+			futureDefaults: true
+		}
+	},
+	{
+		...base,
+		context: path.resolve(__dirname, "a"),
+		name: "a-source-map-prefixed",
+		devtool: "source-map",
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/real-content-hash/a-source-map"
+			),
+			filename: "[contenthash]-[contenthash:6].js"
+		},
+		experiments: {
+			futureDefaults: true
+		}
+	},
+	{
+		...base,
+		context: path.resolve(__dirname, "b"),
+		name: "b-source-map-prefixed",
+		devtool: "source-map",
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/real-content-hash/b-source-map"
+			),
+			filename: "[contenthash]-[contenthash:6].js"
+		},
+		experiments: {
+			futureDefaults: true
+		}
 	}
 ];
