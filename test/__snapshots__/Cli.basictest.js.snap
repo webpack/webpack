@@ -5570,12 +5570,21 @@ Object {
         "description": "Use real [contenthash] based on final content of the assets.",
         "multiple": false,
         "path": "optimization.realContentHash",
+        "type": "enum",
+        "values": Array [
+          "prefixed",
+        ],
+      },
+      Object {
+        "description": "Use real [contenthash] based on final content of the assets.",
+        "multiple": false,
+        "path": "optimization.realContentHash",
         "type": "boolean",
       },
     ],
     "description": "Use real [contenthash] based on final content of the assets.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-remove-available-modules": Object {
     "configs": Array [
