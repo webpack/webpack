@@ -97,6 +97,10 @@ or packaging just about any resource or asset.
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/getting-started) guide and the [other guides](https://webpack.js.org/guides/).
 
+- For better understanding on the topic "How webpack works?" one can go through through following videos:
+1) Understanding Webpacks part-I (https://youtu.be/xj93pvQIsRo?si=aF6eHIiHCoZCQP5R)
+2) Understanding Webpacks part-II (https://youtu.be/4tQiJaFzuJ8?si=CQXi9J_wESrn7u3f)
+
 ### Browser Compatibility
 
 Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
