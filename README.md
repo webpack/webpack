@@ -97,6 +97,16 @@ or packaging just about any resource or asset.
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/getting-started) guide and the [other guides](https://webpack.js.org/guides/).
 
+### Additional Learning Resources
+
+Check out these videos for an intro into Webpack and how it really works under the hood:
+
+It introduces to Webpack: what it does and how basic configuration works.
+[Understanding Webpack - Part 1](https://www.youtube.com/watch?v=xj93pvQIsRo)
+
+Explores the more complex ideas and how Webpack works in module bundling, plugins, and loader.
+[Understanding Webpack - Part 2](https://www.youtube.com/watch?v=4tQiJaFzuJ8)
+
 ### Browser Compatibility
 
 Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
