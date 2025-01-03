@@ -92,7 +92,7 @@ module.exports = [
 		output: {
 			path: path.resolve(
 				__dirname,
-				"../../js/stats/real-content-hash/a-normal"
+				"../../js/stats/real-content-hash/a-normal-prefixed"
 			),
 			filename: "[contenthash]-[contenthash:6].js"
 		},
@@ -107,7 +107,7 @@ module.exports = [
 		output: {
 			path: path.resolve(
 				__dirname,
-				"../../js/stats/real-content-hash/b-normal"
+				"../../js/stats/real-content-hash/b-normal-prefixed"
 			),
 			filename: "[contenthash]-[contenthash:6].js"
 		},
@@ -123,7 +123,7 @@ module.exports = [
 		output: {
 			path: path.resolve(
 				__dirname,
-				"../../js/stats/real-content-hash/a-source-map"
+				"../../js/stats/real-content-hash/a-source-map-prefixed"
 			),
 			filename: "[contenthash]-[contenthash:6].js"
 		},
@@ -139,7 +139,7 @@ module.exports = [
 		output: {
 			path: path.resolve(
 				__dirname,
-				"../../js/stats/real-content-hash/b-source-map"
+				"../../js/stats/real-content-hash/b-source-map-prefixed"
 			),
 			filename: "[contenthash]-[contenthash:6].js"
 		},

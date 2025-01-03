@@ -9,7 +9,7 @@ const hashedFiles = {
 
 module.exports = {
 	validate(stats) {
-		for (let i = 0; i < 6; i += 2) {
+		for (let i = 0; i < 8; i += 2) {
 			const a = stats.stats[i + 0].toJson({
 				assets: true
 			});
@@ -23,7 +23,7 @@ module.exports = {
 			expect(a.assetsByChunkName.b).toEqual(b.assetsByChunkName.b);
 			expect(a.assetsByChunkName.a).toEqual(a.assetsByChunkName.b);
 		}
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < 8; i++) {
 			const statsData = stats.stats[i].toJson({
 				assets: true
 			});
