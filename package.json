@@ -15,7 +15,7 @@
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.17.1",
     "es-module-lexer": "^1.2.1",
-    "eslint-scope": "5.1.1",
+    "eslint-scope": "^8.1.0",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.2.11",
