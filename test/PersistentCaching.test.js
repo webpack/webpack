@@ -60,6 +60,17 @@ describe("Persistent Caching", () => {
 		}
 	};
 
+	// cSpell:words Mtimes
+	const getCacheFileMtimes = async () => {
+		const cacheFiles = (await readdir(cachePath)).sort();
+		return new Map(
+			cacheFiles.map(f => [
+				f,
+				fs.statSync(path.join(cachePath, f)).mtime.toString()
+			])
+		);
+	};
+
 	const compile = async (configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
@@ -224,11 +235,7 @@ sum([1,2,3])
 			`
 		});
 		await compile({ entry: "./src/main.js" });
-		const firstCacheFiles = (await readdir(cachePath)).sort();
-		// cSpell:words Mtimes
-		const firstMtimes = firstCacheFiles.map(
-			f => fs.statSync(path.join(cachePath, f)).mtime
-		);
+		const firstCacheFileMtimes = await getCacheFileMtimes();
 
 		await updateSrc({
 			"main.js": `
@@ -242,11 +249,28 @@ import 'lodash';
 				readonly: true
 			}
 		});
-		const cacheFiles = (await readdir(cachePath)).sort();
-		expect(cacheFiles).toStrictEqual(firstCacheFiles);
-		expect(
-			firstCacheFiles.map(f => fs.statSync(path.join(cachePath, f)).mtime)
-			// cSpell:words Mtimes
-		).toStrictEqual(firstMtimes);
+		await expect(getCacheFileMtimes()).resolves.toEqual(firstCacheFileMtimes);
+	}, 20000);
+
+	it("should not invalidate cache files if timestamps changed with dynamic import()", async () => {
+		const configAdditions = {
+			entry: "./src/main.js",
+			snapshot: {
+				resolve: { hash: true },
+				module: { hash: true }
+			}
+		};
+		await updateSrc({
+			"newer.js": "export default 2;",
+			// eslint-disable-next-line no-template-curly-in-string
+			"main.js": 'const f = "newer.js"; import(`./${f}`);'
+		});
+		await compile(configAdditions);
+		const firstCacheFileMtimes = await getCacheFileMtimes();
+
+		await utimes(path.resolve(srcPath, "newer.js"), new Date(), new Date());
+
+		await compile(configAdditions);
+		await expect(getCacheFileMtimes()).resolves.toEqual(firstCacheFileMtimes);
 	}, 20000);
 });
