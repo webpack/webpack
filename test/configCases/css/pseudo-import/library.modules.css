@@ -1,0 +1,6 @@
+:export {
+	a: red;
+	-b: red;
+	--c: red;
+	_d: red;
+}

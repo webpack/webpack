@@ -254,6 +254,9 @@ describe("snapshots", () => {
 		        "wrappedContextRecursive": true,
 		        "wrappedContextRegExp": /\\.\\*/,
 		      },
+		      "json": Object {
+		        "exportsDepth": Infinity,
+		      },
 		    },
 		    "rules": Array [],
 		    "unsafeCache": false,
@@ -336,7 +339,6 @@ describe("snapshots", () => {
 		    "crossOriginLoading": false,
 		    "cssChunkFilename": "[name].css",
 		    "cssFilename": "[name].css",
-		    "cssHeadDataCompression": true,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -846,6 +848,9 @@ describe("snapshots", () => {
 		-   "mode": "none",
 		+   "mode": "development",
 		@@ ... @@
+		-         "exportsDepth": Infinity,
+		+         "exportsDepth": 1,
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
 		@@ ... @@
@@ -859,9 +864,6 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "minRemainingSize": undefined,
 		+       "minRemainingSize": 0,
-		@@ ... @@
-		-     "cssHeadDataCompression": true,
-		+     "cssHeadDataCompression": false,
 		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
@@ -936,7 +938,16 @@ describe("snapshots", () => {
 		+       "module": true,
 		@@ ... @@
 		-     "chunkFilename": "[name].js",
+		-     "chunkFormat": "array-push",
 		+     "chunkFilename": "[name].mjs",
+		+     "chunkFormat": "module",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "import",
 		@@ ... @@
 		-       "dynamicImport": undefined,
 		-       "dynamicImportInWorker": undefined,
@@ -960,6 +971,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "scriptType": false,
 		+     "scriptType": "module",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "import",
 	`)
 	);
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
@@ -1897,6 +1911,9 @@ describe("snapshots", () => {
 			-   "mode": "none",
 			+   "mode": "development",
 			@@ ... @@
+			-         "exportsDepth": Infinity,
+			+         "exportsDepth": 1,
+			@@ ... @@
 			-     "unsafeCache": false,
 			+     "unsafeCache": [Function anonymous],
 			@@ ... @@
@@ -1910,9 +1927,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
-			@@ ... @@
-			-     "cssHeadDataCompression": true,
-			+     "cssHeadDataCompression": false,
 			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
@@ -2317,9 +2331,8 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			@@ ... @@
+			+         },
 			+         "type": "css",
-			+       },
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
@@ -2341,9 +2354,11 @@ describe("snapshots", () => {
 			+       },
 			+     },
 			@@ ... @@
-			+       },
 			+       "css": Object {
+			+         "import": true,
 			+         "namedExports": true,
+			+         "url": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2361,6 +2376,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2372,11 +2390,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

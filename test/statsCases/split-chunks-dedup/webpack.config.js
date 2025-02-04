@@ -1,4 +1,5 @@
-const { ModuleFederationPlugin } = require("../../../").container;
+const webpack = require("../../../");
+const { ModuleFederationPlugin } = webpack.container;
 const {
 	WEBPACK_MODULE_TYPE_PROVIDE
 } = require("../../../lib/ModuleTypeConstants");
@@ -41,11 +42,7 @@ module.exports = {
 
 								// @ts-expect-error
 								const sharedModuleName = origin.module._name;
-								let suffix = "";
-								if (usedSharedModuleNames.has(sharedModuleName)) {
-									suffix = `-${chunk.id}`;
-								}
-								const chunkName = `${sharedModuleName}${suffix}--shared`;
+								const chunkName = `${sharedModuleName}-${chunk.id}--shared`;
 								usedSharedModuleNames.add(sharedModuleName);
 								chunkIdChunkNameMap.set(chunk.id, chunkName);
 
@@ -74,6 +71,9 @@ module.exports = {
 					requiredVersion: "=1.0.0"
 				}
 			}
+		}),
+		new webpack.optimize.MergeDuplicateChunksPlugin({
+			stage: 10
 		})
 	],
 	stats: {

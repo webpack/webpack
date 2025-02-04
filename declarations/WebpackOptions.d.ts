@@ -159,9 +159,7 @@ export type WasmLoading = false | WasmLoadingType;
 /**
  * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
  */
-export type WasmLoadingType =
-	| ("fetch-streaming" | "fetch" | "async-node")
-	| string;
+export type WasmLoadingType = ("fetch" | "async-node") | string;
 /**
  * An entry point without name.
  */
@@ -494,10 +492,6 @@ export type CssChunkFilename = FilenameTemplate;
  */
 export type CssFilename = FilenameTemplate;
 /**
- * Compress the data in the head tag of CSS files.
- */
-export type CssHeadDataCompression = boolean;
-/**
  * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
  */
 export type DevtoolFallbackModuleFilenameTemplate = string | Function;
@@ -775,9 +769,17 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName = string;
 /**
+ * Enable/disable `@import` at-rules handling.
+ */
+export type CssParserImport = boolean;
+/**
  * Use ES modules named export for css exports.
  */
 export type CssParserNamedExports = boolean;
+/**
+ * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+ */
+export type CssParserUrl = boolean;
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -2106,10 +2108,6 @@ export interface Output {
 	 */
 	cssFilename?: CssFilename;
 	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: CssHeadDataCompression;
-	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -2907,9 +2905,17 @@ export interface CssAutoGeneratorOptions {
  */
 export interface CssAutoParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Generator options for css modules.
@@ -2950,9 +2956,17 @@ export interface CssGlobalGeneratorOptions {
  */
 export interface CssGlobalParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Generator options for css/module modules.
@@ -2980,18 +2994,34 @@ export interface CssModuleGeneratorOptions {
  */
 export interface CssModuleParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * Parser options for css modules.
  */
 export interface CssParserOptions {
 	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
 }
 /**
  * No generator options are supported for this module type.
@@ -3354,7 +3384,7 @@ export interface LazyCompilationOptions {
 				| ((
 						compiler: import("../lib/Compiler"),
 						callback: (
-							err?: Error,
+							err: Error | null,
 							api?: import("../lib/hmr/LazyCompilationPlugin").BackendApi
 						) => void
 				  ) => void)
@@ -3462,10 +3492,6 @@ export interface OutputNormalized {
 	 */
 	cssFilename?: CssFilename;
 	/**
-	 * Compress the data in the head tag of CSS files.
-	 */
-	cssHeadDataCompression?: CssHeadDataCompression;
-	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -3480,19 +3506,19 @@ export interface OutputNormalized {
 	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
-	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
+	enabledChunkLoadingTypes: EnabledChunkLoadingTypes;
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: EnabledLibraryTypes;
+	enabledLibraryTypes: EnabledLibraryTypes;
 	/**
 	 * List of wasm loading types enabled for use by entry points.
 	 */
-	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	enabledWasmLoadingTypes: EnabledWasmLoadingTypes;
 	/**
 	 * The abilities of the environment where the webpack generated code should run.
 	 */
-	environment?: Environment;
+	environment: Environment;
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */

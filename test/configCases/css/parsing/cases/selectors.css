@@ -1,0 +1,746 @@
+[title] {}
+[title=foo] {}
+[title="foo"] {}
+[ title = "foo" ] {}
+[   title   =   "foo"   ] {}
+[lang~="en-us"] {}
+[lang|="zh"] {}
+[href^="#"] {}
+[href$=".org"] {}
+[href*="example"] {}
+[href*="insensitive" i] {}
+[href*="insensitive" I] {}
+[href*="cAsE" s] {}
+[href*="cAsE" S] {}
+[foo|att=val] {}
+[*|att] {}
+[   *|att   ] {}
+[|att] {}
+[ |att ] {}
+[   |att   ] {}
+[att] {}
+[ att ] {}
+[   att   ] {}
+a[ class = "test" ] {}
+a[   class   =   "test"   ] {}
+[href*="insensitive"   i] {}
+[   href*="insensitive"   i   ] {}
+[   href   *=   "insensitive"   i   ] {}
+[   href   ] {}
+[frame=hsides i] {}
+#id.class[target] {}
+#id[target] {}
+[target].class {}
+[title='foo'] {}
+[data-style='value'][data-loading] {}
+a[href="te's't"] {}
+a[href='te"s"t'] {}
+[ng\:cloak] {}
+[ng\3a cloak] {}
+[ng\00003acloak] {}
+:not([foo=")"]) {}
+:not(div/*)*/) { }
+[foo=\"] {}
+[foo=\{] {}
+[foo=\(] {}
+[foo=yes\:\(it\'s\ work\)] {}
+[attr=\;] { }
+[*|attr|="test"] {}
+[foo|attr|="test"] {}
+
+.class {}
+.♥ {}
+.© {}
+.“‘’” {}
+.☺☃ {}
+.⌘⌥ {}
+.𝄞♪♩♫♬ {}
+.💩 {}
+.\? {}
+.\@ {}
+.\. {}
+.\3A \) {}
+.\3A \`\( {}
+.\31 23 {}
+.\31 a2b3c {}
+.\<p\> {}
+.\<\>\<\<\<\>\>\<\> {}
+.\+\+\+\+\+\+\+\+\+\+\[\>\+\+\+\+\+\+\+\>\+\+\+\+\+\+\+\+\+\+\>\+\+\+\>\+\<\<\<\<\-\]\>\+\+\.\>\+\.\+\+\+\+\+\+\+\.\.\+\+\+\.\>\+\+\.\<\<\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\.\>\.\+\+\+\.\-\-\-\-\-\-\.\-\-\-\-\-\-\-\-\.\>\+\.\>\. {}
+.\# {}
+.\#\# {}
+.\#\.\#\.\# {}
+.\_ {}
+.\{\} {}
+.\.fake\-class {}
+.foo\.bar {}
+.\3A hover {}
+.\3A hover\3A focus\3A active {}
+.\[attr\=value\] {}
+.f\/o\/o {}
+.f\\o\\o {}
+.f\*o\*o {}
+.f\!o\!o {}
+.f\'o\'o {}
+.f\~o\~o {}
+.f\+o\+o {}
+.-a-b-c- {}
+.\#fake-id {}
+foo.class > .foo.class {}
+.foo#id {}
+.class[target] {}
+.class#id[target] {}
+ul.list {}
+ul.list::before {}
+.\31 a2b3c {}
+.\<\>\<\<\<\>\>\<\> {}
+.\31 23 {}
+.\# {}
+.\#\# {}
+.\#fake\-id {}
+.foo\.bar {}
+.\3A hover {}
+.\3A hover\3A focus\3A active {}
+.\[attr\=value\] {}
+.not-pseudo\:focus {}
+.not-pseudo\:\:focus {}
+.\\1D306 {}
+.\; {}
+
+/* { } */a b {}
+/* test */a b {}
+/* { } */ a b {}
+/* test */ a b {}
+a/* { } */b {}
+a/* test */b {}
+a /* { } */ b {}
+a /* test */ b {}
+a b/* { } */ {}
+a b/* test */ {}
+a b /* { } */ {}
+a b /* test */ {}
+a b/* { } */{}
+a b/* test */{}
+a/* test */,/* test */b{}
+a /* test */ , /* test */ b {}
+
+article p {}
+article
+p {}
+article   p   {}
+article > p {}
+article
+>
+p {}
+article    >    p    {}
+p + img {}
+p
++
+img {}
+p   +   img {}
+p ~ img {}
+p
+~
+img {}
+p    ~    img {}
+article > p > a {}
+article
+>
+p
+>
+a {}
+div p {}
+.class p {}
+div .class {}
+.class .class {}
+#id p {}
+div #id {}
+#id #id {}
+[attribute] p {}
+div [attribute] {}
+[attribute] [src] {}
+div > p {}
+.class > p {}
+div > .class {}
+.class > .class {}
+#id > p {}
+div > #id {}
+#id > #id {}
+[attribute] > p {}
+div > [attribute] {}
+[attribute] > [src] {}
+div + p {}
+.class + p {}
+div + .class {}
+.class + .class {}
+#id + p {}
+div + #id {}
+#id + #id {}
+[attribute] + p {}
+div + [attribute] {}
+[attribute] + [src] {}
+div ~ p {}
+.class ~ p {}
+div ~ .class {}
+.class ~ .class {}
+#id ~ p {}
+div ~ #id {}
+#id ~ #id {}
+[attribute] ~ p {}
+div ~ [attribute] {}
+[attribute] ~ [src] {}
+a:hover [attribute] {}
+a:hover #id {}
+a:hover .class {}
+a:hover div#thing {}
+a + a[href='place'] {}
+ul.list + a {}
+.foo ~ a + bar {}
+a+ a {}
+a> a {}
+a~ a {}
+a +a {}
+a >a {}
+a ~a {}
+a+a {}
+a>a {}
+a~a {}
+a [type='button'] {}
+a
+[type='button'] {}
+a   a {}
+namespace|type#id > .foo {}
+#id > .cl + .cl2 {}
+a c, d + e h {}
+a ~ h + d {}
+div div div div div div div div div div div {}
+[href][class][name] h1 > h2 {}
+[href*="test.com"][rel='external'][id][class~="test"] > [name] {}
+[data-weird-attr*="Something=weird"], [data-weird-attr^="Something=weird"], [data-weird-attr$="Something=weird"], [data-weird-attr|="Something=weird"] {}
+* + * {}
+* * {}
+*         * {}
+*[href] *:not(*.green) {}
+*::-webkit-media-controls-play-button {}
+col.selected || td {}
+col.selected
+||
+td
+{}
+col.selected||td {}
+
+.one {}
+.foo.bar {}
+.foo#id {}
+.class[target] {}
+.class#id[target] {}
+#id.class {}
+#id.class[target] {}
+div#thing:hover {}
+div#thing::before {}
+a[href='place']:hover {}
+a[href='place']::before {}
+.one.two.three {}
+button.btn-primary {}
+*#z98y {}
+#one#two {}
+#one.two.three {}
+
+#id {}
+#♥ {}
+#© {}
+#“‘’” {}
+#☺☃ {}
+#⌘⌥ {}
+#𝄞♪♩♫♬ {}
+#💩 {}
+#\? {}
+#\@ {}
+#\. {}
+#\3A \) {}
+#\3A \`\( {}
+#\31 23 {}
+#\31 a2b3c {}
+#\<p\> {}
+#\<\>\<\<\<\>\>\<\> {}
+#\+\+\+\+\+\+\+\+\+\+\[\>\+\+\+\+\+\+\+\>\+\+\+\+\+\+\+\+\+\+\>\+\+\+\>\+\<\<\<\<\-\]\>\+\+\.\>\+\.\+\+\+\+\+\+\+\.\.\+\+\+\.\>\+\+\.\<\<\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\.\>\.\+\+\+\.\-\-\-\-\-\-\.\-\-\-\-\-\-\-\-\.\>\+\.\>\. {}
+#\# {}
+#\#\# {}
+#\#\.\#\.\# {}
+#\_ {}
+#\{\} {}
+#\.fake\-class {}
+#foo\.bar {}
+#\3A hover {}
+#\3A hover\3A focus\3A active {}
+#\[attr\=value\] {}
+#f\/o\/o {}
+#f\\o\\o {}
+#f\*o\*o {}
+#f\!o\!o {}
+#f\'o\'o {}
+#f\~o\~o {}
+#f\+o\+o {}
+#id {}
+#id.class {}
+#id.class[target] {}
+div#thing:hover {}
+div#thing:nth-child(2n+1) {}
+div#thing::before {}
+#foo[lang^=en] {}
+#\; {}
+#u-m\00002b {}
+#♥ {}
+#“‘’” {}
+#☺☃ {}
+#\@ {}
+#\. {}
+#\3A \) {}
+#\3A \`\( {}
+#\31 23 {}
+#\31 a2b3c {}
+#\<p\> {}
+#\<\>\<\<\<\>\>\<\> {}
+#\# {}
+#\#\# {}
+#\#\.\#\.\# {}
+#\_ {}
+#\{\} {}
+#\.fake\-class {}
+#foo\.bar {}
+#\3A hover {}
+#\3A hover\3A focus\3A active {}
+#\[attr\=value\] {}
+#f\/o\/o {}
+#f\\o\\o {}
+#f\*o\*o {}
+#f\!o\!o {}
+#f\\\'o\\\'o {}
+#f\~o\~o {}
+#f\+o\+o {}
+
+div, p {}
+div , p {}
+div   ,   p   {}
+a, a[href='place'] {}
+a #foo > [foo='bar'], .FOO {}
+div, p, a {}
+div,p,a{}
+div   ,   p   ,   a   {}
+div
+,
+p
+,
+a
+{}
+.foo, .bar, *.baz {}
+input::-moz-placeholder, input::placeholder {}
+a,b,c,d,e,f,g {}
+a, b, c, d, e, f, g {}
+*, * {}
+#id, #id2 {}
+h1, h2 {}
+.class, .foo {}
+[attr], [attrtoo] {}
+a/* { } */ b {}
+
+table.colortable {
+	& td {
+		text-align: center;
+		&.c { text-transform:uppercase }
+		&:first-child, &:first-child + td { border:1px solid black }
+	}
+
+	& th {
+		text-align:center;
+		background:black;
+		color:white;
+	}
+}
+
+.foo {
+	color: blue;
+	& > .bar { color: red; }
+}
+
+.foo {
+	color: blue;
+	&.bar { color: red; }
+}
+
+.foo, .bar {
+	color: blue;
+	& + .baz, &.qux { color: red; }
+}
+
+.foo {
+	color: blue;
+	& .bar & .baz & .qux { color: red; }
+}
+
+.foo {
+	color: blue;
+	& { padding: 2ch; }
+}
+
+/* TODO fix me */
+/*.foo {*/
+/*    color: blue;*/
+/*    && { padding: 2ch; }*/
+/*}*/
+
+.error, #test {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	&:is(.bar, &.baz) { color: red; }
+}
+
+figure {
+	margin: 0;
+
+	& > figcaption {
+		background: hsl(0 0% 0% / 50%);
+
+		& > p {
+			font-size: .9rem;
+		}
+	}
+}
+
+.foo {
+	color: blue;
+	&__bar { color: red; }
+}
+
+.foo {
+	color: red;
+
+	.bar {
+		color: blue;
+	}
+}
+
+.foo {
+	color: red;
+
+	+ .bar {
+		color: blue;
+	}
+}
+
+.foo {
+	color: blue;
+	& > .bar { color: red; }
+	> .baz { color: green; }
+}
+
+div {
+	color: red;
+
+	& input { margin: 1em; }
+	/* valid, no longer starts with an identifier */
+
+	:is(input) { margin: 1em; }
+	/* valid, starts with a colon,
+		 and equivalent to the previous rule. */
+}
+
+.foo, .bar {
+	color: blue;
+	+ .baz, &.qux { color: red; }
+}
+
+.foo {
+	color: blue;
+	& .bar & .baz & .qux { color: red; }
+}
+
+.foo {
+	color: red;
+	.parent & {
+		color: blue;
+	}
+}
+
+.foo {
+	color: red;
+	:not(&) {
+		color: blue;
+	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.ancestor .el {
+	.other-ancestor & { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+@layer base {
+	html {
+		block-size: 100%;
+
+		& body {
+			min-block-size: 100%;
+		}
+	}
+}
+
+@layer base {
+	html {
+		block-size: 100%;
+
+		@layer base.support {
+			& body {
+				min-block-size: 100%;
+			}
+		}
+	}
+}
+
+article {
+	color: green;
+	& { color: blue; }
+	color: red;
+}
+
+.foo {
+	color: red;
+	@media (min-width: 480px) {
+		& h1, & h2 {
+			color: blue;
+		}
+	}
+}
+
+:unknown {}
+:unknown() {}
+:unknown(foo) {}
+:unknown(foo bar) {}
+:unknown(foo, bar) {}
+:unknown([foo]) {}
+:unknown((foo bar)) {}
+:unknown(((foo bar))) {}
+:unknown({foo: bar}) {}
+:unknown({{foo: bar}}) {}
+:unknown({foo: bar !important}) {}
+:unknown("string") {}
+:unknown("string", foo) {}
+:unknown('string') {}
+:unknown(url(img.png)) {}
+:unknown({!}) {}
+:unknown(!) {}
+:unknown({;}) {}
+:unknown(;) {}
+
+:nth-child(2n+1) {}
+:nth-child(2n +1) {}
+:nth-child(2n + 1) {}
+:nth-child(2n+ 1) {}
+:nth-child(2n-1) {}
+:nth-child(2n -1) {}
+:nth-child(2n- 1) {}
+:nth-child(2n - 1) {}
+:nth-child(-2n+1) {}
+:nth-child(-2n +1) {}
+:nth-child(-2n + 1) {}
+:nth-child(-2n+ 1) {}
+:nth-child(-2n-1) {}
+:nth-child(-2n -1) {}
+:nth-child(-2n - 1) {}
+:nth-child(+2n+1) {}
+:nth-child(+2n +1) {}
+:nth-child(+2n + 1) {}
+:nth-child(+2n+ 1) {}
+:nth-child(+2n-1) {}
+:nth-child(+2n -1) {}
+:nth-child(+2n- 1) {}
+:nth-child(+2n - 1) {}
+:nth-child(n+1) {}
+:nth-child(n +1) {}
+:nth-child(n + 1) {}
+:nth-child(n+ 1) {}
+:nth-child(n-1) {}
+:nth-child(n -1) {}
+:nth-child(n- 1) {}
+:nth-child(n - 1) {}
+:nth-child(-n+1) {}
+:nth-child(-n +1) {}
+:nth-child(-n + 1) {}
+:nth-child(-n+ 1) {}
+:nth-child(-n-1) {}
+:nth-child(-n -1) {}
+:nth-child(-n- 1) {}
+:nth-child(-n - 1) {}
+:nth-child(+n+1) {}
+:nth-child(+n +1) {}
+:nth-child(+n + 1) {}
+:nth-child(+n+ 1) {}
+:nth-child(+n-1) {}
+:nth-child(+n -1) {}
+:nth-child(+n- 1) {}
+:nth-child(+n - 1) {}
+:nth-child(n) {}
+:nth-child(-n) {}
+:nth-child(+n) {}
+:nth-child(2n) {}
+:nth-child(-2n) {}
+:nth-child(+2n) {}
+:nth-child(N) {}
+:nth-child(-N) {}
+:nth-child(+N) {}
+:nth-child(2N) {}
+:nth-child(-2N) {}
+:nth-child(+2N) {}
+:nth-child(1) {}
+:nth-child(-1) {}
+:nth-child(+1) {}
+:nth-child(123456n-12345678) {}
+
+:Nth-Child(2n+1) {}
+:NTH-CHILD(2n+1) {}
+
+:nth-child(odd) {}
+:nth-child(ODD) {}
+:nth-child(oDd) {}
+:nth-child(even) {}
+:nth-child(eVeN) {}
+:nth-child(EVEN) {}
+
+:nth-child(/*test*/2n/*test*/+/*test*/1/*test*/) {}
+:nth-last-child(/*test*/+3n/*test*/-/*test*/2/*test*/) {}
+
+:nth-child(  2n  +  1  ) {}
+:nth-last-child(  +3n  -  2  ) {}
+
+:nth-child(-2n+1) {}
+:nth-last-child(2n+1) {}
+:nth-of-type(2n+1) {}
+:nth-last-of-type(2n+1) {}
+
+:nth-col(odd) {}
+:nth-col(2n+1) {}
+:nth-last-col(odd) {}
+:nth-last-col(2n+1) {}
+
+
+p:nth-child(0){}
+p:nth-child(+0){}
+p:nth-child(-0){}
+p:nth-child(1){}
+p:nth-child(+1){}
+p:nth-child(-1){}
+p:nth-child(3){}
+p:nth-child(+3){}
+p:nth-child(-3){}
+
+:nth-child(2n+1 of li) {}
+:nth-child(   2n+1 of li   ) {}
+:nth-child(2n+1 of li,.test) {}
+:nth-child(2n+1 of li, .test) {}
+:nth-child(-n+3 of li.important) {}
+tr:nth-child(even of :not([hidden])) {}
+
+:root {}
+:any-link {}
+button:hover {}
+div\:before {}
+div\::before {}
+iNpUt {}
+:matches(section, article, aside, nav) h1 {}
+input:not([type='submit']) {}
+div.sidebar:has(*:nth-child(5)):not(:has(*:nth-child(6))) {}
+::-webkit-scrollbar-thumb:window-inactive {}
+::-webkit-scrollbar-button:horizontal:decrement {}
+.test::-webkit-scrollbar-button:horizontal:decrement {}
+*:is(*) {}
+:--heading {}
+a:-moz-placeholder {}
+a:hover::before {}
+div :nth-child(2) {}
+a:hOvEr {}
+:-webkit-full-screen a {}
+
+a::after {}
+
+dialog::backdrop {}
+
+a::before {}
+
+video::cue {}
+video::cue(b) {}
+
+video::cue-region {}
+video::cue-region(#scroll) {}
+
+::grammar-error {}
+
+::marker {}
+
+tabbed-custom-element::part(tab) {}
+
+::placeholder {}
+
+::selection {}
+
+::slotted(*) {}
+::slotted(span) {}
+
+::spelling-error {}
+
+::target-text {}
+
+.form-range::-webkit-slider-thumb:active {}
+
+a::bEfOrE {}
+
+a:hover::before {}
+a:hover::-moz-placeholder {}
+a, b > .foo::before {}
+*:hover.class {}
+
+*|* {}
+foo|h1 {}
+foo|* {}
+|h1 {}
+*|h1 {}
+h1 {}
+\2d {}
+\2d a {}
+div\:before {}
+d\iv {}
+foreignObject {}
+html textPath {}
+div#thing {}
+* {}
+* #foo {}
+*#foo {}
+#foo * {}
+.bar * {}
+*.bar {}
+*[lang^=en] {}
+*:hover {}
+*::before {}
+* *:not(*) {}
+a/**/{}
+a/**/
+{}
+\@noat { }
+h1\\{
+	color: \\;
+}
+. a {
+
+}
+
+# a {
+
+}
+

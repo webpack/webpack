@@ -68,10 +68,12 @@ module.exports = function checkArrayExpectation(
 	kind,
 	filename,
 	upperCaseKind,
+	options,
 	done
 ) {
 	if (!done) {
-		done = upperCaseKind;
+		done = options;
+		options = upperCaseKind;
 		upperCaseKind = filename;
 		filename = `${kind}s`;
 	}
@@ -81,7 +83,10 @@ module.exports = function checkArrayExpectation(
 	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
-		const expected = require(expectedFilename);
+		let expected = require(expectedFilename);
+		if (typeof expected === "function") {
+			expected = expected(options);
+		}
 		const diff = diffItems(array, expected, kind);
 		if (expected.length < array.length) {
 			return (

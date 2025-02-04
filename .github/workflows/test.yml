@@ -56,7 +56,7 @@ jobs:
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn test:basic --ci
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           flags: basic
           functionalities: gcov
@@ -92,7 +92,7 @@ jobs:
           key: jest-unit-${{ env.GITHUB_SHA }}
           restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           flags: unit
           functionalities: gcov
@@ -104,7 +104,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 20.x]
+        node-version: [10.x, 20.x, 22.x]
         part: [a, b]
         include:
           # Test with main branches of webpack dependencies
@@ -118,10 +118,10 @@ jobs:
             use_main_branches: 1
           # Test on the latest version of Node.js
           - os: ubuntu-latest
-            node-version: 22.x
+            node-version: 23.x
             part: a
           - os: ubuntu-latest
-            node-version: 22.x
+            node-version: 23.x
             part: b
           # Test on the old LTS version of Node.js
           - os: ubuntu-latest
@@ -183,7 +183,7 @@ jobs:
           restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
       - run: yarn cover:merge
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           flags: integration
           functionalities: gcov

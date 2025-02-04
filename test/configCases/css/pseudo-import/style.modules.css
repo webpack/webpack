@@ -1,0 +1,68 @@
+:import(   /* test */   "./export.modules.css"   /* test */   ) {
+	IMPORTED_NAME: primary-color;
+}
+
+:import("library.modules.css") {
+	i__imported_a_0: a;
+	i__imported__b_1: -b;
+	i__imported___c_2: --c;
+	i__imported__d_3: _d;
+}
+
+.class {
+	color: IMPORTED_NAME;
+	background: IMPORTED_NAME;
+}
+
+
+.class {background: IMPORTED_NAME}
+
+.class {
+	color: i__imported_a_0;
+	color: i__imported__b_1;
+	color: i__imported___c_2;
+	color: i__imported__d_3;
+}
+
+:import("./after.modules.css") {
+	something: somevalue;
+}
+
+.class {
+	color: something;
+}
+
+:import("./after.modules.css") {
+	again: somevalue;
+}
+
+.class {
+	color: again;
+}
+
+/* TODO fix me */
+/*:import("reexport.modules.css") {
+	primary-color: _my_color;
+}
+
+.class {color: primary-color}*/
+
+:import("vars-1.modules.css") {
+	_i_multile_values: multile-values;
+}
+
+.class {
+	color:    _i_multile_values   ;
+}
+
+.nest {
+	:import("./export.modules.css") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}

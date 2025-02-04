@@ -1,0 +1,22 @@
+@import "./cases/at-rule.css";
+@import "./cases/bad-url-token.css";
+@import "./cases/cdo-and-cdc.css";
+@import "./cases/comment.css";
+@import "./cases/dashed-ident.css";
+@import "./cases/declaration.css";
+@import "./cases/dimension.css";
+@import "./cases/function.css";
+@import "./cases/hacks.css";
+@import "./cases/hex-colors.css";
+@import "./cases/important.css";
+@import "./cases/nesting.css";
+@import "./cases/number.css";
+@import "./cases/pseudo-functions.css";
+@import "./cases/selectors.css";
+@import "./cases/urls.css";
+@import "./cases/values.css";
+@import "./cases/newline-windows.css";
+
+body {
+	background: red;
+}

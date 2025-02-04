@@ -1,3 +1,6 @@
+@import "at-rule-value.module.css";
+@import "var-function.module.css";
+
 .class {
 	color: red;
 }
@@ -304,6 +307,18 @@
 	syntax: "<color>";
 	inherits: false;
 	initial-value: #c0ffee;
+}
+
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: "<color>";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: "<color>";
+	initial-value: #c0ffee;
+	inherits: false;
 }
 
 .class {
@@ -625,3 +640,496 @@
 		}
 	}
 }
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	: local(.class) {
+		color: red;
+	}
+
+	: local .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.comments {
+	:/** test */global(.class) {
+		color: red;
+	}
+
+	:/** test */global .class {
+		color: red;
+	}
+
+	:/** test */local(.class) {
+		color: red;
+	}
+
+	:/** test */local .class {
+		color: red;
+	}
+
+	./** test **/class {
+		color: red;
+	}
+
+	:local(./** test **/class) {
+		color: red;
+	}
+
+	:local ./** test **/class {
+		color: red;
+	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.error, #err-404 {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+.qqq {
+	color: green;
+	& .a { color: blue; }
+	color: red;
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		.content {
+			color: red;
+		}
+	}
+
+	.a {
+		color: red;
+	}
+}
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: "\1F44D";
+	suffix: " ";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.class {
+		font-size: 1.5em;
+	}
+}
+/* At-rule for "nice-style" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes "foo" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.feature) {
+	.class { opacity: 0; }
+
+	:scope .class-1 { opacity: 0; }
+
+	& .class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+.header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.a {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+	.test {
+		width: 200px;
+	}
+}
+
+#test {
+	c: 1;
+
+	#test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@keyframes "initial" { /* ... */ }
+@keyframes/**test**/"initial" { /* ... */ }
+@keyframes/**test**/"initial"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/"initial"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ "initial" /**test**/ /**test**/ { /* ... */ }
+@keyframes "None" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: "<percentage>";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused "initial", localkeyframes2;
+	animation-name: "initial";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
+.var {
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: "test";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: " (" var(--external-link) ")";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
+}
+
+.var-order {
+	background-color: var(--test);
+	--test: red;
+}
+

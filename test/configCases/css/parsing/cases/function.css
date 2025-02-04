@@ -1,0 +1,234 @@
+div {
+	prod: fn(100px);
+	prod: --fn(100px);
+	prod: --fn--fn(100px);
+}
+
+:root {
+	font-size: calc(100vw / 35);
+}
+
+div {
+	--width: calc(10% + 30px);
+
+	width: calc(0px);
+	line-height: calc(0);
+	line-height: calc(2 + 3 * 4);
+	line-height: calc((2 + 3) * 4);
+	line-height: calc(-5 * 0);
+	width: calc((100px + 100px));
+	width: calc(   (   100px   +   100px   )   );
+	width: calc(   100px   +    100px   );
+	width: calc(500px + 50%);
+	width: calc(10% + 20%);
+	width: calc(2pc + 3pt);
+	width: calc(100% / 3 - 2 * 1em - 2 * 1px);
+
+	width: calc(calc(50px));
+	width: calc(calc(60%) - 20px);
+	width: calc(calc(3 * 25%));
+	width: calc(2 * var(--width));
+	width: calc(pow(pow(30px / 1px, 3), 1/3) * 1px);
+	width: calc(infinity);
+	width: calc(InFiNiTy);
+	width: calc(-InFiNiTy);
+	width: calc(NaN);
+	width: calc((1 * 2) * (5px + 20em / 2) - 80% / (3 - 1) + 5px);
+}
+
+.bar {
+	font-size: calc(1rem * pow(1.5, -1));
+	font-size: calc(1rem * pow(1.5, 0));
+	font-size: calc(1rem * pow(1.5, 1));
+	font-size: calc(1rem * pow(1.5, 2));
+	font-size: calc(1rem * pow(1.5, 3));
+	font-size: calc(1rem * pow(1.5, 4));
+}
+
+.fade {
+	background-image: linear-gradient(silver 0%, white 20px, white calc(100% - 20px), silver 100%);
+}
+
+div {
+	/*height: -webkit-calc(9/16 * 100%)!important;*/
+	/*width: -moz-calc((50px - 50%)*2);*/
+}
+div { width: calc(100% / 4); }
+div { margin-top: calc(-120% - 4px); }
+div { width: calc(50% - ( ( 4% ) * 0.5 ) ); }
+
+.fade {
+	background-image: linear-gradient(silver 0%, white 20px,
+	white calc(100% - 20px), silver 100%);
+}
+
+.type {
+	/* Set font-size to 10x the average of vw and vh,
+		 but don’t let it go below 12px. */
+	font-size: max(10 * (1vw + 1vh) / 2, 12px);
+}
+
+.type {
+	/* Force the font-size to stay between 12px and 100px */
+	font-size: clamp(12px, 10 * (1vw + 1vh) / 2, 100px);
+}
+
+.more {
+	width: mod(18px, 5px);
+	transform: rotate(mod(-140deg, -90deg));
+	transform: rotate(atan2(1, -1));
+	transform: rotate(tan(90deg));
+	transform: rotate(atan(tan(90deg)));
+	font-size: hypot(2em);
+	font-size: hypot(-2em);
+	font-size: hypot(30px, 40px);
+	background-position: sign(10%);
+	width: calc(pow(e, pi) - pi);
+	width: min(pi, 5, e);
+	width: log(5);
+	width: log(5, 5);
+	width: round(var(--width), 50px);
+	width: round(nearest, var(--width), 50px);
+	width: round(up, var(--width), 50px);
+	width: round(down, var(--width), 50px);
+	width: round(to-zero, var(--width), 50px);
+}
+
+.min-max {
+	width: min(10px, 20px, 40px, 100px);
+	width: max(10px, 20px, 40px, 100px);
+	width: min(   10px   ,   20px   ,   40px   ,   100px   );
+}
+
+.rem {
+	width: rem(-18px, 5px);
+}
+
+.sin {
+	transform: rotate(sin(45deg));
+	transform: rotate(sin(3.14159 / 4));
+}
+
+.cos {
+	transform: rotate(cos(45deg));
+	transform: rotate(cos(3.14159 / 4));
+}
+
+.asin {
+	transform: rotate(asin(45deg));
+	transform: rotate(asin(pi / 4));
+}
+
+.acos {
+	transform: rotate(acos(45deg));
+	transform: rotate(acos(pi / 4));
+}
+
+.atan {
+	transform: rotate(atan(1 / -1));
+}
+
+.atan2 {
+	transform: rotate(atan2(1, -1));
+}
+
+.sqrt {
+	size: sqrt(250);
+}
+
+.exp {
+	size: exp(250 * 2);
+}
+
+.abs {
+	background-position: calc(10% * abs(-10%));
+}
+
+.sign {
+	background-position: sign(10%);
+	background-position: sign(10% * 2);
+	background-position: sign(   10%   *   2   );
+	background-position: sign(10%*2);
+	background-position: sign(   10   +   10   );
+	background-position: sign(   10%   );
+	width: calc(   (   100px   +   100px   )   *   2   );
+}
+
+a {
+	background: element(#css-source) no-repeat;
+	background: element(var(--foo)) no-repeat;
+	background: -moz-element(#css-source) no-repeat;
+	background: -moz-element(var(--foo)) no-repeat;
+}
+
+a {
+	background: linear-gradient(white, gray);
+	background: linear-gradient(yellow, blue);
+	background: linear-gradient(to bottom, yellow, blue);
+	background: linear-gradient(180deg, yellow, blue);
+	background: linear-gradient(to top, blue, yellow);
+	background: linear-gradient(to bottom, yellow 0%, blue 100%);
+	background: linear-gradient(135deg, yellow, blue);
+	background: linear-gradient(-45deg, blue, yellow);
+	background: linear-gradient(yellow, blue 20%, #0f0);
+	background: linear-gradient(to top right, red, white, blue);
+	background: linear-gradient(0deg, blue, green 40%, red);
+	background: linear-gradient(.25turn, red 10%, blue);
+	background: linear-gradient(45deg, red 0 50%, blue 50% 100%);
+}
+
+div {
+	/*   mix( [ <timeline> && [ by <easing-function> ]? ] ; <start-value> ; <end-value>) */
+	opacity: mix( 70% by ease ; 0% ; 100% );
+	opacity: mix(70%;0%;100%);
+}
+
+a {
+	background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+	background-image: url("./img.png");
+	background-image: url('./img.png');
+	background-image: URL('./img.png');
+	background-image: url(   './img.png');
+	background-image: url('./img.png'   );
+	background-image: url(   './img.png'   );
+	background-image: url(
+	'img.png'
+	);
+	background-image: url();
+	background-image: url(   );
+	background-image: url("");
+	background-image: url(   ""   );
+	background-image: url('');
+	background-image: url(   ''   );
+	background-image: url(   ' '   );
+	background-image: url(./img.png);
+	background-image: url(   ./img.png   );
+	background-image: url(   ./image\32.png   );
+	background-image: url(
+	./image\32.png
+	);
+	background-image: url(
+
+
+
+		./image\32.png
+
+
+
+	);
+	background-image: url(
+
+
+
+	./image\32.png
+
+
+
+		);
+}
+
+div {
+	color: var(--a);
+	color: var(--a,);
+	color: var(--a, blue);
+}

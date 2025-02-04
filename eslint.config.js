@@ -24,6 +24,7 @@ module.exports = [
 			"!test/**/errors.js",
 			"!test/**/warnings.js",
 			"!test/**/deprecations.js",
+			"!test/**/infrastructure-log.js",
 			"!test/helpers/*.*",
 
 			// Ignore some folders

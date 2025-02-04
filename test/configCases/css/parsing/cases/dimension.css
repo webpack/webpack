@@ -1,0 +1,9 @@
+a {
+	prop: 10px;
+	prop: .10px;
+	prop: 12.34px;
+	prop: 0000.000px;
+	prop: 1px\\9;
+	prop: 1e;
+	prop: 1unknown;
+}

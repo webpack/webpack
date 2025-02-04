@@ -29,6 +29,10 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	columns?: boolean;
 	/**
+	 * Emit debug IDs into source and SourceMap.
+	 */
+	debugIds?: boolean;
+	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
 	exclude?: Rules;

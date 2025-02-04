@@ -248,6 +248,7 @@ const describeCases = config => {
 												"infrastructureLog",
 												"infrastructure-log",
 												"InfrastructureLog",
+												options,
 												done
 											)
 										) {
@@ -288,6 +289,7 @@ const describeCases = config => {
 												"infrastructureLog",
 												"infrastructure-log",
 												"InfrastructureLog",
+												options,
 												done
 											)
 										) {
@@ -325,6 +327,7 @@ const describeCases = config => {
 												"infrastructureLog",
 												"infrastructure-log",
 												"InfrastructureLog",
+												options,
 												done
 											)
 										) {
@@ -356,6 +359,7 @@ const describeCases = config => {
 													jsonStats,
 													"error",
 													"Error",
+													options,
 													done
 												)
 											) {
@@ -367,6 +371,7 @@ const describeCases = config => {
 													jsonStats,
 													"warning",
 													"Warning",
+													options,
 													done
 												)
 											) {

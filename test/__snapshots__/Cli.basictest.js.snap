@@ -1717,6 +1717,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-auto-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`@import\` at-rules handling.",
+        "multiple": false,
+        "path": "module.parser.css/auto.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`@import\` at-rules handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-named-exports": Object {
     "configs": Array [
       Object {
@@ -1727,6 +1740,32 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+        "multiple": false,
+        "path": "module.parser.css/auto.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`@import\` at-rules handling.",
+        "multiple": false,
+        "path": "module.parser.css/global.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`@import\` at-rules handling.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1743,6 +1782,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+        "multiple": false,
+        "path": "module.parser.css/global.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`@import\` at-rules handling.",
+        "multiple": false,
+        "path": "module.parser.css.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`@import\` at-rules handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`@import\` at-rules handling.",
+        "multiple": false,
+        "path": "module.parser.css/module.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`@import\` at-rules handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-module-named-exports": Object {
     "configs": Array [
       Object {
@@ -1756,6 +1834,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-module-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+        "multiple": false,
+        "path": "module.parser.css/module.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-named-exports": Object {
     "configs": Array [
       Object {
@@ -1766,6 +1857,19 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+        "multiple": false,
+        "path": "module.parser.css.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6191,19 +6295,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-css-head-data-compression": Object {
-    "configs": Array [
-      Object {
-        "description": "Compress the data in the head tag of CSS files.",
-        "multiple": false,
-        "path": "output.cssHeadDataCompression",
-        "type": "boolean",
-      },
-    ],
-    "description": "Compress the data in the head tag of CSS files.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "output-devtool-fallback-module-filename-template": Object {
     "configs": Array [
       Object {
@@ -6342,7 +6433,6 @@ Object {
         "path": "output.enabledWasmLoadingTypes[]",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],
@@ -7256,7 +7346,6 @@ Object {
         "path": "output.wasmLoading",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],
@@ -7350,7 +7439,6 @@ Object {
         "path": "output.workerWasmLoading",
         "type": "enum",
         "values": Array [
-          "fetch-streaming",
           "fetch",
           "async-node",
         ],

@@ -22,3 +22,11 @@ a {
 .foo_bar {
   color: red;
 }
+
+.class {
+	color: green;
+}
+
+.default {
+	color: blue;
+}

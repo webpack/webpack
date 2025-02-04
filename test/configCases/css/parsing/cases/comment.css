@@ -1,0 +1,51 @@
+/* comment */a/* comment */
+{
+	/* comment */color/* comment */:/* comment */red/* comment */;
+}
+
+/* a { color: black } */
+/**/
+/* */
+div {
+	/* inside */
+	color: black;
+	/* between */
+	background: red;
+	/* end */
+}
+/* b */
+
+a {
+	color: black;
+	/* c */
+}
+
+@media/* comment */screen/* comment */{}
+@media /* comment */ screen /* comment */ {}
+
+/*!test*/
+/*!te
+st*/
+/*!te
+
+
+st*/
+/*!te**st*/
+/****************************/
+/*************** FOO *****************/
+/* comment *//* comment */
+
+/* comment *//* comment */
+/**/
+/*a*/
+/*
+*/
+/**//**/
+/**//**//*a*/
+/**//**//* a *//**//**/
+./**test*//**test**/a { background: red; }
+
+/**
+
+ */
+

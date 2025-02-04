@@ -373,6 +373,26 @@ it("should bao; thrown sync error from plugin", async () => {
 				`);
 });
 
+it("should emit warning when 'output.iife'=false is used with 'output.library.type'='umd'", async () => {
+	await expect(
+		compile({
+			mode: "production",
+			entry: "./false-iife-umd.js",
+			output: { library: { type: "umd" }, iife: false }
+		})
+	).resolves.toMatchInlineSnapshot(`
+		Object {
+		  "errors": Array [],
+		  "warnings": Array [
+		    Object {
+		      "message": "Configuration:\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
+		      "stack": "FalseIIFEUmdWarning: Configuration:\\nSetting 'output.iife' to 'false' is incompatible with 'output.library.type' set to 'umd'. This configuration may cause unexpected behavior, as UMD libraries are expected to use an IIFE (Immediately Invoked Function Expression) to support various module formats. Consider setting 'output.iife' to 'true' or choosing a different 'library.type' to ensure compatibility.\\nLearn more: https://webpack.js.org/configuration/output/",
+		    },
+		  ],
+		}
+	`);
+});
+
 describe("loaders", () => {
 	it("should emit error thrown at module level", async () => {
 		await expect(

@@ -1,0 +1,269 @@
+@import "./style-import.css";
+@import "print.css?foo=1";
+@import url("print.css?foo=2");
+@import "print.css?foo=3" layer(default);
+@import url("print.css?foo=4") layer(default);
+@import "print.css?foo=5" supports(display: flex);
+@import url("print.css?foo=6") supports(display: flex);
+@import "print.css?foo=7" screen and (min-width: 400px);
+@import url("print.css?foo=8") screen and (min-width: 400px);
+@import "print.css?foo=9" layer(default) supports(display: flex);
+@import "print.css?foo=10" layer(default) screen and (min-width: 400px);
+@import "print.css?foo=11" supports(display: flex) screen and (min-width: 400px);
+@import "print.css?foo=12" layer(default) supports(display: flex) screen and (min-width: 400px);
+@import "print.css?foo=13"layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url(print.css?foo=14)layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url("print.css?foo=15")layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url(print.css?foo=16)layer(default)supports(background: url(./img.png))screen and (min-width: 400px);
+@import url(print.css?foo=17)layer(default)supports(background: url("./img.png"))screen and (min-width: 400px);
+@import url(print.css?foo=18)screen;
+@import url("print.css?foo=19")screen;
+@import "print.css?foo=20"screen;
+@import url(print.css?foo=18)   screen   ;
+@import url("print.css?foo=19")   screen   ;
+@import "print.css?foo=20"   screen  ;
+@import "print.css?foo=21"    ;
+
+/* Has the same URL */
+@import "imported.css";
+@import "imported.css" layer(base);
+@import "imported.css" supports(display: flex);
+@import "imported.css" screen, print;
+
+@import url(style2.css?foo=1);
+@import url('style2.css?foo=2');
+@import url("style2.css?foo=3");
+@IMPORT url(style2.css?foo=4);
+@import URL(style2.css?foo=5);
+@import url(style2.css?foo=6 );
+@import url( style2.css?foo=7);
+@import url( style2.css?foo=8 );
+@import url(
+style2.css?foo=9
+);
+@import url();
+@import url('');
+@import url("");
+@import '';
+@import "";
+@import "   ";
+@import "\
+";
+@import url();
+@import url('');
+@import url("");
+@import url("") /* test */;
+@import url("") screen and (orientation:landscape);
+@import url(style2.css) screen and (orientation:landscape);
+@import url(style2.css) SCREEN AND (ORIENTATION: LANDSCAPE);
+@import url(style2.css)screen and (orientation:landscape);
+@import url(style2.css)  screen and (orientation:landscape);
+@import url(style2.css) screen and (orientation:landscape);
+@import url(style2.css) (min-width: 100px);
+@import url(https://test.cases/path/../../../../configCases/css/import/external.css);
+@import url(https://test.cases/path/../../../../configCases/css/import/external.css) screen and (orientation:landscape);
+@import "//example.com/style.css";
+@import url('test.css?foo=1&bar=1');
+@import url('style2.css?foo=1&bar=1#hash');
+@import url('style2.css?foo=1&bar=1#hash') screen and (orientation:landscape);
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto?foo=1') layer(super.foo) supports(display: flex) screen and (min-width: 400px);
+
+@import './sty\
+le3.css?bar=1';
+@import './sty\
+\
+\
+le3.css?bar=2';
+@import url('./sty\
+le3.css?bar=3');
+@import url('./sty\
+\
+\
+le3.css?=bar4');
+
+@import "./styl'le7.css";
+@import url("./styl'le7.css?foo=1");
+@import './styl\'le7.css';
+@import url('./styl\'le7.css');
+@import './test test.css';
+@import url('./test test.css?foo=1');
+@import './test\ test.css?foo=2';
+@import url('./test\ test.css?foo=3');
+@import './test%20test.css?foo=4';
+@import url('./test%20test.css?foo=5');
+@import './\74\65\73\74.css';
+@import url('./\74\65\73\74.css?foo=1');
+@import './t\65\73\74.css?foo=2';
+@import url('./t\65\73\74.css?foo=3');
+@import url(./test\ test.css?foo=6);
+@import url(./t\65st%20test.css?foo=7);
+@import url('./t\65st%20test.css?foo=8');
+@import url("./t\65st%20test.css?foo=9");
+@import "./t\65st%20test.css?fpp=10";
+@import './t\65st%20test.css?foo=11';
+@import url(                 style6.css?foo=bazz                      );
+@import '\
+\
+\
+';
+@import url('./string-loader.js?esModule=false!./test.css');
+@import url(style4.css?foo=bar);
+@import url(style4.css?foo=bar#hash);
+@import url(style4.css?#hash);
+@import "style4.css?foo=1" supports(display: flex);
+@import "style4.css?foo=2" supports(display: flex) screen and (orientation:landscape);
+
+@import "   ./style4.css?foo=3   ";
+@import url('   ./style4.css?foo=4   ');
+@import url(   ./style4.css?foo=5   );
+
+@import url('   https://fonts.googleapis.com/css?family=Roboto   ');
+@import url('./string-loader.js?esModule=false');
+@import url('   ./string-loader.js?esModule=false!./test.css   ') screen and (orientation: landscape);
+@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20red%3B%0D%0A%7D);
+@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20blue%3B%0D%0A%7D) screen and (orientation:landscape);
+@import url("data:text/css;charset=utf-8;base64,YSB7DQogIGNvbG9yOiByZWQ7DQp9");
+
+@import url("./style5.css?foo=1") supports();
+@import url("./style5.css?foo=2") supports(    );
+@import url("./style5.css?foo=3") supports(unknown);
+@import url("./style5.css?foo=4") supports(display: flex);
+@import url("./style5.css?foo=5") supports(display: flex !important);
+@import url("./style5.css?foo=6") supports(display: flex) screen and (min-width: 400px);
+@import url("./style5.css?foo=7") supports(selector(a b));
+@import url("./style5.css?foo=8") supports(   display: flex   );
+@import url("./layer.css?foo=1") layer;
+@import url("./layer.css?foo=2") layer(default);
+@import url("./layer.css?foo=3") layer(default) supports(display: flex) screen and (min-width: 400px);
+@import url("./layer.css?foo=3") layer supports(display: flex) screen and (min-width: 400px);
+@import url("./layer.css?foo=4") layer() supports(display: flex) screen and (min-width: 400px);
+@import url("./layer.css?foo=5") layer();
+@import url("./layer.css?foo=6") layer(   foo.bar.baz   );
+@import url("./layer.css?foo=7") layer(      );
+@import url("./style6.css")layer(default)supports(display: flex)screen and (min-width:400px);
+@import "./style6.css?foo=1"layer(default)supports(display: flex)screen and (min-width:400px);
+@import "./style6.css?foo=2"supports(display: flex)screen and (min-width:400px);
+@import "./style6.css?foo=3"screen and (min-width:400px);
+@import url("./style6.css?foo=4")screen and (min-width:400px);
+@import url(./style6.css?foo=5)screen and (min-width:400px);
+@import url("./style6.css?foo=6")     layer(     default     )     supports(     display     :     flex     )     screen     and     (     min-width     :     400px     );
+@import URL("./style6.css?foo=7") LAYER(DEFAULT) SUPPORTS(DISPLAY: FLEX) SCREEN AND (MIN-WIDTH: 400PX);
+@import url("./style6.css?foo=8") LAYER SUPPORTS(DISPLAY: FLEX) SCREEN AND (MIN-WIDTH: 400PX);
+@import url("./style6.css?foo=9") /* Comment */ layer(/* Comment */default/* Comment */) /* Comment */ supports(/* Comment */display/* Comment */:/* Comment */ flex/* Comment */)/* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */);
+@import url(style6.css?foo=10) /* Comment */;
+@import url(style6.css?foo=11) /* Comment */   /* Comment */;
+@import url(style6.css?foo=12) /* Comment *//* Comment */;
+@import url(style6.css?foo=13)/* Comment *//* Comment */;
+@import
+url(style6.css?foo=14)
+/* Comment */
+/* Comment */;
+@import /* Comment */ url(style6.css?foo=15) /* Comment */;
+@import url(style6.css?foo=16) /* Comment */ print and (orientation:landscape);
+@import url(style6.css?foo=17)/* Comment */print and (orientation:landscape)/* Comment */;
+@import /* Comment */ url(style6.css?foo=18) /* Comment */ print and (orientation:landscape);
+
+@import url("./style8.css") screen and (min-width: 400px);
+@import url("./style8.css") (prefers-color-scheme: dark);
+@import url("./style8.css") supports(display: flex);
+@import url("./style8.css") supports(((display: flex)));
+@import url("./style8.css") supports(((display: inline-grid))) screen and (((min-width: 400px)));
+@import url("./style8.css") supports(display: flex);
+@import url('./style8.css') supports(display: grid);
+@import url("./style8.css") supports(display: flex) screen and (min-width: 400px);
+@import url("./style8.css") layer(framework);
+@import url("./style8.css") layer(default);
+@import url("./style8.css") layer(base);
+@import url("./style8.css") layer(default) supports(display: flex);
+@import url("./style8.css") layer(default) supports(display: flex) screen and (min-width: 400px);
+
+/* anonymous */
+@import "style2.css" layer();
+@import "style2.css" layer;
+
+/* All unknown parse as media for compatibility */
+@import url("./style9.css") unknown(default) unknown(display: flex) unknown;
+@import url("./style9.css") unknown(default);
+
+@import url("./style10.css");
+
+@import "./media-nested.css" screen and (min-width: 400px);
+@import "./supports-nested.css" supports(display: flex);
+@import "./layer-nested.css" layer(foo);
+@import "./all-nested.css" layer(foo) supports(display: flex) screen and (min-width: 400px);
+@import "./mixed-nested.css" screen and (min-width: 400px);
+@import "./anonymous-nested.css" layer;
+@import "./media-deep-deep-nested.css" screen and (orientation: portrait);
+@import "./duplicate-nested.css" screen and (orientation: portrait);
+@import "./anonymous-nested.css" supports(display: flex) screen and (orientation: portrait);
+@import "./all-nested.css" layer(super.foo) supports(display: flex) screen and (min-width: 400px);
+
+/* Inside support */
+
+@import url("/style2.css?warning=6") supports(unknown: layer(super.foo)) screen and (min-width: 400px);
+@import url("/style2.css?warning=7") supports(url: url("./unknown.css")) screen and (min-width: 400px);
+@import url("/style2.css?warning=8") supports(url: url(./unknown.css)) screen and (min-width: 400px);
+
+/** Possible syntax in future */
+
+@import url("/style2.css?foo=unknown") layer(super.foo) supports(display: flex) unknown("foo") screen and (min-width: 400px);
+@import url("/style2.css?foo=unknown1") layer(super.foo) supports(display: url("./unknown.css")) unknown(foo) screen and (min-width: 400px);
+@import url("/style2.css?foo=unknown2") layer(super.foo) supports(display: url(./unknown.css)) "foo" screen and (min-width: 400px);
+@import "./style2.css?unknown3" "string";
+
+/** Unknown */
+
+@import-normalize;
+
+/** Warnings */
+
+@import nourl(test.css);
+@import ;
+@import foo-bar;
+@import layer(super.foo) "./style2.css?warning=1" supports(display: flex) screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) "./style2.css?warning=2" screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) "./style2.css?warning=3";
+@import layer(super.foo) url("./style2.css?warning=4") supports(display: flex) screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) url("./style2.css?warning=5") screen and (min-width: 400px);
+@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url("./style2.css?warning=6");
+@import url("/style2.css?wrong-order-but-valid=6") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
+@namespace url(http://www.w3.org/1999/xhtml);
+@import url("./style2.css?after-namespace");
+@import supports(background: url("./img.png"));
+@import supports(background: url("./img.png")) screen and (min-width: 400px);
+@import layer(test) supports(background: url("./img.png")) screen and (min-width: 400px);
+@import screen and (min-width: 400px);
+
+@import url(./style2.css?multiple=1) url(./style2.css?multiple=2);
+@import url("./style2.css?multiple=3") url("./style2.css?multiple=4");
+@import "./style2.css?strange=3" url("./style2.css?multiple=4");
+
+@import url("external-1.css");
+@import url("external-2.css") supports(display: grid) screen and (max-width: 400px);
+@import url("external-3.css") supports(not (display: grid) and (display: flex)) screen and (max-width: 400px);
+@import url("external-4.css") supports((selector(h2 > p)) and
+    (font-tech(color-COLRv1)));
+@import url(external-5.css) layer(default);
+@import url(external-6.css) layer(default);
+@import url("external-7.css") layer();
+@import url("external-8.css") layer;
+@import url("external-9.css") print;
+@import url("external-10.css") print, screen;
+@import url("external-11.css") screen;
+@import url("external-12.css") screen and (orientation: landscape);
+@import url("external-13.css") supports(not (display: flex));
+@import url("external-14.css") layer(default) supports(display: grid) screen and (max-width: 400px);
+
+@import url("ignore.css");
+@import url("list-of-media-queries.css");
+@import url("/alias.css");
+@import url("circular.css");
+/* FIXME */
+/*@import url("webpackIgnore-order.css");*/
+
+body {
+	background: red;
+}

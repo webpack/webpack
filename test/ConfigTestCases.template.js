@@ -183,6 +183,7 @@ const describeCases = config => {
 									fakeStats,
 									"error",
 									"Error",
+									options,
 									done
 								)
 							) {
@@ -226,6 +227,7 @@ const describeCases = config => {
 											"infrastructureLog",
 											"infrastructure-log",
 											"InfrastructureLog",
+											options,
 											done
 										)
 									) {
@@ -299,6 +301,7 @@ const describeCases = config => {
 											"infrastructureLog",
 											"infrastructure-log",
 											"InfrastructureLog",
+											options,
 											done
 										)
 									) {
@@ -343,6 +346,7 @@ const describeCases = config => {
 										jsonStats,
 										"error",
 										"Error",
+										options,
 										done
 									)
 								) {
@@ -354,6 +358,7 @@ const describeCases = config => {
 										jsonStats,
 										"warning",
 										"Warning",
+										options,
 										done
 									)
 								) {
@@ -373,6 +378,7 @@ const describeCases = config => {
 										{ deprecations },
 										"deprecation",
 										"Deprecation",
+										options,
 										done
 									)
 								) {
@@ -393,6 +399,7 @@ const describeCases = config => {
 										"infrastructureLog",
 										"infrastructure-log",
 										"InfrastructureLog",
+										options,
 										done
 									)
 								) {
@@ -438,6 +445,7 @@ const describeCases = config => {
 											expect,
 											jest,
 											__STATS__: jsonStats,
+											__STATS_I__: i,
 											nsObj: m => {
 												Object.defineProperty(m, Symbol.toStringTag, {
 													value: "Module"
@@ -469,7 +477,7 @@ const describeCases = config => {
 											runInNewContext = true;
 										}
 										if (testConfig.moduleScope) {
-											testConfig.moduleScope(baseModuleScope);
+											testConfig.moduleScope(baseModuleScope, options);
 										}
 										const esmContext = vm.createContext(baseModuleScope, {
 											name: "context for esm"
@@ -628,7 +636,7 @@ const describeCases = config => {
 													_globalAssign: { expect }
 												};
 												if (testConfig.moduleScope) {
-													testConfig.moduleScope(moduleScope);
+													testConfig.moduleScope(moduleScope, options);
 												}
 												if (!runInNewContext)
 													content = `Object.assign(global, _globalAssign); ${content}`;

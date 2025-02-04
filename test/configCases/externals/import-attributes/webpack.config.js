@@ -58,7 +58,7 @@ module.exports = {
 		"./eager.json": "import ./eager.json",
 		"./weak.json": "import ./weak.json",
 		"./pkg.json": "import ./pkg.json",
-		"./pkg": "import ./pkg",
+		"./pkg": "import ./pkg.json",
 		"./re-export.json": "module ./re-export.json",
 		"./re-export-directly.json": "module ./re-export-directly.json",
 		"./static-package-module-import.json":

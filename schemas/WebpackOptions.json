@@ -395,8 +395,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
     },
@@ -483,14 +489,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
-    },
-    "CssHeadDataCompression": {
-      "description": "Compress the data in the head tag of CSS files.",
-      "type": "boolean"
     },
     "CssModuleGeneratorOptions": {
       "description": "Generator options for css/module modules.",
@@ -516,10 +524,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserImport": {
+      "description": "Enable/disable `@import` at-rules handling.",
+      "type": "boolean"
     },
     "CssParserNamedExports": {
       "description": "Use ES modules named export for css exports.",
@@ -530,10 +548,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserUrl": {
+      "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
+      "type": "boolean"
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -564,7 +592,7 @@
         },
         {
           "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
         }
       ]
     },
@@ -2066,7 +2094,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err?: Error, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err: Error | null, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -3337,9 +3365,6 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
-        "cssHeadDataCompression": {
-          "$ref": "#/definitions/CssHeadDataCompression"
-        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3546,9 +3571,6 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
-        "cssHeadDataCompression": {
-          "$ref": "#/definitions/CssHeadDataCompression"
-        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3661,7 +3683,13 @@
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
-      }
+      },
+      "required": [
+        "environment",
+        "enabledChunkLoadingTypes",
+        "enabledLibraryTypes",
+        "enabledWasmLoadingTypes"
+      ]
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
@@ -5395,7 +5423,7 @@
       "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["fetch-streaming", "fetch", "async-node"]
+          "enum": ["fetch", "async-node"]
         },
         {
           "type": "string"

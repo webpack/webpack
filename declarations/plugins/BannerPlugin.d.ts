@@ -51,7 +51,7 @@ export interface BannerPluginOptions {
 	 */
 	raw?: boolean;
 	/**
-	 * Specifies the banner.
+	 * Specifies the stage when add a banner.
 	 */
 	stage?: number;
 	/**
