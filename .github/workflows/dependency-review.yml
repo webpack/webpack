@@ -14,6 +14,7 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
+          allow-dependencies-licenses: "pkg:npm/@cspell/dict-en-common-misspellings"
           allow-licenses: |
             0BSD,
             AFL-1.1,
@@ -57,7 +58,4 @@ jobs:
             Python-2.0,
             Python-2.0.1,
             Unicode-DFS-2016,
-            Unlicense,
-            ISC AND MIT,
-            Apache-2.0 AND MIT,
-            Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT
+            Unlicense
