@@ -58,3 +58,8 @@ jobs:
             Python-2.0.1,
             Unicode-DFS-2016,
             Unlicense
+            ISC AND MIT
+            Apache-2.0 AND MIT
+            Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT
+            # Exceptions
+            CC BY-SA 4.0
