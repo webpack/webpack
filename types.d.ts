@@ -7482,6 +7482,10 @@ declare interface KnownAssetInfo {
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
 	parsed?: boolean;
+	moduleArgument?: string;
+	exportsArgument?: string;
+	strict?: boolean;
+	moduleConcatenationBailout?: string;
 	fileDependencies?: LazySet<string>;
 	contextDependencies?: LazySet<string>;
 	missingDependencies?: LazySet<string>;
@@ -7493,10 +7497,6 @@ declare interface KnownBuildInfo {
 	snapshot?: null | Snapshot;
 }
 declare interface KnownBuildMeta {
-	moduleArgument?: string;
-	exportsArgument?: string;
-	strict?: boolean;
-	moduleConcatenationBailout?: string;
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
