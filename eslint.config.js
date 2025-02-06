@@ -401,6 +401,7 @@ module.exports = [
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{
+					ignores: ["Blob"],
 					allowExperimental: true
 				}
 			],
