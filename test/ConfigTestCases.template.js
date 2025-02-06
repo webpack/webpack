@@ -470,6 +470,9 @@ const describeCases = config => {
 											baseModuleScope.getComputedStyle =
 												globalContext.getComputedStyle;
 											baseModuleScope.URL = URL;
+											if (typeof Blob !== "undefined") {
+												baseModuleScope.Blob = Blob;
+											}
 											baseModuleScope.Worker =
 												require("./helpers/createFakeWorker")({
 													outputDirectory

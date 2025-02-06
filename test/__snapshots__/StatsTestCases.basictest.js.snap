@@ -2298,7 +2298,7 @@ runtime modules X KiB
   webpack/runtime/load script X KiB {792} [code generated]
     [no exports]
     [used exports unknown]
-  webpack/runtime/publicPath X bytes {792} [code generated]
+  webpack/runtime/publicPath X KiB {792} [code generated]
     [no exports]
     [used exports unknown]
 cacheable modules X bytes
@@ -2588,7 +2588,7 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
     webpack/runtime/load script X KiB {792} [code generated]
       [no exports]
       [used exports unknown]
-    webpack/runtime/publicPath X bytes {792} [code generated]
+    webpack/runtime/publicPath X KiB {792} [code generated]
       [no exports]
       [used exports unknown]
   cacheable modules X bytes
