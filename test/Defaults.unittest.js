@@ -2331,8 +2331,9 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "css",
+			+       },
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
@@ -2354,11 +2355,12 @@ describe("snapshots", () => {
 			+       },
 			+     },
 			@@ ... @@
+			+         },
+			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2370,6 +2372,9 @@ describe("snapshots", () => {
 			+     "global": "warn",
 			@@ ... @@
 			+         "css",
+			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
@@ -2425,9 +2430,10 @@ describe("snapshots", () => {
 			+     "css": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2438,8 +2444,7 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2463,6 +2468,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
