@@ -672,7 +672,7 @@ exports[`StatsTestCases should print correct stats for common-libs 1`] = `
 "asset react.js X KiB [emitted] [minimized] (name: react) 1 related asset
 ./react.js X bytes [built] [code generated]
 ../../../node_modules/react/index.js X bytes [built] [code generated]
-../../../node_modules/react/cjs/react.production.min.js X KiB [built] [code generated]
+../../../node_modules/react/cjs/react.production.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -1039,18 +1039,18 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dynamic-import 1`] = `
-"asset common.js 1.13 MiB [emitted] (name: common) (id hint: vendors)
+"asset common.js 1.01 MiB [emitted] (name: common) (id hint: vendors)
 asset runtime.js X KiB [emitted] (name: runtime)
 asset pages/home.js X KiB [emitted] (name: pages/home)
 asset main.js X KiB [emitted] (name: main)
-Entrypoint main 1.14 MiB = runtime.js X KiB common.js 1.13 MiB main.js X KiB
+Entrypoint main 1.02 MiB = runtime.js X KiB common.js 1.01 MiB main.js X KiB
 runtime modules X KiB 12 modules
-built modules 1.14 MiB [built]
-  modules by path ../../../node_modules/ 1.13 MiB
+built modules 1.01 MiB [built]
+  modules by path ../../../node_modules/ 1 MiB
     modules by path ../../../node_modules/react/ X KiB 4 modules
     modules by path ../../../node_modules/react-dom/ X KiB
-      ../../../node_modules/react-dom/client.js X bytes [built] [code generated]
-      + 2 modules
+      modules by path ../../../node_modules/react-dom/*.js X KiB 2 modules
+      modules by path ../../../node_modules/react-dom/cjs/*.js X KiB 2 modules
     modules by path ../../../node_modules/scheduler/ X KiB
       ../../../node_modules/scheduler/index.js X bytes [built] [code generated]
       ../../../node_modules/scheduler/cjs/scheduler.development.js X KiB [built] [code generated]
