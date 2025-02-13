@@ -298,8 +298,6 @@ For information about the governance of the Node.js project, see [GOVERNANCE.md]
 
 - [alexander-akait](https://github.com/alexander-akait) -
   **Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
-- [ematipico](https://github.com/ematipico) -
-  **Emanuele Stoppa** <<my.burning@gmail.com>> (he/him)
 - [evenstensberg](https://github.com/evenstensberg) -
   **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
 - [ovflowd](https://github.com/ovflowd) -
