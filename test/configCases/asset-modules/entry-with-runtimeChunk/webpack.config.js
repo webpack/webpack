@@ -2,7 +2,6 @@ const path = require("path");
 const fs = require("fs");
 const webpack = require("../../../../");
 
-/** @type {(number, any) => import("../../../../").Configuration} */
 const common = {
 	module: {
 		rules: [
