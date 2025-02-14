@@ -3,15 +3,7 @@ const fs = require("fs");
 const webpack = require("../../../../");
 
 /** @type {(number, any) => import("../../../../").Configuration} */
-const common = (i, options) => ({
-	target: "web",
-	output: {
-		filename: `${i}/[name].js`,
-		chunkFilename: `${i}/[name].js`,
-		cssFilename: `${i}/[name].css`,
-		cssChunkFilename: `${i}/[name].css`,
-		assetModuleFilename: `${i}/[name][ext][query]`
-	},
+const common = {
 	module: {
 		rules: [
 			{
@@ -52,60 +44,92 @@ const common = (i, options) => ({
 		runtimeChunk: {
 			name: entrypoint => `runtime~${entrypoint.name}`
 		}
+	}
+};
+
+const entry = i => {
+	switch (i % 4) {
+		case 0:
+			return {
+				entry: {
+					app: {
+						import: "../_images/file.png"
+					}
+				}
+			};
+		case 1:
+			return {
+				entry: {
+					app: ["../_images/file.png", "./entry.js"]
+				}
+			};
+		case 2:
+			return {
+				entry: {
+					app: ["../_images/file.png", "./entry.css"]
+				}
+			};
+		case 3:
+			return {
+				entry: {
+					entry1: "../_images/file.png",
+					entry2: "./entry.js"
+				}
+			};
+		default:
+			break;
+	}
+};
+
+const esm = i => ({
+	...common,
+	...entry(i),
+	output: {
+		filename: `${i}/[name].mjs`,
+		chunkFilename: `${i}/[name].mjs`,
+		cssFilename: `${i}/[name].css`,
+		cssChunkFilename: `${i}/[name].css`,
+		assetModuleFilename: `${i}/[name][ext][query]`,
+		module: true
 	},
-	...options
+	experiments: {
+		outputModule: true,
+		css: true
+	}
+});
+
+const node = i => ({
+	...common,
+	...entry(i),
+	output: {
+		filename: `${i}/[name].js`,
+		chunkFilename: `${i}/[name].js`,
+		cssFilename: `${i}/[name].css`,
+		cssChunkFilename: `${i}/[name].css`,
+		assetModuleFilename: `${i}/[name][ext][query]`
+	},
+	target: "node"
+});
+
+const web = i => ({
+	...common,
+	...entry(i),
+	output: {
+		filename: `${i}/[name].js`,
+		chunkFilename: `${i}/[name].js`,
+		cssFilename: `${i}/[name].css`,
+		cssChunkFilename: `${i}/[name].css`,
+		assetModuleFilename: `${i}/[name][ext][query]`
+	},
+	target: "web"
 });
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	common(0, {
-		entry: {
-			app: {
-				import: "../_images/file.png"
-			}
-		}
-	}),
-	common(1, {
-		entry: {
-			app: ["../_images/file.png", "./entry.js"]
-		}
-	}),
-	common(2, {
-		entry: {
-			app: ["../_images/file.png", "./entry.css"]
-		}
-	}),
-	common(3, {
-		entry: {
-			entry1: "../_images/file.png",
-			entry2: "./entry.js"
-		}
-	}),
-	common(4, {
-		target: "node",
-		entry: {
-			app: {
-				import: "../_images/file.png"
-			}
-		}
-	}),
-	common(5, {
-		target: "node",
-		entry: {
-			app: ["../_images/file.png", "./entry.js"]
-		}
-	}),
-	common(6, {
-		target: "node",
-		entry: {
-			app: ["../_images/file.png", "./entry.css"]
-		}
-	}),
-	common(7, {
-		target: "node",
-		entry: {
-			entry1: "../_images/file.png",
-			entry2: "./entry.js"
-		}
-	})
+	// web
+	...[0, 1, 2, 3].map(i => web(i)),
+	// node
+	...[4, 5, 6, 7].map(i => node(i)),
+	// ESM
+	...[8, 9, 10, 11].map(i => esm(i))
 ];
