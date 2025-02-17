@@ -6650,11 +6650,29 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
 	): void;
+
+	/**
+	 * Walks through an export named declaration
+	 */
 	walkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
 	): void;
-	blockPreWalkExportDefaultDeclaration(statement?: any): void;
+
+	/**
+	 * Pre-walks an ExportDefaultDeclaration and processes the declaration accordingly.
+	 */
+	blockPreWalkExportDefaultDeclaration(
+		statement: ExportDefaultDeclaration
+	): void;
+
+	/**
+	 * Walks an ExportDefaultDeclaration to process the declaration.
+	 */
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
+
+	/**
+	 * Pre-walks an ExportAllDeclaration to process the export source.
+	 */
 	blockPreWalkExportAllDeclaration(
 		statement: ExportAllDeclarationJavascriptParser
 	): void;
