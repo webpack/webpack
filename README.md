@@ -304,6 +304,8 @@ For information about the governance of the Node.js project, see [GOVERNANCE.md]
   **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
 - [snitin315](https://github.com/snitin315) -
   **Nitin Kumarr** <<snitin315@gmail.com>> (he/him)
+- [thelarkinn](https://github.com/thelarkinn) -
+  **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 
 <h3>Core Collaborators</h3>
 
