@@ -3505,6 +3505,9 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmImportObject": {
+          "$ref": "#/definitions/WasmImportObject"
+        },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         },
@@ -3667,6 +3670,9 @@
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
+        },
+        "wasmImportObject": {
+          "$ref": "#/definitions/WasmImportObject"
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -5407,6 +5413,10 @@
           "$ref": "#/definitions/WarningFilterItemTypes"
         }
       ]
+    },
+    "WasmImportObject": {
+      "description": "Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.",
+      "enum": ["plain-object", "SharedArrayBuffer", "ArrayBuffer"]
     },
     "WasmLoading": {
       "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
