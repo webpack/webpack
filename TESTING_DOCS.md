@@ -64,17 +64,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Tests for Webpack’s watch mode functionality.
 - **Usage**: Ensures file changes trigger correct rebuild behavior.
 
-### 13. `AbstractMethodError.unittest.js`
+### 13. `*.unittest.js`
 
-- **Purpose**: Tests error handling for abstract methods.
-- **Usage**: Ensures expected errors are thrown when abstract methods are not implemented.
+- **Purpose**: Contains unit tests for various functionalities.
+- **Usage**: Ensures individual modules and functions work as expected.
 
-### 14. `ArrayHelpers.unittest.js`
-
-- **Purpose**: Tests helper functions related to arrays.
-- **Usage**: Verifies sorting, filtering, and other array manipulations.
-
-### 15. `BannerPlugin.test.js`
+### 14. `BannerPlugin.test.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
