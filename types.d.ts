@@ -7790,7 +7790,7 @@ declare interface KnownStatsPrinterContext {
 	moduleTraceItem?: StatsModuleTraceItem;
 	moduleTraceDependency?: StatsModuleTraceDependency;
 }
-declare interface KnownStatsPrinterFormaters {
+declare interface KnownStatsPrinterFormatters {
 	formatFilename?: (file: string, oversize?: boolean) => string;
 	formatModuleId?: (id: string) => string;
 	formatChunkId?: (
@@ -15098,7 +15098,7 @@ declare abstract class StatsPrinter {
 }
 type StatsPrinterContext = Record<string, any> &
 	KnownStatsPrinterColorFn &
-	KnownStatsPrinterFormaters &
+	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext;
 type StatsProfile = Record<string, any> & KnownStatsProfile;
 type StatsValue =
