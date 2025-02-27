@@ -6511,7 +6511,7 @@ declare class JavascriptParser extends Parser {
 			| ForOfStatement
 			| ExportDefaultDeclaration
 		)[]
-	): void;
+	): boolean;
 
 	/**
 	 * Walking iterates the statements and expressions and processes them
@@ -6602,19 +6602,19 @@ declare class JavascriptParser extends Parser {
 			| ForInStatement
 			| ForOfStatement
 			| ExportDefaultDeclaration
-	): void;
+	): boolean;
 
 	/**
 	 * Walks a statements that is nested within a parent statement
 	 * and can potentially be a non-block statement.
 	 * This enforces the nested statement to never be in ASI position.
 	 */
-	walkNestedStatement(statement: Statement): void;
+	walkNestedStatement(statement: Statement): boolean;
 	preWalkBlockStatement(statement: BlockStatement): void;
-	walkBlockStatement(statement: BlockStatement): void;
+	walkBlockStatement(statement: BlockStatement): boolean;
 	walkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkIfStatement(statement: IfStatement): void;
-	walkIfStatement(statement: IfStatement): void;
+	walkIfStatement(statement: IfStatement): boolean;
 	preWalkLabeledStatement(statement: LabeledStatement): void;
 	walkLabeledStatement(statement: LabeledStatement): void;
 	preWalkWithStatement(statement: WithStatement): void;
@@ -6625,7 +6625,7 @@ declare class JavascriptParser extends Parser {
 	walkReturnStatement(statement: ReturnStatement): void;
 	walkThrowStatement(statement: ThrowStatement): void;
 	preWalkTryStatement(statement: TryStatement): void;
-	walkTryStatement(statement: TryStatement): void;
+	walkTryStatement(statement: TryStatement): boolean;
 	preWalkWhileStatement(statement: WhileStatement): void;
 	walkWhileStatement(statement: WhileStatement): void;
 	preWalkDoWhileStatement(statement: DoWhileStatement): void;
