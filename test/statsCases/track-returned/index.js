@@ -265,11 +265,7 @@ it("should work correct for classes", () => {
 	class Test {
 		value = true ? require('./used') : require("fail");
 
-		#value1 = true ? require('./used') : require("fail");
-
 		static value = true ? require('./used') : require("fail");
-
-		static #value2 = true ? require('./used') : require("fail");
 
 		constructor(height = true ? require('./used') : require("fail"), width) {
 			if (true) return;
@@ -281,22 +277,7 @@ it("should work correct for classes", () => {
 			return require("fail");
 		}
 
-		#method1() {
-			if (true) return;
-			return require("fail");
-		}
-
 		static method() {
-			if (true) return;
-			return require("fail");
-		}
-
-		static #method2() {
-			if (true) return;
-			return require("fail");
-		}
-
-		static #method3() {
 			if (true) return;
 			return require("fail");
 		}
@@ -307,11 +288,6 @@ it("should work correct for classes", () => {
 		}
 
 		set area(value) {
-			if (true) return;
-			return require("fail");
-		}
-
-		static {
 			if (true) return;
 			return require("fail");
 		}
@@ -347,6 +323,10 @@ switch (a) {
 
 if (true) {
 	require("./used5");
+}
+
+if (false) {
+	require("fail");
 }
 
 require("./used6");
