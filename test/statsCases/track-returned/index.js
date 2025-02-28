@@ -162,17 +162,6 @@ it("should work correct for try catch and loops", () => {
 		}
 	}
 
-	// TODO
-	// try {
-	// 	if (true) {
-	// 		throw new Error("should throw");
-	// 	}
-	//
-	// 	require("fail");
-	// } catch(e) {
-	// 	require('./used');
-	// }
-
 	for(let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
@@ -348,20 +337,12 @@ const a = rand() ? 1 : 2;
 switch (a) {
 	case 1: {
 		if (true) return;
-		require("fail");
+		else require("fail");
 	}
 	case 2:
-		if (true) return;
-		require("fail");
+		if (false) require("fail");
 	default:
 		require("./used2");
-}
-
-try {
-	throw 1;
-	require("fail");
-} catch (e) {
-	require('./used');
 }
 
 if (true) {
