@@ -45,6 +45,10 @@ export type RemotesItems = RemotesItem[];
 
 export interface ContainerReferencePluginOptions {
 	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType: ExternalsType;
