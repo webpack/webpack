@@ -2,13 +2,13 @@ import * as pureStyle from "./style.css";
 import * as styles from "./style.modules.css";
 
 it("should work", done => {
-	expect(pureStyle).toEqual(nsObj({}));
+	expect(pureStyle).toEqual({});
 	const style = getComputedStyle(document.body);
 	expect(style.getPropertyValue("background")).toBe(" red");
   expect(styles.foo).toBe('_style_modules_css-foo');
 
 	import(/* webpackPrefetch: true */ "./style2.css").then(x => {
-		expect(x).toEqual(nsObj({}));
+		expect(x).toEqual({});
 		const style = getComputedStyle(document.body);
 		expect(style.getPropertyValue("color")).toBe(" blue");
 

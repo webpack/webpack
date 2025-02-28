@@ -1,6 +1,6 @@
 it("should import an external css", done => {
 	import("./style.css").then(x => {
-		expect(x).toEqual(nsObj({}));
+		expect(x).toEqual({});
 		const style = getComputedStyle(document.body);
 		expect(style.getPropertyValue("color")).toBe(" green");
 		expect(style.getPropertyValue("background")).toBe(
