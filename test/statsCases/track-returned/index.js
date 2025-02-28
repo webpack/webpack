@@ -344,24 +344,28 @@ if (false) {
 
 const test = true ? require('./used') : require("fail");
 
-// TODO
-// const a = rand() ? 1 : 2;
-// switch (a) {
-// 	case 1: {
-// 		if (true) return;
-// 		require("fail");
-// 	}
-// 	case 2:
-// 		if (true) return;
-// 		require("fail");
-// 	default:
-// 		require("./used2");
-// }
+const a = rand() ? 1 : 2;
+switch (a) {
+	case 1: {
+		if (true) return;
+		require("fail");
+	}
+	case 2:
+		if (true) return;
+		require("fail");
+	default:
+		require("./used2");
+}
 
-// TODO
-// try {
-// 	throw 1;
-// 	require("fail");
-// } catch (e) {
-// 	require('./used');
-// }
+try {
+	throw 1;
+	require("fail");
+} catch (e) {
+	require('./used');
+}
+
+if (true) {
+	require("./used5");
+}
+
+require("./used6");

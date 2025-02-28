@@ -4780,6 +4780,8 @@ exports[`StatsTestCases should print correct stats for track-returned 1`] = `
 ./used1.js X bytes [built] [code generated]
 ./used4.js X bytes [built] [code generated]
 ./used2.js X bytes [built] [code generated]
+./used5.js X bytes [built] [code generated]
+./used6.js X bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
