@@ -28,7 +28,7 @@ const tests = fs
 		const filterPath = path.join(testDirectory, "test.filter.js");
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
-			describe.skip(testName, () => it("filtered"));
+			describe.skip(testName, () => it("filtered", () => {}));
 			return false;
 		}
 		return true;

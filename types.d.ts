@@ -6307,6 +6307,7 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
+		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
@@ -6842,6 +6843,7 @@ declare class JavascriptParser extends Parser {
 		...args: AsArray<T>
 	): undefined | R;
 	inScope(params: any, fn: () => void): void;
+	inExecutedPath(state: boolean, fn: () => void): void;
 	inClassScope(hasThis: boolean, params: Identifier[], fn: () => void): void;
 	inFunctionScope(
 		hasThis: boolean,
@@ -6856,7 +6858,7 @@ declare class JavascriptParser extends Parser {
 		)[],
 		fn: () => void
 	): void;
-	inBlockScope(fn: () => void): void;
+	inBlockScope(fn: () => void, inExecutedPath?: boolean): void;
 	detectMode(
 		statements: (
 			| ImportDeclarationJavascriptParser
@@ -13927,6 +13929,12 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
+
+	/**
+	 * false for unknown state
+	 */
+	inExecutedPath: boolean;
+	terminated?: "return" | "throw";
 }
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
