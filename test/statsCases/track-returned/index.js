@@ -153,6 +153,26 @@ it("should work correct for try catch and loops", () => {
 		require('./used');
 	}
 
+	function test() {
+		try {
+			return;
+			require("fail");
+		} finally {
+			require('./used');
+		}
+	}
+
+	// TODO
+	// try {
+	// 	if (true) {
+	// 		throw new Error("should throw");
+	// 	}
+	//
+	// 	require("fail");
+	// } catch(e) {
+	// 	require('./used');
+	// }
+
 	for(let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
@@ -188,5 +208,123 @@ it("should handle edge case with switch case", () => {
 			return require("fail");
 		default:
 			require("./used2");
+	}
+});
+
+it("should work correct for if", () => {
+	if (true) {
+		require('./used');
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #2", () => {
+	if (false) {
+		require("fail");
+	} else {
+		require('./used');
+	}
+});
+
+it("should work correct for if #3", () => {
+	if (false) {
+		require("fail");
+	} else if (true) {
+		require('./used');
+	} else {
+		require("fail");
+	}
+});
+
+it("should work correct for if #4", () => {
+	if (false) {
+		require("fail");
+	} else if (false) {
+		require("fail");
+	} else {
+		require('./used');
+	}
+});
+
+it("should not include unused assets", (done) => {
+	let a, b;
+	(function() {
+		try {
+			return;
+
+			require("fail");
+		} finally {
+			a = require('./used')
+
+			{
+				try {
+					return;
+					require("fail");
+				} finally {
+					b = require('./used')
+				}
+			}
+
+			require("fail");
+		}
+	})();
+});
+
+it("should work correct for classes", () => {
+	class Test {
+		value = true ? require('./used') : require("fail");
+
+		#value1 = true ? require('./used') : require("fail");
+
+		static value = true ? require('./used') : require("fail");
+
+		static #value2 = true ? require('./used') : require("fail");
+
+		constructor(height = true ? require('./used') : require("fail"), width) {
+			if (true) return;
+			return require("fail");
+		}
+
+		method() {
+			if (true) return;
+			return require("fail");
+		}
+
+		#method1() {
+			if (true) return;
+			return require("fail");
+		}
+
+		static method() {
+			if (true) return;
+			return require("fail");
+		}
+
+		static #method2() {
+			if (true) return;
+			return require("fail");
+		}
+
+		static #method3() {
+			if (true) return;
+			return require("fail");
+		}
+
+		get area() {
+			if (true) return;
+			return require("fail");
+		}
+
+		set area(value) {
+			if (true) return;
+			return require("fail");
+		}
+
+		static {
+			if (true) return;
+			return require("fail");
+		}
 	}
 });
