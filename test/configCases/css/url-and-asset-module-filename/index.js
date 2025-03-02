@@ -7,7 +7,7 @@ it(`should generate correct url public path with css filename`, done => {
 	document.body.appendChild(h1);
 	import("./index.css").then(x => {
 		try {
-			expect(x).toEqual(nsObj({}));
+			expect(x).toEqual({});
 			const style1 = getComputedStyle(h1);
 			expect(style1).toMatchSnapshot();
 			const style2 = getComputedStyle(h2);
