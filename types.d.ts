@@ -2180,7 +2180,7 @@ declare class Compilation {
 	updateAsset(
 		file: string,
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
-		assetInfoUpdateOrFunction?: AssetInfo | ((arg0?: AssetInfo) => AssetInfo)
+		assetInfoUpdateOrFunction?: AssetInfo | ((arg0?: AssetInfo) => AssetInfo | undefined)
 	): void;
 	renameAsset(file: string, newFile: string): void;
 	deleteAsset(file: string): void;
