@@ -9745,6 +9745,12 @@ declare interface NormalModuleCompilationHooks {
 			null | string | Buffer
 		>
 	>;
+	processResult: SyncWaterfallHook<
+		[
+			[string | Buffer, string | SourceMapSource, Record<string, any>],
+			NormalModule
+		]
+	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare interface NormalModuleCreateData {
