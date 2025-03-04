@@ -101,6 +101,7 @@ within webpack itself use this plugin interface. This makes webpack very
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
+|  [html-bundler-webpack-plugin][bundler]   |   ![bundler-npm]   |   ![bundler-size]   | Renders a template (EJS, Handlebars, Pug) with referenced source asset files into HTML. |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
 |         [pug-plugin][pug-plugin]          | ![pug-plugin-npm]  | ![pug-plugin-size]  | Renders Pug files to HTML, extracts JS and CSS from sources specified directly in Pug.  |
 
@@ -114,6 +115,9 @@ within webpack itself use this plugin interface. This makes webpack very
 [compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
+[bundler]: https://github.com/webdiscus/html-bundler-webpack-plugin
+[bundler-npm]: https://img.shields.io/npm/v/html-bundler-webpack-plugin.svg
+[bundler-size]: https://packagephobia.com/badge?p=html-bundler-webpack-plugin
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
