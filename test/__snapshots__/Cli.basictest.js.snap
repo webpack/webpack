@@ -7523,6 +7523,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-worker-chunk-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.workerChunkFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-worker-chunk-loading": Object {
     "configs": Array [
       Object {
