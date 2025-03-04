@@ -703,7 +703,8 @@ const describeCases = config => {
 								}
 								Promise.all(results)
 									.then(() => {
-										if (testConfig.afterExecute) testConfig.afterExecute();
+										if (testConfig.afterExecute)
+											testConfig.afterExecute(options);
 										for (const key of Object.keys(global)) {
 											if (key.includes("webpack")) delete global[key];
 										}
