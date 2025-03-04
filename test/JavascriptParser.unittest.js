@@ -86,7 +86,7 @@ describe("JavascriptParser", () => {
 					fgh.sub;
 				})();
 			},
-			{}
+			{ abc: ["test"] }
 		],
 		"const definition": [
 			function () {
@@ -98,7 +98,7 @@ describe("JavascriptParser", () => {
 				fgh;
 				fgh.sub;
 			},
-			{}
+			{ abc: ["test"] }
 		],
 		"var definition": [
 			function () {
@@ -110,7 +110,7 @@ describe("JavascriptParser", () => {
 				fgh;
 				fgh.sub;
 			},
-			{}
+			{ abc: ["test"] }
 		],
 		"function definition": [
 			function () {
@@ -125,7 +125,7 @@ describe("JavascriptParser", () => {
 				fgh;
 				fgh.sub;
 			},
-			{}
+			{ abc: ["test"] }
 		],
 		"class definition": [
 			function () {
@@ -362,6 +362,53 @@ describe("JavascriptParser", () => {
 			expect(element.type).toBe(state[index].type);
 			expect(element.value).toBe(state[index].value);
 		}
+	});
+
+	it("issue #18113", () => {
+		const source = `
+		class TopLevelClass {}
+		function topLevelFunction() {} 
+		new TopLevelClass();
+		topLevelFunction();
+		`.trim();
+
+		const testParser = new JavascriptParser({});
+		let foundClassExpression;
+		let foundFunctionExpression;
+		let foundIdentifier;
+
+		testParser.hooks.new
+			.for("TopLevelClass")
+			.tap("JavascriptParserTest", expression => {
+				foundClassExpression = expression;
+			});
+
+		testParser.hooks.call
+			.for("topLevelFunction")
+			.tap("JavascriptParserTest", expression => {
+				foundFunctionExpression = expression;
+			});
+
+		testParser.hooks.evaluateIdentifier
+			.for("topLevelFunction")
+			.tap("JavascriptParserTest", expression => {
+				foundIdentifier = expression;
+			});
+
+		testParser.parse(source, {});
+		expect(foundClassExpression).toBeTruthy();
+		expect(foundClassExpression.type).toBe("NewExpression");
+		expect(foundClassExpression.callee.type).toBe("Identifier");
+		expect(foundClassExpression.callee.name).toBe("TopLevelClass");
+
+		expect(foundFunctionExpression).toBeTruthy();
+		expect(foundFunctionExpression.type).toBe("CallExpression");
+		expect(foundFunctionExpression.callee.type).toBe("Identifier");
+		expect(foundFunctionExpression.callee.name).toBe("topLevelFunction");
+
+		expect(foundIdentifier).toBeTruthy();
+		expect(foundIdentifier.name).toBe("topLevelFunction");
+		expect(foundIdentifier.type).toBe("Identifier");
 	});
 
 	describe("expression evaluation", () => {
