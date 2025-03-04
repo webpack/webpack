@@ -10826,6 +10826,11 @@ declare interface Output {
 	uniqueName?: string;
 
 	/**
+	 * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+	 */
+	wasmImportObject?: "plain-object" | "SharedArrayBuffer" | "ArrayBuffer";
+
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
@@ -11103,6 +11108,11 @@ declare interface OutputNormalized {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: string;
+
+	/**
+	 * Controls the memory configuration for the `importObj` parameter in `WebAssembly.instantiate`.
+	 */
+	wasmImportObject?: "plain-object" | "SharedArrayBuffer" | "ArrayBuffer";
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
