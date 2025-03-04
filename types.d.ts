@@ -12472,6 +12472,13 @@ declare interface Output {
 	webassemblyModuleFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
@@ -12753,6 +12760,13 @@ declare interface OutputNormalized {
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: string;
+
+	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).

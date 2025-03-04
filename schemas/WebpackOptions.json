@@ -3756,6 +3756,9 @@
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
         },
+        "workerChunkFilename": {
+          "$ref": "#/definitions/WorkerChunkFilename"
+        },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -3918,6 +3921,9 @@
         },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkFilename": {
+          "$ref": "#/definitions/WorkerChunkFilename"
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
@@ -5965,6 +5971,14 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerChunkFilename": {
+      "description": "Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
     },
     "WorkerPublicPath": {
       "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
