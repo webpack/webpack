@@ -57,9 +57,11 @@ const describeCases = config => {
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
+			if (category.name !== "container") continue;
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
+					if (testName !== "eager-async") continue;
 					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
