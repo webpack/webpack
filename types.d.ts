@@ -7505,6 +7505,7 @@ declare interface KnownBuildMeta {
 	async?: boolean;
 	sideEffectFree?: boolean;
 	exportsFinalName?: Record<string, string>;
+	isCSSModule?: boolean;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
