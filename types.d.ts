@@ -1993,7 +1993,7 @@ declare class Compilation {
 	namedChunkGroups: Map<string, ChunkGroup>;
 	namedChunks: Map<string, Chunk>;
 	modules: Set<Module>;
-	records: null | Record<string, any>;
+	records: null | Records;
 	additionalChunkAssets: string[];
 	assets: CompilationAssets;
 	assetsInfo: Map<string, AssetInfo>;
@@ -12214,6 +12214,9 @@ declare interface RealPathTypes {
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
+declare interface Records {
+	[index: string]: any;
+}
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| RecursiveArrayOrRecord<T>[]
@@ -14400,12 +14403,12 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename: TemplatePath;
+	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
 		context: CacheGroupsContext
-	) => CacheGroupSource[];
+	) => null | CacheGroupSource[];
 	getName: (
 		module?: Module,
 		chunks?: Chunk[],
