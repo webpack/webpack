@@ -10241,7 +10241,7 @@ declare interface Optimization {
 	/**
 	 * Use real [contenthash] based on final content of the assets.
 	 */
-	realContentHash?: boolean;
+	realContentHash?: boolean | "prefixed";
 
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.
@@ -12146,6 +12146,10 @@ declare class RealContentHashPlugin {
 		 * the hash digest to use
 		 */
 		hashDigest: string;
+		/**
+		 * the hash prefix to use
+		 */
+		hashPrefix?: string;
 	});
 
 	/**
