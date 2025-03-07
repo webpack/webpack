@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .eslintcache
-          key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/eslint.config.js') }}
+          key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/eslint.config.mjs') }}
           restore-keys: lint-eslint-
       - name: Cache cspell result
         uses: actions/cache@v4
