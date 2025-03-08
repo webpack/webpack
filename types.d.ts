@@ -15501,7 +15501,7 @@ declare class WebpackError extends Error {
 	/**
 	 * Creates an instance of WebpackError.
 	 */
-	constructor(message?: string);
+	constructor(message?: string, cause?: Error);
 	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
@@ -15509,8 +15509,10 @@ declare class WebpackError extends Error {
 	hideStack?: boolean;
 	chunk?: Chunk;
 	file?: string;
+	cause?: Error;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
+	errors: any;
 
 	/**
 	 * Create .stack property on a target object
