@@ -19,6 +19,16 @@ it("should allow to import an rejected async module again", async () => {
 			message: expect.stringContaining("expected rejection 1")
 		})
 	);
+	try {
+		require("./script")
+	} catch (e) {
+		expect.stringContaining("expected rejection 1")
+	}
+	try {
+		require("./script-reexport")
+	} catch (e) {
+		expect.stringContaining("expected rejection 1")
+	}
 	await Promise.all([
 		expect(require("./module?3")).rejects.toEqual(
 			expect.objectContaining({

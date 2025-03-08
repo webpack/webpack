@@ -1,17 +1,17 @@
-const js = require("@eslint/js");
-const prettier = require("eslint-plugin-prettier");
-const n = require("eslint-plugin-n");
-const jest = require("eslint-plugin-jest");
-const jsdoc = require("eslint-plugin-jsdoc");
-const prettierConfig = require("eslint-config-prettier");
-const globals = require("globals");
-const stylistic = require("@stylistic/eslint-plugin");
-const unicorn = require("eslint-plugin-unicorn");
+import js from "@eslint/js";
+import prettier from "eslint-plugin-prettier";
+import n from "eslint-plugin-n";
+import jest from "eslint-plugin-jest";
+import jsdoc from "eslint-plugin-jsdoc";
+import prettierConfig from "eslint-config-prettier";
+import globals from "globals";
+import stylistic from "@stylistic/eslint-plugin";
+import unicorn from "eslint-plugin-unicorn";
 
 const nodeConfig = n.configs["flat/recommended"];
 const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
 
-module.exports = [
+export default [
 	{
 		ignores: [
 			// Ignore some test files
@@ -420,9 +420,29 @@ module.exports = [
 		}
 	},
 	{
+		files: ["lib/**/*.js"],
+		rules: {
+			"no-console": "error"
+		}
+	},
+	{
 		files: ["examples/**/*.js"],
 		rules: {
 			"n/no-missing-require": "off"
+		}
+	},
+	{
+		files: ["*.mjs", "**/*.mjs"],
+		languageOptions: {
+			sourceType: "module"
+		},
+		rules: {
+			"n/no-unsupported-features/es-syntax": [
+				"error",
+				{
+					ignores: ["modules"]
+				}
+			]
 		}
 	},
 	{

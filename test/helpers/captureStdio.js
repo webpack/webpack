@@ -17,10 +17,16 @@ module.exports = (stdio, tty) => {
 		reset: () => (logs = []),
 
 		toString: () =>
-			stripAnsi(logs.join("")).replace(
-				/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
-				""
-			),
+			stripAnsi(logs.join(""))
+				.replace(
+					/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
+					""
+				)
+				// Ignore deprecated `import * as pkg from "file.json" assert { type: "json" };`
+				.replace(
+					/\([^)]+\) (\[[^\]]+\]\s*)?(V8:).* 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead\n/g,
+					""
+				),
 
 		toStringRaw: () => logs.join(""),
 

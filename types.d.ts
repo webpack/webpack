@@ -556,8 +556,8 @@ declare abstract class BasicEvaluatedExpression {
 	prefix?: null | BasicEvaluatedExpression;
 	postfix?: null | BasicEvaluatedExpression;
 	wrappedInnerExpressions?: BasicEvaluatedExpression[];
-	identifier?: string | VariableInfoInterface;
-	rootInfo?: string | VariableInfoInterface;
+	identifier?: string | VariableInfo;
+	rootInfo?: string | VariableInfo;
 	getMembers?: () => string[];
 	getMembersOptionals?: () => boolean[];
 	getMemberRanges?: () => [number, number][];
@@ -716,8 +716,8 @@ declare abstract class BasicEvaluatedExpression {
 	 * Set's the value of this expression to a particular identifier and its members.
 	 */
 	setIdentifier(
-		identifier: string | VariableInfoInterface,
-		rootInfo: string | VariableInfoInterface,
+		identifier: string | VariableInfo,
+		rootInfo: string | VariableInfo,
 		getMembers: () => string[],
 		getMembersOptionals?: () => boolean[],
 		getMemberRanges?: () => [number, number][]
@@ -1993,7 +1993,7 @@ declare class Compilation {
 	namedChunkGroups: Map<string, ChunkGroup>;
 	namedChunks: Map<string, Chunk>;
 	modules: Set<Module>;
-	records: any;
+	records: null | Records;
 	additionalChunkAssets: string[];
 	assets: CompilationAssets;
 	assetsInfo: Map<string, AssetInfo>;
@@ -2004,8 +2004,8 @@ declare class Compilation {
 	dependencyFactories: Map<DepConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
 	childrenCounters: Record<string, number>;
-	usedChunkIds: Set<string | number>;
-	usedModuleIds: Set<number>;
+	usedChunkIds: null | Set<string | number>;
+	usedModuleIds: null | Set<number>;
 	needAdditionalPass: boolean;
 	builtModules: WeakSet<Module>;
 	codeGeneratedModules: WeakSet<Module>;
@@ -6307,6 +6307,7 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
+		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
@@ -6373,7 +6374,7 @@ declare class JavascriptParser extends Parser {
 		Expression,
 		Set<DestructuringAssignmentProperty>
 	>;
-	currentTagData: any;
+	currentTagData?: TagData;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -6408,7 +6409,7 @@ declare class JavascriptParser extends Parser {
 			| UpdateExpression
 			| YieldExpression
 			| SpreadElement
-	): undefined | string | VariableInfoInterface;
+	): undefined | string | VariableInfo;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 
 	/**
@@ -6841,7 +6842,20 @@ declare class JavascriptParser extends Parser {
 		defined: undefined | (() => any),
 		...args: AsArray<T>
 	): undefined | R;
-	inScope(params: any, fn: () => void): void;
+	inScope(
+		params: (
+			| string
+			| Identifier
+			| MemberExpression
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| Property
+		)[],
+		fn: () => void
+	): void;
+	inExecutedPath(state: boolean, fn: () => void): void;
 	inClassScope(hasThis: boolean, params: Identifier[], fn: () => void): void;
 	inFunctionScope(
 		hasThis: boolean,
@@ -6856,7 +6870,7 @@ declare class JavascriptParser extends Parser {
 		)[],
 		fn: () => void
 	): void;
-	inBlockScope(fn: () => void): void;
+	inBlockScope(fn: () => void, inExecutedPath?: boolean): void;
 	detectMode(
 		statements: (
 			| ImportDeclarationJavascriptParser
@@ -7014,8 +7028,8 @@ declare class JavascriptParser extends Parser {
 	setAsiPosition(pos: number): void;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr: Expression): boolean;
-	getTagData(name: string, tag: symbol): any;
-	tagVariable(name: string, tag: symbol, data?: any): void;
+	getTagData(name: string, tag: symbol): undefined | TagData;
+	tagVariable(name: string, tag: symbol, data?: TagData): void;
 	defineVariable(name: string): void;
 	undefineVariable(name: string): void;
 	isVariableDefined(name: string): boolean;
@@ -7790,7 +7804,7 @@ declare interface KnownStatsPrinterContext {
 	moduleTraceItem?: StatsModuleTraceItem;
 	moduleTraceDependency?: StatsModuleTraceDependency;
 }
-declare interface KnownStatsPrinterFormaters {
+declare interface KnownStatsPrinterFormatters {
 	formatFilename?: (file: string, oversize?: boolean) => string;
 	formatModuleId?: (id: string) => string;
 	formatChunkId?: (
@@ -7952,9 +7966,9 @@ declare class LazySet<T> {
 	clear(): void;
 	delete(value: T): boolean;
 	entries(): IterableIterator<[T, T]>;
-	forEach(
+	forEach<K>(
 		callbackFn: (arg0: T, arg1: T, arg2: Set<T>) => void,
-		thisArg?: any
+		thisArg: K
 	): void;
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
@@ -9743,6 +9757,12 @@ declare interface NormalModuleCompilationHooks {
 			null | string | Buffer
 		>
 	>;
+	processResult: SyncWaterfallHook<
+		[
+			[string | Buffer, string | SourceMapSource, Record<string, any>],
+			NormalModule
+		]
+	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare interface NormalModuleCreateData {
@@ -10052,9 +10072,19 @@ declare interface ObjectSerializer {
 }
 declare interface ObjectSerializerContext {
 	write: (arg0?: any) => void;
+	setCircularReference: (arg0?: any) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (arg0: ObjectSerializerSnapshot) => void;
 	writeLazy?: (arg0?: any) => void;
 	writeSeparate?: (arg0: any, arg1?: object) => () => any;
-	setCircularReference: (arg0?: any) => void;
+}
+declare interface ObjectSerializerSnapshot {
+	length: number;
+	cycleStackSize: number;
+	referenceableSize: number;
+	currentPos: number;
+	objectTypeLookupSize: number;
+	currentPosTypeLookup: number;
 }
 declare class OccurrenceChunkIdsPlugin {
 	constructor(options?: OccurrenceChunkIdsPluginOptions);
@@ -12184,6 +12214,9 @@ declare interface RealPathTypes {
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
+declare interface Records {
+	[index: string]: any;
+}
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| RecursiveArrayOrRecord<T>[]
@@ -13928,6 +13961,12 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
+
+	/**
+	 * false for unknown state
+	 */
+	inExecutedPath: boolean;
+	terminated?: "return" | "throw";
 }
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
@@ -13942,11 +13981,11 @@ declare abstract class Serializer {
 declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
 	serialize(
 		data: DeserializedType,
-		context: object
+		context?: any
 	): SerializedType | Promise<SerializedType>;
 	deserialize(
 		data: SerializedType,
-		context: object
+		context?: any
 	): DeserializedType | Promise<DeserializedType>;
 }
 type ServerOptionsHttps<
@@ -14365,12 +14404,12 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename: TemplatePath;
+	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
 		context: CacheGroupsContext
-	) => CacheGroupSource[];
+	) => null | CacheGroupSource[];
 	getName: (
 		module?: Module,
 		chunks?: Chunk[],
@@ -15099,7 +15138,7 @@ declare abstract class StatsPrinter {
 }
 type StatsPrinterContext = Record<string, any> &
 	KnownStatsPrinterColorFn &
-	KnownStatsPrinterFormaters &
+	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext;
 type StatsProfile = Record<string, any> & KnownStatsProfile;
 type StatsValue =
@@ -15146,6 +15185,9 @@ declare interface SyntheticDependencyLocation {
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+declare interface TagData {
+	[index: string]: any;
+}
 
 /**
  * Helper function for joining two ranges into a single range. This is useful
@@ -15153,8 +15195,8 @@ declare const TRANSITIVE_ONLY: unique symbol;
  * to create the range of the _parent node_.
  */
 declare interface TagInfo {
-	tag: any;
-	data: any;
+	tag: symbol;
+	data?: TagData;
 	next?: TagInfo;
 }
 declare interface TargetItem {
@@ -15258,11 +15300,6 @@ declare class VariableInfo {
 		freeName?: string | true,
 		tagInfo?: TagInfo
 	);
-	declaredScope: ScopeInfo;
-	freeName?: string | true;
-	tagInfo?: TagInfo;
-}
-declare interface VariableInfoInterface {
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
 	tagInfo?: TagInfo;
