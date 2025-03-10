@@ -293,7 +293,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -310,7 +314,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-iife-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -327,7 +335,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external-eval.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -344,7 +356,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external-eval-source-map.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -363,7 +379,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs-static-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -380,7 +400,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-split-chunks/"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
