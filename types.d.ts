@@ -621,12 +621,12 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| SwitchCase
-		| CatchClause
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern
+		| SwitchCase
+		| CatchClause
 		| Property
 		| Super
 		| AssignmentProperty
@@ -844,12 +844,12 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| SwitchCase
-			| CatchClause
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| SwitchCase
+			| CatchClause
 			| Property
 			| Super
 			| AssignmentProperty
@@ -6211,10 +6211,10 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
-		varDeclaration: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationLet: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationConst: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationVar: HookMap<SyncBailHook<[Declaration], boolean | void>>;
+		varDeclaration: HookMap<SyncBailHook<[Pattern], boolean | void>>;
+		varDeclarationLet: HookMap<SyncBailHook<[Pattern], boolean | void>>;
+		varDeclarationConst: HookMap<SyncBailHook<[Pattern], boolean | void>>;
+		varDeclarationVar: HookMap<SyncBailHook<[Pattern], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
