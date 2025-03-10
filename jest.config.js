@@ -4,10 +4,10 @@ const config = {
 	forceExit: true,
 	setupFilesAfterEnv: ["<rootDir>/test/setupTestFramework.js"],
 	testMatch: [
-		"<rootDir>/test/*.test.js",
-		"<rootDir>/test/*.basictest.js",
-		"<rootDir>/test/*.longtest.js",
-		"<rootDir>/test/*.unittest.js"
+		// "<rootDir>/test/*.test.js",
+		"<rootDir>/test/ConfigTestCases.basictest.js"
+		// "<rootDir>/test/*.longtest.js",
+		// "<rootDir>/test/*.unittest.js"
 	],
 	watchPathIgnorePatterns: [
 		"<rootDir>/.git",

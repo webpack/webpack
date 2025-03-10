@@ -1,0 +1,10 @@
+{
+  "name": "eager-async",
+  "private": true,
+  "scripts": {
+    "build": " ../../../../bin/webpack.js --config=webpack.config.js"
+  },
+  "dependencies": {
+    "react": "0.0.0"
+  }
+}

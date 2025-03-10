@@ -114,6 +114,10 @@ export type SharedItem = string;
 
 export interface ModuleFederationPluginOptions {
 	/**
+	 * Enable/disable asynchronous loading of runtime modules. When enabled, entry points will be wrapped in asynchronous chunks.
+	 */
+	async?: boolean;
+	/**
 	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
 	 */
 	exposes?: Exposes;
