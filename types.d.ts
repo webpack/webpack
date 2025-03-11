@@ -4798,7 +4798,7 @@ declare class ExternalModule extends Module {
 	 * restore unsafe cache data
 	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData: object,
+		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
 }
@@ -7837,6 +7837,19 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+declare interface KnownUnsafeCacheData {
+	/**
+	 * factory meta
+	 */
+	factoryMeta?: FactoryMeta;
+
+	/**
+	 * resolve options
+	 */
+	resolveOptions?: ResolveOptions;
+	parserOptions?: ParserOptions;
+	generatorOptions?: GeneratorOptions;
+}
 declare interface LStatFs {
 	(
 		path: PathLikeFs,
@@ -9725,7 +9738,7 @@ declare class NormalModule extends Module {
 	 * restore unsafe cache data
 	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData: NormalModuleUnsafeCacheData,
+		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
 	createSourceForAsset(
@@ -9995,12 +10008,6 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type NormalModuleUnsafeCacheData = UnsafeCacheData & {
-	parser?: Parser;
-	parserOptions?: ParserOptions;
-	generator?: Generator;
-	generatorOptions?: GeneratorOptions;
-};
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -15282,10 +15289,7 @@ declare const UNDEFINED_MARKER: unique symbol;
  * https://nodejs.org/api/url.html#the-whatwg-url-api
  */
 declare interface URL_url extends URL {}
-declare interface UnsafeCacheData {
-	factoryMeta?: FactoryMeta;
-	resolveOptions?: ResolveOptions;
-}
+type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
