@@ -322,7 +322,7 @@ describe("JavascriptParser", () => {
 					testParser.state.expressions.push(expr.name);
 					return true;
 				});
-			testParser.hooks.new.tap("xyz", "JavascriptParserTest", expr => {
+			testParser.hooks.new.for("xyz").tap("JavascriptParserTest", expr => {
 				if (!testParser.state.xyz) testParser.state.xyz = [];
 				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
