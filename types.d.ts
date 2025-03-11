@@ -1704,6 +1704,12 @@ declare interface CodeGenerationContext {
 	 */
 	sourceTypes?: ReadonlySet<string>;
 }
+declare interface CodeGenerationJob {
+	module: Module;
+	hash: string;
+	runtime: RuntimeSpec;
+	runtimes: RuntimeSpec[];
+}
 declare interface CodeGenerationResult {
 	/**
 	 * the resulting sources for all source types
@@ -2168,12 +2174,7 @@ declare class Compilation {
 	sortItemsWithChunkIds(): void;
 	summarizeDependencies(): void;
 	createModuleHashes(): void;
-	createHash(): {
-		module: Module;
-		hash: string;
-		runtime: RuntimeSpec;
-		runtimes: RuntimeSpec[];
-	}[];
+	createHash(): CodeGenerationJob[];
 	fullHash?: string;
 	hash?: string;
 	emitAsset(file: string, source: Source, assetInfo?: AssetInfo): void;
@@ -3060,15 +3061,21 @@ declare interface ContextModuleOptions {
 declare class ContextReplacementPlugin {
 	constructor(
 		resourceRegExp: RegExp,
-		newContentResource?: any,
-		newContentRecursive?: any,
+		newContentResource?: string | boolean | RegExp | ((context?: any) => void),
+		newContentRecursive?: boolean | RegExp | NewContentCreateContextMap,
 		newContentRegExp?: RegExp
 	);
 	resourceRegExp: RegExp;
-	newContentCallback: any;
-	newContentResource: any;
-	newContentCreateContextMap: any;
-	newContentRecursive: any;
+	newContentCallback?: (context?: any) => void;
+	newContentResource?: string;
+	newContentCreateContextMap?: (
+		fs: InputFileSystem,
+		callback: (
+			err: null | Error,
+			newContentRecursive: NewContentCreateContextMap
+		) => void
+	) => void;
+	newContentRecursive?: boolean;
 	newContentRegExp?: RegExp;
 
 	/**
@@ -4791,7 +4798,7 @@ declare class ExternalModule extends Module {
 	 * restore unsafe cache data
 	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData: object,
+		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
 }
@@ -5832,7 +5839,7 @@ declare interface IntermediateFileSystemExtras {
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
 	open: Open;
-	read: Read<Buffer>;
+	read: Read<ArrayBufferView>;
 	close: (
 		arg0: number,
 		arg1: (arg0: null | NodeJS.ErrnoException) => void
@@ -7830,6 +7837,19 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+declare interface KnownUnsafeCacheData {
+	/**
+	 * factory meta
+	 */
+	factoryMeta?: FactoryMeta;
+
+	/**
+	 * resolve options
+	 */
+	resolveOptions?: ResolveOptions;
+	parserOptions?: ParserOptions;
+	generatorOptions?: GeneratorOptions;
+}
 declare interface LStatFs {
 	(
 		path: PathLikeFs,
@@ -9195,9 +9215,10 @@ declare interface ModuleMemCachesItem {
 	memCache: WeakTupleMap<any, any>;
 }
 declare interface ModuleObject {
-	id: string;
+	id?: string;
 	exports: any;
 	loaded: boolean;
+	error?: Error;
 }
 
 /**
@@ -9616,6 +9637,9 @@ declare interface NeedBuildContext {
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 }
+declare interface NewContentCreateContextMap {
+	[index: string]: string;
+}
 declare class NoEmitOnErrorsPlugin {
 	constructor();
 
@@ -9714,7 +9738,7 @@ declare class NormalModule extends Module {
 	 * restore unsafe cache data
 	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData: NormalModuleUnsafeCacheData,
+		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
 	createSourceForAsset(
@@ -9984,12 +10008,6 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type NormalModuleUnsafeCacheData = UnsafeCacheData & {
-	parser?: Parser;
-	parserOptions?: ParserOptions;
-	generator?: Generator;
-	generatorOptions?: GeneratorOptions;
-};
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -11335,32 +11353,32 @@ declare interface PlatformTargetProperties {
 	/**
 	 * web platform, importing of http(s) and std: is available
 	 */
-	web: null | boolean;
+	web?: null | boolean;
 
 	/**
 	 * browser platform, running in a normal web browser
 	 */
-	browser: null | boolean;
+	browser?: null | boolean;
 
 	/**
 	 * (Web)Worker platform, running in a web/shared/service worker
 	 */
-	webworker: null | boolean;
+	webworker?: null | boolean;
 
 	/**
 	 * node platform, require of node built-in modules is available
 	 */
-	node: null | boolean;
+	node?: null | boolean;
 
 	/**
 	 * nwjs platform, require of legacy nw.gui is available
 	 */
-	nwjs: null | boolean;
+	nwjs?: null | boolean;
 
 	/**
 	 * electron platform, require of some electron built-in modules is available
 	 */
-	electron: null | boolean;
+	electron?: null | boolean;
 }
 type Plugin =
 	| undefined
@@ -11422,7 +11440,7 @@ declare class Profiler {
 	inspector: any;
 	hasSession(): boolean;
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
-	sendCommand(method: string, params?: object): Promise<any>;
+	sendCommand(method: string, params?: Record<string, any>): Promise<any>;
 	destroy(): Promise<void>;
 	stopProfiling(): Promise<{ profile: any }>;
 }
@@ -11625,7 +11643,7 @@ declare interface RawSourceMap {
 	mappings: string;
 	file: string;
 }
-declare interface Read<TBuffer extends ArrayBufferView = Buffer> {
+declare interface Read<TBuffer extends ArrayBufferView = ArrayBufferView> {
 	(
 		fd: number,
 		buffer: TBuffer,
@@ -12988,10 +13006,10 @@ declare interface ResourceDataWithData {
 	data: Record<string, any>;
 }
 declare abstract class RestoreProvidedData {
-	exports: any;
-	otherProvided: any;
-	otherCanMangleProvide: any;
-	otherTerminalBinding: any;
+	exports: any[];
+	otherProvided?: null | boolean;
+	otherCanMangleProvide?: boolean;
+	otherTerminalBinding: boolean;
 	serialize(__0: ObjectSerializerContext): void;
 }
 declare interface RmDirOptions {
@@ -13981,7 +13999,7 @@ declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
 	serialize(
 		data: DeserializedType,
 		context?: any
-	): SerializedType | Promise<SerializedType>;
+	): null | SerializedType | Promise<SerializedType>;
 	deserialize(
 		data: SerializedType,
 		context?: any
@@ -15271,10 +15289,7 @@ declare const UNDEFINED_MARKER: unique symbol;
  * https://nodejs.org/api/url.html#the-whatwg-url-api
  */
 declare interface URL_url extends URL {}
-declare interface UnsafeCacheData {
-	factoryMeta?: FactoryMeta;
-	resolveOptions?: ResolveOptions;
-}
+type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
