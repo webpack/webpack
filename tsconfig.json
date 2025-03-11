@@ -6,8 +6,7 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": false,
-    "noImplicitThis": true,
+    "strict": true,
     "alwaysStrict": true,
     "types": ["node"],
     "esModuleInterop": true
