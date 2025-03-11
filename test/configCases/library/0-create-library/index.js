@@ -2,6 +2,7 @@ export * from "./a";
 export default "default-value";
 export var b = "b";
 export { default as external } from "external";
+export * from "external-named";
 
 var module = "should not conflict",
 	define = "should not conflict",

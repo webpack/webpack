@@ -11,7 +11,8 @@ module.exports = (env, { testPath }) => [
 		target: "node14",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		experiments: {
@@ -27,7 +28,8 @@ module.exports = (env, { testPath }) => [
 		target: "node14",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		experiments: {
@@ -43,7 +45,8 @@ module.exports = (env, { testPath }) => [
 		target: "node14",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -62,7 +65,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -75,7 +79,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -88,7 +93,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -101,7 +107,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -116,7 +123,8 @@ module.exports = (env, { testPath }) => [
 		target: "web",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -134,7 +142,8 @@ module.exports = (env, { testPath }) => [
 		target: "web",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -149,7 +158,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -164,7 +174,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -179,7 +190,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
@@ -195,7 +207,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
@@ -209,7 +222,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -222,7 +236,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -235,7 +250,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -248,7 +264,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		plugins: [
@@ -267,7 +284,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		plugins: [
@@ -288,7 +306,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -303,7 +322,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -314,7 +334,7 @@ module.exports = (env, { testPath }) => [
 			libraryTarget: "commonjs2",
 			iife: false
 		},
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		output: {
@@ -326,7 +346,7 @@ module.exports = (env, { testPath }) => [
 		optimization: {
 			concatenateModules: false
 		},
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		output: {
@@ -335,7 +355,7 @@ module.exports = (env, { testPath }) => [
 			libraryTarget: "commonjs2",
 			iife: true
 		},
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		mode: "development",
@@ -344,7 +364,7 @@ module.exports = (env, { testPath }) => [
 			filename: "commonjs2-external-eval.js",
 			libraryTarget: "commonjs2"
 		},
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		mode: "development",
@@ -354,7 +374,7 @@ module.exports = (env, { testPath }) => [
 			libraryTarget: "commonjs2"
 		},
 		devtool: "eval-source-map",
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		output: {
@@ -363,7 +383,7 @@ module.exports = (env, { testPath }) => [
 			libraryTarget: "commonjs-static",
 			iife: false
 		},
-		externals: ["external"]
+		externals: ["external", "external-named"]
 	},
 	{
 		output: {
@@ -387,7 +407,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	},
@@ -400,7 +421,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -416,7 +438,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -434,7 +457,8 @@ module.exports = (env, { testPath }) => [
 		target: "web",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -452,7 +476,8 @@ module.exports = (env, { testPath }) => [
 		target: "web",
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		},
 		optimization: {
@@ -487,7 +512,8 @@ module.exports = (env, { testPath }) => [
 		},
 		resolve: {
 			alias: {
-				external: "./non-external"
+				external: "./non-external",
+				"external-named": "./non-external-named"
 			}
 		}
 	}
