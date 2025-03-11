@@ -5839,7 +5839,7 @@ declare interface IntermediateFileSystemExtras {
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
 	open: Open;
-	read: Read<Buffer>;
+	read: Read<ArrayBufferView>;
 	close: (
 		arg0: number,
 		arg1: (arg0: null | NodeJS.ErrnoException) => void
@@ -11643,7 +11643,7 @@ declare interface RawSourceMap {
 	mappings: string;
 	file: string;
 }
-declare interface Read<TBuffer extends ArrayBufferView = Buffer> {
+declare interface Read<TBuffer extends ArrayBufferView = ArrayBufferView> {
 	(
 		fd: number,
 		buffer: TBuffer,
