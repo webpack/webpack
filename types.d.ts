@@ -1041,11 +1041,11 @@ declare interface CallbackWebpack<T> {
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
-	constructor(name?: string, backCompat?: boolean);
+	constructor(name?: null | string, backCompat?: boolean);
 	id: null | string | number;
 	ids: null | ChunkId[];
 	debugId: number;
-	name?: string;
+	name?: null | string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
@@ -2157,7 +2157,7 @@ declare class Compilation {
 	 * This method first looks to see if a name is provided for a new chunk,
 	 * and first looks to see if any named chunks already exist and reuse that chunk instead.
 	 */
-	addChunk(name?: string): Chunk;
+	addChunk(name?: null | string): Chunk;
 	assignDepth(module: Module): void;
 	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
@@ -2438,11 +2438,8 @@ declare class Compiler {
 	immutablePaths: Set<string | RegExp>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
-	fileTimestamps?: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
-	contextTimestamps?: ReadonlyMap<
-		string,
-		null | FileSystemInfoEntry | "ignore"
-	>;
+	fileTimestamps?: Map<string, FileSystemInfoEntry | "ignore">;
+	contextTimestamps?: Map<string, FileSystemInfoEntry | "ignore">;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (
@@ -3083,6 +3080,7 @@ declare class ContextReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ContextTimestamp = null | ContextFileSystemInfoEntry | "ignore";
 declare interface ContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
@@ -3090,8 +3088,8 @@ declare interface ContextTimestampAndHash {
 	resolved?: ResolvedContextTimestampAndHash;
 	symlinks?: Set<string>;
 }
-type CreateStatsOptionsContext = Record<string, any> &
-	KnownCreateStatsOptionsContext;
+type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
+	Record<string, any>;
 type CreateWriteStreamFSImplementation = FSImplementation & {
 	write: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -4301,27 +4299,67 @@ declare class EvalSourceMapDevToolPlugin {
 }
 declare interface ExecuteModuleArgument {
 	module: Module;
-	moduleObject?: ModuleObject;
+	moduleObject?: ExecuteModuleObject;
 	preparedInfo: any;
 	codeGenerationResult: CodeGenerationResult;
 }
 declare interface ExecuteModuleContext {
-	assets: Map<string, { source: Source; info: AssetInfo }>;
+	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	chunk: Chunk;
 	chunkGraph: ChunkGraph;
-	__webpack_require__?: (arg0: string) => any;
+	__webpack_require__?: WebpackRequire;
+}
+declare interface ExecuteModuleExports {
+	[index: string]: any;
+}
+declare interface ExecuteModuleObject {
+	/**
+	 * module id
+	 */
+	id?: string;
+
+	/**
+	 * exports
+	 */
+	exports: ExecuteModuleExports;
+
+	/**
+	 * is loaded
+	 */
+	loaded: boolean;
+
+	/**
+	 * error
+	 */
+	error?: Error;
 }
 declare interface ExecuteModuleOptions {
 	entryOptions?: EntryOptions;
 }
 declare interface ExecuteModuleResult {
-	exports: any;
+	exports: ExecuteModuleExports;
 	cacheable: boolean;
-	assets: Map<string, { source: Source; info: AssetInfo }>;
+	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
+}
+declare interface ExecuteOptions {
+	/**
+	 * module id
+	 */
+	id?: string;
+
+	/**
+	 * module
+	 */
+	module: ExecuteModuleObject;
+
+	/**
+	 * require function
+	 */
+	require: WebpackRequire;
 }
 type Experiments = ExperimentsCommon & ExperimentsExtra;
 
@@ -4454,9 +4492,9 @@ declare abstract class ExportInfo {
 		runtime: RuntimeSpec
 	): boolean;
 	setUsed(newValue: UsageStateType, runtime: RuntimeSpec): boolean;
-	unsetTarget(key?: any): boolean;
+	unsetTarget(key: Dependency): boolean;
 	setTarget(
-		key: any,
+		key: Dependency,
 		connection: ModuleGraphConnection,
 		exportName?: null | string[],
 		priority?: number
@@ -4478,7 +4516,7 @@ declare abstract class ExportInfo {
 	setUsedName(name: string): void;
 	getTerminalBinding(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: TargetItem) => boolean
+		resolveTargetFilter?: (arg0: TargetItemWithConnection) => boolean
 	): undefined | ExportsInfo | ExportInfo;
 	isReexport(): undefined | boolean;
 	findTarget(
@@ -4487,17 +4525,19 @@ declare abstract class ExportInfo {
 	): undefined | null | false | TargetItemWithoutConnection;
 	getTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: TargetItem) => boolean
-	): undefined | TargetItem;
+		resolveTargetFilter?: (arg0: TargetItemWithConnection) => boolean
+	): undefined | TargetItemWithConnection;
 
 	/**
 	 * Move the target forward as long resolveTargetFilter is fulfilled
 	 */
 	moveTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter: (arg0: TargetItem) => boolean,
-		updateOriginalConnection?: (arg0: TargetItem) => ModuleGraphConnection
-	): undefined | TargetItem;
+		resolveTargetFilter: (arg0: TargetItemWithConnection) => boolean,
+		updateOriginalConnection?: (
+			arg0: TargetItemWithConnection
+		) => ModuleGraphConnection
+	): undefined | TargetItemWithConnection;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): undefined | ExportsInfo;
 	hasInfo(baseInfo: ExportInfo, runtime: RuntimeSpec): boolean;
@@ -4572,7 +4612,7 @@ declare abstract class ExportsInfo {
 	setUnknownExportsProvided(
 		canMangle?: boolean,
 		excludeExports?: Set<string>,
-		targetKey?: any,
+		targetKey?: Dependency,
 		targetModule?: ModuleGraphConnection,
 		priority?: number
 	): boolean;
@@ -4592,12 +4632,7 @@ declare abstract class ExportsInfo {
 	getUsedName(name: string | string[], runtime: RuntimeSpec): UsedName;
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getRestoreProvidedData(): RestoreProvidedData;
-	restoreProvided(__0: {
-		otherProvided: any;
-		otherCanMangleProvide: any;
-		otherTerminalBinding: any;
-		exports: any;
-	}): void;
+	restoreProvided(__0: RestoreProvidedData): void;
 }
 declare interface ExportsSpec {
 	/**
@@ -5099,11 +5134,11 @@ declare abstract class FileSystemInfo {
 	logStatistics(): void;
 	clear(): void;
 	addFileTimestamps(
-		map: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">,
+		map: ReadonlyMap<string, FileTimestamp>,
 		immutable?: boolean
 	): void;
 	addContextTimestamps(
-		map: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">,
+		map: ReadonlyMap<string, ContextTimestamp>,
 		immutable?: boolean
 	): void;
 	getFileTimestamp(
@@ -5144,7 +5179,7 @@ declare abstract class FileSystemInfo {
 		) => void
 	): void;
 	checkResolveResultsValid(
-		resolveResults: Map<string, string | false>,
+		resolveResults: Map<string, undefined | string | false>,
 		callback: (arg0?: null | Error, arg1?: boolean) => void
 	): void;
 	createSnapshot(
@@ -5160,13 +5195,14 @@ declare abstract class FileSystemInfo {
 		snapshot: Snapshot,
 		callback: (arg0?: null | WebpackError, arg1?: boolean) => void
 	): void;
-	getDeprecatedFileTimestamps(): Map<any, any>;
-	getDeprecatedContextTimestamps(): Map<any, any>;
+	getDeprecatedFileTimestamps(): Map<string, null | number>;
+	getDeprecatedContextTimestamps(): Map<string, null | number>;
 }
 declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
 }
+type FileTimestamp = null | FileSystemInfoEntry | "ignore";
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
@@ -9214,12 +9250,6 @@ declare interface ModuleMemCachesItem {
 	references?: WeakMap<Dependency, Module>;
 	memCache: WeakTupleMap<any, any>;
 }
-declare interface ModuleObject {
-	id?: string;
-	exports: any;
-	loaded: boolean;
-	error?: Error;
-}
 
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
@@ -12456,20 +12486,7 @@ declare interface ResolveBuildDependenciesResult {
 	/**
 	 * dependencies of the resolving
 	 */
-	resolveDependencies: {
-		/**
-		 * list of files
-		 */
-		files: Set<string>;
-		/**
-		 * list of directories
-		 */
-		directories: Set<string>;
-		/**
-		 * list of missing entries
-		 */
-		missing: Set<string>;
-	};
+	resolveDependencies: ResolveDependencies;
 }
 declare interface ResolveContext {
 	contextDependencies?: WriteOnlySet<string>;
@@ -12517,6 +12534,22 @@ declare interface ResolveData {
 	 * allow to use the unsafe cache
 	 */
 	cacheable: boolean;
+}
+declare interface ResolveDependencies {
+	/**
+	 * list of files
+	 */
+	files: Set<string>;
+
+	/**
+	 * list of directories
+	 */
+	directories: Set<string>;
+
+	/**
+	 * list of missing entries
+	 */
+	missing: Set<string>;
 }
 
 /**
@@ -15216,7 +15249,7 @@ declare interface TagInfo {
 	data?: TagData;
 	next?: TagInfo;
 }
-declare interface TargetItem {
+declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
 	export?: string[];
@@ -15792,6 +15825,12 @@ declare interface WebpackPluginInstance {
 	 * The run point of the plugin, required method.
 	 */
 	apply: (compiler: Compiler) => void;
+}
+
+declare interface WebpackRequire {
+	(id: string): ExecuteModuleExports;
+	i?: ((options: ExecuteOptions) => void)[];
+	c?: Record<string, ExecuteModuleObject>;
 }
 declare interface WithId {
 	id: string | number;
