@@ -408,6 +408,7 @@ interface ImportAttributeNode {
 
 type TODO = any;
 type EXPECTED_ANY = any;
+type EXPECTED_OBJECT = object;
 
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }

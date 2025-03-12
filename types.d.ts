@@ -463,8 +463,8 @@ declare class AutomaticPrefetchPlugin {
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare interface BackendApi {
-	dispose: (arg0: (arg0?: null | Error) => void) => void;
-	module: (arg0: Module) => ModuleResult;
+	dispose: (callback: (err?: null | Error) => void) => void;
+	module: (module: Module) => ModuleResult;
 }
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
@@ -895,7 +895,7 @@ declare class Cache {
 			[
 				string,
 				null | Etag,
-				((result: any, callback: (arg0?: Error) => void) => void)[]
+				((result: any, callback: (err?: Error) => void) => void)[]
 			],
 			any
 		>;
@@ -957,7 +957,7 @@ declare abstract class CacheFacade {
 	provide<T>(
 		identifier: string,
 		etag: null | Etag,
-		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		computer: (callback: CallbackNormalErrorCache<T>) => void,
 		callback: CallbackNormalErrorCache<T>
 	): void;
 	providePromise<T>(
@@ -985,7 +985,7 @@ declare interface CacheGroupSource {
 	minChunks?: number;
 	maxAsyncRequests?: number;
 	maxInitialRequests?: number;
-	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	idHint?: string;
 	automaticNameDelimiter?: string;
 	reuseExistingChunk?: boolean;
@@ -1048,8 +1048,12 @@ declare class Chunk {
 	name?: null | string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
-	filenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
-	cssFilenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filenameTemplate?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	cssFilenameTemplate?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -1139,7 +1143,7 @@ declare class ChunkGraph {
 	getModuleChunksIterable(module: Module): Iterable<Chunk>;
 	getOrderedModuleChunksIterable(
 		module: Module,
-		sortFn: (arg0: Chunk, arg1: Chunk) => 0 | 1 | -1
+		sortFn: (a: Chunk, b: Chunk) => 0 | 1 | -1
 	): Iterable<Chunk>;
 	getModuleChunks(module: Module): Chunk[];
 	getNumberOfModuleChunks(module: Module): number;
@@ -1160,17 +1164,17 @@ declare class ChunkGraph {
 	getModuleSourceTypes(module: Module): ReadonlySet<string>;
 	getOrderedChunkModulesIterable(
 		chunk: Chunk,
-		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
+		comparator: (a: Module, b: Module) => 0 | 1 | -1
 	): Iterable<Module>;
 	getOrderedChunkModulesIterableBySourceType(
 		chunk: Chunk,
 		sourceType: string,
-		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
+		comparator: (a: Module, b: Module) => 0 | 1 | -1
 	): undefined | Iterable<Module>;
 	getChunkModules(chunk: Chunk): Module[];
 	getOrderedChunkModules(
 		chunk: Chunk,
-		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
+		comparator: (a: Module, b: Module) => 0 | 1 | -1
 	): Module[];
 	getChunkModuleIdMap(
 		chunk: Chunk,
@@ -1466,7 +1470,7 @@ declare interface ChunkPathData {
 	id: string | number;
 	name?: string;
 	hash: string;
-	hashWithLength?: (arg0: number) => string;
+	hashWithLength?: (length: number) => string;
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
 }
@@ -1560,8 +1564,8 @@ declare abstract class ChunkTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: RenderManifestEntry[],
-					arg1: RenderManifestOptions
+					renderManifestEntries: RenderManifestEntry[],
+					renderManifestOptions: RenderManifestOptions
 				) => RenderManifestEntry[]
 			) => void;
 		};
@@ -1571,9 +1575,9 @@ declare abstract class ChunkTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: ModuleTemplate,
-					arg2: RenderContextJavascriptModulesPlugin
+					source: Source,
+					moduleTemplate: ModuleTemplate,
+					renderContext: RenderContextJavascriptModulesPlugin
 				) => Source
 			) => void;
 		};
@@ -1583,9 +1587,9 @@ declare abstract class ChunkTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: ModuleTemplate,
-					arg2: RenderContextJavascriptModulesPlugin
+					source: Source,
+					moduleTemplate: ModuleTemplate,
+					renderContext: RenderContextJavascriptModulesPlugin
 				) => Source
 			) => void;
 		};
@@ -1594,7 +1598,7 @@ declare abstract class ChunkTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Source, arg1: Chunk) => Source
+				fn: (source: Source, chunk: Chunk) => Source
 			) => void;
 		};
 		hash: {
@@ -1602,7 +1606,7 @@ declare abstract class ChunkTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Hash) => void
+				fn: (hash: Hash) => void
 			) => void;
 		};
 		hashForChunk: {
@@ -1610,7 +1614,11 @@ declare abstract class ChunkTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Hash, arg1: Chunk, arg2: ChunkHashContext) => void
+				fn: (
+					hash: Hash,
+					chunk: Chunk,
+					chunkHashContext: ChunkHashContext
+				) => void
 			) => void;
 		};
 	}>;
@@ -1788,7 +1796,7 @@ type CodeValuePrimitive =
 	| Function
 	| RegExp;
 declare interface Comparator<T> {
-	(arg0: T, arg1: T): 0 | 1 | -1;
+	(a: T, b: T): 0 | 1 | -1;
 }
 declare class CompatSource extends Source {
 	constructor(sourceLike: SourceLike);
@@ -1931,7 +1939,7 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, object, undefined | AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, PathData, undefined | AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean | void>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], boolean | void>;
@@ -2180,8 +2188,10 @@ declare class Compilation {
 	emitAsset(file: string, source: Source, assetInfo?: AssetInfo): void;
 	updateAsset(
 		file: string,
-		newSourceOrFunction: Source | ((arg0: Source) => Source),
-		assetInfoUpdateOrFunction?: AssetInfo | ((arg0?: AssetInfo) => AssetInfo)
+		newSourceOrFunction: Source | ((source: Source) => Source),
+		assetInfoUpdateOrFunction?:
+			| AssetInfo
+			| ((assetInfo?: AssetInfo) => AssetInfo)
 	): void;
 	renameAsset(file: string, newFile: string): void;
 	deleteAsset(file: string): void;
@@ -2443,9 +2453,9 @@ declare class Compiler {
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (
-		arg0: string,
-		arg1: LogTypeEnum,
-		arg2?: any[]
+		value: string,
+		type: LogTypeEnum,
+		args?: any[]
 	) => void;
 	platform: Readonly<PlatformTargetProperties>;
 	options: WebpackOptionsNormalized;
@@ -3373,7 +3383,7 @@ declare class DefinePlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static runtimeValue(
-		fn: (arg0: {
+		fn: (value: {
 			module: NormalModule;
 			key: string;
 			readonly version: ValueCacheVersion;
@@ -3453,7 +3463,10 @@ declare class Dependency {
 	):
 		| null
 		| false
-		| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
+		| ((
+				moduleGraphConnection: ModuleGraphConnection,
+				runtime: RuntimeSpec
+		  ) => ConnectionState);
 
 	/**
 	 * Returns the exported names
@@ -3618,7 +3631,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	/**
 	 * selector function for modules
 	 */
-	test?: (arg0: Module) => boolean;
+	test?: (module: Module) => boolean;
 
 	/**
 	 * maximum id length in digits (used as starting point)
@@ -4487,7 +4500,7 @@ declare abstract class ExportInfo {
 	setUsedWithoutInfo(runtime: RuntimeSpec): boolean;
 	setHasUseInfo(): void;
 	setUsedConditionally(
-		condition: (arg0: UsageStateType) => boolean,
+		condition: (condition: UsageStateType) => boolean,
 		newValue: UsageStateType,
 		runtime: RuntimeSpec
 	): boolean;
@@ -4516,16 +4529,16 @@ declare abstract class ExportInfo {
 	setUsedName(name: string): void;
 	getTerminalBinding(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: TargetItemWithConnection) => boolean
+		resolveTargetFilter?: (target: TargetItemWithConnection) => boolean
 	): undefined | ExportsInfo | ExportInfo;
 	isReexport(): undefined | boolean;
 	findTarget(
 		moduleGraph: ModuleGraph,
-		validTargetModuleFilter: (arg0: Module) => boolean
+		validTargetModuleFilter: (module: Module) => boolean
 	): undefined | null | false | TargetItemWithoutConnection;
 	getTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter?: (arg0: TargetItemWithConnection) => boolean
+		resolveTargetFilter?: (target: TargetItemWithConnection) => boolean
 	): undefined | TargetItemWithConnection;
 
 	/**
@@ -4533,9 +4546,9 @@ declare abstract class ExportInfo {
 	 */
 	moveTarget(
 		moduleGraph: ModuleGraph,
-		resolveTargetFilter: (arg0: TargetItemWithConnection) => boolean,
+		resolveTargetFilter: (target: TargetItemWithConnection) => boolean,
 		updateOriginalConnection?: (
-			arg0: TargetItemWithConnection
+			target: TargetItemWithConnection
 		) => ModuleGraphConnection
 	): undefined | TargetItemWithConnection;
 	createNestedExportsInfo(): ExportsInfo;
@@ -5144,43 +5157,46 @@ declare abstract class FileSystemInfo {
 	getFileTimestamp(
 		path: string,
 		callback: (
-			arg0?: null | WebpackError,
-			arg1?: null | FileSystemInfoEntry | "ignore"
+			err?: null | WebpackError,
+			fileTimestamp?: null | FileSystemInfoEntry | "ignore"
 		) => void
 	): void;
 	getContextTimestamp(
 		path: string,
 		callback: (
-			arg0?: null | WebpackError,
-			arg1?: null | "ignore" | ResolvedContextFileSystemInfoEntry
+			err?: null | WebpackError,
+			resolvedContextTimestamp?:
+				| null
+				| "ignore"
+				| ResolvedContextFileSystemInfoEntry
 		) => void
 	): void;
 	getFileHash(
 		path: string,
-		callback: (arg0?: null | WebpackError, arg1?: null | string) => void
+		callback: (err?: null | WebpackError, hash?: null | string) => void
 	): void;
 	getContextHash(
 		path: string,
-		callback: (arg0?: null | WebpackError, arg1?: string) => void
+		callback: (err?: null | WebpackError, contextHash?: string) => void
 	): void;
 	getContextTsh(
 		path: string,
 		callback: (
-			arg0?: null | WebpackError,
-			arg1?: null | ResolvedContextTimestampAndHash
+			err?: null | WebpackError,
+			resolvedContextTimestampAndHash?: null | ResolvedContextTimestampAndHash
 		) => void
 	): void;
 	resolveBuildDependencies(
 		context: string,
 		deps: Iterable<string>,
 		callback: (
-			arg0?: null | Error,
-			arg1?: ResolveBuildDependenciesResult
+			err?: null | Error,
+			resolveBuildDependenciesResult?: ResolveBuildDependenciesResult
 		) => void
 	): void;
 	checkResolveResultsValid(
 		resolveResults: Map<string, undefined | string | false>,
-		callback: (arg0?: null | Error, arg1?: boolean) => void
+		callback: (err?: null | Error, result?: boolean) => void
 	): void;
 	createSnapshot(
 		startTime: undefined | null | number,
@@ -5188,12 +5204,12 @@ declare abstract class FileSystemInfo {
 		directories: null | Iterable<string>,
 		missing: null | Iterable<string>,
 		options: undefined | null | SnapshotOptionsFileSystemInfo,
-		callback: (arg0: null | WebpackError, arg1: null | Snapshot) => void
+		callback: (err: null | WebpackError, snapshot: null | Snapshot) => void
 	): void;
 	mergeSnapshots(snapshot1: Snapshot, snapshot2: Snapshot): Snapshot;
 	checkSnapshotValid(
 		snapshot: Snapshot,
-		callback: (arg0?: null | WebpackError, arg1?: boolean) => void
+		callback: (err?: null | WebpackError, result?: boolean) => void
 	): void;
 	getDeprecatedFileTimestamps(): Map<string, null | number>;
 	getDeprecatedContextTimestamps(): Map<string, null | number>;
@@ -5348,15 +5364,18 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		name: string,
 		global: string,
 		getFilenameForChunk: (
-			arg0: Chunk
-		) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string),
+			chunk: Chunk
+		) =>
+			| string
+			| false
+			| ((pathData: PathData, assetInfo?: AssetInfo) => string),
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
 	getFilenameForChunk: (
-		arg0: Chunk
-	) => string | false | ((arg0: PathData, arg1?: AssetInfo) => string);
+		chunk: Chunk
+	) => string | false | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	allChunks: boolean;
 
 	/**
@@ -5380,9 +5399,9 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface GroupConfig {
-	getKeys: (arg0?: any) => undefined | string[];
-	createGroup: (arg0: string, arg1: any[], arg2: any[]) => object;
-	getOptions?: (arg0: string, arg1: any[]) => GroupOptions;
+	getKeys: (item?: any) => undefined | string[];
+	createGroup: (key: string, children: any[], items: any[]) => object;
+	getOptions?: (name: string, items: any[]) => GroupOptions;
 }
 declare interface GroupOptions {
 	groupChildren?: boolean;
@@ -5501,7 +5520,7 @@ declare class Hash {
 }
 type HashFunction = string | typeof Hash;
 declare interface HashableObject {
-	updateHash: (arg0: Hash) => void;
+	updateHash: (hash: Hash) => void;
 }
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
@@ -5840,17 +5859,17 @@ declare interface InputFileSystem {
 	realpath?: RealPathFs;
 	realpathSync?: RealPathSync;
 	readJson?: (
-		arg0: PathOrFileDescriptorFs,
-		arg1: (
-			arg0: null | Error | NodeJS.ErrnoException,
-			arg1?: JsonObjectFs
+		pathOrFileDescriptor: PathOrFileDescriptorFs,
+		callback: (
+			err: null | Error | NodeJS.ErrnoException,
+			result?: JsonObjectFs
 		) => void
 	) => void;
-	readJsonSync?: (arg0: PathOrFileDescriptorFs) => JsonObjectFs;
-	purge?: (arg0?: string | string[] | Set<string>) => void;
-	join?: (arg0: string, arg1: string) => string;
-	relative?: (arg0: string, arg1: string) => string;
-	dirname?: (arg0: string) => string;
+	readJsonSync?: (pathOrFileDescriptor: PathOrFileDescriptorFs) => JsonObjectFs;
+	purge?: (value?: string | string[] | Set<string>) => void;
+	join?: (path1: string, path2: string) => string;
+	relative?: (from: string, to: string) => string;
+	dirname?: (dirname: string) => string;
 }
 type IntermediateFileSystem = InputFileSystem &
 	OutputFileSystem &
@@ -5858,8 +5877,8 @@ type IntermediateFileSystem = InputFileSystem &
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: MkdirSync;
 	createWriteStream: (
-		arg0: PathLikeFs,
-		arg1?:
+		pathLike: PathLikeFs,
+		result?:
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -5877,13 +5896,13 @@ declare interface IntermediateFileSystemExtras {
 	open: Open;
 	read: Read<ArrayBufferView>;
 	close: (
-		arg0: number,
-		arg1: (arg0: null | NodeJS.ErrnoException) => void
+		df: number,
+		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
 	rename: (
-		arg0: PathLikeFs,
-		arg1: PathLikeFs,
-		arg2: (arg0: null | NodeJS.ErrnoException) => void
+		a: PathLikeFs,
+		b: PathLikeFs,
+		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
@@ -5900,7 +5919,7 @@ declare abstract class ItemCacheFacade {
 	store<T>(data: T, callback: CallbackCacheCacheFacade<void>): void;
 	storePromise<T>(data: T): Promise<void>;
 	provide<T>(
-		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		computer: (callback: CallbackNormalErrorCache<T>) => void,
 		callback: CallbackNormalErrorCache<T>
 	): void;
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
@@ -6689,7 +6708,7 @@ declare class JavascriptParser extends Parser {
 	): void;
 	enterDeclaration(
 		declaration: Declaration,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	blockPreWalkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
@@ -6854,11 +6873,11 @@ declare class JavascriptParser extends Parser {
 		fallback:
 			| undefined
 			| ((
-					arg0: string,
-					arg1: string | VariableInfo | ScopeInfo,
-					arg2: () => string[]
+					name: string,
+					rootInfo: string | VariableInfo | ScopeInfo,
+					getMembers: () => string[]
 			  ) => any),
-		defined: undefined | ((arg0: string) => any),
+		defined: undefined | ((result?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForName<T, R>(
@@ -6874,14 +6893,14 @@ declare class JavascriptParser extends Parser {
 	callHooksForInfoWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
-		fallback: undefined | ((arg0: string) => any),
-		defined: undefined | ((arg0?: string) => any),
+		fallback: undefined | ((name: string) => any),
+		defined: undefined | ((result?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForNameWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		name: string,
-		fallback: undefined | ((arg0: string) => any),
+		fallback: undefined | ((value: string) => any),
 		defined: undefined | (() => any),
 		...args: AsArray<T>
 	): undefined | R;
@@ -6956,7 +6975,7 @@ declare class JavascriptParser extends Parser {
 			| AssignmentPattern
 			| Property
 		)[],
-		onIdent: (arg0: string) => void
+		onIdent: (ident: string) => void
 	): void;
 	enterPattern(
 		pattern:
@@ -6967,27 +6986,27 @@ declare class JavascriptParser extends Parser {
 			| RestElement
 			| AssignmentPattern
 			| Property,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	enterIdentifier(
 		pattern: Identifier,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	enterObjectPattern(
 		pattern: ObjectPattern,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	enterArrayPattern(
 		pattern: ArrayPattern,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	enterRestElement(
 		pattern: RestElement,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	enterAssignmentPattern(
 		pattern: AssignmentPattern,
-		onIdent: (arg0: string, arg1: Identifier) => void
+		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 	evaluateExpression(
 		expression:
@@ -7728,14 +7747,14 @@ declare interface KnownStatsError {
 }
 declare interface KnownStatsFactoryContext {
 	type: string;
-	makePathsRelative: (arg0: string) => string;
+	makePathsRelative: (path: string) => string;
 	compilation: Compilation;
 	rootModules: Set<Module>;
 	compilationFileToChunks: Map<string, Chunk[]>;
 	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
 	runtime: RuntimeSpec;
-	cachedGetErrors: (arg0: Compilation) => WebpackError[];
-	cachedGetWarnings: (arg0: Compilation) => WebpackError[];
+	cachedGetErrors: (compilation: Compilation) => WebpackError[];
+	cachedGetWarnings: (compilation: Compilation) => WebpackError[];
 }
 declare interface KnownStatsLogging {
 	entries: StatsLoggingEntry[];
@@ -7889,24 +7908,24 @@ declare interface KnownUnsafeCacheData {
 declare interface LStatFs {
 	(
 		path: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: undefined | (StatOptions & { bigint?: false }),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: StatOptions & { bigint: true },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IBigIntStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: undefined | StatOptions,
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: IStats | IBigIntStats
+			err: null | NodeJS.ErrnoException,
+			result?: IStats | IBigIntStats
 		) => void
 	): void;
 }
@@ -8023,7 +8042,7 @@ declare class LazySet<T> {
 	delete(value: T): boolean;
 	entries(): IterableIterator<[T, T]>;
 	forEach<K>(
-		callbackFn: (arg0: T, arg1: T, arg2: Set<T>) => void,
+		callbackFn: (value: T, value2: T, set: Set<T>) => void,
 		thisArg: K
 	): void;
 	has(item: T): boolean;
@@ -8580,8 +8599,8 @@ declare abstract class MainTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: RenderManifestEntry[],
-					arg1: RenderManifestOptions
+					renderManifestEntries: RenderManifestEntry[],
+					renderManifestOptions: RenderManifestOptions
 				) => RenderManifestEntry[]
 			) => void;
 		};
@@ -8592,7 +8611,10 @@ declare abstract class MainTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: string, arg1: RenderBootstrapContext) => string
+				fn: (
+					value: string,
+					renderBootstrapContext: RenderBootstrapContext
+				) => string
 			) => void;
 		};
 		beforeStartup: { tap: () => never };
@@ -8604,11 +8626,11 @@ declare abstract class MainTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: Chunk,
-					arg2: undefined | string,
-					arg3: ModuleTemplate,
-					arg4: DependencyTemplates
+					source: Source,
+					chunk: Chunk,
+					hash: undefined | string,
+					moduleTemplate: ModuleTemplate,
+					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
 		};
@@ -8617,7 +8639,7 @@ declare abstract class MainTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Source, arg1: Chunk, arg2?: string) => Source
+				fn: (source: Source, chunk: Chunk, hash?: string) => Source
 			) => void;
 		};
 		assetPath: {
@@ -8625,7 +8647,7 @@ declare abstract class MainTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: string, arg1: object, arg2?: AssetInfo) => string
+				fn: (value: string, path: PathData, assetInfo?: AssetInfo) => string
 			) => void;
 			call: (filename: TemplatePath, options: PathData) => string;
 		};
@@ -8634,7 +8656,7 @@ declare abstract class MainTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Hash) => void
+				fn: (hash: Hash) => void
 			) => void;
 		};
 		hashForChunk: {
@@ -8642,7 +8664,7 @@ declare abstract class MainTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Hash, arg1: Chunk) => void
+				fn: (hash: Hash, chunk: Chunk) => void
 			) => void;
 		};
 		globalHashPaths: { tap: () => void };
@@ -8751,7 +8773,7 @@ declare interface Mkdir {
 	(
 		file: PathLikeFs,
 		options: MakeDirectoryOptions & { recursive: true },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
 		file: PathLikeFs,
@@ -8761,16 +8783,16 @@ declare interface Mkdir {
 			| string
 			| number
 			| (MakeDirectoryOptions & { recursive?: false }),
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 	(
 		file: PathLikeFs,
 		options: undefined | null | string | number | MakeDirectoryOptions,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
 		file: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
 declare interface MkdirSync {
@@ -8867,7 +8889,7 @@ declare class Module extends DependenciesBlock {
 	hasReasons(moduleGraph: ModuleGraph, runtime: RuntimeSpec): boolean;
 	needBuild(
 		context: NeedBuildContext,
-		callback: (arg0?: null | WebpackError, arg1?: boolean) => void
+		callback: (err?: null | WebpackError, needBuild?: boolean) => void
 	): void;
 	needRebuild(
 		fileTimestamps: Map<string, null | number>,
@@ -8881,7 +8903,7 @@ declare class Module extends DependenciesBlock {
 		compilation: Compilation,
 		resolver: ResolverWithOptions,
 		fs: InputFileSystem,
-		callback: (arg0?: WebpackError) => void
+		callback: (err?: WebpackError) => void
 	): void;
 	getSourceTypes(): ReadonlySet<string>;
 	source(
@@ -8978,7 +9000,7 @@ declare class ModuleDependency extends Dependency {
 declare abstract class ModuleFactory {
 	create(
 		data: ModuleFactoryCreateData,
-		callback: (arg0?: null | Error, arg1?: ModuleFactoryResult) => void
+		callback: (err?: null | Error, result?: ModuleFactoryResult) => void
 	): void;
 }
 declare interface ModuleFactoryCreateData {
@@ -9122,12 +9144,12 @@ declare class ModuleGraph {
 	moveModuleConnections(
 		oldModule: Module,
 		newModule: Module,
-		filterConnection: (arg0: ModuleGraphConnection) => boolean
+		filterConnection: (moduleGraphConnection: ModuleGraphConnection) => boolean
 	): void;
 	copyOutgoingModuleConnections(
 		oldModule: Module,
 		newModule: Module,
-		filterConnection: (arg0: ModuleGraphConnection) => boolean
+		filterConnection: (moduleGraphConnection: ModuleGraphConnection) => boolean
 	): void;
 	addExtraReason(module: Module, explanation: string): void;
 	getResolvedModule(dependency: Dependency): null | Module;
@@ -9208,7 +9230,10 @@ declare class ModuleGraphConnection {
 		condition?:
 			| null
 			| false
-			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
+			| ((
+					moduleGraphConnection: ModuleGraphConnection,
+					runtime: RuntimeSpec
+			  ) => ConnectionState)
 	);
 	originModule: null | Module;
 	resolvedOriginModule: null | Module;
@@ -9218,15 +9243,15 @@ declare class ModuleGraphConnection {
 	weak: boolean;
 	conditional: boolean;
 	condition?: (
-		arg0: ModuleGraphConnection,
-		arg1: RuntimeSpec
+		moduleGraphConnection: ModuleGraphConnection,
+		runtime: RuntimeSpec
 	) => ConnectionState;
 	explanations?: Set<string>;
 	clone(): ModuleGraphConnection;
 	addCondition(
 		condition: (
-			arg0: ModuleGraphConnection,
-			arg1: RuntimeSpec
+			moduleGraphConnection: ModuleGraphConnection,
+			runtime: RuntimeSpec
 		) => ConnectionState
 	): void;
 	addExplanation(explanation: string): void;
@@ -9388,7 +9413,7 @@ declare interface ModuleOptionsNormalized {
 declare interface ModulePathData {
 	id: string | number;
 	hash: string;
-	hashWithLength?: (arg0: number) => string;
+	hashWithLength?: (length: number) => string;
 }
 declare abstract class ModuleProfile {
 	startTime: number;
@@ -9498,10 +9523,10 @@ declare abstract class ModuleTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: Module,
-					arg2: ChunkRenderContextJavascriptModulesPlugin,
-					arg3: DependencyTemplates
+					source: Source,
+					module: Module,
+					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
 		};
@@ -9511,10 +9536,10 @@ declare abstract class ModuleTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: Module,
-					arg2: ChunkRenderContextJavascriptModulesPlugin,
-					arg3: DependencyTemplates
+					source: Source,
+					module: Module,
+					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
 		};
@@ -9524,10 +9549,10 @@ declare abstract class ModuleTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: Module,
-					arg2: ChunkRenderContextJavascriptModulesPlugin,
-					arg3: DependencyTemplates
+					source: Source,
+					module: Module,
+					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
 		};
@@ -9537,10 +9562,10 @@ declare abstract class ModuleTemplate {
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
-					arg0: Source,
-					arg1: Module,
-					arg2: ChunkRenderContextJavascriptModulesPlugin,
-					arg3: DependencyTemplates
+					source: Source,
+					module: Module,
+					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
 		};
@@ -9549,7 +9574,7 @@ declare abstract class ModuleTemplate {
 				options:
 					| string
 					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
-				fn: (arg0: Hash) => void
+				fn: (hash: Hash) => void
 			) => void;
 		};
 	}>;
@@ -10028,10 +10053,10 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	constructor(
 		resourceRegExp: RegExp,
-		newResource: string | ((arg0: ResolveData) => void)
+		newResource: string | ((resolveData: ResolveData) => void)
 	);
 	resourceRegExp: RegExp;
-	newResource: string | ((arg0: ResolveData) => void);
+	newResource: string | ((resolveData: ResolveData) => void);
 
 	/**
 	 * Apply the plugin
@@ -10093,7 +10118,7 @@ declare class NullDependencyTemplate extends DependencyTemplate {
 }
 declare interface ObjectDeserializerContext {
 	read: () => any;
-	setCircularReference: (arg0?: any) => void;
+	setCircularReference: (value?: any) => void;
 }
 declare interface ObjectEncodingOptions {
 	encoding?:
@@ -10115,16 +10140,16 @@ declare interface ObjectForExtract {
 	[index: string]: any;
 }
 declare interface ObjectSerializer {
-	serialize: (arg0: any, arg1: ObjectSerializerContext) => void;
-	deserialize: (arg0: ObjectDeserializerContext) => any;
+	serialize: (value: any, context: ObjectSerializerContext) => void;
+	deserialize: (context: ObjectDeserializerContext) => any;
 }
 declare interface ObjectSerializerContext {
-	write: (arg0?: any) => void;
-	setCircularReference: (arg0?: any) => void;
+	write: (value?: any) => void;
+	setCircularReference: (value?: any) => void;
 	snapshot: () => ObjectSerializerSnapshot;
-	rollback: (arg0: ObjectSerializerSnapshot) => void;
-	writeLazy?: (arg0?: any) => void;
-	writeSeparate?: (arg0: any, arg1?: object) => () => any;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (item?: any, obj?: object) => () => any;
 }
 declare interface ObjectSerializerSnapshot {
 	length: number;
@@ -10169,16 +10194,16 @@ declare interface Open {
 		file: PathLikeFs,
 		flags: undefined | string | number,
 		mode: undefined | null | string | number,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: number) => void
 	): void;
 	(
 		file: PathLikeFs,
 		flags: undefined | string | number,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: number) => void
 	): void;
 	(
 		file: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: number) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: number) => void
 	): void;
 }
 
@@ -10926,15 +10951,15 @@ declare interface OutputFileSystem {
 	readdir?: ReaddirFs;
 	rmdir?: Rmdir;
 	unlink?: (
-		arg0: PathLikeFs,
-		arg1: (arg0: null | NodeJS.ErrnoException) => void
+		pathLike: PathLikeFs,
+		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
 	stat: StatFs;
 	lstat?: LStatFs;
 	readFile: ReadFileFs;
-	join?: (arg0: string, arg1: string) => string;
-	relative?: (arg0: string, arg1: string) => string;
-	dirname?: (arg0: string) => string;
+	join?: (path1: string, path2: string) => string;
+	relative?: (from: string, to: string) => string;
+	dirname?: (dirname: string) => string;
 }
 
 /**
@@ -11200,7 +11225,7 @@ declare interface OutputNormalized {
 	workerWasmLoading?: string | false;
 }
 declare interface ParameterizedComparator<TArg, T> {
-	(arg0: TArg): Comparator<T>;
+	(tArg: TArg): Comparator<T>;
 }
 declare interface ParsedIdentifier {
 	request: string;
@@ -11306,7 +11331,7 @@ declare interface ParserStateBase {
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
-	hashWithLength?: (arg0: number) => string;
+	hashWithLength?: (length: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
 	runtime?: RuntimeSpec;
@@ -11315,7 +11340,7 @@ declare interface PathData {
 	query?: string;
 	contentHashType?: string;
 	contentHash?: string;
-	contentHashWithLength?: (arg0: number) => string;
+	contentHashWithLength?: (length: number) => string;
 	noChunkHash?: boolean;
 	url?: string;
 }
@@ -11751,7 +11776,7 @@ declare interface ReadFileFs {
 			| undefined
 			| null
 			| ({ encoding?: null; flag?: string } & Abortable),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 	(
 		path: PathOrFileDescriptorFs,
@@ -11769,7 +11794,7 @@ declare interface ReadFileFs {
 			| "base64"
 			| "base64url"
 			| "hex",
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
 		path: PathOrFileDescriptorFs,
@@ -11790,13 +11815,13 @@ declare interface ReadFileFs {
 			| "hex"
 			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: string | Buffer
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
 		) => void
 	): void;
 	(
 		path: PathOrFileDescriptorFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 }
 declare interface ReadFileSync {
@@ -11931,18 +11956,18 @@ declare interface ReaddirFs {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string[]) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options:
 			| "buffer"
 			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer[]) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer[]) => void
 	): void;
 	(
 		path: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string[]) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string[]) => void
 	): void;
 	(
 		path: PathLikeFs,
@@ -11966,8 +11991,8 @@ declare interface ReaddirFs {
 					recursive?: boolean;
 			  }),
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: string[] | Buffer[]
+			err: null | NodeJS.ErrnoException,
+			result?: string[] | Buffer[]
 		) => void
 	): void;
 	(
@@ -11976,7 +12001,7 @@ declare interface ReaddirFs {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Dirent[]) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Dirent[]) => void
 	): void;
 }
 declare interface ReaddirSync {
@@ -12135,24 +12160,24 @@ declare interface ReadlinkFs {
 	(
 		path: PathLikeFs,
 		options: EncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: BufferEncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: EncodingOption,
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: string | Buffer
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
 		) => void
 	): void;
 	(
 		path: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
 declare interface ReadlinkSync {
@@ -12213,24 +12238,24 @@ declare interface RealPathFs {
 	(
 		path: PathLikeFs,
 		options: EncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: BufferEncodingOption,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Buffer) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: EncodingOption,
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: string | Buffer
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
 		) => void
 	): void;
 	(
 		path: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
 declare interface RealPathSync {
@@ -12459,7 +12484,7 @@ declare interface RequestRecord {
 	[index: string]: string | string[];
 }
 declare abstract class RequestShortener {
-	contextify: (arg0: string) => string;
+	contextify: (value: string) => string;
 	shorten(request?: null | string): undefined | null | string;
 }
 declare interface ResolveBuildDependenciesResult {
@@ -13053,12 +13078,12 @@ declare interface RmDirOptions {
 declare interface Rmdir {
 	(
 		file: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 	(
 		file: PathLikeFs,
 		options: RmDirOptions,
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
 type Rule = string | RegExp;
@@ -13071,7 +13096,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (arg0: EffectData) => Effect[];
+	exec: (effectData: EffectData) => Effect[];
 }
 type RuleSetCondition =
 	| string
@@ -13563,7 +13588,7 @@ declare class RuntimeSpecMap<T> {
 	set(runtime: RuntimeSpec, value: T): void;
 	provide(runtime: RuntimeSpec, computer: () => any): any;
 	delete(runtime: RuntimeSpec): void;
-	update(runtime: RuntimeSpec, fn: (arg0?: T) => T): void;
+	update(runtime: RuntimeSpec, fn: (value?: T) => T): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
 	get size(): number;
@@ -13976,7 +14001,7 @@ declare abstract class RuntimeTemplate {
 	}): string;
 }
 declare abstract class RuntimeValue {
-	fn: (arg0: {
+	fn: (value: {
 		module: NormalModule;
 		key: string;
 		readonly version: ValueCacheVersion;
@@ -14280,7 +14305,7 @@ declare interface SnapshotOptionsWebpackOptions {
 	unmanagedPaths?: (string | RegExp)[];
 }
 declare interface SortFunction<T> {
-	(arg0: T, arg1: T): number;
+	(a: T, b: T): number;
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
@@ -14292,12 +14317,12 @@ declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (arg0: SortableSet<T>) => R): R;
+	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
 	 */
-	getFromUnorderedCache<R>(fn: (arg0: SortableSet<T>) => R): R;
+	getFromUnorderedCache<R>(fn: (set: SortableSet<T>) => R): R;
 	toJSON(): T[];
 }
 declare class Source {
@@ -14328,7 +14353,7 @@ declare class SourceMapDevToolPlugin {
 	sourceMappingURLComment:
 		| string
 		| false
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	moduleFilenameTemplate: string | Function;
 	fallbackModuleFilenameTemplate: string | Function;
 	namespace: string;
@@ -14454,7 +14479,7 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
@@ -14500,24 +14525,24 @@ type StartupRenderContext = RenderContextJavascriptModulesPlugin & {
 declare interface StatFs {
 	(
 		path: PathLikeFs,
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: undefined | (StatOptions & { bigint?: false }),
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: StatOptions & { bigint: true },
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: IBigIntStats) => void
+		callback: (err: null | NodeJS.ErrnoException, result?: IBigIntStats) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options: undefined | StatOptions,
 		callback: (
-			arg0: null | NodeJS.ErrnoException,
-			arg1?: IStats | IBigIntStats
+			err: null | NodeJS.ErrnoException,
+			result?: IStats | IBigIntStats
 		) => void
 	): void;
 }
@@ -14685,7 +14710,7 @@ declare interface StatsFactoryHooks {
 	>;
 	sort: HookMap<
 		SyncBailHook<
-			[((arg0?: any, arg1?: any) => 0 | 1 | -1)[], StatsFactoryContext],
+			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
 			void
 		>
 	>;
@@ -14697,7 +14722,7 @@ declare interface StatsFactoryHooks {
 	>;
 	sortResults: HookMap<
 		SyncBailHook<
-			[((arg0?: any, arg1?: any) => 0 | 1 | -1)[], StatsFactoryContext],
+			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
 			void
 		>
 	>;
@@ -15216,7 +15241,7 @@ declare class SyncModuleIdsPlugin {
 		/**
 		 * selector for modules
 		 */
-		test: (arg0: Module) => boolean;
+		test?: (module: Module) => boolean;
 		/**
 		 * operation mode (defaults to merge)
 		 */
@@ -15274,7 +15299,7 @@ declare class Template {
 	static renderChunkModules(
 		renderContext: ChunkRenderContextJavascriptModulesPlugin,
 		modules: Module[],
-		renderModule: (arg0: Module) => null | Source,
+		renderModule: (module: Module) => null | Source,
 		prefix?: string
 	): null | Source;
 	static renderRuntimeModules(
@@ -15290,7 +15315,9 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 }
-type TemplatePath = string | ((arg0: PathData, arg1?: AssetInfo) => string);
+type TemplatePath =
+	| string
+	| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -15363,13 +15390,13 @@ declare interface WatchFileSystem {
 		startTime: number,
 		options: WatchOptions,
 		callback: (
-			arg0: null | Error,
-			arg1?: Map<string, FileSystemInfoEntry | "ignore">,
-			arg2?: Map<string, FileSystemInfoEntry | "ignore">,
-			arg3?: Set<string>,
-			arg4?: Set<string>
+			err: null | Error,
+			timeInfoEntries1?: Map<string, FileSystemInfoEntry | "ignore">,
+			timeInfoEntries2?: Map<string, FileSystemInfoEntry | "ignore">,
+			canges?: Set<string>,
+			removals?: Set<string>
 		) => void,
-		callbackUndelayed: (arg0: string, arg1: number) => void
+		callbackUndelayed: (value: string, num: number) => void
 	) => Watcher;
 }
 declare class WatchIgnorePlugin {
@@ -15578,7 +15605,7 @@ declare class WebpackError extends Error {
 	static stackTraceLimit: number;
 }
 declare abstract class WebpackLogger {
-	getChildLogger: (arg0: string | (() => string)) => WebpackLogger;
+	getChildLogger: (name: string | (() => string)) => WebpackLogger;
 	error(...args: any[]): void;
 	warn(...args: any[]): void;
 	info(...args: any[]): void;
@@ -15840,7 +15867,7 @@ declare interface WithOptions {
 	 * create a resolver with additional/different options
 	 */
 	withOptions: (
-		arg0: Partial<ResolveOptionsWithDependencyType>
+		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
 declare interface WriteFile {
@@ -15861,7 +15888,7 @@ declare interface WriteFile {
 			| Float64Array<ArrayBufferLike>
 			| DataView<ArrayBufferLike>,
 		options: WriteFileOptions,
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 	(
 		file: PathOrFileDescriptorFs,
@@ -15879,7 +15906,7 @@ declare interface WriteFile {
 			| Float32Array<ArrayBufferLike>
 			| Float64Array<ArrayBufferLike>
 			| DataView<ArrayBufferLike>,
-		callback: (arg0: null | NodeJS.ErrnoException) => void
+		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
 type WriteFileOptions =
@@ -15997,7 +16024,9 @@ declare namespace exports {
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
-	export const validate: (arg0: Configuration | Configuration[]) => void;
+	export const validate: (
+		configuration: Configuration | Configuration[]
+	) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
@@ -16207,7 +16236,7 @@ declare namespace exports {
 			export let inferDependencyUsage: (state: ParserState) => void;
 			export let onUsage: (
 				state: ParserState,
-				onUsageCallback: (arg0?: boolean | Set<string>) => void
+				onUsageCallback: (value?: boolean | Set<string>) => void
 			) => void;
 			export let setTopLevelSymbol: (
 				state: ParserState,
@@ -16233,7 +16262,10 @@ declare namespace exports {
 			) =>
 				| null
 				| false
-				| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
+				| ((
+						moduleGraphConnection: ModuleGraphConnection,
+						runtime: RuntimeSpec
+				  ) => ConnectionState);
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {
@@ -16378,7 +16410,7 @@ declare namespace exports {
 			) => RuntimeSpec;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
-				fn: (arg0?: string) => void,
+				fn: (runtime?: string) => void,
 				deterministicOrder?: boolean
 			) => void;
 			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
@@ -16419,7 +16451,7 @@ declare namespace exports {
 			) => RuntimeCondition;
 			export let filterRuntime: (
 				runtime: RuntimeSpec,
-				filter: (arg0: RuntimeSpec) => boolean
+				filter: (runtime?: RuntimeSpec) => boolean
 			) => undefined | string | boolean | SortableSet<string>;
 			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
@@ -16432,7 +16464,7 @@ declare namespace exports {
 			) => void;
 			export const registerLoader: (
 				regExp: RegExp,
-				loader: (arg0: string) => boolean
+				loader: (request: string) => boolean
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
@@ -16449,12 +16481,12 @@ declare namespace exports {
 		) => T | O | (T & O);
 		export function compileBooleanMatcher(
 			map: Record<string | number, boolean>
-		): boolean | ((arg0: string) => string);
+		): boolean | ((value: string) => string);
 		export namespace compileBooleanMatcher {
 			export let fromLists: (
 				positiveItems: string[],
 				negativeItems: string[]
-			) => (arg0: string) => string;
+			) => (value: string) => string;
 			export let itemsToRegexp: (itemsArr: string[]) => string;
 		}
 		export { LazySet };

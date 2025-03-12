@@ -6,6 +6,9 @@ const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
+/**
+ * @returns {Promise<void>} result
+ */
 function setup() {
 	return Promise.all([
 		checkSymlinkExistsAsync().then(async hasSymlink => {
@@ -27,12 +30,18 @@ function setup() {
 		});
 }
 
+/**
+ * @returns {Promise<void>} result
+ */
 async function runSetupSymlinkAsync() {
 	await exec("yarn", ["install"], "Install dependencies");
 	await exec("yarn", ["link"], "Create webpack symlink");
 	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
 }
 
+/**
+ * @returns {Promise<boolean>} result
+ */
 function checkSymlinkExistsAsync() {
 	return new Promise((resolve, reject) => {
 		if (
@@ -47,6 +56,9 @@ function checkSymlinkExistsAsync() {
 	});
 }
 
+/**
+ * @returns {Promise<void>} result
+ */
 async function ensureYarnInstalledAsync() {
 	const semverPattern =
 		/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
@@ -60,10 +72,19 @@ async function ensureYarnInstalledAsync() {
 	if (!hasYarn) await installYarnAsync();
 }
 
+/**
+ * @returns {Promise<void>} result
+ */
 function installYarnAsync() {
 	return exec("npm", ["install", "-g", "yarn"], "Install yarn");
 }
 
+/**
+ * @param {string} command command
+ * @param {string[]} args args
+ * @param {string} description description
+ * @returns {Promise<void>} result
+ */
 function exec(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
@@ -85,6 +106,12 @@ function exec(command, args, description) {
 	});
 }
 
+/**
+ * @param {string} command command
+ * @param {string[]} args args
+ * @param {string} description description
+ * @returns {Promise<string>} result
+ */
 function execGetOutput(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
@@ -103,6 +130,7 @@ function execGetOutput(command, args, description) {
 				resolve(Buffer.concat(buffers).toString("utf-8").trim());
 			}
 		});
+		/** @type {Buffer[]} */
 		const buffers = [];
 		cp.stdout.on("data", data => buffers.push(data));
 	});

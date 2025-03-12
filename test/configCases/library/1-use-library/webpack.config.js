@@ -1,9 +1,10 @@
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 
-var webpack = require("../../../../");
-var path = require("path");
-/** @type {function(any, any): import("../../../../").Configuration[]} */
+const webpack = require("../../../../");
+const path = require("path");
+
+/** @type {(env: any, options: any) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		resolve: {

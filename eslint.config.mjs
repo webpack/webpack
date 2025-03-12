@@ -97,11 +97,8 @@ export default [
 			"no-else-return": "error",
 			"no-lonely-if": "error",
 			"no-undef-init": "error",
-			// Disallow @ts-ignore directive. Use @ts-expect-error instead
-			"no-warning-comments": [
-				"error",
-				{ terms: ["@ts-ignore"], location: "start" }
-			],
+			// Disallow ts-ignore directive. Use ts-expect-error instead
+			"no-warning-comments": ["error", { terms: ["@ts-ignore"] }],
 			"no-constructor-return": "error",
 			"symbol-description": "error",
 			"array-callback-return": [
@@ -282,15 +279,12 @@ export default [
 				mode: "typescript",
 				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
 				tagNamePreference: {
-					...["implements", "const", "memberof", "yields"].reduce(
-						(acc, tag) => {
-							acc[tag] = {
-								message: `@${tag} currently not supported in TypeScript`
-							};
-							return acc;
-						},
-						{}
-					),
+					...["memberof", "yields", "member"].reduce((acc, tag) => {
+						acc[tag] = {
+							message: `@${tag} currently not supported in TypeScript`
+						};
+						return acc;
+					}, {}),
 					extends: "extends",
 					return: "returns",
 					constructor: "constructor",
@@ -308,8 +302,7 @@ export default [
 		rules: {
 			...jsdocConfig.rules,
 			// Override recommended
-			// TODO remove me after switch to typescript strict mode
-			"jsdoc/require-jsdoc": "off",
+			//
 			// Doesn't support function overloading/tuples/`readonly`/module keyword/etc
 			// Also `typescript` reports this itself
 			"jsdoc/valid-types": "off",
@@ -320,12 +313,36 @@ export default [
 
 			// More rules
 			"jsdoc/check-indentation": "error",
-			"jsdoc/no-bad-blocks": "error",
+			"jsdoc/check-line-alignment": ["error", "never"],
+			"jsdoc/require-asterisk-prefix": "error",
 			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
 			"jsdoc/require-template": "error",
+			"jsdoc/no-bad-blocks": "error",
 			"jsdoc/no-blank-block-descriptions": "error",
 			"jsdoc/no-blank-blocks": "error",
-			"jsdoc/require-asterisk-prefix": "error"
+			"jsdoc/no-restricted-syntax": [
+				"error",
+				{
+					contexts: [
+						// No `@type {*}`
+						{
+							comment: "JsdocBlock:has(JsdocTypeAny)",
+							message: "Please use `any`."
+						},
+						// No `@type {?}`
+						{
+							comment: "JsdocBlock:has(JsdocTypeUnknown)",
+							message: "Please use `unknown` or `any`"
+						},
+						// Prefer TypeScript syntax for functions
+						{
+							comment: "JsdocBlock:has(JsdocTypeFunction[arrow=false])",
+							message:
+								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
+						}
+					]
+				}
+			]
 		}
 	},
 	{
@@ -363,7 +380,8 @@ export default [
 			"func-style": "off",
 			"unicorn/prefer-includes": "off",
 			"unicorn/no-useless-undefined": "off",
-			"unicorn/no-array-for-each": "off"
+			"unicorn/no-array-for-each": "off",
+			"jsdoc/require-jsdoc": "off"
 		}
 	},
 	{
@@ -398,16 +416,17 @@ export default [
 			"jest/no-done-callback": "off",
 			"jest/expect-expect": "off",
 			"jest/no-conditional-expect": "off",
+			"object-shorthand": "off",
+			camelcase: "off",
+			"no-var": "off",
+			"jsdoc/require-jsdoc": "off",
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{
 					ignores: ["Blob"],
 					allowExperimental: true
 				}
-			],
-			"object-shorthand": "off",
-			camelcase: "off",
-			"no-var": "off"
+			]
 		}
 	},
 	{

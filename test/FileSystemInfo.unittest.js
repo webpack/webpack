@@ -397,7 +397,7 @@ ${details(snapshot)}`)
 		const options = { timestamp: true };
 
 		/**
-		 * @param {function((WebpackError | null)=, (Snapshot | null)=): void} callback callback function
+		 * @param {(err?: WebpackError | null, snapshot?: Snapshot | null) => void} callback callback function
 		 */
 		function getSnapshot(callback) {
 			const fs = createFs();
