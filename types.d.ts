@@ -15393,7 +15393,7 @@ declare interface WatchFileSystem {
 			err: null | Error,
 			timeInfoEntries1?: Map<string, FileSystemInfoEntry | "ignore">,
 			timeInfoEntries2?: Map<string, FileSystemInfoEntry | "ignore">,
-			canges?: Set<string>,
+			changes?: Set<string>,
 			removals?: Set<string>
 		) => void,
 		callbackUndelayed: (value: string, num: number) => void
