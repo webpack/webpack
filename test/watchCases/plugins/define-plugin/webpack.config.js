@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const webpack = require("../../../../");
-/** @type {function(any, any): import("../../../../").Configuration} */
+/** @type {(env: any, options: any) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => {
 	const valueFile = path.resolve(srcPath, "value.txt");
 	return {

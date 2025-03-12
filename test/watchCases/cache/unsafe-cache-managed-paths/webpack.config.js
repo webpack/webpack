@@ -1,4 +1,4 @@
-/** @type {function(): import("../../../../").Configuration} */
+/** @type {(env: any, options: any) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	cache: {

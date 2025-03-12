@@ -17,6 +17,7 @@
     "schemas/**/*.json",
     "bin/*.js",
     "lib/**/*.js",
-    "tooling/**/*.js"
+    "tooling/**/*.js",
+    "setup/**/*.js"
   ]
 }
