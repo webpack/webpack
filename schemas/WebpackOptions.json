@@ -604,7 +604,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((context: TODO) => string)"
         }
       ]
     },
@@ -616,7 +616,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((context: TODO) => string)"
         }
       ]
     },
@@ -2900,7 +2900,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((layer: string | null) => boolean)"
             }
           ]
         },
@@ -2978,7 +2978,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module'), chunks: import('../lib/Chunk')[], key: string) => string | undefined)"
             }
           ]
         },
@@ -3002,7 +3002,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module'), context: import('../lib/optimize/SplitChunksPlugin').CacheGroupsContext) => boolean)"
             }
           ]
         },
@@ -3018,7 +3018,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((type: string) => boolean)"
             }
           ]
         },
@@ -3286,7 +3286,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module'), chunks: import('../lib/Chunk')[], key: string) => string | undefined)"
             }
           ]
         },

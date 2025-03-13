@@ -324,22 +324,42 @@ export default [
 				"error",
 				{
 					contexts: [
-						// No `@type {*}`
-						{
-							comment: "JsdocBlock:has(JsdocTypeAny)",
-							message: "Please use `any`."
-						},
-						// No `@type {?}`
-						{
-							comment: "JsdocBlock:has(JsdocTypeUnknown)",
-							message: "Please use `unknown` or `any`"
-						},
 						// Prefer TypeScript syntax for functions
 						{
 							comment: "JsdocBlock:has(JsdocTypeFunction[arrow=false])",
 							message:
 								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
+						},
+						// No `*` type
+						{
+							comment: "JsdocBlock:has(JsdocTypeAny)",
+							message: "Please use `any`."
+						},
+						// No `?` type
+						{
+							comment: "JsdocBlock:has(JsdocTypeUnknown)",
+							message: "Please use `unknown` or `any`"
+						},
+						// No `Function` type
+						{
+							comment:
+								"JsdocBlock:has(JsdocTypeName[value=/^(function|Function)$/])",
+							message:
+								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function`"
 						}
+						// No `Object` type
+						// {
+						// 	comment:
+						// 		"JsdocBlock:has(JsdocTag[tag!=typedef]:has(JsdocTypeName[value=/^(object|Object)$/]))",
+						// 	message:
+						// 		"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object`"
+						// },
+						// No `any` type
+						// {
+						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
+						// 	message:
+						// 		"Please use provide types instead `any`"
+						// },
 					]
 				}
 			]

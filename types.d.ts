@@ -970,9 +970,9 @@ declare interface CacheGroupSource {
 	key?: string;
 	priority?: number;
 	getName?: (
-		module?: Module,
-		chunks?: Chunk[],
-		key?: string
+		module: Module,
+		chunks: Chunk[],
+		key: string
 	) => undefined | string;
 	chunksFilter?: (chunk: Chunk) => undefined | boolean;
 	enforce?: boolean;
@@ -3653,7 +3653,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-type DevtoolModuleFilenameTemplate = string | Function;
+type DevtoolModuleFilenameTemplate = string | ((context?: any) => string);
 declare interface Dirent {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -4296,12 +4296,12 @@ declare interface EvalDevToolModulePluginOptions {
 	/**
 	 * module filename template
 	 */
-	moduleFilenameTemplate?: string | Function;
+	moduleFilenameTemplate?: string | ((context?: any) => string);
 }
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
 	sourceMapComment: string;
-	moduleFilenameTemplate: string | Function;
+	moduleFilenameTemplate: string | ((context?: any) => string);
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -10408,7 +10408,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module layer.
 	 */
-	layer?: string | Function | RegExp;
+	layer?: string | RegExp | ((layer: null | string) => boolean);
 
 	/**
 	 * Maximum number of requests which are accepted for on-demand loading.
@@ -10458,7 +10458,10 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
-	name?: string | false | Function;
+	name?:
+		| string
+		| false
+		| ((module: Module, chunks: Chunk[], key: string) => undefined | string);
 
 	/**
 	 * Priority of this cache group.
@@ -10473,12 +10476,15 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module name.
 	 */
-	test?: string | Function | RegExp;
+	test?:
+		| string
+		| RegExp
+		| ((module: Module, context: CacheGroupsContext) => boolean);
 
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
-	type?: string | Function | RegExp;
+	type?: string | RegExp | ((type: string) => boolean);
 
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
@@ -10614,7 +10620,10 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?: string | false | Function;
+	name?:
+		| string
+		| false
+		| ((module: Module, chunks: Chunk[], key: string) => undefined | string);
 
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
@@ -10763,12 +10772,12 @@ declare interface Output {
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?: string | Function;
+	devtoolFallbackModuleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?: string | Function;
+	devtoolModuleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -11057,12 +11066,12 @@ declare interface OutputNormalized {
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?: string | Function;
+	devtoolFallbackModuleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?: string | Function;
+	devtoolModuleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -11502,7 +11511,7 @@ type ProblemType =
 	| "multiple-values-unexpected"
 	| "invalid-value";
 declare interface ProcessAssetsAdditionalOptions {
-	additionalAssets?: true | Function;
+	additionalAssets?: any;
 }
 declare class Profiler {
 	constructor(inspector?: any);
@@ -14369,8 +14378,8 @@ declare class SourceMapDevToolPlugin {
 		| string
 		| false
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	moduleFilenameTemplate: string | Function;
-	fallbackModuleFilenameTemplate: string | Function;
+	moduleFilenameTemplate: string | ((context?: any) => string);
+	fallbackModuleFilenameTemplate: string | ((context?: any) => string);
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -14407,7 +14416,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
 	 */
-	fallbackModuleFilenameTemplate?: string | Function;
+	fallbackModuleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
@@ -14432,7 +14441,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.
 	 */
-	moduleFilenameTemplate?: string | Function;
+	moduleFilenameTemplate?: string | ((context?: any) => string);
 
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
@@ -14500,11 +14509,7 @@ declare interface SplitChunksOptions {
 		module: Module,
 		context: CacheGroupsContext
 	) => null | CacheGroupSource[];
-	getName: (
-		module?: Module,
-		chunks?: Chunk[],
-		key?: string
-	) => undefined | string;
+	getName: (module: Module, chunks: Chunk[], key: string) => undefined | string;
 	usedExports: boolean;
 	fallbackCacheGroup: FallbackCacheGroup;
 }
@@ -15300,7 +15305,7 @@ declare interface TargetItemWithoutConnection {
 }
 declare class Template {
 	constructor();
-	static getFunctionContent(fn: Function): string;
+	static getFunctionContent<T extends Function>(fn: T): string;
 	static toIdentifier(str: string): string;
 	static toComment(str: string): string;
 	static toNormalComment(str: string): string;
@@ -16081,19 +16086,10 @@ declare namespace exports {
 		export let REGEXP_NAMESPACE: RegExp;
 		export let createFilename: (
 			module: string | Module,
-			options: any,
+			options: { namespace?: string; moduleFilenameTemplate?: any },
 			__2: {
-				/**
-				 * requestShortener
-				 */
 				requestShortener: RequestShortener;
-				/**
-				 * chunk graph
-				 */
 				chunkGraph: ChunkGraph;
-				/**
-				 * the hash function to use
-				 */
 				hashFunction?: string | typeof Hash;
 			}
 		) => string;
