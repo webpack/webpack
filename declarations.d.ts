@@ -1,3 +1,8 @@
+type TODO = any;
+type EXPECTED_ANY = any;
+type EXPECTED_FUNCTION = Function;
+type EXPECTED_OBJECT = object;
+
 declare module "*.json";
 
 // Deprecated NodeJS API usages in webpack
@@ -124,6 +129,7 @@ declare module "neo-async" {
 
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
+	export type AST = TODO;
 	export interface Visitor {
 		ModuleImport?: (p: NodePath<ModuleImport>) => void;
 		ModuleExport?: (p: NodePath<ModuleExport>) => void;
@@ -131,19 +137,26 @@ declare module "@webassemblyjs/ast" {
 		Global?: (p: NodePath<Global>) => void;
 	}
 	export function traverse(
-		ast: any,
+		ast: AST,
 		visitor: Visitor
 	): void;
 	export class NodePath<T> {
 		node: T;
 		remove(): void;
 	}
-	export class Node {}
+	export class Node {
+		type: string;
+	}
 	export class Identifier extends Node {
 		value: string;
 	}
 	export class Start extends Node {
 		index: Identifier;
+	}
+	export class Module extends Node {
+		id: TODO;
+		fields: Node[];
+		metadata: TODO;
 	}
 	export class ModuleImportDescription {
 		type: string;
@@ -207,7 +220,7 @@ declare module "@webassemblyjs/ast" {
 		inf?: boolean,
 		raw?: string
 	): FloatLiteral;
-	export function global(globalType: string, nodes: Node[]): Global;
+	export function global(globalType: GlobalType, nodes: Node[]): Global;
 	export function identifier(identifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
 	export function instruction(inst: string, args?: Node[]): Instruction;
@@ -233,12 +246,12 @@ declare module "@webassemblyjs/ast" {
 		index: Index
 	): ModuleExportDescr;
 
-	export function getSectionMetadata(ast: any, section: string): { vectorOfSize: { value: number } };
+	export function getSectionMetadata(ast: AST, section: string): { vectorOfSize: { value: number } };
 	export class FuncSignature {
 		args: string[];
 		result: string[];
 	}
-	export function moduleContextFromModuleAST(ast: any): any;
+	export function moduleContextFromModuleAST(module: Module): TODO;
 
 	// Node matcher
 	export function isGlobalType(n: Node): boolean;
@@ -248,12 +261,12 @@ declare module "@webassemblyjs/ast" {
 }
 
 declare module "@webassemblyjs/wasm-parser" {
-	export function decode(source: string | Buffer, options: { dump?: boolean, ignoreCodeSection?: boolean, ignoreDataSection?: boolean, ignoreCustomNameSection?: boolean }): any;
+	export function decode(source: string | Buffer, options: { dump?: boolean, ignoreCodeSection?: boolean, ignoreDataSection?: boolean, ignoreCustomNameSection?: boolean }): import("@webassemblyjs/ast").AST;
 }
 
 declare module "@webassemblyjs/wasm-edit" {
-	export function addWithAST(ast: any, bin: any, newNodes: import("@webassemblyjs/ast").Node[]): ArrayBuffer;
-	export function editWithAST(ast: any, bin: any, visitors: import("@webassemblyjs/ast").Visitor): ArrayBuffer;
+	export function addWithAST(ast: import("@webassemblyjs/ast").AST, bin: any, newNodes: import("@webassemblyjs/ast").Node[]): ArrayBuffer;
+	export function editWithAST(ast: import("@webassemblyjs/ast").AST, bin: any, visitors: import("@webassemblyjs/ast").Visitor): ArrayBuffer;
 }
 
 declare module "webpack-sources" {
@@ -405,10 +418,6 @@ interface ImportAttributeNode {
 	key: import("estree").Identifier | import("estree").Literal;
 	value: import("estree").Literal;
 }
-
-type TODO = any;
-type EXPECTED_ANY = any;
-type EXPECTED_OBJECT = object;
 
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }

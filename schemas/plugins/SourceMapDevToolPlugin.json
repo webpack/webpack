@@ -80,7 +80,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((context: any) => string)"
         }
       ]
     },
@@ -124,7 +124,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((context: any) => string)"
         }
       ]
     },

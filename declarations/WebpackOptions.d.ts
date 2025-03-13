@@ -494,11 +494,15 @@ export type CssFilename = FilenameTemplate;
 /**
  * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
  */
-export type DevtoolFallbackModuleFilenameTemplate = string | Function;
+export type DevtoolFallbackModuleFilenameTemplate =
+	| string
+	| ((context: TODO) => string);
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
-export type DevtoolModuleFilenameTemplate = string | Function;
+export type DevtoolModuleFilenameTemplate =
+	| string
+	| ((context: TODO) => string);
 /**
  * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
  */
@@ -1936,7 +1940,14 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?: false | string | Function;
+	name?:
+		| false
+		| string
+		| ((
+				module: import("../lib/Module"),
+				chunks: import("../lib/Chunk")[],
+				key: string
+		  ) => string | undefined);
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -1981,7 +1992,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module layer.
 	 */
-	layer?: RegExp | string | Function;
+	layer?: RegExp | string | ((layer: string | null) => boolean);
 	/**
 	 * Maximum number of requests which are accepted for on-demand loading.
 	 */
@@ -2021,7 +2032,14 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
-	name?: false | string | Function;
+	name?:
+		| false
+		| string
+		| ((
+				module: import("../lib/Module"),
+				chunks: import("../lib/Chunk")[],
+				key: string
+		  ) => string | undefined);
 	/**
 	 * Priority of this cache group.
 	 */
@@ -2033,11 +2051,17 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module name.
 	 */
-	test?: RegExp | string | Function;
+	test?:
+		| RegExp
+		| string
+		| ((
+				module: import("../lib/Module"),
+				context: import("../lib/optimize/SplitChunksPlugin").CacheGroupsContext
+		  ) => boolean);
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
-	type?: RegExp | string | Function;
+	type?: RegExp | string | ((type: string) => boolean);
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
