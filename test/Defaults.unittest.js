@@ -2020,7 +2020,8 @@ describe("snapshots", () => {
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2043,11 +2044,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			+       },
-			+       Object {
 			@@ ... @@
-			-     "generator": Object {},
-			+     "generator": Object {
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
@@ -2064,7 +2061,6 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
-			+     },
 			@@ ... @@
 			+         },
 			@@ ... @@
@@ -2095,9 +2091,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2109,9 +2102,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
