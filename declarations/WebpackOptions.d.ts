@@ -3347,6 +3347,15 @@ export interface JavascriptParserOptions {
 	[k: string]: any;
 }
 /**
+ * Generator options for json modules.
+ */
+export interface JsonGeneratorOptions {
+	/**
+	 * Use `JSON.parse` when the JSON string is longer than 20 characters.
+	 */
+	JSONParse?: boolean;
+}
+/**
  * Options for the default backend.
  */
 export interface LazyCompilationDefaultBackendOptions {
@@ -3882,6 +3891,10 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * No generator options are supported for this module type.
 	 */
 	"javascript/esm"?: EmptyGeneratorOptions;
+	/**
+	 * Generator options for json modules.
+	 */
+	json?: JsonGeneratorOptions;
 }
 /**
  * Specify options for each generator.

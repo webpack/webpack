@@ -5350,6 +5350,11 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	 * No generator options are supported for this module type.
 	 */
 	"javascript/esm"?: EmptyGeneratorOptions;
+
+	/**
+	 * Generator options for json modules.
+	 */
+	json?: JsonGeneratorOptions;
 }
 
 /**
@@ -7418,6 +7423,16 @@ declare interface JavascriptParserOptions {
 	 * Set the inner regular expression for partial dynamic dependencies.
 	 */
 	wrappedContextRegExp?: RegExp;
+}
+
+/**
+ * Generator options for json modules.
+ */
+declare interface JsonGeneratorOptions {
+	/**
+	 * Use `JSON.parse` when the JSON string is longer than 20 characters.
+	 */
+	JSONParse?: boolean;
 }
 type JsonObjectFs = { [index: string]: JsonValueFs } & {
 	[index: string]:

@@ -225,7 +225,11 @@ describe("snapshots", () => {
 		        },
 		      },
 		    ],
-		    "generator": Object {},
+		    "generator": Object {
+		      "json": Object {
+		        "JSONParse": true,
+		      },
+		    },
 		    "noParse": undefined,
 		    "parser": Object {
 		      "asset": Object {
@@ -2290,7 +2294,7 @@ describe("snapshots", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			+             },
+			@@ ... @@
 			+           },
 			+         ],
 			+         "test": /\\.wasm$/i,
@@ -2299,7 +2303,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2331,12 +2335,11 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			@@ ... @@
+			+         },
 			+         "type": "css",
 			+       },
+			+       Object {
 			@@ ... @@
-			-     "generator": Object {},
-			+     "generator": Object {
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
@@ -2353,14 +2356,12 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
-			+     },
-			@@ ... @@
-			+         },
 			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
