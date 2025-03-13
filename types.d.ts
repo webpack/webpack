@@ -244,20 +244,19 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: any[];
 }
-type ArrayBufferLike = ArrayBuffer | SharedArrayBuffer;
-type ArrayBufferView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> =
-	| Uint8Array<TArrayBuffer>
-	| Uint8ClampedArray<TArrayBuffer>
-	| Uint16Array<TArrayBuffer>
-	| Uint32Array<TArrayBuffer>
-	| Int8Array<TArrayBuffer>
-	| Int16Array<TArrayBuffer>
-	| Int32Array<TArrayBuffer>
-	| BigUint64Array<TArrayBuffer>
-	| BigInt64Array<TArrayBuffer>
-	| Float32Array<TArrayBuffer>
-	| Float64Array<TArrayBuffer>
-	| DataView<TArrayBuffer>;
+type ArrayBufferView =
+	| Uint8Array
+	| Uint8ClampedArray
+	| Uint16Array
+	| Uint32Array
+	| Int8Array
+	| Int16Array
+	| Int32Array
+	| BigUint64Array
+	| BigInt64Array
+	| Float32Array
+	| Float64Array
+	| DataView;
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -872,10 +871,10 @@ type BufferEncoding =
 	| "utf-16le"
 	| "ucs2"
 	| "ucs-2"
-	| "base64"
-	| "base64url"
 	| "latin1"
 	| "binary"
+	| "base64"
+	| "base64url"
 	| "hex";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 type BuildInfo = KnownBuildInfo & Record<string, any>;
@@ -3953,10 +3952,10 @@ type EncodingOption =
 	| "utf-16le"
 	| "ucs2"
 	| "ucs-2"
-	| "base64"
-	| "base64url"
 	| "latin1"
 	| "binary"
+	| "base64"
+	| "base64url"
 	| "hex"
 	| ObjectEncodingOptions;
 type Entry =
@@ -5541,7 +5540,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "base64" | "latin1" | "hex";
+	hashDigest?: "latin1" | "base64" | "hex";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -5890,15 +5889,15 @@ declare interface IntermediateFileSystemExtras {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
 	open: Open;
-	read: Read<ArrayBufferView<ArrayBufferLike>>;
+	read: Read<ArrayBufferView>;
 	close: (
 		df: number,
 		callback: (err: null | NodeJS.ErrnoException) => void
@@ -10144,10 +10143,10 @@ declare interface ObjectEncodingOptions {
 		| "utf-16le"
 		| "ucs2"
 		| "ucs-2"
-		| "base64"
-		| "base64url"
 		| "latin1"
 		| "binary"
+		| "base64"
+		| "base64url"
 		| "hex";
 }
 declare interface ObjectForExtract {
@@ -11368,13 +11367,9 @@ declare interface PathData {
 	url?: string;
 }
 type PathLikeFs = string | Buffer | URL;
-type PathLikeTypes = string | URL_url | Buffer<ArrayBufferLike>;
+type PathLikeTypes = string | Buffer | URL_url;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes =
-	| string
-	| number
-	| Buffer<ArrayBufferLike>
-	| URL_url;
+type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -11725,10 +11720,7 @@ declare interface RawSourceMap {
 	mappings: string;
 	file: string;
 }
-declare interface Read<
-	TBuffer extends
-		ArrayBufferView<ArrayBufferLike> = ArrayBufferView<ArrayBufferLike>
-> {
+declare interface Read<TBuffer extends ArrayBufferView = ArrayBufferView> {
 	(
 		fd: number,
 		buffer: TBuffer,
@@ -11755,13 +11747,11 @@ declare interface Read<
 		callback: (
 			err: null | NodeJS.ErrnoException,
 			bytesRead: number,
-			buffer: ArrayBufferView<ArrayBufferLike>
+			buffer: ArrayBufferView
 		) => void
 	): void;
 }
-declare interface ReadAsyncOptions<
-	TBuffer extends ArrayBufferView<ArrayBufferLike>
-> {
+declare interface ReadAsyncOptions<TBuffer extends ArrayBufferView> {
 	offset?: number;
 	length?: number;
 	position?: null | number | bigint;
@@ -11813,7 +11803,6 @@ declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -11821,10 +11810,11 @@ declare interface ReadFileFs {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
+			| "base64"
+			| "base64url"
 			| "hex",
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
@@ -11840,10 +11830,10 @@ declare interface ReadFileFs {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
@@ -11871,10 +11861,10 @@ declare interface ReadFileSync {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| { encoding: BufferEncoding; flag?: string }
 	): string;
@@ -11889,10 +11879,10 @@ declare interface ReadFileSync {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & { flag?: string })
 	): string | Buffer;
@@ -11916,10 +11906,10 @@ declare interface ReadFileTypes {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
@@ -11936,10 +11926,10 @@ declare interface ReadFileTypes {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
@@ -11965,10 +11955,10 @@ declare interface ReaddirFs {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| {
 					encoding:
@@ -11980,10 +11970,10 @@ declare interface ReaddirFs {
 						| "utf-16le"
 						| "ucs2"
 						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
 						| "binary"
+						| "base64"
+						| "base64url"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -12013,10 +12003,10 @@ declare interface ReaddirFs {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
@@ -12048,10 +12038,10 @@ declare interface ReaddirSync {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| {
 					encoding:
@@ -12063,10 +12053,10 @@ declare interface ReaddirSync {
 						| "utf-16le"
 						| "ucs2"
 						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
 						| "binary"
+						| "base64"
+						| "base64url"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -12089,10 +12079,10 @@ declare interface ReaddirSync {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & { withFileTypes?: false; recursive?: boolean })
 	): string[] | Buffer[];
@@ -12117,10 +12107,10 @@ declare interface ReaddirTypes {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| {
 					encoding:
@@ -12132,10 +12122,10 @@ declare interface ReaddirTypes {
 						| "utf-16le"
 						| "ucs2"
 						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
 						| "binary"
+						| "base64"
+						| "base64url"
 						| "hex";
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -12165,10 +12155,10 @@ declare interface ReaddirTypes {
 			| "utf-16le"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
 			| "latin1"
 			| "binary"
+			| "base64"
+			| "base64url"
 			| "hex"
 			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
@@ -15601,7 +15591,6 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string);
-	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
@@ -15899,18 +15888,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array<ArrayBufferLike>
-			| Uint8ClampedArray<ArrayBufferLike>
-			| Uint16Array<ArrayBufferLike>
-			| Uint32Array<ArrayBufferLike>
-			| Int8Array<ArrayBufferLike>
-			| Int16Array<ArrayBufferLike>
-			| Int32Array<ArrayBufferLike>
-			| BigUint64Array<ArrayBufferLike>
-			| BigInt64Array<ArrayBufferLike>
-			| Float32Array<ArrayBufferLike>
-			| Float64Array<ArrayBufferLike>
-			| DataView<ArrayBufferLike>,
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
 		options: WriteFileOptions,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
@@ -15918,18 +15907,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array<ArrayBufferLike>
-			| Uint8ClampedArray<ArrayBufferLike>
-			| Uint16Array<ArrayBufferLike>
-			| Uint32Array<ArrayBufferLike>
-			| Int8Array<ArrayBufferLike>
-			| Int16Array<ArrayBufferLike>
-			| Int32Array<ArrayBufferLike>
-			| BigUint64Array<ArrayBufferLike>
-			| BigInt64Array<ArrayBufferLike>
-			| Float32Array<ArrayBufferLike>
-			| Float64Array<ArrayBufferLike>
-			| DataView<ArrayBufferLike>,
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
@@ -15942,10 +15931,10 @@ type WriteFileOptions =
 	| "utf-16le"
 	| "ucs2"
 	| "ucs-2"
-	| "base64"
-	| "base64url"
 	| "latin1"
 	| "binary"
+	| "base64"
+	| "base64url"
 	| "hex"
 	| (ObjectEncodingOptions &
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
@@ -15963,10 +15952,10 @@ declare interface WriteStreamOptions {
 		| "utf-16le"
 		| "ucs2"
 		| "ucs-2"
-		| "base64"
-		| "base64url"
 		| "latin1"
 		| "binary"
+		| "base64"
+		| "base64url"
 		| "hex";
 	fd?: any;
 	mode?: number;

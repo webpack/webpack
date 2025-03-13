@@ -154,6 +154,7 @@
     "lint": "yarn code-lint && yarn special-lint && yarn type-lint && yarn typings-test && yarn module-typings-test && yarn yarn-lint && yarn pretty-lint && yarn spellcheck",
     "code-lint": "node node_modules/eslint/bin/eslint.js --cache .",
     "type-lint": "tsc",
+    "type-validate": "tsc -p tsconfig.validation.json",
     "typings-test": "tsc -p tsconfig.types.test.json",
     "module-typings-test": "tsc -p tsconfig.module.test.json",
     "spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",

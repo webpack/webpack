@@ -43,6 +43,11 @@ jobs:
           key: lint-cspell-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/cspell.json') }}
           restore-keys: lint-cspell-
       - run: yarn lint
+      - name: Validate types using old typescript version
+        run: |
+          yarn upgrade typescript@5.0
+          yarn --frozen-lockfile
+          yarn type-validate
   basic:
     runs-on: ubuntu-latest
     steps:
