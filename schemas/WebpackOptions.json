@@ -1571,6 +1571,9 @@
         },
         "javascript/esm": {
           "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "json": {
+          "$ref": "#/definitions/JsonGeneratorOptions"
         }
       }
     },
@@ -2006,6 +2009,17 @@
           "description": "Set the inner regular expression for partial dynamic dependencies.",
           "instanceof": "RegExp",
           "tsType": "RegExp"
+        }
+      }
+    },
+    "JsonGeneratorOptions": {
+      "description": "Generator options for json modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JSONParse": {
+          "description": "Use `JSON.parse` when the JSON string is longer than 20 characters.",
+          "type": "boolean"
         }
       }
     },
