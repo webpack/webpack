@@ -1945,6 +1945,184 @@ describe("snapshots", () => {
 			+     "cache": true,
 		`)
 	);
+	test(
+		"cache filesystem and futureDefaults",
+		{ cache: { type: "filesystem" }, experiments: { futureDefaults: true } },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			+   "cache": Object {
+			+     "allowCollectingMemory": false,
+			+     "buildDependencies": Object {
+			+       "defaultWebpack": Array [
+			+         "<cwd>/lib/",
+			+       ],
+			+     },
+			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
+			+     "compression": false,
+			+     "hashAlgorithm": "xxhash64",
+			+     "idleTimeout": 60000,
+			+     "idleTimeoutAfterLargeChanges": 1000,
+			+     "idleTimeoutForInitialStore": 5000,
+			+     "maxAge": 5184000000,
+			+     "maxMemoryGenerations": Infinity,
+			+     "memoryCacheUnaffected": false,
+			+     "name": "default-none",
+			+     "profile": false,
+			+     "readonly": false,
+			+     "store": "pack",
+			+     "type": "filesystem",
+			+     "version": "",
+			+   },
+			@@ ... @@
+			-     "asyncWebAssembly": false,
+			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
+			+     "backCompat": false,
+			@@ ... @@
+			-     "cacheUnaffected": false,
+			-     "css": undefined,
+			-     "futureDefaults": false,
+			+     "cacheUnaffected": true,
+			+     "css": true,
+			+     "futureDefaults": true,
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "type": "webassembly/async",
+			@@ ... @@
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "test": /\\.css$/i,
+			+         "type": "css/auto",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css+module",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css",
+			+       },
+			+       Object {
+			@@ ... @@
+			-     "generator": Object {},
+			+     "generator": Object {
+			+       "css": Object {
+			+         "esModule": true,
+			+         "exportsOnly": false,
+			+       },
+			+       "css/auto": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/global": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/module": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+     },
+			@@ ... @@
+			+         },
+			@@ ... @@
+			+       "css": Object {
+			+         "import": true,
+			+         "namedExports": true,
+			+         "url": true,
+			@@ ... @@
+			+         "exportsPresence": "error",
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
+			@@ ... @@
+			+         "css",
+			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
+			@@ ... @@
+			-     "hashDigestLength": 20,
+			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
+			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
+			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			@@ ... @@
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "<cwd>/node_modules/",
+			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+		`)
+	);
 
 	test(
 		"disable",
