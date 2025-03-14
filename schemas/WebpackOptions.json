@@ -2086,12 +2086,12 @@
               "type": "object",
               "additionalProperties": true,
               "properties": {},
-              "tsType": "(import(\"https\").ServerOptions | import(\"http\").ServerOptions)"
+              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend\").HttpServerOptions)"
             },
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "(() => import(\"net\").Server)"
+              "tsType": "(() => import(\"../lib/hmr/lazyCompilationBackend\").Server)"
             }
           ]
         }

@@ -3402,8 +3402,11 @@ export interface LazyCompilationDefaultBackendOptions {
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
 	server?:
-		| (import("https").ServerOptions | import("http").ServerOptions)
-		| (() => import("net").Server);
+		| (
+				| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
+				| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
+		  )
+		| (() => import("../lib/hmr/lazyCompilationBackend").Server);
 }
 /**
  * Options for compiling entrypoints and import()s only when they are accessed.
