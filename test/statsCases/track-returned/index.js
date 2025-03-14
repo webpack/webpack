@@ -153,6 +153,17 @@ it("should work correct for try catch and loops", () => {
 		require('./used');
 	}
 
+	try {
+		if (true) {
+			throw 1;
+			require("fail3");
+		}
+
+		require("fail2");
+	} catch (e) {
+		require('./used');
+	}
+
 	function test() {
 		try {
 			return;
