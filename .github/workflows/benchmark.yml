@@ -1,0 +1,80 @@
+name: Performance Benchmark
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  benchmark:
+    name: Run Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Checkout base branch
+      run: |
+        git checkout ${{ github.base_ref }}
+        npm ci
+
+    - name: Run base branch benchmarks
+      run: |
+        mkdir -p benchmark-results
+        node benchmark/benchmark.js > benchmark-results/base.txt
+
+    - name: Checkout PR branch
+      run: |
+        git checkout ${{ github.event.pull_request.head.sha }}
+        npm ci
+
+    - name: Run PR branch benchmarks
+      run: |
+        node benchmark/benchmark.js > benchmark-results/pr.txt
+
+    - name: Analyze benchmark results
+      id: benchmark-analysis
+      run: |
+        node .github/scripts/analyze-benchmarks.js
+
+    - name: Comment PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const analysis = JSON.parse(fs.readFileSync('benchmark-results/analysis.json', 'utf8'));
+          
+          let body = '## Performance Benchmark Results\n\n';
+          
+          if (analysis.hasRegression) {
+            body += '⚠️ **Performance Regression Detected**\n\n';
+          } else {
+            body += '✅ **No Significant Performance Regression**\n\n';
+          }
+          
+          body += '### Summary\n\n';
+          body += analysis.summary + '\n\n';
+          body += '### Detailed Results\n\n';
+          body += analysis.details;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+          
+          if (analysis.hasRegression) {
+            core.setFailed('Performance regression detected');
+          } 
