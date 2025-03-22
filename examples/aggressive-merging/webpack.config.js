@@ -1,4 +1,5 @@
 const path = require("path");
+const { experiments } = require("../..");
 const { AggressiveMergingPlugin } = require("../..").optimize;
 
 module.exports = {
@@ -20,5 +21,11 @@ module.exports = {
 	],
 	optimization: {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+	}, 
+	// existing configuration
+
+	experiments:{
+		asyncWebAssembly: false,
+		syncWebAssembly: false,
 	}
 };
