@@ -1,9 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 // Configuration
 const REGRESSION_THRESHOLD = 0.05; // 5% regression threshold
 const SIGNIFICANT_CHANGE_THRESHOLD = 0.02; // 2% is considered a significant change
+
+// Run benchmarks
+console.log("🏃 Running benchmarks...");
+try {
+	execSync("yarn benchmark", { stdio: "inherit" });
+} catch (err) {
+	throw new Error(`❌ Error running benchmarks: ${err.message}`);
+}
 
 /**
  * Parses benchmark results from a file.
@@ -49,6 +58,42 @@ function parseBenchmarkResults(filePath) {
 	}
 
 	return results;
+}
+
+/**
+ * Combines multiple benchmark result files into a single dataset.
+ * @param {string} directory Path to the directory containing benchmark files.
+ * @returns {object} Aggregated benchmark results.
+ */
+function aggregateBenchmarkResults(directory) {
+	const files = fs.readdirSync(directory).filter(file => file.endsWith(".txt"));
+	const aggregatedResults = {};
+
+	for (const file of files) {
+		const filePath = path.join(directory, file);
+		const results = parseBenchmarkResults(filePath);
+
+		for (const [name, data] of Object.entries(results)) {
+			if (!aggregatedResults[name]) {
+				aggregatedResults[name] = { min: [], max: [], mean: [] };
+			}
+			aggregatedResults[name].min.push(data.min);
+			aggregatedResults[name].max.push(data.max);
+			aggregatedResults[name].mean.push(data.mean);
+		}
+	}
+
+	// Compute average across all benchmark files
+	for (const [name, values] of Object.entries(aggregatedResults)) {
+		const avg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+		aggregatedResults[name] = {
+			min: avg(values.min),
+			max: avg(values.max),
+			mean: avg(values.mean)
+		};
+	}
+
+	return aggregatedResults;
 }
 
 /**
@@ -136,23 +181,18 @@ function generateReport(comparison) {
 	};
 }
 
-// Main execution
-const baseResults = parseBenchmarkResults(
-	path.join("benchmark-results", "base.txt")
-);
-const prResults = parseBenchmarkResults(
-	path.join("benchmark-results", "pr.txt")
-);
+// Aggregate benchmark results
+const baseResults = aggregateBenchmarkResults("benchmark-results/base");
+const prResults = aggregateBenchmarkResults("benchmark-results/pr");
 
 // Check if benchmark results are available
 if (
 	Object.keys(baseResults).length === 0 ||
 	Object.keys(prResults).length === 0
 ) {
-	console.error(
-		"❌ Error: One or both benchmark result files are missing or empty."
+	throw new Error(
+		"❌ Error: One or both benchmark result directories are empty."
 	);
-	throw new Error("Benchmark files missing or empty.");
 }
 
 const comparison = compareResults(baseResults, prResults);
@@ -166,8 +206,7 @@ fs.writeFileSync(
 
 // Fail CI if there is a performance regression
 if (comparison.hasRegression) {
-	console.error("❌ Performance regression detected! Failing the CI.");
-	throw new Error("Performance regression detected.");
+	throw new Error("❌ Performance regression detected! Failing the CI.");
 } else {
 	console.log("✅ No significant regressions detected.");
 }
