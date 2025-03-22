@@ -290,8 +290,8 @@ describe("HotModuleReplacementPlugin", () => {
 				filename: "[name]",
 				chunkFilename: "[name].js",
 				path: path.join(__dirname, "js", "HotModuleReplacementPlugin"),
-				hotUpdateChunkFilename: "static/webpack/[id].[hash].hot-update.js",
-				hotUpdateMainFilename: "static/webpack/[hash].hot-update.json"
+				hotUpdateChunkFilename: "static/webpack/[id].[fullhash].hot-update.js",
+				hotUpdateMainFilename: "static/webpack/[fullhash].hot-update.json"
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()],
 			optimization: {
