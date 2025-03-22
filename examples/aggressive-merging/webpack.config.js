@@ -20,12 +20,15 @@ module.exports = {
 		})
 	],
 	optimization: {
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
-	}, 
-	// existing configuration
+		chunkIds: "deterministic", // To keep filename consistent between different modes (for example building only)
+	     providedExports: false,
+	       // Either disable providedExports
+		   // Or disable concatenateModules
+        // concatenateModules: false
 
-	experiments:{
-		asyncWebAssembly: false,
-		syncWebAssembly: false,
-	}
+
+
+
+		}
+	
 };
