@@ -246,18 +246,18 @@ declare interface ArgumentConfig {
 }
 type ArrayBufferLike = ArrayBuffer | SharedArrayBuffer;
 type ArrayBufferView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> =
-	| Uint8Array<TArrayBuffer>
-	| Uint8ClampedArray<TArrayBuffer>
-	| Uint16Array<TArrayBuffer>
-	| Uint32Array<TArrayBuffer>
-	| Int8Array<TArrayBuffer>
-	| Int16Array<TArrayBuffer>
-	| Int32Array<TArrayBuffer>
-	| BigUint64Array<TArrayBuffer>
-	| BigInt64Array<TArrayBuffer>
-	| Float32Array<TArrayBuffer>
-	| Float64Array<TArrayBuffer>
-	| DataView<TArrayBuffer>;
+	| Uint8Array
+	| Uint8ClampedArray
+	| Uint16Array
+	| Uint32Array
+	| Int8Array
+	| Int16Array
+	| Int32Array
+	| BigUint64Array
+	| BigInt64Array
+	| Float32Array
+	| Float64Array
+	| DataView;
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -11368,13 +11368,9 @@ declare interface PathData {
 	url?: string;
 }
 type PathLikeFs = string | Buffer | URL;
-type PathLikeTypes = string | URL_url | Buffer<ArrayBufferLike>;
+type PathLikeTypes = string | URL_url | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes =
-	| string
-	| number
-	| Buffer<ArrayBufferLike>
-	| URL_url;
+type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -15899,18 +15895,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array<ArrayBufferLike>
-			| Uint8ClampedArray<ArrayBufferLike>
-			| Uint16Array<ArrayBufferLike>
-			| Uint32Array<ArrayBufferLike>
-			| Int8Array<ArrayBufferLike>
-			| Int16Array<ArrayBufferLike>
-			| Int32Array<ArrayBufferLike>
-			| BigUint64Array<ArrayBufferLike>
-			| BigInt64Array<ArrayBufferLike>
-			| Float32Array<ArrayBufferLike>
-			| Float64Array<ArrayBufferLike>
-			| DataView<ArrayBufferLike>,
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
 		options: WriteFileOptions,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
@@ -15918,18 +15914,18 @@ declare interface WriteFile {
 		file: PathOrFileDescriptorFs,
 		data:
 			| string
-			| Uint8Array<ArrayBufferLike>
-			| Uint8ClampedArray<ArrayBufferLike>
-			| Uint16Array<ArrayBufferLike>
-			| Uint32Array<ArrayBufferLike>
-			| Int8Array<ArrayBufferLike>
-			| Int16Array<ArrayBufferLike>
-			| Int32Array<ArrayBufferLike>
-			| BigUint64Array<ArrayBufferLike>
-			| BigInt64Array<ArrayBufferLike>
-			| Float32Array<ArrayBufferLike>
-			| Float64Array<ArrayBufferLike>
-			| DataView<ArrayBufferLike>,
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
