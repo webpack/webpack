@@ -1,0 +1,13 @@
+Field,Value
+App Name,WIP
+Listing Type,App
+Developer,Work In Progress
+Publisher 2FA Required,No - Publisher organization does not require 2FA
+EU Trader,No - Does not classify as a trader in the European Union
+Required Permissions,write:checks; read:metadata; read:pull_requests; read:single_file; write:commit_statuses
+Repository Visibility,public
+Repository URL,https://github.com/wip/app
+Third-party Services,"Vercel, Sentry"
+Support URL,https://github.com/wip/app/issues
+Privacy Policy URL,https://github.com/wip/policies/blob/master/PRIVACY.md
+Status page,https://stats.uptimerobot.com/Dq46zf6PY
