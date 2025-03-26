@@ -1031,6 +1031,16 @@ export interface FileCacheOptions {
 	 */
 	cacheDirectory?: string;
 	/**
+	 * Filter options for determining what to cache.
+	 */
+	cacheFilter?: {
+		/**
+		 * Maximum size (in bytes) for asset data to be cached. Larger assets are skipped.
+		 */
+		maxAssetSize?: number;
+		[k: string]: any;
+	};
+	/**
 	 * Locations for the cache (defaults to cacheDirectory / name).
 	 */
 	cacheLocation?: string;

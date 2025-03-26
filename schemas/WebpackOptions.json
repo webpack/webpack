@@ -1354,6 +1354,17 @@
           "type": "string",
           "absolutePath": true
         },
+        "cacheFilter": {
+          "description": "Filter options for determining what to cache.",
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "maxAssetSize": {
+              "description": "Maximum size (in bytes) for asset data to be cached. Larger assets are skipped.",
+              "type": "number"
+            }
+          }
+        },
         "cacheLocation": {
           "description": "Locations for the cache (defaults to cacheDirectory / name).",
           "type": "string",

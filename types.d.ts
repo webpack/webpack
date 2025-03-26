@@ -4972,6 +4972,17 @@ declare interface FileCacheOptions {
 	cacheDirectory?: string;
 
 	/**
+	 * Filter options for determining what to cache.
+	 */
+	cacheFilter?: {
+		[index: string]: any;
+		/**
+		 * Maximum size (in bytes) for asset data to be cached. Larger assets are skipped.
+		 */
+		maxAssetSize?: number;
+	};
+
+	/**
 	 * Locations for the cache (defaults to cacheDirectory / name).
 	 */
 	cacheLocation?: string;
