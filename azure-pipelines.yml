@@ -77,6 +77,9 @@ jobs:
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
+          yarn special-lint-fix
+        displayName: "Fix special linting issues"
+      - script: |
           yarn lint
         env:
           CI: "true"
