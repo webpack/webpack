@@ -333,32 +333,31 @@ export default [
 						// No `*` type
 						{
 							comment: "JsdocBlock:has(JsdocTypeAny)",
-							message: "Please use `any`."
+							message: "Please use `any` or `EXPECTED_ANY` type."
 						},
 						// No `?` type
 						{
 							comment: "JsdocBlock:has(JsdocTypeUnknown)",
-							message: "Please use `unknown` or `any`"
+							message: "Please use `unknown` or `any` (or `EXPECTED_ANY`) type"
 						},
+						// No `any` type
+						// {
+						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
+						// 	message: "Please use provide types instead `any`"
+						// },
 						// No `Function` type
 						{
 							comment:
 								"JsdocBlock:has(JsdocTypeName[value=/^(function|Function)$/])",
 							message:
-								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function`"
+								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function` or use `EXPECTED_FUNCTION` type"
 						}
 						// No `Object` type
 						// {
 						// 	comment:
-						// 		"JsdocBlock:has(JsdocTag[tag!=typedef]:has(JsdocTypeName[value=/^(object|Object)$/]))",
+						// 		"JsdocBlock:has(JsdocTag[tag!=/^(typedef|template)$/]:has(JsdocTypeName[value=/^(object|Object)$/]))",
 						// 	message:
-						// 		"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object`"
-						// },
-						// No `any` type
-						// {
-						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
-						// 	message:
-						// 		"Please use provide types instead `any`"
+						// 		"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object` or use `EXPECTED_OBJECT` type"
 						// },
 					]
 				}
