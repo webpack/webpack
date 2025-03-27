@@ -8,7 +8,7 @@ jobs:
     steps:
       - task: UseNode@1
         inputs:
-          version: "18.x"
+          version: "22.x"
         displayName: "Install Node.js"
       - script: |
           node -v

@@ -1745,7 +1745,7 @@ declare abstract class CodeGenerationResults {
 		runtime: RuntimeSpec
 	): null | ReadonlySet<string>;
 	getData(module: Module, runtime: RuntimeSpec, key: string): any;
-	getHash(module: Module, runtime: RuntimeSpec): any;
+	getHash(module: Module, runtime: RuntimeSpec): string;
 	add(module: Module, runtime: RuntimeSpec, result: CodeGenerationResult): void;
 }
 type CodeValue =
@@ -1867,18 +1867,18 @@ declare class Compilation {
 			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], void>
 		>;
 		runtimeModule: SyncHook<[RuntimeModule, Chunk]>;
-		reviveModules: SyncHook<[Iterable<Module>, any]>;
+		reviveModules: SyncHook<[Iterable<Module>, Records]>;
 		beforeModuleIds: SyncHook<[Iterable<Module>]>;
 		moduleIds: SyncHook<[Iterable<Module>]>;
 		optimizeModuleIds: SyncHook<[Iterable<Module>]>;
 		afterOptimizeModuleIds: SyncHook<[Iterable<Module>]>;
-		reviveChunks: SyncHook<[Iterable<Chunk>, any]>;
+		reviveChunks: SyncHook<[Iterable<Chunk>, Records]>;
 		beforeChunkIds: SyncHook<[Iterable<Chunk>]>;
 		chunkIds: SyncHook<[Iterable<Chunk>]>;
 		optimizeChunkIds: SyncHook<[Iterable<Chunk>]>;
 		afterOptimizeChunkIds: SyncHook<[Iterable<Chunk>]>;
-		recordModules: SyncHook<[Iterable<Module>, any]>;
-		recordChunks: SyncHook<[Iterable<Chunk>, any]>;
+		recordModules: SyncHook<[Iterable<Module>, Records]>;
+		recordChunks: SyncHook<[Iterable<Chunk>, Records]>;
 		optimizeCodeGeneration: SyncHook<[Iterable<Module>]>;
 		beforeModuleHash: SyncHook<[]>;
 		afterModuleHash: SyncHook<[]>;
@@ -1889,8 +1889,8 @@ declare class Compilation {
 		beforeHash: SyncHook<[]>;
 		contentHash: SyncHook<[Chunk]>;
 		afterHash: SyncHook<[]>;
-		recordHash: SyncHook<[any]>;
-		record: SyncHook<[Compilation, any]>;
+		recordHash: SyncHook<[Records]>;
+		record: SyncHook<[Compilation, Records]>;
 		beforeModuleAssets: SyncHook<[]>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean | void>;
 		beforeChunkAssets: SyncHook<[]>;
@@ -13119,7 +13119,7 @@ declare interface RuleSet {
 	/**
 	 * map of references in the rule set (may grow over time)
 	 */
-	references: Map<string, any>;
+	references: Map<string, RuleSetLoaderOptions>;
 
 	/**
 	 * execute the rule set
@@ -13144,6 +13144,7 @@ type RuleSetConditionOrConditions =
 	| ((value: string) => boolean)
 	| RuleSetLogicalConditions
 	| RuleSetCondition[];
+type RuleSetLoaderOptions = string | { [index: string]: any };
 
 /**
  * Logic operators used in a condition matcher.
@@ -13909,7 +13910,7 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): [string, string];
-	exportFromImport(__0: {
+	exportFromImport<GenerateContext>(__0: {
 		/**
 		 * the module graph
 		 */
@@ -13953,7 +13954,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * init fragments will be added here
 		 */
-		initFragments: InitFragment<any>[];
+		initFragments: InitFragment<GenerateContext>[];
 		/**
 		 * runtime for which this code will be generated
 		 */

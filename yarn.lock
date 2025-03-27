@@ -5967,9 +5967,9 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.23.6:
-  version "1.23.5"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/fde1360cf28dfdb938e289d06da01ed83df0a343"
+tooling@webpack/tooling#v1.23.7:
+  version "1.23.7"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/bee59400abb9046078b7ea919ab36b60828e796d"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.1.0"
