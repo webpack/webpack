@@ -15597,7 +15597,7 @@ declare class WebpackError extends Error {
 	/**
 	 * Creates an instance of WebpackError.
 	 */
-	constructor(message?: string);
+	constructor(message?: string, options?: { cause?: Error });
 	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
@@ -15605,6 +15605,8 @@ declare class WebpackError extends Error {
 	hideStack?: boolean;
 	chunk?: Chunk;
 	file?: string;
+	cause?: Error;
+	errors: any;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 
