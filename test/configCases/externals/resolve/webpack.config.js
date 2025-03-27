@@ -5,7 +5,10 @@ module.exports = {
 	},
 	externals: [
 		async ({ context, request, getResolve }) => {
-			if (request !== "external") return false;
+			if (request !== "external" && request !== "external-promise") {
+				return false;
+			}
+
 			const resolve = getResolve();
 			const resolved = await resolve(context, request);
 			return `var ${JSON.stringify(resolved)}`;
