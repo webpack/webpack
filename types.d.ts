@@ -4791,7 +4791,7 @@ declare interface ExternalItemFunctionData {
 		| ((
 				context: string,
 				request: string,
-				callback: (err?: Error, result?: string) => void
+				callback: (err?: null | Error, result?: string | false) => void
 		  ) => void)
 		| ((context: string, request: string) => Promise<string>);
 
@@ -9026,7 +9026,7 @@ declare interface ModuleFactoryCreateData {
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
 	issuerLayer?: null | string;
-	compiler: string;
+	compiler?: string;
 }
 declare interface ModuleFactoryResult {
 	/**

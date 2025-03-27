@@ -3175,7 +3175,7 @@ export interface ExternalItemFunctionData {
 		| ((
 				context: string,
 				request: string,
-				callback: (err?: Error, result?: string) => void
+				callback: (err?: Error | null, result?: string | false) => void
 		  ) => void)
 		| ((context: string, request: string) => Promise<string>);
 	/**

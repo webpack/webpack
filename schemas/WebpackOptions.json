@@ -1206,7 +1206,7 @@
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
           "instanceof": "Function",
-          "tsType": "((options?: ResolveOptions) => ((context: string, request: string, callback: (err?: Error, result?: string) => void) => void) | ((context: string, request: string) => Promise<string>))"
+          "tsType": "((options?: ResolveOptions) => ((context: string, request: string, callback: (err?: Error | null, result?: string | false) => void) => void) | ((context: string, request: string) => Promise<string>))"
         },
         "request": {
           "description": "The request as written by the user in the require/import expression/statement.",
