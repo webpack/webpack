@@ -8,6 +8,7 @@ const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const FakeDocument = require("./helpers/FakeDocument");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
@@ -108,8 +109,7 @@ const describeCases = config => {
 								// ignored
 							}
 
-							compiler = webpack(options);
-							compiler.run((err, stats) => {
+							const onCompiled = (err, stats) => {
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -179,9 +179,8 @@ const describeCases = config => {
 									},
 									document: {
 										createElement(type) {
-											return {
+											const ele = {
 												_type: type,
-												sheet: {},
 												getAttribute(name) {
 													return this[name];
 												},
@@ -199,6 +198,11 @@ const describeCases = config => {
 													}
 												}
 											};
+											ele.sheet =
+												type === "link"
+													? new FakeDocument.FakeSheet(ele, outputDirectory)
+													: {};
+											return ele;
 										},
 										head: {
 											appendChild(element) {
@@ -353,8 +357,15 @@ const describeCases = config => {
 								let promise = Promise.resolve();
 								const info = stats.toJson({ all: false, entrypoints: true });
 								if (config.target === "web") {
-									for (const file of info.entrypoints.main.assets)
-										_require(`./${file.name}`);
+									for (const file of info.entrypoints.main.assets) {
+										if (file.name.endsWith(".css")) {
+											const link = window.document.createElement("link");
+											link.href = path.join(outputDirectory, file.name);
+											window.document.head.appendChild(link);
+										} else {
+											_require(`./${file.name}`);
+										}
+									}
 								} else {
 									const assets = info.entrypoints.main.assets;
 									const result = _require(
@@ -375,7 +386,9 @@ const describeCases = config => {
 										done(err);
 									}
 								);
-							});
+							};
+							compiler = webpack(options);
+							compiler.run(onCompiled);
 						}, 20000);
 
 						const {

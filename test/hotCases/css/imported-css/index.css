@@ -1,0 +1,9 @@
+@import url("./a.css");
+---
+html {
+	color: blue;
+}
+---
+html {
+	color: yellow;
+}
