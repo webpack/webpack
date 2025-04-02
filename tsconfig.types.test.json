@@ -6,13 +6,15 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": false,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "types": ["node", "jest"],
     "esModuleInterop": true
   },
   "include": [
+    "declarations.d.ts",
+    "declarations/*.d.ts",
     "test/**/webpack.config.js",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",

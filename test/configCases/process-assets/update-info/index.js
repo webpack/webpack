@@ -3,7 +3,7 @@ it("should update info", () => {
 	expect(/file\.svg$/.test(file)).toBe(true);
 	const { info } = __STATS__.assets.find(item => item.name === "images/file.svg");
 	expect(info.custom).toBe(true);
-	expect(info.related).toEqual(["first", "second"]);
+	expect(info.related).toEqual({"first": ["first"], "second": ["second"]});
 	expect(info.customFn).toBe(true);
 
 	const file1 = new URL("./file1.svg", import.meta.url);

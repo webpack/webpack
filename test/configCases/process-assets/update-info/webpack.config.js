@@ -10,7 +10,6 @@ module.exports = {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "TestPlugin",
-							stage: this.stage,
 							additionalAssets: true
 						},
 						assets => {
@@ -19,11 +18,11 @@ module.exports = {
 									case "images/file.svg": {
 										compilation.updateAsset(asset, assets[asset], {
 											custom: true,
-											related: ["first"]
+											related: { first: ["first"] }
 										});
 										compilation.updateAsset(asset, assets[asset], info => ({
 											...info,
-											related: [...info.related, "second"],
+											related: { ...info.related, second: ["second"] },
 											customFn: true
 										}));
 										break;

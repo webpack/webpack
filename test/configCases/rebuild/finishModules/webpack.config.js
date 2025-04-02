@@ -2,7 +2,7 @@ const { resolve, join } = require("path");
 const { NormalModule } = require("../../../../");
 
 /**
- * @typedef {import("../../../../lib/Module").Module} Module
+ * @typedef {TODO} Module
  */
 
 /**
@@ -14,7 +14,8 @@ var testPlugin = compiler => {
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
 			loaderContext => {
-				loaderContext.shouldReplace = shouldReplace;
+				/** @type {any} */
+				(loaderContext).shouldReplace = shouldReplace;
 			}
 		);
 		compilation.hooks.finishModules.tapAsync(

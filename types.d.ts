@@ -11246,7 +11246,7 @@ declare interface OutputNormalized {
 	 */
 	workerWasmLoading?: string | false;
 }
-declare interface ParameterizedComparator<TArg, T> {
+declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
 declare interface ParsedIdentifier {

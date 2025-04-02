@@ -17,7 +17,8 @@ exports.default = function (source) {
 			try {
 				const source = await loadModulePromise("../loader!" + ref);
 				loadedRefs.push([ref, JSON.parse(source)]);
-			} catch(err) {
+			} catch(_err) {
+				const err = /** @type {Error} */ (_err);
 				loadedRefs.push([ref, `err: ${err && err.message}`]);
 			}
 		}
