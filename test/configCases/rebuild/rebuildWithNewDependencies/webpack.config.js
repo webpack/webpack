@@ -2,6 +2,10 @@ const { resolve, join } = require("path");
 const { NormalModule } = require("../../../../");
 
 /**
+ * @typedef {import("../../../../lib/Module").Module} Module
+ */
+
+/**
  * @param {import("../../../../").Compiler} compiler the compiler
  */
 var testPlugin = compiler => {
@@ -10,7 +14,7 @@ var testPlugin = compiler => {
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
 			loaderContext => {
-				/** @type {any} */ (loaderContext).shouldReplace = shouldReplace;
+				loaderContext.shouldReplace = shouldReplace;
 			}
 		);
 		compilation.hooks.finishModules.tapAsync(
@@ -19,7 +23,7 @@ var testPlugin = compiler => {
 				const src = resolve(join(__dirname, "a.js"));
 
 				/**
-				 * @param {any} m test
+				 * @param {Module} m test
 				 * @returns {boolean} test
 				 */
 				function matcher(m) {

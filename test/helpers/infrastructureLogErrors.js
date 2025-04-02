@@ -14,7 +14,7 @@ const errorsFilter = [PERSISTENCE_CACHE_INVALIDATE_ERROR];
 
 /**
  * @param {string[]} logs logs
- * @param {object} config config
+ * @param {TODO} config config
  * @returns {string[]} errors
  */
 module.exports = function filterInfraStructureErrors(logs, config) {

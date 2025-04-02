@@ -350,15 +350,15 @@ export default [
 							comment:
 								"JsdocBlock:has(JsdocTypeName[value=/^(function|Function)$/])",
 							message:
-								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function` or use `EXPECTED_FUNCTION` type"
+								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function`/`function` or use `EXPECTED_FUNCTION` type"
+						},
+						// No `Object`
+						{
+							comment:
+								"JsdocBlock:has(JsdocTag[tag!=/^(typedef|template|param)$/]:has(JsdocTypeName[value=/^(Object|object)$/]))",
+							message:
+								"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object`/`object` or use `EXPECTED_OBJECT` type"
 						}
-						// No `Object` type
-						// {
-						// 	comment:
-						// 		"JsdocBlock:has(JsdocTag[tag!=/^(typedef|template)$/]:has(JsdocTypeName[value=/^(object|Object)$/]))",
-						// 	message:
-						// 		"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object` or use `EXPECTED_OBJECT` type"
-						// },
 					]
 				}
 			]

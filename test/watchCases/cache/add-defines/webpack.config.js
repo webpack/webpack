@@ -46,17 +46,15 @@ module.exports = {
 				const plugin = new DefinePlugin(
 					defines[Number(currentWatchStep.step || 0)]
 				);
-				plugin.apply(
-					/** @type {any} */ ({
-						hooks: {
-							compilation: {
-								tap: (name, fn) => {
-									fn(...args);
-								}
+				plugin.apply({
+					hooks: {
+						compilation: {
+							tap: (name, fn) => {
+								fn(...args);
 							}
 						}
-					})
-				);
+					}
+				});
 			});
 		}
 	]
