@@ -115,16 +115,7 @@ declare interface Abortable {
 	signal?: AbortSignal;
 }
 declare class AbstractLibraryPlugin<T> {
-	constructor(__0: {
-		/**
-		 * name of the plugin
-		 */
-		pluginName: string;
-		/**
-		 * used library type
-		 */
-		type: string;
-	});
+	constructor(__0: AbstractLibraryPluginOptions);
 
 	/**
 	 * Apply the plugin
@@ -168,6 +159,17 @@ declare class AbstractLibraryPlugin<T> {
 		libraryContext: LibraryContext<T>
 	): void;
 	static COMMON_LIBRARY_NAME_MESSAGE: string;
+}
+declare interface AbstractLibraryPluginOptions {
+	/**
+	 * name of the plugin
+	 */
+	pluginName: string;
+
+	/**
+	 * used library type
+	 */
+	type: string;
 }
 declare interface AdditionalData {
 	[index: string]: any;
@@ -2187,7 +2189,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((source: Source) => Source),
 		assetInfoUpdateOrFunction?:
 			| AssetInfo
-			| ((assetInfo?: AssetInfo) => AssetInfo)
+			| ((assetInfo?: AssetInfo) => undefined | AssetInfo)
 	): void;
 	renameAsset(file: string, newFile: string): void;
 	deleteAsset(file: string): void;
@@ -5555,8 +5557,7 @@ declare interface HashedModuleIdsPluginOptions {
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
-	constructor(options?: object);
-	options: object;
+	constructor();
 
 	/**
 	 * Apply the plugin
@@ -6800,12 +6801,12 @@ declare class JavascriptParser extends Parser {
 	walkImportExpression(expression: ImportExpressionJavascriptParser): void;
 	walkCallExpression(expression: CallExpression): void;
 	walkMemberExpression(expression: MemberExpression): void;
-	walkMemberExpressionWithExpressionName(
-		expression: any,
+	walkMemberExpressionWithExpressionName<R>(
+		expression: MemberExpression,
 		name: string,
 		rootInfo: string | VariableInfo,
 		members: string[],
-		onUnhandled?: any
+		onUnhandled: () => undefined | R
 	): void;
 	walkThisExpression(expression: ThisExpression): void;
 	walkIdentifier(expression: Identifier): void;
@@ -6881,7 +6882,7 @@ declare class JavascriptParser extends Parser {
 					rootInfo: string | VariableInfo | ScopeInfo,
 					getMembers: () => string[]
 			  ) => any),
-		defined: undefined | ((result?: string) => any),
+		defined: undefined | ((result?: string) => undefined | R),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForName<T, R>(
@@ -6904,8 +6905,8 @@ declare class JavascriptParser extends Parser {
 	callHooksForNameWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		name: string,
-		fallback: undefined | ((value: string) => any),
-		defined: undefined | (() => any),
+		fallback: undefined | ((value: string) => undefined | R),
+		defined: undefined | (() => R),
 		...args: AsArray<T>
 	): undefined | R;
 	inScope(
@@ -7756,7 +7757,7 @@ declare interface KnownStatsError {
 	chunkId?: string | number;
 	moduleId?: string | number;
 	moduleTrace?: StatsModuleTraceItem[];
-	details?: any;
+	details?: string;
 	stack?: string;
 }
 declare interface KnownStatsFactoryContext {
@@ -8383,7 +8384,7 @@ declare interface LoaderPluginLoaderContext {
 	importModule(
 		request: string,
 		options: undefined | ImportModuleOptions,
-		callback: (err?: null | Error, exports?: any) => any
+		callback: (err?: null | Error, exports?: ExecuteModuleExports) => any
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
 }
@@ -9210,13 +9211,13 @@ declare class ModuleGraph {
 	setDepthIfLower(module: Module, depth: number): boolean;
 	isAsync(module: Module): boolean;
 	setAsync(module: Module): void;
-	getMeta(thing?: any): object;
-	getMetaIfExisting(thing?: any): undefined | object;
+	getMeta(thing: object): any;
+	getMetaIfExisting(thing: object): any;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
-	cached<T extends any[], V>(
-		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
-		...args: T
+	cached<T, V>(
+		fn: (moduleGraph: ModuleGraph, ...args: T[]) => V,
+		...args: T[]
 	): V;
 	setModuleMemCaches(
 		moduleMemCaches: Map<Module, WeakTupleMap<any, any>>
@@ -9608,7 +9609,9 @@ declare class MultiCompiler {
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
 		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
-		infrastructureLog: MultiHook<SyncBailHook<[string, string, any[]], true>>;
+		infrastructureLog: MultiHook<
+			SyncBailHook<[string, string, undefined | any[]], true | void>
+		>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
@@ -9719,23 +9722,19 @@ declare class NoEmitOnErrorsPlugin {
 }
 type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
-	constructor(options: {
-		/**
-		 * infrastructure logging options
-		 */
-		infrastructureLogging: InfrastructureLogging;
-	});
-	options: {
-		/**
-		 * infrastructure logging options
-		 */
-		infrastructureLogging: InfrastructureLogging;
-	};
+	constructor(options: NodeEnvironmentPluginOptions);
+	options: NodeEnvironmentPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface NodeEnvironmentPluginOptions {
+	/**
+	 * infrastructure logging options
+	 */
+	infrastructureLogging: InfrastructureLogging;
 }
 
 /**
@@ -9972,8 +9971,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<object, Parser>>;
-	generatorCache: Map<string, WeakMap<object, Generator>>;
+	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
+	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
 		contextInfo: ModuleFactoryCreateDataContextInfo,
@@ -10163,7 +10162,7 @@ declare interface ObjectSerializerContext {
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item?: any) => void;
-	writeSeparate?: (item?: any, obj?: object) => () => any;
+	writeSeparate?: (item?: any, obj?: any) => () => any;
 }
 declare interface ObjectSerializerSnapshot {
 	length: number;
@@ -11247,7 +11246,7 @@ declare interface OutputNormalized {
 	 */
 	workerWasmLoading?: string | false;
 }
-declare interface ParameterizedComparator<TArg, T> {
+declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
 declare interface ParsedIdentifier {
@@ -12238,16 +12237,7 @@ declare interface ReadlinkTypes {
 	): void;
 }
 declare class RealContentHashPlugin {
-	constructor(__0: {
-		/**
-		 * the hash function to use
-		 */
-		hashFunction: string | typeof Hash;
-		/**
-		 * the hash digest to use
-		 */
-		hashDigest: string;
-	});
+	constructor(__0: RealContentHashPluginOptions);
 
 	/**
 	 * Apply the plugin
@@ -12256,6 +12246,17 @@ declare class RealContentHashPlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksRealContentHashPlugin;
+}
+declare interface RealContentHashPluginOptions {
+	/**
+	 * the hash function to use
+	 */
+	hashFunction: string | typeof Hash;
+
+	/**
+	 * the hash digest to use
+	 */
+	hashDigest?: string;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;
@@ -13057,7 +13058,7 @@ declare abstract class Resolver {
 	normalize(path: string): string;
 }
 declare interface ResolverCache {
-	direct: WeakMap<object, ResolverWithOptions>;
+	direct: WeakMap<ResolveOptionsWithDependencyType, ResolverWithOptions>;
 	stringified: Map<string, ResolverWithOptions>;
 }
 declare abstract class ResolverFactory {
@@ -15250,29 +15251,33 @@ type StatsValue =
 	| "detailed";
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
-	constructor(__0: {
-		/**
-		 * path to file
-		 */
-		path: string;
-		/**
-		 * context for module names
-		 */
-		context?: string;
-		/**
-		 * selector for modules
-		 */
-		test?: (module: Module) => boolean;
-		/**
-		 * operation mode (defaults to merge)
-		 */
-		mode?: "read" | "create" | "merge" | "update";
-	});
+	constructor(__0: SyncModuleIdsPluginOptions);
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface SyncModuleIdsPluginOptions {
+	/**
+	 * path to file
+	 */
+	path: string;
+
+	/**
+	 * context for module names
+	 */
+	context?: string;
+
+	/**
+	 * selector for modules
+	 */
+	test?: (module: Module) => boolean;
+
+	/**
+	 * operation mode (defaults to merge)
+	 */
+	mode?: "read" | "create" | "merge" | "update";
 }
 declare interface SyntheticDependencyLocation {
 	name: string;

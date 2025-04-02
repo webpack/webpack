@@ -47,7 +47,8 @@ module.exports = {
 					defines[Number(currentWatchStep.step || 0)]
 				);
 				plugin.apply(
-					/** @type {any} */ ({
+					/** @type {any} */
+					({
 						hooks: {
 							compilation: {
 								tap: (name, fn) => {

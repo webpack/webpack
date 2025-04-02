@@ -17,7 +17,7 @@ module.exports = {
 						},
 						assets => {
 							const name = "bundle0.css";
-							const code = assets[name].source();
+							const code = /** @type {string} */ (assets[name].source());
 
 							compilation.updateAsset(
 								name,

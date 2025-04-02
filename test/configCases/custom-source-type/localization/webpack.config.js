@@ -7,10 +7,11 @@ const webpack = require("../../../../");
 
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").ParserState} ParserState */
+/** @typedef {import("../../../../lib/Parser").PreparsedAst} PreparsedAst */
 
 class LocalizationParser extends Parser {
 	/**
-	 * @param {string | Buffer | Record<string, any>} source input source
+	 * @param {string | Buffer | PreparsedAst} source input source
 	 * @param {ParserState} state state
 	 * @returns {ParserState} state
 	 */

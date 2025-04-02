@@ -10,7 +10,8 @@ exports.default = function (source) {
 			try {
 				const source = await this.importModule("../loader!" + ref);
 				loadedRefs.push([ref, source]);
-			} catch(err) {
+			} catch (_err) {
+				const err = /** @type {Error} */ (_err);
 				loadedRefs.push([ref, `err: ${err && err.message}`]);
 			}
 		}
