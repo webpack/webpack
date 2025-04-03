@@ -29,8 +29,14 @@
     "watchpack": "^2.4.1",
     "webpack-sources": "^3.2.3"
   },
+  "peerDependencies": {
+    "acorn-import-defer": "^1.0.2"
+  },
   "peerDependenciesMeta": {
     "webpack-cli": {
+      "optional": true
+    },
+    "acorn-import-defer": {
       "optional": true
     }
   },
@@ -43,6 +49,7 @@
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^22.13.10",
+    "acorn-import-defer": "^1.0.2",
     "assemblyscript": "^0.27.34",
     "babel-loader": "^10.0.0",
     "benchmark": "^2.1.4",
