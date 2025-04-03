@@ -145,6 +145,16 @@ it("should track return in arrow function expression", () => {
 	a6();
 });
 
+it("should work correct for lonely throw", () => {
+	throw 1;
+	require("fail");
+});
+
+it("should work correct for lonely return", () => {
+	return;
+	require("fail");
+});
+
 it("should work correct for try catch and loops", () => {
 	try {
 		throw 1;
@@ -164,12 +174,82 @@ it("should work correct for try catch and loops", () => {
 		require('./used');
 	}
 
+	try {
+		if (true) {
+			throw 1;
+			require("fail3");
+		}
+
+		require("fail2");
+	} catch (e) {
+		require('./used');
+	}
+
+	try {
+		try {
+			if (true) {
+				throw 1;
+				require("fail3");
+			}
+
+			require("fail2");
+		} catch (e) {
+			require('./used7');
+		}
+
+		require('./used8');
+	} catch (e) {
+		require('./used9');
+	}
+
 	function test() {
 		try {
 			return;
 			require("fail");
 		} finally {
 			require('./used');
+		}
+	}
+
+	function test1() {
+		try {
+			try {
+				if (true) {
+					return;
+					require("fail1");
+				}
+
+				require("fail2");
+			} catch (e) {
+				require('fail3');
+			}
+
+			require('fail4');
+		} catch (e) {
+			require('fail5');
+		} finally {
+			require('fail6');
+		}
+	}
+
+	function test2() {
+		try {
+			try {
+				if (true) {
+					return;
+					require("fail1");
+				}
+
+				require("fail2");
+			} catch (e) {
+				require('fail3');
+			}
+
+			require('fail4');
+		} catch (e) {
+			require('fail5');
+		} finally {
+			require('fail6');
 		}
 	}
 
