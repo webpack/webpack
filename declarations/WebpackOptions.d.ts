@@ -785,6 +785,10 @@ export type CssParserNamedExports = boolean;
  */
 export type CssParserUrl = boolean;
 /**
+ * Options for defer import.
+ */
+export type DeferImportExperimentOptions = boolean;
+/**
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
@@ -3830,6 +3834,10 @@ export interface ExperimentsExtra {
 	 */
 	css?: boolean;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: boolean;
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
@@ -3846,6 +3854,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Enable css support.
 	 */
 	css?: boolean;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */

@@ -1549,6 +1549,11 @@ abort-controller@^3.0.0:
   dependencies:
     event-target-shim "^5.0.0"
 
+acorn-import-defer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/acorn-import-defer/-/acorn-import-defer-1.0.2.tgz#1446791c1a906f2876936ee13ce5254cd957feef"
+  integrity sha512-jQyQFtM3rp9fTuEVGGySG8NYAuxVVB1db40POImsIkPgh90t5eGilznfB1vPoSwjBtXWAlXQ9DYOOXrCtLMMXg==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
