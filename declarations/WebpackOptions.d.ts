@@ -3175,7 +3175,11 @@ export interface ExternalItemFunctionData {
 		| ((
 				context: string,
 				request: string,
-				callback: (err?: Error | null, result?: string | false) => void
+				callback: (
+					err?: Error | null,
+					result?: string | false,
+					resolveRequest?: import("enhanced-resolve").ResolveRequest
+				) => void
 		  ) => void)
 		| ((context: string, request: string) => Promise<string>);
 	/**

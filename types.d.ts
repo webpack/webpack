@@ -4793,7 +4793,11 @@ declare interface ExternalItemFunctionData {
 		| ((
 				context: string,
 				request: string,
-				callback: (err?: null | Error, result?: string | false) => void
+				callback: (
+					err?: null | Error,
+					result?: string | false,
+					resolveRequest?: ResolveRequest
+				) => void
 		  ) => void)
 		| ((context: string, request: string) => Promise<string>);
 

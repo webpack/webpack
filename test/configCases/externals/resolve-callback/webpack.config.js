@@ -18,8 +18,10 @@ module.exports = {
 			if (request === "external-false") {
 				resolve(context, request, callback);
 			} else {
-				resolve(context, request, (err, resolved) => {
+				resolve(context, request, (err, resolved, resolveRequest) => {
 					if (err) callback(err);
+					else if (resolved !== resolveRequest.path)
+						callback(new Error("Error"));
 					else callback(null, `var ${JSON.stringify(resolved)}`);
 				});
 			}
