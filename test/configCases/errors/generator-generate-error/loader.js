@@ -1,4 +1,4 @@
-/** @type {import("../../../../").LoaderDefinition} */
+/** @type {import("../../../../").LoaderDefinition<{ message: string }>} */
 module.exports = function() {
 	const callback = this.async();
 	const options = this.getOptions();
