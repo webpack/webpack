@@ -888,6 +888,11 @@ type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
 	map: Record<string, Generator>;
+	generateError?: (
+		error: Error,
+		module: NormalModule,
+		generateContext: GenerateContext
+	) => null | Source;
 }
 declare const CIRCULAR_CONNECTION: unique symbol;
 declare class Cache {
