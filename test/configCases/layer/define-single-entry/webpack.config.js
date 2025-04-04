@@ -3,11 +3,24 @@ const { DefinePlugin } = require("../../../../");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
-		paid: { import: "./paid.js", layer: "paid" },
-		free: { import: "./free.js", layer: "free" }
+		paid: { import: "./main.js", layer: "paid" },
+		free: { import: "./main.js", layer: "free" }
 	},
 	experiments: {
 		layers: true
+	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				layerPaidCommon: {
+					name: "layer-paid-common",
+					layer: "paid",
+					chunks: "async",
+					enforce: true,
+					reuseExistingChunk: true
+				}
+			}
+		}
 	},
 	output: {
 		filename: "[name].js"
