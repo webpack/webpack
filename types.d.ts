@@ -969,7 +969,7 @@ declare abstract class CacheFacade {
 	): Promise<T>;
 }
 declare interface CacheGroupSource {
-	key?: string;
+	key: string;
 	priority?: number;
 	getName?: (
 		module: Module,
