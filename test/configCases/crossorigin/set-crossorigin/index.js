@@ -4,7 +4,7 @@ it("should load script without crossorigin attribute (default)", function() {
 	var script = document.head._children.pop();
 	__non_webpack_require__("./crossorigin-default.web.js");
 	expect(script.src).toBe("https://test.cases/path/crossorigin-default.web.js");
-	expect(script.crossOrigin).toBe(undefined);
+	expect(script.crossOrigin).toBe('anonmymous');
 
 	return promise;
 });
@@ -18,7 +18,7 @@ it("should load script without crossorigin attribute (relative)", function() {
 	var script = document.head._children.pop();
 	__non_webpack_require__("./crossorigin-relative.web.js");
 	expect(script.src).toBe("https://test.cases/crossorigin-relative.web.js");
-	expect(script.crossOrigin).toBe(undefined);
+	expect(script.crossOrigin).toBe('anonmymous');
 
 	return promise;
 });
@@ -32,7 +32,7 @@ it("should load script without crossorigin attribute (server relative)", functio
 	var script = document.head._children.pop();
 	__non_webpack_require__("./crossorigin-server-relative.web.js");
 	expect(script.src).toBe("https://test.cases/server/crossorigin-server-relative.web.js");
-	expect(script.crossOrigin).toBe(undefined);
+	expect(script.crossOrigin).toBe('anonmymous');
 
 	return promise;
 });
@@ -46,7 +46,7 @@ it("should load script without crossorigin attribute (same origin)", function() 
 	var script = document.head._children.pop();
 	__non_webpack_require__("./crossorigin-same-origin.web.js");
 	expect(script.src).toBe("https://test.cases/crossorigin-same-origin.web.js");
-	expect(script.crossOrigin).toBe(undefined);
+	expect(script.crossOrigin).toBe('anonmymous');
 
 	return promise;
 });
