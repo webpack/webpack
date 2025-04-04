@@ -86,10 +86,14 @@ import {
 	YieldExpression
 } from "estree";
 import { IncomingMessage, ServerOptions } from "http";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
-import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
+import {
+	Extend,
+	ValidationErrorConfiguration
+} from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -244,7 +248,7 @@ declare interface ArgumentConfig {
 	path: string;
 	multiple: boolean;
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
-	values?: any[];
+	values?: EnumValue[];
 }
 type ArrayBufferLike = ArrayBuffer | SharedArrayBuffer;
 type ArrayBufferView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> =
@@ -4180,6 +4184,16 @@ declare abstract class Entrypoint extends ChunkGroup {
 	 */
 	getEntrypointChunk(): Chunk;
 }
+type EnumValue =
+	| null
+	| string
+	| number
+	| boolean
+	| EnumValueObject
+	| EnumValue[];
+declare interface EnumValueObject {
+	[index: string]: EnumValue;
+}
 
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -7763,6 +7777,7 @@ declare interface KnownStatsError {
 	moduleTrace?: StatsModuleTraceItem[];
 	details?: string;
 	stack?: string;
+	compilerPath?: string;
 }
 declare interface KnownStatsFactoryContext {
 	type: string;
@@ -7887,9 +7902,9 @@ declare interface KnownStatsPrinterContext {
 }
 declare interface KnownStatsPrinterFormatters {
 	formatFilename?: (file: string, oversize?: boolean) => string;
-	formatModuleId?: (id: string) => string;
+	formatModuleId?: (id: string | number) => string;
 	formatChunkId?: (
-		id: string,
+		id: string | number,
 		direction?: "parent" | "child" | "sibling"
 	) => string;
 	formatSize?: (size: number) => string;
@@ -8321,7 +8336,7 @@ declare interface LoaderDefinitionFunction<
 }
 declare interface LoaderItem {
 	loader: string;
-	options: any;
+	options?: null | string | Record<string, any>;
 	ident: null | string;
 	type: null | string;
 }
@@ -9292,7 +9307,7 @@ type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 declare interface ModuleMemCachesItem {
 	buildInfo: BuildInfo;
 	references?: WeakMap<Dependency, Module>;
-	memCache: WeakTupleMap<any, any>;
+	memCache: WeakTupleMap<Module[], string>;
 }
 
 /**
@@ -9801,7 +9816,7 @@ declare class NormalModule extends Module {
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
-	resourceResolveData?: Record<string, any>;
+	resourceResolveData: any;
 	matchResource?: string;
 	loaders: LoaderItem[];
 	error: null | WebpackError;
@@ -9854,10 +9869,7 @@ declare interface NormalModuleCompilationHooks {
 		>
 	>;
 	processResult: SyncWaterfallHook<
-		[
-			[string | Buffer, string | SourceMapSource, Record<string, any>],
-			NormalModule
-		]
+		[[string | Buffer, string | SourceMapSource, PreparsedAst], NormalModule]
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
@@ -9900,7 +9912,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * resource resolve data
 	 */
-	resourceResolveData?: Record<string, any>;
+	resourceResolveData?: any;
 
 	/**
 	 * context directory for resolving
@@ -11352,7 +11364,7 @@ declare interface ParserStateBase {
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
-	options: { [index: string]: any };
+	options: WebpackOptionsNormalized;
 }
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
@@ -11502,7 +11514,7 @@ declare interface Problem {
 	type: ProblemType;
 	path: string;
 	argument: string;
-	value?: any;
+	value?: string | number | boolean | RegExp;
 	index?: number;
 	expected?: string;
 }
@@ -14712,12 +14724,12 @@ declare class Stats {
 	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
 	toString(options?: string | boolean | StatsOptions): string;
 }
-type StatsAsset = Record<string, any> & KnownStatsAsset;
-type StatsChunk = Record<string, any> & KnownStatsChunk;
-type StatsChunkGroup = Record<string, any> & KnownStatsChunkGroup;
-type StatsChunkOrigin = Record<string, any> & KnownStatsChunkOrigin;
-type StatsCompilation = Record<string, any> & KnownStatsCompilation;
-type StatsError = Record<string, any> & KnownStatsError;
+type StatsAsset = KnownStatsAsset & Record<string, any>;
+type StatsChunk = KnownStatsChunk & Record<string, any>;
+type StatsChunkGroup = KnownStatsChunkGroup & Record<string, any>;
+type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, any>;
+type StatsCompilation = KnownStatsCompilation & Record<string, any>;
+type StatsError = KnownStatsError & Record<string, any>;
 declare abstract class StatsFactory {
 	hooks: StatsFactoryHooks;
 	create(
@@ -14726,7 +14738,7 @@ declare abstract class StatsFactory {
 		baseContext: Omit<StatsFactoryContext, "type">
 	): any;
 }
-type StatsFactoryContext = Record<string, any> & KnownStatsFactoryContext;
+type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
 declare interface StatsFactoryHooks {
 	extract: HookMap<
 		SyncBailHook<[ObjectForExtract, any, StatsFactoryContext], void>
@@ -14762,14 +14774,14 @@ declare interface StatsFactoryHooks {
 		SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>
 	>;
 }
-type StatsLogging = Record<string, any> & KnownStatsLogging;
-type StatsLoggingEntry = Record<string, any> & KnownStatsLoggingEntry;
-type StatsModule = Record<string, any> & KnownStatsModule;
-type StatsModuleIssuer = Record<string, any> & KnownStatsModuleIssuer;
-type StatsModuleReason = Record<string, any> & KnownStatsModuleReason;
-type StatsModuleTraceDependency = Record<string, any> &
-	KnownStatsModuleTraceDependency;
-type StatsModuleTraceItem = Record<string, any> & KnownStatsModuleTraceItem;
+type StatsLogging = KnownStatsLogging & Record<string, any>;
+type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
+type StatsModule = KnownStatsModule & Record<string, any>;
+type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
+type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
+type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
+	Record<string, any>;
+type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
 
 /**
  * Stats options object.
@@ -15237,11 +15249,11 @@ declare abstract class StatsPrinter {
 	hooks: StatsPrintHooks;
 	print(type: string, object?: any, baseContext?: StatsPrinterContext): string;
 }
-type StatsPrinterContext = Record<string, any> &
-	KnownStatsPrinterColorFn &
+type StatsPrinterContext = KnownStatsPrinterColorFn &
 	KnownStatsPrinterFormatters &
-	KnownStatsPrinterContext;
-type StatsProfile = Record<string, any> & KnownStatsProfile;
+	KnownStatsPrinterContext &
+	Record<string, any>;
+type StatsProfile = KnownStatsProfile & Record<string, any>;
 type StatsValue =
 	| boolean
 	| StatsOptions
@@ -16064,7 +16076,45 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
-		export let getArguments: (schema?: any) => Flags;
+		export let getArguments: (
+			schema?:
+				| (JSONSchema4 &
+						Extend & {
+							absolutePath: boolean;
+							instanceof: string;
+							cli: {
+								helper?: boolean;
+								exclude?: boolean;
+								description?: string;
+								negatedDescription?: string;
+								resetDescription?: string;
+							};
+						})
+				| (JSONSchema6 &
+						Extend & {
+							absolutePath: boolean;
+							instanceof: string;
+							cli: {
+								helper?: boolean;
+								exclude?: boolean;
+								description?: string;
+								negatedDescription?: string;
+								resetDescription?: string;
+							};
+						})
+				| (JSONSchema7 &
+						Extend & {
+							absolutePath: boolean;
+							instanceof: string;
+							cli: {
+								helper?: boolean;
+								exclude?: boolean;
+								description?: string;
+								negatedDescription?: string;
+								resetDescription?: string;
+							};
+						})
+		) => Flags;
 		export let processArguments: (
 			args: Flags,
 			config: any,

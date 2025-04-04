@@ -17,7 +17,7 @@ const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 const lazySizes = [];
 
 /**
- * @param {Array<any>} data data
+ * @param {(Buffer | (() => Promise<Buffer[]>))[]} data data
  * @returns {Promise<SizeInfo>} size info
  */
 const captureSize = async data => {
@@ -43,7 +43,7 @@ const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
 /**
- * @param {Array<any>} data data
+ * @param {Array<EXPECTED_ANY>} data data
  * @param {string} indent indent
  * @returns {Promise<void>} promise
  */
