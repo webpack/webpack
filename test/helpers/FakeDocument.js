@@ -5,7 +5,7 @@ function getPropertyValue(property) {
 	return this[property];
 }
 
-module.exports = class FakeDocument {
+class FakeDocument {
 	constructor(basePath) {
 		this.head = this.createElement("head");
 		this.body = this.createElement("body");
@@ -54,7 +54,7 @@ module.exports = class FakeDocument {
 		}
 		return style;
 	}
-};
+}
 
 class FakeElement {
 	constructor(document, type, basePath) {
@@ -252,3 +252,8 @@ class FakeSheet {
 		return rules;
 	}
 }
+
+FakeDocument.FakeSheet = FakeSheet;
+FakeDocument.FakeElement = FakeDocument;
+
+module.exports = FakeDocument;
