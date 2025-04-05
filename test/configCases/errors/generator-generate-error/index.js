@@ -1,4 +1,8 @@
-it("should compile with errors", async () => {
+it("should generate a custom error content", async () => {
+	expect(__STATS__.modules.filter(m => m.moduleType !== "runtime").length).toEqual(14);
+	expect(__STATS__.assets.length).toEqual(19);
+	expect(__STATS__.chunks.length).toEqual(12);
+
 	let errored;
 
 	let json;
@@ -10,6 +14,16 @@ it("should compile with errors", async () => {
 	}
 
 	expect(errored.toString()).toMatch(/json error message/);
+
+	let otherJson;
+
+	try {
+		otherJson = await import("./other.json");
+	} catch (error) {
+		errored = error;
+	}
+
+	expect(errored.toString()).toMatch(/json other error message/);
 
 	let source;
 
@@ -30,6 +44,16 @@ it("should compile with errors", async () => {
 	}
 
 	expect(errored.toString()).toMatch(/asset\/resource error message/);
+
+	let otherResource;
+
+	try {
+		otherResource = await import("./other.svg");
+	} catch (error) {
+		errored = error;
+	}
+
+	expect(errored.toString()).toMatch(/asset\/resource other error message/);
 
 	let inline;
 

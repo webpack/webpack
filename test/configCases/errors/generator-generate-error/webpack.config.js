@@ -1,6 +1,10 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
+	output: {
+		filename: "[name].[chunkhash:8].[contenthash:8].js",
+		chunkFilename: "[name].[chunkhash:8].[contenthash:8].js"
+	},
 	optimization: {
 		chunkIds: "named",
 		emitOnErrors: true
@@ -28,6 +32,16 @@ module.exports = {
 					loader: "./loader.js",
 					options: {
 						message: "asset/resource error message"
+					}
+				}
+			},
+			{
+				type: "asset/resource",
+				test: /other\.svg$/,
+				use: {
+					loader: "./loader.js",
+					options: {
+						message: "asset/resource other error message"
 					}
 				}
 			},
@@ -83,11 +97,21 @@ module.exports = {
 			},
 			{
 				type: "json",
-				test: /\.json$/,
+				test: /file\.json$/,
 				use: {
 					loader: "./loader.js",
 					options: {
 						message: "json error message"
+					}
+				}
+			},
+			{
+				type: "json",
+				test: /other\.json$/,
+				use: {
+					loader: "./loader.js",
+					options: {
+						message: "json other error message"
 					}
 				}
 			},
