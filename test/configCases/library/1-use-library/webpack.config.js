@@ -7,6 +7,45 @@ const path = require("path");
 /** @type {(env: any, options: any) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
+		entry: "./default-test-modern-module.js",
+		optimization: {
+			minimize: true
+		},
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/modern-module.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("modern-module-tree-shakable")
+			}),
+			/**
+			 * @this {Compiler} compiler
+			 */
+			function () {
+				/**
+				 * @param {Compilation} compilation compilation
+				 * @returns {void}
+				 */
+				const handler = compilation => {
+					compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+						for (const asset of Object.keys(assets)) {
+							const source = assets[asset].source();
+							expect(source).not.toContain('"a"');
+							expect(source).not.toContain('"b"');
+							expect(source).not.toContain('"non-external"');
+							// expect pure ESM export without webpack runtime
+							expect(source).not.toContain('"__webpack_exports__"');
+							expect(source).not.toContain('"__webpack_require__"');
+						}
+					});
+				};
+				this.hooks.compilation.tap("testcase", handler);
+			}
+		]
+	},
+	{
 		resolve: {
 			alias: {
 				library: path.resolve(testPath, "../0-create-library/esm.js")
@@ -48,42 +87,30 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
-		entry: "./default-test-modern-module.js",
-		optimization: {
-			minimize: true
-		},
 		resolve: {
 			alias: {
-				library: path.resolve(testPath, "../0-create-library/modern-module.js")
+				library: path.resolve(testPath, "../0-create-library/esm-async.js")
 			}
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				NAME: JSON.stringify("modern-module-tree-shakable")
-			}),
-			/**
-			 * @this {Compiler} compiler
-			 */
-			function () {
-				/**
-				 * @param {Compilation} compilation compilation
-				 * @returns {void}
-				 */
-				const handler = compilation => {
-					compilation.hooks.afterProcessAssets.tap("testcase", assets => {
-						for (const asset of Object.keys(assets)) {
-							const source = assets[asset].source();
-							expect(source).not.toContain('"a"');
-							expect(source).not.toContain('"b"');
-							expect(source).not.toContain('"non-external"');
-							// expect pure ESM export without webpack runtime
-							expect(source).not.toContain('"__webpack_exports__"');
-							expect(source).not.toContain('"__webpack_require__"');
-						}
-					});
-				};
-				this.hooks.compilation.tap("testcase", handler);
+				NAME: JSON.stringify("esm-async")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-async-no-concatenate-modules.js"
+				)
 			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-async-no-concatenate-modules")
+			})
 		]
 	},
 	{
