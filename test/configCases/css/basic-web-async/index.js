@@ -1,9 +1,9 @@
 import * as style from "./style.css";
 
 it("should compile and load style on demand", done => {
-	expect(style).toEqual(nsObj({}));
+	expect(style).toEqual({});
 	import("./style2.css").then(x => {
-		expect(x).toEqual(nsObj({}));
+		expect(x).toEqual({});
 		const style = getComputedStyle(document.body);
 		expect(style.getPropertyValue("background")).toBe(" red");
 		expect(style.getPropertyValue("margin")).toBe(" 10px");
