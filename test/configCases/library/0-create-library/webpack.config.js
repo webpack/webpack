@@ -5,9 +5,9 @@ const webpack = require("../../../../");
 module.exports = (env, { testPath }) => [
 	{
 		output: {
-			uniqueName: "esm",
-			filename: "esm.js",
-			libraryTarget: "module"
+			uniqueName: "modern-module",
+			filename: "modern-module.js",
+			libraryTarget: "modern-module"
 		},
 		target: "node14",
 		resolve: {
@@ -22,9 +22,9 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
-			uniqueName: "modern-module",
-			filename: "modern-module.js",
-			libraryTarget: "modern-module"
+			uniqueName: "esm",
+			filename: "esm.js",
+			libraryTarget: "module"
 		},
 		target: "node14",
 		resolve: {
@@ -52,6 +52,79 @@ module.exports = (env, { testPath }) => [
 		},
 		optimization: {
 			runtimeChunk: "single"
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
+			uniqueName: "esm-runtimeChunk-concatenateModules",
+			filename: "esm-runtimeChunk-concatenateModules/[name].js",
+			libraryTarget: "module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single",
+			concatenateModules: true
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
+			uniqueName: "esm-runtimeChunk-no-concatenateModules",
+			filename: "esm-runtimeChunk-no-concatenateModules/[name].js",
+			libraryTarget: "module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single",
+			concatenateModules: false
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
+			uniqueName: "esm-runtimeChunk-concatenateModules-splitChunks",
+			filename: "esm-runtimeChunk-concatenateModules-splitChunks/[name].js",
+			libraryTarget: "module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single",
+			concatenateModules: true,
+			splitChunks: {
+				cacheGroups: {
+					module: {
+						test: /a\.js$/,
+						chunks: "all",
+						enforce: true,
+						reuseExistingChunk: true
+					}
+				}
+			}
 		},
 		experiments: {
 			outputModule: true
