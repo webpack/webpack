@@ -1,12 +1,15 @@
 module.exports = function supportsAsync() {
-	let isAsync = true;
+	// Node.js@10 has a bug with nested async/await
+	if (process.version.startsWith("v10.")) {
+		return false;
+	}
 
 	try {
 		eval("async () => {}");
-	} catch (err) {
-		if (err instanceof SyntaxError) isAsync = false;
-		else throw err; // throws CSP error
+		return true;
+	} catch (_err) {
+		// Ignore
 	}
 
-	return isAsync;
+	return false;
 };
