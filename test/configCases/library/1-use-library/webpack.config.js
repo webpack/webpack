@@ -19,6 +19,35 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm-export.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export")
+			})
+		]
+	},
+	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-export-no-concatenate-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export-no-concatenate-modules.js")
+			})
+		]
+	},
+	{
 		entry: "./default-test-modern-module.js",
 		optimization: {
 			minimize: true
