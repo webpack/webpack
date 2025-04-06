@@ -3,21 +3,10 @@
 
 const webpack = require("../../../../");
 const path = require("path");
+const supportsAsync = require("../../../helpers/supportsAsync");
 
 /** @type {(env: any, options: any) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
-	{
-		resolve: {
-			alias: {
-				library: path.resolve(testPath, "../0-create-library/esm.js")
-			}
-		},
-		plugins: [
-			new webpack.DefinePlugin({
-				NAME: JSON.stringify("esm")
-			})
-		]
-	},
 	{
 		entry: "./default-test-modern-module.js",
 		optimization: {
@@ -60,6 +49,81 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm")
+			})
+		]
+	},
+	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm-export.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export")
+			})
+		]
+	},
+	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-export-no-concatenate-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export-no-concatenate-modules.js")
+			})
+		]
+	},
+	...(supportsAsync()
+		? [
+				{
+					resolve: {
+						alias: {
+							library: path.resolve(
+								testPath,
+								"../0-create-library/esm-async.js"
+							)
+						}
+					},
+					plugins: [
+						new webpack.DefinePlugin({
+							NAME: JSON.stringify("esm-async")
+						})
+					]
+				},
+				{
+					resolve: {
+						alias: {
+							library: path.resolve(
+								testPath,
+								"../0-create-library/esm-async-no-concatenate-modules.js"
+							)
+						}
+					},
+					plugins: [
+						new webpack.DefinePlugin({
+							NAME: JSON.stringify("esm-async-no-concatenate-modules")
+						})
+					]
+				}
+			]
+		: []),
+	{
+		resolve: {
+			alias: {
 				library: path.resolve(
 					testPath,
 					"../0-create-library/esm-runtimeChunk/main.js"
@@ -69,6 +133,51 @@ module.exports = (env, { testPath }) => [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("esm-runtimeChunk")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-concatenateModules/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-concatenateModules")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-no-concatenateModules/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-no-concatenateModules")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-concatenateModules-splitChunks/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-concatenateModules-splitChunks")
 			})
 		]
 	},
