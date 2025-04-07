@@ -189,7 +189,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			if (true) {
 				throw 1;
-				require("fail5");
+				require("fail5a");
 			}
 
 			require("fail2");
@@ -314,6 +314,48 @@ it("should work correct for try catch and loops", () => {
 
 		function next() {
 			return require("./used20");
+		}
+	}
+
+	async function test8() {
+		try {
+			let routeModule = fn();
+
+			return routeModule;
+		} catch (error) {
+			if (test && require("./used21")) {
+					throw error;
+			}
+		}
+	}
+
+	async function test9() {
+		try {
+			let routeModule = fn();
+
+			return routeModule;
+		} catch (error) {
+			if (test && import.meta.hot) {
+				require("fail");
+			}
+		}
+	}
+
+	function test10() {
+		return require("./used23"), require("./used24");
+	}
+
+	function test11() {
+		try {
+			let routeModule = fn();
+
+			return routeModule;
+		} catch (error) {
+			const test = 1;
+			require("./used25");
+		} finally {
+			const test = 1;
+			require("./used26");
 		}
 	}
 
@@ -465,9 +507,10 @@ if (false) {
 const test = true ? require('./used') : require("fail");
 
 const a = rand() ? 1 : 2;
+
 switch (a) {
 	case 1: {
-		if (true) return;
+		if (true) require("./used22")
 		else require("fail");
 	}
 	case 2:
