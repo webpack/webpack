@@ -166,7 +166,7 @@ it("should work correct for try catch and loops", () => {
 	try {
 		if (true) {
 			throw 1;
-			require("fail3");
+			require("fail7");
 		}
 
 		require("fail2");
@@ -177,7 +177,7 @@ it("should work correct for try catch and loops", () => {
 	try {
 		if (true) {
 			throw 1;
-			require("fail3");
+			require("fail4");
 		}
 
 		require("fail2");
@@ -189,7 +189,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			if (true) {
 				throw 1;
-				require("fail3");
+				require("fail5");
 			}
 
 			require("fail2");
@@ -221,14 +221,14 @@ it("should work correct for try catch and loops", () => {
 
 				require("fail2");
 			} catch (e) {
-				require('fail3');
+				require('./used16');
 			}
 
 			require('fail4');
 		} catch (e) {
-			require('fail5');
+			require('./used17');
 		} finally {
-			require('fail6');
+			require('./used18');
 		}
 	}
 
@@ -242,15 +242,71 @@ it("should work correct for try catch and loops", () => {
 
 				require("fail2");
 			} catch (e) {
-				require('fail3');
+				require('./used19');
 			}
 
 			require('fail4');
 		} catch (e) {
-			require('fail5');
+			require('./used17');
 		} finally {
-			require('fail6');
+			require('./used18');
 		}
+
+		require('fail5');
+	}
+
+	function test3() {
+		if (true) {
+			try {
+				if (true) {
+					throw new Error('test')
+				}
+				require("fail");
+				return false;
+			} catch (err) {
+				return false;
+			} finally {
+				require("./used10");
+			}
+		}
+	}
+
+	function fn() {
+		throw new Error('test');
+	}
+
+	function test4() {
+		try {
+			return fn()
+		} catch (err) {
+			require("./used11")
+		} finally {
+			require("./used12")
+		}
+	}
+
+	function test5() {
+		try {
+			return fn()
+		} catch (err) {
+			// return;
+			require("./used13")
+		} finally {
+			require("./used14")
+		}
+	}
+
+	function test6() {
+		try {
+			return fn()
+		} catch (err) {
+			return;
+			require("fail")
+		} finally {
+			require("./used15")
+		}
+
+		require("fail");
 	}
 
 	for(let i = 0; i < 1; i++)
