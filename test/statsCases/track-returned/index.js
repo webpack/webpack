@@ -309,6 +309,14 @@ it("should work correct for try catch and loops", () => {
 		require("fail");
 	}
 
+	function test7() {
+		return next();
+
+		function next() {
+			return require("./used20");
+		}
+	}
+
 	for(let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
