@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const runBenchmark = require("../test/helpers/runBenchmark"); // we'll modularize it
+const runBenchmark = require("../test/helpers/runBenchmark");
 
 (async () => {
 	const resultsDir = path.resolve(__dirname, "../benchmark-results");
