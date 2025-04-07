@@ -359,6 +359,44 @@ it("should work correct for try catch and loops", () => {
 		}
 	}
 
+	function test12() {
+		try {
+			return fn();
+		} catch (error) {
+			return;
+			require("fail1");
+		} finally {
+			return;
+			require("fail2");
+		}
+		import("fail3");
+	}
+
+	function test13() {
+		try {
+			return fn();
+		} catch (error) {
+			require("./used27");
+			return;
+		} finally {
+			require("./used28");
+			return;
+		}
+		import("fail");
+	}
+
+	function test13() {
+		try {
+			fn();
+		} catch (error) {
+			return;
+		} finally {
+			return;
+		}
+
+		require("./used29");
+	}
+
 	for(let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
