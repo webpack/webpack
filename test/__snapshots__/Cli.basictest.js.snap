@@ -8942,6 +8942,15 @@ Object {
         "description": "Sort the assets by that field.",
         "multiple": false,
         "path": "stats.assetsSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Sort the assets by that field.",
+        "multiple": false,
+        "path": "stats.assetsSort",
         "type": "string",
       },
     ],
@@ -9146,6 +9155,15 @@ Object {
   },
   "stats-chunks-sort": Object {
     "configs": Array [
+      Object {
+        "description": "Sort the chunks by that field.",
+        "multiple": false,
+        "path": "stats.chunksSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
       Object {
         "description": "Sort the chunks by that field.",
         "multiple": false,
@@ -9767,6 +9785,15 @@ Object {
   },
   "stats-modules-sort": Object {
     "configs": Array [
+      Object {
+        "description": "Sort the modules by that field.",
+        "multiple": false,
+        "path": "stats.modulesSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
       Object {
         "description": "Sort the modules by that field.",
         "multiple": false,

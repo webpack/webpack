@@ -2484,7 +2484,7 @@ export interface StatsOptions {
 	/**
 	 * Sort the assets by that field.
 	 */
-	assetsSort?: string;
+	assetsSort?: false | string;
 	/**
 	 * Space to display assets (groups will be collapsed to fit this space).
 	 */
@@ -2548,7 +2548,7 @@ export interface StatsOptions {
 	/**
 	 * Sort the chunks by that field.
 	 */
-	chunksSort?: string;
+	chunksSort?: false | string;
 	/**
 	 * Enables/Disables colorful output.
 	 */
@@ -2715,7 +2715,7 @@ export interface StatsOptions {
 	/**
 	 * Sort the modules by that field.
 	 */
-	modulesSort?: string;
+	modulesSort?: false | string;
 	/**
 	 * Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).
 	 */

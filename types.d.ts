@@ -50,6 +50,8 @@ import {
 	ImportSpecifier,
 	LabeledStatement,
 	LogicalExpression,
+	MaybeNamedClassDeclaration,
+	MaybeNamedFunctionDeclaration,
 	MemberExpression,
 	MetaProperty,
 	MethodDefinition,
@@ -391,6 +393,7 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions:
 			| null
+			| string
 			| (RawChunkGroupOptions & { name?: null | string } & {
 					entryOptions?: EntryOptions;
 			  }),
@@ -597,6 +600,7 @@ declare abstract class BasicEvaluatedExpression {
 		| YieldExpression
 		| SpreadElement
 		| PrivateIdentifier
+		| Super
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -630,7 +634,6 @@ declare abstract class BasicEvaluatedExpression {
 		| RestElement
 		| AssignmentPattern
 		| Property
-		| Super
 		| AssignmentProperty
 		| ClassBody
 		| ImportSpecifier
@@ -820,6 +823,7 @@ declare abstract class BasicEvaluatedExpression {
 			| YieldExpression
 			| SpreadElement
 			| PrivateIdentifier
+			| Super
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -853,7 +857,6 @@ declare abstract class BasicEvaluatedExpression {
 			| RestElement
 			| AssignmentPattern
 			| Property
-			| Super
 			| AssignmentProperty
 			| ClassBody
 			| ImportSpecifier
@@ -1747,7 +1750,7 @@ declare interface CodeGenerationResult {
 	hash?: string;
 }
 declare abstract class CodeGenerationResults {
-	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
+	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
 	has(module: Module, runtime: RuntimeSpec): boolean;
 	getSource(module: Module, runtime: RuntimeSpec, sourceType: string): Source;
@@ -4339,9 +4342,6 @@ declare interface ExecuteModuleContext {
 	chunkGraph: ChunkGraph;
 	__webpack_require__?: WebpackRequire;
 }
-declare interface ExecuteModuleExports {
-	[index: string]: any;
-}
 declare interface ExecuteModuleObject {
 	/**
 	 * module id
@@ -4351,7 +4351,7 @@ declare interface ExecuteModuleObject {
 	/**
 	 * exports
 	 */
-	exports: ExecuteModuleExports;
+	exports: any;
 
 	/**
 	 * is loaded
@@ -4367,7 +4367,7 @@ declare interface ExecuteModuleOptions {
 	entryOptions?: EntryOptions;
 }
 declare interface ExecuteModuleResult {
-	exports: ExecuteModuleExports;
+	exports: any;
 	cacheable: boolean;
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
@@ -4583,6 +4583,7 @@ declare abstract class ExportInfo {
 type ExportNamedDeclarationJavascriptParser = ExportNamedDeclarationImport & {
 	attributes?: ImportAttribute[];
 };
+type ExportPresenceMode = false | 0 | 1 | 2 | 3;
 declare interface ExportSpec {
 	/**
 	 * the name of the export
@@ -5514,11 +5515,11 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	): undefined | WebpackError[];
 	static Template: typeof HarmonyImportDependencyTemplate;
 	static ExportPresenceModes: {
-		NONE: 0;
-		WARN: 1;
-		AUTO: 2;
-		ERROR: 3;
-		fromUserOption(str: string | false): 0 | 1 | 2 | 3;
+		NONE: ExportPresenceMode;
+		WARN: ExportPresenceMode;
+		AUTO: ExportPresenceMode;
+		ERROR: ExportPresenceMode;
+		fromUserOption(str: string | false): ExportPresenceMode;
 	};
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -6047,6 +6048,7 @@ declare class JavascriptParser extends Parser {
 					| YieldExpression
 					| SpreadElement
 					| PrivateIdentifier
+					| Super
 				],
 				undefined | null | BasicEvaluatedExpression
 			>
@@ -6111,8 +6113,10 @@ declare class JavascriptParser extends Parser {
 						| YieldExpression
 						| PrivateIdentifier
 						| FunctionDeclaration
+						| MaybeNamedFunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
+						| MaybeNamedClassDeclaration
 					),
 					number
 				],
@@ -6125,8 +6129,10 @@ declare class JavascriptParser extends Parser {
 				| ExportNamedDeclarationJavascriptParser
 				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
+				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
+				| MaybeNamedClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| StaticBlock
@@ -6156,8 +6162,10 @@ declare class JavascriptParser extends Parser {
 				| ExportNamedDeclarationJavascriptParser
 				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
+				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
+				| MaybeNamedClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| StaticBlock
@@ -6187,8 +6195,10 @@ declare class JavascriptParser extends Parser {
 				| ExportNamedDeclarationJavascriptParser
 				| ExportAllDeclarationJavascriptParser
 				| FunctionDeclaration
+				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
 				| ClassDeclaration
+				| MaybeNamedClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| StaticBlock
@@ -6214,13 +6224,16 @@ declare class JavascriptParser extends Parser {
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
 		classExtendsExpression: SyncBailHook<
-			[Expression, ClassExpression | ClassDeclaration],
+			[
+				Expression,
+				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+			],
 			boolean | void
 		>;
 		classBodyElement: SyncBailHook<
 			[
 				StaticBlock | MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration
+				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
 			],
 			boolean | void
 		>;
@@ -6228,7 +6241,7 @@ declare class JavascriptParser extends Parser {
 			[
 				Expression,
 				MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration
+				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
 			],
 			boolean | void
 		>;
@@ -6267,7 +6280,40 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		exportExpression: SyncBailHook<
-			[ExportDefaultDeclaration, FunctionDeclaration | ClassDeclaration],
+			[
+				ExportDefaultDeclaration,
+				(
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| MaybeNamedFunctionDeclaration
+					| MaybeNamedClassDeclaration
+				)
+			],
 			boolean | void
 		>;
 		exportSpecifier: SyncBailHook<
@@ -6438,8 +6484,10 @@ declare class JavascriptParser extends Parser {
 		| UpdateExpression
 		| YieldExpression
 		| FunctionDeclaration
+		| MaybeNamedFunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
+		| MaybeNamedClassDeclaration
 		| ExpressionStatement
 		| BlockStatement
 		| StaticBlock
@@ -6500,7 +6548,9 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SpreadElement
 	): undefined | string | VariableInfo;
-	walkClass(classy: ClassExpression | ClassDeclaration): void;
+	walkClass(
+		classy: ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+	): void;
 
 	/**
 	 * Pre walking iterates the scope for variable declarations
@@ -6613,8 +6663,10 @@ declare class JavascriptParser extends Parser {
 			| ExportNamedDeclarationJavascriptParser
 			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
+			| MaybeNamedClassDeclaration
 			| ExpressionStatement
 			| BlockStatement
 			| StaticBlock
@@ -6642,8 +6694,10 @@ declare class JavascriptParser extends Parser {
 			| ExportNamedDeclarationJavascriptParser
 			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
+			| MaybeNamedClassDeclaration
 			| ExpressionStatement
 			| BlockStatement
 			| StaticBlock
@@ -6671,8 +6725,10 @@ declare class JavascriptParser extends Parser {
 			| ExportNamedDeclarationJavascriptParser
 			| ExportAllDeclarationJavascriptParser
 			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
+			| MaybeNamedClassDeclaration
 			| ExpressionStatement
 			| BlockStatement
 			| StaticBlock
@@ -6727,8 +6783,12 @@ declare class JavascriptParser extends Parser {
 	walkForInStatement(statement: ForInStatement): void;
 	preWalkForOfStatement(statement: ForOfStatement): void;
 	walkForOfStatement(statement: ForOfStatement): void;
-	preWalkFunctionDeclaration(statement: FunctionDeclaration): void;
-	walkFunctionDeclaration(statement: FunctionDeclaration): void;
+	preWalkFunctionDeclaration(
+		statement: FunctionDeclaration | MaybeNamedFunctionDeclaration
+	): void;
+	walkFunctionDeclaration(
+		statement: FunctionDeclaration | MaybeNamedFunctionDeclaration
+	): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
 	blockPreWalkImportDeclaration(
@@ -6744,7 +6804,9 @@ declare class JavascriptParser extends Parser {
 	walkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
 	): void;
-	blockPreWalkExportDefaultDeclaration(statement?: any): void;
+	blockPreWalkExportDefaultDeclaration(
+		statement: ExportDefaultDeclaration
+	): void;
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
 	blockPreWalkExportAllDeclaration(
 		statement: ExportAllDeclarationJavascriptParser
@@ -6753,8 +6815,12 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkVariableDeclaration(statement: VariableDeclaration): void;
 	preWalkVariableDeclarator(declarator: VariableDeclarator): void;
 	walkVariableDeclaration(statement: VariableDeclaration): void;
-	blockPreWalkClassDeclaration(statement: ClassDeclaration): void;
-	walkClassDeclaration(statement: ClassDeclaration): void;
+	blockPreWalkClassDeclaration(
+		statement: ClassDeclaration | MaybeNamedClassDeclaration
+	): void;
+	walkClassDeclaration(
+		statement: ClassDeclaration | MaybeNamedClassDeclaration
+	): void;
 	preWalkSwitchCases(switchCases: SwitchCase[]): void;
 	walkSwitchCases(switchCases: SwitchCase[]): void;
 	preWalkCatchClause(catchClause: CatchClause): void;
@@ -6797,7 +6863,39 @@ declare class JavascriptParser extends Parser {
 			| SpreadElement
 		)[]
 	): void;
-	walkExpression(expression?: any): void;
+	walkExpression(
+		expression:
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
+			| PrivateIdentifier
+			| Super
+	): void;
 	walkAwaitExpression(expression: AwaitExpression): void;
 	walkArrayExpression(expression: ArrayExpression): void;
 	walkSpreadElement(expression: SpreadElement): void;
@@ -7067,6 +7165,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SpreadElement
 			| PrivateIdentifier
+			| Super
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression: Expression): {
@@ -7109,8 +7208,10 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| PrivateIdentifier
 			| FunctionDeclaration
+			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
-			| ClassDeclaration,
+			| ClassDeclaration
+			| MaybeNamedClassDeclaration,
 		commentsStartPos: number
 	): boolean;
 	getComments(range: [number, number]): Comment[];
@@ -7642,11 +7743,11 @@ declare interface KnownHooks {
 declare interface KnownNormalizedStatsOptions {
 	context: string;
 	requestShortener: RequestShortener;
-	chunksSort: string;
-	modulesSort: string;
-	chunkModulesSort: string;
-	nestedModulesSort: string;
-	assetsSort: string;
+	chunksSort: string | false;
+	modulesSort: string | false;
+	chunkModulesSort: string | false;
+	nestedModulesSort: string | false;
+	assetsSort: string | false;
 	ids: boolean;
 	cachedAssets: boolean;
 	groupAssetsByEmitStatus: boolean;
@@ -8409,7 +8510,7 @@ declare interface LoaderPluginLoaderContext {
 	importModule(
 		request: string,
 		options: undefined | ImportModuleOptions,
-		callback: (err?: null | Error, exports?: ExecuteModuleExports) => any
+		callback: (err?: null | Error, exports?: any) => any
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
 }
@@ -11539,7 +11640,7 @@ declare class Profiler {
 	inspector: any;
 	hasSession(): boolean;
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
-	sendCommand(method: string, params?: Record<string, any>): Promise<any>;
+	sendCommand(method: string, params: Record<string, any>): Promise<any>;
 	destroy(): Promise<void>;
 	stopProfiling(): Promise<{ profile: any }>;
 }
@@ -12597,7 +12698,7 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptions;
 	context: string;
 	request: string;
-	assertions?: Record<string, any>;
+	assertions?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
 	createData: Partial<NormalModuleCreateData & { settings: ModuleSettings }>;
@@ -13633,16 +13734,16 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-declare class RuntimeSpecMap<T> {
-	constructor(clone?: RuntimeSpecMap<T>);
-	get(runtime: RuntimeSpec): undefined | T;
+declare class RuntimeSpecMap<T, R = T> {
+	constructor(clone?: RuntimeSpecMap<T, R>);
+	get(runtime: RuntimeSpec): undefined | R;
 	has(runtime: RuntimeSpec): boolean;
-	set(runtime: RuntimeSpec, value: T): void;
-	provide(runtime: RuntimeSpec, computer: () => any): any;
+	set(runtime: RuntimeSpec, value: R): void;
+	provide(runtime: RuntimeSpec, computer: () => R): R;
 	delete(runtime: RuntimeSpec): void;
-	update(runtime: RuntimeSpec, fn: (value?: T) => T): void;
+	update(runtime: RuntimeSpec, fn: (value?: R) => R): void;
 	keys(): RuntimeSpec[];
-	values(): IterableIterator<T>;
+	values(): IterableIterator<R>;
 	get size(): number;
 }
 declare class RuntimeSpecSet {
@@ -14365,7 +14466,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
+	getFromCache<R extends unknown>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
@@ -14697,8 +14798,10 @@ type StatementPathItem =
 	| UpdateExpression
 	| YieldExpression
 	| FunctionDeclaration
+	| MaybeNamedFunctionDeclaration
 	| VariableDeclaration
 	| ClassDeclaration
+	| MaybeNamedClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
 	| StaticBlock
@@ -14806,7 +14909,7 @@ declare interface StatsOptions {
 	/**
 	 * Sort the assets by that field.
 	 */
-	assetsSort?: string;
+	assetsSort?: string | false;
 
 	/**
 	 * Space to display assets (groups will be collapsed to fit this space).
@@ -14886,7 +14989,7 @@ declare interface StatsOptions {
 	/**
 	 * Sort the chunks by that field.
 	 */
-	chunksSort?: string;
+	chunksSort?: string | false;
 
 	/**
 	 * Enables/Disables colorful output.
@@ -15115,7 +15218,7 @@ declare interface StatsOptions {
 	/**
 	 * Sort the modules by that field.
 	 */
-	modulesSort?: string;
+	modulesSort?: string | false;
 
 	/**
 	 * Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).
@@ -15903,7 +16006,7 @@ declare interface WebpackPluginInstance {
 }
 
 declare interface WebpackRequire {
-	(id: string): ExecuteModuleExports;
+	(id: string): any;
 	i?: ((options: ExecuteOptions) => void)[];
 	c?: Record<string, ExecuteModuleObject>;
 }
