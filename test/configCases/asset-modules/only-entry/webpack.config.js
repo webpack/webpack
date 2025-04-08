@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const webpack = require("../../../../");
 
-/** @type {(number, any) => import("../../../../").Configuration} */
+/** @type {(number, Partial<Configuration>) => import("../../../../").Configuration} */
 const common = (i, options) => ({
 	target: "web",
 	output: {

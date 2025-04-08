@@ -1,7 +1,10 @@
 var path = require("path");
 var LibManifestPlugin = require("../../../../").LibManifestPlugin;
 
-/** @type {(env: any, options: any) => import("../../../../").Configuration} */
+/** @typedef {import("../../../WatchTestCases.template").Env} */
+/** @typedef {import("../../../WatchTestCases.template").TestOptions} */
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { testPath }) => ({
 	entry: {
 		bundle0: ["./"]

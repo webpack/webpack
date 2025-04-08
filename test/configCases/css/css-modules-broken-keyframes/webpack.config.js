@@ -1,7 +1,10 @@
 const webpack = require("../../../../");
 const path = require("path");
 
-/** @type {(env: any, options: any) => import("../../../../").Configuration} */
+/** @typedef {import("../../../WatchTestCases.template").Env} */
+/** @typedef {import("../../../WatchTestCases.template").TestOptions} */
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { testPath }) => ({
 	target: "web",
 	mode: "production",

@@ -1,6 +1,9 @@
 var path = require("path");
 
-/** @type {(env: any, options: any) => import("../../../../types").Configuration} */
+/** @typedef {import("../../../WatchTestCases.template").Env} */
+/** @typedef {import("../../../WatchTestCases.template").TestOptions} */
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../types").Configuration} */
 module.exports = (env, { testPath }) => ({
 	target: "node14",
 	output: {

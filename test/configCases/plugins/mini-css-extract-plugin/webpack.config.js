@@ -1,6 +1,6 @@
 var MCEP = require("mini-css-extract-plugin");
 
-/** @type {(number, any) => import("../../../../").Configuration} */
+/** @type {(number, import("mini-css-extract-plugin").PluginOptions) => import("../../../../").Configuration} */
 const config = (i, options) => ({
 	entry: {
 		a: "./a",
