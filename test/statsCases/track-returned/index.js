@@ -224,7 +224,8 @@ it("should work correct for try catch and loops", () => {
 				require('./used16');
 			}
 
-			require('fail47');
+			// TODO potential improvement
+			require('./used69');
 		} catch (e) {
 			require('./used17');
 		} finally {
@@ -565,7 +566,7 @@ it("should work correct for try catch and loops", () => {
 		}
 	}
 
-	function test25() {
+	function test25a() {
 		try {
 			return;
 		} finally {
@@ -703,6 +704,16 @@ it("should work correct for try catch and loops", () => {
 		require("./used51");
 	}
 
+	function test36() {
+		test();
+
+		throw 1;
+
+		function test() {
+			require("./used67")
+		}
+	}
+
 	for(let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
@@ -777,6 +788,410 @@ it("should work correct for if #4", () => {
 		require('./used');
 	}
 });
+
+it("should work correct for if #5", () => {
+	if (rand())
+		return;
+	else if (rand())
+		return;
+	else {
+		const test = 1;
+		require("./used52")
+	}
+});
+
+it("should work correct for if #6", () => {
+	if (rand())
+		return;
+	else {
+		const test = 1;
+		require("./used53")
+	}
+});
+
+it("should work correct for if #7", () => {
+	if (rand())
+		return;
+	else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #8", () => {
+	if (rand()) {
+		rand()
+	} else if (rand()) {
+		rand()
+	} else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #9", () => {
+	if (true) {
+		return;
+	} else if (rand()) {
+		require("fail");
+	} else
+		require("fail");
+
+	require("fail");
+});
+
+it("should work correct for if #10", () => {
+	if (rand()) {
+		return;
+	} else if (true) {
+		return;
+	} else
+		require("fail");
+
+	require("fail");
+});
+
+it("should work correct for if #11", () => {
+	if (false)
+		return;
+	else if (rand()) {
+		return;
+	} else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #12", () => {
+	if (false)
+		return;
+	else if (false) {
+		return;
+	} else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #13", () => {
+	if (true)
+		return;
+	else if (true) {
+		return;
+	} else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #13", () => {
+	if (false)
+		return;
+	else if (false) {
+		return;
+	} else {}
+
+	require("./used54");
+});
+
+it("should work correct for if #14", () => {
+	if (fn())
+		return;
+	else if (fn()) {
+		fn()
+		require("./used55");
+	}
+
+	require("./used56");
+});
+
+it("should work correct for if #15", () => {
+	if (true) {
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #16", () => {
+	if (true) return;
+
+	const test = 1;
+	require("fail");
+});
+
+it("should work correct for if #17", () => {
+	if (false) return;
+
+	const test = 1;
+	require("./used57");
+});
+
+it("should work correct for if #18", () => {
+	if (rand()) return;
+
+	const test = 1;
+	require("./used58");
+});
+
+it("should work correct for if #19", () => {
+	if (!rand())
+		// if reference flag is false ,then show the form and update the model with relative type list
+		return rand();
+	else {
+		if (rand()) {
+			rand();
+			require("./used59")
+			rand();
+		} else {
+			rand();
+			require("./used60");
+			rand();
+		}
+	}
+
+	require("./used61");
+});
+
+it("should work correct for if #20", () => {
+	if (rand()) {
+		return;
+	} else if (rand()) {
+		return;
+	} else if (rand()) {
+		return;
+	} else if (rand()) {
+		return;
+	}
+
+	require("./used62");
+});
+
+it("should work correct for if #21", () => {
+	if (rand())
+		return;
+	else if (rand())
+		return;
+	else if (rand())
+		return;
+	else if (rand())
+		return;
+
+	require("./used63");
+});
+
+it("should work correct for if #22", () => {
+	if (rand()) {
+		if (true) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+
+		require("fail");
+	} else {
+		return;
+		require("fail");
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #23", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (true) {
+			return;
+		} else {
+			return;
+		}
+
+		require("fail");
+	} else {
+		return;
+		require("fail");
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #24", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+	}
+
+	require("./used64");
+});
+
+it("should work correct for if #25", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+	} else if (rand()) {
+		return;
+	}
+
+	require("./used65");
+});
+
+it("should work correct for if #26", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+	} else if (rand()) {
+		return;
+	} else if (rand()) {}
+
+	require("./used66");
+});
+
+it("should work correct for if #22", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+
+		// require("fail");
+	} else if (rand()) {
+		if (rand()) {
+			return;
+		} else {
+			return;
+		}
+
+		// require("fail");
+	} else {
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #23", () => {
+	if (rand()) {
+		if (rand())
+			return;
+		else if (rand())
+			return;
+		else
+			return;
+
+		require("fail");
+	} else if (rand()) {
+		if (rand())
+			return;
+		else
+			return;
+
+		require("fail");
+	} else {
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #24", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else {
+			return;
+		}
+	} else {
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #25", () => {
+	if (rand())
+		return;
+	else
+		if (rand())
+			return;
+		else
+			return;
+
+	require("fail");
+});
+
+it("should work correct for if #26", () => {
+	if (rand()) {
+		return;
+	} else
+		if (rand())
+			return;
+		else
+			return;
+
+	require("fail");
+});
+
+it("should work correct for if #27", () => {
+	if (rand())
+		return;
+	else {
+		if (rand())
+			return;
+		else
+			return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #28", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else {
+			const test = 1;
+			require("./used68")
+			return;
+		}
+
+		require("fail");
+	}
+});
+
+it("should work correct for if #29", () => {
+	if (rand()) {
+		return;
+		if (rand()) {
+			return;
+		} else {
+			return;
+		}
+
+		require("fail");
+	}
+});
+
 
 it("should not include unused assets", (done) => {
 	let a, b;
