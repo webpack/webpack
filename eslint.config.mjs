@@ -324,11 +324,18 @@ export default [
 				"error",
 				{
 					contexts: [
-						// Prefer TypeScript syntax for functions
+						// // Prefer TypeScript syntax for functions
 						{
 							comment: "JsdocBlock:has(JsdocTypeFunction[arrow=false])",
 							message:
 								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
+						},
+						// Prefer `{string=}` over `{string} [arg]`
+						{
+							comment:
+								"JsdocBlock:has(JsdocTag[tag=/^(property|param)$/][name=/[\\[\\]]/])",
+							message:
+								"Please use `@property {string=} property`/`@param {string=} arg` instead `[arg]` for optional properties and parameters"
 						},
 						// No `*` type
 						{
