@@ -7043,7 +7043,6 @@ declare class JavascriptParser extends Parser {
 		)[],
 		fn: () => void
 	): void;
-	inExecutedPath(state: boolean, fn: () => void): void;
 	inClassScope(hasThis: boolean, params: Identifier[], fn: () => void): void;
 	inFunctionScope(
 		hasThis: boolean,

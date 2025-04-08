@@ -25,7 +25,8 @@ it("should track return in function declaration", () => {
 	function a4() {
 		if (true) {
 			{
-				{}
+				{
+				}
 				return;
 				require("fail4");
 			}
@@ -72,7 +73,8 @@ it("should track return in function expression", () => {
 	const a4 = function () {
 		if (true) {
 			{
-				{}
+				{
+				}
 				return;
 				require("fail9");
 			}
@@ -116,7 +118,8 @@ it("should track return in arrow function expression", () => {
 	const a4 = () => {
 		if (true) {
 			{
-				{}
+				{
+				}
 				return;
 				result = require("fail14");
 			}
@@ -324,7 +327,7 @@ it("should work correct for try catch and loops", () => {
 			return routeModule;
 		} catch (error) {
 			if (test && require("./used21")) {
-					throw error;
+				throw error;
 			}
 		}
 	}
@@ -486,12 +489,12 @@ it("should work correct for try catch and loops", () => {
 		try {
 			try {
 				throw '1';
-			} catch(x) {
+			} catch (x) {
 				throw '2';
 			}
 
 			require("fail")
-		} catch(x) {
+		} catch (x) {
 			require("./used39");
 		}
 
@@ -502,14 +505,14 @@ it("should work correct for try catch and loops", () => {
 		try {
 			try {
 				throw '1';
-			} catch(x) {
+			} catch (x) {
 				throw '2';
 			} finally {
 				throw '3';
 			}
 
 			require("fail")
-		} catch(x) {
+		} catch (x) {
 			require("./used39");
 		}
 
@@ -518,12 +521,13 @@ it("should work correct for try catch and loops", () => {
 
 	function test23() {
 		try {
-			try {} finally {
+			try {
+			} finally {
 				throw '3';
 			}
 
 			require("fail")
-		} catch(x) {
+		} catch (x) {
 			require("./used39");
 		}
 
@@ -539,9 +543,10 @@ it("should work correct for try catch and loops", () => {
 			}
 
 			require("fail81")
-		} catch(x) {
+		} catch (x) {
 			// handle it
-		} finally {}
+		} finally {
+		}
 
 		require("./used42");
 	}
@@ -556,7 +561,7 @@ it("should work correct for try catch and loops", () => {
 				}
 
 				require("fail81")
-			} catch(x) {
+			} catch (x) {
 				// handle it
 			} finally {
 				throw 1
@@ -599,7 +604,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn();
 		} finally {
-		 	require("./used45");
+			require("./used45");
 		}
 
 		require("fail");
@@ -714,11 +719,11 @@ it("should work correct for try catch and loops", () => {
 		}
 	}
 
-	for(let i = 0; i < 1; i++)
+	for (let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
 
-	for(let i = 0; i < 1; i++) {
+	for (let i = 0; i < 1; i++) {
 		if (true) {
 			require('./used4');
 			return;
@@ -732,7 +737,8 @@ it("should work correct for try catch and loops", () => {
 			require("fail49");
 		}
 		return;
-	} catch {}
+	} catch {
+	}
 
 	require("./used36");
 });
@@ -889,7 +895,8 @@ it("should work correct for if #13", () => {
 		return;
 	else if (false) {
 		return;
-	} else {}
+	} else {
+	}
 
 	require("./used54");
 });
@@ -1059,7 +1066,8 @@ it("should work correct for if #26", () => {
 		}
 	} else if (rand()) {
 		return;
-	} else if (rand()) {}
+	} else if (rand()) {
+	}
 
 	require("./used66");
 });
@@ -1131,11 +1139,10 @@ it("should work correct for if #24", () => {
 it("should work correct for if #25", () => {
 	if (rand())
 		return;
+	else if (rand())
+		return;
 	else
-		if (rand())
-			return;
-		else
-			return;
+		return;
 
 	require("fail");
 });
@@ -1143,11 +1150,10 @@ it("should work correct for if #25", () => {
 it("should work correct for if #26", () => {
 	if (rand()) {
 		return;
-	} else
-		if (rand())
-			return;
-		else
-			return;
+	} else if (rand())
+		return;
+	else
+		return;
 
 	require("fail");
 });
@@ -1325,10 +1331,334 @@ it("should work correct for if #38", () => {
 	require("./used78");
 });
 
+it("should work correct for if #39", () => {
+	if (rand()) {
+		rand();
+	} else if (rand()) {
+		rand();
+	} else {
+		return;
+		require("fail");
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+		require("fail");
+	}
+});
+
+it("should work correct for if #40", () => {
+	if (rand()) {
+		require('./used?n=8');
+	} else {
+		if (rand()) {
+			require('./used?n=9');
+		} else {
+			if (rand()) {
+				require('./used?n=10');
+			} else {
+				if (rand()) {
+					require('./used?n=11');
+				} else {
+					if (rand()) {
+						require('./used?n=12');
+					} else {
+						return;
+					}
+					require('./used?n=1');
+					require('./used?n=2');
+				}
+				require('./used?n=3');
+			}
+			require('./used?n=4');
+		}
+		require('./used?t=5');
+	}
+	require('./used?n=6');
+	require('./used?n=7');
+});
+
+it("should work correct for if #41", () => {
+	if (rand()) {
+		return
+	} else {
+		if (rand()) {
+			return
+		} else {
+			if (rand()) {
+				return
+			} else {
+				if (rand()) {
+					return
+				} else {
+					if (rand()) {
+						return
+					} else {
+						return;
+					}
+					require('fail');
+					require('fail');
+				}
+				require('fail');
+			}
+			require('fail');
+		}
+		require('fail');
+	}
+	require('fail');
+});
+
+it("should work correct for if #42", () => {
+	try {
+		if (rand()) {
+			return;
+			require("fail");
+		} else {
+			return;
+			require("fail");
+		}
+
+		require("fail");
+		require("fail");
+	} catch (e) {
+		require('./used?n=13');
+	}
+});
+
+it("should work correct for if #43", () => {
+	for (let i = 0; i < 1; i++) {
+		if (true)
+			return;
+		require("fail");
+	}
+});
+
+it("should work correct for if #44", () => {
+	for (let i = 0; i < 1; i++)
+		if (true)
+			return;
+	require("./used?n=14");
+});
+
+it("should work correct for switch #45", () => {
+	switch (expr) {
+		case "Oranges":
+			return;
+			break;
+		case "Apples":
+			rand();
+			require("./used?n=15");
+			break;
+		case "Bananas":
+		case "Cherries":
+			rand()
+			require("./used?n=16");
+			break;
+		case "Mangoes":
+		case "Papayas":
+			require("./used?n=17");
+			break;
+		default:
+			require("./used?n=18");
+	}
+});
+
+it("should work correct for switch #46", () => {
+	switch (expr) {
+		case "Oranges": {
+			return;
+			break;
+		}
+		case "Apples": {
+			rand();
+			require("./used?n=19");
+			break;
+		}
+		case "Bananas":
+		case "Cherries": {
+			rand()
+			require("./used?n=20");
+			break;
+		}
+		case "Mangoes":
+		case "Papayas": {
+			require("./used?n=21");
+			break;
+		}
+		default: {
+			require("./used?n=22");
+		}
+	}
+});
+
+it("should work correct for loop and return", () => {
+	function test() {
+		for (let i = 0; i < 0; i++)
+			if (rand())
+				return;
+		require("./used?n=23");
+	}
+});
+
+it("should work correct for labeled statement", () => {
+	use_cache: {
+		if (rand()) {
+			rand();
+		} else {
+			require("./used?n=27")
+		}
+		if (rand()) {
+			break use_cache;
+		}
+		if (false) {
+			require("fail")
+		} else {
+			return;
+		}
+		return entry.result;
+	}
+
+	require("./used?n=24")
+
+	{
+		require("./used?n=25")
+	}
+
+	require("./used?n=26")
+});
+
+it("should work correct for while statement", () => {
+	let n = 0;
+	let x = 0;
+
+	while (false) {
+		n++;
+		x += n;
+		require("./used?n=28");
+		return;
+	}
+
+	require("./used?n=29");
+
+	while (false)
+		return;
+
+	require("./used?n=30");
+});
+
+it("should work correct for do while statement", () => {
+	let n = 0;
+	let x = 0;
+
+	do {
+		n++;
+		x += n;
+		require("./used?n=31");
+		return;
+	} while(false)
+
+	require("./used?n=32");
+
+	do
+	return;
+	while(false)
+
+	require("./used?n=33");
+});
+
+it("should work correct for for/in", () => {
+	const object = { a: 1, b: 2, c: 3 };
+
+	for (const property in object) {
+		return;
+	}
+
+	require("./used?n=34");
+
+	for (const property in object)
+		return;
+
+	require("./used?n=35");
+});
+
+it("should work correct for for/of", () => {
+	const iterable = [10, 20, 30];
+
+	for (let value of iterable) {
+		return;
+	}
+
+	require("./used?n=36");
+
+	for (let value of iterable)
+		return;
+
+	require("./used?n=37");
+});
+
+it("should work correct for for", () => {
+	for (let i = 0; i < 9; i++) {
+		return;
+	}
+
+	require("./used?n=38");
+
+	for (let i = 0; i < 9; i++)
+		return;
+
+	require("./used?n=39");
+});
+
+it("should work correct for function declaration", () => {
+	require("./used?n=40");
+
+	function test() {
+		return;
+	}
+
+	require("./used?n=50");
+});
+
+it("should work correct for IIFE", () => {
+	require("./used?n=51");
+
+	(function () {
+		return;
+	})();
+
+	require("./used?n=52");
+
+	(() => {
+		return;
+	})();
+
+	require("./used?n=53");
+
+	(async () => {
+		return;
+	})();
+
+	require("./used?n=54");
+});
+
+it("should work correct for claases", () => {
+	require("./used?n=55");
+
+	class Test {
+		fn() {
+			return;
+		}
+	}
+
+	require("./used?n=56");
+});
 
 it("should not include unused assets", (done) => {
 	let a, b;
-	(function() {
+	(function () {
 		try {
 			return;
 
