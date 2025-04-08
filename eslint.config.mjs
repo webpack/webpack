@@ -348,10 +348,10 @@ export default [
 							message: "Please use `unknown` or `any` (or `EXPECTED_ANY`) type"
 						},
 						// No `any` type
-						// {
-						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
-						// 	message: "Please use provide types instead `any`"
-						// },
+						{
+							comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
+							message: "Please use provide types instead `any`"
+						},
 						// No `Function` type
 						{
 							comment:
