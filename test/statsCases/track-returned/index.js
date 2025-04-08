@@ -306,7 +306,7 @@ it("should work correct for try catch and loops", () => {
 			require("./used15")
 		}
 
-		// require("fail35");
+		require("fail35");
 	}
 
 	function test7() {
@@ -826,7 +826,7 @@ it("should work correct for if #8", () => {
 	} else
 		return;
 
-	require("fail");
+	require("./used70");
 });
 
 it("should work correct for if #9", () => {
@@ -1082,7 +1082,7 @@ it("should work correct for if #22", () => {
 			return;
 		}
 
-		// require("fail");
+		require("fail");
 	} else {
 		return;
 	}
@@ -1190,6 +1190,139 @@ it("should work correct for if #29", () => {
 
 		require("fail");
 	}
+});
+
+it("should work correct for if #30", () => {
+	if (rand()) {
+		rand();
+		return;
+	} else {
+		rand();
+	}
+
+	require("./used71")
+});
+
+it("should work correct for if #31", () => {
+	if (rand()) {
+		rand();
+	} else {
+		rand();
+		return;
+	}
+
+	require("./used72")
+});
+
+it("should work correct for if #32", () => {
+	if (rand()) {
+		rand();
+		return;
+	} else {
+		rand();
+		return;
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #33", () => {
+	if (rand()) {
+		rand();
+		return;
+	} else if (rand()) {
+		rand()
+	} else {
+		rand();
+		return;
+	}
+
+	require("./used73");
+});
+
+it("should work correct for if #34", () => {
+	if (rand()) {
+		rand();
+		return;
+	} else if (rand()) {
+		rand();
+		return;
+	} else {
+		rand();
+	}
+
+	require("./used74");
+});
+
+it("should work correct for if #35", () => {
+	if (rand()) {
+		rand();
+	} else if (rand()) {
+		rand();
+		return;
+	} else {
+		rand();
+		return;
+	}
+
+	require("./used75");
+});
+
+it("should work correct for if #36", () => {
+	if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+		require("fail");
+	} else if (rand()) {
+		rand();
+	} else {
+		rand();
+	}
+
+	require("./used76");
+});
+
+it("should work correct for if #37", () => {
+	if (rand()) {
+		rand();
+	} else if (rand()) {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+		require("fail");
+	} else {
+		rand();
+	}
+
+	require("./used77");
+});
+
+it("should work correct for if #38", () => {
+	if (rand()) {
+		rand();
+	} else if (rand()) {
+		rand();
+	} else {
+		if (rand()) {
+			return;
+		} else if (rand()) {
+			return;
+		} else {
+			return;
+		}
+		require("fail");
+	}
+
+	require("./used78");
 });
 
 
