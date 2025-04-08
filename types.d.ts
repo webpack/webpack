@@ -15473,7 +15473,6 @@ declare class WebpackError extends Error {
 	chunk?: Chunk;
 	file?: string;
 	cause?: Error;
-	errors: any;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 
