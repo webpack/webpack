@@ -13947,6 +13947,7 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
+	generatePublicPath(filename: string): string;
 	moduleNamespacePromise(__0: {
 		/**
 		 * the chunk graph
@@ -16349,6 +16350,7 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let relativeUrl: "__webpack_require__.U";
 		export let asyncModule: "__webpack_require__.a";
+		export let dynamicPublicPath: "__webpack_require__.dp";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
