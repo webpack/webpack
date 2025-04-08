@@ -4784,12 +4784,19 @@ exports[`StatsTestCases should print correct stats for track-returned 1`] = `
 ./used17.js X bytes [built] [code generated]
 ./used18.js X bytes [built] [code generated]
 ./used19.js X bytes [built] [code generated]
+./used48.js X bytes [built] [code generated]
+./used35.js X bytes [built] [code generated]
 ./used10.js X bytes [built] [code generated]
 ./used11.js X bytes [built] [code generated]
-./used12.js X bytes [built] [code generated]
-./used13.js X bytes [built] [code generated]
-+ 17 modules
-webpack x.x.x compiled successfully in X ms"
++ 38 modules
+
+WARNING in ./index.js 227:3-20
+Module not found: Error: Can't resolve 'fail47' in 'Xdir/track-returned'
+
+1 warning has detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
