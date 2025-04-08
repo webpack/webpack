@@ -9348,7 +9348,13 @@ declare class ModuleGraph {
 	setModuleMemCaches(
 		moduleMemCaches: Map<Module, WeakTupleMap<any, any>>
 	): void;
-	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
+	dependencyCacheProvide<D extends Dependency, R, ARGS extends any[]>(
+		dependency: Dependency,
+		...args: [
+			ARGS,
+			(moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R
+		]
+	): R;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
