@@ -1503,6 +1503,159 @@ it("should work correct for loop and return", () => {
 	}
 });
 
+it("should work correct for labeled statement", () => {
+	use_cache: {
+		if (rand()) {
+			rand();
+		} else {
+			require("./used?n=27")
+		}
+		if (rand()) {
+			break use_cache;
+		}
+		if (false) {
+			require("fail")
+		} else {
+			return;
+		}
+		return entry.result;
+	}
+
+	require("./used?n=24")
+
+	{
+		require("./used?n=25")
+	}
+
+	require("./used?n=26")
+});
+
+it("should work correct for while statement", () => {
+	let n = 0;
+	let x = 0;
+
+	while (false) {
+		n++;
+		x += n;
+		require("./used?n=28");
+		return;
+	}
+
+	require("./used?n=29");
+
+	while (false)
+		return;
+
+	require("./used?n=30");
+});
+
+it("should work correct for do while statement", () => {
+	let n = 0;
+	let x = 0;
+
+	do {
+		n++;
+		x += n;
+		require("./used?n=31");
+		return;
+	} while(false)
+
+	require("./used?n=32");
+
+	do
+	return;
+	while(false)
+
+	require("./used?n=33");
+});
+
+it("should work correct for for/in", () => {
+	const object = { a: 1, b: 2, c: 3 };
+
+	for (const property in object) {
+		return;
+	}
+
+	require("./used?n=34");
+
+	for (const property in object)
+		return;
+
+	require("./used?n=35");
+});
+
+it("should work correct for for/of", () => {
+	const iterable = [10, 20, 30];
+
+	for (let value of iterable) {
+		return;
+	}
+
+	require("./used?n=36");
+
+	for (let value of iterable)
+		return;
+
+	require("./used?n=37");
+});
+
+it("should work correct for for", () => {
+	for (let i = 0; i < 9; i++) {
+		return;
+	}
+
+	require("./used?n=38");
+
+	for (let i = 0; i < 9; i++)
+		return;
+
+	require("./used?n=39");
+});
+
+it("should work correct for function declaration", () => {
+	require("./used?n=40");
+
+	function test() {
+		return;
+	}
+
+	require("./used?n=50");
+});
+
+it("should work correct for IIFE", () => {
+	require("./used?n=51");
+
+	(function () {
+		return;
+	})();
+
+	require("./used?n=52");
+
+	(() => {
+		return;
+	})();
+
+	require("./used?n=53");
+
+	(async () => {
+		return;
+	})();
+
+	require("./used?n=54");
+});
+
+it("should work correct for claases", () => {
+	require("./used?n=55");
+
+	class Test {
+		fn() {
+			return;
+		}
+	}
+
+	require("./used?n=56");
+});
+
 it("should not include unused assets", (done) => {
 	let a, b;
 	(function () {
