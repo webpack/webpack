@@ -2036,7 +2036,7 @@ export interface OptimizationSplitChunksCacheGroup {
 		| false
 		| string
 		| ((
-				module: import("../lib/Module"),
+				module: import("../lib/NormalModule"),
 				chunks: import("../lib/Chunk")[],
 				key: string
 		  ) => string | undefined);
