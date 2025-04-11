@@ -1,6 +1,9 @@
-export const _default = 'disable-provided-export'
+import React from 'react';
 
-export default "null"
+const foo = "module"
+
+export default 'module'
+export { React, foo }
 
 it("should compile and run", () => {
 	// avoid `No tests exported by test case`
