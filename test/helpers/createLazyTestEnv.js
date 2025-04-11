@@ -89,6 +89,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[1] = createDisposableFn(args[1], true);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
+				// @ts-expect-error expected
 				// eslint-disable-next-line jest/no-disabled-tests
 				it(...args);
 				fixAsyncError(
