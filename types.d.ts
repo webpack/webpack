@@ -2796,12 +2796,15 @@ declare interface ConcatenationBailoutReasonContext {
 declare class ConcatenationScope {
 	constructor(
 		modulesMap: ModuleInfo[] | Map<Module, ModuleInfo>,
-		currentModule: ConcatenatedModuleInfo
+		currentModule: ConcatenatedModuleInfo,
+		usedNames: Set<string>
 	);
+	usedNames: Set<string>;
 	isModuleInScope(module: Module): boolean;
 	registerExport(exportName: string, symbol: string): void;
 	registerRawExport(exportName: string, expression: string): void;
 	registerNamespaceExport(symbol: string): void;
+	registerUsedName(symbol: string): boolean;
 	createModuleReference(
 		module: Module,
 		__1: Partial<ModuleReferenceOptions>
