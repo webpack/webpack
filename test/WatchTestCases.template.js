@@ -3,7 +3,7 @@
 require("./helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
-/** @typedef {{ testPath: string, srcPath: string} TestOptions */
+/** @typedef {{ testPath: string, srcPath: string }} TestOptions */
 
 const path = require("path");
 const fs = require("graceful-fs");
@@ -55,9 +55,7 @@ const describeCases = config => {
 		}
 
 		const casesPath = path.join(__dirname, "watchCases");
-		let categories = fs.readdirSync(casesPath);
-
-		categories = categories.map(cat => ({
+		const categories = fs.readdirSync(casesPath).map(cat => ({
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
@@ -101,6 +99,7 @@ const describeCases = config => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
+						/** @type {TODO} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()

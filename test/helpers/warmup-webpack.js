@@ -1,6 +1,6 @@
 describe("warmup", () => {
 	it("should warmup webpack", done => {
-		let webpack = require("../../");
+		let webpack = /** @type {EXPECTED_ANY} */ (require("../../"));
 		const END = new Error("end warmup");
 		webpack(
 			{
