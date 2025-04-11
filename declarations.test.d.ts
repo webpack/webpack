@@ -1,5 +1,4 @@
 declare module "*.json";
-declare module "mini-css-extract-plugin";
 
 declare namespace jest {
 	interface Matchers<R> {

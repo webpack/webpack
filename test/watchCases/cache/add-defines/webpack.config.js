@@ -47,7 +47,7 @@ module.exports = {
 					defines[Number(currentWatchStep.step || 0)]
 				);
 				plugin.apply(
-					/** @type {any} */
+					/** @type {EXPECTED_ANY} */
 					({
 						hooks: {
 							compilation: {
