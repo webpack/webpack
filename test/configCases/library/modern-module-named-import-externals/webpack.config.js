@@ -20,7 +20,7 @@ module.exports = {
 	externals: ["externals0", "externals1"],
 	optimization: {
 		concatenateModules: true,
-		usedExports: true,
+		usedExports: true
 	},
 	plugins: [
 		function () {
