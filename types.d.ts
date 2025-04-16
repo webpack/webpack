@@ -669,7 +669,15 @@ declare abstract class BasicEvaluatedExpression {
 	/**
 	 * Gets the compile-time value of the expression
 	 */
-	asCompileTimeValue(): any;
+	asCompileTimeValue():
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| any[];
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): undefined | boolean;
@@ -1116,7 +1124,7 @@ declare class Chunk {
 	getChildIdsByOrders(
 		chunkGraph: ChunkGraph,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string, (string | number)[]>;
+	): Record<string, ChunkId[]>;
 	getChildrenOfTypeInOrder(
 		chunkGraph: ChunkGraph,
 		type: string
@@ -1476,6 +1484,7 @@ declare interface ChunkModuleMaps {
 	id: Record<string | number, (string | number)[]>;
 	hash: Record<string | number, string>;
 }
+type ChunkName = null | string;
 declare interface ChunkPathData {
 	id: string | number;
 	name?: string;
@@ -1987,8 +1996,8 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: ModuleTemplates;
-	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
-	moduleMemCaches2?: Map<Module, WeakTupleMap<any, any>>;
+	moduleMemCaches?: Map<Module, WeakTupleMap<any[], any>>;
+	moduleMemCaches2?: Map<Module, WeakTupleMap<any[], any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
@@ -3114,6 +3123,7 @@ type CreateWriteStreamFSImplementation = FSImplementation & {
 	write: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
 };
+declare interface CreatedObject<T, F> {}
 
 /**
  * Generator options for css/auto modules.
@@ -4330,6 +4340,7 @@ declare class EvalSourceMapDevToolPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ExcludeModulesType = "module" | "chunk" | "root-of-chunk" | "nested";
 declare interface ExecuteModuleArgument {
 	module: Module;
 	moduleObject?: ExecuteModuleObject;
@@ -7757,7 +7768,7 @@ declare interface KnownNormalizedStatsOptions {
 	excludeModules: ((
 		name: string,
 		module: StatsModule,
-		type: "module" | "chunk" | "root-of-chunk" | "nested"
+		type: ExcludeModulesType
 	) => boolean)[];
 	warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
 	cachedModules: boolean;
@@ -7791,12 +7802,12 @@ declare interface KnownStatsAsset {
 	comparedForEmit: boolean;
 	cached: boolean;
 	related?: StatsAsset[];
-	chunkNames?: (string | number)[];
-	chunkIdHints?: (string | number)[];
-	chunks?: (string | number)[];
-	auxiliaryChunkNames?: (string | number)[];
-	auxiliaryChunks?: (string | number)[];
-	auxiliaryChunkIdHints?: (string | number)[];
+	chunks?: ChunkId[];
+	chunkNames?: ChunkName[];
+	chunkIdHints?: string[];
+	auxiliaryChunks?: ChunkId[];
+	auxiliaryChunkNames?: ChunkName[];
+	auxiliaryChunkIdHints?: string[];
 	filteredRelated?: number;
 	isOverSizeLimit?: boolean;
 }
@@ -7814,7 +7825,7 @@ declare interface KnownStatsChunk {
 	files: string[];
 	auxiliaryFiles: string[];
 	hash: string;
-	childrenByOrder: Record<string, (string | number)[]>;
+	childrenByOrder: Record<string, ChunkId[]>;
 	id?: string | number;
 	siblings?: (string | number)[];
 	parents?: (string | number)[];
@@ -7845,7 +7856,7 @@ declare interface KnownStatsChunkOrigin {
 	moduleId?: string | number;
 }
 declare interface KnownStatsCompilation {
-	env?: any;
+	env?: Record<string, any>;
 	name?: string;
 	hash?: string;
 	version?: string;
@@ -7868,6 +7879,8 @@ declare interface KnownStatsCompilation {
 	warningsCount?: number;
 	children?: StatsCompilation[];
 	logging?: Record<string, StatsLogging>;
+	filteredWarningDetailsCount?: number;
+	filteredErrorDetailsCount?: number;
 }
 declare interface KnownStatsError {
 	message: string;
@@ -7936,7 +7949,7 @@ declare interface KnownStatsModule {
 	dependent?: boolean;
 	issuer?: null | string;
 	issuerName?: null | string;
-	issuerPath?: StatsModuleIssuer[];
+	issuerPath?: null | StatsModuleIssuer[];
 	failed?: boolean;
 	errors?: number;
 	warnings?: number;
@@ -7982,13 +7995,13 @@ declare interface KnownStatsModuleTraceItem {
 	originId?: string | number;
 	moduleId?: string | number;
 }
-declare interface KnownStatsPrinterColorFn {
-	bold?: (str: string) => string;
-	yellow?: (str: string) => string;
-	red?: (str: string) => string;
-	green?: (str: string) => string;
-	magenta?: (str: string) => string;
-	cyan?: (str: string) => string;
+declare interface KnownStatsPrinterColorFunctions {
+	bold?: (value: string | number) => string;
+	yellow?: (value: string | number) => string;
+	red?: (value: string | number) => string;
+	green?: (value: string | number) => string;
+	magenta?: (value: string | number) => string;
+	cyan?: (value: string | number) => string;
 }
 declare interface KnownStatsPrinterContext {
 	type?: string;
@@ -8172,6 +8185,20 @@ declare interface LazyCompilationOptions {
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
 	test?: string | RegExp | ((module: Module) => boolean);
+}
+type LazyFunction<
+	InputValue,
+	OutputValue,
+	InternalLazyTarget extends SerializerMiddleware<
+		any,
+		any,
+		Record<string, any>
+	>,
+	InternalLazyOptions extends undefined | LazyOptions
+> = (() => InputValue | Promise<InputValue>) &
+	Partial<{ options: InternalLazyOptions }>;
+declare interface LazyOptions {
+	[index: string]: any;
 }
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
@@ -9340,14 +9367,20 @@ declare class ModuleGraph {
 	getMetaIfExisting(thing: object): any;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
-	cached<T, V>(
-		fn: (moduleGraph: ModuleGraph, ...args: T[]) => V,
+	cached<T, R>(
+		fn: (moduleGraph: ModuleGraph, ...args: T[]) => R,
 		...args: T[]
-	): V;
+	): R;
 	setModuleMemCaches(
-		moduleMemCaches: Map<Module, WeakTupleMap<any, any>>
+		moduleMemCaches: Map<Module, WeakTupleMap<any[], any>>
 	): void;
-	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
+	dependencyCacheProvide<D extends Dependency, ARGS extends any[], R>(
+		dependency: D,
+		...args: [
+			ARGS,
+			...((moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R)[]
+		]
+	): R;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
@@ -9413,7 +9446,7 @@ type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 declare interface ModuleMemCachesItem {
 	buildInfo: BuildInfo;
 	references?: WeakMap<Dependency, Module>;
-	memCache: WeakTupleMap<Module[], string>;
+	memCache: WeakTupleMap<any[], any>;
 }
 
 /**
@@ -10253,7 +10286,7 @@ declare class NullDependencyTemplate extends DependencyTemplate {
 }
 declare interface ObjectDeserializerContext {
 	read: () => any;
-	setCircularReference: (value?: any) => void;
+	setCircularReference: (value: ReferenceableItem) => void;
 }
 declare interface ObjectEncodingOptions {
 	encoding?:
@@ -10280,11 +10313,14 @@ declare interface ObjectSerializer {
 }
 declare interface ObjectSerializerContext {
 	write: (value?: any) => void;
-	setCircularReference: (value?: any) => void;
+	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item?: any) => void;
-	writeSeparate?: (item?: any, obj?: any) => () => any;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
 }
 declare interface ObjectSerializerSnapshot {
 	length: number;
@@ -11614,7 +11650,7 @@ declare interface PreparsedAst {
 }
 declare interface PrintedElement {
 	element: string;
-	content: string;
+	content?: string;
 }
 declare interface Problem {
 	type: ProblemType;
@@ -11639,7 +11675,7 @@ declare class Profiler {
 	inspector: any;
 	hasSession(): boolean;
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
-	sendCommand(method: string, params: Record<string, any>): Promise<any>;
+	sendCommand(method: string, params?: Record<string, any>): Promise<any>;
 	destroy(): Promise<void>;
 	stopProfiling(): Promise<{ profile: any }>;
 }
@@ -12445,6 +12481,7 @@ type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| RecursiveArrayOrRecord<T>[]
 	| T;
+type ReferenceableItem = string | object;
 declare interface ReferencedExport {
 	/**
 	 * name of the referenced export
@@ -14198,21 +14235,31 @@ declare interface ScopeInfo {
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
-declare abstract class Serializer {
-	serializeMiddlewares: SerializerMiddleware<any, any>[];
-	deserializeMiddlewares: SerializerMiddleware<any, any>[];
-	context: any;
-	serialize(obj?: any, context?: any): Promise<any>;
-	deserialize(value?: any, context?: any): Promise<any>;
+declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
+	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
+	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
+	context?: Context;
+	serialize<ExtendedContext>(
+		obj: DeserializedValue | Promise<DeserializedValue>,
+		context: Context & ExtendedContext
+	): Promise<SerializedValue>;
+	deserialize<ExtendedContext>(
+		value: SerializedValue | Promise<SerializedValue>,
+		context: Context & ExtendedContext
+	): Promise<DeserializedValue>;
 }
-declare abstract class SerializerMiddleware<DeserializedType, SerializedType> {
+declare abstract class SerializerMiddleware<
+	DeserializedType,
+	SerializedType,
+	Context
+> {
 	serialize(
 		data: DeserializedType,
-		context?: any
+		context: Context
 	): null | SerializedType | Promise<SerializedType>;
 	deserialize(
 		data: SerializedType,
-		context?: any
+		context: Context
 	): DeserializedType | Promise<DeserializedType>;
 }
 declare class SharePlugin {
@@ -14840,11 +14887,11 @@ type StatsCompilation = KnownStatsCompilation & Record<string, any>;
 type StatsError = KnownStatsError & Record<string, any>;
 declare abstract class StatsFactory {
 	hooks: StatsFactoryHooks;
-	create(
+	create<FactoryData, FallbackCreatedObject>(
 		type: string,
-		data: any,
+		data: FactoryData,
 		baseContext: Omit<StatsFactoryContext, "type">
-	): any;
+	): CreatedObject<FactoryData, FallbackCreatedObject>;
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
 declare interface StatsFactoryHooks {
@@ -15341,23 +15388,32 @@ declare interface StatsOptions {
 declare interface StatsPrintHooks {
 	sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], void>>;
 	printElements: HookMap<
-		SyncBailHook<[PrintedElement[], StatsPrinterContext], string | void>
+		SyncBailHook<
+			[PrintedElement[], StatsPrinterContext],
+			undefined | string | void
+		>
 	>;
 	sortItems: HookMap<
 		SyncBailHook<[any[], StatsPrinterContext], boolean | void>
 	>;
 	getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
 	printItems: HookMap<
-		SyncBailHook<[string[], StatsPrinterContext], string | void>
+		SyncBailHook<[string[], StatsPrinterContext], undefined | string>
 	>;
-	print: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+	print: HookMap<
+		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
+	>;
 	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 }
 declare abstract class StatsPrinter {
 	hooks: StatsPrintHooks;
-	print(type: string, object?: any, baseContext?: StatsPrinterContext): string;
+	print(
+		type: string,
+		object?: any,
+		baseContext?: StatsPrinterContext
+	): undefined | string;
 }
-type StatsPrinterContext = KnownStatsPrinterColorFn &
+type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext &
 	Record<string, any>;
@@ -15675,12 +15731,12 @@ declare abstract class Watching {
 	resume(): void;
 	close(callback: CallbackFunction_1<void>): void;
 }
-declare abstract class WeakTupleMap<T extends any[], V> {
-	set(...args: [T, ...V[]]): void;
-	has(...args: T): boolean;
-	get(...args: T): undefined | V;
-	provide(...args: [T, ...(() => V)[]]): V;
-	delete(...args: T): void;
+declare abstract class WeakTupleMap<K extends any[], V> {
+	set(...args: [K, ...V[]]): void;
+	has(...args: K): boolean;
+	get(...args: K): undefined | V;
+	provide(...args: [K, ...((...args: K) => V)[]]): V;
+	delete(...args: K): void;
 	clear(): void;
 }
 declare interface WebAssemblyRenderContext {
@@ -16647,11 +16703,11 @@ declare namespace exports {
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: Serializer;
-			export let createFileSerializer: (
+			export const buffersSerializer: Serializer<any, any, any>;
+			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
 				hashFunction: string | typeof Hash
-			) => Serializer;
+			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(

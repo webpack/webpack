@@ -330,6 +330,13 @@ export default [
 							message:
 								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
 						},
+						// Prefer `{string=}` over `{string} [arg]`
+						{
+							comment:
+								"JsdocBlock:has(JsdocTag[tag=/^(property|param)$/][name=/[\\[\\]]/])",
+							message:
+								"Please use `@property {string=} property`/`@param {string=} arg` instead `[arg]` for optional properties and parameters"
+						},
 						// No `*` type
 						{
 							comment: "JsdocBlock:has(JsdocTypeAny)",
@@ -341,10 +348,10 @@ export default [
 							message: "Please use `unknown` or `any` (or `EXPECTED_ANY`) type"
 						},
 						// No `any` type
-						// {
-						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
-						// 	message: "Please use provide types instead `any`"
-						// },
+						{
+							comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
+							message: "Please use provide types instead `any`"
+						},
 						// No `Function` type
 						{
 							comment:

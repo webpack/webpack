@@ -1,6 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * @this {FakeDocument}
+ * @param {string} property property
+ * @returns {EXPECTED_ANY} value
+ */
 function getPropertyValue(property) {
 	return this[property];
 }
@@ -209,6 +214,7 @@ class FakeSheet {
 		let css = fs.readFileSync(filepath, "utf-8");
 		css = css
 			// Remove comments
+			// @ts-expect-error we use es2018 for such tests
 			.replace(/\/\*.*?\*\//gms, "")
 			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
