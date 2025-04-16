@@ -3059,7 +3059,7 @@ declare interface ContextModuleOptions {
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
-	resolveOptions: ResolveOptions;
+	resolveOptions?: ResolveOptions;
 }
 declare class ContextReplacementPlugin {
 	constructor(
