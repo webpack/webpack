@@ -7075,7 +7075,7 @@ declare class JavascriptParser extends Parser {
 		)[],
 		fn: () => void
 	): void;
-	inBlockScope(fn: () => void, inExecutedPath?: boolean): void;
+	inStatementScope(fn: () => void, inExecutedPath?: boolean): void;
 	detectMode(
 		statements: (
 			| ImportDeclarationJavascriptParser
@@ -14232,11 +14232,6 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
-
-	/**
-	 * false for unknown state
-	 */
-	inExecutedPath: boolean;
 	terminated?: 1 | 2;
 }
 declare interface Selector<A, B> {

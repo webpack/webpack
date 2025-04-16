@@ -4775,21 +4775,28 @@ global:
 exports[`StatsTestCases should print correct stats for track-returned 1`] = `
 "asset bundle.js X KiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
-./used3.js X bytes [built] [code generated]
-./used.js X bytes [built] [code generated]
-./used7.js X bytes [built] [code generated]
-./used8.js X bytes [built] [code generated]
-./used9.js X bytes [built] [code generated]
-./used16.js X bytes [built] [code generated]
-./used69.js X bytes [built] [code generated]
-./used17.js X bytes [built] [code generated]
-./used18.js X bytes [built] [code generated]
-./used19.js X bytes [built] [code generated]
-./used48.js X bytes [built] [code generated]
-./used35.js X bytes [built] [code generated]
-./used10.js X bytes [built] [code generated]
-+ 123 modules
-webpack x.x.x compiled successfully in X ms"
+./used.js?n=171 X bytes [built] [code generated]
+./used.js?n=164 X bytes [built] [code generated]
+./used.js?n=165 X bytes [built] [code generated]
+./used.js?n=166 X bytes [built] [code generated]
+./used.js?n=172 X bytes [built] [code generated]
+./used.js?n=173 X bytes [built] [code generated]
+./used.js?n=174 X bytes [built] [code generated]
+./used.js?n=167 X bytes [built] [code generated]
+./used.js?n=175 X bytes [built] [code generated]
+./used.js?n=176 X bytes [built] [code generated]
+./used.js?n=177 X bytes [built] [code generated]
+./used.js?n=178 X bytes [built] [code generated]
+./used.js?n=79 X bytes [built] [code generated]
++ 231 modules
+
+WARNING in ./index.js 246:4-21
+Module not found: Error: Can't resolve 'fail28' in 'Xdir/track-returned'
+
+1 warning has detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `

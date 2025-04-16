@@ -40,7 +40,7 @@ it("should track return in function declaration", () => {
 		}
 
 		if (rand()) return;
-		require("./used3");
+		require("./used?n=171");
 	}
 
 	a1();
@@ -163,7 +163,7 @@ it("should work correct for try catch and loops", () => {
 		throw 1;
 		require("fail19");
 	} catch (e) {
-		require('./used');
+		require("./used?n=164");
 	}
 
 	try {
@@ -174,7 +174,7 @@ it("should work correct for try catch and loops", () => {
 
 		require("fail21");
 	} catch (e) {
-		require('./used');
+		require("./used?n=165");
 	}
 
 	try {
@@ -185,7 +185,7 @@ it("should work correct for try catch and loops", () => {
 
 		require("fail23");
 	} catch (e) {
-		require('./used');
+		require("./used?n=166");
 	}
 
 	try {
@@ -197,12 +197,12 @@ it("should work correct for try catch and loops", () => {
 
 			require("fail25");
 		} catch (e) {
-			require('./used7');
+			require("./used?n=172");
 		}
 
-		require('./used8');
+		require("./used?n=173");
 	} catch (e) {
-		require('./used9');
+		require("./used?n=174");
 	}
 
 	function test() {
@@ -210,11 +210,11 @@ it("should work correct for try catch and loops", () => {
 			return;
 			require("fail26");
 		} finally {
-			require('./used');
+			require("./used?n=167");
 		}
 	}
 
-	function test1() {
+	function test1a() {
 		try {
 			try {
 				if (true) {
@@ -224,15 +224,142 @@ it("should work correct for try catch and loops", () => {
 
 				require("fail28");
 			} catch (e) {
-				require('./used16');
+				require("./used?n=175");
 			}
 
-			// TODO potential improvement
-			require('./used69');
+			require("./used?n=176");
 		} catch (e) {
-			require('./used17');
+			require("./used?n=177");
 		} finally {
-			require('./used18');
+			require("./used?n=178");
+		}
+	}
+
+	function test1b() {
+		try {
+			try {
+				if (rand()) {
+					return fn();
+					require("fail27");
+				}
+
+				require("fail28");
+			} catch (e) {
+				require('./used?n=79');
+			}
+
+			require('./used?n=80');
+		} catch (e) {
+			require('./used?n=81');
+		} finally {
+			require('./used?n=82');
+		}
+	}
+
+	function test1c() {
+		try {
+			try {
+				if (true) {
+					throw 1;
+					require("fail");
+				}
+
+				require("fail");
+			} catch (e) {
+				require('./used?n=83');
+			}
+
+			require('./used?n=84');
+		} catch (e) {
+			require('./used?n=85');
+		} finally {
+			require('./used?n=86');
+		}
+	}
+
+	function test1d() {
+		try {
+			try {
+				if (rand()) {
+					throw 1;
+					require("fail");
+				}
+
+				require("./used?n=87");
+			} catch (e) {
+				require('./used?n=88');
+			}
+
+			require('./used?n=89');
+		} catch (e) {
+			require('./used?n=90');
+		} finally {
+			require('./used?n=91');
+		}
+	}
+
+	function test1e() {
+		try {
+			try {
+				if (true) {
+					throw 1;
+					require("fail");
+				}
+
+				require("fail");
+			} catch (e) {
+				require('./used?n=104');
+				return;
+			}
+
+			require('fail');
+		} catch (e) {
+			require('./used?n=92');
+		} finally {
+			require('./used?n=93');
+		}
+	}
+
+	function test1f() {
+		try {
+			try {
+				if (rand()) {
+					throw 1;
+					require("fail");
+				}
+
+				require("./used?n=94");
+			} catch (e) {
+				return require('./used?n=95');
+			}
+
+			require('./used?n=96');
+		} catch (e) {
+			require('./used?n=97');
+		} finally {
+			require('./used?n=98');
+		}
+	}
+
+	function test1g() {
+		try {
+			try {
+				if (rand()) {
+					throw 1;
+					require("fail");
+				}
+
+				require("./used?n=99");
+			} catch (e) {
+				require('./used?n=100');
+				throw 1;
+			}
+
+			require('./used?n=101');
+		} catch (e) {
+			require('./used?n=102');
+		} finally {
+			require('./used?n=103');
 		}
 	}
 
@@ -246,17 +373,17 @@ it("should work correct for try catch and loops", () => {
 
 				require("fail31");
 			} catch (e) {
-				require('./used19');
+				require("./used?n=179");
 			}
 
-			require('./used48');
+			require("./used?n=180");
 		} catch (e) {
-			require('./used17');
+			require("./used?n=181");
 		} finally {
-			require('./used18');
+			require("./used?n=182");
 		}
 
-		require('./used35');
+		require("./used?n=41");
 	}
 
 	function test3() {
@@ -270,7 +397,7 @@ it("should work correct for try catch and loops", () => {
 			} catch (err) {
 				return false;
 			} finally {
-				require("./used10");
+				require("./used?n=170");
 			}
 		}
 	}
@@ -283,9 +410,9 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn()
 		} catch (err) {
-			require("./used11")
+			require("./used?n=183");
 		} finally {
-			require("./used12")
+			require("./used?n=184");
 		}
 	}
 
@@ -293,9 +420,9 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn()
 		} catch (err) {
-			require("./used13")
+			require("./used?n=185");
 		} finally {
-			require("./used14")
+			require("./used?n=186");
 		}
 	}
 
@@ -306,7 +433,7 @@ it("should work correct for try catch and loops", () => {
 			return;
 			require("fail34")
 		} finally {
-			require("./used15")
+			require("./used?n=187");
 		}
 
 		require("fail35");
@@ -316,7 +443,7 @@ it("should work correct for try catch and loops", () => {
 		return next();
 
 		function next() {
-			return require("./used20");
+			return require("./used?n=188");
 		}
 	}
 
@@ -326,7 +453,7 @@ it("should work correct for try catch and loops", () => {
 
 			return routeModule;
 		} catch (error) {
-			if (test && require("./used21")) {
+			if (test && require("./used?n=189")) {
 				throw error;
 			}
 		}
@@ -345,7 +472,7 @@ it("should work correct for try catch and loops", () => {
 	}
 
 	function test10() {
-		return require("./used23"), require("./used24");
+		return require("./used?n=190"), require("./used?n=191");
 	}
 
 	function test11() {
@@ -355,10 +482,10 @@ it("should work correct for try catch and loops", () => {
 			return routeModule;
 		} catch (error) {
 			const test = 1;
-			require("./used25");
+			require("./used?n=192")
 		} finally {
 			const test = 1;
-			require("./used26");
+			require("./used?n=193")
 		}
 	}
 
@@ -379,10 +506,10 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn();
 		} catch (error) {
-			require("./used27");
+			require("./used?n=194")
 			return;
 		} finally {
-			require("./used28");
+			require("./used?n=195")
 			return;
 		}
 		import("fail40");
@@ -401,13 +528,13 @@ it("should work correct for try catch and loops", () => {
 	}
 
 	function test14() {
-		throw 1, require("./used34");
+		throw 1, require("./used?n=196");
 		require("fail41")
 	}
 
 	function test15() {
 		try {
-			return this || require("./used30");
+			return this || require("./used?n=197");
 		} catch {
 			if (true) return;
 			require("fail42");
@@ -418,7 +545,7 @@ it("should work correct for try catch and loops", () => {
 
 	function test16() {
 		try {
-			return this || require("./used30");
+			return this || require("./used?n=198");
 		} finally {
 			if (true) return;
 			require("fail43");
@@ -443,7 +570,7 @@ it("should work correct for try catch and loops", () => {
 		} catch (e) {
 
 		} finally {
-			require("./used31")
+			require("./used?n=199");
 			return;
 		}
 
@@ -456,7 +583,7 @@ it("should work correct for try catch and loops", () => {
 		} catch (e) {
 			return fn()
 		} finally {
-			require("./used32")
+			require("./used?n=200");
 			return;
 		}
 
@@ -467,7 +594,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn();
 		} finally {
-			require("./used37")
+			require("./used?n=201");
 			return;
 		}
 
@@ -478,7 +605,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn();
 		} catch {
-			require("./used38")
+			require("./used?n=202");
 			return;
 		}
 
@@ -495,10 +622,10 @@ it("should work correct for try catch and loops", () => {
 
 			require("fail")
 		} catch (x) {
-			require("./used39");
+			require("./used?n=203");
 		}
 
-		require("./used40");
+		require("./used?n=204");
 	}
 
 	function test22() {
@@ -513,10 +640,10 @@ it("should work correct for try catch and loops", () => {
 
 			require("fail")
 		} catch (x) {
-			require("./used39");
+			require("./used?n=205");
 		}
 
-		require("./used40");
+		require("./used?n=206");
 	}
 
 	function test23() {
@@ -528,10 +655,10 @@ it("should work correct for try catch and loops", () => {
 
 			require("fail")
 		} catch (x) {
-			require("./used39");
+			require("./used?n=207");
 		}
 
-		require("./used40");
+		require("./used?n=208");
 	}
 
 	function test24() {
@@ -548,7 +675,7 @@ it("should work correct for try catch and loops", () => {
 		} finally {
 		}
 
-		require("./used42");
+		require("./used?n=209");
 	}
 
 	function test25() {
@@ -567,7 +694,7 @@ it("should work correct for try catch and loops", () => {
 				throw 1
 			}
 		} catch (e) {
-			require("./used41")
+			require("./used?n=210");
 		}
 	}
 
@@ -594,17 +721,17 @@ it("should work correct for try catch and loops", () => {
 		try {
 			fn();
 		} finally {
-			require("./used43");
+			require("./used?n=211");
 		}
 
-		require("./used44");
+		require("./used?n=212");
 	}
 
 	function test28() {
 		try {
 			return fn();
 		} finally {
-			require("./used45");
+			require("./used?n=213");
 		}
 
 		require("fail");
@@ -614,7 +741,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			throw 1;
 		} finally {
-			require("./used46");
+			require("./used?n=214");
 		}
 
 		require("fail");
@@ -624,7 +751,7 @@ it("should work correct for try catch and loops", () => {
 		try {
 			return fn();
 		} catch {
-			return require("./used50");
+			return require("./used?n=215");
 		}
 
 		require("fail");
@@ -650,7 +777,7 @@ it("should work correct for try catch and loops", () => {
 			return 2;
 			require("fail");
 		} finally {
-			require("./used47")
+			require("./used?n=216");
 		}
 
 		require("fail");
@@ -662,7 +789,7 @@ it("should work correct for try catch and loops", () => {
 		} finally {
 		}
 
-		require("./used29");
+		require("./used?n=217");
 	}
 
 	function test33() {
@@ -703,10 +830,10 @@ it("should work correct for try catch and loops", () => {
 
 			require("fail");
 		} catch (e) {
-			require("./used33");
+			require("./used?n=218");
 		}
 
-		require("./used51");
+		require("./used?n=221");
 	}
 
 	function test36() {
@@ -715,7 +842,7 @@ it("should work correct for try catch and loops", () => {
 		throw 1;
 
 		function test() {
-			require("./used67")
+			require("./used?n=220");
 		}
 	}
 
@@ -730,7 +857,7 @@ it("should work correct for try catch and loops", () => {
 			require("./used?n=57");
 		}
 
-		require("./used?n=58");
+		require("fail");
 	}
 
 	function test38() {
@@ -744,14 +871,16 @@ it("should work correct for try catch and loops", () => {
 			} finally {
 				require("./used?n=59");
 			}
+			require("fail");
 			return;
 		} catch (e) {
+			require("./used?n=240");
 			return;
 		} finally {
 			require("./used?n=60");
 		}
 
-		require("./used?n=61");
+		require("fail");
 	}
 
 	function test39() {
@@ -773,16 +902,365 @@ it("should work correct for try catch and loops", () => {
 			require("./used?n=64");
 		}
 
-		require("./used?n=65");
+		require("fail");
 	}
+
+	function test40() {
+		try {
+			return;
+		} finally {
+			require("./used?n=105");
+		}
+
+		require("fail");
+	}
+
+	function test41() {
+		try {
+			throw 1;
+		} catch (e) {
+			require("./used?n=106");
+		} finally {
+			require("./used?n=107");
+		}
+
+		require("./used?n=108");
+	}
+
+	function test42() {
+		try {
+			return;
+		} catch (e) {
+			return;
+		} finally {
+			require("./used?n=109");
+		}
+
+		require("fail");
+	}
+
+	function test43() {
+		try {
+			return;
+		} finally {
+			require("./used?n=110");
+		}
+
+		require("fail");
+	}
+
+	function test44() {
+		try {
+			return rand();
+		} catch (e) {
+			throw 1;
+		} finally {
+			require("./used?n=111");
+		}
+
+		require("fail");
+	}
+
+	function test45() {
+		try {
+			throw 1;
+		} catch (e) {
+			return rand();
+		} finally {
+			require("./used?n=112");
+		}
+
+		require("fail");
+	}
+
+	function test46() {
+		try {
+			throw 1;
+		} catch (e) {
+			throw 1;
+		} finally {
+			require("./used?n=113");
+		}
+
+		require("fail");
+	}
+
+	function test47() {
+		try {
+			try {
+				return rand();
+			} catch (e) {
+				return rand();
+			} finally {
+				require("./used?n=114");
+			}
+		} catch (e) {
+			require("./used?n=115");
+		}
+
+		require("./used?n=116");
+	}
+
+	function test48() {
+		try {
+			return rand();
+		} catch (e) {
+			// nothing
+		} finally {
+			require("./used?n=117");
+		}
+
+		require("./used?n=118");
+	}
+
+	function test49() {
+		try {
+			throw 1;
+		} catch (e) {
+			// nothing
+		} finally {
+			require("./used?n=119");
+		}
+
+		require("./used?n=120");
+	}
+
+	function test50() {
+		try {
+			try {
+				return rand();
+			} catch (e) {
+				// nothing
+			} finally {
+				require("./used?n=121");
+			}
+
+			require("./used?n=122");
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=123");
+	}
+
+	function test51() {
+		try {
+			try {
+				throw 1;
+			} catch (e) {
+				// nothing
+			} finally {
+				require("./used?n=124");
+			}
+
+			require("./used?n=125");
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=126");
+	}
+
+	function test52() {
+		try {
+			try {
+				return rand();
+			} finally {
+				require("./used?n=127");
+			}
+
+			require("fail");
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=137");
+	}
+
+	function test53() {
+		try {
+			try {
+				throw 1;
+			} finally {
+				require("./used?n=128");
+			}
+
+			require("fail");
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=136");
+	}
+
+	function test54() {
+		try {
+			try {
+				return rand();
+			} finally {
+				require("./used?n=129");
+			}
+
+			require("fail");
+		} finally {
+			// nothing
+		}
+
+		require("fail");
+	}
+
+	function test55() {
+		try {
+			return fn();
+		} catch (e) {
+			require("./used?n=130");
+		} finally {
+			require("./used?n=131");
+		}
+
+		require("./used?n=132");
+	}
+
+	function test56() {
+		try {
+			fn();
+		} catch (e) {
+			// nothing
+		} finally {
+			require("./used?n=133");
+			return;
+		}
+
+		require("fail");
+	}
+
+	function test57() {
+		try {
+			fn();
+		} catch (e) {
+			// nothing
+		} finally {
+			require("./used?n=134");
+			throw 1;
+		}
+
+		require("fail");
+	}
+
+	function test58() {
+		try {
+			fn();
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=135");
+	}
+
+	function test59() {
+		try {
+			fn();
+		} catch (e) {
+			try {
+				throw 1;
+			} catch (e) {
+				throw 1;
+			} finally {
+				require("./used?n=138");
+			}
+		}
+
+		require("./used?n=139");
+	}
+
+	function test60() {
+		try {
+			try {
+				throw 1;
+			} catch (e) {
+				throw 1;
+			} finally {
+				require("./used?n=140");
+			}
+		} catch (e) {
+			// nothing
+		}
+
+		require("./used?n=141");
+	}
+
+	function test61() {
+		try {
+			return fn();
+		} finally {
+			require("./used?n=142");
+		}
+
+		require("fail");
+	}
+
+	function test62() {
+		try {
+			throw 1;
+		} finally {
+			require("./used?n=143");
+		}
+
+		require("fail");
+	}
+
+	function test63() {
+		try {
+			// nothing
+		} finally {
+			require("./used?n=145");
+		}
+
+		require("./used?n=146");
+	}
+
+	function test64() {
+		try {
+			rand();
+		} finally {
+			require("./used?n=147");
+		}
+
+		require("./used?n=148");
+	}
+
+	function test65() {
+		try {
+			return fn();
+		} catch (err) {
+			// nothing
+		} finally {
+			require("./used?n=149");
+		}
+
+		require("./used?n=150");
+	}
+
+	function test66() {
+		try {
+			throw 1;
+		} catch (err) {
+			// nothing
+		} finally {
+			require("./used?n=151");
+		}
+
+		require("./used?n=152");
+	}
+
 
 	for (let i = 0; i < 1; i++)
 		if (rand())
-			require('./used1');
+			require("./used?n=219");
 
 	for (let i = 0; i < 1; i++) {
 		if (true) {
-			require('./used4');
+			require("./used?n=222");
 			return;
 		}
 		import("fail48");
@@ -797,7 +1275,7 @@ it("should work correct for try catch and loops", () => {
 	} catch {
 	}
 
-	require("./used36");
+	require("./used?n=223");
 });
 
 it("should handle edge case with switch case", () => {
@@ -811,13 +1289,13 @@ it("should handle edge case with switch case", () => {
 			if (true) return;
 			return require("fail52");
 		default:
-			require("./used2");
+			require("./used?n=168");
 	}
 });
 
 it("should work correct for if", () => {
 	if (true) {
-		require('./used');
+		require("./used?n=153");
 		return;
 	}
 
@@ -828,7 +1306,7 @@ it("should work correct for if #2", () => {
 	if (false) {
 		require("fail54");
 	} else {
-		require('./used');
+		require("./used?n=154");
 	}
 });
 
@@ -836,7 +1314,7 @@ it("should work correct for if #3", () => {
 	if (false) {
 		require("fail55");
 	} else if (true) {
-		require('./used');
+		require("./used?n=155");
 	} else {
 		require("fail56");
 	}
@@ -848,7 +1326,7 @@ it("should work correct for if #4", () => {
 	} else if (false) {
 		require("fail58");
 	} else {
-		require('./used');
+		require("./used?n=156");
 	}
 });
 
@@ -859,7 +1337,7 @@ it("should work correct for if #5", () => {
 		return;
 	else {
 		const test = 1;
-		require("./used52")
+		require("./used?n=42");
 	}
 });
 
@@ -868,7 +1346,7 @@ it("should work correct for if #6", () => {
 		return;
 	else {
 		const test = 1;
-		require("./used53")
+		require("./used?n=43");
 	}
 });
 
@@ -889,7 +1367,7 @@ it("should work correct for if #8", () => {
 	} else
 		return;
 
-	require("./used70");
+	require("./used?n=44");
 });
 
 it("should work correct for if #9", () => {
@@ -955,7 +1433,7 @@ it("should work correct for if #13", () => {
 	} else {
 	}
 
-	require("./used54");
+	require("./used?n=45");
 });
 
 it("should work correct for if #14", () => {
@@ -963,10 +1441,10 @@ it("should work correct for if #14", () => {
 		return;
 	else if (fn()) {
 		fn()
-		require("./used55");
+		require("./used?n=46");
 	}
 
-	require("./used56");
+	require("./used?n=47");
 });
 
 it("should work correct for if #15", () => {
@@ -988,14 +1466,14 @@ it("should work correct for if #17", () => {
 	if (false) return;
 
 	const test = 1;
-	require("./used57");
+	require("./used?n=48");
 });
 
 it("should work correct for if #18", () => {
 	if (rand()) return;
 
 	const test = 1;
-	require("./used58");
+	require("./used?n=49");
 });
 
 it("should work correct for if #19", () => {
@@ -1005,16 +1483,16 @@ it("should work correct for if #19", () => {
 	else {
 		if (rand()) {
 			rand();
-			require("./used59")
+			require("./used?n=144");
 			rand();
 		} else {
 			rand();
-			require("./used60");
+			require("./used?n=58");
 			rand();
 		}
 	}
 
-	require("./used61");
+	require("./used?n=65");
 });
 
 it("should work correct for if #20", () => {
@@ -1028,7 +1506,7 @@ it("should work correct for if #20", () => {
 		return;
 	}
 
-	require("./used62");
+	require("./used?n=61");
 });
 
 it("should work correct for if #21", () => {
@@ -1041,7 +1519,7 @@ it("should work correct for if #21", () => {
 	else if (rand())
 		return;
 
-	require("./used63");
+	require("./used?n=239");
 });
 
 it("should work correct for if #22", () => {
@@ -1093,7 +1571,7 @@ it("should work correct for if #24", () => {
 		}
 	}
 
-	require("./used64");
+	require("./used?n=238");
 });
 
 it("should work correct for if #25", () => {
@@ -1109,7 +1587,7 @@ it("should work correct for if #25", () => {
 		return;
 	}
 
-	require("./used65");
+	require("./used?n=237");
 });
 
 it("should work correct for if #26", () => {
@@ -1126,7 +1604,7 @@ it("should work correct for if #26", () => {
 	} else if (rand()) {
 	}
 
-	require("./used66");
+	require("./used?n=236");
 });
 
 it("should work correct for if #22", () => {
@@ -1139,7 +1617,7 @@ it("should work correct for if #22", () => {
 			return;
 		}
 
-		// require("fail");
+		require("fail");
 	} else if (rand()) {
 		if (rand()) {
 			return;
@@ -1234,7 +1712,7 @@ it("should work correct for if #28", () => {
 			return;
 		} else {
 			const test = 1;
-			require("./used68")
+			require("./used?n=235");
 			return;
 		}
 
@@ -1263,7 +1741,7 @@ it("should work correct for if #30", () => {
 		rand();
 	}
 
-	require("./used71")
+	require("./used?n=234");
 });
 
 it("should work correct for if #31", () => {
@@ -1274,7 +1752,7 @@ it("should work correct for if #31", () => {
 		return;
 	}
 
-	require("./used72")
+	require("./used?n=233");
 });
 
 it("should work correct for if #32", () => {
@@ -1300,7 +1778,7 @@ it("should work correct for if #33", () => {
 		return;
 	}
 
-	require("./used73");
+	require("./used?n=232");
 });
 
 it("should work correct for if #34", () => {
@@ -1314,7 +1792,7 @@ it("should work correct for if #34", () => {
 		rand();
 	}
 
-	require("./used74");
+	require("./used?n=231");
 });
 
 it("should work correct for if #35", () => {
@@ -1328,7 +1806,7 @@ it("should work correct for if #35", () => {
 		return;
 	}
 
-	require("./used75");
+	require("./used?n=230");
 });
 
 it("should work correct for if #36", () => {
@@ -1347,7 +1825,7 @@ it("should work correct for if #36", () => {
 		rand();
 	}
 
-	require("./used76");
+	require("./used?n=229");
 });
 
 it("should work correct for if #37", () => {
@@ -1366,7 +1844,7 @@ it("should work correct for if #37", () => {
 		rand();
 	}
 
-	require("./used77");
+	require("./used?n=228");
 });
 
 it("should work correct for if #38", () => {
@@ -1385,7 +1863,7 @@ it("should work correct for if #38", () => {
 		require("fail");
 	}
 
-	require("./used78");
+	require("./used?n=227");
 });
 
 it("should work correct for if #39", () => {
@@ -1560,6 +2038,121 @@ it("should work correct for if #50", () => {
 	require("fail");
 });
 
+it("should work correct for if #51", () => {
+	if (rand())
+		return;
+	else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #52", () => {
+	if (true)
+		return;
+	else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #53", () => {
+	if (rand())
+		rand();
+	else
+		return;
+
+	require("./used?n=71");
+});
+
+it("should work correct for if #54", () => {
+	if (rand()) {
+		return rand();
+	} else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #55", () => {
+	if (rand()) {
+		rand();
+	} else
+		return;
+
+	require("./used?n=72");
+});
+
+it("should work correct for if #56", () => {
+	if (rand()) {
+		return rand();
+	} else
+		rand();
+
+	require("./used?n=73");
+});
+
+it("should work correct for if #57", () => {
+	if (rand()) {
+		rand();
+	} else
+		return rand();
+
+	require("./used?n=74");
+});
+
+it("should work correct for if #58", () => {
+	if (rand()) {
+		rand();
+	}
+
+	require("./used?n=75");
+});
+
+it("should work correct for if #59", () => {
+	if (rand()) {
+		return rand();
+	}
+
+	require("./used?n=76");
+});
+
+it("should work correct for if #60", () => {
+	if (true) {
+		return rand();
+	}
+
+	require("fail");
+});
+
+it("should work correct for if #61", () => {
+	if (false) {
+		return rand();
+	}
+
+	require("./used?n=77");
+});
+
+it("should work correct for if #62", () => {
+	if (false) {
+		return rand();
+	} else {
+		rand()
+	}
+
+	require("./used?n=78");
+});
+
+it("should work correct for if #63", () => {
+	if (false) {
+		return rand();
+	} else {
+		return rand()
+	}
+
+	require("fail");
+});
+
 it("should work correct for switch #1", () => {
 	switch (expr) {
 		case "Oranges":
@@ -1690,6 +2283,32 @@ it("should work correct for while statement", () => {
 		return;
 
 	require("./used?n=30");
+
+	while (require("./used?n=241") < 5) {
+		return;
+	}
+
+	require("./used?n=242");
+
+	while (
+		(() => {
+			return 15;
+		})() < 10
+		) {
+		return;
+	}
+
+	require("./used?n=243");
+
+	while (
+		(function wrap() {
+			return 15;
+		})() < 10
+		) {
+		return;
+	}
+
+	require("./used?n=244");
 });
 
 it("should work correct for do while statement", () => {
@@ -1843,14 +2462,14 @@ it("should not include unused assets", (done) => {
 
 			require("fail59");
 		} finally {
-			a = require('./used')
+			a = require("./used?n=157");
 
 			{
 				try {
 					return fn();
 					require("fail60");
 				} finally {
-					b = require('./used')
+					b = require("./used?n=158");
 				}
 			}
 
@@ -1861,11 +2480,11 @@ it("should not include unused assets", (done) => {
 
 it("should work correct for classes", () => {
 	class Test {
-		value = true ? require('./used') : require("fail62");
+		value = true ? require("./used?n=159") : require("fail62");
 
-		static value = true ? require('./used') : require("fail63");
+		static value = true ? require("./used?n=160") : require("fail63");
 
-		constructor(height = true ? require('./used') : require("fail64"), width) {
+		constructor(height = true ? require("./used?n=161") : require("fail64"), width) {
 			if (true) return;
 			return require("fail65");
 		}
@@ -1900,32 +2519,32 @@ function top1() {
 if (false) {
 	require("fail71");
 } else if (true) {
-	require('./used');
+	require("./used?n=162");
 } else {
 	require("fail72");
 }
 
-const test = true ? require('./used') : require("fail73");
+const test = true ? require("./used?n=163") : require("fail73");
 
 const a = rand() ? 1 : 2;
 
 switch (a) {
 	case 1: {
-		if (true) require("./used22")
+		if (true) require("./used?n=225");
 		else require("fail74");
 	}
 	case 2:
 		if (false) require("fail75");
 	default:
-		require("./used2");
+		require("./used?n=169");
 }
 
 if (true) {
-	require("./used5");
+	require("./used?n=224");
 }
 
 if (false) {
 	require("fail77");
 }
 
-require("./used6");
+require("./used?n=226");
