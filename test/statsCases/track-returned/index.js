@@ -1500,7 +1500,67 @@ it("should work correct for if #44", () => {
 	require("./used?n=14");
 });
 
-it("should work correct for switch #45", () => {
+it("should work correct for if #45", () => {
+	if (rand())
+		rand();
+	else if (rand())
+		rand();
+	else
+		if (rand())
+			return;
+		else if (rand())
+			return;
+		else
+			return;
+
+	require("./used?n=68");
+});
+
+it("should work correct for if #47", () => {
+	if (rand())
+		return;
+	else if (rand())
+		rand();
+	else
+		return;
+
+	require("./used?n=69");
+});
+
+it("should work correct for if #48", () => {
+	if (rand())
+		return;
+	else if (true)
+		rand();
+	else
+		return;
+
+	require("./used?n=70");
+});
+
+it("should work correct for if #49", () => {
+	if (true)
+		return;
+	else if (rand())
+		rand();
+	else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for if #50", () => {
+	if (rand())
+		return;
+	else if (true)
+		return
+	else
+		return;
+
+	require("fail");
+});
+
+it("should work correct for switch #1", () => {
 	switch (expr) {
 		case "Oranges":
 			return;
@@ -1523,7 +1583,7 @@ it("should work correct for switch #45", () => {
 	}
 });
 
-it("should work correct for switch #46", () => {
+it("should work correct for switch #2", () => {
 	switch (expr) {
 		case "Oranges": {
 			return;
@@ -1549,6 +1609,18 @@ it("should work correct for switch #46", () => {
 			require("./used?n=22");
 		}
 	}
+});
+
+it("should work correct for block statement", () => {
+	{
+		{
+			return;
+			require("fail");
+		}
+		require("fail");
+	}
+
+	require("fail");
 });
 
 it("should work correct for loop and return", () => {
