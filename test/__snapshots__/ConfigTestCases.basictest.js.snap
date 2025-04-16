@@ -10142,13 +10142,19 @@ exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = 
 exports[`ConfigTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 1`] = `
 "import { a, b } from \\"externals0\\";
 import { a as a_0 } from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
 /*!*****************************!*\\\\
-  !*** ./test.js + 3 modules ***!
+  !*** ./test.js + 5 modules ***!
   \\\\*****************************/
 
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
 
 ;// ./lib.js
 
@@ -10160,7 +10166,10 @@ b;
 
 
 
+
+
 a_0;
+default_0;
 
 export { a as a1 };
 "

@@ -17,7 +17,7 @@ module.exports = {
 		extensions: [".js"]
 	},
 	externalsType: "module",
-	externals: ["externals0", "externals1"],
+	externals: ["externals0", "externals1", "externals2", "externals3"],
 	optimization: {
 		concatenateModules: true,
 		usedExports: true
