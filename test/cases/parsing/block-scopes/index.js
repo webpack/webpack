@@ -38,6 +38,15 @@ it("should allow block scopes", () => {
 		expect(ok).toBe("no");
 	}
 	expect(ok).toBe("ok");
+	while (ok) {
+		expect(ok).toBe("ok");
+		break;
+	}
+	do {
+		expect(ok).toBe("ok");
+		break;
+	} while(ok);
+	expect(ok).toBe("ok");
 });
 
 it("should allow function scopes in block scopes", () => {
