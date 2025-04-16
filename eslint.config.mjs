@@ -324,7 +324,7 @@ export default [
 				"error",
 				{
 					contexts: [
-						// // Prefer TypeScript syntax for functions
+						// Prefer TypeScript syntax for functions
 						{
 							comment: "JsdocBlock:has(JsdocTypeFunction[arrow=false])",
 							message:

@@ -15387,26 +15387,24 @@ declare interface StatsOptions {
 	warningsSpace?: number;
 }
 declare interface StatsPrintHooks {
-	sortElements: HookMap<
-		SyncBailHook<[string[], StatsPrinterContextWithExtra], void>
-	>;
+	sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], void>>;
 	printElements: HookMap<
 		SyncBailHook<
-			[PrintedElement[], StatsPrinterContextWithExtra],
-			string | void
+			[PrintedElement[], StatsPrinterContext],
+			undefined | string | void
 		>
 	>;
 	sortItems: HookMap<
-		SyncBailHook<[any[], StatsPrinterContextWithExtra], boolean | void>
+		SyncBailHook<[any[], StatsPrinterContext], boolean | void>
 	>;
-	getItemName: HookMap<
-		SyncBailHook<[any, StatsPrinterContextWithExtra], string | void>
-	>;
+	getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
 	printItems: HookMap<
-		SyncBailHook<[string[], StatsPrinterContextWithExtra], string | void>
+		SyncBailHook<[string[], StatsPrinterContext], undefined | string>
 	>;
-	print: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
-	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContextWithExtra]>>;
+	print: HookMap<
+		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
+	>;
+	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 }
 declare abstract class StatsPrinter {
 	hooks: StatsPrintHooks;
@@ -15420,12 +15418,6 @@ type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext &
 	Record<string, any>;
-type StatsPrinterContextWithExtra = KnownStatsPrinterColorFunctions &
-	KnownStatsPrinterFormatters &
-	KnownStatsPrinterContext &
-	Record<string, any> &
-	Required<KnownStatsPrinterColorFunctions> &
-	Required<KnownStatsPrinterFormatters> & { type: string };
 type StatsProfile = KnownStatsProfile & Record<string, any>;
 type StatsValue =
 	| boolean
