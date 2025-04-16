@@ -719,6 +719,63 @@ it("should work correct for try catch and loops", () => {
 		}
 	}
 
+	function test37() {
+		try {
+			test();
+			return false; // Validation skipped = feature disabled.
+		} catch {
+			test();
+			return true; // Validation worked = feature enabled.
+		} finally {
+			require("./used?n=57");
+		}
+
+		require("./used?n=58");
+	}
+
+	function test38() {
+		try {
+			try {
+				test();
+				return false;
+			} catch {
+				test();
+				return true;
+			} finally {
+				require("./used?n=59");
+			}
+			return;
+		} catch (e) {
+			return;
+		} finally {
+			require("./used?n=60");
+		}
+
+		require("./used?n=61");
+	}
+
+	function test39() {
+		try {
+			test();
+			return;
+		} catch (e) {
+			try {
+				test();
+				return false;
+			} catch {
+				require("./used?n=62");
+				return true;
+			} finally {
+				require("./used?n=63");
+			}
+			return;
+		} finally {
+			require("./used?n=64");
+		}
+
+		require("./used?n=65");
+	}
+
 	for (let i = 0; i < 1; i++)
 		if (rand())
 			require('./used1');
@@ -1541,6 +1598,20 @@ it("should work correct for while statement", () => {
 		return;
 	}
 
+	while (false) {
+		n++;
+		x += n;
+		return;
+		require("fail");
+	}
+
+	while (false) {
+		n++;
+		x += n;
+		throw new Error('test');
+		require("fail");
+	}
+
 	require("./used?n=29");
 
 	while (false)
@@ -1560,6 +1631,20 @@ it("should work correct for do while statement", () => {
 		return;
 	} while(false)
 
+	do {
+		n++;
+		x += n;
+		return;
+		require("fail");
+	} while(false);
+
+	do {
+		n++;
+		x += n;
+		throw new Error('test');
+		require("fail");
+	} while(false)
+
 	require("./used?n=32");
 
 	do
@@ -1574,6 +1659,28 @@ it("should work correct for for/in", () => {
 
 	for (const property in object) {
 		return;
+	}
+
+	try {
+		for (const property in object) {
+			return;
+			require("fail")
+		}
+	} catch (e) {
+
+	} finally {
+
+	}
+
+	try {
+		for (const property in object) {
+			throw new Error('test');
+			require("fail")
+		}
+	} catch (e) {
+		require("./used?n=66");
+	} finally {
+		require("./used?n=67");
 	}
 
 	require("./used?n=34");
@@ -1644,7 +1751,7 @@ it("should work correct for IIFE", () => {
 	require("./used?n=54");
 });
 
-it("should work correct for claases", () => {
+it("should work correct for classes", () => {
 	require("./used?n=55");
 
 	class Test {
