@@ -3946,8 +3946,9 @@ declare class EnableChunkLoadingPlugin {
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
 declare class EnableLibraryPlugin {
-	constructor(type: string);
+	constructor(type: string, options?: EnableLibraryPluginOptions);
 	type: string;
+	options: EnableLibraryPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3955,6 +3956,12 @@ declare class EnableLibraryPlugin {
 	apply(compiler: Compiler): void;
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
+}
+declare interface EnableLibraryPluginOptions {
+	/**
+	 * function that runs when applying the current plugin.
+	 */
+	additionalApply?: () => void;
 }
 declare class EnableWasmLoadingPlugin {
 	constructor(type: string);
