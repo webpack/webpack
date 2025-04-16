@@ -243,7 +243,7 @@ it("should work correct for try catch and loops", () => {
 					require("fail27");
 				}
 
-				require("fail28");
+				require('./used?n=245');
 			} catch (e) {
 				require('./used?n=79');
 			}
