@@ -213,7 +213,16 @@ describe("StatsTestCases", () => {
 						match => `${match.replace(/[0-9a-f]/g, "X")}`
 					);
 				expect(actual).toMatchSnapshot();
-				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
+
+				if (testConfig.validate) {
+					try {
+						testConfig.validate(stats, stderr.toString());
+					} catch (err) {
+						done(err);
+						return;
+					}
+				}
+
 				done();
 			});
 		});

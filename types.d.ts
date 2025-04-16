@@ -14232,12 +14232,7 @@ declare interface ScopeInfo {
 	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
-
-	/**
-	 * false for unknown state
-	 */
-	inExecutedPath: boolean;
-	terminated?: "return" | "throw";
+	terminated?: 1 | 2;
 }
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
@@ -15476,12 +15471,6 @@ declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagData {
 	[index: string]: any;
 }
-
-/**
- * Helper function for joining two ranges into a single range. This is useful
- * when working with AST nodes, as it allows you to combine the ranges of child nodes
- * to create the range of the _parent node_.
- */
 declare interface TagInfo {
 	tag: symbol;
 	data?: TagData;
