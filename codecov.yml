@@ -7,9 +7,9 @@ coverage:
   status:
     project:
       default: off
-      types:
+      coverage-types:
         flags:
-          - types
+          - coverage-types
         target: auto
       unit:
         flags:
@@ -21,9 +21,9 @@ coverage:
         target: auto
     patch:
       default: off
-      types:
+      coverage-types:
         flags:
-          - types
+          - coverage-types
         target: 90%
         base: pr
       unit:
@@ -38,9 +38,9 @@ coverage:
         base: pr
     changes:
       default: off
-      types:
+      coverage-types:
         flags:
-          - types
+          - coverage-types
       unit:
         flags:
           - unit
@@ -49,5 +49,5 @@ coverage:
           - integration
 comment: off
 flags:
-  types:
+  coverage-types:
     joined: false
