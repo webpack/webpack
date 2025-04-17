@@ -7,53 +7,47 @@ coverage:
   status:
     project:
       default: off
-      basic:
-        flags: basic
-        target: auto
       types:
-        flags: types
+        flags:
+          - types
         target: auto
       unit:
-        flags: unit
+        flags:
+          - unit
         target: auto
       integration:
-        flags: integration
+        flags:
+          - integration
         target: auto
     patch:
       default: off
       types:
-        flags: types
+        flags:
+          - types
         target: 90%
         base: pr
       unit:
-        flags: unit
-        target: 90%
-        base: pr
-      basic:
-        flags: basic
+        flags:
+          - unit
         target: 90%
         base: pr
       integration:
-        flags: integration
+        flags:
+          - integration
         target: 90%
         base: pr
     changes:
       default: off
       types:
-        flags: types
-        target: 0%
-      basic:
-        flags: basic
-        target: 0%
+        flags:
+          - types
       unit:
-        flags: unit
-        target: 0%
+        flags:
+          - unit
       integration:
-        flags: integration
-        target: 0%
+        flags:
+          - integration
 comment: off
 flags:
-  basic:
-    joined: false
   types:
     joined: false

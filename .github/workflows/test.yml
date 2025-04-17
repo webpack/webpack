@@ -93,13 +93,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: yarn cover:basic --ci
-      - uses: codecov/codecov-action@v5
-        with:
-          flags: basic
-          functionalities: gcov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - run: yarn test:basic --ci
   unit:
     runs-on: ubuntu-latest
     steps:
