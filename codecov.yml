@@ -10,11 +10,25 @@ coverage:
       basic:
         flags: basic
         target: auto
+      types:
+        flags: types
+        target: auto
+      unit:
+        flags: unit
+        target: auto
       integration:
         flags: integration
         target: auto
     patch:
       default: off
+      types:
+        flags: types
+        target: 90%
+        base: pr
+      unit:
+        flags: unit
+        target: 90%
+        base: pr
       basic:
         flags: basic
         target: 90%
@@ -25,8 +39,14 @@ coverage:
         base: pr
     changes:
       default: off
+      types:
+        flags: types
+        target: 0%
       basic:
         flags: basic
+        target: 0%
+      unit:
+        flags: unit
         target: 0%
       integration:
         flags: integration
@@ -34,4 +54,6 @@ coverage:
 comment: off
 flags:
   basic:
+    joined: false
+  types:
     joined: false

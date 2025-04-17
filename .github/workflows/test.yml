@@ -48,25 +48,6 @@ jobs:
           yarn upgrade typescript@5.0
           yarn --frozen-lockfile
           yarn type-validate
-  basic:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: "yarn"
-      - run: yarn --frozen-lockfile
-      - run: yarn link --frozen-lockfile || true
-      - run: yarn link webpack --frozen-lockfile
-      - run: yarn test:basic --ci
-      - uses: codecov/codecov-action@v5
-        with:
-          flags: basic
-          functionalities: gcov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   validate-legacy-node:
     runs-on: ubuntu-latest
     steps:
@@ -79,6 +60,46 @@ jobs:
       # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
       - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
       - run: yarn install --production --frozen-lockfile
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "yarn"
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - run: yarn cover:types
+      - uses: codecov/codecov-action@v5
+        with:
+          flags: types
+          disable-search: true
+          files: ./coverage/coverage-types.json
+          functionalities: gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  basic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "yarn"
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - run: yarn cover:basic --ci
+      - uses: codecov/codecov-action@v5
+        with:
+          flags: basic
+          functionalities: gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   unit:
     runs-on: ubuntu-latest
     steps:
