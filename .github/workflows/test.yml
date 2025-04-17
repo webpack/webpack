@@ -73,13 +73,13 @@ jobs:
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn cover:types
-      - uses: codecov/codecov-action@v5
-        with:
-          flags: coverage-types
-          disable_search: true
-          files: ./coverage/coverage-types.json
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  #      - uses: codecov/codecov-action@v5
+  #        with:
+  #          flags: coverage-types
+  #          disable_search: true
+  #          files: ./coverage/coverage-types.json
+  #        env:
+  #          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   basic:
     runs-on: ubuntu-latest
     steps:
