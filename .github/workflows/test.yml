@@ -76,9 +76,8 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: types
-          disable-search: true
+          disable_search: true
           files: ./coverage/coverage-types.json
-          functionalities: gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   basic:
@@ -115,7 +114,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: unit
-          functionalities: gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   integration:
@@ -206,6 +204,5 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: integration
-          functionalities: gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
