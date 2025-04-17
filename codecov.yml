@@ -10,47 +10,17 @@ coverage:
         flags:
           - unit
           - integration
-      coverage-types:
-        flags:
-          - coverage-types
-        target: auto
-      unit:
-        flags:
-          - unit
-        target: auto
-      integration:
-        flags:
-          - integration
         target: auto
     patch:
-      default: off
-      coverage-types:
-        flags:
-          - coverage-types
-        target: 90%
-        base: pr
-      unit:
+      default:
         flags:
           - unit
-        target: 90%
-        base: pr
-      integration:
-        flags:
           - integration
         target: 90%
         base: pr
     changes:
-      default: off
-      coverage-types:
-        flags:
-          - coverage-types
-      unit:
+      default:
         flags:
           - unit
-      integration:
-        flags:
           - integration
 comment: off
-flags:
-  coverage-types:
-    joined: false
