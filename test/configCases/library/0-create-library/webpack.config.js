@@ -46,6 +46,26 @@ module.exports = (env, { testPath }) => [
 		}
 	},
 	{
+		entry: "./esm-with-commonjs.js",
+		output: {
+			uniqueName: "esm-with-commonjs",
+			filename: "esm-with-commonjs.js",
+			library: {
+				type: "module"
+			}
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
 		output: {
 			uniqueName: "esm-export",
 			filename: "esm-export.js",

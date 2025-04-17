@@ -41,7 +41,7 @@ module.exports = (env, { testPath }) => [
 							expect(source).not.toContain('"non-external"');
 							// expect pure ESM export without webpack runtime
 							expect(source).not.toContain('"__webpack_exports__"');
-							expect(source).not.toContain('"__webpack_require__"');
+							expect(source).not.toContain(".exports=");
 						}
 					});
 				};
@@ -58,6 +58,22 @@ module.exports = (env, { testPath }) => [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("esm")
+			})
+		]
+	},
+	{
+		entry: "./esm-with-commonjs",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-with-commonjs.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-with-commonjs")
 			})
 		]
 	},
