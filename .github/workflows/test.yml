@@ -64,6 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
