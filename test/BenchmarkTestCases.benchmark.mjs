@@ -73,7 +73,13 @@ async function getBaselineRevs(rootPath) {
 function runBenchmark(webpack, config, callback) {
 	// warmup
 	const warmupCompiler = webpack(config, (err, stats) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+
 		warmupCompiler.purgeInputFileSystem();
+
 		const bench = new Benchmark(
 			function (deferred) {
 				const compiler = webpack(config, (err, stats) => {
@@ -82,10 +88,12 @@ function runBenchmark(webpack, config, callback) {
 						callback(err);
 						return;
 					}
+
 					if (stats.hasErrors()) {
-						callback(new Error(stats.toJson().errors.join("\n\n")));
+						callback(new Error(stats.toString()));
 						return;
 					}
+
 					deferred.resolve();
 				});
 			},
@@ -98,6 +106,7 @@ function runBenchmark(webpack, config, callback) {
 					const n = stats.sample.length;
 					const nSqrt = Math.sqrt(n);
 					const z = tDistribution(n - 1);
+
 					stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 					stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
 					stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
@@ -105,11 +114,13 @@ function runBenchmark(webpack, config, callback) {
 					)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
 						stats.maxConfidence * 1000
 					)} ms]`;
+
 					callback(null, bench.stats);
 				},
 				onError: callback
 			}
 		);
+
 		bench.run({
 			async: true
 		});
@@ -132,9 +143,10 @@ function tDistribution(n) {
 		const data = [
 			1.697, 1.684, 1.676, 1.671, 1.667, 1.664, 1.662, 1.66, 1.659, 1.658
 		];
-		var a = data[Math.floor(n / 10) - 3];
-		var b = data[Math.ceil(n / 10) - 3];
-		var f = n / 10 - Math.floor(n / 10);
+		const a = data[Math.floor(n / 10) - 3];
+		const b = data[Math.ceil(n / 10) - 3];
+		const f = n / 10 - Math.floor(n / 10);
+
 		return a * (1 - f) + b * f;
 	}
 
@@ -232,33 +244,6 @@ describe("BenchmarkTestCases", function () {
 				let baselineStats = null;
 
 				// eslint-disable-next-line no-loop-func
-				it(`should benchmark ${baseline.name} (${baseline.rev})`, function (done) {
-					const outputDirectory = path.join(
-						__dirname,
-						"js",
-						"benchmark",
-						`baseline-${baseline.name}`,
-						testName
-					);
-					const config =
-						Object.create(
-							jest.requireActual(path.join(testDirectory, "webpack.config.js"))
-						) || {};
-					config.output = Object.create(config.output || {});
-
-					if (!config.context) config.context = testDirectory;
-					if (!config.output.path) config.output.path = outputDirectory;
-
-					runBenchmark(baseline.webpack(), config, (err, stats) => {
-						if (err) return done(err);
-						process.stderr.write(`        ${baseline.name} ${stats.text}`);
-						if (baseline.name === "HEAD") headStats = stats;
-						else baselineStats = stats;
-						done();
-					});
-				}, 180000);
-
-				// eslint-disable-next-line no-loop-func
 				it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
 					const outputDirectory = path.join(
 						__dirname,
@@ -271,6 +256,7 @@ describe("BenchmarkTestCases", function () {
 						jest.requireActual(path.join(testDirectory, "webpack.config.js")) ||
 						{};
 
+					config.mode = config.mode || "production";
 					config.output = config.output || {};
 
 					if (!config.context) config.context = testDirectory;
@@ -288,6 +274,10 @@ describe("BenchmarkTestCases", function () {
 				if (baseline.name !== "HEAD") {
 					// eslint-disable-next-line no-loop-func
 					it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
+						if (!baselineStats) {
+							throw new Error("No baseline stats");
+						}
+
 						if (baselineStats.maxConfidence < headStats.minConfidence) {
 							throw new Error(
 								`${testName} HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`
@@ -296,7 +286,15 @@ describe("BenchmarkTestCases", function () {
 							console.log(
 								`======> ${testName} HEAD is ${Math.round(
 									(baselineStats.mean / headStats.mean) * 100 - 100
-								)}% faster than ${baseline.name} (90% confidence)!`
+								)}% faster than ${baseline.name} (90% confidence)!\n`
+							);
+						} else if (
+							baselineStats.minConfidence === headStats.maxConfidence
+						) {
+							console.log(
+								`======> ${testName} HEAD is ${Math.round(
+									(baselineStats.mean / headStats.mean) * 100 - 100
+								)}% is the same ${baseline.name}!\n`
 							);
 						}
 					});
