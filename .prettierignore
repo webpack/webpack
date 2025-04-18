@@ -3,6 +3,7 @@ package.json
 # Ignore some test files
 test/**/*.*
 !test/*.js
+!test/**/*.benchmark.mjs
 !test/**/webpack.config.js
 !test/**/test.config.js
 !test/**/test.filter.js
