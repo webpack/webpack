@@ -8,6 +8,7 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const url = require("url");
 const { URL, pathToFileURL, fileURLToPath } = require("url");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -560,10 +561,20 @@ const describeCases = config => {
 																specifier,
 																module
 															) => {
+																const normalizedSpecifier =
+																	specifier.startsWith("file:")
+																		? `./${path.relative(
+																				path.dirname(p),
+																				url.fileURLToPath(specifier)
+																			)}`
+																		: specifier.replace(
+																				/https:\/\/example.com\/public\/path\//,
+																				"./"
+																			);
 																const result = await _require(
 																	path.dirname(p),
 																	options,
-																	specifier,
+																	normalizedSpecifier,
 																	"evaluated",
 																	module
 																);
@@ -675,7 +686,6 @@ const describeCases = config => {
 												module.startsWith("node:") ? module.slice(5) : module
 											);
 										};
-
 										if (Array.isArray(bundlePath)) {
 											for (const bundlePathItem of bundlePath) {
 												results.push(
