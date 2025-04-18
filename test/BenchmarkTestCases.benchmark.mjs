@@ -2,6 +2,7 @@
 
 import path from "path";
 import fs from "fs/promises";
+import { createWriteStream } from "fs";
 import Benchmark from "benchmark";
 import { remove } from "./helpers/remove";
 import { dirname } from "node:path";
@@ -107,6 +108,7 @@ function runBenchmark(webpack, config, callback) {
 					const nSqrt = Math.sqrt(n);
 					const z = tDistribution(n - 1);
 
+					stats.sampleCount = stats.sample.length;
 					stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 					stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
 					stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
@@ -175,15 +177,12 @@ for (const folder of await fs.readdir(casesPath)) {
 	tests.push(folder);
 }
 
-const baselinesPath = path.join(__dirname, "js", "benchmark-baselines");
+const output = path.join(__dirname, "js");
+const baselinesPath = path.join(output, "benchmark-baselines");
 const baselines = [];
 
 try {
-	await fs.mkdir(path.join(__dirname, "js"));
-} catch (_err) {} // eslint-disable-line no-empty
-
-try {
-	await fs.mkdir(baselinesPath);
+	await fs.mkdir(baselinesPath, { recursive: true });
 } catch (_err) {} // eslint-disable-line no-empty
 
 const rootPath = path.join(__dirname, "..");
@@ -234,6 +233,11 @@ for (const baselineInfo of baselineRevisions) {
 	}
 }
 
+const reportFilePath = path.resolve(output, "benchmark.md");
+const report = createWriteStream(reportFilePath, { flags: "w" });
+
+report.write("### Benchmarks:\n\n");
+
 describe("BenchmarkTestCases", function () {
 	for (const testName of tests) {
 		const testDirectory = path.join(casesPath, testName);
@@ -261,10 +265,11 @@ describe("BenchmarkTestCases", function () {
 
 					if (!config.context) config.context = testDirectory;
 					if (!config.output.path) config.output.path = outputDirectory;
-
 					runBenchmark(baseline.webpack(), config, (err, stats) => {
 						if (err) return done(err);
-						process.stderr.write(`        ${baseline.name} ${stats.text}`);
+						report.write(
+							`- "${testName}": ${baseline.name === "HEAD" ? baseline.name : `BASE (${baseline.name})`} ${stats.text} (${stats.sampleCount} runs)\n`
+						);
 						if (baseline.name === "HEAD") headStats = stats;
 						else baselineStats = stats;
 						done();
@@ -273,30 +278,28 @@ describe("BenchmarkTestCases", function () {
 
 				if (baseline.name !== "HEAD") {
 					// eslint-disable-next-line no-loop-func
-					it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
+					it(`HEAD and ${baseline.name} (${baseline.rev}) results`, function () {
 						if (!baselineStats) {
 							throw new Error("No baseline stats");
 						}
 
-						if (baselineStats.maxConfidence < headStats.minConfidence) {
-							throw new Error(
-								`${testName} HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`
-							);
-						} else if (baselineStats.minConfidence > headStats.maxConfidence) {
-							console.log(
-								`======> ${testName} HEAD is ${Math.round(
-									(baselineStats.mean / headStats.mean) * 100 - 100
-								)}% faster than ${baseline.name} (90% confidence)!\n`
-							);
-						} else if (
+						report.write(`- "${testName}" change: `);
+
+						console.log(baselineStats.maxConfidence);
+						console.log(headStats.minConfidence);
+						console.log(baselineStats.maxConfidence < headStats.minConfidence);
+						console.log(baselineStats.minConfidence > headStats.maxConfidence);
+						console.log(
 							baselineStats.minConfidence === headStats.maxConfidence
-						) {
-							console.log(
-								`======> ${testName} HEAD is ${Math.round(
-									(baselineStats.mean / headStats.mean) * 100 - 100
-								)}% is the same ${baseline.name}!\n`
-							);
-						}
+						);
+
+						report.write(
+							`HEAD (${headStats.text}) is ${Math.round(
+								(baselineStats.mean / headStats.mean) * 100 - 100
+							)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower" : baselineStats.minConfidence > headStats.maxConfidence ? "faster" : "the same as"} than BASE (${baseline.name}) (${baselineStats.text})\n`
+						);
+
+						report.write(`\n\n`);
 					});
 				}
 			}
@@ -305,5 +308,6 @@ describe("BenchmarkTestCases", function () {
 
 	afterAll(() => {
 		remove(baselinesPath);
+		report.end();
 	});
 });

@@ -76,6 +76,20 @@ jobs:
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn benchmark --ci
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Benchmarks
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: "./test/js/benchmark.md"
+          edit-mode: replace
   basic:
     runs-on: ubuntu-latest
     steps:
