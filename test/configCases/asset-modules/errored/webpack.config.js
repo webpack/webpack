@@ -10,7 +10,7 @@ module.exports = {
 				test: /\.css$/i,
 				type: "asset/resource",
 				generator: {
-					filename: () => `css/style.[contenthash].css`
+					filename: () => "css/style.[contenthash].css"
 				},
 				use: [
 					{
