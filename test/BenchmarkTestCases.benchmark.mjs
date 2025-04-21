@@ -10,8 +10,14 @@ import { fileURLToPath } from "node:url";
 import simpleGit from "simple-git";
 import { jest } from "@jest/globals";
 
-async function getBaselineRevs(rootPath) {
-	const git = simpleGit(rootPath);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const rootPath = path.join(__dirname, "..");
+const git = simpleGit(rootPath);
+
+/**
+ * @returns {Promise<[string, string]>} last version and commit id
+ */
+async function getRevLastVersion() {
 	const pkgJSON = JSON.parse(
 		await fs.readFile(path.resolve(__dirname, "../package.json"))
 	);
@@ -21,7 +27,12 @@ async function getBaselineRevs(rootPath) {
 
 	if (!matchVersion) throw new Error("Invalid result from git revparse");
 
-	const revLastVersion = matchVersion[1];
+	return [lastVersionTag, matchVersion[1]];
+}
+
+async function getBaselineRevs(rootPath) {
+	const [lastVersionTag, revLastVersion] = await getRevLastVersion();
+
 	const resultParents = await git.raw([
 		"rev-list",
 		"--parents",
@@ -155,7 +166,6 @@ function tDistribution(n) {
 	return 1.645;
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const casesPath = path.join(__dirname, "benchmarkCases");
 
 const tests = [];
@@ -185,8 +195,9 @@ try {
 	await fs.mkdir(baselinesPath, { recursive: true });
 } catch (_err) {} // eslint-disable-line no-empty
 
-const rootPath = path.join(__dirname, "..");
 const baselineRevisions = await getBaselineRevs(rootPath);
+
+console.log(baselineRevisions);
 
 for (const baselineInfo of baselineRevisions) {
 	function doLoadWebpack() {
@@ -211,12 +222,7 @@ for (const baselineInfo of baselineRevisions) {
 
 		const gitIndex = path.resolve(rootPath, ".git/index");
 		const index = await fs.readFile(gitIndex);
-		const prevHead = await simpleGit(rootPath).raw([
-			"rev-list",
-			"-n",
-			"1",
-			"HEAD"
-		]);
+		const prevHead = await git.raw(["rev-list", "-n", "1", "HEAD"]);
 
 		await simpleGit(baselinePath).raw([
 			"--git-dir",
@@ -226,7 +232,7 @@ for (const baselineInfo of baselineRevisions) {
 			baselineRevision
 		]);
 
-		await simpleGit(rootPath).raw(["reset", "--soft", prevHead.split("\n")[0]]);
+		await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
 		await fs.writeFile(gitIndex, index);
 	} finally {
 		doLoadWebpack();
@@ -268,7 +274,7 @@ describe("BenchmarkTestCases", function () {
 					runBenchmark(baseline.webpack(), config, (err, stats) => {
 						if (err) return done(err);
 						report.write(
-							`- "${testName}": ${baseline.name === "HEAD" ? baseline.name : `BASE (${baseline.name})`} ${stats.text} (${stats.sampleCount} runs)\n`
+							`- "${testName}": ${baseline.name === "HEAD" ? `${baseline.name} (${baseline.rev})` : `BASE (${baseline.rev} - ${baseline.name})`} ${stats.text} (${stats.sampleCount} runs)\n`
 						);
 						if (baseline.name === "HEAD") headStats = stats;
 						else baselineStats = stats;
@@ -284,22 +290,13 @@ describe("BenchmarkTestCases", function () {
 						}
 
 						report.write(`- "${testName}" change: `);
-
-						console.log(baselineStats.maxConfidence);
-						console.log(headStats.minConfidence);
-						console.log(baselineStats.maxConfidence < headStats.minConfidence);
-						console.log(baselineStats.minConfidence > headStats.maxConfidence);
-						console.log(
-							baselineStats.minConfidence === headStats.maxConfidence
-						);
-
 						report.write(
 							`HEAD (${headStats.text}) is ${Math.round(
 								(baselineStats.mean / headStats.mean) * 100 - 100
-							)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower" : baselineStats.minConfidence > headStats.maxConfidence ? "faster" : "the same as"} than BASE (${baseline.name}) (${baselineStats.text})\n`
+							)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} BASE (${baseline.name}) (${baselineStats.text})\n`
 						);
 
-						report.write(`\n\n`);
+						report.write(`-----\n`);
 					});
 				}
 			}
