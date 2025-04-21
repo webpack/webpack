@@ -76,6 +76,7 @@ jobs:
           node-version: lts/*
           cache: "yarn"
       - run: git log --format="%h %B" --oneline -n 5
+      - run: git rev-list --parents -n 1 HEAD
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile

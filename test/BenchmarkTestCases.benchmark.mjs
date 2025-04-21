@@ -19,36 +19,34 @@ async function getBaselineRevs() {
 
 	const resultParents = await git.raw([
 		"rev-list",
-		"--first-parent",
 		"--parents",
 		"-n",
 		"1",
 		"HEAD"
 	]);
-	console.log(resultParents);
 	const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(
 		resultParents
 	);
 
 	if (!match) throw new Error("Invalid result from git rev-list");
 
-	const head = match[1];
-	const parent1 = match[2];
+	const head = match[3] ? match[3] : match[1];
+	const base = match[3] ? match[2] : match[2];
 
-	if (parent1) {
-		return [
-			{
-				name: "HEAD",
-				rev: head
-			},
-			{
-				name: "BASE",
-				rev: parent1
-			}
-		];
+	if (!head || !base) {
+		throw new Error("No baseline found");
 	}
 
-	throw new Error("No baseline found");
+	return [
+		{
+			name: "HEAD",
+			rev: head
+		},
+		{
+			name: "BASE",
+			rev: base
+		}
+	];
 }
 
 function runBenchmark(webpack, config, callback) {
