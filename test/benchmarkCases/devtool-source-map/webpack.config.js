@@ -1,4 +1,5 @@
 /** @type {import("../../../").Configuration} */
 module.exports = {
-	entry: ["./index", "./index2"]
+	entry: "./index",
+	devtool: "source-map"
 };
