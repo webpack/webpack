@@ -15,13 +15,17 @@ const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
 
 async function getBaselineRevs() {
+	// const head = await git.raw(["rev-list", "-n", "1", "HEAD"]);
+
 	const resultParents = await git.raw([
 		"rev-list",
+		"--first-parent",
 		"--parents",
 		"-n",
 		"1",
 		"HEAD"
 	]);
+	console.log(resultParents);
 	const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(
 		resultParents
 	);
