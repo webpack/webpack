@@ -40,6 +40,7 @@ async function getBaselineRevs(rootPath) {
 		"1",
 		"HEAD"
 	]);
+	console.log(resultParents);
 	const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(
 		resultParents
 	);
@@ -196,8 +197,6 @@ try {
 } catch (_err) {} // eslint-disable-line no-empty
 
 const baselineRevisions = await getBaselineRevs(rootPath);
-
-console.log(baselineRevisions);
 
 for (const baselineInfo of baselineRevisions) {
 	function doLoadWebpack() {
