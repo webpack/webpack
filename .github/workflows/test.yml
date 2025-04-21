@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - dev-1
   pull_request:
     branches:
       - main
-      - dev-1
 
 permissions:
   contents: read
@@ -80,6 +78,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
       - run: yarn benchmark --ci
       - name: Find Comment
+        if: github.event_name == 'pull_request'
         uses: peter-evans/find-comment@v3
         id: fc
         with:
@@ -87,6 +86,7 @@ jobs:
           comment-author: "github-actions[bot]"
           body-includes: Benchmarks
       - name: Create or update comment
+        if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}

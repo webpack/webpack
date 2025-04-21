@@ -29,7 +29,6 @@ module.exports = {
 					}
 
 					return resolve(
-						// eslint-disable-next-line n/no-unsupported-features/node-builtins
 						new Response(data, {
 							headers: { "Content-Type": "application/wasm" }
 						})
