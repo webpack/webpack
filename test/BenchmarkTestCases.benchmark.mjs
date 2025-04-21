@@ -14,25 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
 
-/**
- * @returns {Promise<[string, string]>} last version and commit id
- */
-async function getRevLastVersion() {
-	const pkgJSON = JSON.parse(
-		await fs.readFile(path.resolve(__dirname, "../package.json"))
-	);
-	const lastVersionTag = `v${pkgJSON.version}`;
-	const resultVersion = await git.raw(["rev-list", "-n", "1", lastVersionTag]);
-	const matchVersion = /^([a-f0-9]+)\s*$/.exec(resultVersion);
-
-	if (!matchVersion) throw new Error("Invalid result from git revparse");
-
-	return [lastVersionTag, matchVersion[1]];
-}
-
-async function getBaselineRevs(rootPath) {
-	const [lastVersionTag, revLastVersion] = await getRevLastVersion();
-
+async function getBaselineRevs() {
 	const resultParents = await git.raw([
 		"rev-list",
 		"--parents",
@@ -40,7 +22,6 @@ async function getBaselineRevs(rootPath) {
 		"1",
 		"HEAD"
 	]);
-	console.log(resultParents);
 	const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(
 		resultParents
 	);
@@ -49,35 +30,18 @@ async function getBaselineRevs(rootPath) {
 
 	const head = match[1];
 	const parent1 = match[2];
-	const parent2 = match[3];
 
-	if (parent2 && parent1) {
+	if (parent1) {
 		return [
 			{
 				name: "HEAD",
 				rev: head
 			},
-			head !== revLastVersion && {
-				name: lastVersionTag,
-				rev: revLastVersion
-			},
-			parent1 !== revLastVersion &&
-				head !== revLastVersion && {
-					name: "base",
-					rev: parent1
-				}
-		].filter(Boolean);
-	} else if (parent1) {
-		return [
 			{
-				name: "HEAD",
-				rev: head
-			},
-			head !== revLastVersion && {
-				name: lastVersionTag,
-				rev: revLastVersion
+				name: "BASE",
+				rev: parent1
 			}
-		].filter(Boolean);
+		];
 	}
 
 	throw new Error("No baseline found");
@@ -196,7 +160,9 @@ try {
 	await fs.mkdir(baselinesPath, { recursive: true });
 } catch (_err) {} // eslint-disable-line no-empty
 
-const baselineRevisions = await getBaselineRevs(rootPath);
+const baselineRevisions = await getBaselineRevs();
+
+console.log(baselineRevisions);
 
 for (const baselineInfo of baselineRevisions) {
 	function doLoadWebpack() {
@@ -273,7 +239,7 @@ describe("BenchmarkTestCases", function () {
 					runBenchmark(baseline.webpack(), config, (err, stats) => {
 						if (err) return done(err);
 						report.write(
-							`- "${testName}": ${baseline.name === "HEAD" ? `${baseline.name} (${baseline.rev})` : `BASE (${baseline.rev} - ${baseline.name})`} ${stats.text} (${stats.sampleCount} runs)\n`
+							`- "${testName}": ${baseline.name} (${baseline.rev}) ${stats.text} (${stats.sampleCount} runs)\n`
 						);
 						if (baseline.name === "HEAD") headStats = stats;
 						else baselineStats = stats;
