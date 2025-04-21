@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/eslint-scope": "^3.7.7",
     "@types/estree": "^1.0.6",
+    "@types/json-schema": "^7.0.15",
     "@webassemblyjs/ast": "^1.14.1",
     "@webassemblyjs/wasm-edit": "^1.14.1",
     "@webassemblyjs/wasm-parser": "^1.14.1",
