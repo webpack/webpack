@@ -14,9 +14,53 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
 
-async function getBaselineRevs() {
-	// const head = await git.raw(["rev-list", "-n", "1", "HEAD"]);
+const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
+async function getHead(revList) {
+	if (typeof process.env.HEAD !== "undefined") {
+		return process.env.HEAD;
+	}
+
+	if (revList[3]) {
+		return revList[3];
+	}
+
+	return revList[1];
+}
+
+async function getBase(revList) {
+	if (typeof process.env.BASE !== "undefined") {
+		return process.env.BASE;
+	}
+
+	if (revList[3]) {
+		return revList[2];
+	}
+
+	const branchName = await git.raw(["rev-parse", "--abbrev-ref", "HEAD"]);
+
+	if (branchName !== "main") {
+		const resultParents = await git.raw([
+			"rev-list",
+			"--parents",
+			"-n",
+			"1",
+			"main"
+		]);
+
+		const revList = REV_LIST_REGEXP.exec(resultParents);
+
+		if (!revList[1]) {
+			throw new Error("No parent commit found");
+		}
+
+		return revList[1];
+	}
+
+	return revList[2];
+}
+
+async function getBaselineRevs() {
 	const resultParents = await git.raw([
 		"rev-list",
 		"--parents",
@@ -24,14 +68,12 @@ async function getBaselineRevs() {
 		"1",
 		"HEAD"
 	]);
-	const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(
-		resultParents
-	);
+	const revList = REV_LIST_REGEXP.exec(resultParents);
 
-	if (!match) throw new Error("Invalid result from git rev-list");
+	if (!revList) throw new Error("Invalid result from git rev-list");
 
-	const head = match[3] ? match[3] : match[1];
-	const base = match[3] ? match[2] : match[2];
+	const head = await getHead(revList);
+	const base = await getBase(revList);
 
 	if (!head || !base) {
 		throw new Error("No baseline found");
@@ -163,8 +205,6 @@ try {
 } catch (_err) {} // eslint-disable-line no-empty
 
 const baselineRevisions = await getBaselineRevs();
-
-console.log(baselineRevisions);
 
 for (const baselineInfo of baselineRevisions) {
 	function doLoadWebpack() {
