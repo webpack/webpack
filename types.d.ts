@@ -906,6 +906,12 @@ declare abstract class ByTypeGenerator extends Generator {
 	) => null | Source;
 }
 declare const CIRCULAR_CONNECTION: unique symbol;
+type CSSModuleCreateData = NormalModuleCreateData & {
+	cssLayer: CssLayer;
+	supports: Supports;
+	media: Media;
+	inheritance: [CssLayer, Supports, Media][];
+};
 declare class Cache {
 	constructor();
 	hooks: {
@@ -3278,11 +3284,16 @@ declare interface CssLoadingRuntimeModulePluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk]>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
 }
-declare abstract class CssModule extends NormalModule {
+declare class CssModule extends NormalModule {
+	constructor(options: CSSModuleCreateData);
 	cssLayer: CssLayer;
 	supports: Supports;
 	media: Media;
 	inheritance: [CssLayer, Supports, Media][];
+	static deserialize(context: ObjectDeserializerContext): CssModule;
+	static getCompilationHooks(
+		compilation: Compilation
+	): NormalModuleCompilationHooks;
 }
 
 /**
@@ -16550,7 +16561,7 @@ declare namespace exports {
 		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace css {
-		export { CssModulesPlugin };
+		export { CssModulesPlugin, CssModule };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
