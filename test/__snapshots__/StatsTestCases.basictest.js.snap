@@ -498,6 +498,69 @@ all:
   all (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for cause-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+WARNING in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+WARNING in error with case
+  [cause]: error case
+
+WARNING in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+WARNING in error with string case
+  [cause]: string case
+
+WARNING in webpack error with case
+  [cause]: cause
+
+WARNING in webpack error
+
+ERROR in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+ERROR in error with case
+  [cause]: error case
+
+ERROR in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+ERROR in error with string case
+  [cause]: string case
+
+ERROR in webpack error with case
+  [cause]: cause
+
+ERROR in webpack error
+
+error cause (webpack x.x.x) compiled with 6 errors and 6 warnings in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
 "asset child.js X bytes [emitted]
 asset parent.js X bytes [emitted] (name: parent)

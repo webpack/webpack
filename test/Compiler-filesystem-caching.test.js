@@ -45,6 +45,7 @@ describe("Compiler (filesystem caching)", () => {
 		const isErrorCaseSupported =
 			typeof new Error("test", { cause: new Error("cause") }).cause !==
 			"undefined";
+		const isAggregateErrorSupported = typeof AggregateError !== "undefined";
 
 		options.plugins = [
 			{
@@ -76,6 +77,17 @@ describe("Compiler (filesystem caching)", () => {
 										expect(result.error.cause.message).toEqual("cause");
 										expect(result.error1.cause.string).toBe("string");
 										expect(result.error1.cause.number).toBe(42);
+									}
+
+									if (isAggregateErrorSupported) {
+										expect(result.aggregateError.errors).toEqual([
+											new Error("first", { cause: "nested cause" }),
+											"second"
+										]);
+										expect(result.aggregateError.message).toEqual(
+											"aggregate error"
+										);
+										expect(result.aggregateError.cause.message).toBe("cause");
 									}
 
 									if (isBigIntSupported) {
@@ -112,6 +124,14 @@ describe("Compiler (filesystem caching)", () => {
 									storeValue.error1 = new Error("error", {
 										cause: { string: "string", number: 42 }
 									});
+								}
+
+								if (isAggregateErrorSupported) {
+									storeValue.aggregateError = new AggregateError(
+										[new Error("first", { cause: "nested cause" }), "second"],
+										"aggregate error",
+										{ cause: new Error("cause") }
+									);
 								}
 
 								if (isBigIntSupported) {

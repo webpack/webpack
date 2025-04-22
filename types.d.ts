@@ -1962,8 +1962,8 @@ declare class Compilation {
 		needAdditionalPass: SyncBailHook<[], boolean | void>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], boolean | void>;
-		processWarnings: SyncWaterfallHook<[WebpackError[]]>;
-		processErrors: SyncWaterfallHook<[WebpackError[]]>;
+		processWarnings: SyncWaterfallHook<[Error[]]>;
+		processErrors: SyncWaterfallHook<[Error[]]>;
 		statsPreset: HookMap<
 			SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>
 		>;
@@ -2030,8 +2030,8 @@ declare class Compilation {
 	additionalChunkAssets: string[];
 	assets: CompilationAssets;
 	assetsInfo: Map<string, AssetInfo>;
-	errors: WebpackError[];
-	warnings: WebpackError[];
+	errors: Error[];
+	warnings: Error[];
 	children: Compilation[];
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DepConstructor, ModuleFactory>;
@@ -2230,8 +2230,8 @@ declare class Compilation {
 		filename: TemplatePath,
 		data: PathData
 	): InterpolatedPathAndAssetInfo;
-	getWarnings(): WebpackError[];
-	getErrors(): WebpackError[];
+	getWarnings(): Error[];
+	getErrors(): Error[];
 
 	/**
 	 * This function allows you to run another instance of webpack inside of webpack however as
@@ -2705,7 +2705,7 @@ declare interface Configuration {
 				 */
 				module?: RegExp;
 		  }
-		| ((warning: WebpackError, compilation: Compilation) => boolean)
+		| ((warning: Error, compilation: Compilation) => boolean)
 	)[];
 
 	/**
@@ -7903,6 +7903,8 @@ declare interface KnownStatsError {
 	moduleTrace?: StatsModuleTraceItem[];
 	details?: string;
 	stack?: string;
+	cause?: KnownStatsError;
+	errors?: KnownStatsError[];
 	compilerPath?: string;
 }
 declare interface KnownStatsFactoryContext {
@@ -15097,9 +15099,19 @@ declare interface StatsOptions {
 	env?: boolean;
 
 	/**
+	 * Add cause to errors.
+	 */
+	errorCause?: boolean | "auto";
+
+	/**
 	 * Add details to errors (like resolving log).
 	 */
 	errorDetails?: boolean | "auto";
+
+	/**
+	 * Add nested errors to errors (like in AggregateError).
+	 */
+	errorErrors?: boolean | "auto";
 
 	/**
 	 * Add internal stack trace to errors.
@@ -15778,7 +15790,7 @@ declare class WebpackError extends Error {
 	/**
 	 * Creates an instance of WebpackError.
 	 */
-	constructor(message?: string);
+	constructor(message?: string, options?: { cause?: unknown });
 	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
@@ -15788,6 +15800,7 @@ declare class WebpackError extends Error {
 	file?: string;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
+	cause: any;
 
 	/**
 	 * Create .stack property on a target object
@@ -15925,10 +15938,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Ignore specific warnings.
 	 */
-	ignoreWarnings?: ((
-		warning: WebpackError,
-		compilation: Compilation
-	) => boolean)[];
+	ignoreWarnings?: ((warning: Error, compilation: Compilation) => boolean)[];
 
 	/**
 	 * Options for infrastructure level logging.
