@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		switch (i) {
 			case 2:
 			case 6:

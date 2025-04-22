@@ -1,4 +1,4 @@
-var path = require("path");
+const path = require("path");
 
 /** @typedef {import("../../../WatchTestCases.template").Env} Env */
 /** @typedef {import("../../../WatchTestCases.template").TestOptions} TestOptions */

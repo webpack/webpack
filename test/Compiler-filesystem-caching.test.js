@@ -43,7 +43,6 @@ describe("Compiler (filesystem caching)", () => {
 
 		const isBigIntSupported = typeof BigInt !== "undefined";
 		const isErrorCaseSupported =
-			// eslint-disable-next-line n/no-unsupported-features/es-syntax
 			typeof new Error("test", { cause: new Error("cause") }).cause !==
 			"undefined";
 
@@ -107,11 +106,9 @@ describe("Compiler (filesystem caching)", () => {
 								storeValue.string = "string";
 
 								if (isErrorCaseSupported) {
-									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error = new Error("error", {
 										cause: new Error("cause")
 									});
-									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error1 = new Error("error", {
 										cause: { string: "string", number: 42 }
 									});
@@ -171,6 +168,9 @@ describe("Compiler (filesystem caching)", () => {
 		};
 	}
 
+	/**
+	 * @returns {void}
+	 */
 	function cleanup() {
 		rimraf.sync(`${tempFixturePath}*`);
 	}
@@ -178,6 +178,9 @@ describe("Compiler (filesystem caching)", () => {
 	beforeAll(cleanup);
 	afterAll(cleanup);
 
+	/**
+	 * @returns {{ rootPath: string, usesAssetFilepath: string, svgFilepath: string }} temp fixture paths
+	 */
 	function createTempFixture() {
 		const fixturePath = `${tempFixturePath}-${fixtureCount}`;
 		const usesAssetFilepath = path.join(fixturePath, "uses-asset.js");
@@ -197,8 +200,8 @@ describe("Compiler (filesystem caching)", () => {
 		fixtureCount++;
 		return {
 			rootPath: fixturePath,
-			usesAssetFilepath: usesAssetFilepath,
-			svgFilepath: svgFilepath
+			usesAssetFilepath,
+			svgFilepath
 		};
 	}
 

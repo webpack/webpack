@@ -1,3 +1,7 @@
+/**
+ * @param {EXPECTED_ANY[]} useArray use array
+ * @returns {EXPECTED_FUNCTION[]} functions
+ */
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(function (useItem) {
 		return function (data) {
@@ -6,7 +10,7 @@ function createFunctionArrayFromUseArray(useArray) {
 	});
 }
 
-var useArray = createFunctionArrayFromUseArray([
+const useArray = createFunctionArrayFromUseArray([
 	"./loader",
 	{
 		loader: "./loader",
@@ -15,7 +19,7 @@ var useArray = createFunctionArrayFromUseArray([
 	{
 		loader: "./loader",
 		options: {
-			get: function () {
+			get() {
 				return "second-3";
 			}
 		}

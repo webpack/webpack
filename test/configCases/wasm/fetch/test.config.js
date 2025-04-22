@@ -3,7 +3,7 @@ const url = require("url");
 const path = require("path");
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		switch (i) {
 			case 0:
 				return ["bundle0.mjs"];
@@ -29,7 +29,6 @@ module.exports = {
 					}
 
 					return resolve(
-						// eslint-disable-next-line n/no-unsupported-features/node-builtins
 						new Response(data, {
 							headers: { "Content-Type": "application/wasm" }
 						})

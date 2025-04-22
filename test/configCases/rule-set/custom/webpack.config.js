@@ -4,7 +4,7 @@ module.exports = {
 		rules: [
 			{
 				test: /[ab]\.js$/,
-				use: function (data) {
+				use(data) {
 					return {
 						loader: "./loader",
 						options: {

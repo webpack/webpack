@@ -1,7 +1,7 @@
 module.exports = function supportsSpread() {
 	try {
-		var x = { a: true };
-		var y;
+		const x = { a: true };
+		let y;
 		eval("y = { ...x }");
 		return y !== x && y.a;
 	} catch (_err) {

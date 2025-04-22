@@ -307,6 +307,11 @@ const describeCases = config => {
 									});
 								}
 
+								/**
+								 * @private
+								 * @param {string} module module
+								 * @returns {EXPECTED_ANY} required module
+								 */
 								function _require(module) {
 									if (module.startsWith("./")) {
 										const p = path.join(outputDirectory, module);

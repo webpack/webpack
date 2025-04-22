@@ -33,6 +33,11 @@ describe("WatchClose", () => {
 			compiler = null;
 		});
 
+		/**
+		 * @param {import("../").Watching} watcher watcher
+		 * @param {(err?: null | Error) -> void} callback callback
+		 * @returns {Promise<void>}
+		 */
 		function close(watcher, callback) {
 			return new Promise(res => {
 				const onClose = () => {

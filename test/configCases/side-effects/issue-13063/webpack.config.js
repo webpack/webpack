@@ -1,6 +1,8 @@
 module.exports = {
 	entry: {
+		// eslint-disable-next-line camelcase
 		tst_examples_uiform: "./tst_examples_uiform",
+		// eslint-disable-next-line camelcase
 		tst_examples_uitable: "./tst_examples_uitable",
 		another: "./another"
 	},

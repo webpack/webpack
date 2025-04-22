@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const ext = options.output.module ? "mjs" : "js";
 
 		switch (i % 4) {

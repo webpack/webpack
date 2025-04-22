@@ -2,12 +2,13 @@
 
 import path from "path";
 import fs from "fs/promises";
-import { createWriteStream } from "fs";
+import { createWriteStream, constants } from "fs";
 import Benchmark from "benchmark";
 import { remove } from "./helpers/remove";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import simpleGit from "simple-git";
+// eslint-disable-next-line n/no-extraneous-import
 import { jest } from "@jest/globals";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -16,6 +17,12 @@ const git = simpleGit(rootPath);
 
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
+new Error().cause = 1;
+
+/**
+ * @param {(string | undefined)[]} revList rev list
+ * @returns {Promise<string>} head
+ */
 async function getHead(revList) {
 	if (typeof process.env.HEAD !== "undefined") {
 		return process.env.HEAD;
@@ -28,6 +35,10 @@ async function getHead(revList) {
 	return revList[1];
 }
 
+/**
+ * @param {(string | undefined)[]} revList rev list
+ * @returns {Promise<string>} base
+ */
 async function getBase(revList) {
 	if (typeof process.env.BASE !== "undefined") {
 		return process.env.BASE;
@@ -39,7 +50,7 @@ async function getBase(revList) {
 
 	const branchName = await git.raw(["rev-parse", "--abbrev-ref", "HEAD"]);
 
-	if (branchName !== "main") {
+	if (branchName.trim() !== "main") {
 		const resultParents = await git.raw([
 			"rev-list",
 			"--parents",
@@ -60,6 +71,9 @@ async function getBase(revList) {
 	return revList[2];
 }
 
+/**
+ * @returns {Promise<{name: string, rev: string}[]>} baseline revs
+ */
 async function getBaselineRevs() {
 	const resultParents = await git.raw([
 		"rev-list",
@@ -122,7 +136,7 @@ function runBenchmark(webpack, config, callback) {
 				maxTime: 30,
 				defer: true,
 				initCount: 1,
-				onComplete: function () {
+				onComplete() {
 					const stats = bench.stats;
 					const n = stats.sample.length;
 					const nSqrt = Math.sqrt(n);
@@ -149,6 +163,10 @@ function runBenchmark(webpack, config, callback) {
 	});
 }
 
+/**
+ * @param {number} n number of runs
+ * @returns {number} distribution
+ */
 function tDistribution(n) {
 	// two-sided, 90%
 	// https://en.wikipedia.org/wiki/Student%27s_t-distribution
@@ -187,9 +205,9 @@ for (const folder of await fs.readdir(casesPath)) {
 	try {
 		await fs.access(
 			path.resolve(casesPath, folder, "webpack.config.js"),
-			fs.constants.R_OK
+			constants.R_OK
 		);
-	} catch (e) {
+	} catch (_err) {
 		continue;
 	}
 
@@ -207,13 +225,15 @@ try {
 const baselineRevisions = await getBaselineRevs();
 
 for (const baselineInfo of baselineRevisions) {
+	/**
+	 * @returns {void}
+	 */
 	function doLoadWebpack() {
 		baselines.push({
 			name: baselineInfo.name,
 			rev: baselineRevision,
-			webpack: () => {
-				return jest.requireActual(path.resolve(baselinePath, "lib/index.js"));
-			}
+			webpack: () =>
+				jest.requireActual(path.resolve(baselinePath, "lib/index.js"))
 		});
 	}
 
@@ -221,7 +241,7 @@ for (const baselineInfo of baselineRevisions) {
 	const baselinePath = path.resolve(baselinesPath, baselineRevision);
 
 	try {
-		await fs.access(path.resolve(baselinePath, ".git"), fs.constants.R_OK);
+		await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
 	} catch (_err) {
 		try {
 			await fs.mkdir(baselinePath);

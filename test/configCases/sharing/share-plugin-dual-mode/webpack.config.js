@@ -8,6 +8,7 @@ module.exports = {
 		new SharePlugin({
 			shared: {
 				lib: {},
+				// eslint-disable-next-line camelcase
 				transitive_lib: {}
 			}
 		})

@@ -138,7 +138,7 @@ const describeCases = config => {
 								}
 							}
 							testConfig = {
-								findBundle: function (i, options) {
+								findBundle(i, options) {
 									const ext = path.extname(
 										parseResource(options.output.filename).path
 									);
@@ -422,10 +422,10 @@ const describeCases = config => {
 										filesCount++;
 										const document = new FakeDocument(outputDirectory);
 										const globalContext = {
-											console: console,
-											expect: expect,
-											setTimeout: setTimeout,
-											clearTimeout: clearTimeout,
+											console,
+											expect,
+											setTimeout,
+											clearTimeout,
 											document,
 											getComputedStyle:
 												document.getComputedStyle.bind(document),
@@ -442,7 +442,7 @@ const describeCases = config => {
 										const esmCache = new Map();
 										const esmIdentifier = `${category.name}-${testName}-${i}`;
 										const baseModuleScope = {
-											console: console,
+											console,
 											it: _it,
 											beforeEach: _beforeEach,
 											afterEach: _afterEach,

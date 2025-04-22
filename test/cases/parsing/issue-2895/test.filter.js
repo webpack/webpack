@@ -1,4 +1,4 @@
-var supportsBlockScoping = require("../../../helpers/supportsBlockScoping");
+const supportsBlockScoping = require("../../../helpers/supportsBlockScoping");
 
 module.exports = function (config) {
 	return supportsBlockScoping();
