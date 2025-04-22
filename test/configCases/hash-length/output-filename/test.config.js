@@ -14,7 +14,7 @@ const verifyFilenameLength = (filename, expectedNameLength) => {
 };
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const files = fs.readdirSync(options.output.path);
 		const bundleDetects = [
 			options.amd.expectedChunkFilenameLength && {

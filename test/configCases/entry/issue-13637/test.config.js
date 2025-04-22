@@ -10,7 +10,7 @@ module.exports = {
 	afterExecute: () => {
 		System.execute("(anonym)");
 	},
-	findBundle: function () {
+	findBundle() {
 		return ["./main.system.js", "./main.umd.js"];
 	}
 };

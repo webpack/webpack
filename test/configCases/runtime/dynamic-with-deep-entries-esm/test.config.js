@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function () {
+	findBundle() {
 		return [
 			"./runtime/one.mjs",
 			"./one.mjs",

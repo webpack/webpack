@@ -125,7 +125,7 @@ function runBenchmark(webpack, config, callback) {
 				maxTime: 30,
 				defer: true,
 				initCount: 1,
-				onComplete: function () {
+				onComplete() {
 					const stats = bench.stats;
 					const n = stats.sample.length;
 					const nSqrt = Math.sqrt(n);

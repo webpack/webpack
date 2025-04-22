@@ -261,8 +261,8 @@ const describeCases = config => {
 											return;
 
 										const globalContext = {
-											console: console,
-											expect: expect,
+											console,
+											expect,
 											setTimeout,
 											clearTimeout,
 											document: new FakeDocument()

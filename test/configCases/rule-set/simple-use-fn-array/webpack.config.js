@@ -15,7 +15,7 @@ const useArray = createFunctionArrayFromUseArray([
 	{
 		loader: "./loader",
 		options: {
-			get: function () {
+			get() {
 				return "second-3";
 			}
 		}

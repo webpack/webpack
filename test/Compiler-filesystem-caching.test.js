@@ -194,8 +194,8 @@ describe("Compiler (filesystem caching)", () => {
 		fixtureCount++;
 		return {
 			rootPath: fixturePath,
-			usesAssetFilepath: usesAssetFilepath,
-			svgFilepath: svgFilepath
+			usesAssetFilepath,
+			svgFilepath
 		};
 	}
 

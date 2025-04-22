@@ -3,7 +3,7 @@ const url = require("url");
 const path = require("path");
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		switch (i) {
 			case 0:
 				return ["bundle0.mjs"];

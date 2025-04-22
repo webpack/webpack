@@ -421,7 +421,7 @@ const describeCases = config => {
 								Buffer,
 								setTimeout,
 								setImmediate,
-								nsObj: function (m) {
+								nsObj(m) {
 									Object.defineProperty(m, Symbol.toStringTag, {
 										value: "Module"
 									});

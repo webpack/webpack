@@ -116,8 +116,8 @@ describe("Compiler (caching)", () => {
 		fixtureCount++;
 		return {
 			rootPath: fixturePath,
-			aFilepath: aFilepath,
-			cFilepath: cFilepath
+			aFilepath,
+			cFilepath
 		};
 	}
 

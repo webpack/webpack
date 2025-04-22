@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports = {
 	noTests: true,
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const regex = new RegExp(`^bundle.${options.name}`, "i");
 		const files = fs.readdirSync(options.output.path);
 		const bundle = files.find(function (file) {

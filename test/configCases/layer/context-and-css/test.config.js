@@ -9,7 +9,7 @@ module.exports = {
 		dark.href = "dark.css";
 		scope.window.document.head.appendChild(dark);
 	},
-	findBundle: function () {
+	findBundle() {
 		return ["./runtime.js", "./light.js", "./dark.js"];
 	}
 };

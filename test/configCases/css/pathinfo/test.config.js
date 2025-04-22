@@ -8,7 +8,7 @@ module.exports = {
 		link.href = "bundle0.css";
 		scope.window.document.head.appendChild(link);
 	},
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const source = fs.readFileSync(
 			path.resolve(options.output.path, "bundle0.css"),
 			"utf-8"
