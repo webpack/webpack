@@ -92,10 +92,7 @@ import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
-import {
-	Extend,
-	ValidationErrorConfiguration
-} from "schema-utils/declarations/validate";
+import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -16238,42 +16235,39 @@ declare namespace exports {
 	export namespace cli {
 		export let getArguments: (
 			schema?:
-				| (JSONSchema4 &
-						Extend & {
-							absolutePath: boolean;
-							instanceof: string;
-							cli: {
-								helper?: boolean;
-								exclude?: boolean;
-								description?: string;
-								negatedDescription?: string;
-								resetDescription?: string;
-							};
-						})
-				| (JSONSchema6 &
-						Extend & {
-							absolutePath: boolean;
-							instanceof: string;
-							cli: {
-								helper?: boolean;
-								exclude?: boolean;
-								description?: string;
-								negatedDescription?: string;
-								resetDescription?: string;
-							};
-						})
-				| (JSONSchema7 &
-						Extend & {
-							absolutePath: boolean;
-							instanceof: string;
-							cli: {
-								helper?: boolean;
-								exclude?: boolean;
-								description?: string;
-								negatedDescription?: string;
-								resetDescription?: string;
-							};
-						})
+				| (JSONSchema4 & {
+						absolutePath: boolean;
+						instanceof: string;
+						cli: {
+							helper?: boolean;
+							exclude?: boolean;
+							description?: string;
+							negatedDescription?: string;
+							resetDescription?: string;
+						};
+				  })
+				| (JSONSchema6 & {
+						absolutePath: boolean;
+						instanceof: string;
+						cli: {
+							helper?: boolean;
+							exclude?: boolean;
+							description?: string;
+							negatedDescription?: string;
+							resetDescription?: string;
+						};
+				  })
+				| (JSONSchema7 & {
+						absolutePath: boolean;
+						instanceof: string;
+						cli: {
+							helper?: boolean;
+							exclude?: boolean;
+							description?: string;
+							negatedDescription?: string;
+							resetDescription?: string;
+						};
+				  })
 		) => Flags;
 		export let processArguments: (
 			args: Flags,
