@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
-    "lib": ["es2017", "dom", "es2022.error"],
+    "lib": ["es2017", "dom"],
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
