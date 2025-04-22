@@ -1,5 +1,3 @@
 module.exports = function (config) {
-	if (config.target !== "web") {
-		return false;
-	}
+	return config.target === "web";
 };
