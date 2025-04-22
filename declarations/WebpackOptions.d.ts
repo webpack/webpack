@@ -239,10 +239,7 @@ export type IgnoreWarnings = (
 			 */
 			module?: RegExp;
 	  }
-	| ((
-			warning: import("../lib/WebpackError"),
-			compilation: import("../lib/Compilation")
-	  ) => boolean)
+	| ((warning: Error, compilation: import("../lib/Compilation")) => boolean)
 )[];
 /**
  * Filtering values.
@@ -823,7 +820,7 @@ export type HttpUriOptionsAllowedUris = (
  * Ignore specific warnings.
  */
 export type IgnoreWarningsNormalized = ((
-	warning: import("../lib/WebpackError"),
+	warning: Error,
 	compilation: import("../lib/Compilation")
 ) => boolean)[];
 /**
@@ -2601,9 +2598,17 @@ export interface StatsOptions {
 	 */
 	env?: boolean;
 	/**
+	 * Add cause to errors.
+	 */
+	errorCause?: "auto" | boolean;
+	/**
 	 * Add details to errors (like resolving log).
 	 */
 	errorDetails?: "auto" | boolean;
+	/**
+	 * Add nested errors to errors (like in AggregateError).
+	 */
+	errorErrors?: "auto" | boolean;
 	/**
 	 * Add internal stack trace to errors.
 	 */

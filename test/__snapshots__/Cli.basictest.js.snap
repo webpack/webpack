@@ -9340,6 +9340,28 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-error-cause": Object {
+    "configs": Array [
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": false,
+        "path": "stats.errorCause",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": false,
+        "path": "stats.errorCause",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add cause to errors.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "stats-error-details": Object {
     "configs": Array [
       Object {
@@ -9359,6 +9381,28 @@ Object {
       },
     ],
     "description": "Add details to errors (like resolving log).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "stats-error-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": false,
+        "path": "stats.errorErrors",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": false,
+        "path": "stats.errorErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add nested errors to errors (like in AggregateError).",
     "multiple": false,
     "simpleType": "string",
   },

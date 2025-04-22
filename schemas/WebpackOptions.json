@@ -1733,7 +1733,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+            "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
           }
         ]
       }
@@ -1744,7 +1744,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+        "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
       }
     },
     "Iife": {
@@ -5048,8 +5048,30 @@
           "description": "Add --env information.",
           "type": "boolean"
         },
+        "errorCause": {
+          "description": "Add cause to errors.",
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "errorDetails": {
           "description": "Add details to errors (like resolving log).",
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "errorErrors": {
+          "description": "Add nested errors to errors (like in AggregateError).",
           "anyOf": [
             {
               "enum": ["auto"]
