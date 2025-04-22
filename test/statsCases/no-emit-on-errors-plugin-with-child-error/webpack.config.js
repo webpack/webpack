@@ -1,7 +1,7 @@
 "use strict";
 
-var NoEmitOnErrorsPlugin = require("../../../").NoEmitOnErrorsPlugin;
-var TestChildCompilationFailurePlugin = require("./TestChildCompilationFailurePlugin");
+const NoEmitOnErrorsPlugin = require("../../../").NoEmitOnErrorsPlugin;
+const TestChildCompilationFailurePlugin = require("./TestChildCompilationFailurePlugin");
 
 /** @type {import("../../../").Configuration} */
 module.exports = {

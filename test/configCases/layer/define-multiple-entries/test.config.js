@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function () {
+	findBundle() {
 		return ["./common.js", "./free.js", "./paid.js"];
 	}
 };

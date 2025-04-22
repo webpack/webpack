@@ -1,4 +1,4 @@
-var supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
+const supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
 
 module.exports = function (config) {
 	return supportsOptionalChaining();

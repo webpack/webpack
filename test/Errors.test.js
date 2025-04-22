@@ -10,6 +10,10 @@ const prettyFormat = require("pretty-format").default;
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
+/**
+ * @param {unknown} err an err
+ * @returns {Record<string, EXPECTED_ANY>} a cleaned error
+ */
 function cleanError(err) {
 	const result = {};
 	for (const key of Object.getOwnPropertyNames(err)) {
@@ -27,6 +31,10 @@ function cleanError(err) {
 	return result;
 }
 
+/**
+ * @param {unknown} received received
+ * @returns {string} serialized value
+ */
 function serialize(received) {
 	return prettyFormat(received, prettyFormatOptions)
 		.replace(CWD_PATTERN, "<cwd>")
@@ -94,6 +102,10 @@ const defaults = {
 	}
 };
 
+/**
+ * @param {import("../").Configuration} options options
+ * @returns {Promise<{errors: TODO[], warnings: TODO[]}>} errors and warnings
+ */
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
 		const compiler = webpack({ ...defaults.options, ...options });

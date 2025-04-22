@@ -1,4 +1,4 @@
-var supportsLogicalAssignment = require("../../../helpers/supportsLogicalAssignment");
+const supportsLogicalAssignment = require("../../../helpers/supportsLogicalAssignment");
 
 module.exports = function (config) {
 	return supportsLogicalAssignment();

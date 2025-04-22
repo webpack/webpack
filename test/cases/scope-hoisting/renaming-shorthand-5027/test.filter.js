@@ -1,7 +1,7 @@
-var supportsES6 = require("../../../helpers/supportsES6");
-var supportDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
-var supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
-var supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+const supportsES6 = require("../../../helpers/supportsES6");
+const supportDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
+const supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
+const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
 
 module.exports = function (config) {
 	return (

@@ -1,6 +1,6 @@
 module.exports = function supportsBlockScoping() {
 	try {
-		var f = eval(
+		const f = eval(
 			"(function f() { const x = 1; if (true) { const x = 2; } return x; })"
 		);
 		return f() === 1;

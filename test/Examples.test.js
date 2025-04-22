@@ -38,6 +38,9 @@ describe("Examples", () => {
 				processOptions(options);
 			}
 
+			/**
+			 * @param {import("../").Configuration} options options
+			 */
 			function processOptions(options) {
 				options.context = examplePath;
 				options.output = options.output || {};

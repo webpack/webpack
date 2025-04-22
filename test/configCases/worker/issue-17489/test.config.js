@@ -15,7 +15,7 @@ module.exports = {
 			}
 		};
 	},
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		outputDirectory = options.output.path;
 		return ["main.js"];
 	}

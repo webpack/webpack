@@ -107,9 +107,8 @@ describe("MemoryLimitTestCases", () => {
 			}
 			c.run((err, stats) => {
 				if (err) return done(err);
-				if (testName.endsWith("error")) {
-					expect(stats.hasErrors()).toBe(true);
-				} else if (stats.hasErrors()) {
+				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
+				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(
 						new Error(
 							stats.toString({

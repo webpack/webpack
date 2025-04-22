@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const child_process = require("child_process");
+const childProcess = require("child_process");
 const fs = require("fs");
 const rimraf = require("rimraf");
 
@@ -14,7 +14,7 @@ const exec = (n, options = {}) =>
 		const webpack = require("../");
 		const coverageEnabled = webpack.toString().includes("++");
 
-		const p = child_process.execFile(
+		const p = childProcess.execFile(
 			process.execPath,
 			[
 				...(coverageEnabled

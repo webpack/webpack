@@ -4,7 +4,7 @@ const allCss = new Set();
 const allBundles = new Set();
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const bundle = findOutputFiles(options, new RegExp(`^bundle${i}`))[0];
 		const async = findOutputFiles(options, /\.js/, `css${i}`);
 		allBundles.add(/\.([^.]+)\./.exec(bundle)[1]);

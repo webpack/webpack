@@ -1,6 +1,6 @@
-var webpack = require("../../../../");
-var path = require("path");
-var os = require("os");
+const webpack = require("../../../../");
+const path = require("path");
+const os = require("os");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

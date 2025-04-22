@@ -2,7 +2,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		devtoolModuleFilenameTemplate: function (info) {
+		devtoolModuleFilenameTemplate(info) {
 			return `dummy:///${info.resourcePath}`;
 		}
 	},

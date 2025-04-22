@@ -5,19 +5,24 @@ require("./helpers/warmup-webpack");
 describe("Validation", () => {
 	const createTestCase = (name, config, fn) => {
 		it(`should fail validation for ${name}`, () => {
+			let errored;
+
 			try {
 				const webpack = require("..");
 				webpack(config);
 			} catch (err) {
 				if (err.name !== "ValidationError") throw err;
-
-				expect(err.message).toMatch(/^Invalid configuration object./);
+				errored = err;
 				fn(err.message);
 
 				return;
 			}
 
-			throw new Error("Validation didn't fail");
+			if (!errored) {
+				throw new Error("Validation didn't fail");
+			}
+
+			expect(errored.message).toMatch(/^Invalid configuration object./);
 		});
 	};
 

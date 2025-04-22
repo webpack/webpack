@@ -336,6 +336,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
+		let errored;
 		try {
 			const createCompiler = options =>
 				new Promise((resolve, reject) => {
@@ -363,10 +364,16 @@ describe("Compiler", () => {
 				bail: true
 			});
 		} catch (err) {
-			expect(err.toString()).toMatch(
-				"ModuleNotFoundError: Module not found: Error: Can't resolve './missing-file'"
-			);
+			errored = err;
 		}
+
+		if (!errored) {
+			throw new Error("Should throw an error");
+		}
+
+		expect(errored.toString()).toMatch(
+			"ModuleNotFoundError: Module not found: Error: Can't resolve './missing-file'"
+		);
 	});
 	it("should not emit compilation errors in async (watch)", async () => {
 		const createStats = options =>
