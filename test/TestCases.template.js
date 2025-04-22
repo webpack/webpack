@@ -429,6 +429,13 @@ const describeCases = config => {
 								}
 							});
 							cleanups.push(() => (esmContext.it = undefined));
+
+							/**
+							 * @param {string} module a module
+							 * @param {"evaluated" | "unlinked"=} esmMode esm mode
+							 * @returns {EXPECTED_ANY} required module
+							 * @private
+							 */
 							function _require(module, esmMode) {
 								if (module.startsWith("./")) {
 									const p = path.join(outputDirectory, module);

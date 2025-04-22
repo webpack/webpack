@@ -19,6 +19,10 @@ const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
 new Error().cause = 1;
 
+/**
+ * @param {(string | undefined)[]} revList rev list
+ * @returns {Promise<string>} head
+ */
 async function getHead(revList) {
 	if (typeof process.env.HEAD !== "undefined") {
 		return process.env.HEAD;
@@ -31,6 +35,10 @@ async function getHead(revList) {
 	return revList[1];
 }
 
+/**
+ * @param {(string | undefined)[]} revList rev list
+ * @returns {Promise<string>} base
+ */
 async function getBase(revList) {
 	if (typeof process.env.BASE !== "undefined") {
 		return process.env.BASE;
@@ -63,6 +71,9 @@ async function getBase(revList) {
 	return revList[2];
 }
 
+/**
+ * @returns {Promise<{name: string, rev: string}[]>} baseline revs
+ */
 async function getBaselineRevs() {
 	const resultParents = await git.raw([
 		"rev-list",
@@ -152,6 +163,10 @@ function runBenchmark(webpack, config, callback) {
 	});
 }
 
+/**
+ * @param {number} n number of runs
+ * @returns {number} distribution
+ */
 function tDistribution(n) {
 	// two-sided, 90%
 	// https://en.wikipedia.org/wiki/Student%27s_t-distribution
@@ -210,6 +225,9 @@ try {
 const baselineRevisions = await getBaselineRevs();
 
 for (const baselineInfo of baselineRevisions) {
+	/**
+	 * @returns {void}
+	 */
 	function doLoadWebpack() {
 		baselines.push({
 			name: baselineInfo.name,

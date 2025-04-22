@@ -1,3 +1,7 @@
+/**
+ * @param {EXPECTED_ANY[]} useArray use array
+ * @returns {EXPECTED_FUNCTION[]} functions
+ */
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(function (useItem) {
 		return function (data) {

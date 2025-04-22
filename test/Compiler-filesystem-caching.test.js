@@ -168,6 +168,9 @@ describe("Compiler (filesystem caching)", () => {
 		};
 	}
 
+	/**
+	 * @returns {void}
+	 */
 	function cleanup() {
 		rimraf.sync(`${tempFixturePath}*`);
 	}
@@ -175,6 +178,9 @@ describe("Compiler (filesystem caching)", () => {
 	beforeAll(cleanup);
 	afterAll(cleanup);
 
+	/**
+	 * @returns {{ rootPath: string, usesAssetFilepath: string, svgFilepath: string }} temp fixture paths
+	 */
 	function createTempFixture() {
 		const fixturePath = `${tempFixturePath}-${fixtureCount}`;
 		const usesAssetFilepath = path.join(fixturePath, "uses-asset.js");

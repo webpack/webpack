@@ -25,6 +25,10 @@ describe("WatchDetection", () => {
 		createTestCase(changeTimeout);
 	}
 
+	/**
+	 * @param {number} changeTimeout change timeout
+	 * @param {boolean=} invalidate need invalidate?
+	 */
 	function createTestCase(changeTimeout, invalidate) {
 		describe(`time between changes ${changeTimeout}ms${
 			invalidate ? " with invalidate call" : ""
@@ -90,6 +94,9 @@ describe("WatchDetection", () => {
 
 				step1();
 
+				/**
+				 * @returns {void}
+				 */
 				function step1() {
 					onChange = () => {
 						if (
@@ -110,6 +117,9 @@ describe("WatchDetection", () => {
 					);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step2() {
 					onChange = () => {
 						expect(compiler.modifiedFiles).not.toBe(undefined);
@@ -126,6 +136,9 @@ describe("WatchDetection", () => {
 					setTimeout(step3, changeTimeout);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step3() {
 					if (invalidate) watcher.invalidate();
 					fs.writeFile(file2Path, "wrong", "utf-8", handleError);
@@ -133,6 +146,9 @@ describe("WatchDetection", () => {
 					setTimeout(step4, changeTimeout);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step4() {
 					onChange = () => {
 						expect(compiler.modifiedFiles).not.toBe(undefined);
@@ -149,6 +165,9 @@ describe("WatchDetection", () => {
 					fs.writeFile(file2Path, "correct", "utf-8", handleError);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step5() {
 					onChange = null;
 
@@ -157,6 +176,9 @@ describe("WatchDetection", () => {
 					});
 				}
 
+				/**
+				 * @param {unknown} err err
+				 */
 				function handleError(err) {
 					if (err) done(err);
 				}

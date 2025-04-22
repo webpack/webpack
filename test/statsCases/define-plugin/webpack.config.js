@@ -2,6 +2,10 @@ const webpack = require("../../../");
 const fs = require("fs");
 const join = require("path").join;
 
+/**
+ * @param {string} path path
+ * @returns {string} JSON content of a file
+ */
 function read(path) {
 	return JSON.stringify(
 		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n?/g, "\n")

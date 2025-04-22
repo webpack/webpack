@@ -365,6 +365,10 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("expression evaluation", () => {
+		/**
+		 * @param {string} source source
+		 * @returns {import("../lib/javascript/JavascriptParser").ParserState} the parser state
+		 */
 		function evaluateInParser(source) {
 			const parser = new JavascriptParser();
 			parser.hooks.call.for("test").tap("JavascriptParserTest", expr => {
@@ -569,6 +573,10 @@ describe("JavascriptParser", () => {
 		};
 
 		for (const key of Object.keys(testCases)) {
+			/**
+			 * @param {import("../lib/javascript/BasicEvaluatedExpression")} evalExpr eval expr
+			 * @returns {string} result
+			 */
 			function evalExprToString(evalExpr) {
 				if (!evalExpr) {
 					return "null";

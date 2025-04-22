@@ -93,6 +93,9 @@ describe("Compiler (caching)", () => {
 		"temp-cache-fixture"
 	);
 
+	/**
+	 * @returns {void}
+	 */
 	function cleanup() {
 		rimraf.sync(`${tempFixturePath}-*`);
 	}
@@ -100,6 +103,9 @@ describe("Compiler (caching)", () => {
 	beforeAll(cleanup);
 	afterAll(cleanup);
 
+	/**
+	 * @returns {{ rootPath: string, aFilepath: string, cFilepath: string }} temp fixture paths
+	 */
 	function createTempFixture() {
 		const fixturePath = `${tempFixturePath}-${fixtureCount}`;
 		const aFilepath = path.join(fixturePath, "a.js");

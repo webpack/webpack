@@ -135,9 +135,8 @@ describe("StatsTestCases", () => {
 					.map(s => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
-				if (testName.endsWith("error")) {
-					expect(stats.hasErrors()).toBe(true);
-				} else if (stats.hasErrors()) {
+				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
+				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(
 						new Error(
 							stats.toString({
@@ -148,17 +147,17 @@ describe("StatsTestCases", () => {
 							})
 						)
 					);
-				} else {
-					fs.writeFileSync(
-						path.join(outputBase, testName, "stats.txt"),
-						stats.toString({
-							preset: "verbose",
-							context: path.join(base, testName),
-							colors: false
-						}),
-						"utf-8"
-					);
 				}
+				fs.writeFileSync(
+					path.join(outputBase, testName, "stats.txt"),
+					stats.toString({
+						preset: "verbose",
+						context: path.join(base, testName),
+						colors: false
+					}),
+					"utf-8"
+				);
+
 				let toStringOptions = {
 					context: path.join(base, testName),
 					colors: false

@@ -40,6 +40,11 @@ describe("MultiItemCache", () => {
 		expect(callbacks).toEqual(1);
 	});
 
+	/**
+	 * @param {number} howMany how many generation
+	 * @param {() => EXPECTED_ANY=} dataGenerator data generator fn
+	 * @returns {EXPECTED_ANY[]} cache facades
+	 */
 	function generateItemCaches(howMany, dataGenerator) {
 		const ret = [];
 		for (let i = 0; i < howMany; ++i) {

@@ -45,10 +45,16 @@ const getChanges = compiler => {
 	};
 };
 
+/**
+ * @param {(err?: unknown) => void} callback callback
+ */
 function cleanup(callback) {
 	rimraf(tempFolderPath, callback);
 }
 
+/**
+ * @returns {void}
+ */
 function createFiles() {
 	fs.mkdirSync(tempFolderPath, { recursive: true });
 

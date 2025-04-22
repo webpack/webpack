@@ -16,6 +16,11 @@ const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 
+/**
+ * @param {string} src src
+ * @param {string} dest dest
+ * @param {boolean} initial is initial?
+ */
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
@@ -268,6 +273,12 @@ const describeCases = config => {
 											document: new FakeDocument()
 										};
 
+										/**
+										 * @param {string} currentDirectory the current directory
+										 * @param {TODO} module a module
+										 * @returns {EXPECTED_ANY} required module
+										 * @private
+										 */
 										function _require(currentDirectory, module) {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let fn;

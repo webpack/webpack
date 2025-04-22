@@ -7,9 +7,18 @@ const regexEscape = require("./regexEscape.js");
 // Break up the match string so we don't match it in these expect* functions either.
 const doNotMatch = ["DO", "NOT", "MATCH", "BELOW", "THIS", "LINE"].join(" ");
 
+/**
+ * @param {string} source value
+ * @param {string} str string for searching
+ */
 function expectSourceToContain(source, str) {
 	expect(source).toMatch(new RegExp(`${regexEscape(str)}.*${doNotMatch}`, "s"));
 }
+
+/**
+ * @param {string} source value
+ * @param {RegExp} regexStr regexp
+ */
 function expectSourceToMatch(source, regexStr) {
 	expect(source).toMatch(new RegExp(`${regexStr}.*${doNotMatch}`, "s"));
 }
