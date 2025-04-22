@@ -1,5 +1,6 @@
-var webpack = require("../../../../");
-var TerserPlugin = require("terser-webpack-plugin");
+const webpack = require("../../../../");
+const TerserPlugin = require("terser-webpack-plugin");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {

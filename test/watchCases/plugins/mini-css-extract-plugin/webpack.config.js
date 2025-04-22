@@ -1,4 +1,4 @@
-var MCEP = require("mini-css-extract-plugin");
+const MCEP = require("mini-css-extract-plugin");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

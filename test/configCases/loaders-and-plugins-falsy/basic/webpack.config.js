@@ -1,4 +1,4 @@
-var DefinePlugin = require("../../../../").DefinePlugin;
+const DefinePlugin = require("../../../../").DefinePlugin;
 
 const nullValue = null;
 const undefinedValue = undefined;

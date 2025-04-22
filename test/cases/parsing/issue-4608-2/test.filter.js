@@ -1,4 +1,4 @@
-var supportsForOf = require("../../../helpers/supportsForOf");
+const supportsForOf = require("../../../helpers/supportsForOf");
 
 module.exports = function (config) {
 	return supportsForOf();

@@ -6,7 +6,7 @@ function createFunctionArrayFromUseArray(useArray) {
 	});
 }
 
-var useArray = createFunctionArrayFromUseArray([
+const useArray = createFunctionArrayFromUseArray([
 	"./loader",
 	{
 		loader: "./loader",

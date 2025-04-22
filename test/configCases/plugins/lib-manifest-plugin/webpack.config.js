@@ -1,5 +1,5 @@
-var path = require("path");
-var LibManifestPlugin = require("../../../../").LibManifestPlugin;
+const path = require("path");
+const LibManifestPlugin = require("../../../../").LibManifestPlugin;
 
 /** @typedef {import("../../../WatchTestCases.template").Env} Env */
 /** @typedef {import("../../../WatchTestCases.template").TestOptions} TestOptions */

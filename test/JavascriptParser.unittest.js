@@ -103,7 +103,7 @@ describe("JavascriptParser", () => {
 		"var definition": [
 			function () {
 				// eslint-disable-next-line one-var
-				var abc, cde, fgh;
+				let abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
 				cde.ddd.abc("test");
@@ -176,7 +176,7 @@ describe("JavascriptParser", () => {
 		],
 		"renaming with var": [
 			function () {
-				var xyz = abc;
+				const xyz = abc;
 				xyz("test");
 			},
 			{
@@ -246,7 +246,7 @@ describe("JavascriptParser", () => {
 		],
 		"spread calls/literals": [
 			function () {
-				var xyz = [...abc("xyz"), cde];
+				const xyz = [...abc("xyz"), cde];
 				Math.max(...fgh);
 			},
 			{

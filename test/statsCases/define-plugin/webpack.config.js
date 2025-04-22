@@ -1,6 +1,6 @@
-var webpack = require("../../../");
-var fs = require("fs");
-var join = require("path").join;
+const webpack = require("../../../");
+const fs = require("fs");
+const join = require("path").join;
 
 function read(path) {
 	return JSON.stringify(

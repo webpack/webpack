@@ -417,7 +417,6 @@ export default defineConfig([
 			"no-console": "off",
 			"object-shorthand": "off",
 			camelcase: "off",
-			"no-var": "off",
 			"jsdoc/require-jsdoc": "off",
 			"n/no-unsupported-features/es-syntax": [
 				"error",

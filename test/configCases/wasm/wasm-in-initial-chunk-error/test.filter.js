@@ -1,4 +1,4 @@
-var supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
+const supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
 
 module.exports = function () {
 	return supportsWebAssembly();
