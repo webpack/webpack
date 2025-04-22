@@ -43,6 +43,7 @@ module.exports = createTestCases({
 			"./assert": [...base, "definiteEqual"]
 		}
 	},
+	// eslint-disable-next-line camelcase
 	ExportCls1_2: {
 		usedExports: ["ExportCls1", "ExportCls2"],
 		expect: {

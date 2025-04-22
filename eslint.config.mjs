@@ -415,7 +415,6 @@ export default defineConfig([
 			"jest/expect-expect": "off",
 			"jest/no-conditional-expect": "off",
 			"no-console": "off",
-			camelcase: "off",
 			"jsdoc/require-jsdoc": "off",
 			"n/no-unsupported-features/es-syntax": [
 				"error",
