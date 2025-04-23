@@ -1,3 +1,4 @@
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = function(content) {
 	const callback = this.async();
 
