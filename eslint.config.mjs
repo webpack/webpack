@@ -133,7 +133,6 @@ export default [
 						"__webpack_share_scopes__",
 						"__webpack_init_sharing__",
 						"__webpack_require_module__",
-						"__webpack_dynamic_public_path__",
 						"_stream_duplex",
 						"_stream_passthrough",
 						"_stream_readable",

@@ -3,8 +3,7 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	output: {
-		assetModuleFilename: "[name][ext][query][fragment]",
-		publicPath: "public/"
+		assetModuleFilename: "[name][ext][query][fragment]"
 	},
 	module: {
 		parser: {
