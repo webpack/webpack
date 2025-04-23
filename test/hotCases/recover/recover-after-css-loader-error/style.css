@@ -1,0 +1,11 @@
+.class {
+	color: red;
+}
+---
+.class {
+	color: green;
+}Failed
+---
+.class {
+ color: blue;
+}

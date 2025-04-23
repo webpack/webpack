@@ -3172,6 +3172,17 @@ declare interface CssAutoParserOptions {
 	 */
 	url?: boolean;
 }
+declare interface CssData {
+	/**
+	 * whether export __esModule
+	 */
+	esModule: boolean;
+
+	/**
+	 * the css exports
+	 */
+	exports: Map<string, string>;
+}
 
 /**
  * Generator options for css modules.
@@ -7711,19 +7722,97 @@ declare interface KnownAssetInfo {
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
 	parsed?: boolean;
-	moduleArgument?: string;
-	exportsArgument?: string;
 	strict?: boolean;
+
+	/**
+	 * using in AMD
+	 */
+	moduleArgument?: string;
+
+	/**
+	 * using in AMD
+	 */
+	exportsArgument?: string;
+
+	/**
+	 * using in CommonJs
+	 */
 	moduleConcatenationBailout?: string;
+
+	/**
+	 * using in APIPlugin
+	 */
+	needCreateRequire?: boolean;
+
+	/**
+	 * using in HttpUriPlugin
+	 */
+	resourceIntegrity?: string;
+
+	/**
+	 * using in NormalModule
+	 */
 	fileDependencies?: LazySet<string>;
+
+	/**
+	 * using in NormalModule
+	 */
 	contextDependencies?: LazySet<string>;
+
+	/**
+	 * using in NormalModule
+	 */
 	missingDependencies?: LazySet<string>;
+
+	/**
+	 * using in NormalModule
+	 */
 	buildDependencies?: LazySet<string>;
+
+	/**
+	 * using in NormalModule
+	 */
 	valueDependencies?: Map<string, string | Set<string>>;
-	hash?: any;
+
+	/**
+	 * using in NormalModule
+	 */
 	assets?: Record<string, Source>;
-	assetsInfo?: Map<string, undefined | AssetInfo>;
+
+	/**
+	 * using in NormalModule
+	 */
+	hash?: string;
+
+	/**
+	 * using in ContextModule
+	 */
 	snapshot?: null | Snapshot;
+
+	/**
+	 * for assets modules
+	 */
+	fullContentHash?: string;
+
+	/**
+	 * for assets modules
+	 */
+	filename?: string;
+
+	/**
+	 * for assets modules
+	 */
+	assetsInfo?: Map<string, undefined | AssetInfo>;
+
+	/**
+	 * for assets modules
+	 */
+	dataUrl?: boolean;
+
+	/**
+	 * for css modules
+	 */
+	cssData?: CssData;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
