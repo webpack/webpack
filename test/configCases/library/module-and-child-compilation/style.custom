@@ -1,0 +1,2 @@
+import style from "./test.mjs";
+export const myClass = style("my-class");
