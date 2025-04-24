@@ -33,7 +33,8 @@ jobs:
           delete-branch: true
           commit-message: |
             docs: update examples
-          title: Update examples
+          title: |
+            docs: update examples
           body: |
             - Example updates
           branch: update-examples
