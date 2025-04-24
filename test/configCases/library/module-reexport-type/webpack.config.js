@@ -14,7 +14,7 @@ module.exports = {
 	output: {
 		module: true,
 		library: {
-			type: "modern-module"
+			type: "module"
 		},
 		chunkFormat: "module"
 	},
@@ -35,7 +35,24 @@ module.exports = {
 				options: {
 					transpileOnly: true
 				}
+			},
+			{
+				type: "asset/inline",
+				test: /\.png$/
 			}
 		]
-	}
+	},
+	plugins: [
+		function () {
+			const handler = compilation => {
+				compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+					const source = assets["bundle0.mjs"].source();
+					expect(source).toContain(
+						"export { file_namespaceObject as logo, value };"
+					);
+				});
+			};
+			this.hooks.compilation.tap("testcase", handler);
+		}
+	]
 };
