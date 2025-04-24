@@ -1,8 +1,9 @@
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = [
 	{
 		name: "vendor",
@@ -233,9 +234,9 @@ vendor:
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
       [used exports unknown]
-      dll entry
+      dll entry 0:0-0
       used as library export
-  vendor (webpack 5.78.0) compiled successfully
+  vendor (webpack 5.99.6) compiled successfully
 
 app:
   asset pageB.js 2.63 KiB [emitted] (name: pageB)
@@ -261,7 +262,7 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.78.0) compiled successfully
+  app (webpack 5.99.6) compiled successfully
 ```
 
 ## Production mode
@@ -273,13 +274,13 @@ vendor:
     > main
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
-      dll entry
+      dll entry 0:0-0
       used as library export
-  vendor (webpack 5.78.0) compiled successfully
+  vendor (webpack 5.99.6) compiled successfully
 
 app:
-  asset pageA.js 297 bytes [emitted] [minimized] (name: pageA)
   asset pageB.js 297 bytes [emitted] [minimized] (name: pageB)
+  asset pageA.js 295 bytes [emitted] [minimized] (name: pageA)
   asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
@@ -288,12 +289,6 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageB.js 2:0-14
       entry ./pageB pageB
-  chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
-    > ./pageC pageC
-    ./pageC.js 25 bytes [built] [code generated]
-      [used exports unknown]
-      cjs self exports reference ./pageC.js 1:0-14
-      entry ./pageC pageC
   chunk (runtime: pageA) pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
     dependent modules 84 bytes [dependent] 2 modules
@@ -301,5 +296,11 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageA.js 2:0-14
       entry ./pageA pageA
-  app (webpack 5.78.0) compiled successfully
+  chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
+    > ./pageC pageC
+    ./pageC.js 25 bytes [built] [code generated]
+      [used exports unknown]
+      cjs self exports reference ./pageC.js 1:0-14
+      entry ./pageC pageC
+  app (webpack 5.99.6) compiled successfully
 ```

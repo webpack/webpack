@@ -26,7 +26,6 @@ module.exports = {
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/

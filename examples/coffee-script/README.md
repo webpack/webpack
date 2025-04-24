@@ -98,7 +98,6 @@ module.exports = 42;
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -118,14 +117,14 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.27 KiB [emitted] (name: main)
+asset output.js 2.24 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 175 bytes [dependent] 2 modules
   ./example.js 31 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
@@ -138,5 +137,5 @@ chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
   ./example.js 31 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

@@ -76,9 +76,9 @@ console.log("side effect");
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => (/* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a),
-/* harmony export */   "b": () => (/* reexport safe */ _b__WEBPACK_IMPORTED_MODULE_1__.b),
-/* harmony export */   "c": () => (/* reexport safe */ _c__WEBPACK_IMPORTED_MODULE_2__.c)
+/* harmony export */   a: () => (/* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a),
+/* harmony export */   b: () => (/* reexport safe */ _b__WEBPACK_IMPORTED_MODULE_1__.b),
+/* harmony export */   c: () => (/* reexport safe */ _c__WEBPACK_IMPORTED_MODULE_2__.c)
 /* harmony export */ });
 /* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
@@ -103,7 +103,7 @@ console.log("side effect");
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => (/* binding */ a)
+/* harmony export */   a: () => (/* binding */ a)
 /* harmony export */ });
 const a = "a";
 
@@ -121,7 +121,7 @@ const a = "a";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "b": () => (/* binding */ b)
+/* harmony export */   b: () => (/* binding */ b)
 /* harmony export */ });
 const b = "b";
 
@@ -139,7 +139,7 @@ const b = "b";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "c": () => (/* binding */ c)
+/* harmony export */   c: () => (/* binding */ c)
 /* harmony export */ });
 const c = "c";
 
@@ -157,7 +157,7 @@ const c = "c";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => (/* binding */ a)
+/* harmony export */   a: () => (/* binding */ a)
 /* harmony export */ });
 const a = "a";
 
@@ -175,7 +175,7 @@ const a = "a";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "b": () => (/* binding */ b)
+/* harmony export */   b: () => (/* binding */ b)
 /* harmony export */ });
 const b = "b";
 
@@ -282,7 +282,7 @@ console.log(
 ## Unoptimized
 
 ```
-asset output.js 8.55 KiB [emitted] (name: main)
+asset output.js 8.53 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 354 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 214 bytes [dependent] 6 modules
@@ -291,7 +291,7 @@ chunk (runtime: main) output.js (main) 354 bytes (javascript) 670 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
@@ -304,5 +304,5 @@ chunk (runtime: main) output.js (main) 332 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

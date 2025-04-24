@@ -330,14 +330,14 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
         harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset react-vendors.js 1.15 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 185 bytes [emitted] [minimized] (name: app)
+asset app.js 187 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
@@ -371,5 +371,5 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
         harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

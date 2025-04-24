@@ -163,13 +163,13 @@ chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset app.js 333 bytes [emitted] [minimized] (name: main)
+asset app.js 331 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -177,7 +177,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 <!-- @TODO:

@@ -70,10 +70,10 @@ _{{dist/pageA.js}}_
 _{{dist/pageB.js}}_
 ```
 
-# dist/52.js
+# dist/shared_js.js
 
 ```javascript
-_{{dist/52.js}}_
+_{{dist/shared_js.js}}_
 ```
 
 # Info
