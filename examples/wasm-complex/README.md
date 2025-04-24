@@ -360,6 +360,7 @@ function getRandomNumber() {
 /******/ 	/* webpack/runtime/wasm loading */
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
+/******/ 		
 /******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".module.wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
@@ -367,6 +368,7 @@ function getRandomNumber() {
 /******/ 				.then((res) => (Object.assign(exports, res.instance.exports))));
 /******/ 			return req.then((res) => {
 /******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
+/******/ 		
 /******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
 /******/ 						.then(
 /******/ 							(res) => (Object.assign(exports, res.instance.exports)),
@@ -420,14 +422,14 @@ chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webasse
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 2.81 KiB [emitted] [minimized] (name: main)
-asset 05aa07f6a3836ded50d1.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
+asset 03b5e050bc920dbbb73e.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.42 KiB 5 modules
@@ -436,5 +438,5 @@ chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webasse
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

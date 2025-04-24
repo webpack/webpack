@@ -26,7 +26,6 @@ module.exports = {
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -45,5 +44,5 @@ console.log("Hello World!");
 ```
 asset output.js 28 bytes [emitted] [minimized] (name: main)
 ./example.js 29 bytes [built] [code generated]
-webpack 5.88.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

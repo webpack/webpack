@@ -7,18 +7,19 @@ This is the _user_ bundle, which uses the manifest from [dll-reference example](
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = {
 	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),
-			manifest: require("../dll/dist/alpha-manifest.json") // eslint-disable-line
+			manifest: require("../dll/dist/alpha-manifest.json")
 		}),
 		new webpack.DllReferencePlugin({
 			scope: "beta",
-			manifest: require("../dll/dist/beta-manifest.json"), // eslint-disable-line
+			manifest: require("../dll/dist/beta-manifest.json"),
 			extensions: [".js", ".jsx"]
 		})
 	]
@@ -46,18 +47,18 @@ console.log(require("module"));
 /* 0 */,
 /* 1 */
 /*!**************************************************************************!*\
-  !*** delegated ./alpha.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
+  !*** delegated ./alpha.js from dll-reference alpha_2239422b902ff2ef1cc1 ***!
   \**************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference alpha_2239422b902ff2ef1cc1 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!*********************************************!*\
-  !*** external "alpha_a53f6ab3ecd4de18316c" ***!
+  !*** external "alpha_2239422b902ff2ef1cc1" ***!
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -65,34 +66,34 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de1831
 /***/ ((module) => {
 
 "use strict";
-module.exports = alpha_a53f6ab3ecd4de18316c;
+module.exports = alpha_2239422b902ff2ef1cc1;
 
 /***/ }),
 /* 3 */
 /*!**********************************************************************!*\
-  !*** delegated ./a.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
+  !*** delegated ./a.js from dll-reference alpha_2239422b902ff2ef1cc1 ***!
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(2);
+module.exports = (__webpack_require__(/*! dll-reference alpha_2239422b902ff2ef1cc1 */ 2))(2);
 
 /***/ }),
 /* 4 */
 /*!************************************************************************!*\
-  !*** delegated ./beta.js from dll-reference beta_a53f6ab3ecd4de18316c ***!
+  !*** delegated ./beta.js from dll-reference beta_2239422b902ff2ef1cc1 ***!
   \************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(5);
+module.exports = (__webpack_require__(/*! dll-reference beta_2239422b902ff2ef1cc1 */ 5))(5);
 
 /***/ }),
 /* 5 */
 /*!********************************************!*\
-  !*** external "beta_a53f6ab3ecd4de18316c" ***!
+  !*** external "beta_2239422b902ff2ef1cc1" ***!
   \********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -100,40 +101,40 @@ module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316
 /***/ ((module) => {
 
 "use strict";
-module.exports = beta_a53f6ab3ecd4de18316c;
+module.exports = beta_2239422b902ff2ef1cc1;
 
 /***/ }),
 /* 6 */
 /*!*********************************************************************!*\
-  !*** delegated ./b.js from dll-reference beta_a53f6ab3ecd4de18316c ***!
+  !*** delegated ./b.js from dll-reference beta_2239422b902ff2ef1cc1 ***!
   \*********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(6);
+module.exports = (__webpack_require__(/*! dll-reference beta_2239422b902ff2ef1cc1 */ 5))(6);
 
 /***/ }),
 /* 7 */
 /*!**********************************************************************!*\
-  !*** delegated ./c.jsx from dll-reference beta_a53f6ab3ecd4de18316c ***!
+  !*** delegated ./c.jsx from dll-reference beta_2239422b902ff2ef1cc1 ***!
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_a53f6ab3ecd4de18316c */ 5))(7);
+module.exports = (__webpack_require__(/*! dll-reference beta_2239422b902ff2ef1cc1 */ 5))(7);
 
 /***/ }),
 /* 8 */
 /*!*****************************************************************************************!*\
-  !*** delegated ../node_modules/module.js from dll-reference alpha_a53f6ab3ecd4de18316c ***!
+  !*** delegated ../node_modules/module.js from dll-reference alpha_2239422b902ff2ef1cc1 ***!
   \*****************************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de18316c */ 2))(3);
+module.exports = (__webpack_require__(/*! dll-reference alpha_2239422b902ff2ef1cc1 */ 2))(3);
 
 /***/ })
 /******/ 	]);
@@ -173,7 +174,6 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_a53f6ab3ecd4de1831
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -201,14 +201,14 @@ console.log(__webpack_require__(/*! module */ 8));
 ## Unoptimized
 
 ```
-asset output.js 5.51 KiB [emitted] (name: main)
+asset output.js 5.48 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 336 bytes [dependent] 8 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
@@ -221,5 +221,5 @@ chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

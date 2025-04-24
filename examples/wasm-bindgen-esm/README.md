@@ -316,6 +316,7 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 /******/ 	/* webpack/runtime/wasm loading */
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
+/******/ 		
 /******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
@@ -323,6 +324,7 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 /******/ 				.then((res) => (Object.assign(exports, res.instance.exports))));
 /******/ 			return req.then((res) => {
 /******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
+/******/ 		
 /******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
 /******/ 						.then(
 /******/ 							(res) => (Object.assign(exports, res.instance.exports)),
@@ -376,13 +378,13 @@ chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassemb
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset f7199313c1125f249cd6.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
+asset 78eeb14b9b5e2c77fb0a.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
 asset output.js 3.41 KiB [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -392,5 +394,5 @@ chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassemb
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

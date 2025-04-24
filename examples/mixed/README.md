@@ -236,6 +236,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -280,7 +281,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			"main": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -317,7 +318,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -382,7 +383,7 @@ var amd1 = __webpack_require__(/*! ./amd */ 2);
 var harmony1 = __webpack_require__(/*! ./harmony */ 3);
 
 // AMD-style requires (with all webpack features)
-__webpack_require__.e(/*! AMD require */ 635).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
+__webpack_require__.e(/*! AMD require */ "require_context_templates_sync_recursive_js_").then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
 	__webpack_require__(/*! ./commonjs */ 1), __webpack_require__(/*! ./amd */ 2),
 	__webpack_require__(4)("./"+amd1+".js"),
 	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 1) : __webpack_require__(/*! ./amd */ 2)]; (function(commonjs2, amd2, template, randModule) {
@@ -395,10 +396,10 @@ __webpack_require__.e(/*! AMD require */ 635).then(function() { var __WEBPACK_AM
 ;
 ```
 
-# dist/635.output.js
+# dist/require_context_templates_sync_recursive_js_.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([[635],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["require_context_templates_sync_recursive_js_"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -490,41 +491,41 @@ module.exports = function() {
 
 ```
 asset output.js 13.8 KiB [emitted] (name: main)
-asset 635.output.js 2.24 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.8 KiB (runtime) [entry] [rendered]
+asset require_context_templates_sync_recursive_js_.output.js 2.28 KiB [emitted]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.8 KiB 9 modules
+  runtime modules 5.77 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 635.output.js 433 bytes [rendered]
+chunk (runtime: main) require_context_templates_sync_recursive_js_.output.js 433 bytes [rendered]
   > ./example.js 7:0-14:1
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 7:0-14:1
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.49 KiB [emitted] [minimized] (name: main)
-asset 635.output.js 580 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.8 KiB (runtime) [entry] [rendered]
+asset output.js 2.53 KiB [emitted] [minimized] (name: main)
+asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.8 KiB 9 modules
+  runtime modules 5.77 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 635.output.js 433 bytes [rendered]
+chunk (runtime: main) require_context_templates_sync_recursive_js_.output.js 433 bytes [rendered]
   > ./example.js 7:0-14:1
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 7:0-14:1
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

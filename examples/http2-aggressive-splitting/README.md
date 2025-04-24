@@ -17,8 +17,9 @@ The compression improves with bigger `maxSize`, as gzip works better for bigger 
 The backward compatibility (non-HTTP2 client) improves with bigger `maxSize`, as the number of requests decreases.
 
 ```js
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = {
 	// mode: "development" || "production",
 	cache: true, // better performance for the AggressiveSplittingPlugin
@@ -46,84 +47,61 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset 4fb93bdcf707906b4096.js 130 KiB [emitted] [immutable] (id hint: vendors)
-asset 946bfb099aeb10733813.js 25.5 KiB [emitted] [immutable] (name: main)
-asset fc12108f1066403ead6b.js 14.6 KiB [emitted] [immutable]
-chunk (runtime: main) 946bfb099aeb10733813.js (main) 6.98 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
+asset 3010f5aee596f6f09529.js 36.3 KiB [emitted] [immutable] (name: main)
+asset adcc62444431e4f1597f.js 11.9 KiB [emitted] [immutable]
+chunk (runtime: main) 3010f5aee596f6f09529.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 5.02 KiB 6 modules
-  dependent modules 6.94 KiB [dependent] 2 modules
+  runtime modules 4.94 KiB 6 modules
+  dependent modules 16.9 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
-chunk (runtime: main) fc12108f1066403ead6b.js 5.66 KiB [rendered]
+chunk (runtime: main) adcc62444431e4f1597f.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
-  dependent modules 4.14 KiB [dependent] 1 module
+  dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-  ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
-chunk (runtime: main) 4fb93bdcf707906b4096.js (id hint: vendors) 129 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
-  > react-dom ./example.js 2:0-22
-  ../../node_modules/react-dom/cjs/react-dom.production.min.js 129 KiB [built] [code generated]
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset 8d87087aa75c47be9b05.js 126 KiB [emitted] [immutable] [minimized] (id hint: vendors) 1 related asset
-asset 9d09362c80c0b4708c7a.js 8.14 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
-asset b9e0b2d00d17329af7b7.js 4.12 KiB [emitted] [immutable] [minimized] 1 related asset
-chunk (runtime: main) 9d09362c80c0b4708c7a.js (main) 6.98 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
-  > ./example main
-  runtime modules 5.02 KiB 6 modules
-  dependent modules 6.94 KiB [dependent] 2 modules
-  ./example.js 42 bytes [built] [code generated]
-chunk (runtime: main) b9e0b2d00d17329af7b7.js 5.66 KiB [rendered]
+asset 954fd9a9a767ef883087.js 9.04 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 52e3fb6cd8bed8b461cf.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
+chunk (runtime: main) 52e3fb6cd8bed8b461cf.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
-  dependent modules 4.14 KiB [dependent] 1 module
+  dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-  ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
-chunk (runtime: main) 8d87087aa75c47be9b05.js (id hint: vendors) 129 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
-  > react-dom ./example.js 2:0-22
-  ../../node_modules/react-dom/cjs/react-dom.production.min.js 129 KiB [built] [code generated]
-webpack 5.78.0 compiled successfully
+chunk (runtime: main) 954fd9a9a767ef883087.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 4.94 KiB 6 modules
+  dependent modules 16.9 KiB [dependent] 2 modules
+  ./example.js 42 bytes [built] [code generated]
+webpack 5.99.6 compiled successfully
 ```
 
 ## Records
 
 ```
 {
-  "aggressiveSplits": [
-    {
-      "hash": "4fb93bdcf707906b4096f918339c66ef",
-      "id": 2,
-      "modules": [
-        "../../node_modules/react-dom/cjs/react-dom.production.min.js"
-      ],
-      "size": 131737
-    }
-  ],
+  "aggressiveSplits": [],
   "chunks": {
     "byName": {
       "main": 0
     },
     "bySource": {
-      "0 ./example.js react-dom": 2,
-      "0 main": 0,
-      "1 ./example.js react-dom": 1
+      "0 ./example.js react-dom": 1,
+      "0 main": 0
     },
     "usedIds": [
       0,
-      1,
-      2
+      1
     ]
   },
   "modules": {
     "byIdentifier": {
-      "../../node_modules/react-dom/cjs/react-dom.production.min.js": 4,
+      "../../node_modules/react-dom/cjs/react-dom.production.js": 4,
       "../../node_modules/react-dom/index.js": 3,
-      "../../node_modules/react/cjs/react.production.min.js": 2,
+      "../../node_modules/react/cjs/react.production.js": 2,
       "../../node_modules/react/index.js": 1,
-      "../../node_modules/scheduler/cjs/scheduler.production.min.js": 6,
-      "../../node_modules/scheduler/index.js": 5,
       "./example.js": 0
     },
     "usedIds": [
@@ -131,9 +109,7 @@ webpack 5.78.0 compiled successfully
       1,
       2,
       3,
-      4,
-      5,
-      6
+      4
     ]
   }
 }

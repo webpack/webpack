@@ -102,7 +102,7 @@ exports.readFile = function() {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "readFile": () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
+/* harmony export */   readFile: () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
 /* harmony export */ });
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
 // reexport a CommonJs module
@@ -148,7 +148,7 @@ var namedExport = module.named;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "named": () => (/* binding */ named)
+/* harmony export */   named: () => (/* binding */ named)
 /* harmony export */ });
 // just some exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("default");
@@ -286,7 +286,7 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 937 bytes (runtime)
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
@@ -301,5 +301,5 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 670 bytes (runtime)
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

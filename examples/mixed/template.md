@@ -26,10 +26,10 @@ _{{commonjs.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/635.output.js
+# dist/require_context_templates_sync_recursive_js_.output.js
 
 ```javascript
-_{{dist/635.output.js}}_
+_{{dist/require_context_templates_sync_recursive_js_.output.js}}_
 ```
 
 # Info

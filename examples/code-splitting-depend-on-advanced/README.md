@@ -209,6 +209,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -554,7 +555,7 @@ asset react-vendors.js 1.33 KiB [emitted] (name: react-vendors)
 asset lazy_js.js 1.11 KiB [emitted]
 Entrypoint app 1.44 KiB = app.js
 Entrypoint page1 1.91 KiB = page1.js
-Entrypoint react-vendors 12.4 KiB = runtime.js 11.1 KiB react-vendors.js 1.33 KiB
+Entrypoint react-vendors 12.5 KiB = runtime.js 11.1 KiB react-vendors.js 1.33 KiB
 Entrypoint other-vendors 13.3 KiB = runtime.js 11.1 KiB other-vendors.js 2.13 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
@@ -612,22 +613,22 @@ chunk (runtime: runtime) runtime.js (runtime) 6.74 KiB ={other-vendors}= ={react
   > react react-vendors
   > react-dom react-vendors
   runtime modules 6.74 KiB 10 modules
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset runtime.js 2.37 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 287 bytes [emitted] [minimized] (name: page1)
-asset other-vendors.js 239 bytes [emitted] [minimized] (name: other-vendors)
-asset app.js 207 bytes [emitted] [minimized] (name: app)
-asset react-vendors.js 200 bytes [emitted] [minimized] (name: react-vendors)
-asset lazy_js.js 159 bytes [emitted] [minimized]
-Entrypoint app 207 bytes = app.js
-Entrypoint page1 287 bytes = page1.js
-Entrypoint react-vendors 2.56 KiB = runtime.js 2.37 KiB react-vendors.js 200 bytes
-Entrypoint other-vendors 2.6 KiB = runtime.js 2.37 KiB other-vendors.js 239 bytes
+asset page1.js 283 bytes [emitted] [minimized] (name: page1)
+asset other-vendors.js 241 bytes [emitted] [minimized] (name: other-vendors)
+asset react-vendors.js 204 bytes [emitted] [minimized] (name: react-vendors)
+asset app.js 202 bytes [emitted] [minimized] (name: app)
+asset lazy_js.js 160 bytes [emitted] [minimized]
+Entrypoint app 202 bytes = app.js
+Entrypoint page1 283 bytes = page1.js
+Entrypoint react-vendors 2.57 KiB = runtime.js 2.37 KiB react-vendors.js 204 bytes
+Entrypoint other-vendors 2.6 KiB = runtime.js 2.37 KiB other-vendors.js 241 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -683,5 +684,5 @@ chunk (runtime: runtime) runtime.js (runtime) 6.74 KiB ={other-vendors}= ={react
   > react react-vendors
   > react-dom react-vendors
   runtime modules 6.74 KiB 10 modules
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

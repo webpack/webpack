@@ -10,10 +10,10 @@ _{{example.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/577.output.js
+# dist/require_context_templates_sync_recursive_.output.js
 
 ``` javascript
-_{{dist/577.output.js}}_
+_{{dist/require_context_templates_sync_recursive_.output.js}}_
 ```
 
 # Info

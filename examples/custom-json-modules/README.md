@@ -119,7 +119,7 @@ module.exports = {
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ }),
 /* 2 */
@@ -139,7 +139,7 @@ module.exports = JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Presto
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ }),
 /* 3 */
@@ -158,7 +158,7 @@ module.exports = JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Presto
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ })
 /******/ 	]);
@@ -246,7 +246,7 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 5.87 KiB [emitted] (name: main)
+asset output.js 5.91 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
@@ -255,5 +255,5 @@ chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.99.6 compiled successfully
 ```

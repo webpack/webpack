@@ -10,8 +10,9 @@ console.log("Running " + ENV + " build");
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
+
 module.exports = [
 	{
 		name: "mobile",
@@ -49,7 +50,6 @@ module.exports = [
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -115,7 +115,6 @@ console.log("Running " + "desktop" + " build");
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -139,37 +138,37 @@ console.log("Running " + "mobile" + " build");
 
 ```
 mobile:
-  asset mobile.js 1.74 KiB [emitted] (name: main)
+  asset mobile.js 1.71 KiB [emitted] (name: main)
   chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
     > ./example main
     dependent modules 20 bytes [dependent] 1 module
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  mobile (webpack 5.78.0) compiled successfully
+  mobile (webpack 5.99.6) compiled successfully
 
 desktop:
-  asset desktop.js 292 bytes [emitted] (name: main)
+  asset desktop.js 262 bytes [emitted] (name: main)
   chunk (runtime: main) desktop.js (main) 94 bytes [entry] [rendered]
     > ./example main
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  desktop (webpack 5.78.0) compiled successfully
+  desktop (webpack 5.99.6) compiled successfully
 ```
 
 ## Production mode
 
 ```
 mobile:
-  asset mobile.js 195 bytes [emitted] [minimized] (name: main)
+  asset mobile.js 193 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
     > ./example main
     dependent modules 20 bytes [dependent] 1 module
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  mobile (webpack 5.78.0) compiled successfully
+  mobile (webpack 5.99.6) compiled successfully
 
 desktop:
   asset desktop.js 37 bytes [emitted] [minimized] (name: main)
@@ -178,5 +177,5 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  desktop (webpack 5.78.0) compiled successfully
+  desktop (webpack 5.99.6) compiled successfully
 ```

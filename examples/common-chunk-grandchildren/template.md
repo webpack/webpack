@@ -61,28 +61,28 @@ _{{webpack.config.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/366.output.js
+# dist/pageA_js.output.js
 
 ```javascript
-_{{dist/366.output.js}}_
+_{{dist/pageA_js.output.js}}_
 ```
 
-# dist/588.output.js
+# dist/pageB_js.output.js
 
 ```javascript
-_{{dist/588.output.js}}_
+_{{dist/pageB_js.output.js}}_
 ```
 
-# dist/145.output.js
+# dist/pageC_js.output.js
 
 ```javascript
-_{{dist/145.output.js}}_
+_{{dist/pageC_js.output.js}}_
 ```
 
-# dist/421.output.js
+# dist/reusableComponent_js.output.js
 
 ```javascript
-_{{dist/421.output.js}}_
+_{{dist/reusableComponent_js.output.js}}_
 ```
 
 # Info

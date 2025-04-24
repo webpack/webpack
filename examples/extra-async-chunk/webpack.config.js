@@ -4,6 +4,6 @@ module.exports = {
 		splitChunks: {
 			minSize: 0 // This example is too small
 		},
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
 	}
 };
