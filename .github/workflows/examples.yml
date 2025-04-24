@@ -25,7 +25,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: build:examples
+      - run: yarn build:examples
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
