@@ -5,7 +5,7 @@ module.exports = {
 	output: {
 		module: true,
 		library: {
-			type: "modern-module"
+			type: "module"
 		},
 		filename: "[name].js",
 		chunkFormat: "module"
