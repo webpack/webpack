@@ -259,7 +259,7 @@ chunk (runtime: main) 1.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -282,5 +282,5 @@ chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.05 KiB (runtime)
     [no exports used]
     entry ./example.js main
     used as library export
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

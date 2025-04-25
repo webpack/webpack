@@ -399,7 +399,7 @@ chunk (runtime: main) node_modules_b_js-node_modules_d_js.output.js 22 bytes [re
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -442,5 +442,5 @@ chunk (runtime: main) node_modules_b_js-node_modules_d_js.output.js 22 bytes [re
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

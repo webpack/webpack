@@ -236,7 +236,7 @@ vendor:
       [used exports unknown]
       dll entry 0:0-0
       used as library export
-  vendor (webpack 5.99.6) compiled successfully
+  vendor (webpack 5.99.7) compiled successfully
 
 app:
   asset pageB.js 2.63 KiB [emitted] (name: pageB)
@@ -262,7 +262,7 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.99.6) compiled successfully
+  app (webpack 5.99.7) compiled successfully
 ```
 
 ## Production mode
@@ -276,7 +276,7 @@ vendor:
     dll main 12 bytes [built] [code generated]
       dll entry 0:0-0
       used as library export
-  vendor (webpack 5.99.6) compiled successfully
+  vendor (webpack 5.99.7) compiled successfully
 
 app:
   asset pageB.js 297 bytes [emitted] [minimized] (name: pageB)
@@ -302,5 +302,5 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.99.6) compiled successfully
+  app (webpack 5.99.7) compiled successfully
 ```

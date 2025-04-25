@@ -567,7 +567,7 @@ chunk (runtime: main) 1.output.js, 1.output.css 1 bytes (javascript) 23 bytes (c
     [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 4:0-26
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -601,5 +601,5 @@ chunk (runtime: main) 822.output.js, 822.output.css 1 bytes (javascript) 23 byte
   css ./lazy-style.css 1 bytes (javascript) 23 bytes (css) [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js + 2 modules ./example.js 4:0-26
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

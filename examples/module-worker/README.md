@@ -871,7 +871,7 @@ chunk (runtime: 1fad8bf8de78b0a77bfd) 936.js 152 bytes [rendered]
     [used exports unknown]
     import() ./chat-module ./chat-worker.js 7:27-50
     import() ./chat-module ./chat-worker.js 11:31-54
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -916,5 +916,5 @@ chunk (runtime: 1fad8bf8de78b0a77bfd) 936.js 152 bytes [rendered]
     [all exports used]
     import() ./chat-module ./chat-worker.js 7:27-50
     import() ./chat-module ./chat-worker.js 11:31-54
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

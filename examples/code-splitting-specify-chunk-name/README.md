@@ -386,7 +386,7 @@ chunk (runtime: main) 994.output.js (chunk-bar-baz0) 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -424,5 +424,5 @@ chunk (runtime: main) 994.output.js (chunk-bar-baz0) 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

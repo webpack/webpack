@@ -753,7 +753,7 @@ chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.41 KiB (runtime) [e
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -789,5 +789,5 @@ chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.41 KiB (runtime) [e
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

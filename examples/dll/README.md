@@ -162,7 +162,7 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     [used exports unknown]
     dll entry 0:0-0
     used as library export
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -182,5 +182,5 @@ chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   dll alpha 12 bytes [built] [code generated]
     dll entry 0:0-0
     used as library export
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

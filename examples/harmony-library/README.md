@@ -115,7 +115,7 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [used exports unknown]
     entry ./example main
     used as library export
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -129,5 +129,5 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [exports: default, increment, value]
     entry ./example main
     used as library export
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
