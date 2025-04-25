@@ -89,6 +89,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
         with:
+          token: ${{ secrets.PAT }}
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body-path: "./test/js/benchmark.md"
