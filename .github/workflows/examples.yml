@@ -2,7 +2,7 @@ name: "Update examples"
 
 on:
   schedule:
-    - cron: "0 0 * * 0"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: read
