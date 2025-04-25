@@ -88,6 +88,10 @@ import {
 	YieldExpression
 } from "estree";
 import { IncomingMessage, ServerOptions } from "http";
+import {
+	Session as SessionImportInspectorClass_1,
+	Session as SessionImportInspectorClass_2
+} from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
@@ -224,7 +228,6 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
-type Algorithm = string | typeof Hash;
 type Alias = string | false | string[];
 declare interface AliasOption {
 	alias: Alias;
@@ -5867,7 +5870,11 @@ declare interface InfrastructureLogging {
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
 	 */
-	stream?: NodeJS.WritableStream;
+	stream?: NodeJS.WritableStream & {
+		isTTY?: boolean;
+		columns?: number;
+		rows?: number;
+	};
 }
 declare class InitFragment<GenerateContext> {
 	constructor(
@@ -5925,6 +5932,9 @@ declare interface InputFileSystem {
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
 	dirname?: (dirname: string) => string;
+}
+declare interface Inspector {
+	Session: typeof SessionImportInspectorClass_1;
 }
 type IntermediateFileSystem = InputFileSystem &
 	OutputFileSystem &
@@ -11765,12 +11775,12 @@ declare interface ProcessAssetsAdditionalOptions {
 	additionalAssets?: any;
 }
 declare class Profiler {
-	constructor(inspector?: any);
-	session: any;
-	inspector: any;
+	constructor(inspector: Inspector);
+	session?: SessionImportInspectorClass_2;
+	inspector: Inspector;
 	hasSession(): boolean;
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
-	sendCommand(method: string, params?: Record<string, any>): Promise<any>;
+	sendCommand(method: string, params?: object): Promise<any>;
 	destroy(): Promise<void>;
 	stopProfiling(): Promise<{ profile: any }>;
 }
@@ -13347,11 +13357,18 @@ declare interface ResourceDataWithData {
 	data: Record<string, any>;
 }
 declare abstract class RestoreProvidedData {
-	exports: any[];
+	exports: RestoreProvidedDataExports[];
 	otherProvided?: null | boolean;
 	otherCanMangleProvide?: boolean;
 	otherTerminalBinding: boolean;
 	serialize(__0: ObjectSerializerContext): void;
+}
+declare interface RestoreProvidedDataExports {
+	name: string;
+	provided?: null | boolean;
+	canMangleProvide?: boolean;
+	terminalBinding: boolean;
+	exportsInfo?: RestoreProvidedData;
 }
 declare interface RmDirOptions {
 	maxRetries?: number;
@@ -16399,7 +16416,10 @@ declare namespace exports {
 		export let REGEXP_NAMESPACE: RegExp;
 		export let createFilename: (
 			module: string | Module,
-			options: { namespace?: string; moduleFilenameTemplate?: any },
+			options: {
+				namespace?: string;
+				moduleFilenameTemplate?: string | ((context?: any) => string);
+			},
 			__2: {
 				requestShortener: RequestShortener;
 				chunkGraph: ChunkGraph;
@@ -16670,7 +16690,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm: Algorithm) => Hash;
+		export const createHash: (algorithm: HashFunction) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (

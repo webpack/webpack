@@ -80,7 +80,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "((context: any) => string)"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -124,7 +124,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "((context: any) => string)"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },

@@ -499,7 +499,7 @@ export type DevtoolFallbackModuleFilenameTemplate =
  */
 export type DevtoolModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
  */
@@ -1289,7 +1289,11 @@ export interface InfrastructureLogging {
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
 	 */
-	stream?: NodeJS.WritableStream;
+	stream?: NodeJS.WritableStream & {
+		isTTY?: boolean;
+		columns?: number;
+		rows?: number;
+	};
 }
 /**
  * Custom values available in the loader context.
