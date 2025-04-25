@@ -616,7 +616,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: TODO) => string)"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1794,7 +1794,7 @@
         },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
-          "tsType": "NodeJS.WritableStream"
+          "tsType": "NodeJS.WritableStream & { isTTY?: boolean, columns?: number, rows?: number }"
         }
       }
     },
