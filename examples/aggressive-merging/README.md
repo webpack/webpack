@@ -113,7 +113,7 @@ chunk (runtime: pageC) pageC.bundle.js (pageC) 68 bytes (javascript) 4.94 KiB (r
   ./pageC.js 68 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageC pageC
-webpack 5.99.0 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -172,5 +172,5 @@ chunk (runtime: pageC) pageC.bundle.js (pageC) 68 bytes (javascript) 4.94 KiB (r
   ./pageC.js 68 bytes [built] [code generated]
     [no exports used]
     entry ./pageC pageC
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

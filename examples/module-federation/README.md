@@ -2100,7 +2100,7 @@ app:
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 7:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.99.6) compiled successfully
+  app (webpack 5.99.7) compiled successfully
 
 mfe-b:
   assets by chunk 1020 KiB (id hint: vendors)
@@ -2129,7 +2129,7 @@ mfe-b:
     > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 16.7 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
-  mfe-b (webpack 5.99.6) compiled successfully
+  mfe-b (webpack 5.99.7) compiled successfully
 
 mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
@@ -2167,7 +2167,7 @@ mfe-c:
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^19.0.0 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.99.6) compiled successfully
+  mfe-c (webpack 5.99.7) compiled successfully
 ```
 
 ## Production mode
@@ -2186,9 +2186,9 @@ app:
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
       provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: app) node_modules_react_index_js.js 16.9 KiB [rendered]
+    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
     > consume shared module (default) react@^19.1.0 (singleton) (fallback: ../../node_modules/react/index.js)
     > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
     dependent modules 16.7 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) src_bootstrap_js.js 26.3 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
@@ -2198,7 +2198,7 @@ app:
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 7:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.99.6) compiled successfully
+  app (webpack 5.99.7) compiled successfully
 
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
@@ -2213,8 +2213,8 @@ mfe-b:
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
       provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) node_modules_react_index_js.js 16.9 KiB [rendered]
-    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
     > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 16.7 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 752 bytes (javascript) 84 bytes (consume-shared) [rendered]
@@ -2225,7 +2225,7 @@ mfe-b:
     > consume shared module (default) date-fns@^4.0.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
     > provide shared module (default) date-fns@4.1.0 = ../../node_modules/date-fns/index.js
     ../../node_modules/date-fns/index.js + 302 modules 520 KiB [built] [code generated]
-  mfe-b (webpack 5.99.6) compiled successfully
+  mfe-b (webpack 5.99.7) compiled successfully
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
@@ -2261,5 +2261,5 @@ mfe-c:
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^19.0.0 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.99.6) compiled successfully
+  mfe-c (webpack 5.99.7) compiled successfully
 ```

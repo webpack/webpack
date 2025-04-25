@@ -134,5 +134,5 @@ chunk (runtime: pageF) pageF.js (pageF) 137 bytes (javascript) 3.01 KiB (runtime
   runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/f.js 106 bytes [built] [code generated]
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

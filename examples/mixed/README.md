@@ -506,7 +506,7 @@ chunk (runtime: main) require_context_templates_sync_recursive_js_.output.js 433
     [no exports]
     [used exports unknown]
     amd require context ./example.js 7:0-14:1
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -527,5 +527,5 @@ chunk (runtime: main) require_context_templates_sync_recursive_js_.output.js 433
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 7:0-14:1
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

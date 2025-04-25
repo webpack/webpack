@@ -715,7 +715,7 @@ chunk (runtime: pageA, pageB) shared_js.js 88 bytes [rendered]
       cjs require ./shared ./pageB.js 3:14-33
     amd require ./shared ./pageA.js 2:0-4:2
     cjs self exports reference ./shared.js 2:0-14
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -758,5 +758,5 @@ chunk (runtime: pageA, pageB) shared_js.js 88 bytes [rendered]
       cjs require ./shared ./pageB.js 3:14-33
     amd require ./shared ./pageA.js 2:0-4:2
     cjs self exports reference ./shared.js 2:0-14
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```

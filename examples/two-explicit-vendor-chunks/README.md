@@ -315,7 +315,7 @@ chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
 
 ## Production mode
@@ -361,5 +361,5 @@ chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
     [used exports unknown]
     cjs self exports reference ./pageC.js 1:0-14
     entry ./pageC pageC
-webpack 5.99.6 compiled successfully
+webpack 5.99.7 compiled successfully
 ```
