@@ -58,7 +58,7 @@ chunk (runtime: main) adcc62444431e4f1597f.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -75,7 +75,7 @@ chunk (runtime: main) 954fd9a9a767ef883087.js (main) 16.9 KiB (javascript) 4.94 
   runtime modules 4.94 KiB 6 modules
   dependent modules 16.9 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Records

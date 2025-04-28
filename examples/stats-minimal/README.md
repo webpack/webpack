@@ -44,5 +44,5 @@ console.log("Hello World!");
 ```
 1 asset
 1 module
-webpack 5.99.7 compiled [1m[32msuccessfully[39m[22m
+webpack X.X.X compiled successfully
 ```

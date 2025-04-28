@@ -576,7 +576,7 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [used exports unknown]
     entry ./router pageA
     entry ./router pageB
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -631,5 +631,5 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [no exports used]
     entry ./router pageA
     entry ./router pageB
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

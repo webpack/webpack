@@ -76,7 +76,7 @@ modules by path https:// 30 KiB
   [no exports]
   [used exports unknown]
   entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -88,5 +88,5 @@ orphan modules 30 KiB [orphan] 26 modules
   [no exports]
   [no exports used]
   entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

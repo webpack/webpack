@@ -719,7 +719,7 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -786,5 +786,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
