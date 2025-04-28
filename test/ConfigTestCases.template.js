@@ -2,9 +2,13 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {Record<string, EXPECTED_ANY>} Env */
+/** @typedef {{ testPath: string } TestOptions */
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const url = require("url");
 const { URL, pathToFileURL, fileURLToPath } = require("url");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -134,7 +138,7 @@ const describeCases = config => {
 								}
 							}
 							testConfig = {
-								findBundle: function (i, options) {
+								findBundle(i, options) {
 									const ext = path.extname(
 										parseResource(options.output.filename).path
 									);
@@ -418,10 +422,10 @@ const describeCases = config => {
 										filesCount++;
 										const document = new FakeDocument(outputDirectory);
 										const globalContext = {
-											console: console,
-											expect: expect,
-											setTimeout: setTimeout,
-											clearTimeout: clearTimeout,
+											console,
+											expect,
+											setTimeout,
+											clearTimeout,
 											document,
 											getComputedStyle:
 												document.getComputedStyle.bind(document),
@@ -438,7 +442,7 @@ const describeCases = config => {
 										const esmCache = new Map();
 										const esmIdentifier = `${category.name}-${testName}-${i}`;
 										const baseModuleScope = {
-											console: console,
+											console,
 											it: _it,
 											beforeEach: _beforeEach,
 											afterEach: _afterEach,
@@ -557,10 +561,20 @@ const describeCases = config => {
 																specifier,
 																module
 															) => {
+																const normalizedSpecifier =
+																	specifier.startsWith("file:")
+																		? `./${path.relative(
+																				path.dirname(p),
+																				url.fileURLToPath(specifier)
+																			)}`
+																		: specifier.replace(
+																				/https:\/\/example.com\/public\/path\//,
+																				"./"
+																			);
 																const result = await _require(
 																	path.dirname(p),
 																	options,
-																	specifier,
+																	normalizedSpecifier,
 																	"evaluated",
 																	module
 																);
@@ -672,7 +686,6 @@ const describeCases = config => {
 												module.startsWith("node:") ? module.slice(5) : module
 											);
 										};
-
 										if (Array.isArray(bundlePath)) {
 											for (const bundlePathItem of bundlePath) {
 												results.push(

@@ -8,13 +8,13 @@ const { NormalModule } = require("../../../../");
 /**
  * @param {import("../../../../").Compiler} compiler the compiler
  */
-var testPlugin = compiler => {
+const testPlugin = compiler => {
 	compiler.hooks.compilation.tap("TestPlugin", compilation => {
 		let shouldReplace = false;
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
 			loaderContext => {
-				/** @type {any} */
+				/** @type {EXPECTED_ANY} */
 				(loaderContext).shouldReplace = shouldReplace;
 			}
 		);

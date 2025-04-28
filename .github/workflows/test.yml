@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - dev-1
   pull_request:
     branches:
       - main
-      - dev-1
 
 permissions:
   contents: read
@@ -48,6 +46,54 @@ jobs:
           yarn upgrade typescript@5.0
           yarn --frozen-lockfile
           yarn type-validate
+  validate-legacy-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 10.x
+          cache: "yarn"
+      # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
+      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
+      - run: yarn install --production --frozen-lockfile
+  benchmark:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "yarn"
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - run: yarn benchmark --ci
+      - name: Find Comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Benchmarks
+      - name: Create or update comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.PAT }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: "./test/js/benchmark.md"
+          edit-mode: replace
   basic:
     runs-on: ubuntu-latest
     steps:
@@ -61,24 +107,6 @@ jobs:
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn test:basic --ci
-      - uses: codecov/codecov-action@v5
-        with:
-          flags: basic
-          functionalities: gcov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-  validate-legacy-node:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 10.x
-          cache: "yarn"
-      # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
-      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
-      - run: yarn install --production --frozen-lockfile
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +128,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: unit
-          functionalities: gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   integration:
@@ -191,6 +218,5 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           flags: integration
-          functionalities: gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

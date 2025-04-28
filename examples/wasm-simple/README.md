@@ -323,6 +323,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 	/* webpack/runtime/wasm loading */
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
+/******/ 		
 /******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
@@ -330,6 +331,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 				.then((res) => (Object.assign(exports, res.instance.exports))));
 /******/ 			return req.then((res) => {
 /******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
+/******/ 		
 /******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
 /******/ 						.then(
 /******/ 							(res) => (Object.assign(exports, res.instance.exports)),
@@ -385,16 +387,16 @@ chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassem
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 2.89 KiB [emitted] [minimized] (name: main)
-asset 67aca7a09456080b5120.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset 36825f9224dde8d88de0.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset 10cff76bc58b7aa8f9cb.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+asset 93de874acf2fa7def7d9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset 5055869d769f484de216.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset db91ebd6538fd6985888.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.42 KiB 5 modules
@@ -403,5 +405,5 @@ chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassem
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.90.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

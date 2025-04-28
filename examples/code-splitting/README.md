@@ -149,6 +149,7 @@ require.ensure(["c"], function(require) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -182,7 +183,7 @@ require.ensure(["c"], function(require) {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			"main": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -219,7 +220,7 @@ require.ensure(["c"], function(require) {
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -270,7 +271,6 @@ require.ensure(["c"], function(require) {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -280,7 +280,7 @@ var __webpack_exports__ = {};
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 var a = __webpack_require__(/*! a */ 1);
 var b = __webpack_require__(/*! b */ 2);
-__webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js").then((function(require) {
     (__webpack_require__(/*! b */ 2).xyz)();
     var d = __webpack_require__(/*! d */ 4);
 }).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
@@ -290,10 +290,10 @@ __webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
 ;
 ```
 
-# dist/796.output.js
+# dist/node_modules_c_js-node_modules_d_js.output.js
 
 ```javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([[796],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["node_modules_c_js-node_modules_d_js"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -325,7 +325,7 @@ __webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([[796],{286:()=>{},882:()=>{}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([["node_modules_c_js-node_modules_d_js"],{576:()=>{},605:()=>{}}]);
 ```
 
 # Info
@@ -333,16 +333,16 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.47 KiB [emitted] (name: main)
-asset 796.output.js 528 bytes [emitted]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+asset output.js 9.46 KiB [emitted] (name: main)
+asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 796.output.js 22 bytes [rendered]
+chunk (runtime: main) node_modules_c_js-node_modules_d_js.output.js 22 bytes [rendered]
   > ./example.js 3:0-6:2
   ./node_modules/c.js 11 bytes [built] [code generated]
     [used exports unknown]
@@ -350,22 +350,22 @@ chunk (runtime: main) 796.output.js 22 bytes [rendered]
   ./node_modules/d.js 11 bytes [built] [code generated]
     [used exports unknown]
     cjs require d ./example.js 5:12-24
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.74 KiB [emitted] [minimized] (name: main)
-asset 796.output.js 80 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+asset output.js 1.77 KiB [emitted] [minimized] (name: main)
+asset node_modules_c_js-node_modules_d_js.output.js 114 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 796.output.js 22 bytes [rendered]
+chunk (runtime: main) node_modules_c_js-node_modules_d_js.output.js 22 bytes [rendered]
   > ./example.js 3:0-6:2
   ./node_modules/c.js 11 bytes [built] [code generated]
     [used exports unknown]
@@ -373,5 +373,5 @@ chunk (runtime: main) 796.output.js 22 bytes [rendered]
   ./node_modules/d.js 11 bytes [built] [code generated]
     [used exports unknown]
     cjs require d ./example.js 5:12-24
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

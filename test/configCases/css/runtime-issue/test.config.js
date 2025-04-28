@@ -9,7 +9,7 @@ module.exports = {
 		link2.href = "asyncChunk2_js.css";
 		scope.window.document.head.appendChild(link2);
 	},
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		return [
 			"./common-share_js-img_png.js",
 			"./asyncChunk_js.js",

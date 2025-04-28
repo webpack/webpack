@@ -1,4 +1,4 @@
-var supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
 
 module.exports = function (config) {
 	return supportsIteratorDestructuring();

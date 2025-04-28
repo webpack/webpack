@@ -1,7 +1,8 @@
 # webpack.config.js
 
 ```javascript
-var path = require("path");
+const path = require("path");
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: {
@@ -314,29 +315,17 @@ chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset pageA.js 265 bytes [emitted] [minimized] (name: pageA)
+asset pageA.js 263 bytes [emitted] [minimized] (name: pageA)
 asset vendor2.js 218 bytes [emitted] [minimized] (name: vendor2)
 asset vendor1.js 176 bytes [emitted] [minimized] (name: vendor1)
 asset pageB.js 174 bytes [emitted] [minimized] (name: pageB)
 asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
-chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
-  > ./pageB pageB
-  ./pageB.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageB.js 1:0-14
-    entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
-  > ./pageC pageC
-  ./pageC.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageC.js 1:0-14
-    entry ./pageC pageC
 chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
   > ./vendor2 vendor2
   dependent modules 27 bytes [dependent] 1 module
@@ -345,6 +334,12 @@ chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
+chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
+  > ./pageB pageB
+  ./pageB.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./pageB.js 1:0-14
+    entry ./pageB pageB
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
   > ./pageA pageA
   dependent modules 77 bytes [dependent] 2 modules
@@ -360,5 +355,11 @@ chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
     cjs self exports reference ./vendor1.js 1:0-14
     cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
-webpack 5.78.0 compiled successfully
+chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
+  > ./pageC pageC
+  ./pageC.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./pageC.js 1:0-14
+    entry ./pageC pageC
+webpack X.X.X compiled successfully
 ```

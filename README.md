@@ -676,5 +676,5 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3&branchName=main
 [dependency-review-url]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml
 [dependency-review]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml/badge.svg
-[cover]: https://codecov.io/gh/webpack/webpack/branch/master/graph/badge.svg?token=mDP3mQJNnn
+[cover]: https://codecov.io/gh/webpack/webpack/graph/badge.svg?token=mDP3mQJNnn
 [cover-url]: https://codecov.io/gh/webpack/webpack

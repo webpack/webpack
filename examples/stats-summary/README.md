@@ -26,7 +26,6 @@ module.exports = {
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -43,5 +42,5 @@ console.log("Hello World!");
 ## Production mode
 
 ```
-webpack 5.88.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

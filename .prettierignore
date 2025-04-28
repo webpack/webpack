@@ -3,6 +3,8 @@ package.json
 # Ignore some test files
 test/**/*.*
 !test/*.js
+!test/*.cjs
+!test/*.mjs
 !test/**/webpack.config.js
 !test/**/test.config.js
 !test/**/test.filter.js
@@ -12,6 +14,7 @@ test/**/*.*
 !test/**/infrastructure-log.js
 !test/*.md
 !test/helpers/*.*
+test/js/**/*.*
 
 # Ignore some folders
 benchmark/

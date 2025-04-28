@@ -1,6 +1,7 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import js from "@eslint/js";
 import prettier from "eslint-plugin-prettier";
-import n from "eslint-plugin-n";
+import nodePlugin from "eslint-plugin-n";
 import jest from "eslint-plugin-jest";
 import jsdoc from "eslint-plugin-jsdoc";
 import prettierConfig from "eslint-config-prettier";
@@ -8,57 +9,87 @@ import globals from "globals";
 import stylistic from "@stylistic/eslint-plugin";
 import unicorn from "eslint-plugin-unicorn";
 
-const nodeConfig = n.configs["flat/recommended"];
 const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
 
-export default [
+export default defineConfig([
+	globalIgnores([
+		// Ignore some test files
+		"test/**/*.*",
+		"!test/*.js",
+		"!test/*.cjs",
+		"!test/*.mjs",
+		"!test/**/webpack.config.js",
+		"!test/**/test.config.js",
+		"!test/**/test.filter.js",
+		"test/cases/parsing/es2022/test.filter.js",
+		"!test/**/errors.js",
+		"!test/**/warnings.js",
+		"!test/**/deprecations.js",
+		"!test/**/infrastructure-log.js",
+		"!test/helpers/*.*",
+		"test/js/**/*.*",
+
+		// Ignore some folders
+		"benchmark",
+		"coverage",
+
+		// Ignore generated files
+		"*.check.js",
+
+		// Ignore not supported files
+		"*.d.ts",
+
+		// Ignore precompiled schemas
+		"schemas/**/*.check.js",
+
+		// Auto generation
+		"lib/util/semver.js",
+
+		// Ignore some examples files
+		"examples/**/*.js",
+		"examples/**/*.mjs",
+		"!examples/*/webpack.config.js"
+	]),
 	{
-		ignores: [
-			// Ignore some test files
-			"test/**/*.*",
-			"!test/*.js",
-			"!test/**/webpack.config.js",
-			"!test/**/test.config.js",
-			"!test/**/test.filter.js",
-			"test/cases/parsing/es2022/test.filter.js",
-			"!test/**/errors.js",
-			"!test/**/warnings.js",
-			"!test/**/deprecations.js",
-			"!test/**/infrastructure-log.js",
-			"!test/helpers/*.*",
-
-			// Ignore some folders
-			"benchmark",
-			"coverage",
-
-			// Ignore generated files
-			"*.check.js",
-
-			// Ignore not supported files
-			"*.d.ts",
-
-			// Ignore precompiled schemas
-			"schemas/**/*.check.js",
-
-			// Auto generation
-			"lib/util/semver.js",
-
-			// Ignore some examples files
-			"examples/**/*.js",
-			"examples/**/*.mjs",
-			"!examples/*/webpack.config.js"
-		]
+		files: ["**/*.mjs"],
+		languageOptions: {
+			sourceType: "module"
+		}
 	},
 	{
-		...js.configs.recommended,
+		files: ["**/*.{js,cjs}"],
 		languageOptions: {
 			ecmaVersion: 2018,
+			sourceType: "commonjs",
 			globals: {
 				...globals.node,
 				...globals.es2018,
 				WebAssembly: true
 			}
+		}
+	},
+	...nodePlugin.configs["flat/mixed-esm-and-cjs"],
+	{
+		plugins: {
+			n: nodePlugin
 		},
+		rules: {
+			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
+			"n/no-unsupported-features/node-builtins": [
+				"error",
+				{
+					ignores: [
+						"zlib.createBrotliCompress",
+						"zlib.createBrotliDecompress",
+						"EventSource"
+					]
+				}
+			],
+			"n/exports-style": "error"
+		}
+	},
+	{
+		...js.configs.recommended,
 		linterOptions: {
 			reportUnusedDisableDirectives: true
 		},
@@ -153,6 +184,7 @@ export default [
 					properties: true
 				}
 			],
+			"no-console": "error",
 			"no-extra-label": "error",
 			"no-label-var": "error",
 			"no-lone-blocks": "error",
@@ -255,24 +287,6 @@ export default [
 		}
 	},
 	{
-		...nodeConfig,
-		rules: {
-			...nodeConfig.rules,
-			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
-			"n/no-unsupported-features/node-builtins": [
-				"error",
-				{
-					ignores: [
-						"zlib.createBrotliCompress",
-						"zlib.createBrotliDecompress",
-						"EventSource"
-					]
-				}
-			],
-			"n/exports-style": "error"
-		}
-	},
-	{
 		...jsdocConfig,
 		settings: {
 			jsdoc: {
@@ -330,6 +344,13 @@ export default [
 							message:
 								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
 						},
+						// Prefer `{string=}` over `{string} [arg]`
+						{
+							comment:
+								"JsdocBlock:has(JsdocTag[tag=/^(property|param)$/][name=/[\\[\\]]/])",
+							message:
+								"Please use `@property {string=} property`/`@param {string=} arg` instead `[arg]` for optional properties and parameters"
+						},
 						// No `*` type
 						{
 							comment: "JsdocBlock:has(JsdocTypeAny)",
@@ -341,10 +362,10 @@ export default [
 							message: "Please use `unknown` or `any` (or `EXPECTED_ANY`) type"
 						},
 						// No `any` type
-						// {
-						// 	comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
-						// 	message: "Please use provide types instead `any`"
-						// },
+						{
+							comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
+							message: "Please use provide types instead `any`"
+						},
 						// No `Function` type
 						{
 							comment:
@@ -371,16 +392,50 @@ export default [
 		}
 	},
 	{
-		files: ["bin/**/*.js"],
-		// Allow to use `dynamic` import
+		...jest.configs["flat/recommended"],
+		files: ["test/**/*.{js,cjs,mjs}"],
 		languageOptions: {
-			ecmaVersion: 2020
+			ecmaVersion: "latest",
+			globals: {
+				...globals.jest,
+				nsObj: false
+			}
 		},
 		rules: {
+			...jest.configs["flat/recommended"].rules,
+			"jest/no-standalone-expect": "off",
+			"jest/valid-title": [
+				"error",
+				{
+					ignoreTypeOfDescribeName: true,
+					ignoreTypeOfTestName: true
+				}
+			],
+			"jest/no-done-callback": "off",
+			"jest/expect-expect": "off",
+			"jest/no-conditional-expect": "off",
+			"no-console": "off",
+			"jsdoc/require-jsdoc": "off",
 			"n/no-unsupported-features/es-syntax": [
 				"error",
 				{
-					ignores: ["hashbang", "dynamic-import"]
+					version: ">=22",
+					ignores: []
+				}
+			],
+			"n/no-unsupported-features/es-builtins": [
+				"error",
+				{
+					version: ">=22",
+					ignores: []
+				}
+			],
+			"n/no-unsupported-features/node-builtins": [
+				"error",
+				{
+					allowExperimental: true,
+					version: ">=22",
+					ignores: []
 				}
 			]
 		}
@@ -402,6 +457,7 @@ export default [
 			"n/exports-style": "off",
 			"prefer-template": "off",
 			"no-implicit-coercion": "off",
+			"no-console": "off",
 			"func-style": "off",
 			"unicorn/prefer-includes": "off",
 			"unicorn/no-useless-undefined": "off",
@@ -410,82 +466,38 @@ export default [
 		}
 	},
 	{
-		files: ["tooling/**/*.js"],
+		files: ["bin/**/*.js"],
+		// Allow to use `dynamic` import
 		languageOptions: {
-			ecmaVersion: 2020,
-			globals: {
-				...globals.es2020
-			}
+			ecmaVersion: 2020
+		},
+		rules: {
+			"no-console": "off",
+			"n/no-unsupported-features/es-syntax": [
+				"error",
+				{
+					ignores: ["hashbang", "dynamic-import"]
+				}
+			]
 		}
 	},
 	{
-		...jest.configs["flat/recommended"],
-		files: ["test/**/*.js"],
+		files: ["setup/**/*.js", "tooling/**/*.js"],
+		// Allow to use `dynamic` import
 		languageOptions: {
-			ecmaVersion: 2020,
-			globals: {
-				...globals.jest,
-				nsObj: false
-			}
+			ecmaVersion: 2020
 		},
 		rules: {
-			...jest.configs["flat/recommended"].rules,
-			"jest/no-standalone-expect": "off",
-			"jest/valid-title": [
-				"error",
-				{
-					ignoreTypeOfDescribeName: true,
-					ignoreTypeOfTestName: true
-				}
-			],
-			"jest/no-done-callback": "off",
-			"jest/expect-expect": "off",
-			"jest/no-conditional-expect": "off",
-			"object-shorthand": "off",
-			camelcase: "off",
-			"no-var": "off",
-			"jsdoc/require-jsdoc": "off",
-			"n/no-unsupported-features/node-builtins": [
-				"error",
-				{
-					ignores: ["Blob"],
-					allowExperimental: true
-				}
-			]
+			"no-console": "off"
 		}
 	},
 	{
 		files: [
-			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js"
+			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
+			"examples/**/*.js"
 		],
 		rules: {
 			"n/no-missing-require": "off"
-		}
-	},
-	{
-		files: ["lib/**/*.js"],
-		rules: {
-			"no-console": "error"
-		}
-	},
-	{
-		files: ["examples/**/*.js"],
-		rules: {
-			"n/no-missing-require": "off"
-		}
-	},
-	{
-		files: ["*.mjs", "**/*.mjs"],
-		languageOptions: {
-			sourceType: "module"
-		},
-		rules: {
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					ignores: ["modules"]
-				}
-			]
 		}
 	},
 	{
@@ -499,4 +511,4 @@ export default [
 			"prettier/prettier": "error"
 		}
 	}
-];
+]);

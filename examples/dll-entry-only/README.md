@@ -34,8 +34,8 @@ export { c } from "./cjs";
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
+const path = require("path");
+const webpack = require("../../");
 
 module.exports = {
 	// mode: "development" || "production",
@@ -87,7 +87,7 @@ module.exports = __webpack_require__;
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] -> ./b.js .b */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./cjs.js .c */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -97,25 +97,25 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "a": () => (/* reexport */ a),
-  "b": () => (/* reexport */ b),
-  "c": () => (/* reexport */ cjs.c)
+  a: () => (/* reexport */ a),
+  b: () => (/* reexport */ b),
+  c: () => (/* reexport */ cjs.c)
 });
 
-;// CONCATENATED MODULE: ./b.js
+;// ./b.js
 // module b
 function b() {
 	return "b";
 }
 
-;// CONCATENATED MODULE: ./a.js
+;// ./a.js
 // module a
 var a = "a";
 
 
 // EXTERNAL MODULE: ./cjs.js
 var cjs = __webpack_require__(2);
-;// CONCATENATED MODULE: ./example.js
+;// ./example.js
 
 
 
@@ -225,16 +225,16 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 4.71 KiB [emitted] (name: dll)
+asset dll.js 4.64 KiB [emitted] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 670 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     [used exports unknown]
-    dll entry
+    dll entry 0:0-0
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -246,7 +246,7 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [en
   runtime modules 670 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
-    dll entry
+    dll entry 0:0-0
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

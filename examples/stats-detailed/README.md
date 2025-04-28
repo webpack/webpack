@@ -26,7 +26,6 @@ module.exports = {
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -44,11 +43,11 @@ console.log("Hello World!");
 
 ```
 PublicPath: dist/
-asset output.js 28 bytes {179} [emitted] [minimized] (name: main)
+asset output.js 28 bytes {792} [emitted] [minimized] (name: main)
 Entrypoint main 28 bytes = output.js
-chunk {179} (runtime: main) output.js (main) 29 bytes [entry] [rendered]
+chunk {792} (runtime: main) output.js (main) 29 bytes [entry] [rendered]
   > ./example.js main
-./example.js [144] 29 bytes {179} [depth 0] [built] [code generated]
+./example.js [695] 29 bytes {792} [depth 0] [built] [code generated]
   [no exports used]
   Statement (ExpressionStatement) with side effects in source code at 1:0-28
   ModuleConcatenation bailout: Module is not an ECMAScript module
@@ -79,5 +78,5 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-2023-06-23 22:57:08: webpack 5.88.0 compiled successfully (208f5e6e78a48d3e157f)
+XXXX-XX-XX XXXX:XX:XX: webpack X.X.X compiled successfully (922245dc37adc36977b5)
 ```

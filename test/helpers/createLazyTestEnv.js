@@ -60,7 +60,8 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			fn();
 		} catch (err) {
 			// avoid leaking memory
-			err.stack;
+			/** @type {EXPECTED_ANY} */
+			(err).stack;
 			throw err;
 		}
 		state.currentDescribeBlock = oldCurrentDescribeBlock;
@@ -88,6 +89,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[1] = createDisposableFn(args[1], true);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
+				// @ts-expect-error expected
 				// eslint-disable-next-line jest/no-disabled-tests
 				it(...args);
 				fixAsyncError(
@@ -100,6 +102,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				throw new Error("beforeEach called too late");
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
+				// @ts-expect-error expected
 				beforeEach(...args);
 				fixAsyncError(
 					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
@@ -111,6 +114,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				throw new Error("afterEach called too late");
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
+				// @ts-expect-error expected
 				afterEach(...args);
 				fixAsyncError(
 					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]

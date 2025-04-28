@@ -1,4 +1,4 @@
-var supportsSpread = require("../../../helpers/supportsSpread");
+const supportsSpread = require("../../../helpers/supportsSpread");
 
 module.exports = function (config) {
 	return supportsSpread();

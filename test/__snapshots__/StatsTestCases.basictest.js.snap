@@ -498,6 +498,69 @@ all:
   all (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for cause-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+WARNING in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+WARNING in error with case
+  [cause]: error case
+
+WARNING in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+WARNING in error with string case
+  [cause]: string case
+
+WARNING in webpack error with case
+  [cause]: cause
+
+WARNING in webpack error
+
+ERROR in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+ERROR in error with case
+  [cause]: error case
+
+ERROR in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+ERROR in error with string case
+  [cause]: string case
+
+ERROR in webpack error with case
+  [cause]: cause
+
+ERROR in webpack error
+
+error cause (webpack x.x.x) compiled with 6 errors and 6 warnings in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
 "asset child.js X bytes [emitted]
 asset parent.js X bytes [emitted] (name: parent)
@@ -1039,14 +1102,14 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dynamic-import 1`] = `
-"asset common.js 1.01 MiB [emitted] (name: common) (id hint: vendors)
+"asset common.js X KiB [emitted] (name: common) (id hint: vendors)
 asset runtime.js X KiB [emitted] (name: runtime)
 asset pages/home.js X KiB [emitted] (name: pages/home)
 asset main.js X KiB [emitted] (name: main)
-Entrypoint main 1.02 MiB = runtime.js X KiB common.js 1.01 MiB main.js X KiB
+Entrypoint main X MiB = runtime.js X KiB common.js X KiB main.js X KiB
 runtime modules X KiB 12 modules
-built modules 1.01 MiB [built]
-  modules by path ../../../node_modules/ 1 MiB
+built modules X MiB [built]
+  modules by path ../../../node_modules/ X KiB
     modules by path ../../../node_modules/react/ X KiB 4 modules
     modules by path ../../../node_modules/react-dom/ X KiB
       modules by path ../../../node_modules/react-dom/*.js X KiB 2 modules
@@ -2049,15 +2112,15 @@ asset no-warning.pro-node.js X KiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-web.js 1.72 MiB [emitted] (name: main)
+asset no-warning.dev-web.js X MiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-node.js 1.72 MiB [emitted] (name: main)
+asset no-warning.dev-node.js X MiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-web-with-limit-set.js 1.72 MiB [emitted] [big] (name: main)
+asset no-warning.dev-web-with-limit-set.js X MiB [emitted] [big] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
@@ -4775,16 +4838,20 @@ global:
 exports[`StatsTestCases should print correct stats for track-returned 1`] = `
 "asset bundle.js X KiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
-./used3.js X bytes [built] [code generated]
-./used.js X bytes [built] [code generated]
-./used7.js X bytes [built] [code generated]
-./used8.js X bytes [built] [code generated]
-./used9.js X bytes [built] [code generated]
-./used1.js X bytes [built] [code generated]
-./used4.js X bytes [built] [code generated]
-./used2.js X bytes [built] [code generated]
-./used5.js X bytes [built] [code generated]
-./used6.js X bytes [built] [code generated]
+./used.js?n=171 X bytes [built] [code generated]
+./used.js?n=164 X bytes [built] [code generated]
+./used.js?n=165 X bytes [built] [code generated]
+./used.js?n=166 X bytes [built] [code generated]
+./used.js?n=172 X bytes [built] [code generated]
+./used.js?n=173 X bytes [built] [code generated]
+./used.js?n=174 X bytes [built] [code generated]
+./used.js?n=167 X bytes [built] [code generated]
+./used.js?n=175 X bytes [built] [code generated]
+./used.js?n=176 X bytes [built] [code generated]
+./used.js?n=177 X bytes [built] [code generated]
+./used.js?n=178 X bytes [built] [code generated]
+./used.js?n=245 X bytes [built] [code generated]
++ 232 modules
 webpack x.x.x compiled successfully in X ms"
 `;
 

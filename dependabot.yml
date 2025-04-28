@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "yarn"
+    directory: "/"
+    ignore:
+      - dependency-name: "mime-types"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "github-actions"
+    directory: "/"

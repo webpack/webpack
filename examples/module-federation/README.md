@@ -352,14 +352,14 @@ export default Component;
 // This also requires an async boundary (import())
 
 // At this point shared modules initialized and remote modules are loaded
-Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js"), __webpack_require__.e("src_bootstrap_js")]).then(__webpack_require__.bind(__webpack_require__, /*! ./bootstrap */ 2));
+__webpack_require__.e(/*! import() */ "src_bootstrap_js").then(__webpack_require__.bind(__webpack_require__, /*! ./bootstrap */ 2));
 
 // It's possible to place more code here to do stuff on page init
 // but it can't use any of the shared modules or remote modules.
 
 /***/ }),
 
-/***/ 10:
+/***/ 9:
 /*!*********************************************!*\
   !*** external "mfeBBB@/dist/bbb/mfeBBB.js" ***!
   \*********************************************/
@@ -386,7 +386,7 @@ module.exports = new Promise((resolve, reject) => {
 
 /***/ }),
 
-/***/ 12:
+/***/ 11:
 /*!*********************************************!*\
   !*** external "mfeCCC@/dist/ccc/mfeCCC.js" ***!
   \*********************************************/
@@ -557,6 +557,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -592,28 +593,28 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	(() => {
 /******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
-/******/ 				9,
-/******/ 				11
+/******/ 				8,
+/******/ 				10
 /******/ 			],
 /******/ 			"webpack_container_remote_mfe-c_Component2": [
-/******/ 				25
+/******/ 				24
 /******/ 			]
 /******/ 		};
 /******/ 		var idToExternalAndNameMapping = {
-/******/ 			"9": [
+/******/ 			"8": [
 /******/ 				"default",
 /******/ 				"./Component",
-/******/ 				10
+/******/ 				9
 /******/ 			],
-/******/ 			"11": [
+/******/ 			"10": [
 /******/ 				"default",
 /******/ 				"./Component",
-/******/ 				12
+/******/ 				11
 /******/ 			],
-/******/ 			"25": [
+/******/ 			"24": [
 /******/ 				"default",
 /******/ 				"./Component2",
-/******/ 				12
+/******/ 				11
 /******/ 			]
 /******/ 		};
 /******/ 		__webpack_require__.f.remotes = (chunkId, promises) => {
@@ -680,9 +681,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => {
-/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 				})()
+/******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
 /******/ 			var uniqueName = "module-federation-aaa";
 /******/ 			var register = (name, version, factory, eager) => {
@@ -704,9 +703,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", "18.2.0", () => (__webpack_require__.e("node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 23))))));
-/******/ 					initExternal(10);
-/******/ 					initExternal(12);
+/******/ 					register("react", "19.1.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 22))))));
+/******/ 					initExternal(9);
+/******/ 					initExternal(11);
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -738,20 +737,38 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
-/******/ 		var ensureExistence = (scopeName, key) => {
-/******/ 			var scope = __webpack_require__.S[scopeName];
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) throw new Error("Shared module " + key + " doesn't exist in shared scope " + scopeName);
-/******/ 			return scope;
+/******/ 		var exists = (scope, key) => {
+/******/ 			return scope && __webpack_require__.o(scope, key);
+/******/ 		}
+/******/ 		var get = (entry) => {
+/******/ 			entry.loaded = 1;
+/******/ 			return entry.get()
 /******/ 		};
-/******/ 		var findVersion = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var eagerOnly = (versions) => {
+/******/ 			return Object.keys(versions).reduce((filtered, version) => {
+/******/ 					if (versions[version].eager) {
+/******/ 						filtered[version] = versions[version];
+/******/ 					}
+/******/ 					return filtered;
+/******/ 			}, {});
+/******/ 		};
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
+/******/ 			}, 0);
+/******/ 			return key && versions[key];
+/******/ 		};
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersionKey = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
@@ -759,119 +776,90 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		var getSingleton = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var findValidVersion = (scope, key, requiredVersion) => {
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
 /******/ 			var versions = scope[key];
-/******/ 			var key = Object.keys(versions).reduce((a, b) => {
-/******/ 				if (!satisfy(requiredVersion, b)) return a;
-/******/ 				return !a || versionLt(a, b) ? b : a;
-/******/ 			}, 0);
-/******/ 			return key && versions[key]
-/******/ 		};
-/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var versions = scope[key];
-/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
+/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findValidVersion(scope, key, requiredVersion);
-/******/ 			if(entry) return get(entry);
-/******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 		var fail = (msg) => {
+/******/ 			throw new Error(msg);
+/******/ 		}
+/******/ 		var failAsNotExist = (scopeName, key) => {
+/******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
+/******/ 		}
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
+/******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		var warn = (msg) => {
-/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 			})()
-/******/ 		};
-/******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
-/******/ 		};
-/******/ 		var get = (entry) => {
-/******/ 			entry.loaded = 1;
-/******/ 			return entry.get()
-/******/ 		};
-/******/ 		var init = (fn) => (function(scopeName, a, b, c) {
+/******/ 		var init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			var promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then) return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], a, b, c));
-/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], a, b, c);
+/******/ 			if (promise && promise.then && !eager) {
+/******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
+/******/ 			}
+/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findVersion(scope, key));
+/******/ 		var useFallback = (scopeName, key, fallback) => {
+/******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
+/******/ 		}
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			return scope && __webpack_require__.o(scope, key) ? get(findVersion(scope, key)) : fallback();
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			if (fallback) return fallback();
+/******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingleton(scope, scopeName, key);
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadStrictVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getValidVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
-/******/ 		});
-/******/ 		var loadSingletonFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingleton(scope, scopeName, key);
-/******/ 		});
-/******/ 		var loadSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			var entry = scope && __webpack_require__.o(scope, key) && findValidVersion(scope, key, version);
-/******/ 			return entry ? get(entry) : fallback();
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			5: () => (loadSingletonVersionCheckFallback("default", "react", [1,18,2,0], () => (__webpack_require__.e("node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 23)))))))
+/******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,1,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 22))))))),
+/******/ 			6: () => (loadSingletonVersion("default", "react", false, [1,19,0,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 22)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
-/******/ 				5
+/******/ 				5,
+/******/ 				6
 /******/ 			]
 /******/ 		};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
+/******/ 					if(!startedInstallModules[id]) {
 /******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -879,6 +867,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 							module.exports = factory();
 /******/ 						}
 /******/ 					};
+/******/ 					startedInstallModules[id] = true;
 /******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -892,6 +881,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
 /******/ 					} catch(e) { onError(e); }
+/******/ 					}
 /******/ 				});
 /******/ 			}
 /******/ 		}
@@ -1168,6 +1158,7 @@ __webpack_require__.d(exports, {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -1218,9 +1209,7 @@ __webpack_require__.d(exports, {
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => {
-/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 				})()
+/******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
 /******/ 			var uniqueName = "module-federation-bbb";
 /******/ 			var register = (name, version, factory, eager) => {
@@ -1242,8 +1231,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("date-fns", "2.29.3", () => (__webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 6))))));
-/******/ 					register("react", "18.2.0", () => (__webpack_require__.e("node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 319))))));
+/******/ 					register("date-fns", "4.1.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 6))))));
+/******/ 					register("react", "19.1.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 309))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1275,20 +1264,38 @@ __webpack_require__.d(exports, {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
-/******/ 		var ensureExistence = (scopeName, key) => {
-/******/ 			var scope = __webpack_require__.S[scopeName];
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) throw new Error("Shared module " + key + " doesn't exist in shared scope " + scopeName);
-/******/ 			return scope;
+/******/ 		var exists = (scope, key) => {
+/******/ 			return scope && __webpack_require__.o(scope, key);
+/******/ 		}
+/******/ 		var get = (entry) => {
+/******/ 			entry.loaded = 1;
+/******/ 			return entry.get()
 /******/ 		};
-/******/ 		var findVersion = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var eagerOnly = (versions) => {
+/******/ 			return Object.keys(versions).reduce((filtered, version) => {
+/******/ 					if (versions[version].eager) {
+/******/ 						filtered[version] = versions[version];
+/******/ 					}
+/******/ 					return filtered;
+/******/ 			}, {});
+/******/ 		};
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
+/******/ 			}, 0);
+/******/ 			return key && versions[key];
+/******/ 		};
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersionKey = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
@@ -1296,109 +1303,76 @@ __webpack_require__.d(exports, {
 /******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		var getSingleton = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var findValidVersion = (scope, key, requiredVersion) => {
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
 /******/ 			var versions = scope[key];
-/******/ 			var key = Object.keys(versions).reduce((a, b) => {
-/******/ 				if (!satisfy(requiredVersion, b)) return a;
-/******/ 				return !a || versionLt(a, b) ? b : a;
-/******/ 			}, 0);
-/******/ 			return key && versions[key]
-/******/ 		};
-/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var versions = scope[key];
-/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
+/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findValidVersion(scope, key, requiredVersion);
-/******/ 			if(entry) return get(entry);
-/******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 		var fail = (msg) => {
+/******/ 			throw new Error(msg);
+/******/ 		}
+/******/ 		var failAsNotExist = (scopeName, key) => {
+/******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
+/******/ 		}
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
+/******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		var warn = (msg) => {
-/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 			})()
-/******/ 		};
-/******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
-/******/ 		};
-/******/ 		var get = (entry) => {
-/******/ 			entry.loaded = 1;
-/******/ 			return entry.get()
-/******/ 		};
-/******/ 		var init = (fn) => (function(scopeName, a, b, c) {
+/******/ 		var init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			var promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then) return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], a, b, c));
-/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], a, b, c);
+/******/ 			if (promise && promise.then && !eager) {
+/******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
+/******/ 			}
+/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findVersion(scope, key));
+/******/ 		var useFallback = (scopeName, key, fallback) => {
+/******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
+/******/ 		}
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			return scope && __webpack_require__.o(scope, key) ? get(findVersion(scope, key)) : fallback();
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			if (fallback) return fallback();
+/******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingleton(scope, scopeName, key);
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadStrictVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getValidVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
-/******/ 		});
-/******/ 		var loadSingletonFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingleton(scope, scopeName, key);
-/******/ 		});
-/******/ 		var loadSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			var entry = scope && __webpack_require__.o(scope, key) && findValidVersion(scope, key, version);
-/******/ 			return entry ? get(entry) : fallback();
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			4: () => (loadSingletonVersionCheckFallback("default", "react", [1,18,2,0], () => (__webpack_require__.e("node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 319))))))),
-/******/ 			5: () => (loadStrictVersionCheckFallback("default", "date-fns", [1,2,15,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 6)))))))
+/******/ 			4: () => (loadSingletonVersion("default", "react", false, [1,19,0,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 309))))))),
+/******/ 			5: () => (loadStrictVersion("default", "date-fns", false, [1,4,0,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 6)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
@@ -1407,10 +1381,12 @@ __webpack_require__.d(exports, {
 /******/ 				5
 /******/ 			]
 /******/ 		};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
+/******/ 					if(!startedInstallModules[id]) {
 /******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -1418,6 +1394,7 @@ __webpack_require__.d(exports, {
 /******/ 							module.exports = factory();
 /******/ 						}
 /******/ 					};
+/******/ 					startedInstallModules[id] = true;
 /******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -1431,6 +1408,7 @@ __webpack_require__.d(exports, {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
 /******/ 					} catch(e) { onError(e); }
+/******/ 					}
 /******/ 				});
 /******/ 			}
 /******/ 		}
@@ -1481,7 +1459,7 @@ __webpack_require__.d(exports, {
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -1723,6 +1701,7 @@ __webpack_require__.d(exports, {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -1773,9 +1752,7 @@ __webpack_require__.d(exports, {
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => {
-/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 				})()
+/******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
 /******/ 			var uniqueName = "module-federation-ccc";
 /******/ 			var register = (name, version, factory, eager) => {
@@ -1797,8 +1774,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("date-fns", "2.29.3", () => (__webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 8))))));
-/******/ 					register("lodash/random", "4.17.21", () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/lodash/random.js */ 321))))));
+/******/ 					register("date-fns", "4.1.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 8))))));
+/******/ 					register("lodash/random", "4.17.21", () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/lodash/random.js */ 311))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1830,20 +1807,38 @@ __webpack_require__.d(exports, {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
-/******/ 		var ensureExistence = (scopeName, key) => {
-/******/ 			var scope = __webpack_require__.S[scopeName];
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) throw new Error("Shared module " + key + " doesn't exist in shared scope " + scopeName);
-/******/ 			return scope;
+/******/ 		var exists = (scope, key) => {
+/******/ 			return scope && __webpack_require__.o(scope, key);
+/******/ 		}
+/******/ 		var get = (entry) => {
+/******/ 			entry.loaded = 1;
+/******/ 			return entry.get()
 /******/ 		};
-/******/ 		var findVersion = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var eagerOnly = (versions) => {
+/******/ 			return Object.keys(versions).reduce((filtered, version) => {
+/******/ 					if (versions[version].eager) {
+/******/ 						filtered[version] = versions[version];
+/******/ 					}
+/******/ 					return filtered;
+/******/ 			}, {});
+/******/ 		};
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
+/******/ 			}, 0);
+/******/ 			return key && versions[key];
+/******/ 		};
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersionKey = (scope, key) => {
-/******/ 			var versions = scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
@@ -1851,110 +1846,77 @@ __webpack_require__.d(exports, {
 /******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		var getSingleton = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
-/******/ 			return get(scope[key][version]);
-/******/ 		};
-/******/ 		var findValidVersion = (scope, key, requiredVersion) => {
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
 /******/ 			var versions = scope[key];
-/******/ 			var key = Object.keys(versions).reduce((a, b) => {
-/******/ 				if (!satisfy(requiredVersion, b)) return a;
-/******/ 				return !a || versionLt(a, b) ? b : a;
-/******/ 			}, 0);
-/******/ 			return key && versions[key]
-/******/ 		};
-/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var versions = scope[key];
-/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
+/******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findValidVersion(scope, key, requiredVersion);
-/******/ 			if(entry) return get(entry);
-/******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 		var fail = (msg) => {
+/******/ 			throw new Error(msg);
+/******/ 		}
+/******/ 		var failAsNotExist = (scopeName, key) => {
+/******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
+/******/ 		}
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
+/******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		var warn = (msg) => {
-/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
-/******/ 		
-/******/ 			})()
-/******/ 		};
-/******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
-/******/ 		};
-/******/ 		var get = (entry) => {
-/******/ 			entry.loaded = 1;
-/******/ 			return entry.get()
-/******/ 		};
-/******/ 		var init = (fn) => (function(scopeName, a, b, c) {
+/******/ 		var init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			var promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then) return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], a, b, c));
-/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], a, b, c);
+/******/ 			if (promise && promise.then && !eager) {
+/******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
+/******/ 			}
+/******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findVersion(scope, key));
+/******/ 		var useFallback = (scopeName, key, fallback) => {
+/******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
+/******/ 		}
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			return scope && __webpack_require__.o(scope, key) ? get(findVersion(scope, key)) : fallback();
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
+/******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		var loadVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			if (satisfyingVersion) return get(satisfyingVersion);
+/******/ 			if (fallback) return fallback();
+/******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingleton(scope, scopeName, key);
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		var loadStrictVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getValidVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheck = /*#__PURE__*/ init((scopeName, scope, key, version) => {
-/******/ 			ensureExistence(scopeName, key);
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return get(findValidVersion(scope, key, version) || warnInvalidVersion(scope, scopeName, key, version) || findVersion(scope, key));
-/******/ 		});
-/******/ 		var loadSingletonFallback = /*#__PURE__*/ init((scopeName, scope, key, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingleton(scope, scopeName, key);
-/******/ 		});
-/******/ 		var loadSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getSingletonVersion(scope, scopeName, key, version);
-/******/ 		});
-/******/ 		var loadStrictVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			var entry = scope && __webpack_require__.o(scope, key) && findValidVersion(scope, key, version);
-/******/ 			return entry ? get(entry) : fallback();
-/******/ 		});
-/******/ 		var loadStrictSingletonVersionCheckFallback = /*#__PURE__*/ init((scopeName, scope, key, version, fallback) => {
-/******/ 			if(!scope || !__webpack_require__.o(scope, key)) return fallback();
-/******/ 			return getStrictSingletonVersion(scope, scopeName, key, version);
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
+/******/ 			if (!satisfy(requiredVersion, version)) {
+/******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			}
+/******/ 			return get(scope[key][version]);
 /******/ 		});
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			4: () => (loadSingletonVersionCheck("default", "react", [1,18,2,0])),
-/******/ 			5: () => (loadStrictVersionCheckFallback("default", "date-fns", [1,2,15,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 8))))))),
-/******/ 			7: () => (loadStrictVersionCheckFallback("default", "lodash/random", [1,4,17,19], () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! lodash/random */ 321)))))))
+/******/ 			4: () => (loadSingletonVersion("default", "react", false, [1,19,0,0])),
+/******/ 			5: () => (loadStrictVersion("default", "date-fns", false, [1,4,0,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 8))))))),
+/******/ 			7: () => (loadStrictVersion("default", "lodash/random", false, [1,4,17,19], () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! lodash/random */ 311)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
@@ -1968,10 +1930,12 @@ __webpack_require__.d(exports, {
 /******/ 				7
 /******/ 			]
 /******/ 		};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
+/******/ 					if(!startedInstallModules[id]) {
 /******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -1979,6 +1943,7 @@ __webpack_require__.d(exports, {
 /******/ 							module.exports = factory();
 /******/ 						}
 /******/ 					};
+/******/ 					startedInstallModules[id] = true;
 /******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
@@ -1992,6 +1957,7 @@ __webpack_require__.d(exports, {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
 /******/ 					} catch(e) { onError(e); }
+/******/ 					}
 /******/ 				});
 /******/ 			}
 /******/ 		}
@@ -2110,80 +2076,75 @@ __webpack_require__.d(exports, {
 
 ```
 app:
-  asset vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js 171 KiB [emitted] (id hint: vendors)
-  asset app.js 30.8 KiB [emitted] (name: app)
-  asset node_modules_react_index_js.js 16.6 KiB [emitted]
-  asset src_bootstrap_js.js 4.98 KiB [emitted]
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.6 KiB (runtime) [entry] [rendered]
+  asset src_bootstrap_js.js 43.7 KiB [emitted]
+  asset app.js 30.1 KiB [emitted] (name: app)
+  asset vendors-node_modules_react_index_js.js 27.5 KiB [emitted] (id hint: vendors)
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.6 KiB 13 modules
+    runtime modules 19 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: app) node_modules_react_index_js.js 6.94 KiB [rendered]
-    > provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^18.2.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 6.75 KiB [dependent] 1 module
-    ../../node_modules/react/index.js 190 bytes [built] [code generated]
-  chunk (runtime: app) src_bootstrap_js.js 1.56 KiB (javascript) 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
+      provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: app) src_bootstrap_js.js 26.3 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 1.18 KiB (javascript) 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 4 modules
-    ./src/bootstrap.js 381 bytes [built] [code generated]
-  chunk (runtime: app) vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js (id hint: vendors) 151 KiB [rendered] split chunk (cache group: defaultVendors)
-    > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 148 KiB [dependent] 12 modules
-    cacheable modules 2.3 KiB
-      ../../node_modules/date-fns/esm/locale/de/index.js 995 bytes [built] [code generated]
-      ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
+    dependent modules 25.9 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 17 modules
+    ./src/bootstrap.js 380 bytes [built] [code generated]
+  chunk (runtime: app) vendors-node_modules_react_index_js.js (id hint: vendors) 16.9 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.1.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    dependent modules 16.7 KiB [dependent] 1 module
+    ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 7:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.78.0) compiled successfully
+  app (webpack X.X.X) compiled successfully
 
 mfe-b:
-  asset vendors-node_modules_date-fns_esm_index_js.js 1.12 MiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 25.5 KiB [emitted] (name: mfeBBB)
-  asset node_modules_react_index_js.js 16.7 KiB [emitted]
+  assets by chunk 1020 KiB (id hint: vendors)
+    asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
+    asset vendors-node_modules_react_index_js.js 27.5 KiB [emitted] (id hint: vendors)
+  asset mfeBBB.js 24.6 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 2.25 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 17 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 17 KiB 11 modules
+    runtime modules 16.2 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
-      provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js 42 bytes [built] [code generated]
-      provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: mfeBBB) node_modules_react_index_js.js 6.94 KiB [rendered]
-    > provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^18.2.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 6.75 KiB [dependent] 1 module
-    ../../node_modules/react/index.js 190 bytes [built] [code generated]
+      provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 752 bytes (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component
     dependent modules 84 bytes [dependent] 2 modules
     ./src-b/Component.js 752 bytes [built] [code generated]
-  chunk (runtime: mfeBBB) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 679 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
-    dependent modules 663 KiB [dependent] 312 modules
-    ../../node_modules/date-fns/esm/index.js 16.2 KiB [built] [code generated]
-  mfe-b (webpack 5.78.0) compiled successfully
+  chunk (runtime: mfeBBB) vendors-node_modules_date-fns_index_js.js (id hint: vendors) 520 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) date-fns@4.1.0 = ../../node_modules/date-fns/index.js
+    > consume shared module (default) date-fns@^4.0.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
+    dependent modules 512 KiB [dependent] 302 modules
+    ../../node_modules/date-fns/index.js 8.68 KiB [built] [code generated]
+  chunk (runtime: mfeBBB) vendors-node_modules_react_index_js.js (id hint: vendors) 16.9 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    dependent modules 16.7 KiB [dependent] 1 module
+    ../../node_modules/react/index.js 186 bytes [built] [code generated]
+  mfe-b (webpack X.X.X) compiled successfully
 
 mfe-c:
-  assets by chunk 1.15 MiB (id hint: vendors)
-    asset vendors-node_modules_date-fns_esm_index_js.js 1.12 MiB [emitted] (id hint: vendors)
+  assets by chunk 1020 KiB (id hint: vendors)
+    asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 26.5 KiB [emitted] (name: mfeCCC)
+  asset mfeCCC.js 25.6 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 2.05 KiB [emitted]
   asset src-c_Component_js.js 1.97 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.5 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17.5 KiB 12 modules
+    runtime modules 16.6 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
-      provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js 42 bytes [built] [code generated]
-      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js 42 bytes [built] [code generated]
+      provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
   chunk (runtime: mfeCCC) src-c_Component_js.js 467 bytes (javascript) 42 bytes (consume-shared) [rendered]
     > ./src-c/Component container entry ./Component
     dependent modules 42 bytes [dependent] 1 module
@@ -2192,11 +2153,11 @@ mfe-c:
     > ./src-c/LazyComponent container entry ./Component2
     dependent modules 42 bytes [dependent] 1 module
     ./src-c/LazyComponent.js 504 bytes [built] [code generated]
-  chunk (runtime: mfeCCC) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 679 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
-    dependent modules 663 KiB [dependent] 312 modules
-    ../../node_modules/date-fns/esm/index.js 16.2 KiB [built] [code generated]
+  chunk (runtime: mfeCCC) vendors-node_modules_date-fns_index_js.js (id hint: vendors) 520 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) date-fns@4.1.0 = ../../node_modules/date-fns/index.js
+    > consume shared module (default) date-fns@^4.0.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
+    dependent modules 512 KiB [dependent] 302 modules
+    ../../node_modules/date-fns/index.js 8.68 KiB [built] [code generated]
   chunk (runtime: mfeCCC) vendors-node_modules_lodash_random_js.js (id hint: vendors) 16 KiB [rendered] reused as split chunk (cache group: defaultVendors)
     > provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js
     > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
@@ -2205,89 +2166,83 @@ mfe-c:
   chunk (runtime: mfeCCC) 42 bytes split chunk (cache group: default)
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
-    consume shared module (default) react@^18.2.0 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.78.0) compiled successfully
+    consume shared module (default) react@^19.0.0 (singleton) 42 bytes [built] [code generated]
+  mfe-c (webpack X.X.X) compiled successfully
 ```
 
 ## Production mode
 
 ```
 app:
-  asset vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js 139 KiB [emitted] [minimized] (id hint: vendors) 1 related asset
-  asset app.js 7.42 KiB [emitted] [minimized] (name: app)
-  asset node_modules_react_index_js.js 6.5 KiB [emitted] [minimized] 1 related asset
-  asset src_bootstrap_js.js 1.04 KiB [emitted] [minimized]
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.5 KiB (runtime) [entry] [rendered]
+  asset src_bootstrap_js.js 12.5 KiB [emitted] [minimized] 1 related asset
+  asset app.js 7.66 KiB [emitted] [minimized] (name: app)
+  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.5 KiB 13 modules
+    runtime modules 18.9 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: app) node_modules_react_index_js.js 6.94 KiB [rendered]
-    > provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^18.2.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 6.75 KiB [dependent] 1 module
-    ../../node_modules/react/index.js 190 bytes [built] [code generated]
-  chunk (runtime: app) src_bootstrap_js.js 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) 1.56 KiB (javascript) [rendered]
+      provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: app) node_modules_react_index_js.js 16.9 KiB [rendered]
+    > consume shared module (default) react@^19.1.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
+    dependent modules 16.7 KiB [dependent] 1 module
+    ../../node_modules/react/index.js 186 bytes [built] [code generated]
+  chunk (runtime: app) src_bootstrap_js.js 26.3 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 3 modules
-    ./src/bootstrap.js + 1 modules 1.56 KiB [built] [code generated]
-  chunk (runtime: app) vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js (id hint: vendors) 151 KiB [rendered] split chunk (cache group: defaultVendors)
-    > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 133 KiB [dependent] 3 modules
-    cacheable modules 17.5 KiB
-      ../../node_modules/date-fns/esm/locale/de/index.js + 9 modules 16.2 KiB [built] [code generated]
-      ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
+    dependent modules 7.83 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 6 modules
+    ./src/bootstrap.js + 11 modules 18.4 KiB [built] [code generated]
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 7:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.78.0) compiled successfully
+  app (webpack X.X.X) compiled successfully
 
 mfe-b:
-  asset vendors-node_modules_date-fns_esm_index_js.js 154 KiB [emitted] [minimized] (id hint: vendors)
-  asset node_modules_react_index_js.js 6.5 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 5.82 KiB [emitted] [minimized] (name: mfeBBB)
+  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
+  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
+  asset mfeBBB.js 6.36 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 489 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.9 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.9 KiB 11 modules
+    runtime modules 16.1 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
-      provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js 42 bytes [built] [code generated]
-      provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: mfeBBB) node_modules_react_index_js.js 6.94 KiB [rendered]
-    > provide shared module (default) react@18.2.0 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^18.2.0 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 6.75 KiB [dependent] 1 module
-    ../../node_modules/react/index.js 190 bytes [built] [code generated]
+      provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: mfeBBB) node_modules_react_index_js.js 16.9 KiB [rendered]
+    > consume shared module (default) react@^19.0.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > provide shared module (default) react@19.1.0 = ../../node_modules/react/index.js
+    dependent modules 16.7 KiB [dependent] 1 module
+    ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 752 bytes (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component
     dependent modules 84 bytes [dependent] 2 modules
     ./src-b/Component.js 752 bytes [built] [code generated]
-  chunk (runtime: mfeBBB) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 679 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
-    ../../node_modules/date-fns/esm/index.js + 312 modules 679 KiB [built] [code generated]
-  mfe-b (webpack 5.78.0) compiled successfully
+  chunk (runtime: mfeBBB) vendors-node_modules_date-fns_index_js.js (id hint: vendors) 520 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > consume shared module (default) date-fns@^4.0.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
+    > provide shared module (default) date-fns@4.1.0 = ../../node_modules/date-fns/index.js
+    ../../node_modules/date-fns/index.js + 302 modules 520 KiB [built] [code generated]
+  mfe-b (webpack X.X.X) compiled successfully
 
 mfe-c:
-  asset vendors-node_modules_date-fns_esm_index_js.js 154 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 6.47 KiB [emitted] [minimized] (name: mfeCCC)
+  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
+  asset mfeCCC.js 6.9 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
-  asset src-c_LazyComponent_js.js 532 bytes [emitted] [minimized]
+  asset src-c_LazyComponent_js.js 533 bytes [emitted] [minimized]
   asset src-c_Component_js.js 488 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.3 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17.3 KiB 12 modules
+    runtime modules 16.5 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
-      provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js 42 bytes [built] [code generated]
-      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js 42 bytes [built] [code generated]
+      provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
   chunk (runtime: mfeCCC) node_modules_lodash_random_js.js 16 KiB [rendered]
-    > provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js
     > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
+    > provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js
     dependent modules 13.7 KiB [dependent] 20 modules
     ../../node_modules/lodash/random.js 2.32 KiB [built] [code generated]
   chunk (runtime: mfeCCC) src-c_Component_js.js 467 bytes (javascript) 42 bytes (consume-shared) [rendered]
@@ -2298,13 +2253,13 @@ mfe-c:
     > ./src-c/LazyComponent container entry ./Component2
     dependent modules 42 bytes [dependent] 1 module
     ./src-c/LazyComponent.js 504 bytes [built] [code generated]
-  chunk (runtime: mfeCCC) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 679 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) date-fns@2.29.3 = ../../node_modules/date-fns/esm/index.js
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
-    ../../node_modules/date-fns/esm/index.js + 312 modules 679 KiB [built] [code generated]
+  chunk (runtime: mfeCCC) vendors-node_modules_date-fns_index_js.js (id hint: vendors) 520 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > consume shared module (default) date-fns@^4.0.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
+    > provide shared module (default) date-fns@4.1.0 = ../../node_modules/date-fns/index.js
+    ../../node_modules/date-fns/index.js + 302 modules 520 KiB [built] [code generated]
   chunk (runtime: mfeCCC) 42 bytes split chunk (cache group: default)
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
-    consume shared module (default) react@^18.2.0 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.78.0) compiled successfully
+    consume shared module (default) react@^19.0.0 (singleton) 42 bytes [built] [code generated]
+  mfe-c (webpack X.X.X) compiled successfully
 ```

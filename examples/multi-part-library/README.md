@@ -15,7 +15,8 @@ Note: When your library has dependencies that should not be included in the comp
 # webpack.config.js
 
 ```javascript
-var path = require("path");
+const path = require("path");
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: {
@@ -205,21 +206,14 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset MyLibrary.alpha.js 423 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 419 bytes [emitted] [minimized] (name: beta)
-chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-  > ./alpha alpha
-  ./alpha.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./alpha.js 1:0-14
-    entry ./alpha alpha
-    used as library export
+asset MyLibrary.beta.js 421 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]
@@ -227,5 +221,12 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.78.0 compiled successfully
+chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+  > ./alpha alpha
+  ./alpha.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./alpha.js 1:0-14
+    entry ./alpha alpha
+    used as library export
+webpack X.X.X compiled successfully
 ```

@@ -59,7 +59,7 @@ it("can place banner as footer", done => {
 	const compiler = webpack({
 		mode: "development",
 		entry: {
-			footerFile: footerFile
+			footerFile
 		},
 		output: {
 			path: outputDir

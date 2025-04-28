@@ -1,4 +1,4 @@
-var supportsDefaultArgs = require("../../../helpers/supportsDefaultArgs");
+const supportsDefaultArgs = require("../../../helpers/supportsDefaultArgs");
 
 module.exports = function (config) {
 	return supportsDefaultArgs();

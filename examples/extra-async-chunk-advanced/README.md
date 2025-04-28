@@ -124,6 +124,7 @@ module.exports = {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -157,7 +158,7 @@ module.exports = {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			792: 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -194,7 +195,7 @@ module.exports = {
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -245,25 +246,24 @@ module.exports = {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe, __webpack_require__.* */
-Promise.all(/*! AMD require */[__webpack_require__.e(996), __webpack_require__.e(847), __webpack_require__.e(460)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
+Promise.all(/*! AMD require */[__webpack_require__.e(899), __webpack_require__.e(670), __webpack_require__.e(964)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);})['catch'](__webpack_require__.oe);
 
-Promise.all(/*! require.ensure */[__webpack_require__.e(996), __webpack_require__.e(847), __webpack_require__.e(767)]).then((function(require) {
+Promise.all(/*! require.ensure */[__webpack_require__.e(899), __webpack_require__.e(670), __webpack_require__.e(425)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 2);
 	__webpack_require__(/*! ./d */ 4);
 }).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
-Promise.all(/*! require.ensure */[__webpack_require__.e(847), __webpack_require__.e(390)]).then((function(require) {
+Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require__.e(210)]).then((function(require) {
 	__webpack_require__(/*! ./a */ 1);
-	Promise.all(/*! require.ensure */[__webpack_require__.e(996), __webpack_require__.e(568)]).then((function(require) {
+	Promise.all(/*! require.ensure */[__webpack_require__.e(899), __webpack_require__.e(935)]).then((function(require) {
 		__webpack_require__(/*! ./f */ 6);
 	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
-	Promise.all(/*! require.ensure */[__webpack_require__.e(996), __webpack_require__.e(785)]).then((function(require) {
+	Promise.all(/*! require.ensure */[__webpack_require__.e(899), __webpack_require__.e(888)]).then((function(require) {
 		__webpack_require__(/*! ./g */ 7);
 	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 }).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
@@ -277,51 +277,27 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(847), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.94 KiB [emitted] (name: main)
-asset 847.output.js 344 bytes [emitted]
-asset 390.output.js 338 bytes [emitted]
-asset 460.output.js 338 bytes [emitted]
-asset 568.output.js 338 bytes [emitted]
-asset 767.output.js 338 bytes [emitted]
-asset 785.output.js 338 bytes [emitted]
-asset 996.output.js 338 bytes [emitted]
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 346 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-chunk (runtime: main) 390.output.js 21 bytes [rendered]
+asset output.js 9.89 KiB [emitted] (name: main)
+asset 670.output.js 344 bytes [emitted]
+asset 210.output.js 338 bytes [emitted]
+asset 425.output.js 338 bytes [emitted]
+asset 888.output.js 338 bytes [emitted]
+asset 899.output.js 338 bytes [emitted]
+asset 935.output.js 338 bytes [emitted]
+asset 964.output.js 338 bytes [emitted]
+chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./e.js 1:0-14
     require.ensure item ./e ./example.js 8:0-16:2
-chunk (runtime: main) 460.output.js 21 bytes [rendered]
-  > ./a ./b ./c ./example.js 1:0-52
-  ./c.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./c.js 1:0-14
-    amd require ./c ./example.js 1:0-52
-chunk (runtime: main) 568.output.js 21 bytes [rendered]
-  > ./example.js 10:1-12:3
-  ./f.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./f ./example.js 11:2-16
-    cjs self exports reference ./f.js 1:0-14
-chunk (runtime: main) 767.output.js 21 bytes [rendered]
+chunk (runtime: main) 425.output.js 21 bytes [rendered]
   > ./example.js 3:0-6:2
   ./d.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 5:1-15
-chunk (runtime: main) 785.output.js 21 bytes [rendered]
-  > ./example.js 13:1-15:3
-  ./g.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./g ./example.js 14:2-16
-    cjs self exports reference ./g.js 1:0-14
-chunk (runtime: main) 847.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 1:0-52
   > ./example.js 3:0-6:2
   > ./example.js 8:0-16:2
@@ -332,7 +308,19 @@ chunk (runtime: main) 847.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) 996.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 4.94 KiB 6 modules
+  ./example.js 346 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+chunk (runtime: main) 888.output.js 21 bytes [rendered]
+  > ./example.js 13:1-15:3
+  ./g.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./g ./example.js 14:2-16
+    cjs self exports reference ./g.js 1:0-14
+chunk (runtime: main) 899.output.js 21 bytes [rendered] split chunk (cache group: default)
   > ./example.js 10:1-12:3
   > ./example.js 13:1-15:3
   > ./a ./b ./c ./example.js 1:0-52
@@ -344,57 +332,45 @@ chunk (runtime: main) 996.output.js 21 bytes [rendered] split chunk (cache group
     cjs require ./b ./example.js 4:1-15
     require.ensure item ./b ./example.js 10:1-12:3
     require.ensure item ./b ./example.js 13:1-15:3
-webpack 5.78.0 compiled successfully
+chunk (runtime: main) 935.output.js 21 bytes [rendered]
+  > ./example.js 10:1-12:3
+  ./f.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./f ./example.js 11:2-16
+    cjs self exports reference ./f.js 1:0-14
+chunk (runtime: main) 964.output.js 21 bytes [rendered]
+  > ./a ./b ./c ./example.js 1:0-52
+  ./c.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./c.js 1:0-14
+    amd require ./c ./example.js 1:0-52
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 2.11 KiB [emitted] [minimized] (name: main)
-asset 390.output.js 81 bytes [emitted] [minimized]
-asset 460.output.js 81 bytes [emitted] [minimized]
-asset 568.output.js 81 bytes [emitted] [minimized]
-asset 767.output.js 81 bytes [emitted] [minimized]
-asset 785.output.js 81 bytes [emitted] [minimized]
-asset 847.output.js 81 bytes [emitted] [minimized]
-asset 996.output.js 81 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 346 bytes [built] [code generated]
-    [no exports used]
-    entry ./example.js main
-chunk (runtime: main) 390.output.js 21 bytes [rendered]
+asset 210.output.js 81 bytes [emitted] [minimized]
+asset 425.output.js 81 bytes [emitted] [minimized]
+asset 670.output.js 81 bytes [emitted] [minimized]
+asset 888.output.js 81 bytes [emitted] [minimized]
+asset 899.output.js 81 bytes [emitted] [minimized]
+asset 935.output.js 81 bytes [emitted] [minimized]
+asset 964.output.js 81 bytes [emitted] [minimized]
+chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./e.js 1:0-14
     require.ensure item ./e ./example.js 8:0-16:2
-chunk (runtime: main) 460.output.js 21 bytes [rendered]
-  > ./a ./b ./c ./example.js 1:0-52
-  ./c.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./c.js 1:0-14
-    amd require ./c ./example.js 1:0-52
-chunk (runtime: main) 568.output.js 21 bytes [rendered]
-  > ./example.js 10:1-12:3
-  ./f.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./f ./example.js 11:2-16
-    cjs self exports reference ./f.js 1:0-14
-chunk (runtime: main) 767.output.js 21 bytes [rendered]
+chunk (runtime: main) 425.output.js 21 bytes [rendered]
   > ./example.js 3:0-6:2
   ./d.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 5:1-15
-chunk (runtime: main) 785.output.js 21 bytes [rendered]
-  > ./example.js 13:1-15:3
-  ./g.js 21 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./g ./example.js 14:2-16
-    cjs self exports reference ./g.js 1:0-14
-chunk (runtime: main) 847.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 1:0-52
   > ./example.js 3:0-6:2
   > ./example.js 8:0-16:2
@@ -405,7 +381,19 @@ chunk (runtime: main) 847.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) 996.output.js 21 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 4.94 KiB 6 modules
+  ./example.js 346 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+chunk (runtime: main) 888.output.js 21 bytes [rendered]
+  > ./example.js 13:1-15:3
+  ./g.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./g ./example.js 14:2-16
+    cjs self exports reference ./g.js 1:0-14
+chunk (runtime: main) 899.output.js 21 bytes [rendered] split chunk (cache group: default)
   > ./example.js 10:1-12:3
   > ./example.js 13:1-15:3
   > ./a ./b ./c ./example.js 1:0-52
@@ -417,5 +405,17 @@ chunk (runtime: main) 996.output.js 21 bytes [rendered] split chunk (cache group
     cjs require ./b ./example.js 4:1-15
     require.ensure item ./b ./example.js 10:1-12:3
     require.ensure item ./b ./example.js 13:1-15:3
-webpack 5.78.0 compiled successfully
+chunk (runtime: main) 935.output.js 21 bytes [rendered]
+  > ./example.js 10:1-12:3
+  ./f.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./f ./example.js 11:2-16
+    cjs self exports reference ./f.js 1:0-14
+chunk (runtime: main) 964.output.js 21 bytes [rendered]
+  > ./a ./b ./c ./example.js 1:0-52
+  ./c.js 21 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./c.js 1:0-14
+    amd require ./c ./example.js 1:0-52
+webpack X.X.X compiled successfully
 ```

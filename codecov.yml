@@ -6,44 +6,21 @@ coverage:
   range: "70...100"
   status:
     project:
-      default: off
-      basic:
-        flags: basic
+      default:
+        flags:
+          - unit
+          - integration
         target: auto
-      integration:
-        flags: integration
-        target: auto
-      lintunit:
-        flags: lintunit
-        target: 0%
     patch:
-      default: off
-      basic:
-        flags: basic
+      default:
+        flags:
+          - unit
+          - integration
         target: 90%
-        base: pr
-      integration:
-        flags: integration
-        target: 90%
-        base: pr
-      lintunit:
-        flags: lintunit
-        target: 0%
         base: pr
     changes:
-      default: off
-      basic:
-        flags: basic
-        target: 0%
-      integration:
-        flags: integration
-        target: 0%
-      lintunit:
-        flags: lintunit
-        target: 0%
+      default:
+        flags:
+          - unit
+          - integration
 comment: off
-flags:
-  basic:
-    joined: false
-  lintunit:
-    joined: false

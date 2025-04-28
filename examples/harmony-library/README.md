@@ -1,7 +1,8 @@
 # webpack.config.js
 
 ```javascript
-var path = require("path");
+const path = require("path");
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: "./example",
@@ -85,8 +86,8 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "increment": () => (/* binding */ increment),
-/* harmony export */   "value": () => (/* binding */ value)
+/* harmony export */   increment: () => (/* binding */ increment),
+/* harmony export */   value: () => (/* binding */ value)
 /* harmony export */ });
 var value = 0;
 function increment() {
@@ -114,7 +115,7 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [used exports unknown]
     entry ./example main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -128,5 +129,5 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (r
     [exports: default, increment, value]
     entry ./example main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

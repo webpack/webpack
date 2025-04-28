@@ -1,7 +1,7 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
-		noParse: function (content) {
+		noParse(content) {
 			return /not-parsed/.test(content);
 		}
 	}

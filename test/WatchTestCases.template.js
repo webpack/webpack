@@ -2,6 +2,9 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {Record<string, EXPECTED_ANY>} Env */
+/** @typedef {{ testPath: string, srcPath: string }} TestOptions */
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
@@ -13,6 +16,11 @@ const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 
+/**
+ * @param {string} src src
+ * @param {string} dest dest
+ * @param {boolean} initial is initial?
+ */
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
@@ -23,7 +31,7 @@ function copyDiff(src, dest, initial) {
 		if (directory) {
 			copyDiff(srcFile, destFile, initial);
 		} else {
-			var content = fs.readFileSync(srcFile);
+			const content = fs.readFileSync(srcFile);
 			if (/^DELETE\s*$/.test(content.toString("utf-8"))) {
 				fs.unlinkSync(destFile);
 			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf-8"))) {
@@ -52,9 +60,7 @@ const describeCases = config => {
 		}
 
 		const casesPath = path.join(__dirname, "watchCases");
-		let categories = fs.readdirSync(casesPath);
-
-		categories = categories.map(cat => ({
+		const categories = fs.readdirSync(casesPath).map(cat => ({
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
@@ -98,6 +104,7 @@ const describeCases = config => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
+						/** @type {TODO} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -259,13 +266,19 @@ const describeCases = config => {
 											return;
 
 										const globalContext = {
-											console: console,
-											expect: expect,
+											console,
+											expect,
 											setTimeout,
 											clearTimeout,
 											document: new FakeDocument()
 										};
 
+										/**
+										 * @param {string} currentDirectory the current directory
+										 * @param {TODO} module a module
+										 * @returns {EXPECTED_ANY} required module
+										 * @private
+										 */
 										function _require(currentDirectory, module) {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let fn;

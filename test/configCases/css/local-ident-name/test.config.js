@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		return [
 			`style_module_css.bundle${i}.js`,
 			`style_module_css_hash.bundle${i}.js`,

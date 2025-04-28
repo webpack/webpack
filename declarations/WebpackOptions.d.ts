@@ -239,10 +239,7 @@ export type IgnoreWarnings = (
 			 */
 			module?: RegExp;
 	  }
-	| ((
-			warning: import("../lib/WebpackError"),
-			compilation: import("../lib/Compilation")
-	  ) => boolean)
+	| ((warning: Error, compilation: import("../lib/Compilation")) => boolean)
 )[];
 /**
  * Filtering values.
@@ -502,7 +499,7 @@ export type DevtoolFallbackModuleFilenameTemplate =
  */
 export type DevtoolModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
  */
@@ -823,7 +820,7 @@ export type HttpUriOptionsAllowedUris = (
  * Ignore specific warnings.
  */
 export type IgnoreWarningsNormalized = ((
-	warning: import("../lib/WebpackError"),
+	warning: Error,
 	compilation: import("../lib/Compilation")
 ) => boolean)[];
 /**
@@ -1292,7 +1289,11 @@ export interface InfrastructureLogging {
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
 	 */
-	stream?: NodeJS.WritableStream;
+	stream?: NodeJS.WritableStream & {
+		isTTY?: boolean;
+		columns?: number;
+		rows?: number;
+	};
 }
 /**
  * Custom values available in the loader context.
@@ -2601,9 +2602,17 @@ export interface StatsOptions {
 	 */
 	env?: boolean;
 	/**
+	 * Add cause to errors.
+	 */
+	errorCause?: "auto" | boolean;
+	/**
 	 * Add details to errors (like resolving log).
 	 */
 	errorDetails?: "auto" | boolean;
+	/**
+	 * Add nested errors to errors (like in AggregateError).
+	 */
+	errorErrors?: "auto" | boolean;
 	/**
 	 * Add internal stack trace to errors.
 	 */

@@ -135,9 +135,8 @@ describe("StatsTestCases", () => {
 					.map(s => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
-				if (testName.endsWith("error")) {
-					expect(stats.hasErrors()).toBe(true);
-				} else if (stats.hasErrors()) {
+				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
+				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(
 						new Error(
 							stats.toString({
@@ -148,17 +147,17 @@ describe("StatsTestCases", () => {
 							})
 						)
 					);
-				} else {
-					fs.writeFileSync(
-						path.join(outputBase, testName, "stats.txt"),
-						stats.toString({
-							preset: "verbose",
-							context: path.join(base, testName),
-							colors: false
-						}),
-						"utf-8"
-					);
 				}
+				fs.writeFileSync(
+					path.join(outputBase, testName, "stats.txt"),
+					stats.toString({
+						preset: "verbose",
+						context: path.join(base, testName),
+						colors: false
+					}),
+					"utf-8"
+				);
+
 				let toStringOptions = {
 					context: path.join(base, testName),
 					colors: false
@@ -207,13 +206,22 @@ describe("StatsTestCases", () => {
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
-					.replace(/[.0-9]+(\s?(bytes|KiB))/g, "X$1")
+					.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 					.replace(
 						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
 						match => `${match.replace(/[0-9a-f]/g, "X")}`
 					);
 				expect(actual).toMatchSnapshot();
-				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
+
+				if (testConfig.validate) {
+					try {
+						testConfig.validate(stats, stderr.toString());
+					} catch (err) {
+						done(err);
+						return;
+					}
+				}
+
 				done();
 			});
 		});

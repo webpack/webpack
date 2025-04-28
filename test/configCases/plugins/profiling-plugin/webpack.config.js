@@ -1,6 +1,6 @@
-var rootPath = "../../../../";
-var webpack = require(rootPath);
-var path = require("path");
+const rootPath = "../../../../";
+const webpack = require(rootPath);
+const path = require("path");
 
 module.exports = (env, { testPath }) => ({
 	plugins: [
