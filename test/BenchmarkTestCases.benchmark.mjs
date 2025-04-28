@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import simpleGit from "simple-git";
 // eslint-disable-next-line n/no-extraneous-import
 import { jest } from "@jest/globals";
+import { withCodSpeed } from "@codspeed/benchmark.js-plugin";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
@@ -115,46 +116,48 @@ function runBenchmark(webpack, config, callback) {
 
 		warmupCompiler.purgeInputFileSystem();
 
-		const bench = new Benchmark(
-			function (deferred) {
-				const compiler = webpack(config, (err, stats) => {
-					compiler.purgeInputFileSystem();
-					if (err) {
-						callback(err);
-						return;
-					}
+		const bench = withCodSpeed(
+			new Benchmark(
+				function (deferred) {
+					const compiler = webpack(config, (err, stats) => {
+						compiler.purgeInputFileSystem();
+						if (err) {
+							callback(err);
+							return;
+						}
 
-					if (stats.hasErrors()) {
-						callback(new Error(stats.toString()));
-						return;
-					}
+						if (stats.hasErrors()) {
+							callback(new Error(stats.toString()));
+							return;
+						}
 
-					deferred.resolve();
-				});
-			},
-			{
-				maxTime: 30,
-				defer: true,
-				initCount: 1,
-				onComplete() {
-					const stats = bench.stats;
-					const n = stats.sample.length;
-					const nSqrt = Math.sqrt(n);
-					const z = tDistribution(n - 1);
-
-					stats.sampleCount = stats.sample.length;
-					stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
-					stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-					stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
-						stats.deviation * 1000
-					)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
-						stats.maxConfidence * 1000
-					)} ms]`;
-
-					callback(null, bench.stats);
+						deferred.resolve();
+					});
 				},
-				onError: callback
-			}
+				{
+					maxTime: 30,
+					defer: true,
+					initCount: 1,
+					onComplete() {
+						const stats = bench.stats;
+						const n = stats.sample.length;
+						const nSqrt = Math.sqrt(n);
+						const z = tDistribution(n - 1);
+
+						stats.sampleCount = stats.sample.length;
+						stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
+						stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
+						stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
+							stats.deviation * 1000
+						)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
+							stats.maxConfidence * 1000
+						)} ms]`;
+
+						callback(null, bench.stats);
+					},
+					onError: callback
+				}
+			)
 		);
 
 		bench.run({

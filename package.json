@@ -38,6 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.8",
     "@babel/preset-react": "^7.25.7",
+    "@codspeed/benchmark.js-plugin": "^4.0.1",
     "@eslint/js": "^9.21.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/glob-to-regexp": "^0.4.4",
