@@ -85,6 +85,7 @@
     "memfs": "^4.14.0",
     "mini-css-extract-plugin": "^2.9.0",
     "mini-svg-data-uri": "^1.2.3",
+    "node-gyp": "^11.2.0",
     "nyc": "^17.1.0",
     "open-cli": "^8.0.0",
     "prettier": "^3.5.1",
