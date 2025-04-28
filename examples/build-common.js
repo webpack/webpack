@@ -16,7 +16,7 @@ const targetArgs = global.NO_TARGET_ARGS ? "" : "--entry ./example.js --output-f
 const displayReasons = global.NO_REASONS ? "" : "--stats-reasons --stats-used-exports --stats-provided-exports";
 const statsArgs = global.NO_STATS_OPTIONS ? "" : "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
 const publicPathArgs = global.NO_PUBLIC_PATH ? "" : '--output-public-path "dist/"';
-const statsColorsArg = global.STATS_COLORS ? "" : "--no-stats-colors";
+const statsColorsArg = global.STATS_COLORS ? "" : "--no-color";
 const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
@@ -80,7 +80,16 @@ const doCompileAndReplace = (args, prefix, callback) => {
 		if (error !== null)
 			console.log(error);
 		try {
-			readme = tc.replaceResults(readme, process.cwd(), stdout.replace(/[\r?\n]*$/, ""), prefix);
+			readme = tc.replaceResults(
+				readme,
+				process.cwd(),
+				stdout
+					.replace(/[\r?\n]*$/, "")
+					.replace(/\d\d\d\d-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])/g, "XXXX-XX-XX")
+					.replace(/([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g, "XXXX:XX:XX")
+					.replace(/webpack [0-9.]+/g, "webpack X.X.X"),
+				prefix
+			);
 		} catch (e) {
 			console.log(stderr);
 			throw e;

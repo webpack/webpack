@@ -598,7 +598,7 @@ chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.56 KiB (runtime) 
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -621,5 +621,5 @@ chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.56 KiB (runtime) 
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

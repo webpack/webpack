@@ -344,7 +344,7 @@ chunk (runtime: main) 964.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./c.js 1:0-14
     amd require ./c ./example.js 1:0-52
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -417,5 +417,5 @@ chunk (runtime: main) 964.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./c.js 1:0-14
     amd require ./c ./example.js 1:0-52
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

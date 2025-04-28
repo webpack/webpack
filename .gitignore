@@ -8,6 +8,7 @@
 /benchmark/js
 /benchmark/fixtures
 /examples/**/dist
+/examples/nodejs-addons/build/**
 /assembly/**/*.wat
 /assembly/**/*.wasm
 /coverage

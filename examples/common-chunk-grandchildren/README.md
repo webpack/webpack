@@ -486,7 +486,7 @@ chunk (runtime: main) reusableComponent_js.output.js 69 bytes [rendered] split c
     cjs require ./reusableComponent ./pageA.js 1:24-54
     cjs require ./reusableComponent ./pageC.js 1:24-54
     cjs self exports reference ./reusableComponent.js 1:0-14
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -529,5 +529,5 @@ chunk (runtime: main) reusableComponent_js.output.js 69 bytes [rendered] split c
     cjs require ./reusableComponent ./pageA.js 1:24-54
     cjs require ./reusableComponent ./pageC.js 1:24-54
     cjs self exports reference ./reusableComponent.js 1:0-14
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

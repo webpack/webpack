@@ -42,7 +42,7 @@ console.log("Hello World!");
 ## Production mode
 
 ```
-asset [1m[32moutput.js[39m[22m 28 bytes [1m[32m[emitted][39m[22m [1m[32m[minimized][39m[22m (name: main)
-[1m./example.js[39m[22m 29 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
-webpack 5.99.7 compiled [1m[32msuccessfully[39m[22m
+asset output.js 28 bytes [emitted] [minimized] (name: main)
+./example.js 29 bytes [built] [code generated]
+webpack X.X.X compiled successfully
 ```

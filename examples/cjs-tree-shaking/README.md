@@ -194,7 +194,7 @@ chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 
 asset without.js 3.09 KiB [emitted] (name: main)
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
@@ -203,7 +203,7 @@ chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -216,7 +216,7 @@ chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 
 asset without.js 551 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
@@ -225,5 +225,5 @@ chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

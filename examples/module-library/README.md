@@ -87,7 +87,7 @@ chunk (runtime: main) output.js (main) 302 bytes [entry] [rendered]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -101,5 +101,5 @@ chunk (runtime: main) output.js (main) 302 bytes [entry] [rendered]
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```

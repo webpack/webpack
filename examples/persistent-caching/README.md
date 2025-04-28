@@ -59,7 +59,7 @@ asset output.js 3.56 MiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 2.21 MiB (javascript) 1.29 KiB (runtime) [entry]
   > ./example.js main
   cached modules 2.21 MiB (javascript) 1.29 KiB (runtime) [cached] 1491 modules
-webpack 5.99.7 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -84,5 +84,5 @@ WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
-webpack 5.99.7 compiled with 3 warnings
+webpack X.X.X compiled with 3 warnings
 ```
