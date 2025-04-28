@@ -4,7 +4,7 @@ const cp = require("child_process");
 const path = require("path");
 const fs = require("fs");
 
-cp.exec("node-gyp configure build", (error, stdout, stderr) => {
+cp.exec(`node-gyp --target=${process.version} configure build`, (error, stdout, stderr) => {
 	if (stderr) {
 		console.log(stderr);
 	}
