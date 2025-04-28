@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -76,7 +77,11 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: yarn benchmark --ci
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          run: yarn benchmark --ci
+          token: ${{ secrets.CODSPEED_TOKEN }}
   basic:
     runs-on: ubuntu-latest
     steps:
