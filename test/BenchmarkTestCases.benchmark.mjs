@@ -2,14 +2,12 @@
 
 import path from "path";
 import fs from "fs/promises";
-import { createWriteStream, constants } from "fs";
+import { constants } from "fs";
 import Benchmark from "benchmark";
-import { remove } from "./helpers/remove";
+import { remove } from "./helpers/remove.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import simpleGit from "simple-git";
-// eslint-disable-next-line n/no-extraneous-import
-import { jest } from "@jest/globals";
 import { withCodSpeed } from "@codspeed/benchmark.js-plugin";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -142,66 +140,6 @@ async function getBaselineRevs() {
 	];
 }
 
-function runBenchmark(webpack, config, callback) {
-	// warmup
-	const warmupCompiler = webpack(config, (err, stats) => {
-		if (err) {
-			callback(err);
-			return;
-		}
-
-		warmupCompiler.purgeInputFileSystem();
-
-		const bench = withCodSpeed(
-			new Benchmark(
-				function (deferred) {
-					const compiler = webpack(config, (err, stats) => {
-						compiler.purgeInputFileSystem();
-						if (err) {
-							callback(err);
-							return;
-						}
-
-						if (stats.hasErrors()) {
-							callback(new Error(stats.toString()));
-							return;
-						}
-
-						deferred.resolve();
-					});
-				},
-				{
-					maxTime: 30,
-					defer: true,
-					initCount: 1,
-					onComplete() {
-						const stats = bench.stats;
-						const n = stats.sample.length;
-						const nSqrt = Math.sqrt(n);
-						const z = tDistribution(n - 1);
-
-						stats.sampleCount = stats.sample.length;
-						stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
-						stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-						stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
-							stats.deviation * 1000
-						)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
-							stats.maxConfidence * 1000
-						)} ms]`;
-
-						callback(null, bench.stats);
-					},
-					onError: callback
-				}
-			)
-		);
-
-		bench.run({
-			async: true
-		});
-	});
-}
-
 /**
  * @param {number} n number of runs
  * @returns {number} distribution
@@ -232,27 +170,6 @@ function tDistribution(n) {
 	return 1.645;
 }
 
-const casesPath = path.join(__dirname, "benchmarkCases");
-
-const tests = [];
-
-for (const folder of await fs.readdir(casesPath)) {
-	if (folder.includes("_")) {
-		continue;
-	}
-
-	try {
-		await fs.access(
-			path.resolve(casesPath, folder, "webpack.config.js"),
-			constants.R_OK
-		);
-	} catch (_err) {
-		continue;
-	}
-
-	tests.push(folder);
-}
-
 const output = path.join(__dirname, "js");
 const baselinesPath = path.join(output, "benchmark-baselines");
 const baselines = [];
@@ -267,12 +184,35 @@ for (const baselineInfo of baselineRevisions) {
 	/**
 	 * @returns {void}
 	 */
-	function doLoadWebpack() {
+	function addBaseline() {
 		baselines.push({
 			name: baselineInfo.name,
 			rev: baselineRevision,
-			webpack: () =>
-				jest.requireActual(path.resolve(baselinePath, "lib/index.js"))
+			webpack: async config => {
+				const webpack = (
+					await import(
+						path.resolve(
+							baselinePath,
+							`./lib/index.js?nocache=${Math.random()}`
+						)
+					)
+				).default;
+
+				await new Promise((resolve, reject) => {
+					const warmupCompiler = webpack(config, (err, _stats) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+
+						warmupCompiler.purgeInputFileSystem();
+
+						resolve();
+					});
+				});
+
+				return webpack;
+			}
 		});
 	}
 
@@ -301,76 +241,140 @@ for (const baselineInfo of baselineRevisions) {
 		await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
 		await fs.writeFile(gitIndex, index);
 	} finally {
-		doLoadWebpack();
+		addBaseline();
 	}
 }
 
-const reportFilePath = path.resolve(output, "benchmark.md");
-const report = createWriteStream(reportFilePath, { flags: "w" });
+async function registerBenchmarks(suite, test, baselines) {
+	for (const baseline of baselines) {
+		const outputDirectory = path.join(
+			__dirname,
+			"js",
+			"benchmark",
+			`baseline-${baseline.name}`,
+			test
+		);
+		const testDirectory = path.join(casesPath, test);
+		const config =
+			(
+				await import(
+					path.join(testDirectory, `webpack.config.js?nocache=${Math.random()}`)
+				)
+			).default || {};
 
-report.write("### Benchmarks:\n\n");
+		config.mode = config.mode || "production";
+		config.output = config.output || {};
 
-describe("BenchmarkTestCases", function () {
-	for (const testName of tests) {
-		const testDirectory = path.join(casesPath, testName);
-		let headStats = null;
+		if (!config.context) config.context = testDirectory;
+		if (!config.output.path) config.output.path = outputDirectory;
 
-		describe(`${testName} create benchmarks`, function () {
-			for (const baseline of baselines) {
-				let baselineStats = null;
+		const suiteName = `benchmark "${test}" ${baseline.name} (${baseline.rev})`;
+		const webpack = await baseline.webpack(config);
 
-				// eslint-disable-next-line no-loop-func
-				it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
-					const outputDirectory = path.join(
-						__dirname,
-						"js",
-						"benchmark",
-						`baseline-${baseline.name}`,
-						testName
-					);
-					const config =
-						jest.requireActual(path.join(testDirectory, "webpack.config.js")) ||
-						{};
+		suite.add(suiteName, {
+			baseTestName: test,
+			defer: true,
+			fn(deferred) {
+				const compiler = webpack(config, (err, stats) => {
+					compiler.purgeInputFileSystem();
 
-					config.mode = config.mode || "production";
-					config.output = config.output || {};
+					if (err) {
+						throw err;
+					}
 
-					if (!config.context) config.context = testDirectory;
-					if (!config.output.path) config.output.path = outputDirectory;
-					runBenchmark(baseline.webpack(), config, (err, stats) => {
-						if (err) return done(err);
-						report.write(
-							`- "${testName}": ${baseline.name} (${baseline.rev}) ${stats.text} (${stats.sampleCount} runs)\n`
-						);
-						if (baseline.name === "HEAD") headStats = stats;
-						else baselineStats = stats;
-						done();
-					});
-				}, 180000);
+					if (stats.hasErrors()) {
+						throw new Error(stats.toString());
+					}
 
-				if (baseline.name !== "HEAD") {
-					// eslint-disable-next-line no-loop-func
-					it(`HEAD and ${baseline.name} (${baseline.rev}) results`, function () {
-						if (!baselineStats) {
-							throw new Error("No baseline stats");
-						}
-
-						report.write(`- "${testName}" change: `);
-						report.write(
-							`HEAD (${headStats.text}) is ${Math.round(
-								(baselineStats.mean / headStats.mean) * 100 - 100
-							)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} BASE (${baseline.name}) (${baselineStats.text})\n`
-						);
-
-						report.write(`-----\n`);
-					});
-				}
+					deferred.resolve();
+				});
 			}
 		});
 	}
+}
+
+const suite = withCodSpeed(
+	new Benchmark.Suite({
+		maxTime: 30,
+		initCount: 1,
+		onError: event => {
+			throw new Error(event.error);
+		}
+	})
+);
+
+const casesPath = path.join(__dirname, "benchmarkCases");
+
+const tests = [];
+
+for (const folder of await fs.readdir(casesPath)) {
+	if (folder.includes("_")) {
+		continue;
+	}
+
+	try {
+		await fs.access(
+			path.resolve(casesPath, folder, "webpack.config.js"),
+			constants.R_OK
+		);
+	} catch (_err) {
+		continue;
+	}
+
+	tests.push(folder);
+}
+
+for (const test of tests) {
+	await registerBenchmarks(suite, test, baselines);
+}
+
+const statsByTests = new Map();
+
+suite.on("cycle", event => {
+	const target = event.target;
+	const stats = target.stats;
+	const n = stats.sample.length;
+	const nSqrt = Math.sqrt(n);
+	const z = tDistribution(n - 1);
+
+	stats.sampleCount = stats.sample.length;
+	stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
+	stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
+	stats.text = `${target.name} ${Math.round(stats.mean * 1000)} ms ± ${Math.round(
+		stats.deviation * 1000
+	)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
+		stats.maxConfidence * 1000
+	)} ms]`;
+
+	const baseTestName = target.baseTestName;
+	const allStats = statsByTests.get(baseTestName);
+
+	if (!allStats) {
+		statsByTests.set(baseTestName, [stats]);
+		return;
+	}
+
+	allStats.push(stats);
+
+	const headStats = allStats[0];
+	const baselineStats = allStats[0];
+
+	console.log(
+		`Benchmark "${event.test}" result: ${headStats.text} is ${Math.round(
+			(baselineStats.mean / headStats.mean) * 100 - 100
+		)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} ${baselineStats.text}\n`
+	);
+});
+
+describe("benchmarks", function () {
+	it("should work", done => {
+		suite.run({ async: true });
+		suite.on("complete", () => {
+			done();
+		});
+	}, 360000);
 
 	afterAll(() => {
 		remove(baselinesPath);
-		report.end();
 	});
 });
