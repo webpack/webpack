@@ -80,8 +80,10 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         with:
-          run: yarn benchmark --ci
+          run: yarn benchmark --ci --only-head
           token: ${{ secrets.CODSPEED_TOKEN }}
+        env:
+          CODSPEED: 1
   basic:
     runs-on: ubuntu-latest
     steps:

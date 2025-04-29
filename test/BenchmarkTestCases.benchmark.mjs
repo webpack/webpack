@@ -54,6 +54,8 @@ const checkV8Flags = () => {
 
 checkV8Flags();
 
+const CODSPEED = typeof process.env.CODSPEED !== "undefined";
+
 /**
  * @param {(string | undefined)[]} revList rev list
  * @returns {Promise<string>} head
@@ -122,6 +124,16 @@ async function getBaselineRevs() {
 	if (!revList) throw new Error("Invalid result from git rev-list");
 
 	const head = await getHead(revList);
+
+	if (CODSPEED) {
+		return [
+			{
+				name: "HEAD",
+				rev: head
+			}
+		];
+	}
+
 	const base = await getBase(revList);
 
 	if (!head || !base) {
@@ -268,7 +280,7 @@ async function registerBenchmarks(suite, test, baselines) {
 		if (!config.context) config.context = testDirectory;
 		if (!config.output.path) config.output.path = outputDirectory;
 
-		const suiteName = `benchmark "${test}" ${baseline.name} (${baseline.rev})`;
+		const suiteName = `benchmark "${test}"${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
 		const webpack = await baseline.webpack(config);
 
 		suite.add(suiteName, {
@@ -350,6 +362,7 @@ suite.on("cycle", event => {
 	const allStats = statsByTests.get(baseTestName);
 
 	if (!allStats) {
+		console.log(String(target));
 		statsByTests.set(baseTestName, [stats]);
 		return;
 	}
