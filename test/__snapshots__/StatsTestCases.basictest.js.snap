@@ -1929,6 +1929,17 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for non-webpack-require-web-warning 1`] = `
+"asset main.mjs X bytes [emitted] [javascript module] (name: main)
+./index.js X bytes [built] [code generated]
+
+WARNING in ./index.js 1:0-23
+APIPlugin
+require is not allowed in ESM mode with the web target
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
 "asset main.js X KiB {792} [emitted] (name: main)
 asset cir2 from cir1.js X bytes {816}, {915} [emitted] (name: cir2 from cir1)
