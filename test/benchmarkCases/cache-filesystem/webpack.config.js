@@ -1,4 +1,7 @@
 /** @type {import("../../../").Configuration} */
 module.exports = {
-	entry: "./index"
+	entry: "./index",
+	cache: {
+		type: "filesystem"
+	}
 };

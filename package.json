@@ -103,6 +103,7 @@
     "strip-ansi": "^6.0.0",
     "style-loader": "^4.0.0",
     "terser": "^5.38.1",
+    "three": "^0.176.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.23.7",
     "ts-loader": "^9.5.1",
