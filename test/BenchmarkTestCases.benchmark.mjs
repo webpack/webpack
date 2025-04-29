@@ -357,24 +357,17 @@ suite.on("cycle", event => {
 	allStats.push(stats);
 
 	const headStats = allStats[0];
-	const baselineStats = allStats[0];
+	const baselineStats = allStats[1];
 
 	console.log(
-		`Benchmark "${event.test}" result: ${headStats.text} is ${Math.round(
+		`Benchmark "${baseTestName}" result: ${headStats.text} is ${Math.round(
 			(baselineStats.mean / headStats.mean) * 100 - 100
-		)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} ${baselineStats.text}\n`
+		)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} ${baselineStats.text}`
 	);
 });
 
-describe("benchmarks", function () {
-	it("should work", done => {
-		suite.run({ async: true });
-		suite.on("complete", () => {
-			done();
-		});
-	}, 360000);
+suite.run({ async: true });
 
-	afterAll(() => {
-		remove(baselinesPath);
-	});
+suite.on("complete", () => {
+	remove(baselinesPath);
 });
