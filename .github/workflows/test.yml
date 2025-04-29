@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -76,24 +77,13 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: yarn benchmark --ci
-      - name: Find Comment
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/find-comment@v3
-        id: fc
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: Benchmarks
-      - name: Create or update comment
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          token: ${{ secrets.PAT }}
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body-path: "./test/js/benchmark.md"
-          edit-mode: replace
+          run: yarn benchmark --ci --only-head
+          token: ${{ secrets.CODSPEED_TOKEN }}
+        env:
+          CODSPEED: 1
   basic:
     runs-on: ubuntu-latest
     steps:
