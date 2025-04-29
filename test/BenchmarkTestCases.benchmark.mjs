@@ -18,7 +18,43 @@ const git = simpleGit(rootPath);
 
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
-new Error().cause = 1;
+const getV8Flags = () => {
+	const nodeVersionMajor = Number.parseInt(
+		process.version.slice(1).split(".")[0]
+	);
+	const flags = [
+		"--hash-seed=1",
+		"--random-seed=1",
+		"--no-opt",
+		"--predictable",
+		"--predictable-gc-schedule",
+		"--interpreted-frames-native-stack",
+		"--allow-natives-syntax",
+		"--expose-gc",
+		"--no-concurrent-sweeping",
+		"--max-old-space-size=4096"
+	];
+	if (nodeVersionMajor < 18) {
+		flags.push("--no-randomize-hashes");
+	}
+	if (nodeVersionMajor < 20) {
+		flags.push("--no-scavenge-task");
+	}
+	return flags;
+};
+
+const checkV8Flags = () => {
+	const requiredFlags = getV8Flags();
+	const actualFlags = process.execArgv;
+	const missingFlags = requiredFlags.filter(
+		flag => !actualFlags.includes(flag)
+	);
+	if (missingFlags.length > 0) {
+		console.warn(`Missing required flags: ${missingFlags.join(", ")}`);
+	}
+};
+
+checkV8Flags();
 
 /**
  * @param {(string | undefined)[]} revList rev list
