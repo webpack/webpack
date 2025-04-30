@@ -416,9 +416,17 @@ const suite = withCodSpeed(
 await fs.rm(baseOutputPath, { recursive: true, force: true });
 
 const casesPath = path.join(__dirname, "benchmarkCases");
-const benchmarks = (await fs.readdir(casesPath)).filter(
-	item => !item.includes("_")
-);
+const allBenchmarks = (await fs.readdir(casesPath))
+	.filter(item => !item.includes("_"))
+	.sort((a, b) => a.localeCompare(b));
+
+const benchmarks = allBenchmarks.filter(item => !item.includes("long"));
+const longBenchmarks = allBenchmarks.filter(item => item.includes("long"));
+const i = Math.floor(benchmarks.length / longBenchmarks.length);
+
+for (const [index, value] of longBenchmarks.entries()) {
+	benchmarks.splice(index * i, 0, value);
+}
 
 const shard =
 	typeof process.env.SHARD !== "undefined"
