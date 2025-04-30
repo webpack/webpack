@@ -263,6 +263,74 @@ const scenarios = [
 	}
 ];
 
+function buildConfiguration(
+	test,
+	baseline,
+	realConfig,
+	scenario,
+	testDirectory
+) {
+	const { watch, ...rest } = scenario;
+	const config = structuredClone({ ...realConfig, ...rest });
+
+	config.entry = config.entry || "./index.js";
+	config.devtool = config.devtool || false;
+	config.name = `${test}-${baseline.name}-${scenario.name}`;
+	config.context = testDirectory;
+	config.performance = false;
+	config.output = config.output || {};
+	config.output.path = path.join(
+		baseOutputPath,
+		test,
+		`scenario-${scenario.name}`,
+		`baseline-${baseline.name}`
+	);
+
+	if (config.cache) {
+		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
+	}
+
+	return config;
+}
+
+function warmupCompiler(compiler) {
+	return new Promise((resolve, reject) => {
+		compiler.run((err, stats) => {
+			if (err) {
+				reject(err);
+			}
+
+			if (stats.hasWarnings() || stats.hasErrors()) {
+				reject(new Error(stats.toString()));
+			}
+
+			compiler.close(closeErr => {
+				if (closeErr) {
+					reject(closeErr);
+				}
+
+				resolve();
+			});
+		});
+	});
+}
+
+function runWatch(compiler) {
+	return new Promise((resolve, reject) => {
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) {
+				reject(err);
+			}
+
+			if (stats.hasWarnings() || stats.hasErrors()) {
+				reject(new Error(stats.toString()));
+			}
+
+			resolve(watching);
+		});
+	});
+}
+
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
 async function registerSuite(suite, test, baselines) {
@@ -287,120 +355,77 @@ async function registerSuite(suite, test, baselines) {
 		)
 	).default;
 
-	for (const baseline of baselines) {
-		const webpack = await baseline.webpack();
+	await Promise.all(
+		baselines.map(async baseline => {
+			const webpack = await baseline.webpack();
 
-		for (const scenario of scenarios) {
-			const stringifiedScenario = JSON.stringify(scenario);
-			const { watch, ...rest } = scenario;
-			const config = structuredClone({ ...realConfig, ...rest });
+			await Promise.all(
+				scenarios.map(async scenario => {
+					const config = buildConfiguration(
+						test,
+						baseline,
+						realConfig,
+						scenario,
+						testDirectory
+					);
 
-			config.entry = config.entry || "./index.js";
-			config.devtool = config.devtool || false;
-			config.name = `${test}-${baseline.name}-${scenario.name}`;
-			config.context = testDirectory;
-			config.performance = false;
-			config.output = config.output || {};
-			config.output.path = path.join(
-				baseOutputPath,
-				test,
-				`scenario-${scenario.name}`,
-				`baseline-${baseline.name}`
+					// Warmup and also prebuild cache
+					await warmupCompiler(webpack(config));
+
+					// Make an extra run for watching tests
+					let watching;
+
+					if (scenario.watch) {
+						watching = await runWatch(webpack(config));
+					}
+
+					const stringifiedScenario = JSON.stringify(scenario);
+					const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+					const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} (${baseline.rev})`;
+
+					console.log(`Register: ${fullSuiteName}`);
+
+					suite.add(suiteName, {
+						collectBy: `${test}, scenario '${stringifiedScenario}'`,
+						defer: true,
+						fn(deferred) {
+							if (watching) {
+								watching.invalidate(() => {
+									watching.close(closeErr => {
+										if (closeErr) {
+											throw closeErr;
+										}
+
+										deferred.resolve();
+									});
+								});
+							} else {
+								const baseCompiler = webpack(config);
+
+								baseCompiler.run((err, stats) => {
+									if (err) {
+										throw err;
+									}
+
+									if (stats.hasWarnings() || stats.hasErrors()) {
+										throw new Error(stats.toString());
+									}
+
+									baseCompiler.close(closeErr => {
+										if (closeErr) {
+											throw closeErr;
+										}
+
+										deferred.resolve();
+									});
+								});
+							}
+						}
+					});
+				})
 			);
-
-			if (config.cache) {
-				config.cache.cacheDirectory = path.resolve(
-					config.output.path,
-					".cache"
-				);
-			}
-
-			// Warmup and also prebuild cache
-			const warmupCompiler = webpack(config);
-
-			await new Promise((resolve, reject) => {
-				warmupCompiler.run((err, stats) => {
-					if (err) {
-						reject(err);
-					}
-
-					if (stats.hasWarnings() || stats.hasErrors()) {
-						reject(new Error(stats.toString()));
-					}
-
-					warmupCompiler.close(closeErr => {
-						if (closeErr) {
-							reject(closeErr);
-						}
-
-						resolve();
-					});
-				});
-			});
-
-			// Make an extra run for watching tests
-			let watching;
-
-			if (watch) {
-				await new Promise((resolve, reject) => {
-					watching = webpack(config).watch({}, (err, stats) => {
-						if (err) {
-							reject(err);
-						}
-
-						if (stats.hasWarnings() || stats.hasErrors()) {
-							reject(new Error(stats.toString()));
-						}
-
-						resolve();
-					});
-				});
-			}
-
-			const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-			const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} (${baseline.rev})`;
-
-			console.log(`Register: ${fullSuiteName}`);
-
-			suite.add(suiteName, {
-				collectBy: `${test}, scenario '${stringifiedScenario}'`,
-				defer: true,
-				fn(deferred) {
-					if (watching) {
-						watching.invalidate(() => {
-							watching.close(closeErr => {
-								if (closeErr) {
-									throw closeErr;
-								}
-
-								deferred.resolve();
-							});
-						});
-					} else {
-						const baseCompiler = webpack(config);
-
-						baseCompiler.run((err, stats) => {
-							if (err) {
-								throw err;
-							}
-
-							if (stats.hasWarnings() || stats.hasErrors()) {
-								throw new Error(stats.toString());
-							}
-
-							baseCompiler.close(closeErr => {
-								if (closeErr) {
-									throw closeErr;
-								}
-
-								deferred.resolve();
-							});
-						});
-					}
-				}
-			});
-		}
-	}
+		})
+	);
 }
 
 const suite = withCodSpeed(
@@ -437,10 +462,12 @@ if (
 	typeof shard[0] === "undefined" ||
 	typeof shard[1] === "undefined" ||
 	shard[0] > shard[1] ||
-	shard[0] < 0 ||
-	shard[1] < 0
+	shard[0] <= 0 ||
+	shard[1] <= 0
 ) {
-	throw new Error("Invalid `SHARD` value");
+	throw new Error(
+		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
+	);
 }
 
 function splitToNChunks(array, n) {
@@ -451,6 +478,14 @@ function splitToNChunks(array, n) {
 	}
 
 	return result;
+}
+
+const countOfBenchmarks = benchmarks.length;
+
+if (countOfBenchmarks < shard[1]) {
+	throw new Error(
+		`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
+	);
 }
 
 await Promise.all(
