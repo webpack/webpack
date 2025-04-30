@@ -420,8 +420,35 @@ const benchmarks = (await fs.readdir(casesPath)).filter(
 	item => !item.includes("_")
 );
 
+const shard =
+	typeof process.env.SHARD !== "undefined"
+		? process.env.SHARD.split("/").map(item => Number.parseInt(item, 10))
+		: [1, 1];
+
+if (
+	typeof shard[0] === "undefined" ||
+	typeof shard[1] === "undefined" ||
+	shard[0] > shard[1] ||
+	shard[0] < 0 ||
+	shard[1] < 0
+) {
+	throw new Error("Invalid `SHARD` value");
+}
+
+function splitToNChunks(array, n) {
+	const result = [];
+
+	for (let i = n; i > 0; i--) {
+		result.push(array.splice(0, Math.ceil(array.length / i)));
+	}
+
+	return result;
+}
+
 await Promise.all(
-	benchmarks.map(benchmark => registerSuite(suite, benchmark, baselines))
+	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map(benchmark =>
+		registerSuite(suite, benchmark, baselines)
+	)
 );
 
 const statsByTests = new Map();
