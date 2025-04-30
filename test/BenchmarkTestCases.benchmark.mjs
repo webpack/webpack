@@ -4,9 +4,8 @@ import path from "path";
 import fs from "fs/promises";
 import { constants } from "fs";
 import Benchmark from "benchmark";
-import { remove } from "./helpers/remove.js";
 import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import simpleGit from "simple-git";
 import { withCodSpeed } from "@codspeed/benchmark.js-plugin";
 
@@ -65,18 +64,21 @@ async function getHead(revList) {
 		return process.env.HEAD;
 	}
 
+	// On CI we take the latest commit `merge commit` as a head
 	if (revList[3]) {
 		return revList[3];
 	}
 
+	// Otherwise we take the latest commit
 	return revList[1];
 }
 
 /**
+ * @param {string} head head
  * @param {(string | undefined)[]} revList rev list
  * @returns {Promise<string>} base
  */
-async function getBase(revList) {
+async function getBase(head, revList) {
 	if (typeof process.env.BASE !== "undefined") {
 		return process.env.BASE;
 	}
@@ -100,6 +102,10 @@ async function getBase(revList) {
 
 		if (!revList[1]) {
 			throw new Error("No parent commit found");
+		}
+
+		if (head === revList[1]) {
+			return revList[2];
 		}
 
 		return revList[1];
@@ -134,7 +140,7 @@ async function getBaselineRevs() {
 		];
 	}
 
-	const base = await getBase(revList);
+	const base = await getBase(head, revList);
 
 	if (!head || !base) {
 		throw new Error("No baseline found");
@@ -200,28 +206,12 @@ for (const baselineInfo of baselineRevisions) {
 		baselines.push({
 			name: baselineInfo.name,
 			rev: baselineRevision,
-			webpack: async config => {
+			webpack: async () => {
 				const webpack = (
 					await import(
-						path.resolve(
-							baselinePath,
-							`./lib/index.js?nocache=${Math.random()}`
-						)
+						pathToFileURL(path.resolve(baselinePath, `./lib/index.js`))
 					)
 				).default;
-
-				await new Promise((resolve, reject) => {
-					const warmupCompiler = webpack(config, (err, _stats) => {
-						if (err) {
-							reject(err);
-							return;
-						}
-
-						warmupCompiler.purgeInputFileSystem();
-
-						resolve();
-					});
-				});
 
 				return webpack;
 			}
@@ -257,52 +247,185 @@ for (const baselineInfo of baselineRevisions) {
 	}
 }
 
-async function registerBenchmarks(suite, test, baselines) {
-	for (const baseline of baselines) {
-		const outputDirectory = path.join(
-			__dirname,
-			"js",
-			"benchmark",
-			`baseline-${baseline.name}`,
-			test
-		);
-		const testDirectory = path.join(casesPath, test);
-		const config =
-			(
-				await import(
-					path.join(testDirectory, `webpack.config.js?nocache=${Math.random()}`)
-				)
-			).default || {};
-
-		config.mode = config.mode || "production";
-		config.output = config.output || {};
-
-		if (!config.context) config.context = testDirectory;
-		if (!config.output.path) config.output.path = outputDirectory;
-
-		const suiteName = `benchmark "${test}"${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-		const webpack = await baseline.webpack(config);
-
-		suite.add(suiteName, {
-			baseTestName: test,
-			defer: true,
-			fn(deferred) {
-				const compiler = webpack(config, (err, stats) => {
-					compiler.purgeInputFileSystem();
-
-					if (err) {
-						throw err;
-					}
-
-					if (stats.hasErrors()) {
-						throw new Error(stats.toString());
-					}
-
-					deferred.resolve();
-				});
-			}
-		});
+const scenarios = [
+	{
+		name: "mode-development",
+		mode: "development"
+	},
+	{
+		name: "mode-development-rebuild",
+		mode: "development",
+		watch: true
+	},
+	{
+		name: "mode-production",
+		mode: "production"
 	}
+];
+
+function buildConfiguration(
+	test,
+	baseline,
+	realConfig,
+	scenario,
+	testDirectory
+) {
+	const { watch, ...rest } = scenario;
+	const config = structuredClone({ ...realConfig, ...rest });
+
+	config.entry = config.entry || "./index.js";
+	config.devtool = config.devtool || false;
+	config.name = `${test}-${baseline.name}-${scenario.name}`;
+	config.context = testDirectory;
+	config.performance = false;
+	config.output = config.output || {};
+	config.output.path = path.join(
+		baseOutputPath,
+		test,
+		`scenario-${scenario.name}`,
+		`baseline-${baseline.name}`
+	);
+
+	if (config.cache) {
+		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
+	}
+
+	return config;
+}
+
+function warmupCompiler(compiler) {
+	return new Promise((resolve, reject) => {
+		compiler.run((err, stats) => {
+			if (err) {
+				reject(err);
+			}
+
+			if (stats.hasWarnings() || stats.hasErrors()) {
+				reject(new Error(stats.toString()));
+			}
+
+			compiler.close(closeErr => {
+				if (closeErr) {
+					reject(closeErr);
+				}
+
+				resolve();
+			});
+		});
+	});
+}
+
+function runWatch(compiler) {
+	return new Promise((resolve, reject) => {
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) {
+				reject(err);
+			}
+
+			if (stats.hasWarnings() || stats.hasErrors()) {
+				reject(new Error(stats.toString()));
+			}
+
+			resolve(watching);
+		});
+	});
+}
+
+const baseOutputPath = path.join(__dirname, "js", "benchmark");
+
+async function registerSuite(suite, test, baselines) {
+	const testDirectory = path.join(casesPath, test);
+	const setupPath = path.resolve(testDirectory, "setup.mjs");
+
+	let needSetup = true;
+
+	try {
+		await fs.access(setupPath, constants.R_OK);
+	} catch (_err) {
+		needSetup = false;
+	}
+
+	if (needSetup) {
+		await import(`${pathToFileURL(setupPath)}?date=${Date.now()}`);
+	}
+
+	const realConfig = (
+		await import(
+			`${pathToFileURL(path.join(testDirectory, `webpack.config.js`))}`
+		)
+	).default;
+
+	await Promise.all(
+		baselines.map(async baseline => {
+			const webpack = await baseline.webpack();
+
+			await Promise.all(
+				scenarios.map(async scenario => {
+					const config = buildConfiguration(
+						test,
+						baseline,
+						realConfig,
+						scenario,
+						testDirectory
+					);
+
+					// Warmup and also prebuild cache
+					await warmupCompiler(webpack(config));
+
+					// Make an extra run for watching tests
+					let watching;
+
+					if (scenario.watch) {
+						watching = await runWatch(webpack(config));
+					}
+
+					const stringifiedScenario = JSON.stringify(scenario);
+					const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+					const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} (${baseline.rev})`;
+
+					console.log(`Register: ${fullSuiteName}`);
+
+					suite.add(suiteName, {
+						collectBy: `${test}, scenario '${stringifiedScenario}'`,
+						defer: true,
+						fn(deferred) {
+							if (watching) {
+								watching.invalidate(() => {
+									watching.close(closeErr => {
+										if (closeErr) {
+											throw closeErr;
+										}
+
+										deferred.resolve();
+									});
+								});
+							} else {
+								const baseCompiler = webpack(config);
+
+								baseCompiler.run((err, stats) => {
+									if (err) {
+										throw err;
+									}
+
+									if (stats.hasWarnings() || stats.hasErrors()) {
+										throw new Error(stats.toString());
+									}
+
+									baseCompiler.close(closeErr => {
+										if (closeErr) {
+											throw closeErr;
+										}
+
+										deferred.resolve();
+									});
+								});
+							}
+						}
+					});
+				})
+			);
+		})
+	);
 }
 
 const suite = withCodSpeed(
@@ -315,30 +438,61 @@ const suite = withCodSpeed(
 	})
 );
 
+await fs.rm(baseOutputPath, { recursive: true, force: true });
+
 const casesPath = path.join(__dirname, "benchmarkCases");
+const allBenchmarks = (await fs.readdir(casesPath))
+	.filter(item => !item.includes("_"))
+	.sort((a, b) => a.localeCompare(b));
 
-const tests = [];
+const benchmarks = allBenchmarks.filter(item => !item.includes("long"));
+const longBenchmarks = allBenchmarks.filter(item => item.includes("long"));
+const i = Math.floor(benchmarks.length / longBenchmarks.length);
 
-for (const folder of await fs.readdir(casesPath)) {
-	if (folder.includes("_")) {
-		continue;
-	}
-
-	try {
-		await fs.access(
-			path.resolve(casesPath, folder, "webpack.config.js"),
-			constants.R_OK
-		);
-	} catch (_err) {
-		continue;
-	}
-
-	tests.push(folder);
+for (const [index, value] of longBenchmarks.entries()) {
+	benchmarks.splice(index * i, 0, value);
 }
 
-for (const test of tests) {
-	await registerBenchmarks(suite, test, baselines);
+const shard =
+	typeof process.env.SHARD !== "undefined"
+		? process.env.SHARD.split("/").map(item => Number.parseInt(item, 10))
+		: [1, 1];
+
+if (
+	typeof shard[0] === "undefined" ||
+	typeof shard[1] === "undefined" ||
+	shard[0] > shard[1] ||
+	shard[0] <= 0 ||
+	shard[1] <= 0
+) {
+	throw new Error(
+		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
+	);
 }
+
+function splitToNChunks(array, n) {
+	const result = [];
+
+	for (let i = n; i > 0; i--) {
+		result.push(array.splice(0, Math.ceil(array.length / i)));
+	}
+
+	return result;
+}
+
+const countOfBenchmarks = benchmarks.length;
+
+if (countOfBenchmarks < shard[1]) {
+	throw new Error(
+		`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
+	);
+}
+
+await Promise.all(
+	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map(benchmark =>
+		registerSuite(suite, benchmark, baselines)
+	)
+);
 
 const statsByTests = new Map();
 
@@ -349,21 +503,25 @@ suite.on("cycle", event => {
 	const nSqrt = Math.sqrt(n);
 	const z = tDistribution(n - 1);
 
-	stats.sampleCount = stats.sample.length;
+	const sampleCount = stats.sample.length;
 	stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 	stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-	stats.text = `${target.name} ${Math.round(stats.mean * 1000)} ms ± ${Math.round(
+	const confidence = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
 		stats.deviation * 1000
 	)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
 		stats.maxConfidence * 1000
 	)} ms]`;
+	stats.text = `${target.name} ${confidence}`;
 
-	const baseTestName = target.baseTestName;
-	const allStats = statsByTests.get(baseTestName);
+	const collectBy = target.collectBy;
+	const allStats = statsByTests.get(collectBy);
+
+	console.log(
+		`Done: ${target.name} ${confidence} (${sampleCount} runs sampled)`
+	);
 
 	if (!allStats) {
-		console.log(String(target));
-		statsByTests.set(baseTestName, [stats]);
+		statsByTests.set(collectBy, [stats]);
 		return;
 	}
 
@@ -373,14 +531,10 @@ suite.on("cycle", event => {
 	const baselineStats = allStats[1];
 
 	console.log(
-		`Benchmark "${baseTestName}" result: ${headStats.text} is ${Math.round(
+		`Result: ${headStats.text} is ${Math.round(
 			(baselineStats.mean / headStats.mean) * 100 - 100
 		)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} ${baselineStats.text}`
 	);
 });
 
 suite.run({ async: true });
-
-suite.on("complete", () => {
-	remove(baselinesPath);
-});
