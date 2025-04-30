@@ -436,10 +436,6 @@ await fs.rm(baseOutputPath, { recursive: true, force: true });
 const casesPath = path.join(__dirname, "benchmarkCases");
 
 for (const folder of await fs.readdir(casesPath)) {
-	if (!folder.includes("context")) {
-		continue;
-	}
-
 	if (folder.includes("_")) {
 		continue;
 	}
