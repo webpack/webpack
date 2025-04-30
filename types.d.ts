@@ -529,7 +529,7 @@ declare interface BannerPluginOptions {
 	test?: string | RegExp | Rule[];
 }
 declare interface BaseDependencyMeta {
-	attributes?: Record<string, string | number | boolean | Record<string, any>>;
+	attributes?: { [index: string]: string | number | boolean };
 }
 declare interface BaseResolveRequest {
 	path: string | false;
