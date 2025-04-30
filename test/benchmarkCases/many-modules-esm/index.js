@@ -1,0 +1,1 @@
+import "./generated/module.js";

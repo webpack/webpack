@@ -279,9 +279,23 @@ const scenarios = [
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
 async function registerBenchmarks(suite, test, baselines) {
+	const testDirectory = path.join(casesPath, test);
+	const setupPath = path.resolve(testDirectory, "setup.mjs");
+
+	let needSetup = true;
+
+	try {
+		await fs.access(setupPath, constants.R_OK);
+	} catch (_err) {
+		needSetup = false;
+	}
+
+	if (needSetup) {
+		await import(`${pathToFileURL(setupPath)}?date=${Date.now()}`);
+	}
+
 	for (const baseline of baselines) {
 		for (const scenario of scenarios) {
-			const testDirectory = path.join(casesPath, test);
 			const stringifiedScenario = JSON.stringify(scenario);
 			const realConfig =
 				(
@@ -295,6 +309,7 @@ async function registerBenchmarks(suite, test, baselines) {
 			const config = { ...realConfig, ...rest };
 
 			config.entry = config.entry || "./index.js";
+			config.devtool = config.devtool || false;
 			config.name = `${test}-${baseline.name}-${scenario.name}`;
 			config.context = testDirectory;
 			config.output = config.output || {};
@@ -312,7 +327,6 @@ async function registerBenchmarks(suite, test, baselines) {
 				);
 			}
 
-			const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
 			const webpack = await baseline.webpack(config);
 
 			let compiler;
@@ -361,6 +375,7 @@ async function registerBenchmarks(suite, test, baselines) {
 				});
 			}
 
+			const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
 			const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} (${baseline.rev})`;
 
 			console.log(`Register: ${fullSuiteName}`);
@@ -421,16 +436,11 @@ await fs.rm(baseOutputPath, { recursive: true, force: true });
 const casesPath = path.join(__dirname, "benchmarkCases");
 
 for (const folder of await fs.readdir(casesPath)) {
-	if (folder.includes("_")) {
+	if (!folder.includes("context")) {
 		continue;
 	}
 
-	try {
-		await fs.access(
-			path.resolve(casesPath, folder, "webpack.config.js"),
-			constants.R_OK
-		);
-	} catch (_err) {
+	if (folder.includes("_")) {
 		continue;
 	}
 

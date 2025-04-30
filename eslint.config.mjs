@@ -27,6 +27,8 @@ export default defineConfig([
 		"!test/**/deprecations.js",
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
+		"!test/benchmarkCases/**/*.mjs",
+		"!test/_helpers/**/*.mjs",
 		"test/js/**/*.*",
 
 		// Ignore some folders
