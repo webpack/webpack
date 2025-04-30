@@ -46,7 +46,7 @@ jobs:
         run: |
           yarn upgrade typescript@5.0
           yarn --frozen-lockfile
-          yarn type-validate
+          yarn validate:types
   validate-legacy-node:
     runs-on: ubuntu-latest
     steps:
