@@ -293,7 +293,7 @@ async function registerSuite(suite, test, baselines) {
 		for (const scenario of scenarios) {
 			const stringifiedScenario = JSON.stringify(scenario);
 			const { watch, ...rest } = scenario;
-			const config = { ...realConfig, ...rest };
+			const config = structuredClone({ ...realConfig, ...rest });
 
 			config.entry = config.entry || "./index.js";
 			config.devtool = config.devtool || false;

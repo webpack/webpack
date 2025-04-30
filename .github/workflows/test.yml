@@ -60,6 +60,10 @@ jobs:
       - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
       - run: yarn install --production --frozen-lockfile
   benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -80,10 +84,11 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         with:
-          run: yarn benchmark --ci
+          run: yarn benchmark --ci --only-head
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           CODSPEED: 1
+          SHARD: ${{ matrix.shard }}
   basic:
     runs-on: ubuntu-latest
     steps:
