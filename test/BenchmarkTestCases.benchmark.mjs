@@ -206,25 +206,12 @@ for (const baselineInfo of baselineRevisions) {
 		baselines.push({
 			name: baselineInfo.name,
 			rev: baselineRevision,
-			webpack: async config => {
+			webpack: async () => {
 				const webpack = (
 					await import(
 						pathToFileURL(path.resolve(baselinePath, `./lib/index.js`))
 					)
 				).default;
-
-				await new Promise((resolve, reject) => {
-					const warmupCompiler = webpack(config, (err, _stats) => {
-						if (err) {
-							reject(err);
-							return;
-						}
-
-						warmupCompiler.purgeInputFileSystem();
-
-						resolve();
-					});
-				});
 
 				return webpack;
 			}
@@ -278,7 +265,7 @@ const scenarios = [
 
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
-async function registerBenchmarks(suite, test, baselines) {
+async function registerSuite(suite, test, baselines) {
 	const testDirectory = path.join(casesPath, test);
 	const setupPath = path.resolve(testDirectory, "setup.mjs");
 
@@ -294,19 +281,19 @@ async function registerBenchmarks(suite, test, baselines) {
 		await import(`${pathToFileURL(setupPath)}?date=${Date.now()}`);
 	}
 
+	const realConfig = (
+		await import(
+			`${pathToFileURL(path.join(testDirectory, `webpack.config.js`))}`
+		)
+	).default;
+
 	for (const baseline of baselines) {
+		const webpack = await baseline.webpack();
+
 		for (const scenario of scenarios) {
 			const stringifiedScenario = JSON.stringify(scenario);
-			const realConfig =
-				(
-					await import(
-						`${pathToFileURL(
-							path.join(testDirectory, `webpack.config.js`)
-						)}?date=${Date.now()}`
-					)
-				).default || {};
 			const { watch, ...rest } = scenario;
-			const config = { ...realConfig, ...rest };
+			const config = structuredClone({ ...realConfig, ...rest });
 
 			config.entry = config.entry || "./index.js";
 			config.devtool = config.devtool || false;
@@ -327,41 +314,35 @@ async function registerBenchmarks(suite, test, baselines) {
 				);
 			}
 
-			const webpack = await baseline.webpack(config);
+			// Warmup and also prebuild cache
+			const warmupCompiler = webpack(config);
 
-			let compiler;
+			await new Promise((resolve, reject) => {
+				warmupCompiler.run((err, stats) => {
+					if (err) {
+						reject(err);
+					}
 
-			// Prebuild cache
-			if (config.cache) {
-				compiler = webpack(config);
+					if (stats.hasWarnings() || stats.hasErrors()) {
+						reject(new Error(stats.toString()));
+					}
 
-				await new Promise((resolve, reject) => {
-					compiler.run((err, stats) => {
-						if (err) {
-							reject(err);
+					warmupCompiler.close(closeErr => {
+						if (closeErr) {
+							reject(closeErr);
 						}
 
-						if (stats.hasWarnings() || stats.hasErrors()) {
-							reject(new Error(stats.toString()));
-						}
-
-						compiler.close(closeErr => {
-							if (closeErr) {
-								reject(closeErr);
-							}
-
-							resolve();
-						});
+						resolve();
 					});
 				});
-			}
+			});
 
 			// Make an extra run for watching tests
 			let watching;
 
 			if (watch) {
 				await new Promise((resolve, reject) => {
-					watching = (compiler || webpack(config)).watch({}, (err, stats) => {
+					watching = webpack(config).watch({}, (err, stats) => {
 						if (err) {
 							reject(err);
 						}
@@ -395,7 +376,7 @@ async function registerBenchmarks(suite, test, baselines) {
 							});
 						});
 					} else {
-						const baseCompiler = compiler || webpack(config);
+						const baseCompiler = webpack(config);
 
 						baseCompiler.run((err, stats) => {
 							if (err) {
@@ -434,14 +415,13 @@ const suite = withCodSpeed(
 await fs.rm(baseOutputPath, { recursive: true, force: true });
 
 const casesPath = path.join(__dirname, "benchmarkCases");
+const benchmarks = (await fs.readdir(casesPath)).filter(
+	item => !item.includes("_")
+);
 
-for (const folder of await fs.readdir(casesPath)) {
-	if (folder.includes("_")) {
-		continue;
-	}
-
-	await registerBenchmarks(suite, folder, baselines);
-}
+await Promise.all(
+	benchmarks.map(benchmark => registerSuite(suite, benchmark, baselines))
+);
 
 const statsByTests = new Map();
 

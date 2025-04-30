@@ -1,2 +1,2 @@
-import * as mod from "./generated/module.js";
-export { mod };
+const result = require("./generated/module.js");
+module.exports = result;
