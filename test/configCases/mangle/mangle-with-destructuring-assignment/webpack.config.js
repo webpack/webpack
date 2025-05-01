@@ -1,4 +1,4 @@
-// const { getRuntimeKey } = require("../../../../lib/util/runtime");
+/** @typedef {import("webpack-sources").Source} Source */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -30,7 +30,9 @@ module.exports = {
 										module,
 										"main"
 									);
-									const source = sources.get("javascript");
+									const source =
+										/** @type {Source} */
+										(sources.get("javascript"));
 									const file = compilation.getAssetPath("[name].js", {
 										filename: `${module
 											.readableIdentifier(compilation.requestShortener)

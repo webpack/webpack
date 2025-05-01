@@ -13,7 +13,10 @@ module.exports = {
 		generator: {
 			asset: {
 				dataUrl: (source, { module }) => {
-					const mimeType = mimeTypes.lookup(module.nameForCondition());
+					const mimeType = mimeTypes.lookup(
+						/** @type {string} */
+						(module.nameForCondition())
+					);
 					if (mimeType === "image/svg+xml") {
 						if (typeof source !== "string") {
 							source = source.toString();

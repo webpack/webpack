@@ -7,6 +7,7 @@
 
 const util = require("util");
 
+/** @type {undefined | Map<string, { code: string, message: string, stack: string }>} */
 let interception;
 
 const originalDeprecate = util.deprecate;
@@ -15,19 +16,19 @@ const originalDeprecate = util.deprecate;
  * @template {EXPECTED_FUNCTION} T
  * @param {T} fn fn
  * @param {string} message message
- * @param {string=} code code
+ * @param {string=} _code code
  * @returns {T} result
  */
-util.deprecate = (fn, message, code) => {
-	const original = originalDeprecate(fn, message, code);
+util.deprecate = (fn, message, _code) => {
+	const original = originalDeprecate(fn, message, _code);
 
 	// @ts-expect-error expected
 	return function (...args) {
 		if (interception) {
-			interception.set(`${code}: ${message}`, {
-				code,
+			interception.set(`${_code}: ${message}`, {
+				code: /** @type {string} */ (_code),
 				message,
-				stack: new Error(message).stack
+				stack: /** @type {string} */ (new Error(message).stack)
 			});
 			// @ts-expect-error expected
 			return fn.apply(this, args);
@@ -38,6 +39,10 @@ util.deprecate = (fn, message, code) => {
 	};
 };
 
+/**
+ * @param {EXPECTED_ANY} handler handler
+ * @returns {() => EXPECTED_ANY} result
+ */
 module.exports.start = handler => {
 	interception = new Map();
 

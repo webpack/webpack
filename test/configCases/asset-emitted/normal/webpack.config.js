@@ -5,6 +5,7 @@ const Source = require("webpack-sources").Source;
 module.exports = {
 	plugins: [
 		compiler => {
+			/** @type {Record<string, boolean>} */
 			const files = {};
 			compiler.hooks.assetEmitted.tap(
 				"Test",

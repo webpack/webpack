@@ -1,3 +1,5 @@
+/** @typedef {import("../../../../").AssetInfo} AssetInfo */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
@@ -22,7 +24,12 @@ module.exports = {
 										});
 										compilation.updateAsset(asset, assets[asset], info => ({
 											...info,
-											related: { ...info.related, second: ["second"] },
+											related: {
+												.../** @type {{ related: Record<string, string | string[]> }} */ (
+													info
+												).related,
+												second: ["second"]
+											},
 											customFn: true
 										}));
 										break;

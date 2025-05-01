@@ -1,3 +1,4 @@
+/** @typedef {import("../../../").Module} Module */
 /** @typedef {import("../../../").WebpackError} WebpackError */
 
 /** @type {import("../../../").Configuration} */
@@ -13,6 +14,7 @@ module.exports = {
 		},
 		/The 'mode' option has not been set/,
 		warning =>
-			/** @type {WebpackError} */ (warning).module.identifier().endsWith("?2")
+			/** @type {Module} */
+			(/** @type {WebpackError} */ (warning).module).identifier().endsWith("?2")
 	]
 };

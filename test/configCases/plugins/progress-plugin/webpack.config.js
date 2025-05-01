@@ -1,6 +1,9 @@
 const path = require("path");
 const webpack = require("../../../../");
 const data = require("./data");
+
+/** @typedef {import("../../../../").ProgressPlugin} ProgressPlugin */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	externals: {
@@ -14,7 +17,9 @@ module.exports = {
 			apply: compiler => {
 				compiler.hooks.compilation.tap("CustomPlugin", compilation => {
 					compilation.hooks.optimize.tap("CustomPlugin", () => {
-						const reportProgress = webpack.ProgressPlugin.getReporter(compiler);
+						const reportProgress =
+							/** @type {NonNullable<ReturnType<typeof webpack.ProgressPlugin['getReporter']>>} */
+							(webpack.ProgressPlugin.getReporter(compiler));
 						reportProgress(0, "custom category", "custom message");
 					});
 				});

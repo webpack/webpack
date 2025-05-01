@@ -1,15 +1,22 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Compilation} Compilation */
+
 const {
 	SingleEntryPlugin,
 	node: { NodeTemplatePlugin }
 } = require("../../../..");
 
+/** @type {WeakMap<Compiler, Compiler>} */
 const compilerCache = new WeakMap();
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source) {
-	let childCompiler = compilerCache.get(this._compiler);
+	const compiler = /** @type {Compiler} */ (this._compiler);
+	const compilation = /** @type {Compilation} */ (this._compilation);
+
+	let childCompiler = compilerCache.get(compiler);
 	if (childCompiler === undefined) {
-		childCompiler = this._compilation.createChildCompiler(
+		childCompiler = compilation.createChildCompiler(
 			"my-compiler|" + this.request,
 			{
 				filename: "test.js"
@@ -19,7 +26,7 @@ module.exports = function (source) {
 				new SingleEntryPlugin(this.context, this.resource)
 			]
 		);
-		compilerCache.set(this._compiler, childCompiler);
+		compilerCache.set(compiler, childCompiler);
 	}
 	const callback = this.async();
 	childCompiler.parentCompilation = this._compilation;
@@ -27,7 +34,8 @@ module.exports = function (source) {
 		if (err) return callback(err);
 
 		const result = `export const assets = ${JSON.stringify(
-			compilation.getAssets().map(a => a.name)
+			/** @type {Compilation} */
+			(compilation).getAssets().map(a => a.name)
 		)};\n${source}`;
 
 		callback(null, result);

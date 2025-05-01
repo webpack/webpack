@@ -1,4 +1,7 @@
 const { ChunkGraph, ExternalModule } = require("../../../../");
+
+/** @typedef {import("../../../../").Module} Module */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
@@ -57,7 +60,9 @@ module.exports = {
 					m.issuer = module;
 					expect(m.issuer).toBe(module);
 					expect(
-						typeof m.usedExports === "boolean" ? [] : [...m.usedExports]
+						typeof m.usedExports === "boolean"
+							? []
+							: [.../** @type {Set<string>} */ (m.usedExports)]
 					).toEqual(["testExport"]);
 					expect(Array.isArray(m.optimizationBailout)).toBe(true);
 					expect(m.optional).toBe(false);

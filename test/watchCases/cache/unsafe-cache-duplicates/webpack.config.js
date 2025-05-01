@@ -1,6 +1,8 @@
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @typedef {import("../../../../").NormalModule} NormalModule */
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	cache: {
@@ -9,7 +11,8 @@ module.exports = (env, { srcPath }) => ({
 		idleTimeout: 1
 	},
 	module: {
-		unsafeCache: module => /module\.js/.test(module.resource)
+		unsafeCache: module =>
+			/module\.js/.test(/** @type {NormalModule} */ (module).resource)
 	},
 	plugins: [
 		compiler => {

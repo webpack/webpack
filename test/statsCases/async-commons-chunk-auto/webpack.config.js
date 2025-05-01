@@ -8,6 +8,7 @@ const stats = {
 	chunkOrigins: true,
 	modules: false
 };
+
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{

@@ -1,12 +1,4 @@
-const matchAll = (str, regexp) => {
-	const matches = [];
-	let match;
-	while ((match = regexp.exec(str)) !== null) {
-		matches.push(match);
-	}
-	return matches;
-};
-
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = source => {
 	return [
 		source,

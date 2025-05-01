@@ -187,13 +187,26 @@ export type ExternalItem =
 	| RegExp
 	| string
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
-	| (
-			| ((
-					data: ExternalItemFunctionData,
-					callback: (err?: Error | null, result?: ExternalItemValue) => void
-			  ) => void)
-			| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
-	  );
+	| ExternalItemFunction;
+/**
+ * The function is called on each dependency.
+ */
+export type ExternalItemFunction =
+	| ExternalItemFunctionCallback
+	| ExternalItemFunctionPromise;
+/**
+ * The function is called on each dependency (`function(context, request, callback(err, result))`).
+ */
+export type ExternalItemFunctionCallback = (
+	data: ExternalItemFunctionData,
+	callback: (err?: Error | null, result?: ExternalItemValue) => void
+) => void;
+/**
+ * The function is called on each dependency (`function(context, request)`).
+ */
+export type ExternalItemFunctionPromise = (
+	data: ExternalItemFunctionData
+) => Promise<ExternalItemValue>;
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -349,13 +362,7 @@ export type ResolvePluginInstance =
  */
 export type RuleSetUse =
 	| (Falsy | RuleSetUseItem)[]
-	| ((data: {
-			resource: string;
-			realResource: string;
-			resourceQuery: string;
-			issuer: string;
-			compiler: string;
-	  }) => (Falsy | RuleSetUseItem)[])
+	| RuleSetUseFunction
 	| RuleSetUseItem;
 /**
  * A description of an applied loader.
@@ -375,8 +382,14 @@ export type RuleSetUseItem =
 			 */
 			options?: RuleSetLoaderOptions;
 	  }
-	| ((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])
+	| RuleSetUseFunction
 	| RuleSetLoader;
+/**
+ * The function is called on each data and return rule set item.
+ */
+export type RuleSetUseFunction = (
+	data: import("../lib/rules/RuleSetCompiler").EffectData
+) => RuleSetUseItem | (Falsy | RuleSetUseItem)[];
 /**
  * A list of rules.
  */
@@ -390,10 +403,10 @@ export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
  * Don't parse files matching. It's matched against the full resolved request.
  */
 export type NoParse =
-	| (RegExp | string | Function)[]
+	| (RegExp | string | ((content: string) => boolean))[]
 	| RegExp
 	| string
-	| Function;
+	| ((content: string) => boolean);
 /**
  * Specify options for each parser.
  */
@@ -424,8 +437,19 @@ export type OptimizationRuntimeChunk =
 			/**
 			 * The name or name factory for the runtime chunks.
 			 */
-			name?: string | Function;
+			name?:
+				| string
+				| import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
 	  };
+/**
+ * A function returning cache groups.
+ */
+export type OptimizationSplitChunksGetCacheGroups = (
+	module: import("../lib/Module")
+) =>
+	| OptimizationSplitChunksCacheGroup
+	| OptimizationSplitChunksCacheGroup[]
+	| void;
 /**
  * Size description for limits.
  */
@@ -795,6 +819,33 @@ export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 export type ExperimentsNormalized = ExperimentsCommon &
 	ExperimentsNormalizedExtra;
 /**
+ * Get a resolve function with the current resolver options.
+ */
+export type ExternalItemFunctionDataGetResolve = (
+	options?: ResolveOptions
+) =>
+	| ExternalItemFunctionDataGetResolveCallbackResult
+	| ExternalItemFunctionDataGetResolveResult;
+/**
+ * Result of get a resolve function with the current resolver options.
+ */
+export type ExternalItemFunctionDataGetResolveCallbackResult = (
+	context: string,
+	request: string,
+	callback: (
+		err?: Error | null,
+		result?: string | false,
+		resolveRequest?: import("enhanced-resolve").ResolveRequest
+	) => void
+) => void;
+/**
+ * Callback result of get a resolve function with the current resolver options.
+ */
+export type ExternalItemFunctionDataGetResolveResult = (
+	context: string,
+	request: string
+) => Promise<string>;
+/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
@@ -832,17 +883,8 @@ export type OptimizationRuntimeChunkNormalized =
 			/**
 			 * The name factory for the runtime chunks.
 			 */
-			name?: Function;
+			name?: import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
 	  };
-/**
- * A function returning cache groups.
- */
-export type OptimizationSplitChunksGetCacheGroups = (
-	module: import("../lib/Module")
-) =>
-	| OptimizationSplitChunksCacheGroup
-	| OptimizationSplitChunksCacheGroup[]
-	| void;
 
 /**
  * Options object as provided by the user.
@@ -1368,7 +1410,7 @@ export interface ModuleOptions {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | Function;
+	unsafeCache?: boolean | ((module: import("../lib/Module")) => boolean);
 	/**
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
@@ -1835,7 +1877,7 @@ export interface OptimizationSplitChunksOptions {
 			| false
 			| RegExp
 			| string
-			| Function
+			| OptimizationSplitChunksGetCacheGroups
 			| OptimizationSplitChunksCacheGroup;
 	};
 	/**
@@ -2387,7 +2429,11 @@ export interface PerformanceOptions {
 	/**
 	 * Filter function to select assets that are checked.
 	 */
-	assetFilter?: Function;
+	assetFilter?: (
+		name: import("../lib/Compilation").Asset["name"],
+		source: import("../lib/Compilation").Asset["source"],
+		assetInfo: import("../lib/Compilation").Asset["info"]
+	) => boolean;
 	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all.
 	 */
@@ -3178,19 +3224,7 @@ export interface ExternalItemFunctionData {
 	/**
 	 * Get a resolve function with the current resolver options.
 	 */
-	getResolve?: (
-		options?: ResolveOptions
-	) =>
-		| ((
-				context: string,
-				request: string,
-				callback: (
-					err?: Error | null,
-					result?: string | false,
-					resolveRequest?: import("enhanced-resolve").ResolveRequest
-				) => void
-		  ) => void)
-		| ((context: string, request: string) => Promise<string>);
+	getResolve?: ExternalItemFunctionDataGetResolve;
 	/**
 	 * The request as written by the user in the require/import expression/statement.
 	 */
@@ -3393,6 +3427,21 @@ export interface JsonGeneratorOptions {
 	JSONParse?: boolean;
 }
 /**
+ * Parser options for JSON modules.
+ */
+export interface JsonParserOptions {
+	/**
+	 * The depth of json dependency flagged as `exportInfo`.
+	 */
+	exportsDepth?: number;
+	/**
+	 * Function to parser content and return JSON.
+	 */
+	parse?: (
+		input: string
+	) => Buffer | import("../lib/json/JsonParser").JsonValue;
+}
+/**
  * Options for the default backend.
  */
 export interface LazyCompilationDefaultBackendOptions {
@@ -3482,7 +3531,114 @@ export interface ModuleOptionsNormalized {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | Function;
+	unsafeCache?: boolean | ((module: import("../lib/Module")) => boolean);
+}
+/**
+ * Enables/Disables integrated optimizations.
+ */
+export interface OptimizationNormalized {
+	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	avoidEntryIife?: boolean;
+	/**
+	 * Check for incompatible wasm types when importing/exporting from/to ESM.
+	 */
+	checkWasmTypes?: boolean;
+	/**
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
+	 */
+	chunkIds?:
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
+	/**
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 */
+	concatenateModules?: boolean;
+	/**
+	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
+	 */
+	emitOnErrors?: boolean;
+	/**
+	 * Also flag chunks as loaded which contain a subset of the modules.
+	 */
+	flagIncludedChunks?: boolean;
+	/**
+	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
+	 */
+	innerGraph?: boolean;
+	/**
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
+	 */
+	mangleExports?: ("size" | "deterministic") | boolean;
+	/**
+	 * Reduce size of WASM by changing imports to shorter strings.
+	 */
+	mangleWasmImports?: boolean;
+	/**
+	 * Merge chunks which contain the same modules.
+	 */
+	mergeDuplicateChunks?: boolean;
+	/**
+	 * Enable minimizing the output. Uses optimization.minimizer.
+	 */
+	minimize?: boolean;
+	/**
+	 * Minimizer(s) to use for minimizing the output.
+	 */
+	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
+	/**
+	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
+	 */
+	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
+	/**
+	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
+	 */
+	noEmitOnErrors?: boolean;
+	/**
+	 * Set process.env.NODE_ENV to a specific value.
+	 */
+	nodeEnv?: false | string;
+	/**
+	 * Generate records with relative paths to be able to move the context folder.
+	 */
+	portableRecords?: boolean;
+	/**
+	 * Figure out which exports are provided by modules to generate more efficient code.
+	 */
+	providedExports?: boolean;
+	/**
+	 * Use real [contenthash] based on final content of the assets.
+	 */
+	realContentHash?: boolean;
+	/**
+	 * Removes modules from chunks when these modules are already included in all parents.
+	 */
+	removeAvailableModules?: boolean;
+	/**
+	 * Remove chunks which are empty.
+	 */
+	removeEmptyChunks?: boolean;
+	/**
+	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
+	 */
+	runtimeChunk?: OptimizationRuntimeChunkNormalized;
+	/**
+	 * Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).
+	 */
+	sideEffects?: "flag" | boolean;
+	/**
+	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
+	 */
+	splitChunks?: false | OptimizationSplitChunksOptions;
+	/**
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
+	 */
+	usedExports?: "global" | boolean;
 }
 /**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -3772,7 +3928,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Enables/Disables integrated optimizations.
 	 */
-	optimization: Optimization;
+	optimization: OptimizationNormalized;
 	/**
 	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 	 */
@@ -3999,6 +4155,10 @@ export interface ParserOptionsByModuleTypeKnown {
 	 * Parser options for javascript modules.
 	 */
 	"javascript/esm"?: JavascriptParserOptions;
+	/**
+	 * Parser options for JSON modules.
+	 */
+	json?: JsonParserOptions;
 }
 /**
  * Specify options for each parser.

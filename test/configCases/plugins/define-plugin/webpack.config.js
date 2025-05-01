@@ -20,6 +20,10 @@ module.exports = {
 			NEGATIVE_ZER0: -0,
 			NEGATIVE_NUMBER: -100.25,
 			POSITIVE_NUMBER: +100.25,
+			/**
+			 * @param {number} a a
+			 * @returns {number} result
+			 */
 			// eslint-disable-next-line object-shorthand
 			FUNCTION: /* istanbul ignore next */ function (a) {
 				return a + 1;
@@ -29,6 +33,10 @@ module.exports = {
 			OBJECT: {
 				SUB: {
 					UNDEFINED: undefined,
+					/**
+					 * @param {number} a a
+					 * @returns {number} result
+					 */
 					// eslint-disable-next-line object-shorthand
 					FUNCTION: /* istanbul ignore next */ function (a) {
 						return a + 1;

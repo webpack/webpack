@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 const base = {
 	entry: {
 		web: "./web",

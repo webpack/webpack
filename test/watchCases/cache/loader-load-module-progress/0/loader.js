@@ -1,4 +1,4 @@
-/** @type {import("../../../../../").PitchLoaderDefinitionFunction} */
+/** @type {import("../../../../../").PitchLoaderDefinitionFunction<{}, {}>} */
 exports.pitch = async function (remaining) {
 	const callback = this.async();
 	const result = this.loadModule(

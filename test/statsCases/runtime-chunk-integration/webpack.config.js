@@ -1,5 +1,6 @@
 const { MinChunkSizePlugin } = require("../../../").optimize;
 
+/** @type {import("../../../").Configuration} */
 const baseConfig = {
 	mode: "production",
 	target: "web",
@@ -15,6 +16,7 @@ const baseConfig = {
 	]
 };
 
+/** @type {import("../../../").Configuration} */
 const withoutNamedEntry = {
 	...baseConfig,
 	output: {
@@ -29,6 +31,7 @@ const withoutNamedEntry = {
 	}
 };
 
+/** @type {import("../../../").Configuration} */
 const withNamedEntry = {
 	...baseConfig,
 	output: {
@@ -47,6 +50,7 @@ const withNamedEntry = {
 	}
 };
 
+/** @type {import("../../../").Configuration} */
 const withFunctionEntry = {
 	...baseConfig,
 	output: {

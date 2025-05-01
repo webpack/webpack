@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 const common = {
 	target: "web",
 	optimization: {
@@ -7,6 +8,8 @@ const common = {
 		css: true
 	}
 };
+
+/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
@@ -76,6 +79,7 @@ module.exports = [
 				{
 					test: /\.css$/,
 					type: "css/module",
+					/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 					generator: {
 						exportsConvention: name => name.toUpperCase()
 					}

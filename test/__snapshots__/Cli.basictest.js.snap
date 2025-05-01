@@ -4494,6 +4494,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-json-exports-depth": Object {
+    "configs": Array [
+      Object {
+        "description": "The depth of json dependency flagged as \`exportInfo\`.",
+        "multiple": false,
+        "path": "module.parser.json.exportsDepth",
+        "type": "number",
+      },
+    ],
+    "description": "The depth of json dependency flagged as \`exportInfo\`.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "module-rules-compiler": Object {
     "configs": Array [
       Object {

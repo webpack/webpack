@@ -45,6 +45,7 @@
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^22.13.10",
+    "@types/xxhashjs": "^0.2.4",
     "assemblyscript": "^0.27.34",
     "babel-loader": "^10.0.0",
     "benchmark": "^2.1.4",

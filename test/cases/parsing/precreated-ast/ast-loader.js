@@ -5,6 +5,7 @@ const acornParser = acorn.Parser;
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source) {
+	/** @type {TODO} */
 	const comments = [];
 
 	const semicolons = new Set();

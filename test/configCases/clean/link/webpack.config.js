@@ -12,7 +12,9 @@ module.exports = {
 			let once = true;
 			compiler.hooks.environment.tap("Test", () => {
 				if (once) {
-					const outputPath = compiler.options.output.path;
+					const outputPath =
+						/** @type {string} */
+						(compiler.options.output.path);
 					const originalPath = path.join(outputPath, "file.ext");
 					fs.writeFileSync(originalPath, "");
 					const customDir = path.join(outputPath, "this/dir/should/be/removed");

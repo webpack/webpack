@@ -1179,11 +1179,25 @@
           }
         },
         {
-          "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
-          "instanceof": "Function",
-          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
+          "$ref": "#/definitions/ExternalItemFunction"
         }
       ]
+    },
+    "ExternalItemFunction": {
+      "description": "The function is called on each dependency.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ExternalItemFunctionCallback"
+        },
+        {
+          "$ref": "#/definitions/ExternalItemFunctionPromise"
+        }
+      ]
+    },
+    "ExternalItemFunctionCallback": {
+      "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
+      "instanceof": "Function",
+      "tsType": "((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void)"
     },
     "ExternalItemFunctionData": {
       "description": "Data object passed as argument when a function is set for 'externals'.",
@@ -1204,15 +1218,33 @@
           "type": "string"
         },
         "getResolve": {
-          "description": "Get a resolve function with the current resolver options.",
-          "instanceof": "Function",
-          "tsType": "((options?: ResolveOptions) => ((context: string, request: string, callback: (err?: Error | null, result?: string | false, resolveRequest?: import('enhanced-resolve').ResolveRequest) => void) => void) | ((context: string, request: string) => Promise<string>))"
+          "$ref": "#/definitions/ExternalItemFunctionDataGetResolve"
         },
         "request": {
           "description": "The request as written by the user in the require/import expression/statement.",
           "type": "string"
         }
       }
+    },
+    "ExternalItemFunctionDataGetResolve": {
+      "description": "Get a resolve function with the current resolver options.",
+      "instanceof": "Function",
+      "tsType": "((options?: ResolveOptions) => ExternalItemFunctionDataGetResolveCallbackResult | ExternalItemFunctionDataGetResolveResult)"
+    },
+    "ExternalItemFunctionDataGetResolveCallbackResult": {
+      "description": "Result of get a resolve function with the current resolver options.",
+      "instanceof": "Function",
+      "tsType": "((context: string, request: string, callback: (err?: Error | null, result?: string | false, resolveRequest?: import('enhanced-resolve').ResolveRequest) => void) => void)"
+    },
+    "ExternalItemFunctionDataGetResolveResult": {
+      "description": "Callback result of get a resolve function with the current resolver options.",
+      "instanceof": "Function",
+      "tsType": "((context: string, request: string) => Promise<string>)"
+    },
+    "ExternalItemFunctionPromise": {
+      "description": "The function is called on each dependency (`function(context, request)`).",
+      "instanceof": "Function",
+      "tsType": "((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)"
     },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
@@ -2023,6 +2055,22 @@
         }
       }
     },
+    "JsonParserOptions": {
+      "description": "Parser options for JSON modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsDepth": {
+          "description": "The depth of json dependency flagged as `exportInfo`.",
+          "type": "number"
+        },
+        "parse": {
+          "description": "Function to parser content and return JSON.",
+          "instanceof": "Function",
+          "tsType": "((input: string) => Buffer | import('../lib/json/JsonParser').JsonValue)"
+        }
+      }
+    },
     "Layer": {
       "description": "Specifies the layer in which modules of this entrypoint are placed.",
       "anyOf": [
@@ -2474,7 +2522,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module')) => boolean)"
             }
           ]
         },
@@ -2534,7 +2582,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module')) => boolean)"
             }
           ]
         }
@@ -2565,7 +2613,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "Function"
+                "tsType": "((content: string) => boolean)"
               }
             ]
           },
@@ -2583,7 +2631,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((content: string) => boolean)"
         }
       ]
     },
@@ -2784,6 +2832,173 @@
         }
       }
     },
+    "OptimizationNormalized": {
+      "description": "Enables/Disables integrated optimizations.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "avoidEntryIife": {
+          "description": "Avoid wrapping the entry module in an IIFE.",
+          "type": "boolean"
+        },
+        "checkWasmTypes": {
+          "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
+          "type": "boolean"
+        },
+        "chunkIds": {
+          "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).",
+          "enum": [
+            "natural",
+            "named",
+            "deterministic",
+            "size",
+            "total-size",
+            false
+          ]
+        },
+        "concatenateModules": {
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+          "type": "boolean"
+        },
+        "emitOnErrors": {
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
+          "type": "boolean"
+        },
+        "flagIncludedChunks": {
+          "description": "Also flag chunks as loaded which contain a subset of the modules.",
+          "type": "boolean"
+        },
+        "innerGraph": {
+          "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
+          "type": "boolean"
+        },
+        "mangleExports": {
+          "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\"deterministic\": generate short deterministic names optimized for caching, \"size\": generate the shortest possible names).",
+          "anyOf": [
+            {
+              "enum": ["size", "deterministic"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
+        "mergeDuplicateChunks": {
+          "description": "Merge chunks which contain the same modules.",
+          "type": "boolean"
+        },
+        "minimize": {
+          "description": "Enable minimizing the output. Uses optimization.minimizer.",
+          "type": "boolean"
+        },
+        "minimizer": {
+          "description": "Minimizer(s) to use for minimizing the output.",
+          "type": "array",
+          "cli": {
+            "exclude": true
+          },
+          "items": {
+            "description": "Plugin of type object or instanceof Function.",
+            "anyOf": [
+              {
+                "enum": ["..."]
+              },
+              {
+                "$ref": "#/definitions/Falsy"
+              },
+              {
+                "$ref": "#/definitions/WebpackPluginInstance"
+              },
+              {
+                "$ref": "#/definitions/WebpackPluginFunction"
+              }
+            ]
+          }
+        },
+        "moduleIds": {
+          "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
+          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
+        },
+        "noEmitOnErrors": {
+          "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
+          "type": "boolean",
+          "cli": {
+            "exclude": true
+          }
+        },
+        "nodeEnv": {
+          "description": "Set process.env.NODE_ENV to a specific value.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "portableRecords": {
+          "description": "Generate records with relative paths to be able to move the context folder.",
+          "type": "boolean"
+        },
+        "providedExports": {
+          "description": "Figure out which exports are provided by modules to generate more efficient code.",
+          "type": "boolean"
+        },
+        "realContentHash": {
+          "description": "Use real [contenthash] based on final content of the assets.",
+          "type": "boolean"
+        },
+        "removeAvailableModules": {
+          "description": "Removes modules from chunks when these modules are already included in all parents.",
+          "type": "boolean"
+        },
+        "removeEmptyChunks": {
+          "description": "Remove chunks which are empty.",
+          "type": "boolean"
+        },
+        "runtimeChunk": {
+          "$ref": "#/definitions/OptimizationRuntimeChunkNormalized"
+        },
+        "sideEffects": {
+          "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+          "anyOf": [
+            {
+              "enum": ["flag"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "splitChunks": {
+          "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksOptions"
+            }
+          ]
+        },
+        "usedExports": {
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \"global\": analyse exports globally for all runtimes combined).",
+          "anyOf": [
+            {
+              "enum": ["global"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    },
     "OptimizationRuntimeChunk": {
       "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
       "anyOf": [
@@ -2805,7 +3020,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "Function"
+                  "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
                 }
               ]
             }
@@ -2826,7 +3041,7 @@
             "name": {
               "description": "The name factory for the runtime chunks.",
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
             }
           }
         }
@@ -3060,8 +3275,7 @@
                 "type": "string"
               },
               {
-                "instanceof": "Function",
-                "tsType": "Function"
+                "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
               },
               {
                 "$ref": "#/definitions/OptimizationSplitChunksCacheGroup"
@@ -3084,8 +3298,7 @@
                     "type": "string"
                   },
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
                   }
                 ]
               }
@@ -3754,6 +3967,9 @@
         },
         "javascript/esm": {
           "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "json": {
+          "$ref": "#/definitions/JsonParserOptions"
         }
       }
     },
@@ -3792,7 +4008,7 @@
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((name: import('../lib/Compilation').Asset['name'], source: import('../lib/Compilation').Asset['source'], assetInfo: import('../lib/Compilation').Asset['info'])  => boolean)"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
@@ -4700,13 +4916,17 @@
           }
         },
         {
-          "instanceof": "Function",
-          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => (Falsy | RuleSetUseItem)[])"
+          "$ref": "#/definitions/RuleSetUseFunction"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"
         }
       ]
+    },
+    "RuleSetUseFunction": {
+      "description": "The function is called on each data and return rule set item.",
+      "instanceof": "Function",
+      "tsType": "((data: import('../lib/rules/RuleSetCompiler').EffectData) => (RuleSetUseItem | (Falsy | RuleSetUseItem)[]))"
     },
     "RuleSetUseItem": {
       "description": "A description of an applied loader.",
@@ -4738,8 +4958,7 @@
           }
         },
         {
-          "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])"
+          "$ref": "#/definitions/RuleSetUseFunction"
         },
         {
           "$ref": "#/definitions/RuleSetLoader"
@@ -5613,7 +5832,7 @@
           "$ref": "#/definitions/Node"
         },
         "optimization": {
-          "$ref": "#/definitions/Optimization"
+          "$ref": "#/definitions/OptimizationNormalized"
         },
         "output": {
           "$ref": "#/definitions/OutputNormalized"

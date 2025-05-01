@@ -1,9 +1,7 @@
 const { resolve, join } = require("path");
 const { NormalModule } = require("../../../../");
 
-/**
- * @typedef {TODO} Module
- */
+/** @typedef {import("../../../../").Module} Module */
 
 /**
  * @param {import("../../../../").Compiler} compiler the compiler
@@ -25,10 +23,13 @@ const testPlugin = compiler => {
 
 				/**
 				 * @param {Module} m test
-				 * @returns {boolean} test
+				 * @returns {boolean | string} test
 				 */
 				function matcher(m) {
-					return m.resource && m.resource === src;
+					return (
+						/** @type {NormalModule} */ (m).resource &&
+						/** @type {NormalModule} */ (m).resource === src
+					);
 				}
 
 				const module = Array.from(modules).find(matcher);
@@ -39,7 +40,11 @@ const testPlugin = compiler => {
 
 				// Check if already build the updated version
 				// this will happen when using caching
-				if (module.buildInfo._isReplaced) return callback();
+				if (
+					/** @type {NonNullable<NormalModule["buildInfo"]>} */
+					(module.buildInfo)._isReplaced
+				)
+					return callback();
 
 				shouldReplace = true;
 				compilation.rebuildModule(module, err => {

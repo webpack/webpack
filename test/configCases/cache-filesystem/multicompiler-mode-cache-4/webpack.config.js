@@ -2,7 +2,11 @@
 
 // with explicit cache names
 
-/** @type {import("../../../../").Configuration} */
+/** @typedef {import("../../../../").Configuration} Configuration */
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").FileCacheOptions} FileCacheOptions */
+
+/** @type {Configuration} */
 module.exports = [
 	{
 		mode: "production",
@@ -13,13 +17,18 @@ module.exports = [
 		},
 		plugins: [
 			{
+				/**
+				 * @param {Compiler} compiler compiler
+				 */
 				apply(compiler) {
 					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
-						compiler.options.cache.cacheLocation =
-							compiler.options.cache.cacheLocation.replace(
-								/default$/,
-								"default-extra"
-							);
+						/** @type {FileCacheOptions} */
+						(compiler.options.cache).cacheLocation =
+							/** @type {string} */
+							(
+								/** @type {FileCacheOptions} */
+								(compiler.options.cache).cacheLocation
+							).replace(/default$/, "default-extra");
 					});
 				}
 			}

@@ -4,7 +4,7 @@ const WebpackError = require("../../../lib/WebpackError");
 
 /**
  * @param {string} message message
- * @param {{ cause?: unknown }=} options options
+ * @param {{ cause: unknown }} options options
  * @returns {ErrorWithCause} error with cause
  */
 function createErrorWithCause(message, options) {
@@ -23,7 +23,7 @@ function createErrorWithCause(message, options) {
 
 /**
  * @param {string} message message
- * @param {{ cause?: unknown }=} options options
+ * @param {{ cause: unknown }} options options
  * @returns {WebpackErrorWithCause} error with cause
  */
 function createWebpackErrorWithCause(message, options) {

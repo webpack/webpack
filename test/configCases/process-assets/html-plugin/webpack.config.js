@@ -5,11 +5,22 @@ const {
 	optimize: { RealContentHashPlugin }
 } = require("../../../../");
 
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Asset} Asset */
+/** @typedef {import("../../../../").AssetInfo} AssetInfo */
+/** @typedef {import("../../../../").ChunkGroup} Entrypoint */
+
 class VerifyAdditionalAssetsPlugin {
+	/**
+	 * @param {number} stage stage
+	 */
 	constructor(stage) {
 		this.stage = stage;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap(
 			"VerifyAdditionalAssetsPlugin",
@@ -34,10 +45,16 @@ class VerifyAdditionalAssetsPlugin {
 }
 
 class HtmlPlugin {
+	/**
+	 * @param {string[]} entrypoints entrypoints
+	 */
 	constructor(entrypoints) {
 		this.entrypoints = entrypoints;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("html-plugin", compilation => {
 			compilation.hooks.processAssets.tap(
@@ -49,17 +66,27 @@ class HtmlPlugin {
 					const publicPath = compilation.outputOptions.publicPath;
 					const files = [];
 					for (const name of this.entrypoints) {
-						for (const file of compilation.entrypoints.get(name).getFiles())
+						for (const file of /** @type {Entrypoint} */ (
+							compilation.entrypoints.get(name)
+						).getFiles())
 							files.push(file);
 					}
-					const toScriptTag = (file, extra) => {
-						const asset = compilation.getAsset(file);
+					/**
+					 * @param {string} file file
+					 * @returns {string} content of script tag
+					 */
+					const toScriptTag = file => {
+						const asset = /** @type {Asset} */ (compilation.getAsset(file));
 						const hash = createHash("sha512");
 						hash.update(asset.source.source());
 						const integrity = `sha512-${hash.digest("base64")}`;
 						compilation.updateAsset(
 							file,
 							x => x,
+							/**
+							 * @param {AssetInfo} assetInfo asset info
+							 * @returns {AssetInfo} new asset info
+							 */
 							assetInfo => ({
 								...assetInfo,
 								contenthash: Array.isArray(assetInfo.contenthash)
@@ -91,10 +118,16 @@ ${files.map(file => `		${toScriptTag(file)}`).join("\n")}
 }
 
 class HtmlInlinePlugin {
+	/**
+	 * @param {RegExp} inline inline
+	 */
 	constructor(inline) {
 		this.inline = inline;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("html-inline-plugin", compilation => {
 			compilation.hooks.processAssets.tap(
@@ -104,11 +137,14 @@ class HtmlInlinePlugin {
 					additionalAssets: true
 				},
 				assets => {
-					const publicPath = compilation.outputOptions.publicPath;
+					const publicPath =
+						/** @type {string} */
+						(compilation.outputOptions.publicPath);
 					for (const name of Object.keys(assets)) {
 						if (/\.html$/.test(name)) {
-							const asset = compilation.getAsset(name);
-							const content = asset.source.source();
+							const asset = /** @type {Asset} */ (compilation.getAsset(name));
+							const content = /** @type {string} */ (asset.source.source());
+							/** @type {{ start: number, length: number, asset: Asset }[]} */
 							const matches = [];
 							const regExp =
 								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|[^\s]+))?)*\s*><\/script>/g;
@@ -118,7 +154,9 @@ class HtmlInlinePlugin {
 								if (url.startsWith(publicPath))
 									url = url.slice(publicPath.length);
 								if (this.inline.test(url)) {
-									const asset = compilation.getAsset(url);
+									const asset = /** @type {Asset} */ (
+										compilation.getAsset(url)
+									);
 									matches.push({
 										start: match.index,
 										length: match[0].length,
@@ -147,6 +185,9 @@ class HtmlInlinePlugin {
 }
 
 class SriHashSupportPlugin {
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("sri-hash-support-plugin", compilation => {
 			RealContentHashPlugin.getCompilationHooks(compilation).updateHash.tap(
@@ -164,6 +205,9 @@ class SriHashSupportPlugin {
 }
 
 class HtmlMinimizePlugin {
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("html-minimize-plugin", compilation => {
 			compilation.hooks.processAssets.tap(
@@ -177,7 +221,11 @@ class HtmlMinimizePlugin {
 						if (/\.html$/.test(name)) {
 							compilation.updateAsset(
 								name,
-								source => new RawSource(source.source().replace(/\s+/g, " ")),
+								source =>
+									new RawSource(
+										/** @type {string} */
+										(source.source()).replace(/\s+/g, " ")
+									),
 								assetInfo => ({
 									...assetInfo,
 									minimized: true

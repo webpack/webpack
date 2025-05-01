@@ -8,7 +8,7 @@ module.exports = function () {
 			if (err) return callback(err);
 			callback(
 				null,
-				`export default ${JSON.stringify(result.toString("utf-8").trim())};`
+				`export default ${JSON.stringify(/** @type {Buffer} */ (result).toString("utf-8").trim())};`
 			);
 		});
 	});

@@ -34,7 +34,9 @@ module.exports = [
 					vendors: {
 						test: /node_modules/,
 						name: m => {
-							const match = m.nameForCondition().match(/([b-d]+)\.js$/);
+							const match =
+								/** @type {string} */
+								(m.nameForCondition()).match(/([b-d]+)\.js$/);
 							if (match) return `vendors-${match[1]}`;
 						}
 					}
