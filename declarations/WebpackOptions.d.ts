@@ -44,9 +44,37 @@ export type DevServer =
 			[k: string]: any;
 	  };
 /**
- * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+ * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
  */
-export type DevTool = (false | "eval") | string;
+export type DevTool =
+	| (false | "eval")
+	| string
+	| {
+			/**
+			 * Similar to `devtool.moduleFilenameTemplate`, but used in the case of duplicate module identifiers.
+			 */
+			fallbackModuleFilenameTemplate?:
+				| string
+				| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+			/**
+			 * Filename template string of function for the sources array in a generated SourceMap.
+			 */
+			moduleFilenameTemplate?:
+				| string
+				| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+			/**
+			 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
+			 */
+			namespace?: string;
+			/**
+			 * The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.
+			 */
+			sourceMapFilename?: string;
+			/**
+			 * The type of SourceMap to generate.
+			 */
+			type: string;
+	  };
 /**
  * The entry point(s) of the compilation.
  */
@@ -517,7 +545,7 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
@@ -915,7 +943,7 @@ export interface WebpackOptions {
 	 */
 	devServer?: DevServer;
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
 	devtool?: DevTool;
 	/**
@@ -3874,7 +3902,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	devServer?: DevServer;
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
 	devtool?: DevTool;
 	/**
