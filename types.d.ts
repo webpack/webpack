@@ -7639,12 +7639,12 @@ type JsonObjectTypes = { [index: string]: JsonValueTypes } & {
  */
 declare interface JsonParserOptions {
 	/**
-	 * The depth of json dependency flagged as `exportInfo`
+	 * The depth of json dependency flagged as `exportInfo`.
 	 */
 	exportsDepth?: number;
 
 	/**
-	 * Function to parser content and return JSON
+	 * Function to parser content and return JSON.
 	 */
 	parse?: (
 		input: string

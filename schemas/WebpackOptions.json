@@ -1184,6 +1184,7 @@
       ]
     },
     "ExternalItemFunction": {
+      "description": "The function is called on each dependency.",
       "anyOf": [
         {
           "$ref": "#/definitions/ExternalItemFunctionCallback"
@@ -2060,11 +2061,11 @@
       "additionalProperties": false,
       "properties": {
         "exportsDepth": {
-          "description": "The depth of json dependency flagged as `exportInfo`",
+          "description": "The depth of json dependency flagged as `exportInfo`.",
           "type": "number"
         },
         "parse": {
-          "description": "Function to parser content and return JSON",
+          "description": "Function to parser content and return JSON.",
           "instanceof": "Function",
           "tsType": "((input: string) => Buffer | import('../lib/json/JsonParser').JsonValue)"
         }
@@ -4923,6 +4924,7 @@
       ]
     },
     "RuleSetUseFunction": {
+      "description": "The function is called on each data and return rule set item.",
       "instanceof": "Function",
       "tsType": "((data: import('../lib/rules/RuleSetCompiler').EffectData) => (RuleSetUseItem | (Falsy | RuleSetUseItem)[]))"
     },

@@ -189,8 +189,7 @@ export type ExternalItem =
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ExternalItemFunction;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ExternalItemFunction".
+ * The function is called on each dependency.
  */
 export type ExternalItemFunction =
 	| ExternalItemFunctionCallback
@@ -386,8 +385,7 @@ export type RuleSetUseItem =
 	| RuleSetUseFunction
 	| RuleSetLoader;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetUseFunction".
+ * The function is called on each data and return rule set item.
  */
 export type RuleSetUseFunction = (
 	data: import("../lib/rules/RuleSetCompiler").EffectData
@@ -3433,11 +3431,11 @@ export interface JsonGeneratorOptions {
  */
 export interface JsonParserOptions {
 	/**
-	 * The depth of json dependency flagged as `exportInfo`
+	 * The depth of json dependency flagged as `exportInfo`.
 	 */
 	exportsDepth?: number;
 	/**
-	 * Function to parser content and return JSON
+	 * Function to parser content and return JSON.
 	 */
 	parse?: (
 		input: string
