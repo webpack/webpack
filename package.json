@@ -36,8 +36,8 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.26.8",
-    "@babel/preset-react": "^7.25.7",
+    "@babel/core": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
     "@codspeed/benchmark.js-plugin": "^4.0.1",
     "@eslint/js": "^9.21.0",
     "@stylistic/eslint-plugin": "^4.2.0",
@@ -106,7 +106,7 @@
     "terser": "^5.38.1",
     "three": "^0.176.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.23.7",
+    "tooling": "webpack/tooling#v1.23.8",
     "ts-loader": "^9.5.1",
     "typescript": "^5.8.2",
     "url-loader": "^4.1.0",
