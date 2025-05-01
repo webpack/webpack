@@ -445,7 +445,7 @@ Object {
   "devtool": Object {
     "configs": Array [
       Object {
-        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
         "multiple": false,
         "path": "devtool",
         "type": "enum",
@@ -455,13 +455,13 @@ Object {
         ],
       },
       Object {
-        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
         "multiple": false,
         "path": "devtool",
         "type": "string",
       },
     ],
-    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
     "multiple": false,
     "simpleType": "string",
   },

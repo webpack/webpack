@@ -585,7 +585,7 @@
       ]
     },
     "DevTool": {
-      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
       "anyOf": [
         {
           "enum": [false, "eval"]
@@ -593,6 +593,11 @@
         {
           "type": "string",
           "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+        },
+        {
+          "description": "Configuration options for the SourceMapDevToolPlugin",
+          "type": "object",
+          "tsType": "(import('../lib/SourceMapDevToolPlugin').SourceMapDevToolPluginOptions) & { eval?: boolean }"
         }
       ]
     },
@@ -604,7 +609,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: TODO) => string)"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
