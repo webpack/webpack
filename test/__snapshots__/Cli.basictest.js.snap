@@ -465,6 +465,71 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "devtool-fallback-module-filename-template": Object {
+    "configs": Array [
+      Object {
+        "description": "Similar to \`devtool.moduleFilenameTemplate\`, but used in the case of duplicate module identifiers.",
+        "multiple": false,
+        "path": "devtool.fallbackModuleFilenameTemplate",
+        "type": "string",
+      },
+    ],
+    "description": "Similar to \`devtool.moduleFilenameTemplate\`, but used in the case of duplicate module identifiers.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "devtool-module-filename-template": Object {
+    "configs": Array [
+      Object {
+        "description": "Filename template string of function for the sources array in a generated SourceMap.",
+        "multiple": false,
+        "path": "devtool.moduleFilenameTemplate",
+        "type": "string",
+      },
+    ],
+    "description": "Filename template string of function for the sources array in a generated SourceMap.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "devtool-namespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to \`output.library\` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+        "multiple": false,
+        "path": "devtool.namespace",
+        "type": "string",
+      },
+    ],
+    "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to \`output.library\` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "devtool-source-map-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
+        "multiple": false,
+        "path": "devtool.sourceMapFilename",
+        "type": "string",
+      },
+    ],
+    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "devtool-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Controls how source maps are generated.",
+        "multiple": false,
+        "path": "devtool.type",
+        "type": "string",
+      },
+    ],
+    "description": "Controls how source maps are generated.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "entry": Object {
     "configs": Array [
       Object {
