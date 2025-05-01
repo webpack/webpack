@@ -1,5 +1,8 @@
 "use strict";
 
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").FileCacheOptions} FileCacheOptions */
+
 // with explicit cache names
 
 /** @type {import("../../../../").Configuration} */
@@ -13,13 +16,18 @@ module.exports = [
 		},
 		plugins: [
 			{
+				/**
+				 * @param {Compiler} compiler compiler
+				 */
 				apply(compiler) {
 					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
-						compiler.options.cache.cacheLocation =
-							compiler.options.cache.cacheLocation.replace(
-								/filesystem$/,
-								"filesystem-extra-1"
-							);
+						/** @type {FileCacheOptions} */
+						(compiler.options.cache).cacheLocation =
+							/** @type {string} */
+							(
+								/** @type {FileCacheOptions} */
+								(compiler.options.cache).cacheLocation
+							).replace(/filesystem$/, "filesystem-extra-1");
 					});
 				}
 			}
@@ -34,13 +42,18 @@ module.exports = [
 		},
 		plugins: [
 			{
+				/**
+				 * @param {Compiler} compiler compiler
+				 */
 				apply(compiler) {
 					compiler.hooks.environment.tap("FixTestCachePlugin", () => {
-						compiler.options.cache.cacheLocation =
-							compiler.options.cache.cacheLocation.replace(
-								/filesystem$/,
-								"filesystem-extra-2"
-							);
+						/** @type {FileCacheOptions} */
+						(compiler.options.cache).cacheLocation =
+							/** @type {string} */
+							(
+								/** @type {FileCacheOptions} */
+								(compiler.options.cache).cacheLocation
+							).replace(/filesystem$/, "filesystem-extra-2");
 					});
 				}
 			}

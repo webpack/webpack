@@ -13,11 +13,18 @@ class FailPlugin {
 }
 
 class TestChildCompilationPlugin {
-	constructor(output) {}
+	constructor() {}
 
+	/**
+	 * @param {TODO} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.make.tapAsync(
 			"TestChildCompilationFailurePlugin",
+			/**
+			 * @param {TODO} compilation compilation
+			 * @param {TODO} cb cb
+			 */
 			(compilation, cb) => {
 				const child = compilation.createChildCompiler(
 					"name",

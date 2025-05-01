@@ -4,7 +4,7 @@
  */
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(function (useItem) {
-		return function (data) {
+		return function () {
 			return useItem;
 		};
 	});

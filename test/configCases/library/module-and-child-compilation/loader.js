@@ -1,11 +1,15 @@
-/** @type {import("../../../../").LoaderDefinitionFunction} */
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Compilation} Compilation */
+
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = async function loader() {
 	const callback = this.async();
 	const loader = this;
 	const compilerName = `extract:${loader.resourcePath}`;
-	const compiler = loader._compiler;
+	const compiler = /** @type {Compiler} */ (loader._compiler);
+	const compilation = /** @type {Compilation} */ (loader._compilation);
 	const filename = "*";
-	const childCompiler = loader._compilation.createChildCompiler(
+	const childCompiler = compilation.createChildCompiler(
 		compilerName,
 		{
 			filename,
@@ -24,7 +28,7 @@ module.exports = async function loader() {
 		library: {
 			EnableLibraryPlugin
 		}
-	} = loader._compiler.webpack;
+	} = compiler.webpack;
 
 	new EnableLibraryPlugin('commonjs2').apply(childCompiler);
 
@@ -59,11 +63,18 @@ module.exports = async function loader() {
 	});
 
 	try {
-		await new Promise((resolve, reject) => {
-			childCompiler.runAsChild((err, _entries, compilation) => {
+		await new Promise(
+			/**
+			 * @param {(value?: void) => void} resolve resolve
+			 * @param {(reason?: Error) => void} reject
+			 */
+			(resolve, reject) => {
+			childCompiler.runAsChild((err, _entries, _compilation) => {
 				if (err) {
 					return reject(err);
 				}
+
+				const compilation = /** @type {Compilation} */ (_compilation);
 
 				if (compilation.errors.length > 0) {
 					return reject(compilation.errors[0]);
@@ -73,7 +84,7 @@ module.exports = async function loader() {
 			});
 		})
 	} catch (e) {
-		callback(e);
+		callback(/** @type {Error} */ (e));
 		return;
 	}
 

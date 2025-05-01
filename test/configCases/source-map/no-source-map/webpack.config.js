@@ -1,3 +1,6 @@
+/** @typedef {import("../../../../").WebpackPluginFunction} WebpackPluginFunction */
+
+/** @type {WebpackPluginFunction[]} */
 const plugins = [
 	compiler => {
 		compiler.hooks.emit.tap("Test", compilation => {

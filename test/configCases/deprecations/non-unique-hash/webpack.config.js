@@ -1,3 +1,5 @@
+/** @typedef {import("../../../../").Chunk} Chunk */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -19,7 +21,8 @@ module.exports = {
 					const hashes = [];
 					expect(() => {
 						for (const module of compilation.chunkGraph.getChunkModulesIterable(
-							compilation.namedChunks.get("a")
+							/** @type {Chunk} */
+							(compilation.namedChunks.get("a"))
 						)) {
 							hashes.push(module.hash);
 						}

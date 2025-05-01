@@ -245,9 +245,9 @@ type AdditionalData = {
 };
 
 type WebpackLoaderContextCallback = (
-	err: Error | undefined | null,
+	err: undefined | null | Error,
 	content?: string | Buffer,
-	sourceMap?: string | SourceMap,
+	sourceMap?: null | string | SourceMap,
 	additionalData?: AdditionalData
 ) => void;
 

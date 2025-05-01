@@ -77,6 +77,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		};
 	};
 	return {
+		/**
+		 * @param {number} time time
+		 */
 		setDefaultTimeout(time) {
 			globalTimeout = time;
 		},

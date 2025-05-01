@@ -2643,7 +2643,6 @@ declare interface Configuration {
 	externals?:
 		| string
 		| RegExp
-		| ExternalItem[]
 		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 		| ((
 				data: ExternalItemFunctionData,
@@ -2652,7 +2651,8 @@ declare interface Configuration {
 					result?: string | boolean | string[] | { [index: string]: any }
 				) => void
 		  ) => void)
-		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
+		| ExternalItem[];
 
 	/**
 	 * Enable presets of externals for specific targets.
@@ -3925,7 +3925,18 @@ declare interface Effect {
 	value: any;
 }
 declare interface EffectData {
-	[index: string]: any;
+	resource?: string;
+	realResource?: string;
+	resourceQuery?: string;
+	resourceFragment?: string;
+	scheme?: string;
+	assertions?: ImportAttributes;
+	mimetype?: string;
+	dependency: string;
+	descriptionData: Record<string, any>;
+	compiler?: string;
+	issuer: string;
+	issuerLayer: string;
 }
 declare class ElectronTargetPlugin {
 	constructor(context?: "main" | "preload" | "renderer");
@@ -4813,6 +4824,15 @@ type ExternalItem =
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+type ExternalItemFunction =
+	| ((
+			data: ExternalItemFunctionData,
+			callback: (
+				err?: null | Error,
+				result?: string | boolean | string[] | { [index: string]: any }
+			) => void
+	  ) => void)
+	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
 
 /**
  * Data object passed as argument when a function is set for 'externals'.
@@ -4917,7 +4937,6 @@ declare interface ExternalModuleInfo {
 type Externals =
 	| string
 	| RegExp
-	| ExternalItem[]
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
 			data: ExternalItemFunctionData,
@@ -4926,7 +4945,8 @@ type Externals =
 				result?: string | boolean | string[] | { [index: string]: any }
 			) => void
 	  ) => void)
-	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
+	| ExternalItem[];
 declare class ExternalsPlugin {
 	constructor(type: undefined | string, externals: Externals);
 	type?: string;
@@ -7613,6 +7633,23 @@ type JsonObjectTypes = { [index: string]: JsonValueTypes } & {
 		| JsonObjectTypes
 		| JsonValueTypes[];
 };
+
+/**
+ * Parser options for JSON modules.
+ */
+declare interface JsonParserOptions {
+	/**
+	 * The depth of json dependency flagged as `exportInfo`
+	 */
+	exportsDepth?: number;
+
+	/**
+	 * Function to parser content and return JSON
+	 */
+	parse?: (
+		input: string
+	) => null | string | number | boolean | Buffer | JsonObjectFs | JsonValueFs[];
+}
 type JsonValueFs =
 	| null
 	| string
@@ -8669,7 +8706,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	async(): (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: string | SourceMap,
+		sourceMap?: null | string | SourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -8683,7 +8720,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	callback: (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: string | SourceMap,
+		sourceMap?: null | string | SourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -9591,7 +9628,11 @@ declare interface ModuleOptions {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: string | Function | RegExp | (string | Function | RegExp)[];
+	noParse?:
+		| string
+		| RegExp
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -9636,7 +9677,7 @@ declare interface ModuleOptions {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | Function;
+	unsafeCache?: boolean | ((module: Module) => boolean);
 
 	/**
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
@@ -9671,7 +9712,11 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: string | Function | RegExp | (string | Function | RegExp)[];
+	noParse?:
+		| string
+		| RegExp
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -9686,7 +9731,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | Function;
+	unsafeCache?: boolean | ((module: Module) => boolean);
 }
 declare interface ModulePathData {
 	id: string | number;
@@ -9983,6 +10028,11 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NoParse =
+	| string
+	| RegExp
+	| (string | RegExp | ((content: string) => boolean))[]
+	| ((content: string) => boolean);
 type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options: NodeEnvironmentPluginOptions);
@@ -10087,8 +10137,16 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
-	applyNoParseRule(rule: any, content: string): boolean;
-	shouldPreventParsing(noParseRule: any, request: string): boolean;
+	applyNoParseRule(rule: Exclude<NoParse, any[]>, content: string): boolean;
+	shouldPreventParsing(
+		noParseRule:
+			| undefined
+			| string
+			| RegExp
+			| (string | RegExp | ((content: string) => boolean))[]
+			| ((content: string) => boolean),
+		request: string
+	): boolean;
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
@@ -10613,7 +10671,154 @@ declare interface Optimization {
 				/**
 				 * The name or name factory for the runtime chunks.
 				 */
-				name?: string | Function;
+				name?: string | ((entrypoint: { name: string }) => string);
+		  };
+
+	/**
+	 * Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).
+	 */
+	sideEffects?: boolean | "flag";
+
+	/**
+	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
+	 */
+	splitChunks?: false | OptimizationSplitChunksOptions;
+
+	/**
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
+	 */
+	usedExports?: boolean | "global";
+}
+
+/**
+ * Enables/Disables integrated optimizations.
+ */
+declare interface OptimizationNormalized {
+	/**
+	 * Avoid wrapping the entry module in an IIFE.
+	 */
+	avoidEntryIife?: boolean;
+
+	/**
+	 * Check for incompatible wasm types when importing/exporting from/to ESM.
+	 */
+	checkWasmTypes?: boolean;
+
+	/**
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
+	 */
+	chunkIds?:
+		| false
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size";
+
+	/**
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 */
+	concatenateModules?: boolean;
+
+	/**
+	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
+	 */
+	emitOnErrors?: boolean;
+
+	/**
+	 * Also flag chunks as loaded which contain a subset of the modules.
+	 */
+	flagIncludedChunks?: boolean;
+
+	/**
+	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
+	 */
+	innerGraph?: boolean;
+
+	/**
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
+	 */
+	mangleExports?: boolean | "deterministic" | "size";
+
+	/**
+	 * Reduce size of WASM by changing imports to shorter strings.
+	 */
+	mangleWasmImports?: boolean;
+
+	/**
+	 * Merge chunks which contain the same modules.
+	 */
+	mergeDuplicateChunks?: boolean;
+
+	/**
+	 * Enable minimizing the output. Uses optimization.minimizer.
+	 */
+	minimize?: boolean;
+
+	/**
+	 * Minimizer(s) to use for minimizing the output.
+	 */
+	minimizer?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+		| "..."
+	)[];
+
+	/**
+	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
+	 */
+	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
+
+	/**
+	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
+	 */
+	noEmitOnErrors?: boolean;
+
+	/**
+	 * Set process.env.NODE_ENV to a specific value.
+	 */
+	nodeEnv?: string | false;
+
+	/**
+	 * Generate records with relative paths to be able to move the context folder.
+	 */
+	portableRecords?: boolean;
+
+	/**
+	 * Figure out which exports are provided by modules to generate more efficient code.
+	 */
+	providedExports?: boolean;
+
+	/**
+	 * Use real [contenthash] based on final content of the assets.
+	 */
+	realContentHash?: boolean;
+
+	/**
+	 * Removes modules from chunks when these modules are already included in all parents.
+	 */
+	removeAvailableModules?: boolean;
+
+	/**
+	 * Remove chunks which are empty.
+	 */
+	removeEmptyChunks?: boolean;
+
+	/**
+	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
+	 */
+	runtimeChunk?:
+		| false
+		| {
+				/**
+				 * The name factory for the runtime chunks.
+				 */
+				name?: (entrypoint: { name: string }) => string;
 		  };
 
 	/**
@@ -10769,8 +10974,13 @@ declare interface OptimizationSplitChunksOptions {
 		[index: string]:
 			| string
 			| false
-			| Function
 			| RegExp
+			| ((
+					module: Module
+			  ) =>
+					| void
+					| OptimizationSplitChunksCacheGroup
+					| OptimizationSplitChunksCacheGroup[])
 			| OptimizationSplitChunksCacheGroup;
 	};
 
@@ -11597,6 +11807,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 	 * Parser options for javascript modules.
 	 */
 	"javascript/esm"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for JSON modules.
+	 */
+	json?: JsonParserOptions;
 }
 
 /**
@@ -11648,7 +11863,7 @@ declare interface PerformanceOptions {
 	/**
 	 * Filter function to select assets that are checked.
 	 */
-	assetFilter?: Function;
+	assetFilter?: (name: string, source: Source, assetInfo: AssetInfo) => boolean;
 
 	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all.
@@ -13678,6 +13893,7 @@ declare interface RuleSetRule {
 				| string
 				| false
 				| 0
+				| RuleSetUseFunction
 				| {
 						/**
 						 * Unique loader options identifier.
@@ -13692,32 +13908,8 @@ declare interface RuleSetRule {
 						 */
 						options?: string | { [index: string]: any };
 				  }
-				| ((data: object) =>
-						| string
-						| {
-								/**
-								 * Unique loader options identifier.
-								 */
-								ident?: string;
-								/**
-								 * Loader name.
-								 */
-								loader?: string;
-								/**
-								 * Loader options.
-								 */
-								options?: string | { [index: string]: any };
-						  }
-						| __TypeWebpackOptions
-						| __Type_2[])
 		  )[]
-		| ((data: {
-				resource: string;
-				realResource: string;
-				resourceQuery: string;
-				issuer: string;
-				compiler: string;
-		  }) => __Type_2[])
+		| RuleSetUseFunction
 		| {
 				/**
 				 * Unique loader options identifier.
@@ -13731,8 +13923,7 @@ declare interface RuleSetRule {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
-		  }
-		| __TypeWebpackOptions;
+		  };
 
 	/**
 	 * Match on import attributes of the dependency.
@@ -13747,6 +13938,7 @@ type RuleSetUse =
 			| string
 			| false
 			| 0
+			| RuleSetUseFunction
 			| {
 					/**
 					 * Unique loader options identifier.
@@ -13761,32 +13953,25 @@ type RuleSetUse =
 					 */
 					options?: string | { [index: string]: any };
 			  }
-			| ((data: object) =>
-					| string
-					| {
-							/**
-							 * Unique loader options identifier.
-							 */
-							ident?: string;
-							/**
-							 * Loader name.
-							 */
-							loader?: string;
-							/**
-							 * Loader options.
-							 */
-							options?: string | { [index: string]: any };
-					  }
-					| __TypeWebpackOptions
-					| __Type_2[])
 	  )[]
-	| ((data: {
-			resource: string;
-			realResource: string;
-			resourceQuery: string;
-			issuer: string;
-			compiler: string;
-	  }) => __Type_2[])
+	| RuleSetUseFunction
+	| {
+			/**
+			 * Unique loader options identifier.
+			 */
+			ident?: string;
+			/**
+			 * Loader name.
+			 */
+			loader?: string;
+			/**
+			 * Loader options.
+			 */
+			options?: string | { [index: string]: any };
+	  };
+type RuleSetUseFunction = (data: EffectData) =>
+	| string
+	| RuleSetUseFunction
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -13801,9 +13986,31 @@ type RuleSetUse =
 			 */
 			options?: string | { [index: string]: any };
 	  }
-	| __TypeWebpackOptions;
+	| (
+			| undefined
+			| null
+			| string
+			| false
+			| 0
+			| RuleSetUseFunction
+			| {
+					/**
+					 * Unique loader options identifier.
+					 */
+					ident?: string;
+					/**
+					 * Loader name.
+					 */
+					loader?: string;
+					/**
+					 * Loader options.
+					 */
+					options?: string | { [index: string]: any };
+			  }
+	  )[];
 type RuleSetUseItem =
 	| string
+	| RuleSetUseFunction
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -13817,18 +14024,18 @@ type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
-	  }
-	| __TypeWebpackOptions;
+	  };
 declare interface RunCallback<T> {
 	(err: null | Error, result?: T): any;
 }
 declare class RuntimeChunkPlugin {
-	constructor(options: { name?: (entrypoint: { name: string }) => string });
-	options: {
-		name:
-			| ((entrypoint: { name: string }) => string)
-			| ((entrypoint: Entrypoint) => string);
-	};
+	constructor(options?: {
+		/**
+		 * The name factory for the runtime chunks.
+		 */
+		name?: (entrypoint: { name: string }) => string;
+	});
+	options: { name: (entrypoint: { name: string }) => string };
 
 	/**
 	 * Apply the plugin
@@ -16076,7 +16283,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Enables/Disables integrated optimizations.
 	 */
-	optimization: Optimization;
+	optimization: OptimizationNormalized;
 
 	/**
 	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -16267,62 +16474,6 @@ declare interface WriteStreamOptions {
 	signal?: null | AbortSignal;
 	fs?: null | CreateWriteStreamFSImplementation;
 }
-type __TypeWebpackOptions = (data: object) =>
-	| string
-	| {
-			/**
-			 * Unique loader options identifier.
-			 */
-			ident?: string;
-			/**
-			 * Loader name.
-			 */
-			loader?: string;
-			/**
-			 * Loader options.
-			 */
-			options?: string | { [index: string]: any };
-	  }
-	| __TypeWebpackOptions
-	| __Type_2[];
-type __Type_2 =
-	| undefined
-	| null
-	| string
-	| false
-	| 0
-	| {
-			/**
-			 * Unique loader options identifier.
-			 */
-			ident?: string;
-			/**
-			 * Loader name.
-			 */
-			loader?: string;
-			/**
-			 * Loader options.
-			 */
-			options?: string | { [index: string]: any };
-	  }
-	| ((data: object) =>
-			| string
-			| {
-					/**
-					 * Unique loader options identifier.
-					 */
-					ident?: string;
-					/**
-					 * Loader name.
-					 */
-					loader?: string;
-					/**
-					 * Loader options.
-					 */
-					options?: string | { [index: string]: any };
-			  }
-			| __TypeWebpackOptions
-			| __Type_2[]);
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
@@ -16857,6 +17008,81 @@ declare namespace exports {
 			export { SyncModuleIdsPlugin };
 		}
 	}
+	export type ExternalItemFunctionCallback = (
+		data: ExternalItemFunctionData,
+		callback: (
+			err?: null | Error,
+			result?: string | boolean | string[] | { [index: string]: any }
+		) => void
+	) => void;
+	export type ExternalItemFunctionDataGetResolve = (
+		options?: ResolveOptions
+	) =>
+		| ((
+				context: string,
+				request: string,
+				callback: (
+					err?: null | Error,
+					result?: string | false,
+					resolveRequest?: ResolveRequest
+				) => void
+		  ) => void)
+		| ((context: string, request: string) => Promise<string>);
+	export type ExternalItemFunctionDataGetResolveCallbackResult = (
+		context: string,
+		request: string,
+		callback: (
+			err?: null | Error,
+			result?: string | false,
+			resolveRequest?: ResolveRequest
+		) => void
+	) => void;
+	export type ExternalItemFunctionDataGetResolveResult = (
+		context: string,
+		request: string
+	) => Promise<string>;
+	export type ExternalItemFunctionPromise = (
+		data: ExternalItemFunctionData
+	) => Promise<ExternalItemValue>;
+	export type RuleSetUseFunction = (data: EffectData) =>
+		| string
+		| RuleSetUseFunction
+		| {
+				/**
+				 * Unique loader options identifier.
+				 */
+				ident?: string;
+				/**
+				 * Loader name.
+				 */
+				loader?: string;
+				/**
+				 * Loader options.
+				 */
+				options?: string | { [index: string]: any };
+		  }
+		| (
+				| undefined
+				| null
+				| string
+				| false
+				| 0
+				| RuleSetUseFunction
+				| {
+						/**
+						 * Unique loader options identifier.
+						 */
+						ident?: string;
+						/**
+						 * Loader name.
+						 */
+						loader?: string;
+						/**
+						 * Loader options.
+						 */
+						options?: string | { [index: string]: any };
+				  }
+		  )[];
 	export type WebpackPluginFunction = (
 		this: Compiler,
 		compiler: Compiler
@@ -16923,15 +17149,19 @@ declare namespace exports {
 		Entry,
 		EntryNormalized,
 		EntryObject,
+		ExternalItem,
+		ExternalItemFunction,
 		ExternalItemFunctionData,
 		ExternalItemObjectKnown,
 		ExternalItemObjectUnknown,
 		ExternalItemValue,
 		Externals,
 		FileCacheOptions,
+		GeneratorOptionsByModuleTypeKnown,
 		LibraryOptions,
 		MemoryCacheOptions,
 		ModuleOptions,
+		ParserOptionsByModuleTypeKnown,
 		ResolveOptions,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
@@ -16948,6 +17178,7 @@ declare namespace exports {
 		EntryOptions,
 		PathData,
 		AssetEmittedInfo,
+		Entrypoint,
 		MultiCompilerOptions,
 		MultiStats,
 		ResolveData,

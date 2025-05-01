@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const webpack = require("../../../../");
 
+/** @type {import("../../../../").Configuration} */
 const common = {
 	module: {
 		rules: [
@@ -46,6 +47,10 @@ const common = {
 	}
 };
 
+/**
+ * @param {number} i index
+ * @returns {import("../../../../").Configuration | undefined} configuration
+ */
 const entry = i => {
 	switch (i % 4) {
 		case 0:
@@ -80,6 +85,10 @@ const entry = i => {
 	}
 };
 
+/**
+ * @param {number} i index
+ * @returns {import("../../../../").Configuration} configuration
+ */
 const esm = i => ({
 	...common,
 	...entry(i),
@@ -97,6 +106,10 @@ const esm = i => ({
 	}
 });
 
+/**
+ * @param {number} i index
+ * @returns {import("../../../../").Configuration} configuration
+ */
 const node = i => ({
 	...common,
 	...entry(i),
@@ -110,6 +123,10 @@ const node = i => ({
 	target: "node"
 });
 
+/**
+ * @param {number} i index
+ * @returns {import("../../../../").Configuration} configuration
+ */
 const web = i => ({
 	...common,
 	...entry(i),

@@ -1,12 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * @param {string} path path
+ * @returns {string} path
+ */
 function handlePath(path) {
 	return path.replace(/\\/g, "/");
 }
 
+/**
+ * @param {string} from from
+ * @returns {{ files: string[], directories: string[] }}
+ */
 module.exports = function readDir(from) {
+	/** @type {string[]} */
 	const collectedFiles = [];
+	/** @type {string[]} */
 	const collectedDirectories = [];
 	const stack = [from];
 	let cursor;

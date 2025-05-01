@@ -2,6 +2,10 @@ const path = require("path");
 const fs = require("fs");
 const webpack = require("../../../../");
 
+/**
+ * @param {0 | 1 | 2} i index
+ * @returns {{ main: string[] }} entry
+ */
 const entry = i => {
 	switch (i) {
 		case 0:
@@ -20,7 +24,7 @@ const entry = i => {
 };
 
 /**
- * @param {number} i param
+ * @param {0 | 1 | 2} i param
  * @returns {import("../../../../").Configuration} return
  */
 const common = i => ({
@@ -66,4 +70,4 @@ const common = i => ({
 });
 
 /** @type {import("../../../../").Configuration[]} */
-module.exports = [...[0, 1].map(i => common(i))];
+module.exports = [.../** @type {(0 | 1 | 2)[]} */ ([0, 1]).map(i => common(i))];

@@ -3,7 +3,12 @@ const { NormalModule } = require("webpack");
 const PLUGIN_NAME = "PluginWithLoader";
 const loaderPath = require.resolve("./loader.js");
 
+/** @typedef {import("../../../../").Compiler} Compiler */
+
 class PluginWithLoader {
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap(PLUGIN_NAME, compilation => {
 			NormalModule.getCompilationHooks(compilation).beforeLoaders.tap(

@@ -1,3 +1,5 @@
+/** @typedef {import("../../../").Module} Module */
+
 const webpack = require("../../../");
 const { ModuleFederationPlugin } = webpack.container;
 const {
@@ -33,7 +35,8 @@ module.exports = {
 					if (group.origins) {
 						for (const origin of group.origins) {
 							if (
-								origin.module.type === WEBPACK_MODULE_TYPE_PROVIDE &&
+								/** @type {Module} */
+								(origin.module).type === WEBPACK_MODULE_TYPE_PROVIDE &&
 								chunk.id
 							) {
 								if (chunkIdChunkNameMap.has(chunk.id)) {

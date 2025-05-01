@@ -1,3 +1,5 @@
+/** @typedef {import("../../../../").Compilation} Compilation */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "none",
@@ -44,6 +46,9 @@ module.exports = {
 	},
 	plugins: [
 		function () {
+			/**
+			 * @param {Compilation} compilation compilation
+			 */
 			const handler = compilation => {
 				compilation.hooks.afterProcessAssets.tap("testcase", assets => {
 					const source = assets["bundle0.mjs"].source();

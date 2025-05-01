@@ -1,4 +1,4 @@
-/** @type {import("../../../../").LoaderDefinitionFunction} */
+/** @type {import("../../../../").LoaderDefinition} */
 exports.default = function (source) {
 	const ref = JSON.parse(source);
 	const callback = this.async();
@@ -6,7 +6,7 @@ exports.default = function (source) {
 		if (err) {
 			callback(null, JSON.stringify(`err: ${err && err.message}`));
 		} else {
-			callback(null, JSON.stringify(`source: ${JSON.parse(source)}`));
+			callback(null, JSON.stringify(`source: ${JSON.parse(/** @type {string} */ (source))}`));
 		}
 	});
 };

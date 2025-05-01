@@ -1,4 +1,4 @@
-/** @type {import("../../../../").LoaderDefinitionFunction} */
+/** @type {import("../../../../").LoaderDefinition} */
 exports.default = function (source) {
 	const ref = JSON.parse(source);
 	const callback = this.async();

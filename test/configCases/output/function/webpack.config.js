@@ -1,3 +1,5 @@
+/** @typedef {import("../../../../").Chunk} Chunk */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry() {
@@ -8,6 +10,9 @@ module.exports = {
 	},
 	output: {
 		filename: data =>
-			data.chunk.name === "a" ? `${data.chunk.name}.js` : "[name].js"
+			/** @type {Chunk} */
+			(data.chunk).name === "a"
+				? `${/** @type {Chunk} */ (data.chunk).name}.js`
+				: "[name].js"
 	}
 };

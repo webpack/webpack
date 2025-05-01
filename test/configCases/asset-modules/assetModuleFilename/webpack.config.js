@@ -2,7 +2,8 @@
 module.exports = {
 	mode: "development",
 	output: {
-		assetModuleFilename: ({ filename }) => {
+		assetModuleFilename: ({ filename: _filename }) => {
+			const filename = /** @type {string} */ (_filename);
 			if (/.png$/.test(filename)) {
 				return "images/[\\ext\\]/success-png[ext]";
 			}

@@ -8,6 +8,7 @@ const webpack = require("../../../../");
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").ParserState} ParserState */
 /** @typedef {import("../../../../lib/Parser").PreparsedAst} PreparsedAst */
+/** @typedef {import("../../../../").Module} Module */
 
 class LocalizationParser extends Parser {
 	/**
@@ -18,22 +19,28 @@ class LocalizationParser extends Parser {
 	parse(source, state) {
 		if (typeof source !== "string") throw new Error("Unexpected input");
 		const { module } = state;
-		module.buildInfo.content = JSON.parse(source);
+		/** @type {NonNullable<Module["buildInfo"]>} */
+		(module.buildInfo).content = JSON.parse(source);
 		return state;
 	}
 }
 
 const TYPES = new Set(["localization"]);
 
+/**
+ * @extends {Generator}
+ */
 class LocalizationGenerator extends Generator {
 	getTypes() {
 		return TYPES;
 	}
 
+	/** @type {Generator["getSize"]} */
 	getSize(module, type) {
 		return 42;
 	}
 
+	/** @type {Generator["generate"]} */
 	generate(module, { type }) {
 		return null;
 	}
@@ -62,6 +69,9 @@ ${RuntimeGlobals.ensureChunkHandlers}.localization = (chunkId, promises) => {
 	}
 }
 
+/**
+ * @type {{ TARGET: string, CONTENT2: boolean, NORMAL1: boolean, NORMAL2: boolean }[]}
+ */
 const definitions = ["node", "async-node", "web"].reduce(
 	(arr, target) =>
 		arr.concat([
@@ -102,7 +112,8 @@ const definitions = ["node", "async-node", "web"].reduce(
 				NORMAL2: false
 			}
 		]),
-	[]
+	/** @type {{ TARGET: string, CONTENT2: boolean, NORMAL1: boolean, NORMAL2: boolean }[]} */
+	([])
 );
 
 module.exports = definitions.map((defs, i) => ({
@@ -136,6 +147,7 @@ module.exports = definitions.map((defs, i) => ({
 					compilation.chunkTemplate.hooks.renderManifest.tap(
 						"LocalizationPlugin",
 						(result, { chunk, chunkGraph }) => {
+							/** @type {Module[]} */
 							const localizationModules = [];
 							for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
 								if (module.getSourceTypes().has("localization"))
@@ -144,10 +156,15 @@ module.exports = definitions.map((defs, i) => ({
 
 							result.push({
 								render: () => {
+									/** @type {Record<number | string, string>} */
 									const data = {};
 									for (const module of localizationModules) {
-										data[chunkGraph.getModuleId(module)] =
-											module.buildInfo.content;
+										data[
+											/** @type {number | string} */
+											(chunkGraph.getModuleId(module))
+										] =
+											/** @type {NonNullable<Module["buildInfo"]>} */
+											(module.buildInfo).content;
 									}
 									return new RawSource(
 										`module.exports = ${JSON.stringify(data)}`

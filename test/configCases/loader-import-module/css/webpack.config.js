@@ -1,3 +1,5 @@
+/** @typedef {import("../../../../").Chunk} Chunk */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
@@ -56,7 +58,9 @@ module.exports = {
 						"info",
 						expect.objectContaining({ sourceFilename: "file.jpg" })
 					);
-					const { auxiliaryFiles } = stats.compilation.namedChunks.get("main");
+					const { auxiliaryFiles } =
+						/** @type {Chunk} */
+						(stats.compilation.namedChunks.get("main"));
 					expect(auxiliaryFiles).toContain("assets/file.png");
 					expect(auxiliaryFiles).toContain("assets/file.png?1");
 					expect(auxiliaryFiles).toContain("assets/file.jpg");

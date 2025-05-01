@@ -20,6 +20,7 @@ module.exports = {
 			 */
 			const handler = compilation => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
+					/** @type {Record<string, string>} */
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {
 						/** @type {Map<Module, number>} */

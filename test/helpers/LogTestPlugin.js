@@ -1,9 +1,21 @@
+/** @typedef {import("../../").Compiler} Compiler */
+/** @typedef {import("../../").Compilation} Compilation */
+
 module.exports = class LogTestPlugin {
+	/**
+	 * @param {boolean=} noTraced noTraced
+	 */
 	constructor(noTraced) {
 		this.noTraced = noTraced;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
+		/**
+		 * @param {ReturnType<Compilation["getLogger"]>} logger logger
+		 */
 		const logSome = logger => {
 			logger.group("Group");
 			if (!this.noTraced) {

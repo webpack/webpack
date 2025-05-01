@@ -1380,6 +1380,13 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.3.tgz#6209321eb2c1712a7e7466422b8cb1fc0d9dd5d8"
   integrity sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==
 
+"@types/xxhashjs@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@types/xxhashjs/-/xxhashjs-0.2.4.tgz#fd35be1a3673295337f932c182e02ade748c1922"
+  integrity sha512-E2+ZoJY2JjmVPN0iQM5gJvZkk98O2PYXSi6HrciEk3EKF34+mauEk/HgwTeCz+2r8HXHMKpucrwy4qTT12OPaQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/yargs-parser@*":
   version "21.0.3"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.3.tgz#815e30b786d2e8f0dcd85fd5bcf5e1a04d008f15"

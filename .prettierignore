@@ -6,6 +6,8 @@ test/**/*.*
 !test/*.cjs
 !test/*.mjs
 !test/**/webpack.config.js
+!test/**/webpack.config.cjs
+!test/**/webpack.config.mjs
 !test/**/test.config.js
 !test/**/test.filter.js
 !test/**/errors.js
@@ -15,7 +17,6 @@ test/**/*.*
 !test/*.md
 !test/helpers/*.*
 !test/benchmarkCases/**/*.mjs
-!test/_helpers/**/*.mjs
 test/js/**/*.*
 
 # Ignore some folders
