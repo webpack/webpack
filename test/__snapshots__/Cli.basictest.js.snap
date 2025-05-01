@@ -445,7 +445,7 @@ Object {
   "devtool": Object {
     "configs": Array [
       Object {
-        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
         "multiple": false,
         "path": "devtool",
         "type": "enum",
@@ -455,13 +455,13 @@ Object {
         ],
       },
       Object {
-        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
         "multiple": false,
         "path": "devtool",
         "type": "string",
       },
     ],
-    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -520,13 +520,13 @@ Object {
   "devtool-type": Object {
     "configs": Array [
       Object {
-        "description": "Controls how source maps are generated.",
+        "description": "The type of SourceMap to generate.",
         "multiple": false,
         "path": "devtool.type",
         "type": "string",
       },
     ],
-    "description": "Controls how source maps are generated.",
+    "description": "The type of SourceMap to generate.",
     "multiple": false,
     "simpleType": "string",
   },
