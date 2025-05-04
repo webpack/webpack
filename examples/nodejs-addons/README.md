@@ -46,7 +46,7 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset 6cf1cf4222a82ec560f4.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
+asset 7726cbf5eb6de9759226.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
 asset output.js 6.27 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 457 bytes (javascript) 16.5 KiB (asset) 1.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -62,7 +62,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 6cf1cf4222a82ec560f4.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
+asset 7726cbf5eb6de9759226.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
 asset output.js 510 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 16.5 KiB (asset) 457 bytes (javascript) 440 bytes (runtime) [entry] [rendered]
   > ./example.js main
