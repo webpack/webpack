@@ -1,5 +1,3 @@
-"use strict";
-
 import path from "path";
 import fs from "fs/promises";
 import { constants } from "fs";
@@ -53,7 +51,7 @@ const checkV8Flags = () => {
 
 checkV8Flags();
 
-const CODSPEED = typeof process.env.CODSPEED !== "undefined";
+const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 /**
  * @param {(string | undefined)[]} revList rev list
@@ -118,6 +116,14 @@ async function getBase(head, revList) {
  * @returns {Promise<{name: string, rev: string}[]>} baseline revs
  */
 async function getBaselineRevs() {
+	if (LAST_COMMIT) {
+		return [
+			{
+				name: "HEAD"
+			}
+		];
+	}
+
 	const resultParents = await git.raw([
 		"rev-list",
 		"--parents",
@@ -130,16 +136,6 @@ async function getBaselineRevs() {
 	if (!revList) throw new Error("Invalid result from git rev-list");
 
 	const head = await getHead(revList);
-
-	if (CODSPEED) {
-		return [
-			{
-				name: "HEAD",
-				rev: head
-			}
-		];
-	}
-
 	const base = await getBase(head, revList);
 
 	if (!head || !base) {
@@ -190,13 +186,14 @@ function tDistribution(n) {
 
 const output = path.join(__dirname, "js");
 const baselinesPath = path.join(output, "benchmark-baselines");
-const baselines = [];
+
+const baselineRevisions = await getBaselineRevs();
 
 try {
 	await fs.mkdir(baselinesPath, { recursive: true });
 } catch (_err) {} // eslint-disable-line no-empty
 
-const baselineRevisions = await getBaselineRevs();
+const baselines = [];
 
 for (const baselineInfo of baselineRevisions) {
 	/**
@@ -219,7 +216,10 @@ for (const baselineInfo of baselineRevisions) {
 	}
 
 	const baselineRevision = baselineInfo.rev;
-	const baselinePath = path.resolve(baselinesPath, baselineRevision);
+	const baselinePath =
+		baselineRevision === undefined
+			? path.resolve(__dirname, "../")
+			: path.resolve(baselinesPath, baselineRevision);
 
 	try {
 		await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
@@ -335,18 +335,31 @@ const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
 async function registerSuite(suite, test, baselines) {
 	const testDirectory = path.join(casesPath, test);
-	const setupPath = path.resolve(testDirectory, "setup.mjs");
+	const optionsPath = path.resolve(testDirectory, "options.mjs");
 
-	let needSetup = true;
+	let options = {};
 
 	try {
-		await fs.access(setupPath, constants.R_OK);
+		options = await import(`${pathToFileURL(optionsPath)}`);
 	} catch (_err) {
-		needSetup = false;
+		// Ignore
 	}
 
-	if (needSetup) {
-		await import(`${pathToFileURL(setupPath)}?date=${Date.now()}`);
+	if (typeof options.setup !== "undefined") {
+		await options.setup();
+	}
+
+	if (test.includes("-unit")) {
+		const fullSuiteName = `unit benchmark "${test}"`;
+
+		console.log(`Register: ${fullSuiteName}`);
+
+		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
+		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
+
+		registerBenchmarks.default(suite);
+
+		return;
 	}
 
 	const realConfig = (
@@ -380,8 +393,8 @@ async function registerSuite(suite, test, baselines) {
 					}
 
 					const stringifiedScenario = JSON.stringify(scenario);
-					const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${CODSPEED ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-					const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} (${baseline.rev})`;
+					const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+					const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
 
 					console.log(`Register: ${fullSuiteName}`);
 
@@ -440,13 +453,28 @@ const suite = withCodSpeed(
 
 await fs.rm(baseOutputPath, { recursive: true, force: true });
 
+const FILTER =
+	typeof process.env.FILTER !== "undefined"
+		? new RegExp(process.env.FILTER)
+		: undefined;
+
+const NEGATIVE_FILTER =
+	typeof process.env.NEGATIVE_FILTER !== "undefined"
+		? new RegExp(process.env.NEGATIVE_FILTER)
+		: undefined;
+
 const casesPath = path.join(__dirname, "benchmarkCases");
 const allBenchmarks = (await fs.readdir(casesPath))
-	.filter(item => !item.includes("_"))
+	.filter(
+		item =>
+			!item.includes("_") &&
+			(FILTER ? FILTER.test(item) : true) &&
+			(NEGATIVE_FILTER ? !NEGATIVE_FILTER.test(item) : true)
+	)
 	.sort((a, b) => a.localeCompare(b));
 
-const benchmarks = allBenchmarks.filter(item => !item.includes("long"));
-const longBenchmarks = allBenchmarks.filter(item => item.includes("long"));
+const benchmarks = allBenchmarks.filter(item => !item.includes("-long"));
+const longBenchmarks = allBenchmarks.filter(item => item.includes("-long"));
 const i = Math.floor(benchmarks.length / longBenchmarks.length);
 
 for (const [index, value] of longBenchmarks.entries()) {
@@ -494,6 +522,24 @@ await Promise.all(
 	)
 );
 
+const MS_PER_SEC = 10 ** 3;
+const US_PER_SEC = 10 ** 6;
+const NS_PER_SEC = 10 ** 9;
+
+function formatTime(value, toType) {
+	switch (toType) {
+		case "ms": {
+			return `${Math.round(value * MS_PER_SEC)} ms`;
+		}
+		case "µs": {
+			return `${Math.round(value * US_PER_SEC)} µs`;
+		}
+		case "ns": {
+			return `${Math.round(value * NS_PER_SEC)} ns`;
+		}
+	}
+}
+
 const statsByTests = new Map();
 
 suite.on("cycle", event => {
@@ -506,11 +552,19 @@ suite.on("cycle", event => {
 	const sampleCount = stats.sample.length;
 	stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 	stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-	const confidence = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
-		stats.deviation * 1000
-	)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
-		stats.maxConfidence * 1000
-	)} ms]`;
+
+	const toType =
+		Math.round(stats.deviation * MS_PER_SEC) / MS_PER_SEC > 0
+			? "ms"
+			: Math.round(stats.deviation * US_PER_SEC) / US_PER_SEC > 0
+				? "µs"
+				: "ns";
+	const mean = formatTime(stats.mean, toType);
+	const deviation = formatTime(stats.deviation, toType);
+	const minConfidence = formatTime(stats.minConfidence, toType);
+	const maxConfidence = formatTime(stats.maxConfidence, toType);
+	const confidence = `${mean} ± ${deviation} [${minConfidence}; ${maxConfidence}]`;
+
 	stats.text = `${target.name} ${confidence}`;
 
 	const collectBy = target.collectBy;
@@ -527,13 +581,13 @@ suite.on("cycle", event => {
 
 	allStats.push(stats);
 
-	const headStats = allStats[0];
-	const baselineStats = allStats[1];
+	const firstStats = allStats[0];
+	const secondStats = allStats[1];
 
 	console.log(
-		`Result: ${headStats.text} is ${Math.round(
-			(baselineStats.mean / headStats.mean) * 100 - 100
-		)}% ${baselineStats.maxConfidence < headStats.minConfidence ? "slower than" : baselineStats.minConfidence > headStats.maxConfidence ? "faster than" : "the same as"} ${baselineStats.text}`
+		`Result: ${firstStats.text} is ${Math.round(
+			(secondStats.mean / firstStats.mean) * 100 - 100
+		)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
 	);
 });
 
