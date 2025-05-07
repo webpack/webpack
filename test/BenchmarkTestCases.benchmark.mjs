@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { constants } from "fs";
+import { constants, writeFile } from "fs";
 import Benchmark from "benchmark";
 import { dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -273,7 +273,14 @@ function buildConfiguration(
 	const { watch, ...rest } = scenario;
 	const config = structuredClone({ ...realConfig, ...rest });
 
-	config.entry = config.entry || "./index.js";
+	config.entry = path.resolve(
+		testDirectory,
+		config.entry
+			? /\.(c|m)?js$/.test(config.entry)
+				? config.entry
+				: `${config.entry}.js`
+			: "./index.js"
+	);
 	config.devtool = config.devtool || false;
 	config.name = `${test}-${baseline.name}-${scenario.name}`;
 	config.context = testDirectory;
@@ -285,6 +292,7 @@ function buildConfiguration(
 		`scenario-${scenario.name}`,
 		`baseline-${baseline.name}`
 	);
+	config.plugins = config.plugins || [];
 
 	if (config.cache) {
 		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
@@ -387,9 +395,33 @@ async function registerSuite(suite, test, baselines) {
 
 					// Make an extra run for watching tests
 					let watching;
+					let entry;
+					let originalEntryContent;
+					let watchingResolve;
 
 					if (scenario.watch) {
+						entry = path.resolve(config.entry);
+						originalEntryContent = await fs.readFile(entry, "utf-8");
 						watching = await runWatch(webpack(config));
+						watching.compiler.hooks.done.tapAsync(
+							"WatchingBenchmarkPlugin",
+							(_stats, callback) => {
+								writeFile(entry, originalEntryContent, err => {
+									if (err) {
+										callback(err);
+										return;
+									}
+
+									callback();
+								});
+							}
+						);
+						watching.compiler.hooks.afterDone.tap(
+							"WatchingBenchmarkPlugin",
+							stats => {
+								watchingResolve(stats);
+							}
+						);
 					}
 
 					const stringifiedScenario = JSON.stringify(scenario);
@@ -398,21 +430,45 @@ async function registerSuite(suite, test, baselines) {
 
 					console.log(`Register: ${fullSuiteName}`);
 
-					suite.add(suiteName, {
-						collectBy: `${test}, scenario '${stringifiedScenario}'`,
-						defer: true,
-						fn(deferred) {
-							if (watching) {
-								watching.invalidate(() => {
-									watching.close(closeErr => {
-										if (closeErr) {
-											throw closeErr;
+					if (watching) {
+						suite.add(suiteName, {
+							collectBy: `${test}, scenario '${stringifiedScenario}'`,
+							defer: true,
+							fn(deferred) {
+								const watchingPromise = new Promise(res => {
+									watchingResolve = res;
+								});
+
+								writeFile(
+									entry,
+									`${originalEntryContent};console.log('watch test')`,
+									err => {
+										if (err) {
+											throw err;
 										}
 
-										deferred.resolve();
-									});
+										watchingPromise.then(stats => {
+											// Construct and print stats to be more accurate with real life projects
+											stats.toString();
+
+											deferred.resolve();
+										});
+									}
+								);
+							},
+							onComplete() {
+								watching.close(closeErr => {
+									if (closeErr) {
+										throw closeErr;
+									}
 								});
-							} else {
+							}
+						});
+					} else {
+						suite.add(suiteName, {
+							collectBy: `${test}, scenario '${stringifiedScenario}'`,
+							defer: true,
+							fn(deferred) {
 								const baseCompiler = webpack(config);
 
 								baseCompiler.run((err, stats) => {
@@ -429,12 +485,15 @@ async function registerSuite(suite, test, baselines) {
 											throw closeErr;
 										}
 
+										// Construct and print stats to be more accurate with real life projects
+										stats.toString();
+
 										deferred.resolve();
 									});
 								});
 							}
-						}
-					});
+						});
+					}
 				})
 			);
 		})
