@@ -243,6 +243,7 @@ describe("snapshots", () => {
 		        "dynamicImportMode": "lazy",
 		        "dynamicImportPrefetch": false,
 		        "dynamicImportPreload": false,
+		        "dynamicUrl": true,
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
