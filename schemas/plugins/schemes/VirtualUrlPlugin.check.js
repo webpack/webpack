@@ -1,0 +1,6 @@
+/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn fix:special` to update
+ */
+"use strict";function s(e,{instancePath:t="",parentData:r,parentDataProperty:n,rootData:o=e}={}){let a=null,l=0;const u=l;let c=!1,i=null;const p=l;if(l==l)if(e&&"object"==typeof e&&!Array.isArray(e)){let s;if(void 0===e.source&&(s="source")){const e={params:{missingProperty:s}};null===a?a=[e]:a.push(e),l++}else{const s=l;for(const s in e)if("scheme"!==s&&"source"!==s){const e={params:{additionalProperty:s}};null===a?a=[e]:a.push(e),l++;break}if(s===l){if(void 0!==e.scheme){const s=l;if("string"!=typeof e.scheme){const s={params:{type:"string"}};null===a?a=[s]:a.push(s),l++}var f=s===l}else f=!0;if(f)if(void 0!==e.source){const s=l;if(!(e.source instanceof Function)){const s={params:{}};null===a?a=[s]:a.push(s),l++}f=s===l}else f=!0}}}else{const s={params:{type:"object"}};null===a?a=[s]:a.push(s),l++}if(p===l&&(c=!0,i=0),!c){const e={params:{passingSchemas:i}};return null===a?a=[e]:a.push(e),l++,s.errors=a,!1}return l=u,null!==a&&(u?a.length=u:a=null),s.errors=a,0===l}module.exports=s,module.exports.default=s;
