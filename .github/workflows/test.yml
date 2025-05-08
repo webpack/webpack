@@ -131,7 +131,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 20.x, 22.x]
+        node-version: [10.x, 20.x, 22.x, 24.x]
         part: [a, b]
         include:
           # Test with main branches of webpack dependencies
