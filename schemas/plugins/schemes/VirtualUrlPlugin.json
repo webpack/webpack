@@ -1,21 +1,45 @@
 {
   "definitions": {
+    "VirtualModule": {
+      "description": "A virtual module definition.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "description": "The source function that provides the virtual content.",
+          "instanceof": "Function",
+          "tsType": "((resourcePath: string, loaderContext: import('webpack').LoaderContext<EXPECTED_ANY>) => Promise<string> | string)"
+        },
+        "type": {
+          "description": "The module type.",
+          "type": "string"
+        }
+      },
+      "required": ["type", "source"]
+    },
+    "VirtualModuleContent": {
+      "description": "A virtual module can be a string, a function, or a VirtualModule object.",
+      "type": "string"
+    },
     "VirtualUrlOptions": {
       "description": "Options for building virtual resources.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "modules": {
+          "description": "The virtual modules configuration.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "A virtual module can be a string, a function, or a VirtualModule object.",
+            "type": "string"
+          }
+        },
         "scheme": {
           "description": "The URL scheme to use for virtual resources.",
           "type": "string"
-        },
-        "source": {
-          "description": "The source function that provides the virtual content.",
-          "instanceof": "Function",
-          "tsType": "((resourcePath: string, loaderContext: import('webpack').LoaderContext<any>) => Promise<string> | string)"
         }
       },
-      "required": ["source"]
+      "required": ["modules"]
     }
   },
   "title": "VirtualUrlPluginOptions",

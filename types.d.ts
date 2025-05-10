@@ -15899,33 +15899,40 @@ declare class VariableInfo {
 	freeName?: string | true;
 	tagInfo?: TagInfo;
 }
-declare class VirtualUrlPlugin {
-	constructor(__0: VirtualUrlPluginOptions);
+declare interface VirtualModule {
+	/**
+	 * - The module type
+	 */
+	type: string;
+
+	/**
+	 * - The source function
+	 */
 	source: (
 		resourcePath: string,
 		loaderContext: LoaderContextObject<any>
 	) => string | Promise<string>;
+}
+declare interface VirtualModules {
+	[index: string]:
+		| string
+		| ((
+				resourcePath: string,
+				loaderContext: LoaderContextObject<any>
+		  ) => string | Promise<string>)
+		| VirtualModule;
+}
+declare class VirtualUrlPlugin {
+	constructor(modules: VirtualModules, scheme?: string);
 	scheme: string;
+	modules: { [index: string]: VirtualModule };
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	findVirtualModuleById(id: string): VirtualModule;
 	static DEFAULT_SCHEME: string;
-}
-declare interface VirtualUrlPluginOptions {
-	/**
-	 * - The source function that provides the virtual content
-	 */
-	source: (
-		resourcePath: string,
-		loaderContext: LoaderContextObject<any>
-	) => string | Promise<string>;
-
-	/**
-	 * - The URL scheme to use
-	 */
-	scheme?: string;
 }
 type WarningFilterItemTypes =
 	| string

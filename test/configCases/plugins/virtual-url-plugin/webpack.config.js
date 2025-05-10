@@ -4,26 +4,40 @@ const webpack = require("../../../../");
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 const watchDir = path.join(__dirname, "./routes");
-const virtualModuleId = "virtual:routes";
 
 /** @type {import('webpack').Configuration} */
 const config = {
 	plugins: [
 		new VirtualUrlPlugin({
-			source(id, loaderContext) {
-				if (id === virtualModuleId) {
+			routes: {
+				type: "",
+				source(loaderContext) {
 					const files = fs.readdirSync(watchDir);
-
 					return `
-            export const routes = {
-              ${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
-            }        
-          `;
+						export const routes = {
+							${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
+						}        
+					`;
 				}
-				throw new Error(`Unknown virtual module: ${id}`);
+			},
+			app: "export const app = 'app'",
+			config: {
+				type: ".json",
+				source() {
+					return `{"name": "virtual-url-plugin"}`;
+				}
+			},
+			style: {
+				type: ".css",
+				source() {
+					return `body{background-color: powderblue;}`;
+				}
 			}
 		})
-	]
+	],
+	experiments: {
+		css: true
+	}
 };
 
 module.exports = config;

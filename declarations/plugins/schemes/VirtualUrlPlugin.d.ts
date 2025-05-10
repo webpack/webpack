@@ -11,14 +11,16 @@ export type VirtualUrlPluginOptions = VirtualUrlOptions;
  */
 export interface VirtualUrlOptions {
 	/**
+	 * The virtual modules configuration.
+	 */
+	modules: {
+		/**
+		 * A virtual module can be a string, a function, or a VirtualModule object.
+		 */
+		[k: string]: string;
+	};
+	/**
 	 * The URL scheme to use for virtual resources.
 	 */
 	scheme?: string;
-	/**
-	 * The source function that provides the virtual content.
-	 */
-	source: (
-		resourcePath: string,
-		loaderContext: import("webpack").LoaderContext<any>
-	) => Promise<string> | string;
 }
