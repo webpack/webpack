@@ -1973,7 +1973,7 @@ declare class Compilation {
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
 		get normalModuleLoader(): SyncHook<
-			[LoaderContextNormalModule<any>, NormalModule]
+			[LoaderContextObject<any>, NormalModule]
 		>;
 	}>;
 	name?: string;
@@ -8583,7 +8583,7 @@ type LoaderContextDeclarationsIndex<OptionsType> =
 		LoaderRunnerLoaderContext<OptionsType> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+type LoaderContextObject<T> = NormalModuleLoaderContext<T> &
 	LoaderRunnerLoaderContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
@@ -10153,9 +10153,9 @@ declare class NormalModule extends Module {
 	static deserialize(context: ObjectDeserializerContext): any;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
+	loader: SyncHook<[LoaderContextObject<any>, NormalModule]>;
 	beforeLoaders: SyncHook<
-		[LoaderItem[], NormalModule, LoaderContextNormalModule<any>]
+		[LoaderItem[], NormalModule, LoaderContextObject<any>]
 	>;
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
@@ -10165,10 +10165,7 @@ declare interface NormalModuleCompilationHooks {
 		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<
-			[LoaderContextNormalModule<any>],
-			null | string | Buffer
-		>
+		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
 		[[string | Buffer, string | SourceMapSource, PreparsedAst], NormalModule]
@@ -15902,6 +15899,41 @@ declare class VariableInfo {
 	freeName?: string | true;
 	tagInfo?: TagInfo;
 }
+declare interface VirtualModule {
+	/**
+	 * - The module type
+	 */
+	type: string;
+
+	/**
+	 * - The source function
+	 */
+	source: (
+		resourcePath: string,
+		loaderContext: LoaderContextObject<any>
+	) => string | Promise<string>;
+}
+declare interface VirtualModules {
+	[index: string]:
+		| string
+		| ((
+				resourcePath: string,
+				loaderContext: LoaderContextObject<any>
+		  ) => string | Promise<string>)
+		| VirtualModule;
+}
+declare class VirtualUrlPlugin {
+	constructor(modules: VirtualModules, scheme?: string);
+	scheme: string;
+	modules: { [index: string]: VirtualModule };
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	findVirtualModuleById(id: string): VirtualModule;
+	static DEFAULT_SCHEME: string;
+}
 type WarningFilterItemTypes =
 	| string
 	| RegExp
@@ -17038,7 +17070,7 @@ declare namespace exports {
 	}
 	export namespace experiments {
 		export namespace schemes {
-			export { HttpUriPlugin };
+			export { HttpUriPlugin, VirtualUrlPlugin };
 		}
 		export namespace ids {
 			export { SyncModuleIdsPlugin };

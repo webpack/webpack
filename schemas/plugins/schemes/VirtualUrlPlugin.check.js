@@ -1,0 +1,6 @@
+/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn fix:special` to update
+ */
+"use strict";function s(e,{instancePath:t="",parentData:o,parentDataProperty:r,rootData:n=e}={}){let l=null,a=0;const i=a;let p=!1,u=null;const c=a;if(a==a)if(e&&"object"==typeof e&&!Array.isArray(e)){let s;if(void 0===e.modules&&(s="modules")){const e={params:{missingProperty:s}};null===l?l=[e]:l.push(e),a++}else{const s=a;for(const s in e)if("modules"!==s&&"scheme"!==s){const e={params:{additionalProperty:s}};null===l?l=[e]:l.push(e),a++;break}if(s===a){if(void 0!==e.modules){let s=e.modules;const t=a;if(a===t)if(s&&"object"==typeof s&&!Array.isArray(s))for(const e in s){const t=a;if("string"!=typeof s[e]){const s={params:{type:"string"}};null===l?l=[s]:l.push(s),a++}if(t!==a)break}else{const s={params:{type:"object"}};null===l?l=[s]:l.push(s),a++}var f=t===a}else f=!0;if(f)if(void 0!==e.scheme){const s=a;if("string"!=typeof e.scheme){const s={params:{type:"string"}};null===l?l=[s]:l.push(s),a++}f=s===a}else f=!0}}}else{const s={params:{type:"object"}};null===l?l=[s]:l.push(s),a++}if(c===a&&(p=!0,u=0),!p){const e={params:{passingSchemas:u}};return null===l?l=[e]:l.push(e),a++,s.errors=l,!1}return a=i,null!==l&&(i?l.length=i:l=null),s.errors=l,0===a}module.exports=s,module.exports.default=s;
