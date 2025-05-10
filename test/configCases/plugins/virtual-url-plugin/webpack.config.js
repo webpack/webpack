@@ -9,16 +9,13 @@ const watchDir = path.join(__dirname, "./routes");
 const config = {
 	plugins: [
 		new VirtualUrlPlugin({
-			routes: {
-				type: "",
-				source(loaderContext) {
-					const files = fs.readdirSync(watchDir);
-					return `
-						export const routes = {
-							${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
-						}        
-					`;
-				}
+			routes(loaderContext) {
+				const files = fs.readdirSync(watchDir);
+				return `
+					export const routes = {
+						${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
+					}        
+				`;
 			},
 			app: "export const app = 'app'",
 			config: {
