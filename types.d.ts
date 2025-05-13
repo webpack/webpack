@@ -3526,7 +3526,7 @@ declare class Dependency {
 	getModuleEvaluationSideEffectsState(
 		moduleGraph: ModuleGraph
 	): ConnectionState;
-	createIgnoredModule(context: string): null | Module;
+	createIgnoredModule(context: string): Module;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 	module: any;
@@ -3933,7 +3933,7 @@ declare interface EffectData {
 	assertions?: ImportAttributes;
 	mimetype?: string;
 	dependency: string;
-	descriptionData: Record<string, any>;
+	descriptionData?: Record<string, any>;
 	compiler?: string;
 	issuer: string;
 	issuerLayer: string;
@@ -10110,7 +10110,7 @@ declare class NormalModule extends Module {
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
-	resourceResolveData: any;
+	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
 	loaders: LoaderItem[];
 	error: null | WebpackError;
@@ -10129,7 +10129,10 @@ declare class NormalModule extends Module {
 		sourceMap?: string | SourceMap,
 		associatedObjectForCache?: object
 	): Source;
-	getCurrentLoader(loaderContext?: any, index?: number): null | LoaderItem;
+	getCurrentLoader(
+		loaderContext: LoaderContextNormalModule<any>,
+		index?: number
+	): null | LoaderItem;
 	createSource(
 		context: string,
 		content: string | Buffer,
@@ -10150,7 +10153,7 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): any;
+	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
@@ -10214,7 +10217,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * resource resolve data
 	 */
-	resourceResolveData?: any;
+	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 
 	/**
 	 * context directory for resolving
@@ -13569,7 +13572,28 @@ declare interface ResourceDataWithData {
 	query?: string;
 	fragment?: string;
 	context?: string;
-	data: Record<string, any>;
+	data: ResourceSchemeData & Partial<ResolveRequest>;
+}
+declare interface ResourceSchemeData {
+	/**
+	 * mime type of the resource
+	 */
+	mimetype?: string;
+
+	/**
+	 * additional parameters for the resource
+	 */
+	parameters?: string;
+
+	/**
+	 * encoding of the resource
+	 */
+	encoding?: false | "base64";
+
+	/**
+	 * encoded content of the resource
+	 */
+	encodedContent?: string;
 }
 declare abstract class RestoreProvidedData {
 	exports: RestoreProvidedDataExports[];
