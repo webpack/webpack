@@ -419,7 +419,9 @@ async function registerSuite(suite, test, baselines) {
 						watching.compiler.hooks.afterDone.tap(
 							"WatchingBenchmarkPlugin",
 							stats => {
-								watchingResolve(stats);
+								if (watchingResolve) {
+									watchingResolve(stats);
+								}
 							}
 						);
 					}
@@ -455,8 +457,11 @@ async function registerSuite(suite, test, baselines) {
 										});
 									}
 								);
-							},
-							onComplete() {
+							}
+						});
+
+						suite.on("complete", function () {
+							if (watching && watchingResolve) {
 								watching.close(closeErr => {
 									if (closeErr) {
 										throw closeErr;

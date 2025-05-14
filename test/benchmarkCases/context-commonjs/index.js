@@ -3,4 +3,3 @@ async function run() {
 
 	require(`./generated/${mod}`);
 }
-
