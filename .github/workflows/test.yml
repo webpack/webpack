@@ -84,10 +84,11 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         with:
-          run: yarn benchmark --ci --only-head
+          run: yarn benchmark --ci
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          CODSPEED: 1
+          LAST_COMMIT: 1
+          NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
   basic:
     runs-on: ubuntu-latest
