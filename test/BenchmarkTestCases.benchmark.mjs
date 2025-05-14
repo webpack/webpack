@@ -1,11 +1,11 @@
 import path from "path";
 import fs from "fs/promises";
 import { constants, writeFile } from "fs";
-import Benchmark from "benchmark";
+import { Bench, hrtimeNow } from "tinybench";
 import { dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import simpleGit from "simple-git";
-import { withCodSpeed } from "@codspeed/benchmark.js-plugin";
+import { withCodSpeed } from "@codspeed/tinybench-plugin";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
@@ -247,22 +247,6 @@ for (const baselineInfo of baselineRevisions) {
 	}
 }
 
-const scenarios = [
-	{
-		name: "mode-development",
-		mode: "development"
-	},
-	{
-		name: "mode-development-rebuild",
-		mode: "development",
-		watch: true
-	},
-	{
-		name: "mode-production",
-		mode: "production"
-	}
-];
-
 function buildConfiguration(
 	test,
 	baseline,
@@ -301,28 +285,6 @@ function buildConfiguration(
 	return config;
 }
 
-function warmupCompiler(compiler) {
-	return new Promise((resolve, reject) => {
-		compiler.run((err, stats) => {
-			if (err) {
-				reject(err);
-			}
-
-			if (stats.hasWarnings() || stats.hasErrors()) {
-				reject(new Error(stats.toString()));
-			}
-
-			compiler.close(closeErr => {
-				if (closeErr) {
-					reject(closeErr);
-				}
-
-				resolve();
-			});
-		});
-	});
-}
-
 function runWatch(compiler) {
 	return new Promise((resolve, reject) => {
 		const watching = compiler.watch({}, (err, stats) => {
@@ -339,9 +301,33 @@ function runWatch(compiler) {
 	});
 }
 
+const scenarios = [
+	{
+		name: "mode-development",
+		mode: "development"
+	},
+	{
+		name: "mode-development-rebuild",
+		mode: "development",
+		watch: true
+	},
+	{
+		name: "mode-production",
+		mode: "production"
+	}
+];
+
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
-async function registerSuite(suite, test, baselines) {
+const bench = withCodSpeed(
+	new Bench({
+		warmup: true,
+		now: hrtimeNow,
+		throws: true
+	})
+);
+
+async function registerSuite(bench, test, baselines) {
 	const testDirectory = path.join(casesPath, test);
 	const optionsPath = path.resolve(testDirectory, "options.mjs");
 
@@ -358,14 +344,14 @@ async function registerSuite(suite, test, baselines) {
 	}
 
 	if (test.includes("-unit")) {
-		const fullSuiteName = `unit benchmark "${test}"`;
+		const fullBenchName = `unit benchmark "${test}"`;
 
-		console.log(`Register: ${fullSuiteName}`);
+		console.log(`Register: ${fullBenchName}`);
 
 		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
 		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
 
-		registerBenchmarks.default(suite);
+		registerBenchmarks.default(bench);
 
 		return;
 	}
@@ -390,130 +376,130 @@ async function registerSuite(suite, test, baselines) {
 						testDirectory
 					);
 
-					// Warmup and also prebuild cache
-					await warmupCompiler(webpack(config));
+					const stringifiedScenario = JSON.stringify(scenario);
+					const benchName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+					const fullBenchName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
 
-					// Make an extra run for watching tests
-					let watching;
-					let entry;
-					let originalEntryContent;
-					let watchingResolve;
+					console.log(`Register: ${fullBenchName}`);
 
 					if (scenario.watch) {
-						entry = path.resolve(config.entry);
-						originalEntryContent = await fs.readFile(entry, "utf-8");
-						watching = await runWatch(webpack(config));
-						watching.compiler.hooks.done.tapAsync(
-							"WatchingBenchmarkPlugin",
-							(_stats, callback) => {
-								writeFile(entry, originalEntryContent, err => {
-									if (err) {
-										callback(err);
-										return;
-									}
+						const entry = path.resolve(config.entry);
+						const originalEntryContent = await fs.readFile(entry, "utf-8");
 
-									callback();
-								});
-							}
-						);
-						watching.compiler.hooks.afterDone.tap(
-							"WatchingBenchmarkPlugin",
-							stats => {
-								if (watchingResolve) {
-									watchingResolve(stats);
-								}
-							}
-						);
-					}
+						let watching;
+						let watchingResolve;
 
-					const stringifiedScenario = JSON.stringify(scenario);
-					const suiteName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-					const fullSuiteName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
-
-					console.log(`Register: ${fullSuiteName}`);
-
-					if (watching) {
-						suite.add(suiteName, {
-							collectBy: `${test}, scenario '${stringifiedScenario}'`,
-							defer: true,
-							fn(deferred) {
+						bench.add(
+							benchName,
+							async () => {
 								const watchingPromise = new Promise(res => {
 									watchingResolve = res;
 								});
 
-								writeFile(
-									entry,
-									`${originalEntryContent};console.log('watch test')`,
-									err => {
+								await new Promise((resolve, reject) => {
+									writeFile(
+										entry,
+										`${originalEntryContent};console.log('watch test')`,
+										err => {
+											if (err) {
+												reject(err);
+											}
+
+											watchingPromise.then(stats => {
+												// Construct and print stats to be more accurate with real life projects
+												stats.toString();
+
+												resolve();
+											});
+										}
+									);
+								});
+							},
+							{
+								async beforeAll() {
+									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
+
+									watching = await runWatch(webpack(config));
+									watching.compiler.hooks.afterDone.tap(
+										"WatchingBenchmarkPlugin",
+										stats => {
+											if (watchingResolve) {
+												watchingResolve(stats);
+											}
+										}
+									);
+								},
+								async afterEach() {
+									await new Promise((resolve, reject) => {
+										writeFile(entry, originalEntryContent, err => {
+											if (err) {
+												reject(err);
+												return;
+											}
+
+											resolve();
+										});
+									});
+								},
+								async afterAll() {
+									await new Promise((resolve, reject) => {
+										if (watching) {
+											watching.close(closeErr => {
+												if (closeErr) {
+													reject(closeErr);
+													return;
+												}
+
+												resolve();
+											});
+										}
+									});
+								}
+							}
+						);
+					} else {
+						bench.add(
+							benchName,
+							async () => {
+								await new Promise((resolve, reject) => {
+									const baseCompiler = webpack(config);
+
+									baseCompiler.run((err, stats) => {
 										if (err) {
-											throw err;
+											reject(err);
+											return;
 										}
 
-										watchingPromise.then(stats => {
+										if (stats.hasWarnings() || stats.hasErrors()) {
+											throw new Error(stats.toString());
+										}
+
+										baseCompiler.close(closeErr => {
+											if (closeErr) {
+												reject(closeErr);
+												return;
+											}
+
 											// Construct and print stats to be more accurate with real life projects
 											stats.toString();
 
-											deferred.resolve();
+											resolve();
 										});
-									}
-								);
-							}
-						});
-
-						suite.on("complete", function () {
-							if (watching && watchingResolve) {
-								watching.close(closeErr => {
-									if (closeErr) {
-										throw closeErr;
-									}
-								});
-							}
-						});
-					} else {
-						suite.add(suiteName, {
-							collectBy: `${test}, scenario '${stringifiedScenario}'`,
-							defer: true,
-							fn(deferred) {
-								const baseCompiler = webpack(config);
-
-								baseCompiler.run((err, stats) => {
-									if (err) {
-										throw err;
-									}
-
-									if (stats.hasWarnings() || stats.hasErrors()) {
-										throw new Error(stats.toString());
-									}
-
-									baseCompiler.close(closeErr => {
-										if (closeErr) {
-											throw closeErr;
-										}
-
-										// Construct and print stats to be more accurate with real life projects
-										stats.toString();
-
-										deferred.resolve();
 									});
 								});
+							},
+							{
+								beforeAll() {
+									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
+								}
 							}
-						});
+						);
 					}
 				})
 			);
 		})
 	);
 }
-
-const suite = withCodSpeed(
-	new Benchmark.Suite({
-		maxTime: 30,
-		initCount: 1,
-		onError: event => {
-			throw new Error(event.error);
-		}
-	})
-);
 
 await fs.rm(baseOutputPath, { recursive: true, force: true });
 
@@ -582,68 +568,72 @@ if (countOfBenchmarks < shard[1]) {
 
 await Promise.all(
 	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map(benchmark =>
-		registerSuite(suite, benchmark, baselines)
+		registerSuite(bench, benchmark, baselines)
 	)
 );
 
-const MS_PER_SEC = 10 ** 3;
-const US_PER_SEC = 10 ** 6;
-const NS_PER_SEC = 10 ** 9;
+function formatNumber(value, precision, fractionDigits) {
+	return Math.abs(value) >= 10 ** precision
+		? value.toFixed()
+		: Math.abs(value) < 10 ** (precision - fractionDigits)
+			? value.toFixed(fractionDigits)
+			: value.toPrecision(precision);
+}
 
-function formatTime(value, toType) {
+const US_PER_MS = 10 ** 3;
+const NS_PER_MS = 10 ** 6;
+
+function formatTime(value) {
+	const toType =
+		Math.round(value) > 0
+			? "ms"
+			: Math.round(value * US_PER_MS) / US_PER_MS > 0
+				? "µs"
+				: "ns";
+
 	switch (toType) {
 		case "ms": {
-			return `${Math.round(value * MS_PER_SEC)} ms`;
+			return `${formatNumber(value, 5, 2)} ms`;
 		}
 		case "µs": {
-			return `${Math.round(value * US_PER_SEC)} µs`;
+			return `${formatNumber(value * US_PER_MS, 5, 2)} µs`;
 		}
 		case "ns": {
-			return `${Math.round(value * NS_PER_SEC)} ns`;
+			return `${formatNumber(value * NS_PER_MS, 5, 2)} ns`;
 		}
 	}
 }
 
 const statsByTests = new Map();
 
-suite.on("cycle", event => {
-	const target = event.target;
-	const stats = target.stats;
-	const n = stats.sample.length;
-	const nSqrt = Math.sqrt(n);
-	const z = tDistribution(n - 1);
+bench.addEventListener("cycle", event => {
+	const task = event.task;
+	const runs = task.runs;
+	const nSqrt = Math.sqrt(runs);
+	const z = tDistribution(runs - 1);
+	const { latency } = task.result;
+	const minConfidence = latency.mean - (z * latency.sd) / nSqrt;
+	const maxConfidence = latency.mean + (z * latency.sd) / nSqrt;
+	const mean = formatTime(latency.mean);
+	const deviation = formatTime(latency.sd);
+	const minConfidenceFormatted = formatTime(minConfidence);
+	const maxConfidenceFormatted = formatTime(maxConfidence);
+	const confidence = `${mean} ± ${deviation} [${minConfidenceFormatted}; ${maxConfidenceFormatted}]`;
+	const text = `${task.name} ${confidence}`;
 
-	const sampleCount = stats.sample.length;
-	stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
-	stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-
-	const toType =
-		Math.round(stats.deviation * MS_PER_SEC) / MS_PER_SEC > 0
-			? "ms"
-			: Math.round(stats.deviation * US_PER_SEC) / US_PER_SEC > 0
-				? "µs"
-				: "ns";
-	const mean = formatTime(stats.mean, toType);
-	const deviation = formatTime(stats.deviation, toType);
-	const minConfidence = formatTime(stats.minConfidence, toType);
-	const maxConfidence = formatTime(stats.maxConfidence, toType);
-	const confidence = `${mean} ± ${deviation} [${minConfidence}; ${maxConfidence}]`;
-
-	stats.text = `${target.name} ${confidence}`;
-
-	const collectBy = target.collectBy;
+	const collectBy = task.collectBy;
 	const allStats = statsByTests.get(collectBy);
 
-	console.log(
-		`Done: ${target.name} ${confidence} (${sampleCount} runs sampled)`
-	);
+	console.log(`Done: ${task.name} ${confidence} (${runs} runs sampled)`);
+
+	const info = { ...latency, text, minConfidence, maxConfidence };
 
 	if (!allStats) {
-		statsByTests.set(collectBy, [stats]);
+		statsByTests.set(collectBy, [info]);
 		return;
 	}
 
-	allStats.push(stats);
+	allStats.push(info);
 
 	const firstStats = allStats[0];
 	const secondStats = allStats[1];
@@ -655,4 +645,4 @@ suite.on("cycle", event => {
 	);
 });
 
-suite.run({ async: true });
+await bench.run();

@@ -335,15 +335,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@codspeed/benchmark.js-plugin@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@codspeed/benchmark.js-plugin/-/benchmark.js-plugin-4.0.1.tgz#ac7233491794761d476f364470a55d22887a6a06"
-  integrity sha512-qN7JrOnOC6WAePUVUFXhux0P6r85fqhROINnfv6OIdXDWoxwmCMzTNhAepAKyuDeQgOtAAUITk3fAwfnXDGE/w==
-  dependencies:
-    "@codspeed/core" "^4.0.1"
-    lodash "^4.17.10"
-    stack-trace "1.0.0-pre2"
-
 "@codspeed/core@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-4.0.1.tgz#91049cce17b8c1d1b4b6cbc481f5ddc1145d6e1e"
@@ -353,6 +344,14 @@
     find-up "^6.3.0"
     form-data "^4.0.0"
     node-gyp-build "^4.6.0"
+
+"@codspeed/tinybench-plugin@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@codspeed/tinybench-plugin/-/tinybench-plugin-4.0.1.tgz#b0e27a963c03e6ca84c99685ee86abdbd3aa5c9f"
+  integrity sha512-hga1xif6XU8p/FZqTHzUrDPrBSLqxc3NuxMX8m4P8AIdhORsPrvgSNe09uVYlVOtD6jG7kPsmx5DZscez4wKrQ==
+  dependencies:
+    "@codspeed/core" "^4.0.1"
+    stack-trace "1.0.0-pre2"
 
 "@cspell/cspell-bundled-dicts@8.18.1":
   version "8.18.1"
@@ -1900,14 +1899,6 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
-
-benchmark@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/benchmark/-/benchmark-2.1.4.tgz#09f3de31c916425d498cc2ee565a0ebf3c2a5629"
-  integrity sha512-l9MlfN4M1K/H2fbhfMy3B7vJd6AGKJVQn2h6Sg/Yx+KckoUA7ewS5Vv6TjSq18ooE1kS9hhAlQRH3AkXIh/aOQ==
-  dependencies:
-    lodash "^4.17.4"
-    platform "^1.3.3"
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -4644,7 +4635,7 @@ lodash.merge@^4.6.2:
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash@^4.17.10, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.4:
+lodash@^4.17.15, lodash@^4.17.19:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5362,11 +5353,6 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
-
-platform@^1.3.3:
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
-  integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
 pluralize@^8.0.0:
   version "8.0.0"
@@ -6353,6 +6339,11 @@ timers-ext@^0.1.7:
   dependencies:
     es5-ext "^0.10.64"
     next-tick "^1.1.0"
+
+tinybench@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-4.0.1.tgz#ff5940b4e4a63892ef0cad3daf148d5fd8a3725b"
+  integrity sha512-Nb1srn7dvzkVx0J5h1vq8f48e3TIcbrS7e/UfAI/cDSef/n8yLh4zsAEsFkfpw6auTY+ZaspEvam/xs8nMnotQ==
 
 tinyglobby@^0.2.12:
   version "0.2.12"
