@@ -645,4 +645,11 @@ bench.addEventListener("cycle", event => {
 	);
 });
 
+// Fix for https://github.com/CodSpeedHQ/codspeed-node/issues/44
+for (const name of bench.tasks.map(task => task.name)) {
+	const task = bench.getTask(name);
+
+	task.opts = task.fnOpts;
+}
+
 await bench.run();
