@@ -1,4 +1,4 @@
-const stripAnsi = require("strip-ansi");
+const stripVTControlCharacters = require("strip-ansi");
 
 module.exports = (stdio, tty) => {
 	let logs = [];
@@ -17,7 +17,7 @@ module.exports = (stdio, tty) => {
 		reset: () => (logs = []),
 
 		toString: () =>
-			stripAnsi(logs.join(""))
+			stripVTControlCharacters(logs.join(""))
 				.replace(
 					/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
 					""

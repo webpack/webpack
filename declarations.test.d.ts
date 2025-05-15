@@ -1,7 +1,7 @@
 declare module "*.json";
 
 type Env = Record<string, any>;
-type TestOptions = { testPath: string, srcPath: string };
+type TestOptions = { testPath: string; srcPath: string };
 
 declare namespace jest {
 	interface Matchers<R> {

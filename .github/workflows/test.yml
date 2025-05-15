@@ -185,6 +185,10 @@ jobs:
           yarn upgrade husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
+      - run: |
+          yarn upgrade cspell@^8.8.4 lint-staged@^15.2.5 --ignore-engines
+          yarn --frozen-lockfile
+        if: matrix.node-version == '18.x'
       # Install main version of our deps
       - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#master
         if: matrix.use_main_branches == '1'
