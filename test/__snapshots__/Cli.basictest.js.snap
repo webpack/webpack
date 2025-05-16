@@ -2052,6 +2052,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
       Object {
@@ -2762,6 +2775,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
       Object {
@@ -3250,6 +3276,12 @@ Object {
   "module-parser-javascript-dynamic-url": Object {
     "configs": Array [
       Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicUrl",
+        "type": "boolean",
+      },
+      Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.url",
@@ -3265,7 +3297,7 @@ Object {
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of new URL() syntax.",
+    "description": "Enable/disable parsing of dynamic URL. Enable/disable parsing of new URL() syntax.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3489,6 +3521,19 @@ Object {
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [

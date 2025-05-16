@@ -1891,6 +1891,10 @@
             }
           ]
         },
+        "dynamicUrl": {
+          "description": "Enable/disable parsing of dynamic URL.",
+          "type": "boolean"
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
