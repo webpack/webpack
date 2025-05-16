@@ -1,0 +1,6 @@
+We use `NEXT()` to trigger one compilation to simulate lazy compilation behavior.
+So this initial content will be ignored.
+---
+A
+---
+B
