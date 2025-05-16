@@ -328,6 +328,7 @@
     "**/dist/**",
     "**/node_modules/**",
     "examples/**/README.md",
+    "examples/nodejs-addons/build/**/*",
     "examples/wasm-bindgen*/pkg/*_bg.js",
     "examples/wasm-bindgen*/pkg/*_bg*.d.ts",
     "**/webpack.lock.data/**",

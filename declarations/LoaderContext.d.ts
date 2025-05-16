@@ -55,10 +55,10 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	sourceMap?: boolean;
 	mode: "development" | "production" | "none";
 	webpack?: boolean;
-	hashFunction: HashFunction,
-	hashDigest: HashDigest,
-	hashDigestLength: HashDigestLength,
-	hashSalt: HashSalt,
+	hashFunction: HashFunction;
+	hashDigest: HashDigest;
+	hashDigestLength: HashDigestLength;
+	hashSalt: HashSalt;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;

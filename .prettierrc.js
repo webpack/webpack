@@ -13,7 +13,7 @@ module.exports = {
 			}
 		},
 		{
-			files: "*.ts",
+			files: "*.{cts,mts,ts}",
 			options: {
 				parser: "typescript"
 			}
