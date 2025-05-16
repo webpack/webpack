@@ -200,6 +200,21 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-multiple-entry-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-multiple-entry-modules")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
 				library: path.resolve(testPath, "../0-create-library/commonjs.js")
 			}
 		},
