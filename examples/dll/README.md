@@ -153,14 +153,14 @@ chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   dependent modules 73 bytes [dependent] 3 modules
   dll alpha 12 bytes [built] [code generated]
     [used exports unknown]
-    dll entry 0:0-0
+    dll entry
     used as library export
 chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   > beta
   dependent modules 68 bytes [dependent] 3 modules
   dll beta 12 bytes [built] [code generated]
     [used exports unknown]
-    dll entry 0:0-0
+    dll entry
     used as library export
 webpack X.X.X compiled successfully
 ```
@@ -174,13 +174,13 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   > beta
   dependent modules 68 bytes [dependent] 3 modules
   dll beta 12 bytes [built] [code generated]
-    dll entry 0:0-0
+    dll entry
     used as library export
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   > alpha
   dependent modules 73 bytes [dependent] 3 modules
   dll alpha 12 bytes [built] [code generated]
-    dll entry 0:0-0
+    dll entry
     used as library export
 webpack X.X.X compiled successfully
 ```

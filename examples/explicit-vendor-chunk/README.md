@@ -234,7 +234,7 @@ vendor:
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
       [used exports unknown]
-      dll entry 0:0-0
+      dll entry
       used as library export
   vendor (webpack X.X.X) compiled successfully
 
@@ -274,7 +274,7 @@ vendor:
     > main
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
-      dll entry 0:0-0
+      dll entry
       used as library export
   vendor (webpack X.X.X) compiled successfully
 
