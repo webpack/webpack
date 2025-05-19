@@ -201,7 +201,7 @@ module.exports = (env, { testPath }) => [
 			path: path.resolve(testPath, "./bundle15"),
 			module: true,
 			filename: "js/bundle15.mjs",
-			chunkFilename: "js/[id].bundle15.mjs",
+			chunkFilename: "js/[id].bundle15.mjs"
 		},
 		experiments: {
 			outputModule: true
