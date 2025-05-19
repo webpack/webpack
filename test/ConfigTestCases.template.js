@@ -498,11 +498,15 @@ const describeCases = config => {
 											esmMode,
 											parentModule
 										) => {
+											if (testConfig.resolveModule) {
+												module = testConfig.resolveModule(module, i, options);
+											}
 											if (testConfig === undefined) {
 												throw new Error(
 													`_require(${module}) called after all tests from ${category.name} ${testName} have completed`
 												);
 											}
+
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;

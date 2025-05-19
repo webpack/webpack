@@ -179,5 +179,32 @@ module.exports = (env, { testPath }) => [
 		experiments: {
 			outputModule: true
 		}
+	},
+	{
+		devtool: false,
+		target: "web",
+		output: {
+			path: path.resolve(testPath, "./bundle14"),
+			module: true,
+			filename: "js/bundle14.mjs",
+			chunkFilename: "js/[id].bundle14.mjs"
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		devtool: false,
+		target: "web",
+		output: {
+			publicPath: "https://example.com/public/path/",
+			path: path.resolve(testPath, "./bundle15"),
+			module: true,
+			filename: "js/bundle15.mjs",
+			chunkFilename: "js/[id].bundle15.mjs"
+		},
+		experiments: {
+			outputModule: true
+		}
 	}
 ];
