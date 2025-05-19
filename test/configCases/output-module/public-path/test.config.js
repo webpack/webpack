@@ -9,8 +9,9 @@ module.exports = {
 			case 3:
 			case 7:
 			case 11:
+			case 12:
 			case 13:
-			case 12: {
+			case 14: {
 				return `./bundle${i}/${options.output.filename}`;
 			}
 			default: {
