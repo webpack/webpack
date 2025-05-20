@@ -10,7 +10,7 @@ const { expectSourceToContain, expectSourceToMatch } = require("../../../helpers
 const regexEscape = require("../../../helpers/regexEscape.js");
 
 // It's important to use propertyName when generating object members to ensure that the exported property name
-// uses the same accessor syntax (quotes vs. dot notatation) as the imported property name on the other end
+// uses the same accessor syntax (quotes vs. dot notation) as the imported property name on the other end
 // (which needs to use propertyAccess).  Else, minifiers such as Closure Compiler will not be able to minify correctly.
 it("should use the same accessor syntax for import and export", function() {
 
