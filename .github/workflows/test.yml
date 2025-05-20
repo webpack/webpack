@@ -190,7 +190,7 @@ jobs:
           yarn --frozen-lockfile
         if: matrix.node-version == '18.x'
       # Install main version of our deps
-      - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#master
+      - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
         if: matrix.use_main_branches == '1'
       # Install dependencies for LTS node versions
       - run: yarn --frozen-lockfile
