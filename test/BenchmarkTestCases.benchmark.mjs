@@ -321,9 +321,10 @@ const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
 const bench = withCodSpeed(
 	new Bench({
-		warmup: true,
 		now: hrtimeNow,
-		throws: true
+		throws: true,
+		warmup: true,
+		time: 30000
 	})
 );
 
