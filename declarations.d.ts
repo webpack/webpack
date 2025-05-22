@@ -477,3 +477,9 @@ declare module "eslint-scope/lib/referencer" {
 	class Referencer {}
 	export = Referencer;
 }
+
+declare module "acorn-import-defer" {
+	import { Parser } from 'acorn';
+	const plugin: (BaseParser: typeof Parser) => typeof Parser
+	export = plugin;
+}
