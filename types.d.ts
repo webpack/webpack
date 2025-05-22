@@ -7460,6 +7460,11 @@ declare interface JavascriptParserOptions {
 	dynamicImportPreload?: number | boolean;
 
 	/**
+	 * Enable/disable parsing of dynamic URL.
+	 */
+	dynamicUrl?: boolean;
+
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: false | "auto" | "error" | "warn";
