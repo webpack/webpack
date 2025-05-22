@@ -706,9 +706,9 @@
   integrity sha512-D/xHXX7T37BJxNRf5JJHsvziFDvh23IF/KvkZXNSh8VqcRdod3BAz9VGHZf6VDqcZXr1VRqIYR3mQ8DSvs3AVQ==
 
 "@cspell/dict-software-terms@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/@cspell/dict-software-terms/-/dict-software-terms-5.0.8.tgz#baa277fabfc70f3d8453830e26628ee6df53fad9"
-  integrity sha512-VsJesitvaHZpMgNwHHms3yDsZz7LNToC2HuSAnyt1znn37ribiJF1ty0jWhVQO6fv7K4PM1KsKTJIwqBwc446g==
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@cspell/dict-software-terms/-/dict-software-terms-5.0.9.tgz#009dcd916191f1915776a5cedb39fd2d34b0b5ff"
+  integrity sha512-Zcm7PMxLSmgJNeICsj1jfhOIS8sOFGgmV1EsTo+EALXWU5pcD6u/P+B9sY0f/9M8V82VaYmTeNVwSlZNh5h94w==
 
 "@cspell/dict-sql@^2.2.0":
   version "2.2.0"
