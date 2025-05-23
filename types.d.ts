@@ -1021,6 +1021,12 @@ declare class CachedSource extends Source {
 	originalLazy(): Source | (() => Source);
 	getCachedData(): any;
 }
+declare interface CalculatedStringResult {
+	range?: [number, number];
+	value: string;
+	code: boolean;
+	conditional: false | CalculatedStringResult[];
+}
 type CallExpression = SimpleCallExpression | NewExpression;
 declare interface CallExpressionInfo {
 	type: "call";
@@ -1444,11 +1450,18 @@ declare interface ChunkHashContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
+declare interface ChunkHashes {
+	[index: number]: string;
+	[index: string]: string;
+}
 type ChunkId = string | number;
 declare interface ChunkMaps {
 	hash: Record<string | number, string>;
 	contentHash: Record<string | number, Record<string, string>>;
 	name: Record<string | number, string>;
+}
+declare interface ChunkModuleHashes {
+	[index: string]: string;
 }
 declare class ChunkModuleIdRangePlugin {
 	constructor(options: ChunkModuleIdRangePluginOptions);
@@ -1479,6 +1492,10 @@ declare interface ChunkModuleIdRangePluginOptions {
 	 * end id
 	 */
 	end?: number;
+}
+declare interface ChunkModuleIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
 }
 declare interface ChunkModuleMaps {
 	id: Record<string | number, (string | number)[]>;
@@ -1563,6 +1580,10 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 * rendering in strict context
 	 */
 	strictMode?: boolean;
+}
+declare interface ChunkRuntime {
+	[index: number]: string;
+	[index: string]: string;
 }
 declare interface ChunkSizeOptions {
 	/**
@@ -2461,7 +2482,7 @@ declare class Compiler {
 	watchFileSystem: null | WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: Record<string, any>;
+	records: Records;
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
@@ -3293,7 +3314,7 @@ declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
 	supports: Supports;
 	media: Media;
-	inheritance: [CssLayer, Supports, Media][];
+	inheritance?: [CssLayer, Supports, Media][];
 }
 
 /**
@@ -5294,6 +5315,9 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
 }
+declare interface FullHashChunkModuleHashes {
+	[index: string]: string;
+}
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -6403,10 +6427,10 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
-		varDeclaration: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationLet: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationConst: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationVar: HookMap<SyncBailHook<[Declaration], boolean | void>>;
+		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
@@ -6815,7 +6839,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	walkNestedStatement(statement: Statement): void;
 	preWalkBlockStatement(statement: BlockStatement): void;
-	walkBlockStatement(statement: BlockStatement): void;
+	walkBlockStatement(statement: BlockStatement | StaticBlock): void;
 	walkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkIfStatement(statement: IfStatement): void;
 	walkIfStatement(statement: IfStatement): void;
@@ -7059,7 +7083,7 @@ declare class JavascriptParser extends Parser {
 					name: string,
 					rootInfo: string | VariableInfo | ScopeInfo,
 					getMembers: () => string[]
-			  ) => any),
+			  ) => R),
 		defined: undefined | ((result?: string) => undefined | R),
 		...args: AsArray<T>
 	): undefined | R;
@@ -7076,7 +7100,7 @@ declare class JavascriptParser extends Parser {
 	callHooksForInfoWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
-		fallback: undefined | ((name: string) => any),
+		fallback: undefined | ((name: string) => undefined | R),
 		defined: undefined | ((result?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
@@ -7224,12 +7248,7 @@ declare class JavascriptParser extends Parser {
 			| Super
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
-	parseCalculatedString(expression: Expression): {
-		range?: [number, number];
-		value: string;
-		code: boolean;
-		conditional: any;
-	};
+	parseCalculatedString(expression: Expression): CalculatedStringResult;
 	evaluate(source: string): BasicEvaluatedExpression;
 	isPure(
 		expr:
@@ -7938,6 +7957,18 @@ declare interface KnownNormalizedStatsOptions {
 	logging: false | "none" | "error" | "warn" | "info" | "log" | "verbose";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
+}
+declare interface KnownRecords {
+	aggressiveSplits?: SplitData[];
+	chunks?: RecordsChunks;
+	modules?: RecordsModules;
+	hash?: string;
+	hotIndex?: number;
+	fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
+	chunkModuleHashes?: ChunkModuleHashes;
+	chunkHashes?: ChunkHashes;
+	chunkRuntime?: ChunkRuntime;
+	chunkModuleIds?: ChunkModuleIds;
 }
 declare interface KnownStatsAsset {
 	type: string;
@@ -12800,8 +12831,17 @@ declare interface RealPathTypes {
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
-declare interface Records {
-	[index: string]: any;
+type Records = KnownRecords &
+	Record<string, KnownRecords[]> &
+	Record<string, any>;
+declare interface RecordsChunks {
+	byName?: Record<string, number>;
+	bySource?: Record<string, number>;
+	usedIds?: number[];
+}
+declare interface RecordsModules {
+	byIdentifier?: Record<string, number>;
+	usedIds?: number[];
 }
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
@@ -15036,6 +15076,12 @@ declare class SplitChunksPlugin {
 }
 declare interface SplitChunksSizes {
 	[index: string]: number;
+}
+declare interface SplitData {
+	id?: string | number;
+	hash?: string;
+	modules: Module[];
+	size: number;
 }
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
