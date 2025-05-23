@@ -408,25 +408,6 @@ declare module "webpack-sources" {
 	}
 }
 
-declare module "browserslist" {
-	function browserslist(query: string): string[] | undefined;
-	namespace browserslist {
-		export function loadConfig(
-			options:
-				| {
-						config: string;
-						env?: string;
-				  }
-				| {
-						path: string;
-						env?: string;
-				  }
-		): string | undefined;
-		export function findConfig(path: string): Record<string, string[]>;
-	}
-	export = browserslist;
-}
-
 declare module "json-parse-even-better-errors" {
 	function parseJson(
 		text: string,
@@ -434,13 +415,6 @@ declare module "json-parse-even-better-errors" {
 		context?: number
 	): any;
 	export = parseJson;
-}
-
-// TODO remove that when @types/estree is updated
-interface ImportAttributeNode {
-	type: "ImportAttribute";
-	key: import("estree").Identifier | import("estree").Literal;
-	value: import("estree").Literal;
 }
 
 type RecursiveArrayOrRecord<T> =
