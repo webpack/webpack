@@ -2076,7 +2076,7 @@ __webpack_require__.d(exports, {
 
 ```
 app:
-  asset src_bootstrap_js.js 43.7 KiB [emitted]
+  asset src_bootstrap_js.js 43.8 KiB [emitted]
   asset app.js 30.1 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 27.5 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]

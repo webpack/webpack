@@ -55,7 +55,8 @@ module.exports = [
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
-if(false) {}
+if(false) // removed by dead control flow
+{}
 console.log("Running " + "desktop" + " build");
 /******/ })()
 ;
@@ -148,7 +149,7 @@ mobile:
   mobile (webpack X.X.X) compiled successfully
 
 desktop:
-  asset desktop.js 262 bytes [emitted] (name: main)
+  asset desktop.js 294 bytes [emitted] (name: main)
   chunk (runtime: main) desktop.js (main) 94 bytes [entry] [rendered]
     > ./example main
     ./example.js 94 bytes [built] [code generated]
