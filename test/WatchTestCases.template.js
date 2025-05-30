@@ -144,6 +144,8 @@ const describeCases = config => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								if (options.output.clean === undefined)
+									options.output.clean = true;
 								if (!options.output.path) options.output.path = outputDirectory;
 								if (typeof options.output.pathinfo === "undefined")
 									options.output.pathinfo = true;
@@ -360,29 +362,27 @@ const describeCases = config => {
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
 														if (esmMode === "unlinked") return esm;
-														if (esm.status !== "evaluated") {
-															await esm.link(
-																async (specifier, referencingModule) =>
-																	await asModule(
-																		await _require(
-																			path.dirname(
-																				referencingModule.identifier
-																					? referencingModule.identifier.slice(
-																							esmIdentifier.length + 1
-																						)
-																					: fileURLToPath(referencingModule.url)
-																			),
-																			specifier,
-																			"unlinked"
+														await esm.link(
+															async (specifier, referencingModule) =>
+																await asModule(
+																	await _require(
+																		path.dirname(
+																			referencingModule.identifier
+																				? referencingModule.identifier.slice(
+																						esmIdentifier.length + 1
+																					)
+																				: fileURLToPath(referencingModule.url)
 																		),
-																		referencingModule.context,
-																		true
-																	)
-															);
-															// node.js 10 needs instantiate
-															if (esm.instantiate) esm.instantiate();
-															await esm.evaluate();
-														}
+																		specifier,
+																		"unlinked"
+																	),
+																	referencingModule.context,
+																	true
+																)
+														);
+														// node.js 10 needs instantiate
+														if (esm.instantiate) esm.instantiate();
+														await esm.evaluate();
 														if (esmMode === "evaluated") return esm;
 														const ns = esm.namespace;
 														return ns.default && ns.default instanceof Promise
