@@ -30,7 +30,7 @@ it("should work with context options", () => {
 	throwModuleNotFound(() => {
 		dyn = "/a.json";
 		url = new URL(
-			/* webpackExclude: /.\/folder2/ */ "./folder2" + dyn,
+			/* webpackExclude: /[\\/]folder2[\\/]/ */ "./folder2" + dyn,
 			import.meta.url
 		);
 	});
