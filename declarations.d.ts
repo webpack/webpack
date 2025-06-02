@@ -289,6 +289,24 @@ declare module "@webassemblyjs/wasm-edit" {
 	): ArrayBuffer;
 }
 
+declare module "webpack-sources" {
+	export {
+		SourceLike,
+		RawSourceMap,
+		MapOptions,
+		Source,
+		RawSource,
+		OriginalSource,
+		ReplaceSource,
+		SourceMapSource,
+		ConcatSource,
+		PrefixSource,
+		CachedSource,
+		SizeOnlySource,
+		CompatSource
+	} from "webpack-sources/types";
+}
+
 declare module "json-parse-even-better-errors" {
 	function parseJson(
 		text: string,

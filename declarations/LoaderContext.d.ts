@@ -1,4 +1,4 @@
-import type { SourceMap } from "../lib/NormalModule";
+import type { RawSourceMap } from "../lib/NormalModule";
 import type Module from "../lib/Module";
 import type { validate } from "schema-utils";
 import type { AssetInfo } from "../lib/Compilation";
@@ -247,7 +247,7 @@ type AdditionalData = {
 type WebpackLoaderContextCallback = (
 	err: undefined | null | Error,
 	content?: string | Buffer,
-	sourceMap?: null | string | SourceMap,
+	sourceMap?: null | string | RawSourceMap,
 	additionalData?: AdditionalData
 ) => void;
 
@@ -266,14 +266,14 @@ type PitchLoaderDefinitionFunction<OptionsType = {}, ContextAdditions = {}> = (
 type LoaderDefinitionFunction<OptionsType = {}, ContextAdditions = {}> = (
 	this: LoaderContext<OptionsType> & ContextAdditions,
 	content: string,
-	sourceMap?: string | SourceMap,
+	sourceMap?: string | RawSourceMap,
 	additionalData?: AdditionalData
 ) => string | Buffer | Promise<string | Buffer> | void;
 
 type RawLoaderDefinitionFunction<OptionsType = {}, ContextAdditions = {}> = (
 	this: LoaderContext<OptionsType> & ContextAdditions,
 	content: Buffer,
-	sourceMap?: string | SourceMap,
+	sourceMap?: string | RawSourceMap,
 	additionalData?: AdditionalData
 ) => string | Buffer | Promise<string | Buffer> | void;
 

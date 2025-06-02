@@ -895,6 +895,19 @@ type BufferEncoding =
 	| "binary"
 	| "hex";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
+declare interface BufferEntry {
+	map?: null | RawSourceMap;
+	bufferedMap?: null | BufferedMap;
+}
+declare interface BufferedMap {
+	version: number;
+	sources: string[];
+	names: string[];
+	sourceRoot?: string;
+	sourcesContent?: ("" | Buffer)[];
+	mappings?: Buffer;
+	file: string;
+}
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -1014,12 +1027,36 @@ declare interface CacheGroupsContext {
 	chunkGraph: ChunkGraph;
 }
 type CacheOptionsNormalized = false | FileCacheOptions | MemoryCacheOptions;
+declare interface CachedData {
+	source?: boolean;
+	buffer: Buffer;
+	size?: number;
+	maps: Map<string, BufferEntry>;
+	hash?: (string | Buffer)[];
+}
 declare class CachedSource extends Source {
-	constructor(source: Source);
-	constructor(source: Source | (() => Source), cachedData?: any);
-	original(): Source;
+	constructor(source: Source | (() => Source), cachedData?: CachedData);
+	getCachedData(): CachedData;
 	originalLazy(): Source | (() => Source);
-	getCachedData(): any;
+	original(): Source;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
 declare interface CalculatedStringResult {
 	range?: [number, number];
@@ -2545,11 +2582,30 @@ declare class Compiler {
 	close(callback: RunCallback<void>): void;
 }
 declare class ConcatSource extends Source {
-	constructor(...args: (string | Source)[]);
+	constructor(...args: ConcatSourceChild[]);
 	getChildren(): Source[];
-	add(item: string | Source): void;
-	addAllSkipOptimizing(items: Source[]): void;
+	add(item: ConcatSourceChild): void;
+	addAllSkipOptimizing(items: ConcatSourceChild[]): void;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
+type ConcatSourceChild = string | Source | SourceLike;
 declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 	module: Module;
@@ -5369,6 +5425,11 @@ declare interface GenerateContext {
 	 */
 	getData?: () => Map<string, any>;
 }
+declare interface GeneratedSourceInfo {
+	generatedLine?: number;
+	generatedColumn?: number;
+	source?: string;
+}
 declare class Generator {
 	constructor();
 	getTypes(module: NormalModule): ReadonlySet<string>;
@@ -5619,6 +5680,10 @@ declare class Hash {
 	digest(encoding?: string): string | Buffer;
 }
 type HashFunction = string | typeof Hash;
+declare interface HashLike {
+	update: (data: string | Buffer, inputEncoding?: string) => HashLike;
+	digest: (encoding?: string) => string | Buffer;
+}
 declare interface HashableObject {
 	updateHash: (hash: Hash) => void;
 }
@@ -8642,7 +8707,7 @@ declare interface LoaderDefinitionFunction<
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
 		content: string,
-		sourceMap?: string | SourceMap,
+		sourceMap?: string | RawSourceMap,
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
@@ -8743,7 +8808,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	async(): (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: null | string | SourceMap,
+		sourceMap?: null | string | RawSourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -8757,7 +8822,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	callback: (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: null | string | SourceMap,
+		sourceMap?: null | string | RawSourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -10163,7 +10228,7 @@ declare class NormalModule extends Module {
 		context: string,
 		name: string,
 		content: string | Buffer,
-		sourceMap?: string | SourceMap,
+		sourceMap?: string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
 	getCurrentLoader(
@@ -11186,8 +11251,26 @@ declare interface OriginRecord {
 	request: string;
 }
 declare class OriginalSource extends Source {
-	constructor(source: string | Buffer, name: string);
+	constructor(value: string | Buffer, name: string);
 	getName(): string;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
 
 /**
@@ -11998,9 +12081,27 @@ declare class PrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class PrefixSource extends Source {
-	constructor(prefix: string, source: string | Source);
-	original(): Source;
+	constructor(prefix: string, source: string | Source | Buffer);
 	getPrefix(): string;
+	original(): Source;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
 declare interface PreparsedAst {
 	[index: string]: any;
@@ -12218,13 +12319,31 @@ declare interface RawLoaderDefinitionFunction<
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
 		content: Buffer,
-		sourceMap?: string | SourceMap,
+		sourceMap?: string | RawSourceMap,
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 declare class RawSource extends Source {
-	constructor(source: string | Buffer, convertToString?: boolean);
+	constructor(value: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
 declare interface RawSourceMap {
 	version: number;
@@ -12234,6 +12353,8 @@ declare interface RawSourceMap {
 	sourcesContent?: string[];
 	mappings: string;
 	file: string;
+	debugId?: string;
+	ignoreList?: number[];
 }
 declare interface Read<
 	TBuffer extends
@@ -13022,17 +13143,38 @@ declare interface RenderManifestOptions {
 }
 declare class ReplaceSource extends Source {
 	constructor(source: Source, name?: string);
+	getName(): undefined | string;
+	getReplacements(): Replacement[];
 	replace(start: number, end: number, newValue: string, name?: string): void;
 	insert(pos: number, newValue: string, name?: string): void;
-	getName(): string;
-	original(): string;
-	getReplacements(): {
-		start: number;
-		end: number;
-		content: string;
-		insertIndex: number;
-		name: string;
-	}[];
+	original(): Source;
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
+	static Replacement: typeof Replacement;
+}
+declare class Replacement {
+	constructor(start: number, end: number, content: string, name?: string);
+	start: number;
+	end: number;
+	content: string;
+	name?: string;
+	index?: number;
 }
 declare interface RequestRecord {
 	[index: string]: string | string[];
@@ -14903,25 +15045,24 @@ declare abstract class SortableSet<T> extends Set<T> {
 }
 declare class Source {
 	constructor();
+	source(): SourceValue;
+	buffer(): Buffer;
 	size(): number;
 	map(options?: MapOptions): null | RawSourceMap;
-	sourceAndMap(options?: MapOptions): { source: string | Buffer; map: Object };
-	updateHash(hash: Hash): void;
-	source(): string | Buffer;
-	buffer(): Buffer;
+	sourceAndMap(options?: MapOptions): SourceAndMap;
+	updateHash(hash: HashLike): void;
+}
+declare interface SourceAndMap {
+	source: SourceValue;
+	map: null | RawSourceMap;
 }
 declare interface SourceLike {
-	source(): string | Buffer;
-}
-declare interface SourceMap {
-	version: number;
-	sources: string[];
-	mappings: string;
-	file?: string;
-	sourceRoot?: string;
-	sourcesContent?: string[];
-	names?: string[];
-	debugId?: string;
+	source: () => SourceValue;
+	buffer?: () => Buffer;
+	size?: () => number;
+	map?: (options?: MapOptions) => null | RawSourceMap;
+	sourceAndMap?: (options?: MapOptions) => SourceAndMap;
+	updateHash?: (hash: HashLike) => void;
 }
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
@@ -15022,11 +15163,11 @@ declare interface SourceMapDevToolPluginOptions {
 }
 declare class SourceMapSource extends Source {
 	constructor(
-		source: string | Buffer,
+		value: string | Buffer,
 		name: string,
-		sourceMap: string | Object | Buffer,
+		sourceMap?: string | Buffer | RawSourceMap,
 		originalSource?: string | Buffer,
-		innerSourceMap?: string | Object | Buffer,
+		innerSourceMap?: string | Buffer | RawSourceMap,
 		removeOriginalSource?: boolean
 	);
 	getArgsAsBuffers(): [
@@ -15035,13 +15176,32 @@ declare class SourceMapSource extends Source {
 		Buffer,
 		undefined | Buffer,
 		undefined | Buffer,
-		boolean
+		undefined | boolean
 	];
+	streamChunks(
+		options: StreamChunksOptions,
+		onChunk: (
+			chunk: undefined | string,
+			generatedLine: number,
+			generatedColumn: number,
+			sourceIndex: number,
+			originalLine: number,
+			originalColumn: number,
+			nameIndex: number
+		) => void,
+		onSource: (
+			sourceIndex: number,
+			source: null | string,
+			sourceContent?: string
+		) => void,
+		onName: (nameIndex: number, name: string) => void
+	): GeneratedSourceInfo;
 }
 declare interface SourcePosition {
 	line: number;
 	column?: number;
 }
+type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	defaultSizeTypes: string[];
@@ -15826,6 +15986,11 @@ type StatsValue =
 	| "minimal"
 	| "normal"
 	| "detailed";
+declare interface StreamChunksOptions {
+	source?: boolean;
+	finalSource?: boolean;
+	columns?: boolean;
+}
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	constructor(__0: SyncModuleIdsPluginOptions);
