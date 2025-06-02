@@ -109,14 +109,14 @@ module.exports = function checkArrayExpectation(
 		}
 		for (let i = 0; i < array.length; i++) {
 			if (Array.isArray(expected[i])) {
-				for (let j = 0; j < expected[i].length; j++) {
-					if (!check(expected[i][j], array[i])) {
+				for (const expectedItem of expected[i]) {
+					if (!check(expectedItem, array[i])) {
 						return (
 							done(
 								new Error(
 									`${upperCaseKind} ${i}: ${explain(
 										array[i]
-									)} doesn't match ${explain(expected[i][j])}`
+									)} doesn't match ${explain(expectedItem)}`
 								)
 							),
 							true

@@ -1021,6 +1021,12 @@ declare class CachedSource extends Source {
 	originalLazy(): Source | (() => Source);
 	getCachedData(): any;
 }
+declare interface CalculatedStringResult {
+	range?: [number, number];
+	value: string;
+	code: boolean;
+	conditional: false | CalculatedStringResult[];
+}
 type CallExpression = SimpleCallExpression | NewExpression;
 declare interface CallExpressionInfo {
 	type: "call";
@@ -1444,11 +1450,18 @@ declare interface ChunkHashContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
+declare interface ChunkHashes {
+	[index: number]: string;
+	[index: string]: string;
+}
 type ChunkId = string | number;
 declare interface ChunkMaps {
 	hash: Record<string | number, string>;
 	contentHash: Record<string | number, Record<string, string>>;
 	name: Record<string | number, string>;
+}
+declare interface ChunkModuleHashes {
+	[index: string]: string;
 }
 declare class ChunkModuleIdRangePlugin {
 	constructor(options: ChunkModuleIdRangePluginOptions);
@@ -1479,6 +1492,10 @@ declare interface ChunkModuleIdRangePluginOptions {
 	 * end id
 	 */
 	end?: number;
+}
+declare interface ChunkModuleIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
 }
 declare interface ChunkModuleMaps {
 	id: Record<string | number, (string | number)[]>;
@@ -1563,6 +1580,10 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 * rendering in strict context
 	 */
 	strictMode?: boolean;
+}
+declare interface ChunkRuntime {
+	[index: number]: string;
+	[index: string]: string;
 }
 declare interface ChunkSizeOptions {
 	/**
@@ -1973,7 +1994,7 @@ declare class Compilation {
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
 		get normalModuleLoader(): SyncHook<
-			[LoaderContextNormalModule<any>, NormalModule]
+			[LoaderContextObject<any>, NormalModule]
 		>;
 	}>;
 	name?: string;
@@ -2461,7 +2482,7 @@ declare class Compiler {
 	watchFileSystem: null | WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: Record<string, any>;
+	records: Records;
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
@@ -3293,7 +3314,7 @@ declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
 	supports: Supports;
 	media: Media;
-	inheritance: [CssLayer, Supports, Media][];
+	inheritance?: [CssLayer, Supports, Media][];
 }
 
 /**
@@ -5294,6 +5315,9 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
 }
+declare interface FullHashChunkModuleHashes {
+	[index: string]: string;
+}
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -6403,10 +6427,10 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
-		varDeclaration: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationLet: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationConst: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		varDeclarationVar: HookMap<SyncBailHook<[Declaration], boolean | void>>;
+		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
@@ -6815,7 +6839,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	walkNestedStatement(statement: Statement): void;
 	preWalkBlockStatement(statement: BlockStatement): void;
-	walkBlockStatement(statement: BlockStatement): void;
+	walkBlockStatement(statement: BlockStatement | StaticBlock): void;
 	walkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkIfStatement(statement: IfStatement): void;
 	walkIfStatement(statement: IfStatement): void;
@@ -7059,7 +7083,7 @@ declare class JavascriptParser extends Parser {
 					name: string,
 					rootInfo: string | VariableInfo | ScopeInfo,
 					getMembers: () => string[]
-			  ) => any),
+			  ) => R),
 		defined: undefined | ((result?: string) => undefined | R),
 		...args: AsArray<T>
 	): undefined | R;
@@ -7076,7 +7100,7 @@ declare class JavascriptParser extends Parser {
 	callHooksForInfoWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
-		fallback: undefined | ((name: string) => any),
+		fallback: undefined | ((name: string) => undefined | R),
 		defined: undefined | ((result?: string) => any),
 		...args: AsArray<T>
 	): undefined | R;
@@ -7224,12 +7248,7 @@ declare class JavascriptParser extends Parser {
 			| Super
 	): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
-	parseCalculatedString(expression: Expression): {
-		range?: [number, number];
-		value: string;
-		code: boolean;
-		conditional: any;
-	};
+	parseCalculatedString(expression: Expression): CalculatedStringResult;
 	evaluate(source: string): BasicEvaluatedExpression;
 	isPure(
 		expr:
@@ -7458,6 +7477,11 @@ declare interface JavascriptParserOptions {
 	 * Specifies global preload for dynamic import.
 	 */
 	dynamicImportPreload?: number | boolean;
+
+	/**
+	 * Enable/disable parsing of dynamic URL.
+	 */
+	dynamicUrl?: boolean;
 
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
@@ -7933,6 +7957,18 @@ declare interface KnownNormalizedStatsOptions {
 	logging: false | "none" | "error" | "warn" | "info" | "log" | "verbose";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
+}
+declare interface KnownRecords {
+	aggressiveSplits?: SplitData[];
+	chunks?: RecordsChunks;
+	modules?: RecordsModules;
+	hash?: string;
+	hotIndex?: number;
+	fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
+	chunkModuleHashes?: ChunkModuleHashes;
+	chunkHashes?: ChunkHashes;
+	chunkRuntime?: ChunkRuntime;
+	chunkModuleIds?: ChunkModuleIds;
 }
 declare interface KnownStatsAsset {
 	type: string;
@@ -8584,7 +8620,7 @@ type LoaderContextDeclarationsIndex<OptionsType> =
 		LoaderRunnerLoaderContext<OptionsType> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+type LoaderContextObject<T> = NormalModuleLoaderContext<T> &
 	LoaderRunnerLoaderContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
@@ -10131,7 +10167,7 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	getCurrentLoader(
-		loaderContext: LoaderContextNormalModule<any>,
+		loaderContext: LoaderContextObject<any>,
 		index?: number
 	): null | LoaderItem;
 	createSource(
@@ -10157,9 +10193,9 @@ declare class NormalModule extends Module {
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[LoaderContextNormalModule<any>, NormalModule]>;
+	loader: SyncHook<[LoaderContextObject<any>, NormalModule]>;
 	beforeLoaders: SyncHook<
-		[LoaderItem[], NormalModule, LoaderContextNormalModule<any>]
+		[LoaderItem[], NormalModule, LoaderContextObject<any>]
 	>;
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
@@ -10169,10 +10205,7 @@ declare interface NormalModuleCompilationHooks {
 		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<
-			[LoaderContextNormalModule<any>],
-			null | string | Buffer
-		>
+		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
 		[[string | Buffer, string | SourceMapSource, PreparsedAst], NormalModule]
@@ -12798,8 +12831,17 @@ declare interface RealPathTypes {
 		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
 	): void;
 }
-declare interface Records {
-	[index: string]: any;
+type Records = KnownRecords &
+	Record<string, KnownRecords[]> &
+	Record<string, any>;
+declare interface RecordsChunks {
+	byName?: Record<string, number>;
+	bySource?: Record<string, number>;
+	usedIds?: number[];
+}
+declare interface RecordsModules {
+	byIdentifier?: Record<string, number>;
+	usedIds?: number[];
 }
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
@@ -15035,6 +15077,12 @@ declare class SplitChunksPlugin {
 declare interface SplitChunksSizes {
 	[index: string]: number;
 }
+declare interface SplitData {
+	id?: string | number;
+	hash?: string;
+	modules: Module[];
+	size: number;
+}
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
 	stack: Map<K, InternalCell<V>>[];
@@ -15926,6 +15974,46 @@ declare class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName?: string | true;
 	tagInfo?: TagInfo;
+}
+declare interface VirtualModuleConfig {
+	/**
+	 * - The module type
+	 */
+	type?: string;
+
+	/**
+	 * - The source function
+	 */
+	source: (loaderContext: LoaderContextObject<any>) => string | Promise<string>;
+
+	/**
+	 * - Optional version function or value
+	 */
+	version?: string | true | (() => string);
+}
+type VirtualModuleInput =
+	| string
+	| ((loaderContext: LoaderContextObject<any>) => string | Promise<string>)
+	| VirtualModuleConfig;
+declare interface VirtualModules {
+	[index: string]: VirtualModuleInput;
+}
+declare class VirtualUrlPlugin {
+	constructor(modules: VirtualModules, scheme?: string);
+	scheme: string;
+	modules: { [index: string]: VirtualModuleConfig };
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	findVirtualModuleConfigById(id: string): VirtualModuleConfig;
+
+	/**
+	 * Get the cache version for a given version value
+	 */
+	getCacheVersion(version: string | true | (() => string)): undefined | string;
+	static DEFAULT_SCHEME: string;
 }
 type WarningFilterItemTypes =
 	| string
@@ -17063,7 +17151,7 @@ declare namespace exports {
 	}
 	export namespace experiments {
 		export namespace schemes {
-			export { HttpUriPlugin };
+			export { HttpUriPlugin, VirtualUrlPlugin };
 		}
 		export namespace ids {
 			export { SyncModuleIdsPlugin };

@@ -9,12 +9,14 @@ const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const { pathToFileURL, fileURLToPath } = require("url");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
 const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
+const asModule = require("./helpers/asModule");
 
 /**
  * @param {string} src src
@@ -142,6 +144,8 @@ const describeCases = config => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								if (options.output.clean === undefined)
+									options.output.clean = true;
 								if (!options.output.path) options.output.path = outputDirectory;
 								if (typeof options.output.pathinfo === "undefined")
 									options.output.pathinfo = true;
@@ -200,7 +204,7 @@ const describeCases = config => {
 									{
 										aggregateTimeout: 1000
 									},
-									(err, stats) => {
+									async (err, stats) => {
 										if (err) return compilationFinished(err);
 										if (!stats) {
 											return compilationFinished(
@@ -273,29 +277,120 @@ const describeCases = config => {
 											document: new FakeDocument()
 										};
 
+										const baseModuleScope = {
+											console,
+											it: run.it,
+											beforeEach: _beforeEach,
+											afterEach: _afterEach,
+											expect,
+											jest,
+											STATS_JSON: jsonStats,
+											nsObj: m => {
+												Object.defineProperty(m, Symbol.toStringTag, {
+													value: "Module"
+												});
+												return m;
+											},
+											window: globalContext,
+											self: globalContext,
+											WATCH_STEP: run.name,
+											STATE: state
+										};
+
+										const esmCache = new Map();
+										const esmIdentifier = `${category.name}-${testName}`;
+										const esmContext = vm.createContext(baseModuleScope, {
+											name: "context for esm"
+										});
+										// ESM
+										const isModule =
+											options.experiments && options.experiments.outputModule;
+
 										/**
-										 * @param {string} currentDirectory the current directory
-										 * @param {TODO} module a module
+										 * @param {string} currentDirectory The directory to resolve relative paths from
+										 * @param {string} module The module to require
+										 * @param {("unlinked"|"evaluated")} esmMode The mode for ESM module handling
 										 * @returns {EXPECTED_ANY} required module
 										 * @private
 										 */
-										function _require(currentDirectory, module) {
-											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
+										function _require(currentDirectory, module, esmMode) {
+											if (/^\.\.?\//.test(module) || path.isAbsolute(module)) {
 												let fn;
-												let content;
-												let p;
-												if (Array.isArray(module)) {
-													p = path.join(currentDirectory, module[0]);
-													content = module
-														.map(arg => {
-															p = path.join(currentDirectory, arg);
-															return fs.readFileSync(p, "utf-8");
-														})
-														.join("\n");
-												} else {
-													p = path.join(currentDirectory, module);
-													content = fs.readFileSync(p, "utf-8");
+												const p = path.isAbsolute(module)
+													? module
+													: path.join(currentDirectory, module);
+												const content = fs.readFileSync(p, "utf-8");
+
+												if (isModule) {
+													if (!vm.SourceTextModule)
+														throw new Error(
+															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+														);
+													let esm = esmCache.get(p);
+													if (!esm) {
+														esm = new vm.SourceTextModule(content, {
+															identifier: `${esmIdentifier}-${p}`,
+															url: `${pathToFileURL(p).href}?${esmIdentifier}`,
+															context: esmContext,
+															initializeImportMeta: (meta, module) => {
+																meta.url = pathToFileURL(p).href;
+															},
+															importModuleDynamically: async (
+																specifier,
+																module
+															) => {
+																const normalizedSpecifier =
+																	specifier.startsWith("file:")
+																		? `./${path.relative(
+																				path.dirname(p),
+																				fileURLToPath(specifier)
+																			)}`
+																		: specifier.replace(
+																				/https:\/\/test.cases\/path\//,
+																				"./"
+																			);
+																const result = await _require(
+																	currentDirectory,
+																	normalizedSpecifier,
+																	"evaluated"
+																);
+																return await asModule(result, module.context);
+															}
+														});
+														esmCache.set(p, esm);
+													}
+													if (esmMode === "unlinked") return esm;
+													return (async () => {
+														if (esmMode === "unlinked") return esm;
+														await esm.link(
+															async (specifier, referencingModule) =>
+																await asModule(
+																	await _require(
+																		path.dirname(
+																			referencingModule.identifier
+																				? referencingModule.identifier.slice(
+																						esmIdentifier.length + 1
+																					)
+																				: fileURLToPath(referencingModule.url)
+																		),
+																		specifier,
+																		"unlinked"
+																	),
+																	referencingModule.context,
+																	true
+																)
+														);
+														// node.js 10 needs instantiate
+														if (esm.instantiate) esm.instantiate();
+														await esm.evaluate();
+														if (esmMode === "evaluated") return esm;
+														const ns = esm.namespace;
+														return ns.default && ns.default instanceof Promise
+															? ns.default
+															: ns;
+													})();
 												}
+
 												if (
 													options.target === "web" ||
 													options.target === "webworker"
@@ -358,10 +453,33 @@ const describeCases = config => {
 
 										if (testConfig.noTests)
 											return process.nextTick(compilationFinished);
-										_require(
+
+										const getBundle = (outputDirectory, module) => {
+											if (Array.isArray(module)) {
+												return module.map(arg =>
+													path.join(outputDirectory, arg)
+												);
+											} else if (module instanceof RegExp) {
+												return fs
+													.readdirSync(outputDirectory)
+													.filter(f => module.test(f))
+													.map(f => path.join(outputDirectory, f));
+											}
+											return [path.join(outputDirectory, module)];
+										};
+
+										const promises = [];
+										for (const p of getBundle(
 											outputDirectory,
 											testConfig.bundlePath || "./bundle.js"
-										);
+										)) {
+											promises.push(
+												Promise.resolve().then(() =>
+													_require(outputDirectory, p)
+												)
+											);
+										}
+										await Promise.all(promises);
 
 										if (run.getNumberOfTests() < 1)
 											return compilationFinished(
@@ -431,6 +549,12 @@ const describeCases = config => {
 						afterAll(() => {
 							remove(tempDirectory);
 						});
+
+						const {
+							it: _it,
+							beforeEach: _beforeEach,
+							afterEach: _afterEach
+						} = createLazyTestEnv(10000);
 					});
 				}
 			});

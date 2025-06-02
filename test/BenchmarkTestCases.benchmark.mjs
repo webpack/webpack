@@ -2,12 +2,11 @@ import path from "path";
 import fs from "fs/promises";
 import { constants, writeFile } from "fs";
 import { Bench, hrtimeNow } from "tinybench";
-import { dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import simpleGit from "simple-git";
 import { withCodSpeed } from "@codspeed/tinybench-plugin";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
 

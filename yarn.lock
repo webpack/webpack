@@ -706,9 +706,9 @@
   integrity sha512-D/xHXX7T37BJxNRf5JJHsvziFDvh23IF/KvkZXNSh8VqcRdod3BAz9VGHZf6VDqcZXr1VRqIYR3mQ8DSvs3AVQ==
 
 "@cspell/dict-software-terms@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/@cspell/dict-software-terms/-/dict-software-terms-5.0.8.tgz#baa277fabfc70f3d8453830e26628ee6df53fad9"
-  integrity sha512-VsJesitvaHZpMgNwHHms3yDsZz7LNToC2HuSAnyt1znn37ribiJF1ty0jWhVQO6fv7K4PM1KsKTJIwqBwc446g==
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@cspell/dict-software-terms/-/dict-software-terms-5.0.9.tgz#009dcd916191f1915776a5cedb39fd2d34b0b5ff"
+  integrity sha512-Zcm7PMxLSmgJNeICsj1jfhOIS8sOFGgmV1EsTo+EALXWU5pcD6u/P+B9sY0f/9M8V82VaYmTeNVwSlZNh5h94w==
 
 "@cspell/dict-sql@^2.2.0":
   version "2.2.0"
@@ -6556,9 +6556,9 @@ wast-loader@^1.12.1:
     wabt "1.0.0-nightly.20180421"
 
 watchpack@^2.4.1:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.4.3.tgz#110b3a600c525f6a39ab66cf354cf08b205c29dc"
-  integrity sha512-adBYQLivcg1jbdKEJeqScJJFvgm4qY9+3tXw+jdG6lkVeqRJEtiQmSWjmth8GKmDZuX7sYM4YFxQsf0AzMfGGw==
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.4.4.tgz#473bda72f0850453da6425081ea46fc0d7602947"
+  integrity sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"

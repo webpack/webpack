@@ -68,7 +68,7 @@ const createSimpleCompilerWithCustomHandler = options => {
 	return compiler;
 };
 
-const getLogs = logsStr => logsStr.split(/\r/).filter(v => !(v === " "));
+const getLogs = logsStr => logsStr.split(/\r/).filter(v => v !== " ");
 
 const runCompilerAsync = compiler =>
 	new Promise((resolve, reject) => {
