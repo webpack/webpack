@@ -1935,7 +1935,7 @@ exports[`StatsTestCases should print correct stats for non-webpack-require-web-w
 
 WARNING in ./index.js 1:0-23
 APIPlugin
-require is not allowed in ESM mode with the web target
+__non_webpack_require__ is only allowed in target node
 
 webpack x.x.x compiled with 1 warning in X ms"
 `;
