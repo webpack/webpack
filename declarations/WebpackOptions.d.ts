@@ -1040,7 +1040,7 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
-	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
 	 */
 	cacheUnaffected?: boolean;
 	/**
@@ -1133,6 +1133,10 @@ export interface FileCacheOptions {
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
+	/**
+	 * A function to filter which cache entries should be stored. Return false to skip storing a cache entry.
+	 */
+	storeFilter?: (identifier: string, data: any) => boolean;
 	/**
 	 * Filesystem caching.
 	 */
