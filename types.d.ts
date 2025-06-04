@@ -14512,6 +14512,7 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
+	generatePublicPath(filename: string | { expr: string }): string;
 	moduleNamespacePromise(__0: {
 		/**
 		 * the chunk graph
