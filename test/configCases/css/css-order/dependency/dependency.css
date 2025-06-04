@@ -1,0 +1,3 @@
+.dependency::before {
+	content: "dependency - should be first";
+}
