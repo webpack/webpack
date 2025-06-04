@@ -649,6 +649,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "experiments.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {

@@ -563,6 +563,11 @@
       "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
       "type": "boolean"
     },
+    "DeferImportExperimentOptions": {
+      "description": "Options for defer import.",
+      "type": "boolean",
+      "required": ["asyncModule"]
+    },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
       "type": "array",
@@ -989,6 +994,10 @@
           "description": "Enable css support.",
           "type": "boolean"
         },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+          "type": "boolean"
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -1089,6 +1098,10 @@
         },
         "css": {
           "description": "Enable css support.",
+          "type": "boolean"
+        },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean"
         },
         "futureDefaults": {
