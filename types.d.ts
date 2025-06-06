@@ -387,7 +387,7 @@ declare interface AssetResourceGeneratorOptions {
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: 'auto' | (string & {}) | ((pathData: PathData, assetInfo?: AssetInfo) => 'auto' | (string & {}));
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
