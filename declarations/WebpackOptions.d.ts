@@ -143,11 +143,11 @@ export type PublicPath = "auto" | RawPublicPath;
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
-	| string
+	| (string & {})
 	| ((
 			pathData: import("../lib/Compilation").PathData,
 			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
+	  ) => "auto" | (string & {});
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
