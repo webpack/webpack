@@ -181,7 +181,7 @@
     "cover:basic": "yarn cover:base --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "node ./test.js && yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
-    "cover:integration:b": "node ./test.js && yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
+    "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
     "cover:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
