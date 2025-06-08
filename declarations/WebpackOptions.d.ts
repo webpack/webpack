@@ -1048,6 +1048,10 @@ export interface MemoryCacheOptions {
 	 */
 	maxGenerations?: number;
 	/**
+	 * A function to filter which cache entries should be stored. Return false to skip storing a cache entry.
+	 */
+	storeFilter?: (identifier: string, data: any) => boolean;
+	/**
 	 * In memory caching.
 	 */
 	type: "memory";

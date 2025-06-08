@@ -2378,6 +2378,11 @@
           "type": "number",
           "minimum": 1
         },
+        "storeFilter": {
+          "description": "A function to filter which cache entries should be stored. Return false to skip storing a cache entry.",
+          "instanceof": "Function",
+          "tsType": "((identifier: string, data: any) => boolean)"
+        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]
