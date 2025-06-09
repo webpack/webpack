@@ -9147,8 +9147,13 @@ declare interface MemoryCacheOptions {
 	type: "memory";
 }
 declare class MemoryCachePlugin {
-	constructor(storeFilter: (identifier: string, data?: any) => boolean);
-	storeFilter: (identifier: string, data?: any) => boolean;
+	constructor(options?: {
+		/**
+		 * a function that filters which cache entries should be stored
+		 */
+		storeFilter?: (identifier: string, data?: any) => boolean;
+	});
+	storeFilter?: (identifier: string, data?: any) => boolean;
 
 	/**
 	 * Apply the plugin
