@@ -280,7 +280,7 @@ vendor:
 
 app:
   asset pageB.js 297 bytes [emitted] [minimized] (name: pageB)
-  asset pageA.js 293 bytes [emitted] [minimized] (name: pageA)
+  asset pageA.js 295 bytes [emitted] [minimized] (name: pageA)
   asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
