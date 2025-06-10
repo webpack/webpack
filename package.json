@@ -46,7 +46,7 @@
     "@types/mime-types": "^2.1.4",
     "@types/node": "^22.15.11",
     "@types/xxhashjs": "^0.2.4",
-    "assemblyscript": "^0.28.1",
+    "assemblyscript": "^0.28.2",
     "babel-loader": "^10.0.0",
     "bundle-loader": "^0.5.6",
     "coffee-loader": "^5.0.0",
