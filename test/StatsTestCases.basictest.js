@@ -210,7 +210,11 @@ describe("StatsTestCases", () => {
 					.replace(
 						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
 						match => `${match.replace(/[0-9a-f]/g, "X")}`
-					);
+					)
+					// Normalize stack traces between Jest v27 and v30
+					// Jest v27: at Object.<anonymous>.module.exports
+					// Jest v30: at Object.module.exports
+					.replace(/Object\.<anonymous>\./g, "Object.");
 				expect(actual).toMatchSnapshot();
 
 				if (testConfig.validate) {

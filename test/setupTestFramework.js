@@ -40,6 +40,32 @@ expect.extend({
 	}
 });
 
+// Add snapshot serializer to normalize differences between Jest v27 and v30
+// This ensures that snapshots work correctly across different Jest versions
+expect.addSnapshotSerializer({
+	test(val) {
+		// Test if the value contains stack traces or other Jest-version specific content
+		return (
+			typeof val === "string" &&
+			(val.includes("Object.<anonymous>.") ||
+				val.includes(" at Object.") ||
+				val.includes("    at "))
+		);
+	},
+	serialize(val, config, indentation, depth, refs, printer) {
+		// Normalize stack traces to Jest v30 format
+		// Jest v27 outputs: Object.<anonymous>.module.exports
+		// Jest v30 outputs: Object.module.exports
+		// We normalize everything to v30 format since that's what's in the committed snapshots
+		let normalized = val;
+
+		// Remove <anonymous> from stack traces to match Jest v30 format
+		normalized = normalized.replace(/Object\.<anonymous>\./g, "Object.");
+
+		return JSON.stringify(normalized);
+	}
+});
+
 if (process.env.ALTERNATIVE_SORT) {
 	const oldSort = Array.prototype.sort;
 
