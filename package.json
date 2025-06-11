@@ -42,6 +42,7 @@
     "@eslint/js": "^9.21.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/glob-to-regexp": "^0.4.4",
+    "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^22.15.11",
