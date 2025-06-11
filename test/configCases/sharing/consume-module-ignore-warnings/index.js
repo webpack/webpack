@@ -17,12 +17,8 @@ const expectWarning = regexp => {
 	if (!regexp) {
 		expect(warnings).toEqual([]);
 	} else {
-		expect(warnings).toEqual(
-			expect.objectContaining({
-				0: expect.stringMatching(regexp),
-				length: 1
-			})
-		);
+		expect(warnings).toHaveLength(1);
+		expect(warnings[0]).toMatch(regexp);
 	}
 	warnings.length = 0;
 };

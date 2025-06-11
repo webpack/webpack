@@ -17,5 +17,5 @@ it("should be possible to import js without extension without import assertion i
 it("should not be possible to import js with import assertion", function () {
 	expect(() => {
 		require("./import-poison.js");
-	}).toThrowError();
+	}).toThrow();
 });

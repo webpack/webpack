@@ -2,7 +2,7 @@ it("should not bundle context requires with asyncMode === 'weak'", function() {
 	var contextRequire = require.context(".", false, /two/, "weak");
 	expect(function() {
 		contextRequire("./two")
-	}).toThrowError(/not available/);
+	}).toThrow(/not available/);
 });
 
 it("should not bundle context requires with asyncMode === 'weak' using import.meta.webpackContext", function() {
@@ -13,7 +13,7 @@ it("should not bundle context requires with asyncMode === 'weak' using import.me
 	});
 	expect(function() {
 		contextRequire("./two")
-	}).toThrowError(/not available/);
+	}).toThrow(/not available/);
 });
 
 it("should find module with asyncMode === 'weak' when required elsewhere", function() {
