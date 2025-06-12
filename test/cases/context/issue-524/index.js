@@ -3,9 +3,9 @@ it("should support an empty context", function() {
 	expect(typeof c.id === "number" || typeof c.id === "string").toBeTruthy();
 	expect(function() {
 		c.resolve("");
-	}).toThrowError();
+	}).toThrow();
 	expect(function() {
 		c("");
-	}).toThrowError();
+	}).toThrow();
 	expect(c.keys()).toEqual([]);
 });

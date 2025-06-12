@@ -15,7 +15,7 @@ it("should allow include/exclude", function() {
 	});
 	expect(function() {
 		contextRequire("./two-three")
-	}).toThrowError(/Cannot find module/);
+	}).toThrow(/Cannot find module/);
 });
 
 it("should allow chunkName", function() {

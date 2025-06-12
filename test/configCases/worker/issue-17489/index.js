@@ -9,7 +9,7 @@ it("should allow to create a paintWorklet worklet", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 

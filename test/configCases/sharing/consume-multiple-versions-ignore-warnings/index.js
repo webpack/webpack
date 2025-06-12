@@ -38,7 +38,7 @@ it("should be able to consume different shared module version depending on conte
 	expect(require("shared")).toBe("shared@1.9.9");
 	expect(require("my-module")).toBe("shared@2.9.9");
 	expect(require("my-module2")).toBe("shared@2.3.9");
-	expect(() => require("my-module3")).toThrowError(
+	expect(() => require("my-module3")).toThrow(
 		"No satisfying version (^3.4.5) of shared module shared found in shared scope default.\n" +
 			"Available versions: 9.9.9 from undefined, 1.9.9 from undefined, 1.2.9 from undefined, 1.2.3 from mfe1, 2.9.9 from undefined, 2.3.9 from undefined, 2.3.4 from undefined, 3.0.0 from undefined"
 	);

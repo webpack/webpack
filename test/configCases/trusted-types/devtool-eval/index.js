@@ -11,10 +11,10 @@ it("should pass TrustedScript to eval", function () {
 
 	const testPattern =
 		"var test = {\\s*foo: 'bar'\\s*};\\s*module.exports = test;";
-	expect(policy.createScript).toBeCalledWith(
+	expect(policy.createScript).toHaveBeenCalledWith(
 		expect.stringMatching(testPattern)
 	);
-	expect(window.eval).toBeCalledWith(
+	expect(window.eval).toHaveBeenCalledWith(
 		expect.objectContaining({
 			_script: expect.stringMatching(testPattern)
 		})
