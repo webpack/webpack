@@ -6,6 +6,7 @@ const webpackVersion = parseInt(
 	require("../../../../package.json").version,
 	10
 );
+const devProdCondition = require('echo-dev-condition').default;
 
 it('typeof import.meta === "object"', () => {
 	expect(typeof import.meta).toBe("object");
@@ -27,6 +28,18 @@ it("should return correct import.meta.url", () => {
 	expect(import.meta["url"]).toBe(url);
 	expect("my" + import.meta.url).toBe("my" + url);
 	if (import.meta.url.indexOf("index.js") === -1) require("fail");
+});
+
+it("should return correct import.meta.DEBUG", () => {
+	if (devProdCondition === '<unset>') {
+		// If nothing else, import.meta.DEBUG should be falsey (e.g. undefined).
+		expect(import.meta.DEBUG).toBeFalsy();
+	} else {
+		expect(import.meta.DEBUG).toBe(devProdCondition === '<dev>');
+	}
+	expect(!!import.meta.DEBUG).toBe(process.env.NODE_ENV === 'development');
+	if (typeof import.meta.DEBUG !== "boolean") require("fail");
+	if (import.meta.DEBUG !== false && import.meta.DEBUG !== true) require("fail");
 });
 
 it("should return correct import.meta.webpack", () => {
