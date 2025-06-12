@@ -212,7 +212,7 @@ it("should not explode on recursive typeof calls", function() {
 it("should not explode on recursive statements", function() {
 	expect(function() {
 		wurst; // <- is recursively defined in config
-	}).toThrowError("suppe is not defined");
+	}).toThrow("suppe is not defined");
 });
 
 it("should evaluate composed expressions (issue 5100)", function() {
@@ -293,5 +293,5 @@ it('should allow shorthand property (issue #16764)', () => {
 })
 
 it("fails for unknown property", () => {
-	expect(() => ({ UNKNOWN })).toThrowError("UNKNOWN is not defined")
+	expect(() => ({ UNKNOWN })).toThrow("UNKNOWN is not defined")
 })

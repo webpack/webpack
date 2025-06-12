@@ -2,14 +2,14 @@ import "./module";
 
 expect(function() {
 	module.exports = 1;
-}).toThrowError();
+}).toThrow();
 
 expect((typeof module.exports)).toBe("undefined");
 
 expect((typeof define)).toBe("undefined");
 expect(function() {
 	define(function() {})
-}).toThrowError(/define is not defined/);
+}).toThrow(/define is not defined/);
 
 export default 1234;
 

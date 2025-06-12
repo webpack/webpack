@@ -12,7 +12,7 @@ it("should answer typeof System.import correctly", () => {
 	} else {
 		expect(() => {
 			typeof System.import;
-		}).toThrowError();
+		}).toThrow();
 	}
 });
 

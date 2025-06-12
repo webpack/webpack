@@ -6,7 +6,7 @@ it("should allow to create a paintWorklet worklet", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -25,7 +25,7 @@ it("should allow to create a layoutWorklet worklet", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -44,7 +44,7 @@ it("should allow to create a animationWorklet worklet", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -64,7 +64,7 @@ it("should allow to create a audioWorklet worklet", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -83,7 +83,7 @@ it("should allow to create a paintWorklet worklet using '?.'", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -103,7 +103,7 @@ it("should allow to create a audioWorklet worklet #2", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -127,7 +127,7 @@ it("should allow to create a audioWorklet worklet #3", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 
@@ -147,7 +147,7 @@ it("should allow to create a audioWorklet worklet using '?.'", async () => {
 
 	pseudoWorklet = new pseudoWorklet();
 
-	expect(pseudoWorklet.url).not.toContain("asset-");
+	expect(pseudoWorklet.url.toString()).not.toMatch(/asset-/);
 
 	pseudoWorklet.postMessage("ok");
 

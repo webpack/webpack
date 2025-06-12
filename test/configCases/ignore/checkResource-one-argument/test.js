@@ -4,10 +4,10 @@
 it("should ignore ignored resources", function() {
 	expect(function() {
 		require("./ignored-module");
-	}).toThrowError();
+	}).toThrow();
 });
 it("should not ignore resources that do not match", function() {
 	expect(function() {
 		require("./normal-module");
-	}).not.toThrowError();
+	}).not.toThrow();
 });

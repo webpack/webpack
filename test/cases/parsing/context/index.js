@@ -37,15 +37,15 @@ it("should compile an empty context", function() {
 	var x = "xxx";
 	expect(function() {
 		require("./templates/notExisting" + x);
-	}).toThrowError(/xxx/);
+	}).toThrow(/xxx/);
 });
 
 it("should execute an empty context", function() {
 	var context;
 	expect(function() {
 		context = require.context("./templates/", true, /^\.\/notExisting/);
-	}).not.toThrowError();
+	}).not.toThrow();
 	expect(function() {
 		context("");
-	}).toThrowError();
+	}).toThrow();
 });

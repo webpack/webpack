@@ -5,5 +5,5 @@ it("should ignore missing modules as entries", function() {
 it("should use WebpackMissingModule when evaluating missing modules", function() {
   expect(function() {
     require("./intentionally-missing-module");
-  }).toThrowError("Cannot find module './intentionally-missing-module'");
+  }).toThrow("Cannot find module './intentionally-missing-module'");
 });
