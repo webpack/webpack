@@ -1484,6 +1484,11 @@
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]
         },
+        "storeFilter": {
+          "description": "A function to filter which cache entries should be stored. Return false to skip storing a cache entry.",
+          "instanceof": "Function",
+          "tsType": "((identifier: string, data: any) => boolean)"
+        },
         "type": {
           "description": "Filesystem caching.",
           "enum": ["filesystem"]
@@ -2365,13 +2370,18 @@
       "additionalProperties": false,
       "properties": {
         "cacheUnaffected": {
-          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
           "type": "boolean"
         },
         "maxGenerations": {
           "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
           "type": "number",
           "minimum": 1
+        },
+        "storeFilter": {
+          "description": "A function to filter which cache entries should be stored. Return false to skip storing a cache entry.",
+          "instanceof": "Function",
+          "tsType": "((identifier: string, data: any) => boolean)"
         },
         "type": {
           "description": "In memory caching.",

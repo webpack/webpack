@@ -5250,6 +5250,11 @@ declare interface FileCacheOptions {
 	store?: "pack";
 
 	/**
+	 * A function to filter which cache entries should be stored. Return false to skip storing a cache entry.
+	 */
+	storeFilter?: (identifier: string, data?: any) => boolean;
+
+	/**
 	 * Filesystem caching.
 	 */
 	type: "filesystem";
@@ -9122,7 +9127,7 @@ type Media = undefined | string;
  */
 declare interface MemoryCacheOptions {
 	/**
-	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
 	 */
 	cacheUnaffected?: boolean;
 
@@ -9132,12 +9137,23 @@ declare interface MemoryCacheOptions {
 	maxGenerations?: number;
 
 	/**
+	 * A function to filter which cache entries should be stored. Return false to skip storing a cache entry.
+	 */
+	storeFilter?: (identifier: string, data?: any) => boolean;
+
+	/**
 	 * In memory caching.
 	 */
 	type: "memory";
 }
 declare class MemoryCachePlugin {
-	constructor();
+	constructor(options?: {
+		/**
+		 * a function that filters which cache entries should be stored
+		 */
+		storeFilter?: (identifier: string, data?: any) => boolean;
+	});
+	storeFilter?: (identifier: string, data?: any) => boolean;
 
 	/**
 	 * Apply the plugin
