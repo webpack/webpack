@@ -25,7 +25,7 @@ module.exports = {
 		}
 	},
 	output: {
-		filename: "[name].[contenthash].js",
-		chunkFilename: "[name].[contenthash].js"
+		filename: "[name].[contenthash].mjs",
+		chunkFilename: "[name].[contenthash].mjs"
 	}
 };
