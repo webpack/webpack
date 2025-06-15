@@ -420,12 +420,11 @@ const describeCases = config => {
 											testMeta: {
 												category: category.name,
 												name: testName,
-												index: i
+												round: i
 											},
 											testConfig,
 											webpackOptions: options
 										});
-
 										runner.mergeModuleScope({
 											it: _it,
 											beforeEach: _beforeEach,
@@ -433,11 +432,9 @@ const describeCases = config => {
 											__STATS__: jsonStats,
 											__STATS_I__: i
 										});
-
 										if (testConfig.moduleScope) {
 											testConfig.moduleScope(runner._moduleScope, options);
 										}
-
 										if (Array.isArray(bundlePath)) {
 											for (const bundlePathItem of bundlePath) {
 												results.push(

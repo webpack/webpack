@@ -282,20 +282,20 @@ const describeCases = config => {
 
 										if (testConfig.noTests)
 											return process.nextTick(compilationFinished);
-
 										const runner = new TestRunner({
 											target: options.target,
 											outputDirectory,
 											testMeta: {
 												category: category.name,
 												name: testName,
-												env: "jsdom",
+												env: "jsdom"
+											},
+											testConfig: {
+												...testConfig,
 												evaluateScriptOnAttached: true
 											},
-											testConfig,
 											webpackOptions: options
 										});
-
 										runner.mergeModuleScope({
 											it: run.it,
 											beforeEach: _beforeEach,
@@ -304,7 +304,6 @@ const describeCases = config => {
 											STATE: state,
 											WATCH_STEP: run.name
 										});
-
 										const getBundle = (outputDirectory, module) => {
 											if (Array.isArray(module)) {
 												return module.map(arg =>

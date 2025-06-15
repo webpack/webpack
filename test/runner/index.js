@@ -34,18 +34,40 @@ const getSubPath = path => {
 const isRelativePath = path => /^\.\.?\//.test(path);
 
 /**
+ * @param {string} url
+ * @param {string} outputDirectory
+ * @returns {string}
+ */
+const urlToPath = (url, outputDirectory) => {
+	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
+	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
+	return path.resolve(outputDirectory, `./${url}`);
+};
+
+/**
+ * @param {string} url
+ * @returns {string}
+ */
+const urlToRelativePath = url => {
+	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
+	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
+	return `./${url}`;
+};
+
+/**
  * @typedef {Object} TestMeta
  * @property {string} category
  * @property {string} name
- * @property {string} env
- * @property {number} [index]
- * @property {boolean} [evaluateScriptOnAttached]
+ * @property {"jsdom"} [env]
+ * @property {number} [round]
+ */
 
 /**
  * @typedef {Object} TestConfig
  * @property {Function} [resolveModule]
  * @property {Function} [moduleScope]
  * @property {Function} [nonEsmThis]
+ * @property {boolean} [evaluateScriptOnAttached]
  */
 
 /**
@@ -92,7 +114,7 @@ class TestRunner {
 		this.outputDirectory = outputDirectory;
 		this.testConfig = testConfig || {};
 		this.testMeta = testMeta || {};
-		this.webpackOptions = webpackOptions;
+		this.webpackOptions = webpackOptions || {};
 		this._runInNewContext = this.isTargetWeb();
 		this._globalContext = this.createBaseGlobalContext();
 		this._moduleScope = this.createBaseModuleScope();
@@ -130,6 +152,12 @@ class TestRunner {
 		);
 	}
 	/**
+	 * @returns {boolean}
+	 */
+	jsDom() {
+		return this.testMeta.env === "jsdom" || this.isTargetWeb();
+	}
+	/**
 	 * @returns {EXPECTED_ANY} moduleScope
 	 */
 	createBaseModuleScope() {
@@ -144,7 +172,7 @@ class TestRunner {
 				return m;
 			}
 		};
-		if (this.isTargetWeb() || this.testMeta.env === "jsdom") {
+		if (this.jsDom()) {
 			Object.assign(base, this._globalContext);
 			base.window = this._globalContext;
 			base.self = this._globalContext;
@@ -152,8 +180,15 @@ class TestRunner {
 		return base;
 	}
 	/**
+	 * @param {EXPECTED_ANY} globalContext
+	 * @returns {EXPECTED_ANY}
+	 */
+	mergeGlobalContext(globalContext) {
+		return Object.assign(this._globalContext, globalContext);
+	}
+	/**
 	 * @param {EXPECTED_ANY} moduleScope
-	 * @returns {EXPECTED_ANY} moduleScope
+	 * @returns {EXPECTED_ANY}
 	 */
 	mergeModuleScope(moduleScope) {
 		return Object.assign(this._moduleScope, moduleScope);
@@ -202,7 +237,7 @@ class TestRunner {
 		if (this.testConfig.resolveModule) {
 			module = this.testConfig.resolveModule(
 				module,
-				this.testMeta.index || 0,
+				this.testMeta.round || 0,
 				this.webpackOptions
 			);
 		}
@@ -246,10 +281,7 @@ class TestRunner {
 				require: this.require.bind(this, path.dirname(modulePath)),
 				importScripts: url => {
 					expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
-					this.require(
-						this.outputDirectory,
-						`.${url.slice("https://test.cases/path".length)}`
-					);
+					this.require(this.outputDirectory, urlToRelativePath(url));
 				},
 				module: mod,
 				exports: mod.exports,
@@ -257,6 +289,7 @@ class TestRunner {
 				__filename: modulePath,
 				_globalAssign: { expect, it: this._moduleScope.it }
 			};
+			// Call again because some tests rely on `scope.module`
 			if (this.testConfig.moduleScope) {
 				this.testConfig.moduleScope(moduleScope, this.webpackOptions);
 			}
@@ -297,7 +330,8 @@ class TestRunner {
 	 */
 	createEsmRunner() {
 		const esmCache = new Map();
-		const esmIdentifier = `${this.testMeta.category.name}-${this.testMeta.name}`;
+		const { category, name, round } = this.testMeta;
+		const esmIdentifier = `${category.name}-${name}-${round || 0}`;
 		let esmContext = null;
 		return (moduleInfo, context) => {
 			const asModule = require("../helpers/asModule");
@@ -385,41 +419,13 @@ class TestRunner {
 		};
 	}
 	setupEnv() {
-		if (this.isTargetWeb() || this.testMeta.env === "jsdom") {
+		if (this.jsDom()) {
 			const outputDirectory = this.outputDirectory;
-			const pathSplitPoint = url => {
-				if (url.startsWith("https://test.cases/path/"))
-					return "https://test.cases/path/".length;
-				else if (url.startsWith("https://test.cases/"))
-					return "https://test.cases/".length;
-				const filename = url.includes(".hot-update.")
-					? this.webpackOptions.output.hotUpdateChunkFilename
-					: this.webpackOptions.output.chunkFilename;
-				// path segments count
-				let count = filename
-					? filename.split(/[/\\]/).filter(part => part !== "" && part !== ".")
-							.length
-					: 0;
-				let pos = url.length;
-				while (count > 0) {
-					pos = url.lastIndexOf("/", pos - 1);
-					count--;
-				}
-				return pos + 1;
-			};
-			const urlToPath = url => {
-				const pos = pathSplitPoint(url);
-				return path.resolve(outputDirectory, `./${url.slice(pos)}`);
-			};
-			const urlToRelativePath = url => {
-				const pos = pathSplitPoint(url);
-				return `./${url.slice(pos)}`;
-			};
 			const FakeDocument = require("../helpers/FakeDocument");
 			const createFakeWorker = require("../helpers/createFakeWorker");
 			const EventSource = require("../helpers/EventSourceForNode");
 			const document = new FakeDocument(outputDirectory);
-			if (this.testMeta.evaluateScriptOnAttached) {
+			if (this.testConfig.evaluateScriptOnAttached) {
 				document.onScript = src => {
 					this.require(outputDirectory, urlToRelativePath(src));
 				};
@@ -427,7 +433,7 @@ class TestRunner {
 			const fetch = async url => {
 				try {
 					const buffer = await new Promise((resolve, reject) => {
-						fs.readFile(urlToPath(url), (err, b) =>
+						fs.readFile(urlToPath(url, this.outputDirectory), (err, b) =>
 							err ? reject(err) : resolve(b)
 						);
 					});
@@ -446,7 +452,7 @@ class TestRunner {
 					throw err;
 				}
 			};
-			return {
+			let env = {
 				setTimeout,
 				document,
 				location: {
@@ -461,12 +467,15 @@ class TestRunner {
 					outputDirectory
 				}),
 				URL,
-				// node.js >= 18
-				Blob,
 				EventSource,
 				clearTimeout,
 				fetch
 			};
+			if (typeof Blob !== "undefined") {
+				// node.js >= 18
+				env.Blob = Blob;
+			}
+			return env;
 		}
 		return {};
 	}
