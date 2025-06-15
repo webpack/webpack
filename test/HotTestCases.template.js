@@ -148,10 +148,12 @@ const describeCases = config => {
 									testMeta: {
 										category: category.name,
 										name: testName,
-										env: "jsdom",
+										env: "jsdom"
+									},
+									testConfig: {
+										...testConfig,
 										evaluateScriptOnAttached: true
 									},
-									testConfig,
 									webpackOptions: options
 								});
 
@@ -197,8 +199,7 @@ const describeCases = config => {
 									beforeEach: _beforeEach,
 									afterEach: _afterEach,
 									STATE: jsonStats,
-									NEXT: _next,
-									process
+									NEXT: _next
 								});
 
 								let promise = Promise.resolve();
