@@ -14,6 +14,7 @@ module.exports = class EventSource {
 			url,
 			{
 				agent: false,
+				rejectUnauthorized: false,
 				headers: { accept: "text/event-stream" }
 			},
 			res => {
