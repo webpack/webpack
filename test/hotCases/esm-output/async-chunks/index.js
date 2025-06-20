@@ -1,3 +1,6 @@
+import update from "../../update.esm";
+import.meta.webpackHot.accept(["./async-module", "./lazy-module"]);
+
 it("should handle HMR with async chunks in ESM format", (done) => {
 	// Initial load of async chunks
 	Promise.all([
@@ -6,14 +9,8 @@ it("should handle HMR with async chunks in ESM format", (done) => {
 	]).then(([asyncModule, lazyModule]) => {
 		expect(asyncModule.message).toBe("Hello from async module!");
 		expect(lazyModule.data.value).toBe(42);
-		
-		// Use ESM-style HMR API if available
-		const hmr = import.meta.webpackHot || module.hot;
-		
-		// Accept updates for async modules
-		hmr.accept(["./async-module", "./lazy-module"]);
-		
-		NEXT(require("../../update")(done, true, () => {
+				
+		NEXT(update(done, true, () => {
 			// Re-import after HMR update
 			Promise.all([
 				import("./async-module"),

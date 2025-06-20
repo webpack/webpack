@@ -1,4 +1,4 @@
-/** @type {import("../../../../types").Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	experiments: {
@@ -8,8 +8,9 @@ module.exports = {
 	output: {
 		module: true,
 		chunkFormat: "module",
-		filename: "[name].js",
-		cssFilename: "[name].css"
+		filename: "[name].mjs",
+		chunkFilename: "[name].chunk.mjs",
+		enabledLibraryTypes: ["module"]
 	},
 	optimization: {
 		minimize: false

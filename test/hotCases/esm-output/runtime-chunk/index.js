@@ -1,11 +1,12 @@
 import { sharedData } from "./shared";
+import update from "../../update.esm";
 
 it("should handle HMR with runtime chunk in ESM format", (done) => {
 	expect(sharedData.version).toBe("1.0.0");
 	
-	module.hot.accept("./shared");
+	import.meta.webpackHot.accept(["./shared"]);
 	
-	NEXT(require("../../update")(done, true, () => {
+	NEXT(update(done, true, () => {
 		import("./shared").then(updatedModule => {
 			expect(updatedModule.sharedData.version).toBe("2.0.0");
 			done();

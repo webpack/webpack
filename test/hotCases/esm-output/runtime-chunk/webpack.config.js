@@ -7,7 +7,9 @@ module.exports = {
 	output: {
 		module: true,
 		chunkFormat: "module",
-		filename: "[name].js"
+		filename: "[name].mjs",
+		chunkFilename: "[name].chunk.mjs",
+		enabledLibraryTypes: ["module"]
 	},
 	optimization: {
 		minimize: false,
