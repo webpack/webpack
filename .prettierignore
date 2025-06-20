@@ -16,6 +16,7 @@ test/**/*.*
 !test/**/infrastructure-log.js
 !test/*.md
 !test/helpers/*.*
+!test/runner/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
 
