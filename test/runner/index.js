@@ -222,6 +222,14 @@ class TestRunner {
 				content: fs.readFileSync(module, "utf-8")
 			};
 		}
+		if (module.startsWith("https://test.")) {
+			const realPath = urlToPath(module, currentDirectory);
+			return {
+				subPath: "",
+				modulePath: realPath,
+				content: fs.readFileSync(realPath, "utf-8")
+			};
+		}
 	}
 
 	/**
