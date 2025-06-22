@@ -1,8 +1,9 @@
-/** @type {import("../../../../types").Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	experiments: {
-		outputModule: true
+		outputModule: true,
+		css: true
 	},
 	output: {
 		module: true,
@@ -12,7 +13,6 @@ module.exports = {
 		enabledLibraryTypes: ["module"]
 	},
 	optimization: {
-		minimize: false,
-		runtimeChunk: "single"
+		minimize: false
 	}
 };
