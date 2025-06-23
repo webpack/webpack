@@ -263,6 +263,7 @@ type ArrayBufferView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> =
 	| Int32Array
 	| BigUint64Array
 	| BigInt64Array
+	| Float16Array
 	| Float32Array
 	| Float64Array
 	| DataView;
@@ -900,12 +901,39 @@ declare interface BufferEntry {
 	bufferedMap?: null | BufferedMap;
 }
 declare interface BufferedMap {
+	/**
+	 * version
+	 */
 	version: number;
+
+	/**
+	 * sources
+	 */
 	sources: string[];
+
+	/**
+	 * name
+	 */
 	names: string[];
+
+	/**
+	 * source root
+	 */
 	sourceRoot?: string;
+
+	/**
+	 * sources content
+	 */
 	sourcesContent?: ("" | Buffer)[];
+
+	/**
+	 * mappings
+	 */
 	mappings?: Buffer;
+
+	/**
+	 * file
+	 */
 	file: string;
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
@@ -1028,10 +1056,29 @@ declare interface CacheGroupsContext {
 }
 type CacheOptionsNormalized = false | FileCacheOptions | MemoryCacheOptions;
 declare interface CachedData {
+	/**
+	 * source
+	 */
 	source?: boolean;
+
+	/**
+	 * buffer
+	 */
 	buffer: Buffer;
+
+	/**
+	 * size
+	 */
 	size?: number;
+
+	/**
+	 * maps
+	 */
 	maps: Map<string, BufferEntry>;
+
+	/**
+	 * hash
+	 */
 	hash?: (string | Buffer)[];
 }
 declare class CachedSource extends Source {
@@ -5426,8 +5473,19 @@ declare interface GenerateContext {
 	getData?: () => Map<string, any>;
 }
 declare interface GeneratedSourceInfo {
+	/**
+	 * generated line
+	 */
 	generatedLine?: number;
+
+	/**
+	 * generated column
+	 */
 	generatedColumn?: number;
+
+	/**
+	 * source
+	 */
 	source?: string;
 }
 declare class Generator {
@@ -5681,7 +5739,14 @@ declare class Hash {
 }
 type HashFunction = string | typeof Hash;
 declare interface HashLike {
+	/**
+	 * make hash update
+	 */
 	update: (data: string | Buffer, inputEncoding?: string) => HashLike;
+
+	/**
+	 * get hash digest
+	 */
 	digest: (encoding?: string) => string | Buffer;
 }
 declare interface HashableObject {
@@ -9106,7 +9171,14 @@ declare interface MakeDirectoryOptions {
 	mode?: string | number;
 }
 declare interface MapOptions {
+	/**
+	 * need columns?
+	 */
 	columns?: boolean;
+
+	/**
+	 * is module
+	 */
 	module?: boolean;
 }
 declare interface MatchObject {
@@ -11269,7 +11341,7 @@ declare class OriginalSource extends Source {
 			source: null | string,
 			sourceContent?: string
 		) => void,
-		onName: (nameIndex: number, name: string) => void
+		_onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
 }
 
@@ -12346,14 +12418,49 @@ declare class RawSource extends Source {
 	): GeneratedSourceInfo;
 }
 declare interface RawSourceMap {
+	/**
+	 * version
+	 */
 	version: number;
+
+	/**
+	 * sources
+	 */
 	sources: string[];
+
+	/**
+	 * names
+	 */
 	names: string[];
+
+	/**
+	 * source root
+	 */
 	sourceRoot?: string;
+
+	/**
+	 * sources content
+	 */
 	sourcesContent?: string[];
+
+	/**
+	 * mappings
+	 */
 	mappings: string;
+
+	/**
+	 * file
+	 */
 	file: string;
+
+	/**
+	 * debug id
+	 */
 	debugId?: string;
+
+	/**
+	 * ignore list
+	 */
 	ignoreList?: number[];
 }
 declare interface Read<
@@ -15053,15 +15160,45 @@ declare class Source {
 	updateHash(hash: HashLike): void;
 }
 declare interface SourceAndMap {
+	/**
+	 * source
+	 */
 	source: SourceValue;
+
+	/**
+	 * map
+	 */
 	map: null | RawSourceMap;
 }
 declare interface SourceLike {
+	/**
+	 * source
+	 */
 	source: () => SourceValue;
+
+	/**
+	 * buffer
+	 */
 	buffer?: () => Buffer;
+
+	/**
+	 * size
+	 */
 	size?: () => number;
+
+	/**
+	 * map
+	 */
 	map?: (options?: MapOptions) => null | RawSourceMap;
+
+	/**
+	 * source and map
+	 */
 	sourceAndMap?: (options?: MapOptions) => SourceAndMap;
+
+	/**
+	 * hash updater
+	 */
 	updateHash?: (hash: HashLike) => void;
 }
 declare class SourceMapDevToolPlugin {
@@ -16720,6 +16857,7 @@ declare interface WriteFile {
 			| Int32Array
 			| BigUint64Array
 			| BigInt64Array
+			| Float16Array
 			| Float32Array
 			| Float64Array
 			| DataView,
@@ -16739,6 +16877,7 @@ declare interface WriteFile {
 			| Int32Array
 			| BigUint64Array
 			| BigInt64Array
+			| Float16Array
 			| Float32Array
 			| Float64Array
 			| DataView,
