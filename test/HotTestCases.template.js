@@ -212,7 +212,12 @@ const describeCases = config => {
 											link.href = file.name;
 											runner._moduleScope.document.head.appendChild(link);
 										} else {
-											runner.require(outputDirectory, `./${file.name}`);
+											const result = runner.require(
+												outputDirectory,
+												`./${file.name}`
+											);
+											if (typeof result === "object" && "then" in result)
+												promise = promise.then(() => result);
 										}
 									}
 								} else {
