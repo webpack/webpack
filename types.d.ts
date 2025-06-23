@@ -3809,7 +3809,58 @@ declare interface DeterministicModuleIdsPluginOptions {
 	failOnConflict?: boolean;
 }
 type DevtoolModuleFilenameTemplate = string | ((context?: any) => string);
-declare interface Dirent {
+declare interface DirentFs<T extends string | Buffer = string> {
+	/**
+	 * true when is file, otherwise false
+	 */
+	isFile: () => boolean;
+
+	/**
+	 * true when is directory, otherwise false
+	 */
+	isDirectory: () => boolean;
+
+	/**
+	 * true when is block device, otherwise false
+	 */
+	isBlockDevice: () => boolean;
+
+	/**
+	 * true when is character device, otherwise false
+	 */
+	isCharacterDevice: () => boolean;
+
+	/**
+	 * true when is symbolic link, otherwise false
+	 */
+	isSymbolicLink: () => boolean;
+
+	/**
+	 * true when is FIFO, otherwise false
+	 */
+	isFIFO: () => boolean;
+
+	/**
+	 * true when is socket, otherwise false
+	 */
+	isSocket: () => boolean;
+
+	/**
+	 * name
+	 */
+	name: T;
+
+	/**
+	 * path
+	 */
+	parentPath: string;
+
+	/**
+	 * path
+	 */
+	path?: string;
+}
+declare interface DirentTypes {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
 	isBlockDevice: () => boolean;
@@ -8015,6 +8066,11 @@ declare interface KnownBuildInfo {
 	 * for css modules
 	 */
 	cssData?: CssData;
+
+	/**
+	 * top level declaration names
+	 */
+	topLevelDeclarations?: Set<string>;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
@@ -8516,16 +8572,16 @@ declare class LazySet<T> {
 	addAll(iterable: LazySet<T> | Iterable<T>): LazySet<T>;
 	clear(): void;
 	delete(value: T): boolean;
-	entries(): IterableIterator<[T, T]>;
+	entries(): SetIterator<[T, T]>;
 	forEach<K>(
 		callbackFn: (value: T, value2: T, set: Set<T>) => void,
 		thisArg: K
 	): void;
 	has(item: T): boolean;
-	keys(): IterableIterator<T>;
-	values(): IterableIterator<T>;
+	keys(): SetIterator<T>;
+	values(): SetIterator<T>;
 	serialize(__0: ObjectSerializerContext): void;
-	[Symbol.iterator](): IterableIterator<T>;
+	[Symbol.iterator](): SetIterator<T>;
 	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
 }
 declare interface LibIdentOptions {
@@ -12726,18 +12782,14 @@ declare interface ReaddirFs {
 					withFileTypes?: false;
 					recursive?: boolean;
 			  },
-		callback: (err: null | NodeJS.ErrnoException, result?: string[]) => void
+		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
 	): void;
 	(
 		path: PathLikeFs,
 		options:
 			| "buffer"
 			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
-		callback: (err: null | NodeJS.ErrnoException, result?: Buffer[]) => void
-	): void;
-	(
-		path: PathLikeFs,
-		callback: (err: null | NodeJS.ErrnoException, result?: string[]) => void
+		callback: (err: null | NodeJS.ErrnoException, files?: Buffer[]) => void
 	): void;
 	(
 		path: PathLikeFs,
@@ -12762,8 +12814,12 @@ declare interface ReaddirFs {
 			  }),
 		callback: (
 			err: null | NodeJS.ErrnoException,
-			result?: string[] | Buffer[]
+			files?: string[] | Buffer[]
 		) => void
+	): void;
+	(
+		path: PathLikeFs,
+		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
 	): void;
 	(
 		path: PathLikeFs,
@@ -12771,7 +12827,18 @@ declare interface ReaddirFs {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (err: null | NodeJS.ErrnoException, result?: Dirent[]) => void
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files?: DirentFs<string>[]
+		) => void
+	): void;
+	(
+		path: PathLikeFs,
+		options: { encoding: "buffer"; withFileTypes: true; recursive?: boolean },
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files: DirentFs<Buffer>[]
+		) => void
 	): void;
 }
 declare interface ReaddirSync {
@@ -12840,7 +12907,11 @@ declare interface ReaddirSync {
 			withFileTypes: true;
 			recursive?: boolean;
 		}
-	): Dirent[];
+	): DirentFs<string>[];
+	(
+		path: PathLikeFs,
+		options: { encoding: "buffer"; withFileTypes: true; recursive?: boolean }
+	): DirentFs<Buffer>[];
 }
 declare interface ReaddirTypes {
 	(
@@ -12923,7 +12994,7 @@ declare interface ReaddirTypes {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (arg0: null | NodeJS.ErrnoException, arg1?: Dirent[]) => void
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: DirentTypes[]) => void
 	): void;
 }
 declare interface ReadlinkFs {

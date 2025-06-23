@@ -15,6 +15,22 @@ declare namespace NodeJS {
 	}
 }
 
+// New iterator interfaces from `lib.es2015.iterable.d.ts` for compatibility with old typescript versions
+interface IteratorObject<T, TReturn = unknown, TNext = unknown>
+	extends Iterator<T, TReturn, TNext> {
+	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
+}
+
+interface SetIterator<T>
+	extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
+	[Symbol.iterator](): SetIterator<T>;
+}
+
+interface MapIterator<T>
+	extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
+	[Symbol.iterator](): MapIterator<T>;
+}
+
 declare module "neo-async" {
 	interface QueueObject<T, E> {
 		push(item: T): void;
