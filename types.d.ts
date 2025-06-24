@@ -2691,9 +2691,12 @@ declare interface Configuration {
 	dependencies?: string[];
 
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
-	devtool?: string | false;
+	devtool?:
+		| string
+		| false
+		| (SourceMapDevToolPluginOptions & { eval?: boolean });
 
 	/**
 	 * The entry point(s) of the compilation.
@@ -3761,7 +3764,9 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-type DevtoolModuleFilenameTemplate = string | ((context?: any) => string);
+type DevtoolModuleFilenameTemplate =
+	| string
+	| ((context: ModuleFilenameTemplateContext) => string);
 declare interface Dirent {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -4432,12 +4437,16 @@ declare interface EvalDevToolModulePluginOptions {
 	/**
 	 * module filename template
 	 */
-	moduleFilenameTemplate?: string | ((context?: any) => string);
+	moduleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 }
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
 	sourceMapComment: string;
-	moduleFilenameTemplate: string | ((context?: any) => string);
+	moduleFilenameTemplate:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -9522,6 +9531,62 @@ declare interface ModuleFederationPluginOptions {
 	 */
 	shared?: (string | SharedObject)[] | SharedObject;
 }
+declare interface ModuleFilenameTemplateContext {
+	/**
+	 * The identifier of the module.
+	 */
+	identifier: string;
+
+	/**
+	 * The shortened identifier of the module.
+	 */
+	shortIdentifier: string;
+
+	/**
+	 * The resource of the module request.
+	 */
+	resource: string;
+
+	/**
+	 * The resource path of the module request.
+	 */
+	resourcePath: string;
+
+	/**
+	 * The absolute resource path of the module request.
+	 */
+	absoluteResourcePath: string;
+
+	/**
+	 * The loaders of the module request.
+	 */
+	loaders: string;
+
+	/**
+	 * The all loaders of the module request.
+	 */
+	allLoaders: string;
+
+	/**
+	 * The query of the module identifier.
+	 */
+	query: string;
+
+	/**
+	 * The module id of the module.
+	 */
+	moduleId: string;
+
+	/**
+	 * The hash of the module identifier.
+	 */
+	hash: string;
+
+	/**
+	 * The module namespace.
+	 */
+	namespace: string;
+}
 type ModuleFilterItemTypes =
 	| string
 	| RegExp
@@ -11363,12 +11428,16 @@ declare interface Output {
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?: string | ((context?: any) => string);
+	devtoolFallbackModuleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?: string | ((context?: any) => string);
+	devtoolModuleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -11657,12 +11726,16 @@ declare interface OutputNormalized {
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?: string | ((context?: any) => string);
+	devtoolFallbackModuleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?: string | ((context?: any) => string);
+	devtoolModuleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -15071,8 +15144,12 @@ declare class SourceMapDevToolPlugin {
 		| string
 		| false
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	moduleFilenameTemplate: string | ((context?: any) => string);
-	fallbackModuleFilenameTemplate: string | ((context?: any) => string);
+	moduleFilenameTemplate:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
+	fallbackModuleFilenameTemplate:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -15109,7 +15186,9 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
 	 */
-	fallbackModuleFilenameTemplate?: string | ((context?: any) => string);
+	fallbackModuleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
@@ -15134,7 +15213,9 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.
 	 */
-	moduleFilenameTemplate?: string | ((context?: any) => string);
+	moduleFilenameTemplate?:
+		| string
+		| ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
@@ -16508,9 +16589,12 @@ declare interface WebpackOptionsNormalized {
 	devServer?: false | { [index: string]: any };
 
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
-	devtool?: string | false;
+	devtool?:
+		| string
+		| false
+		| (SourceMapDevToolPluginOptions & { eval?: boolean });
 
 	/**
 	 * The entry point(s) of the compilation.
@@ -16883,7 +16967,9 @@ declare namespace exports {
 			module: string | Module,
 			options: {
 				namespace?: string;
-				moduleFilenameTemplate?: string | ((context?: any) => string);
+				moduleFilenameTemplate?:
+					| string
+					| ((context: ModuleFilenameTemplateContext) => string);
 			},
 			__2: {
 				requestShortener: RequestShortener;

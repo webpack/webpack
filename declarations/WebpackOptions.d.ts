@@ -44,9 +44,14 @@ export type DevServer =
 			[k: string]: any;
 	  };
 /**
- * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+ * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
  */
-export type DevTool = (false | "eval") | string;
+export type DevTool =
+	| (false | "eval")
+	| string
+	| (import("../lib/SourceMapDevToolPlugin").SourceMapDevToolPluginOptions & {
+			eval?: boolean;
+	  });
 /**
  * The entry point(s) of the compilation.
  */
@@ -517,7 +522,7 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
@@ -915,7 +920,7 @@ export interface WebpackOptions {
 	 */
 	devServer?: DevServer;
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
 	devtool?: DevTool;
 	/**
@@ -3878,7 +3883,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	devServer?: DevServer;
 	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map | Object).
 	 */
 	devtool?: DevTool;
 	/**
