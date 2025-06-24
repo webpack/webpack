@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	entry: "./index.js",
@@ -19,5 +22,44 @@ module.exports = {
 	externalsType: "module",
 	optimization: {
 		concatenateModules: false
-	}
+	},
+	plugins: [
+		{
+			apply(compiler) {
+				compiler.hooks.thisCompilation.tap(
+					"copy-external-files",
+					compilation => {
+						compilation.hooks.processAssets.tap(
+							{
+								name: "copy-external-files",
+								stage:
+									compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+							},
+							() => {
+								// Read the external module files
+								const externalA = fs.readFileSync(
+									path.join(__dirname, "external-a.mjs"),
+									"utf-8"
+								);
+								const externalB = fs.readFileSync(
+									path.join(__dirname, "external-b.mjs"),
+									"utf-8"
+								);
+
+								// Emit them as assets
+								compilation.emitAsset(
+									"external-a.mjs",
+									new compiler.webpack.sources.RawSource(externalA)
+								);
+								compilation.emitAsset(
+									"external-b.mjs",
+									new compiler.webpack.sources.RawSource(externalB)
+								);
+							}
+						);
+					}
+				);
+			}
+		}
+	]
 };
