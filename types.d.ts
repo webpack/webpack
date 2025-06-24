@@ -3906,6 +3906,9 @@ declare interface Dirent<T extends string | Buffer = string> {
 	 */
 	path?: string;
 }
+declare interface Disposable {
+	[Symbol.dispose](): void;
+}
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
 	options: {
@@ -6275,6 +6278,12 @@ declare abstract class ItemCacheFacade {
 		callback: CallbackNormalErrorCache<T>
 	): void;
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
+}
+declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
+	extends Iterator<T, TReturn, TNext>,
+		Disposable {
+	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
+	[Symbol.dispose](): void;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
@@ -15186,6 +15195,10 @@ declare abstract class SerializerMiddleware<
 		data: SerializedType,
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
+}
+declare interface SetIterator<T> extends IteratorObject<T, undefined> {
+	[Symbol.iterator](): SetIterator<T>;
+	[Symbol.dispose](): void;
 }
 declare class SharePlugin {
 	constructor(options: SharePluginOptions);
