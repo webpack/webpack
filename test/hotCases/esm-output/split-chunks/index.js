@@ -8,7 +8,6 @@ it("should handle HMR with split chunks in ESM format", (done) => {
 	]).then(([commonModule, vendorModule]) => {
 		expect(commonModule.commonFunction("test")).toBe("Common function processed: test");
 		expect(vendorModule.default.version).toBe("1.0.0");
-		done();
 	}).catch(done);
 		
 	NEXT(update(done, true, () => {
