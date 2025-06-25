@@ -6,5 +6,4 @@ using resource = {
 	}
 };
 
-
 export { resource, disposed };
