@@ -75,7 +75,7 @@
     "jest-circus": "^30.0.3",
     "jest-cli": "^30.0.3",
     "jest-diff": "^30.0.3",
-    "jest-environment-node": "^30.0.3",
+    "jest-environment-node": "^30.0.2",
     "jest-junit": "^16.0.0",
     "json-loader": "^0.5.7",
     "json5": "^2.1.3",
