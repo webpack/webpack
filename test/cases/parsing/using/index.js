@@ -49,7 +49,7 @@ it("should using", async () => {
 
 	expect(disposeCounter).toBe(5);
 
-	resource[Symbol.dispose]();
-
-	expect(disposed).toBe(true);
+	// TODO uncomment when will re resolved on V8 side - https://github.com/tc39/proposal-explicit-resource-management/issues/262
+	// resource[Symbol.dispose]();
+	// expect(disposed).toBe(true);
 });
