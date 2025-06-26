@@ -6682,6 +6682,7 @@ declare class JavascriptParser extends Parser {
 		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
