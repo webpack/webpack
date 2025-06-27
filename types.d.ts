@@ -2715,11 +2715,35 @@ declare interface ConcatenatedModuleInfo {
 	rawExportMap?: Map<string, string>;
 	namespaceExportSymbol?: string;
 	namespaceObjectName?: string;
+
+	/**
+	 * "default-with-named" namespace
+	 */
 	interopNamespaceObjectUsed: boolean;
+
+	/**
+	 * "default-with-named" namespace
+	 */
 	interopNamespaceObjectName?: string;
+
+	/**
+	 * "default-only" namespace
+	 */
 	interopNamespaceObject2Used: boolean;
+
+	/**
+	 * "default-only" namespace
+	 */
 	interopNamespaceObject2Name?: string;
+
+	/**
+	 * runtime namespace object that detects "__esModule"
+	 */
 	interopDefaultAccessUsed: boolean;
+
+	/**
+	 * runtime namespace object that detects "__esModule"
+	 */
 	interopDefaultAccessName?: string;
 }
 declare interface ConcatenationBailoutReasonContext {
@@ -3633,7 +3657,8 @@ declare interface DependenciesBlockLike {
 declare class Dependency {
 	constructor();
 	weak: boolean;
-	optional: boolean;
+	defer?: boolean;
+	optional?: boolean;
 	get type(): string;
 	get category(): string;
 	loc: DependencyLocation;
@@ -4706,6 +4731,11 @@ declare interface ExperimentsExtra {
 	css?: boolean;
 
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: boolean;
+
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
@@ -4725,6 +4755,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Enable css support.
 	 */
 	css?: boolean;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: boolean;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
@@ -4959,6 +4994,11 @@ declare interface ExportsSpec {
 	 */
 	dependencies?: Module[];
 }
+type ExportsType =
+	| "namespace"
+	| "default-only"
+	| "default-with-named"
+	| "dynamic";
 type Exposes = (string | ExposesObject)[] | ExposesObject;
 
 /**
@@ -5139,12 +5179,60 @@ declare interface ExternalModuleInfo {
 	module: Module;
 	runtimeCondition?: string | boolean | SortableSet<string>;
 	index: number;
+
+	/**
+	 * module.exports / harmony namespace object
+	 */
 	name?: string;
+
+	/**
+	 * deferred module.exports / harmony namespace object
+	 */
+	deferredName?: string;
+
+	/**
+	 * the module is deferred at least once
+	 */
+	deferred: boolean;
+
+	/**
+	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
+	 */
+	deferredNamespaceObjectUsed: boolean;
+
+	/**
+	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
+	 */
+	deferredNamespaceObjectName?: string;
+
+	/**
+	 * "default-with-named" namespace
+	 */
 	interopNamespaceObjectUsed: boolean;
+
+	/**
+	 * "default-with-named" namespace
+	 */
 	interopNamespaceObjectName?: string;
+
+	/**
+	 * "default-only" namespace
+	 */
 	interopNamespaceObject2Used: boolean;
+
+	/**
+	 * "default-only" namespace
+	 */
 	interopNamespaceObject2Name?: string;
+
+	/**
+	 * runtime namespace object that detects "__esModule"
+	 */
 	interopDefaultAccessUsed: boolean;
+
+	/**
+	 * runtime namespace object that detects "__esModule"
+	 */
 	interopDefaultAccessName?: string;
 }
 type Externals =
@@ -6063,6 +6151,7 @@ type ImportAttribute = BaseNode & {
 type ImportAttributes = Record<string, string> & {};
 type ImportDeclarationJavascriptParser = ImportDeclarationImport & {
 	attributes?: ImportAttribute[];
+	phase?: "defer";
 };
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
@@ -6098,6 +6187,7 @@ type ImportExpressionJavascriptParser = ImportExpressionImport & {
 		| ThisExpression
 		| UpdateExpression
 		| YieldExpression;
+	phase?: "defer";
 };
 declare interface ImportModuleOptions {
 	/**
@@ -9479,10 +9569,7 @@ declare class Module extends DependenciesBlock {
 	isProvided(exportName: string): null | boolean;
 	get exportsArgument(): string;
 	get moduleArgument(): string;
-	getExportsType(
-		moduleGraph: ModuleGraph,
-		strict?: boolean
-	): "namespace" | "default-only" | "default-with-named" | "dynamic";
+	getExportsType(moduleGraph: ModuleGraph, strict?: boolean): ExportsType;
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addCodeGenerationDependency(codeGenerationDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
@@ -9821,6 +9908,7 @@ declare class ModuleGraph {
 	setDepth(module: Module, depth: number): void;
 	setDepthIfLower(module: Module, depth: number): boolean;
 	isAsync(module: Module): boolean;
+	isDeferred(module: Module): boolean;
 	setAsync(module: Module): void;
 	getMeta(thing: object): any;
 	getMetaIfExisting(thing: object): any;
@@ -10112,6 +10200,11 @@ declare interface ModuleReferenceOptions {
 	 * true, when this referenced export is directly imported (not via property access)
 	 */
 	directImport: boolean;
+
+	/**
+	 * true, when this referenced export is deferred
+	 */
+	deferredImport: boolean;
 
 	/**
 	 * if the position is ASI safe or unknown
@@ -14986,6 +15079,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		module: Module;
 		/**
+		 * the module graph
+		 */
+		moduleGraph: ModuleGraph;
+		/**
 		 * the chunk graph
 		 */
 		chunkGraph: ChunkGraph;
@@ -15009,12 +15106,20 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * if set, the module will be deferred
+		 */
+		defer?: boolean;
 	}): [string, string];
 	exportFromImport<GenerateContext>(__0: {
 		/**
 		 * the module graph
 		 */
 		moduleGraph: ModuleGraph;
+		/**
+		 * the chunk graph
+		 */
+		chunkGraph: ChunkGraph;
 		/**
 		 * the module
 		 */
@@ -15063,6 +15168,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * if true, the module will be deferred.
+		 */
+		defer?: boolean;
 	}): string;
 	blockPromise(__0: {
 		/**
@@ -16490,6 +16599,7 @@ declare interface TargetItemWithConnection {
 declare interface TargetItemWithoutConnection {
 	module: Module;
 	export: string[];
+	deferred: boolean;
 }
 declare class Template {
 	constructor();
@@ -17374,6 +17484,8 @@ declare namespace exports {
 		export let preloadChunkHandlers: "__webpack_require__.H";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let makeNamespaceObject: "__webpack_require__.r";
+		export let makeDeferredNamespaceObject: "__webpack_require__.z";
+		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let compatGetDefaultExport: "__webpack_require__.n";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
@@ -17422,6 +17534,8 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let relativeUrl: "__webpack_require__.U";
 		export let asyncModule: "__webpack_require__.a";
+		export let asyncModuleExportSymbol: "__webpack_require__.aE";
+		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
