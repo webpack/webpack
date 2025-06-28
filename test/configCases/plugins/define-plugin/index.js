@@ -259,8 +259,12 @@ it("destructuring assignment", () => {
 	expect(DEFINED_NESTED_KEY).toBe(process.env.DEFINED_NESTED_KEY);
 	expect(DEFINED_NESTED_KEY_STRING).toBe(process.env.DEFINED_NESTED_KEY_STRING);
 
-	const { BAZ } = FOO.BAR;
+	const { BAZ, BAZZ } = FOO.BAR;
 	expect(BAZ).toBe(FOO.BAR.BAZ);
+	expect(BAZZ).toBe(FOO.BAR.BAZZ);
+
+	const { BAZ: BAZ2 } = X.Y;
+	expect(BAZ2).toBe(X.Y.BAZ);
 });
 
 it("should allow shorthand property (issue #16764)", () => {
