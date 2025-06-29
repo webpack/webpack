@@ -5264,6 +5264,11 @@ declare interface ExternalModuleInfo {
 	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
 	 */
 	deferredNamespaceObjectName?: string;
+	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
+	runtimeRequirements?: ReadonlySet<string>;
+	exportMap?: Map<string, string | string[] | { name: string[] }>;
+	rawExportMap?: Map<string, string | string[]>;
+	namespaceExportSymbol?: string;
 
 	/**
 	 * "default-with-named" namespace

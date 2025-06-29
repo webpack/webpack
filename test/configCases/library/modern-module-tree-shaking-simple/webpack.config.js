@@ -1,8 +1,5 @@
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
-	cache: {
-		type: "memory" // Enable memory cache to test serialization
-	},
 	mode: "none",
 	entry: { main: "./index.js", test: "./test.js" },
 	output: {
@@ -20,7 +17,7 @@ module.exports = {
 		extensions: [".js"]
 	},
 	externalsType: "module",
-	externals: ["externals0", "externals1", "externals2", "externals3"],
+	externals: ["lodash"],
 	optimization: {
 		concatenateModules: true,
 		usedExports: true

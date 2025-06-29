@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 20b0f3111 (test: update snapshot)
 exports[`ConfigCacheTestCases css build-http exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!*******************************************************************************************************************!*\\\\
@@ -3496,6 +3500,7 @@ exports[`ConfigCacheTestCases css css-modules-no-space exported tests should all
 "
 `;
 
+<<<<<<< HEAD
 exports[`ConfigCacheTestCases css css-order exported tests keep consistent css order 1`] = `".button-module {  padding: 8px 16px;  background-color: #007bff;  color: white;  border: none;  border-radius: 4px;}.teaser-module {  padding: 20px;  border: 1px solid #ddd;  border-radius: 8px;  margin: 16px;}.teaser-module {  background-color: orange;}"`;
 
 exports[`ConfigCacheTestCases css css-order-concatenate-modules exported tests keep consistent css order 1`] = `".a {    color: red;}.b{    color: green;}.c{    color: black;}"`;
@@ -3506,6 +3511,8 @@ exports[`ConfigCacheTestCases css css-order2 exported tests keep consistent css 
 
 exports[`ConfigCacheTestCases css css-order3 exported tests keep consistent css order 1`] = `".dependency3::before {	content: \\"dependency3\\";}.dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
 
+=======
+>>>>>>> 20b0f3111 (test: update snapshot)
 exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 1`] = `
 Object {
   "#": "_style_modules_css-#",
@@ -10149,110 +10156,639 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 "
 `;
 
+<<<<<<< HEAD
+=======
+>>>>>>> f71be4cac (test: update snapshots for external module tests)
+=======
+>>>>>>> 20b0f3111 (test: update snapshot)
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
 /*!*****************************!*\\\\
-  !*** ./test.js + 3 modules ***!
+  !*** ./test.js + 8 modules ***!
   \\\\*****************************/
 
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
+
+;// ./unused.js
+// This file tests the case where imports are made but not used
+// This should trigger the imported.length === 0 code path
+
+
+// Don't use any of the imports
+// This should result in an empty import when tree-shaking is enabled
+
+const loaded = true;
+;// ./conflict.js
+// This file creates local variables that conflict with external names
+// to test the renaming logic in concatenation
+
+// Import from externals
+
+
+// Create local variables with the same names
+// This forces the concatenation logic to rename the imports
+const localA = \\"local-a\\";
+const localB = \\"local-b\\";
+const localC = \\"local-c\\";
+
+// Use both local and imported values
+function testConflicts() {
+	return {
+		importedA: a,
+		importedB: b,
+		importedC: c,
+		localA: localA,
+		localB: localB,
+		localC: localC
+	};
+}
+
+// Also create some name conflicts in the same scope
+function innerScope() {
+	const a = \\"inner-a\\";
+	const b = \\"inner-b\\";
+	return { a, b };
+}
+
+const innerResult = innerScope();
+;// ./with-attributes.js
+// Test import attributes handling in ExternalModule
+// This should test the code path for attributes handling
+
+// Note: Import attributes are experimental and may not be fully supported
+// in all environments. This test mainly ensures the code path is covered.
+
+// Mock the dependency meta structure that would have attributes
+const mockDependencyMeta = {
+	attributes: {
+		type: \\"json\\",
+		_isLegacyAssert: false
+	}
+};
+
+const mockLegacyDependencyMeta = {
+	attributes: {
+		type: \\"json\\", 
+		_isLegacyAssert: true
+	}
+};
+
+// Export to ensure module is included
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
-a_0;
+// Namespace import tests
 
-export { a as a1 };
+
+
+// Reexport cases
+
+
+
+
+;
+
+
+
+
+// Test unused imports (should generate empty import)
+
+
+// Import but only use some exports to trigger export analysis in _analyseModule
+
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
+default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
+
+// Only use some of the named exports to test export tracking
+external_externals1_namespaceObject.export1;
+external_externals1_namespaceObject.export2;
+// export3 and export4 are intentionally not used
+
+// Test that side-effect import works
+const sideEffectLoaded = true;
+
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3, sideEffectLoaded };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 2`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
 /*!*****************************!*\\\\
-  !*** ./test.js + 3 modules ***!
+  !*** ./test.js + 8 modules ***!
   \\\\*****************************/
 
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
+
+;// ./unused.js
+// This file tests the case where imports are made but not used
+// This should trigger the imported.length === 0 code path
+
+
+// Don't use any of the imports
+// This should result in an empty import when tree-shaking is enabled
+
+const loaded = true;
+;// ./conflict.js
+// This file creates local variables that conflict with external names
+// to test the renaming logic in concatenation
+
+// Import from externals
+
+
+// Create local variables with the same names
+// This forces the concatenation logic to rename the imports
+const localA = \\"local-a\\";
+const localB = \\"local-b\\";
+const localC = \\"local-c\\";
+
+// Use both local and imported values
+function testConflicts() {
+	return {
+		importedA: a,
+		importedB: b,
+		importedC: c,
+		localA: localA,
+		localB: localB,
+		localC: localC
+	};
+}
+
+// Also create some name conflicts in the same scope
+function innerScope() {
+	const a = \\"inner-a\\";
+	const b = \\"inner-b\\";
+	return { a, b };
+}
+
+const innerResult = innerScope();
+;// ./with-attributes.js
+// Test import attributes handling in ExternalModule
+// This should test the code path for attributes handling
+
+// Note: Import attributes are experimental and may not be fully supported
+// in all environments. This test mainly ensures the code path is covered.
+
+// Mock the dependency meta structure that would have attributes
+const mockDependencyMeta = {
+	attributes: {
+		type: \\"json\\",
+		_isLegacyAssert: false
+	}
+};
+
+const mockLegacyDependencyMeta = {
+	attributes: {
+		type: \\"json\\", 
+		_isLegacyAssert: true
+	}
+};
+
+// Export to ensure module is included
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
-a_0;
+// Namespace import tests
 
-export { a as a1 };
+
+
+// Reexport cases
+
+
+
+
+;
+
+
+
+
+// Test unused imports (should generate empty import)
+
+
+// Import but only use some exports to trigger export analysis in _analyseModule
+
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
+default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
+
+// Only use some of the named exports to test export tracking
+external_externals1_namespaceObject.export1;
+external_externals1_namespaceObject.export2;
+// export3 and export4 are intentionally not used
+
+// Test that side-effect import works
+const sideEffectLoaded = true;
+
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3, sideEffectLoaded };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (1st) 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
 /*!*****************************!*\\\\
-  !*** ./test.js + 3 modules ***!
+  !*** ./test.js + 8 modules ***!
   \\\\*****************************/
 
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
+
+;// ./unused.js
+// This file tests the case where imports are made but not used
+// This should trigger the imported.length === 0 code path
+
+
+// Don't use any of the imports
+// This should result in an empty import when tree-shaking is enabled
+
+const loaded = true;
+;// ./conflict.js
+// This file creates local variables that conflict with external names
+// to test the renaming logic in concatenation
+
+// Import from externals
+
+
+// Create local variables with the same names
+// This forces the concatenation logic to rename the imports
+const localA = \\"local-a\\";
+const localB = \\"local-b\\";
+const localC = \\"local-c\\";
+
+// Use both local and imported values
+function testConflicts() {
+	return {
+		importedA: a,
+		importedB: b,
+		importedC: c,
+		localA: localA,
+		localB: localB,
+		localC: localC
+	};
+}
+
+// Also create some name conflicts in the same scope
+function innerScope() {
+	const a = \\"inner-a\\";
+	const b = \\"inner-b\\";
+	return { a, b };
+}
+
+const innerResult = innerScope();
+;// ./with-attributes.js
+// Test import attributes handling in ExternalModule
+// This should test the code path for attributes handling
+
+// Note: Import attributes are experimental and may not be fully supported
+// in all environments. This test mainly ensures the code path is covered.
+
+// Mock the dependency meta structure that would have attributes
+const mockDependencyMeta = {
+	attributes: {
+		type: \\"json\\",
+		_isLegacyAssert: false
+	}
+};
+
+const mockLegacyDependencyMeta = {
+	attributes: {
+		type: \\"json\\", 
+		_isLegacyAssert: true
+	}
+};
+
+// Export to ensure module is included
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
-a_0;
+// Namespace import tests
 
-export { a as a1 };
+
+
+// Reexport cases
+
+
+
+
+;
+
+
+
+
+// Test unused imports (should generate empty import)
+
+
+// Import but only use some exports to trigger export analysis in _analyseModule
+
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
+default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
+
+// Only use some of the named exports to test export tracking
+external_externals1_namespaceObject.export1;
+external_externals1_namespaceObject.export2;
+// export3 and export4 are intentionally not used
+
+// Test that side-effect import works
+const sideEffectLoaded = true;
+
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3, sideEffectLoaded };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (2nd) 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
 /*!*****************************!*\\\\
-  !*** ./test.js + 3 modules ***!
+  !*** ./test.js + 8 modules ***!
   \\\\*****************************/
 
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
+
+;// ./unused.js
+// This file tests the case where imports are made but not used
+// This should trigger the imported.length === 0 code path
+
+
+// Don't use any of the imports
+// This should result in an empty import when tree-shaking is enabled
+
+const loaded = true;
+;// ./conflict.js
+// This file creates local variables that conflict with external names
+// to test the renaming logic in concatenation
+
+// Import from externals
+
+
+// Create local variables with the same names
+// This forces the concatenation logic to rename the imports
+const localA = \\"local-a\\";
+const localB = \\"local-b\\";
+const localC = \\"local-c\\";
+
+// Use both local and imported values
+function testConflicts() {
+	return {
+		importedA: a,
+		importedB: b,
+		importedC: c,
+		localA: localA,
+		localB: localB,
+		localC: localC
+	};
+}
+
+// Also create some name conflicts in the same scope
+function innerScope() {
+	const a = \\"inner-a\\";
+	const b = \\"inner-b\\";
+	return { a, b };
+}
+
+const innerResult = innerScope();
+;// ./with-attributes.js
+// Test import attributes handling in ExternalModule
+// This should test the code path for attributes handling
+
+// Note: Import attributes are experimental and may not be fully supported
+// in all environments. This test mainly ensures the code path is covered.
+
+// Mock the dependency meta structure that would have attributes
+const mockDependencyMeta = {
+	attributes: {
+		type: \\"json\\",
+		_isLegacyAssert: false
+	}
+};
+
+const mockLegacyDependencyMeta = {
+	attributes: {
+		type: \\"json\\", 
+		_isLegacyAssert: true
+	}
+};
+
+// Export to ensure module is included
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
-a_0;
+// Namespace import tests
 
-export { a as a1 };
+
+
+// Reexport cases
+
+
+
+
+;
+
+
+
+
+// Test unused imports (should generate empty import)
+
+
+// Import but only use some exports to trigger export analysis in _analyseModule
+
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
+default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
+
+// Only use some of the named exports to test export tracking
+external_externals1_namespaceObject.export1;
+external_externals1_namespaceObject.export2;
+// export3 and export4 are intentionally not used
+
+// Test that side-effect import works
+const sideEffectLoaded = true;
+
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3, sideEffectLoaded };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should compile 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should compile 2`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should pre-compile to fill disk cache (1st) 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should pre-compile to fill disk cache (2nd) 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
 "
 `;
