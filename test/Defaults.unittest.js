@@ -2659,6 +2659,183 @@ describe("snapshots", () => {
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
+
+	test(
+		"target node with ESM output",
+		{ target: "node14", experiments: { outputModule: true } },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "outputModule": false,
+			+     "outputModule": true,
+			@@ ... @@
+			-     "node": false,
+			+     "node": true,
+			@@ ... @@
+			-     "web": true,
+			+     "web": false,
+			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
+			+       "globalThis": true,
+			+       "module": true,
+			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": "node",
+			@@ ... @@
+			-         "createRequire": false,
+			+         "createRequire": true,
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "node-module",
+			+     "__filename": "node-module",
+			+     "global": false,
+			@@ ... @@
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "fetch",
+			+       "async-node",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
+			+       "globalThis": true,
+			+       "module": true,
+			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-     "filename": "[name].js",
+			-     "globalObject": "self",
+			+     "filename": "[name].mjs",
+			+     "globalObject": "global",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "scriptType": false,
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": "async-node",
+			@@ ... @@
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkLoading": "import",
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": "async-node",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			+       "node",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "node14",
+		`)
+	);
 });
 
 it("should result in the same target options for same target", () => {
@@ -2679,6 +2856,12 @@ it("should result in the same target options for same target", () => {
 		- Expected
 		+ Received
 
+		@@ ... @@
+		-       "dynamicImportInWorker": true,
+		+       "dynamicImportInWorker": false,
+		@@ ... @@
+		-       "dynamicImportInWorker": true,
+		+       "dynamicImportInWorker": false,
 		@@ ... @@
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
