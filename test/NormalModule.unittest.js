@@ -332,4 +332,75 @@ describe("NormalModule", () => {
 			});
 		});
 	});
+
+	describe("#cleanupForCache with size pre-caching", () => {
+		let mockGenerator;
+
+		beforeEach(() => {
+			mockGenerator = {
+				getTypes: jest.fn().mockReturnValue(new Set(["javascript"])),
+				getSize: jest.fn().mockReturnValue(100)
+			};
+			normalModule.generator = mockGenerator;
+			normalModule.buildInfo = {
+				cacheable: true,
+				parsed: true
+			};
+		});
+
+		it("should pre-cache size() without parameters during cleanupForCache", () => {
+			const sizeSpy = jest.spyOn(normalModule, "size");
+
+			normalModule.cleanupForCache();
+
+			expect(sizeSpy).toHaveBeenCalledWith();
+
+			expect(sizeSpy).toHaveBeenCalledWith("javascript");
+
+			expect(sizeSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
+
+			sizeSpy.mockRestore();
+		});
+
+		it("should allow size() calls after cleanupForCache when values are cached", () => {
+			normalModule.cleanupForCache();
+
+			expect(normalModule.generator).toBeUndefined();
+
+			expect(normalModule.size()).toBe(100);
+			expect(normalModule.size("javascript")).toBe(100);
+		});
+
+		it("should handle the stats generation scenario after cleanup", () => {
+			normalModule.cleanupForCache();
+
+			expect(normalModule.generator).toBeUndefined();
+
+			const sizes = {};
+			for (const sourceType of normalModule.getSourceTypes()) {
+				sizes[sourceType] = normalModule.size(sourceType);
+			}
+			expect(sizes.javascript).toBe(100);
+
+			const totalSize = normalModule.size();
+			expect(totalSize).toBe(100);
+		});
+
+		it("should cache different size values for different types", () => {
+			mockGenerator.getTypes.mockReturnValue(new Set(["javascript", "css"]));
+			mockGenerator.getSize.mockImplementation((module, type) => {
+				if (type === "javascript") return 100;
+				if (type === "css") return 50;
+				return 150;
+			});
+
+			normalModule.cleanupForCache();
+
+			expect(normalModule.generator).toBeUndefined();
+
+			expect(normalModule.size("javascript")).toBe(100);
+			expect(normalModule.size("css")).toBe(50);
+			expect(normalModule.size()).toBe(150);
+		});
+	});
 });
