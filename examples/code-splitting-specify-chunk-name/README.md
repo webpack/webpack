@@ -392,7 +392,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.44 KiB [emitted] [minimized] (name: main)
+asset output.js 2.42 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 129 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 126 bytes [emitted] [minimized] (name: chunk-bar-baz2)

@@ -619,16 +619,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset runtime.js 2.37 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 283 bytes [emitted] [minimized] (name: page1)
+asset runtime.js 2.36 KiB [emitted] [minimized] (name: runtime)
+asset page1.js 281 bytes [emitted] [minimized] (name: page1)
 asset other-vendors.js 241 bytes [emitted] [minimized] (name: other-vendors)
 asset react-vendors.js 204 bytes [emitted] [minimized] (name: react-vendors)
-asset app.js 202 bytes [emitted] [minimized] (name: app)
+asset app.js 200 bytes [emitted] [minimized] (name: app)
 asset lazy_js.js 160 bytes [emitted] [minimized]
-Entrypoint app 202 bytes = app.js
-Entrypoint page1 283 bytes = page1.js
-Entrypoint react-vendors 2.57 KiB = runtime.js 2.37 KiB react-vendors.js 204 bytes
-Entrypoint other-vendors 2.6 KiB = runtime.js 2.37 KiB other-vendors.js 241 bytes
+Entrypoint app 200 bytes = app.js
+Entrypoint page1 281 bytes = page1.js
+Entrypoint react-vendors 2.55 KiB = runtime.js 2.36 KiB react-vendors.js 204 bytes
+Entrypoint other-vendors 2.59 KiB = runtime.js 2.36 KiB other-vendors.js 241 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]

@@ -529,7 +529,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.11 KiB [emitted] [minimized] (name: main)
+asset output.js 2.1 KiB [emitted] [minimized] (name: main)
 asset lazy_js.output.js 278 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16

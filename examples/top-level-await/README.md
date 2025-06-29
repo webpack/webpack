@@ -571,7 +571,7 @@ __webpack_async_result__();
 ## in production mode:
 
 ```javascript
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{312:(a,e,s)=>{s.a(a,(async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise((a=>setTimeout(a,1e3)))};await a("my-sql://example.com");const c=async a=>(await new Promise((a=>setTimeout(a,100))),"fake data");t()}catch(a){t(a)}}),1)},560:(a,e,s)=>{s.a(a,(async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>m});var c=s(312),n=a([c]);c=(n.then?(await n)():n)[0];const m=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}}))}}]);
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{312:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");t()}catch(a){t(a)}},1)},560:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>m});var c=s(312),n=a([c]);c=(n.then?(await n)():n)[0];const m=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}})}}]);
 ```
 
 # Info
@@ -604,8 +604,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.96 KiB [emitted] [minimized] (name: main)
-asset UserApi_js.output.js 540 bytes [emitted] [minimized]
+asset output.js 2.93 KiB [emitted] [minimized] (name: main)
+asset UserApi_js.output.js 532 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
