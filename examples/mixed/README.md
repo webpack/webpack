@@ -512,7 +512,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.53 KiB [emitted] [minimized] (name: main)
+asset output.js 2.51 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
   > ./example.js main

@@ -194,6 +194,9 @@ export function reset() {
 /******/ 	// no external install chunk
 /******/ 	
 /******/ 	// no on chunks loaded
+/******/ 	// no HMR
+/******/ 	
+/******/ 	// no HMR manifest
 /******/ })();
 /******/ 
 /************************************************************************/
@@ -234,7 +237,7 @@ setTimeout(async () => {
 # dist/output.js (production)
 
 ```javascript
-var e,t,o={},r={};function n(e){var t=r[e];if(void 0!==t)return t.exports;var i=r[e]={exports:{}};return o[e](i,i.exports,n),i.exports}n.m=o,n.d=(e,t)=>{for(var o in t)n.o(t,o)&&!n.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:t[o]})},n.f={},n.e=e=>Promise.all(Object.keys(n.f).reduce(((t,o)=>(n.f[o](e,t),t)),[])),n.u=e=>e+".output.js",n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),n.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.p="dist/",e={792:0},t=t=>{var o,r,{__webpack_ids__:i,__webpack_modules__:a,__webpack_runtime__:s}=t,u=0;for(o in a)n.o(a,o)&&(n.m[o]=a[o]);for(s&&s(n);u<i.length;u++)r=i[u],n.o(e,r)&&e[r]&&e[r][0](),e[i[u]]=0},n.f.j=(o,r)=>{var i=n.o(e,o)?e[o]:void 0;if(0!==i)if(i)r.push(i[1]);else{var a=import(n.p+n.u(o)).then(t,(t=>{throw 0!==e[o]&&(e[o]=void 0),t}));a=Promise.race([a,new Promise((t=>i=e[o]=[t]))]),r.push(i[1]=a)}};const i=e=>console.log(e);setTimeout((async()=>{const e=await n.e(481).then(n.bind(n,481));i(e.value),e.increment(),e.increment(),e.increment(),i(e.value),await(async()=>{(await n.e(481).then(n.bind(n,481))).reset()})(),i(e.value)}),100);
+var e,t,o={},r={};function n(e){var t=r[e];if(void 0!==t)return t.exports;var i=r[e]={exports:{}};return o[e](i,i.exports,n),i.exports}n.m=o,n.d=(e,t)=>{for(var o in t)n.o(t,o)&&!n.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:t[o]})},n.f={},n.e=e=>Promise.all(Object.keys(n.f).reduce((t,o)=>(n.f[o](e,t),t),[])),n.u=e=>e+".output.js",n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),n.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.p="dist/",e={792:0},t=t=>{var o,r,{__webpack_ids__:i,__webpack_modules__:a,__webpack_runtime__:s}=t,u=0;for(o in a)n.o(a,o)&&(n.m[o]=a[o]);for(s&&s(n);u<i.length;u++)r=i[u],n.o(e,r)&&e[r]&&e[r][0](),e[i[u]]=0},n.f.j=(o,r)=>{var i=n.o(e,o)?e[o]:void 0;if(0!==i)if(i)r.push(i[1]);else{var a=import(n.p+n.u(o)).then(t,t=>{throw 0!==e[o]&&(e[o]=void 0),t});a=Promise.race([a,new Promise(t=>i=e[o]=[t])]),r.push(i[1]=a)}};const i=e=>console.log(e);setTimeout(async()=>{const e=await n.e(481).then(n.bind(n,481));i(e.value),e.increment(),e.increment(),e.increment(),i(e.value),await(async()=>{(await n.e(481).then(n.bind(n,481))).reset()})(),i(e.value)},100);
 ```
 
 # Info
@@ -242,11 +245,11 @@ var e,t,o={},r={};function n(e){var t=r[e];if(void 0!==t)return t.exports;var i=
 ## Unoptimized
 
 ```
-asset output.js 6.6 KiB [emitted] [javascript module] (name: main)
+asset output.js 6.66 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.38 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.04 KiB 7 modules
+  runtime modules 3.07 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -265,7 +268,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.2 KiB [emitted] [javascript module] [minimized] (name: main)
+asset output.js 1.19 KiB [emitted] [javascript module] [minimized] (name: main)
 asset 481.output.js 249 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: main) 481.output.js 146 bytes [rendered]
   > ./counter ./methods.js 2:8-27
@@ -274,9 +277,9 @@ chunk (runtime: main) 481.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.04 KiB 7 modules
+  runtime modules 3.07 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]

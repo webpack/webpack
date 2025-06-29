@@ -350,7 +350,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.11 KiB [emitted] [minimized] (name: main)
+asset output.js 2.1 KiB [emitted] [minimized] (name: main)
 asset 210.output.js 81 bytes [emitted] [minimized]
 asset 425.output.js 81 bytes [emitted] [minimized]
 asset 670.output.js 81 bytes [emitted] [minimized]
