@@ -721,12 +721,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 2.17 KiB [emitted] [minimized] (name: pageA)
-asset pageB.js 2.15 KiB [emitted] [minimized] (name: pageB)
+asset pageA.js 2.16 KiB [emitted] [minimized] (name: pageA)
+asset pageB.js 2.13 KiB [emitted] [minimized] (name: pageB)
 asset shared_js.js 125 bytes [emitted] [minimized]
 asset commons.js 92 bytes [emitted] [minimized] (name: commons) (id hint: commons)
-Entrypoint pageA 2.26 KiB = commons.js 92 bytes pageA.js 2.17 KiB
-Entrypoint pageB 2.24 KiB = commons.js 92 bytes pageB.js 2.15 KiB
+Entrypoint pageA 2.25 KiB = commons.js 92 bytes pageA.js 2.16 KiB
+Entrypoint pageB 2.22 KiB = commons.js 92 bytes pageB.js 2.13 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB

@@ -484,7 +484,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			__webpack_require__.r(ns);
 /******/ 			var def = {};
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
 /******/ 			}
 /******/ 			def['default'] = () => (value);
@@ -723,7 +723,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var p=p=>{return p.split(".").map((p=>{return+p==p?+p:p}))},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
+/******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
@@ -1250,7 +1250,7 @@ __webpack_require__.d(exports, {
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var p=p=>{return p.split(".").map((p=>{return+p==p?+p:p}))},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
+/******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
@@ -1793,7 +1793,7 @@ __webpack_require__.d(exports, {
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var p=p=>{return p.split(".").map((p=>{return+p==p?+p:p}))},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
+/******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
@@ -2175,11 +2175,11 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.5 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.66 KiB [emitted] [minimized] (name: app)
-  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
+  asset app.js 7.64 KiB [emitted] [minimized] (name: app)
+  asset node_modules_react_index_js.js 7.44 KiB [emitted] [minimized] 1 related asset
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 18.9 KiB 13 modules
+    runtime modules 19 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2202,8 +2202,8 @@ app:
 
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
-  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.36 KiB [emitted] [minimized] (name: mfeBBB)
+  asset node_modules_react_index_js.js 7.44 KiB [emitted] [minimized] 1 related asset
+  asset mfeBBB.js 6.31 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 489 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
     > mfeBBB
@@ -2229,7 +2229,7 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 6.9 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 6.85 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 533 bytes [emitted] [minimized]
   asset src-c_Component_js.js 488 bytes [emitted] [minimized]

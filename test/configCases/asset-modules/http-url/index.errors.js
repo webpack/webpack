@@ -1,22 +1,22 @@
 it("error when lockfile is outdated/invalid", () => {
 	expect(() => {
 		require("http://localhost:9990/index.css?cache");
-	}).toThrowError();
+	}).toThrow();
 	expect(() => {
 		require("http://localhost:9990/index.css?no-cache");
-	}).toThrowError();
+	}).toThrow();
 	expect(() => {
 		require("http://localhost:9990/index.css");
-	}).toThrowError();
+	}).toThrow();
 	expect(() => {
 		require("http://localhost:9990/resolve.js");
-	}).toThrowError();
+	}).toThrow();
 	expect(() => {
 		require("http://localhost:9990/fallback.js");
-	}).toThrowError();
+	}).toThrow();
 	expect(() => {
 		require("http://localhost:9990/redirect");
-	}).toThrowError();
+	}).toThrow();
 });
 
 import text from "http://localhost:9990/asset.txt?ignore";

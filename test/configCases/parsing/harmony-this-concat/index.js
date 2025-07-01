@@ -13,13 +13,13 @@ it("should have this = undefined on harmony modules", () => {
 	expect((typeof abc.returnThisArrow())).toBe("undefined");
 	expect(function() {
 		returnThisMember();
-	}).toThrowError();
+	}).toThrow();
 	expect(function() {
 		abc.returnThisMember();
-	}).toThrowError();
+	}).toThrow();
 	expect(function() {
 		extendThisClass();
-	}).toThrowError();
+	}).toThrow();
 });
 
 it("should not break classes and functions", () => {

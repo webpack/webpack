@@ -4,11 +4,10 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
-const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const FakeDocument = require("./helpers/FakeDocument");
+const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
@@ -69,7 +68,11 @@ const describeCases = config => {
 							if (!options.output) options.output = {};
 							if (!options.output.path) options.output.path = outputDirectory;
 							if (!options.output.filename)
-								options.output.filename = "bundle.js";
+								options.output.filename = `bundle${
+									options.experiments && options.experiments.outputModule
+										? ".mjs"
+										: ".js"
+								}`;
 							if (!options.output.chunkFilename)
 								options.output.chunkFilename = "[name].chunk.[fullhash].js";
 							if (options.output.pathinfo === undefined)
@@ -139,136 +142,20 @@ const describeCases = config => {
 									return;
 								}
 
-								const urlToPath = url => {
-									if (url.startsWith("https://test.cases/path/"))
-										url = url.slice(24);
-									return path.resolve(outputDirectory, `./${url}`);
-								};
-								const urlToRelativePath = url => {
-									if (url.startsWith("https://test.cases/path/"))
-										url = url.slice(24);
-									return `./${url}`;
-								};
-								const window = {
-									_elements: [],
-									fetch: async url => {
-										try {
-											const buffer = await new Promise((resolve, reject) => {
-												fs.readFile(urlToPath(url), (err, b) =>
-													err ? reject(err) : resolve(b)
-												);
-											});
-											return {
-												status: 200,
-												ok: true,
-												json: async () => JSON.parse(buffer.toString("utf-8"))
-											};
-										} catch (err) {
-											if (err.code === "ENOENT") {
-												return {
-													status: 404,
-													ok: false
-												};
-											}
-											throw err;
-										}
+								const runner = new TestRunner({
+									target: options.target,
+									outputDirectory,
+									testMeta: {
+										category: category.name,
+										name: testName,
+										env: "jsdom"
 									},
-									importScripts: url => {
-										expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
-										_require(urlToRelativePath(url));
+									testConfig: {
+										...testConfig,
+										evaluateScriptOnAttached: true
 									},
-									document: {
-										createElement(type) {
-											const ele = {
-												_type: type,
-												getAttribute(name) {
-													return this[name];
-												},
-												setAttribute(name, value) {
-													this[name] = value;
-												},
-												removeAttribute(name) {
-													delete this[name];
-												},
-												parentNode: {
-													removeChild(node) {
-														window._elements = window._elements.filter(
-															item => item !== node
-														);
-													}
-												}
-											};
-											ele.sheet =
-												type === "link"
-													? new FakeDocument.FakeSheet(ele, outputDirectory)
-													: {};
-											return ele;
-										},
-										head: {
-											appendChild(element) {
-												window._elements.push(element);
-
-												if (element._type === "script") {
-													// run it
-													Promise.resolve().then(() => {
-														_require(urlToRelativePath(element.src));
-													});
-												} else if (element._type === "link") {
-													Promise.resolve().then(() => {
-														if (element.onload) {
-															// run it
-															element.onload({ type: "load" });
-														}
-													});
-												}
-											},
-											insertBefore(element, before) {
-												window._elements.push(element);
-
-												if (element._type === "script") {
-													// run it
-													Promise.resolve().then(() => {
-														_require(urlToRelativePath(element.src));
-													});
-												} else if (element._type === "link") {
-													// run it
-													Promise.resolve().then(() => {
-														element.onload({ type: "load" });
-													});
-												}
-											}
-										},
-										getElementsByTagName(name) {
-											if (name === "head") return [this.head];
-											if (name === "script" || name === "link") {
-												return window._elements.filter(
-													item => item._type === name
-												);
-											}
-
-											throw new Error("Not supported");
-										}
-									},
-									Worker: require("./helpers/createFakeWorker")({
-										outputDirectory
-									}),
-									EventSource: require("./helpers/EventSourceForNode"),
-									location: {
-										href: "https://test.cases/path/index.html",
-										origin: "https://test.cases",
-										toString() {
-											return "https://test.cases/path/index.html";
-										}
-									}
-								};
-
-								const moduleScope = {
-									window
-								};
-
-								if (testConfig.moduleScope) {
-									testConfig.moduleScope(moduleScope, options);
-								}
+									webpackOptions: options
+								});
 
 								function _next(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
@@ -307,74 +194,36 @@ const describeCases = config => {
 									});
 								}
 
-								/**
-								 * @private
-								 * @param {string} module module
-								 * @returns {EXPECTED_ANY} required module
-								 */
-								function _require(module) {
-									if (module.startsWith("./")) {
-										const p = path.join(outputDirectory, module);
-										if (module.endsWith(".css")) {
-											return fs.readFileSync(p, "utf-8");
-										}
-										if (module.endsWith(".json")) {
-											return JSON.parse(fs.readFileSync(p, "utf-8"));
-										}
-										const fn = vm.runInThisContext(
-											"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
-												"global.expect = expect;" +
-												"global.it = it;" +
-												`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${fs.readFileSync(
-													p,
-													"utf-8"
-												)}\n})`,
-											p
-										);
-										const m = {
-											exports: {}
-										};
-										fn.call(
-											m.exports,
-											_require,
-											m,
-											m.exports,
-											outputDirectory,
-											p,
-											_it,
-											_beforeEach,
-											_afterEach,
-											expect,
-											jest,
-											window,
-											window,
-											window.fetch,
-											window.document,
-											window.importScripts,
-											window.Worker,
-											window.EventSource,
-											_next,
-											jsonStats
-										);
-										return m.exports;
-									}
-									return require(module);
-								}
+								runner.mergeModuleScope({
+									it: _it,
+									beforeEach: _beforeEach,
+									afterEach: _afterEach,
+									STATE: jsonStats,
+									NEXT: _next
+								});
+
 								let promise = Promise.resolve();
 								const info = stats.toJson({ all: false, entrypoints: true });
 								if (config.target === "web") {
 									for (const file of info.entrypoints.main.assets) {
 										if (file.name.endsWith(".css")) {
-											const link = window.document.createElement("link");
-											link.href = path.join(outputDirectory, file.name);
-											window.document.head.appendChild(link);
+											const link =
+												runner._moduleScope.document.createElement("link");
+											link.href = file.name;
+											runner._moduleScope.document.head.appendChild(link);
 										} else {
-											_require(`./${file.name}`);
+											const result = runner.require(
+												outputDirectory,
+												`./${file.name}`
+											);
+											if (typeof result === "object" && "then" in result)
+												promise = promise.then(() => result);
 										}
 									}
 								} else {
 									const assets = info.entrypoints.main.assets;
-									const result = _require(
+									const result = runner.require(
+										outputDirectory,
 										`./${assets[assets.length - 1].name}`
 									);
 									if (typeof result === "object" && "then" in result)

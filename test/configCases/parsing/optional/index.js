@@ -7,5 +7,5 @@ it("should not fail for optional modules with bail", () => {
 	}
 	expect(() => {
 		throw error;
-	}).toThrowError();
+	}).toThrow();
 });

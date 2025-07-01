@@ -8,7 +8,7 @@ it("should ignore context modules that match resource regex and context", functi
 
 	expect(function() {
 		folderBContext("normal-module");
-	}).toThrowError();
+	}).toThrow();
 });
 
 it("should not ignore context modules that do not match the resource", function() {
@@ -18,7 +18,7 @@ it("should not ignore context modules that do not match the resource", function(
 
 	expect(function() {
 		folderBContext("only-context-match");
-	}).not.toThrowError();
+	}).not.toThrow();
 });
 
 it("should not ignore context modules that do not match the context", function() {
@@ -28,8 +28,8 @@ it("should not ignore context modules that do not match the context", function()
 
 	expect(function() {
 		folderBContext("normal-module");
-	}).not.toThrowError();
+	}).not.toThrow();
 	expect(function() {
 		folderBContext("ignored-module");
-	}).not.toThrowError();
+	}).not.toThrow();
 });
