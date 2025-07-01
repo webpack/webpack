@@ -102,6 +102,10 @@ export default defineConfig([
 		}
 	},
 	{
+		files: ["lib/**/*.js"],
+		extends: [configs["webpack/special"]]
+	},
+	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
 		languageOptions: {
