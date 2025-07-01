@@ -36,13 +36,11 @@ module.exports = {
 						stage: Compilation.PROCESS_ASSETS_STAGE_ANALYSE
 					},
 					() => {
-						expect(compilation.getAsset("chunk_js.bundle0.js")).not.toBe(
-							undefined
-						);
-						expect(compilation.getAsset("chunk_js.bundle0.js.map")).not.toBe(
-							undefined
-						);
-						expect(compilation.getAsset("LICENSES.txt")).not.toBe(undefined);
+						expect(compilation.getAsset("chunk_js.bundle0.js")).toBeDefined();
+						expect(
+							compilation.getAsset("chunk_js.bundle0.js.map")
+						).toBeDefined();
+						expect(compilation.getAsset("LICENSES.txt")).toBeDefined();
 						// TODO: terser-webpack-plugin should set related info
 						compilation.updateAsset(
 							"chunk_js.bundle0.js",
@@ -59,17 +57,17 @@ module.exports = {
 							}
 						);
 						compilation.deleteAsset("chunk_js.bundle0.js");
-						expect(compilation.getAsset("chunk_js.bundle0.js")).toBe(undefined);
-						expect(compilation.getAsset("chunk_js.bundle0.js.map")).toBe(
-							undefined
-						);
-						expect(compilation.getAsset("chunk2_js.bundle0.js")).toBe(
-							undefined
-						);
-						expect(compilation.getAsset("chunk2_js.bundle0.js.map")).toBe(
-							undefined
-						);
-						expect(compilation.getAsset("LICENSES.txt")).not.toBe(undefined);
+						expect(compilation.getAsset("chunk_js.bundle0.js")).toBeUndefined();
+						expect(
+							compilation.getAsset("chunk_js.bundle0.js.map")
+						).toBeUndefined();
+						expect(
+							compilation.getAsset("chunk2_js.bundle0.js")
+						).toBeUndefined();
+						expect(
+							compilation.getAsset("chunk2_js.bundle0.js.map")
+						).toBeUndefined();
+						expect(compilation.getAsset("LICENSES.txt")).toBeDefined();
 					}
 				);
 			});

@@ -62,6 +62,7 @@ expect.addSnapshotSerializer({
 const getDefaultConfig = config => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
+
 	config = getNormalizedWebpackOptions(config);
 	applyWebpackOptionsDefaults(config);
 	process.chdir(cwd);
@@ -693,9 +694,11 @@ describe("snapshots", () => {
 	test("empty config", {}, e =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
+
 	test("none mode", { mode: "none" }, e =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
+
 	test("no mode provided", { mode: undefined }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -765,6 +768,7 @@ describe("snapshots", () => {
 		+       "hash": true,
 	`)
 	);
+
 	test("production", { mode: "production" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -834,6 +838,7 @@ describe("snapshots", () => {
 		+       "hash": true,
 	`)
 	);
+
 	test("development", { mode: "development" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -883,6 +888,7 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
+
 	test("sync wasm", { experiments: { syncWebAssembly: true } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -922,6 +928,7 @@ describe("snapshots", () => {
 		+         "type": "webassembly/sync",
 	`)
 	);
+
 	test("output module", { experiments: { outputModule: true } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -984,6 +991,7 @@ describe("snapshots", () => {
 		+     "workerChunkLoading": "import",
 	`)
 	);
+
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1023,6 +1031,7 @@ describe("snapshots", () => {
 		+         "type": "webassembly/async",
 	`)
 	);
+
 	test(
 		"both wasm",
 		{ experiments: { syncWebAssembly: true, asyncWebAssembly: true } },
@@ -1068,6 +1077,7 @@ describe("snapshots", () => {
 			+         "type": "webassembly/async",
 		`)
 	);
+
 	test("const filename", { output: { filename: "bundle.js" } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1086,6 +1096,7 @@ describe("snapshots", () => {
 		+     "filename": "bundle.js",
 	`)
 	);
+
 	test("function filename", { output: { filename: () => "bundle.js" } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1104,6 +1115,7 @@ describe("snapshots", () => {
 		+     "filename": [Function filename],
 	`)
 	);
+
 	test("library", { output: { library: ["myLib", "awesome"] } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1141,6 +1153,7 @@ describe("snapshots", () => {
 		+     "uniqueName": "myLib.awesome",
 	`)
 	);
+
 	test(
 		"library contains [name] placeholder",
 		{
@@ -1185,6 +1198,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib",
 		`)
 	);
+
 	test(
 		"library.name contains [name] placeholder",
 		{
@@ -1233,6 +1247,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib.lib",
 		`)
 	);
+
 	test(
 		"library.name.root contains [name] placeholder",
 		{
@@ -1284,6 +1299,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib",
 		`)
 	);
+
 	test(
 		"library.name.root contains escaped placeholder",
 		{
@@ -1336,6 +1352,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "[name].my[name]Lib.[name]",
 		`)
 	);
+
 	test("target node", { target: "node" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1465,6 +1482,7 @@ describe("snapshots", () => {
 		+   "target": "node",
 	`)
 	);
+
 	test("target webworker", { target: "webworker" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1488,6 +1506,7 @@ describe("snapshots", () => {
 		+   "target": "webworker",
 	`)
 	);
+
 	test("target electron-main", { target: "electron-main" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1623,6 +1642,7 @@ describe("snapshots", () => {
 		+   "target": "electron-main",
 	`)
 	);
+
 	test("target electron-main", { target: "electron-preload" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1756,6 +1776,7 @@ describe("snapshots", () => {
 		+   "target": "electron-preload",
 	`)
 	);
+
 	test("records", { recordsPath: "some-path" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1771,9 +1792,11 @@ describe("snapshots", () => {
 		+   "recordsOutputPath": "some-path",
 	`)
 	);
+
 	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, e =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
+
 	test("single runtimeChunk", { optimization: { runtimeChunk: "single" } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1786,6 +1809,7 @@ describe("snapshots", () => {
 		+     },
 	`)
 	);
+
 	test(
 		"single runtimeChunk",
 		{ optimization: { runtimeChunk: "multiple" } },
@@ -1801,6 +1825,7 @@ describe("snapshots", () => {
 			+     },
 		`)
 	);
+
 	test("single runtimeChunk", { optimization: { runtimeChunk: true } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1813,6 +1838,7 @@ describe("snapshots", () => {
 		+     },
 	`)
 	);
+
 	test("cache true", { cache: true }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1836,6 +1862,7 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
+
 	test("cache filesystem", { cache: { type: "filesystem" } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -1878,6 +1905,7 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
+
 	test(
 		"cache filesystem development",
 		{ mode: "development", cache: { type: "filesystem" } },
@@ -1949,6 +1977,7 @@ describe("snapshots", () => {
 			+     "cache": true,
 		`)
 	);
+
 	test(
 		"cache filesystem and futureDefaults",
 		{ cache: { type: "filesystem" }, experiments: { futureDefaults: true } },
@@ -2661,21 +2690,22 @@ describe("snapshots", () => {
 	);
 });
 
-it("should result in the same target options for same target", () => {
-	const inlineTarget = getDefaultConfig({ target: "node12.17" });
-	const browserslistTarget = getDefaultConfig({
-		target: "browserslist: node 12.17"
-	});
-	const diff = stripVTControlCharacters(
-		jestDiff(inlineTarget, browserslistTarget, {
-			expand: false,
-			contextLines: 0
-		})
-	);
+describe("Targets", () => {
+	it("should result in the same target options for same target", () => {
+		const inlineTarget = getDefaultConfig({ target: "node12.17" });
+		const browserslistTarget = getDefaultConfig({
+			target: "browserslist: node 12.17"
+		});
+		const diff = stripVTControlCharacters(
+			jestDiff(inlineTarget, browserslistTarget, {
+				expand: false,
+				contextLines: 0
+			})
+		);
 
-	expect(inlineTarget.output.environment.module).toBe(true);
-	expect(inlineTarget.output.environment.dynamicImport).toBe(true);
-	expect(new Diff(diff)).toMatchInlineSnapshot(`
+		expect(inlineTarget.output.environment.module).toBe(true);
+		expect(inlineTarget.output.environment.dynamicImport).toBe(true);
+		expect(new Diff(diff)).toMatchInlineSnapshot(`
 		- Expected
 		+ Received
 
@@ -2683,4 +2713,5 @@ it("should result in the same target options for same target", () => {
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
 	`);
+	});
 });

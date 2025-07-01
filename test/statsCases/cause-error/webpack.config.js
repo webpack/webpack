@@ -67,7 +67,7 @@ function createAggregateError(errors, message, options = {}) {
 
 /** @type {import("../../../").Configuration} */
 module.exports = {
-	name: `error cause`,
+	name: "error cause",
 	mode: "development",
 	entry: "./index.js",
 	plugins: [

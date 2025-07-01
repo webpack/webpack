@@ -70,4 +70,4 @@ const common = i => ({
 });
 
 /** @type {import("../../../../").Configuration[]} */
-module.exports = [.../** @type {(0 | 1 | 2)[]} */ ([0, 1]).map(i => common(i))];
+module.exports = /** @type {(0 | 1 | 2)[]} */ ([0, 1]).map(i => common(i));

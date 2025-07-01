@@ -5,9 +5,7 @@ module.exports = {
 	findBundle(i, options) {
 		const regex = new RegExp(`^bundle.${options.name}`, "i");
 		const files = fs.readdirSync(options.output.path);
-		const bundle = files.find(function (file) {
-			return regex.test(file);
-		});
+		const bundle = files.find(file => regex.test(file));
 
 		if (!bundle) {
 			throw new Error(

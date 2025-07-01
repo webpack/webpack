@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	// mode: "development || "production",
 	output: {

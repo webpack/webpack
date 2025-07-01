@@ -7,6 +7,7 @@ const { createFsFromVolume, Volume } = require("memfs");
 const compile = options =>
 	new Promise((resolve, reject) => {
 		const webpack = require("..");
+
 		const compiler = webpack(options);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
@@ -50,6 +51,7 @@ describe("Stats", () => {
 				"}"
 		);
 	});
+
 	it("should omit all properties with all false", async () => {
 		const stats = await compile({
 			context: __dirname,
@@ -61,6 +63,7 @@ describe("Stats", () => {
 			})
 		).toEqual({});
 	});
+
 	it("should the results of hasWarnings() be affected by ignoreWarnings", async () => {
 		const stats = await compile({
 			mode: "development",
@@ -77,6 +80,7 @@ describe("Stats", () => {
 		});
 		expect(stats.hasWarnings()).toBeFalsy();
 	});
+
 	describe("chunkGroups", () => {
 		it("should be empty when there is no additional chunks", async () => {
 			const stats = await compile({
@@ -134,6 +138,7 @@ describe("Stats", () => {
 			}
 		`);
 		});
+
 		it("should contain additional chunks", async () => {
 			const stats = await compile({
 				context: __dirname,
@@ -207,6 +212,7 @@ describe("Stats", () => {
 			}
 		`);
 		});
+
 		it("should contain assets", async () => {
 			const stats = await compile({
 				context: __dirname,

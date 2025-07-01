@@ -13,8 +13,6 @@ class FailPlugin {
 }
 
 class TestChildCompilationPlugin {
-	constructor() {}
-
 	/**
 	 * @param {TODO} compiler compiler
 	 */

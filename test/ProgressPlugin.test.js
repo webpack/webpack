@@ -81,7 +81,7 @@ const runCompilerAsync = compiler =>
 		});
 	});
 
-describe("ProgressPlugin", function () {
+describe("ProgressPlugin", () => {
 	let stderr;
 	let stdout;
 
@@ -89,8 +89,11 @@ describe("ProgressPlugin", function () {
 		stderr = captureStdio(process.stderr, true);
 		stdout = captureStdio(process.stdout, true);
 	});
+
 	afterEach(() => {
+		// eslint-disable-next-line no-unused-expressions
 		stderr && stderr.restore();
+		// eslint-disable-next-line no-unused-expressions
 		stdout && stdout.restore();
 	});
 
@@ -107,10 +110,12 @@ describe("ProgressPlugin", function () {
 		"should not contain NaN as a percentage when it is applied to Compiler",
 		nanTest(createSimpleCompiler)
 	);
+
 	it(
 		"should not contain NaN as a percentage when it is applied to MultiCompiler",
 		nanTest(createMultiCompiler)
 	);
+
 	it(
 		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
@@ -182,10 +187,12 @@ describe("ProgressPlugin", function () {
 		"should have monotonic increasing progress",
 		monotonicTest(createSimpleCompiler)
 	);
+
 	it(
 		"should have monotonic increasing progress (multi compiler)",
 		monotonicTest(createMultiCompiler)
 	);
+
 	it(
 		"should have monotonic increasing progress (multi compiler, parallelism)",
 		monotonicTest(o => createMultiCompiler(o, { parallelism: 1 }))

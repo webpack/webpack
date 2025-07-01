@@ -74,8 +74,8 @@ module.exports = [
 							expect(
 								compiler.hooks.compilation.taps.filter(
 									tap => tap.name === "FlagDependencyExportsPlugin"
-								).length
-							).toBe(1);
+								)
+							).toHaveLength(1);
 						}
 					);
 				}

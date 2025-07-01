@@ -1,4 +1,5 @@
 const CONTEXT = {};
+
 module.exports = {
 	nonEsmThis(module) {
 		return CONTEXT;

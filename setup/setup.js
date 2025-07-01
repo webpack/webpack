@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+
 const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
@@ -10,8 +11,8 @@ const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
  * @returns {Promise<void>} result
  */
 function setup() {
-	return Promise.all([
-		checkSymlinkExistsAsync().then(async hasSymlink => {
+	return checkSymlinkExistsAsync()
+		.then(async hasSymlink => {
 			if (!hasSymlink) {
 				await ensureYarnInstalledAsync();
 				await runSetupSymlinkAsync();
@@ -20,7 +21,6 @@ function setup() {
 				}
 			}
 		})
-	])
 		.then(() => {
 			process.exitCode = 0;
 		})
@@ -93,12 +93,13 @@ function exec(command, args, description) {
 			stdio: "inherit",
 			shell: true
 		});
+
 		cp.on("error", error => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exit code ${exitCode}`);
+				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
 				resolve();
 			}
@@ -120,14 +121,15 @@ function execGetOutput(command, args, description) {
 			stdio: [process.stdin, "pipe", process.stderr],
 			shell: true
 		});
+
 		cp.on("error", error => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exit code ${exitCode}`);
+				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
-				resolve(Buffer.concat(buffers).toString("utf-8").trim());
+				resolve(Buffer.concat(buffers).toString("utf8").trim());
 			}
 		});
 		/** @type {Buffer[]} */

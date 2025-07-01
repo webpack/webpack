@@ -12,6 +12,7 @@ describe("extractUrlAndGlobal", () => {
 			"jQuery"
 		]);
 	});
+
 	it("should return _", () => {
 		const result = extractUrlAndGlobal(
 			"_@https://cdn.jsdelivr.net/npm/lodash@4.17.19/lodash.min.js"
@@ -21,15 +22,22 @@ describe("extractUrlAndGlobal", () => {
 			"_"
 		]);
 	});
+
 	it("should throw error if starts with @", () => {
-		expect(() => extractUrlAndGlobal("@something")).toThrow();
+		expect(() => extractUrlAndGlobal("@something")).toThrow(
+			/Invalid request "@something"/
+		);
 	});
 
 	it("should throw error if ends with @", () => {
-		expect(() => extractUrlAndGlobal("something@")).toThrow();
+		expect(() => extractUrlAndGlobal("something@")).toThrow(
+			/Invalid request "something@"/
+		);
 	});
 
 	it("should throw error if do not have @", () => {
-		expect(() => extractUrlAndGlobal("something")).toThrow();
+		expect(() => extractUrlAndGlobal("something")).toThrow(
+			/Invalid request "something"/
+		);
 	});
 });

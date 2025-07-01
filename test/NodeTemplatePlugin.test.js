@@ -7,8 +7,10 @@ const path = require("path");
 // cspell:word nodetest
 describe("NodeTemplatePlugin", () => {
 	jest.setTimeout(20000);
+
 	it("should compile and run a simple module", done => {
 		const webpack = require("..");
+
 		webpack(
 			{
 				mode: "production",
@@ -27,7 +29,9 @@ describe("NodeTemplatePlugin", () => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
 				expect(stats.hasWarnings()).toBe(false);
+
 				const result = require("./js/NodeTemplatePlugin/result").abc;
+
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
 				result.loadChunk(456, chunk => {
@@ -45,6 +49,7 @@ describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module in single mode", done => {
 		const webpack = require("..");
+
 		webpack(
 			{
 				mode: "production",
@@ -68,7 +73,9 @@ describe("NodeTemplatePlugin", () => {
 			(err, stats) => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
+
 				const result = require("./js/NodeTemplatePluginSingle/result2");
+
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
 				const sameTick = true;

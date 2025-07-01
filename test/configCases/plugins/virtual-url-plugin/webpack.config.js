@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
+
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 const watchDir = path.join(__dirname, "./routes");
@@ -14,14 +15,14 @@ const config = {
 				return `
 					export const routes = {
 						${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
-					}        
+					}
 				`;
 			},
 			app: "export const app = 'app'",
 			config: {
 				type: ".json",
 				source() {
-					return `{"name": "virtual-url-plugin"}`;
+					return '{"name": "virtual-url-plugin"}';
 				}
 			},
 			ts: {
@@ -36,13 +37,13 @@ const config = {
 			style: {
 				type: ".css",
 				source() {
-					return `body{background-color: powderblue;}`;
+					return "body{background-color: powderblue;}";
 				}
 			},
 			txt: {
 				type: ".txt",
 				source() {
-					return `Hello world`;
+					return "Hello world";
 				}
 			}
 		})

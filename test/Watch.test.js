@@ -6,9 +6,9 @@ const path = require("path");
 const webpack = require("..");
 const { createFsFromVolume, Volume } = require("memfs");
 
-describe("Watch", () => {
-	jest.setTimeout(10000);
+jest.setTimeout(10000);
 
+describe("Watch", () => {
 	it("should only compile a single time", done => {
 		let counterBeforeCompile = 0;
 		let counterDone = 0;

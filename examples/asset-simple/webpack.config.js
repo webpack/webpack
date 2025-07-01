@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"

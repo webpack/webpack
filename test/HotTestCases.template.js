@@ -32,10 +32,13 @@ const describeCases = config => {
 						describe.skip(testName, () => {
 							it("filtered", () => {});
 						});
+
 						continue;
 					}
+
 					describe(testName, () => {
 						let compiler;
+
 						afterAll(callback => {
 							compiler.close(callback);
 							compiler = undefined;
@@ -43,6 +46,7 @@ const describeCases = config => {
 
 						it(`${testName} should compile`, done => {
 							const webpack = require("..");
+
 							const outputDirectory = path.join(
 								__dirname,
 								"js",
@@ -67,23 +71,29 @@ const describeCases = config => {
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
 							if (!options.output.path) options.output.path = outputDirectory;
-							if (!options.output.filename)
+							if (!options.output.filename) {
 								options.output.filename = `bundle${
 									options.experiments && options.experiments.outputModule
 										? ".mjs"
 										: ".js"
 								}`;
-							if (!options.output.chunkFilename)
+							}
+							if (!options.output.chunkFilename) {
 								options.output.chunkFilename = "[name].chunk.[fullhash].js";
-							if (options.output.pathinfo === undefined)
+							}
+							if (options.output.pathinfo === undefined) {
 								options.output.pathinfo = true;
-							if (options.output.publicPath === undefined)
+							}
+							if (options.output.publicPath === undefined) {
 								options.output.publicPath = "https://test.cases/path/";
-							if (options.output.library === undefined)
+							}
+							if (options.output.library === undefined) {
 								options.output.library = { type: "commonjs2" };
+							}
 							if (!options.optimization) options.optimization = {};
-							if (!options.optimization.moduleIds)
+							if (!options.optimization.moduleIds) {
 								options.optimization.moduleIds = "named";
+							}
 							if (!options.module) options.module = {};
 							if (!options.module.rules) options.module.rules = [];
 							options.module.rules.push({
@@ -216,8 +226,9 @@ const describeCases = config => {
 												outputDirectory,
 												`./${file.name}`
 											);
-											if (typeof result === "object" && "then" in result)
+											if (typeof result === "object" && "then" in result) {
 												promise = promise.then(() => result);
+											}
 										}
 									}
 								} else {
@@ -226,13 +237,15 @@ const describeCases = config => {
 										outputDirectory,
 										`./${assets[assets.length - 1].name}`
 									);
-									if (typeof result === "object" && "then" in result)
+									if (typeof result === "object" && "then" in result) {
 										promise = promise.then(() => result);
+									}
 								}
 								promise.then(
 									() => {
-										if (getNumberOfTests() < 1)
+										if (getNumberOfTests() < 1) {
 											return done(new Error("No tests exported by test case"));
+										}
 
 										done();
 									},

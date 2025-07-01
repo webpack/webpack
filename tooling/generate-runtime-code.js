@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const fs = require("fs");
 const terser = require("terser");
@@ -12,7 +14,8 @@ const files = ["lib/util/semver.js"];
 (async () => {
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
-		const content = fs.readFileSync(filePath, "utf-8");
+		const content = fs.readFileSync(filePath, "utf8");
+
 		const exports = require(`../${file}`);
 
 		const regexp =
@@ -30,7 +33,7 @@ const files = ["lib/util/semver.js"];
 			const body = originalCode.slice(header[0].length, -1);
 			const result = await terser.minify(
 				{
-					["input.js"]: body
+					"input.js": body
 				},
 				{
 					compress: true,
@@ -88,7 +91,7 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 
 		if (newContent !== content) {
 			if (doWrite) {
-				fs.writeFileSync(filePath, newContent, "utf-8");
+				fs.writeFileSync(filePath, newContent, "utf8");
 				console.error(`${file} updated`);
 			} else {
 				console.error(`${file} need to be updated`);

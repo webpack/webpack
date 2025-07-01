@@ -63,6 +63,7 @@ describe("Persistent Caching", () => {
 	const compile = async (configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
+
 			webpack(
 				{
 					...config,
@@ -71,8 +72,9 @@ describe("Persistent Caching", () => {
 				},
 				(err, stats) => {
 					if (err) return reject(err);
-					if (stats.hasErrors())
+					if (stats.hasErrors()) {
 						return reject(stats.toString({ preset: "errors-only" }));
+					}
 					resolve(stats);
 				}
 			);
@@ -84,7 +86,7 @@ describe("Persistent Caching", () => {
 			if (cache[name]) return cache[name].exports;
 			if (!name.endsWith(".js")) name += ".js";
 			const p = path.resolve(outputPath, name);
-			const source = fs.readFileSync(p, "utf-8");
+			const source = fs.readFileSync(p, "utf8");
 			const context = {};
 			const fn = vm.runInThisContext(
 				`(function(require, module, exports) { ${source} })`,
@@ -181,7 +183,9 @@ export { style };
 			"lib2.js": "export default 21"
 		};
 		await updateSrc(data);
+
 		const webpack = require("../");
+
 		const configAdditions = {
 			plugins: [
 				new webpack.container.ModuleFederationPlugin({

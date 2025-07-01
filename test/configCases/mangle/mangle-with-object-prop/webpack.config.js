@@ -1,4 +1,5 @@
 const { DefinePlugin } = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = [
 	{

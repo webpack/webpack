@@ -68,8 +68,9 @@ class HtmlPlugin {
 					for (const name of this.entrypoints) {
 						for (const file of /** @type {Entrypoint} */ (
 							compilation.entrypoints.get(name)
-						).getFiles())
+						).getFiles()) {
 							files.push(file);
+						}
 					}
 					/**
 					 * @param {string} file file
@@ -151,8 +152,9 @@ class HtmlInlinePlugin {
 							let match = regExp.exec(content);
 							while (match) {
 								let url = match[1];
-								if (url.startsWith(publicPath))
+								if (url.startsWith(publicPath)) {
 									url = url.slice(publicPath.length);
+								}
 								if (this.inline.test(url)) {
 									const asset = /** @type {Asset} */ (
 										compilation.getAsset(url)

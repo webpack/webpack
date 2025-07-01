@@ -1,4 +1,3 @@
-// eslint-disable-next-line n/no-unpublished-require
 const { ConsumeSharedPlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */

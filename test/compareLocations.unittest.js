@@ -1,6 +1,7 @@
 "use strict";
 
 const { compareLocations } = require("../lib/util/comparators");
+
 const createPosition = overrides => ({
 	line: 10,
 	column: 5,

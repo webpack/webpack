@@ -10,6 +10,7 @@ describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
+
 		return;
 	}
 
@@ -48,8 +49,8 @@ describe("WatchDetection", () => {
 				} catch (_err) {
 					// empty
 				}
-				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
-				fs.writeFileSync(file2Path, "original", "utf-8");
+				fs.writeFileSync(filePath, "require('./file2')", "utf8");
+				fs.writeFileSync(file2Path, "original", "utf8");
 			});
 
 			afterAll(done => {
@@ -105,8 +106,9 @@ describe("WatchDetection", () => {
 								.readFileSync("/directory/bundle.js")
 								.toString()
 								.includes("original")
-						)
+						) {
 							step2();
+						}
 					};
 
 					watcher = compiler.watch(
@@ -122,14 +124,14 @@ describe("WatchDetection", () => {
 				 */
 				function step2() {
 					onChange = () => {
-						expect(compiler.modifiedFiles).not.toBe(undefined);
-						expect(compiler.removedFiles).not.toBe(undefined);
+						expect(compiler.modifiedFiles).toBeDefined();
+						expect(compiler.removedFiles).toBeDefined();
 					};
 
 					fs.writeFile(
 						filePath,
 						"require('./file2'); again",
-						"utf-8",
+						"utf8",
 						handleError
 					);
 
@@ -141,7 +143,7 @@ describe("WatchDetection", () => {
 				 */
 				function step3() {
 					if (invalidate) watcher.invalidate();
-					fs.writeFile(file2Path, "wrong", "utf-8", handleError);
+					fs.writeFile(file2Path, "wrong", "utf8", handleError);
 
 					setTimeout(step4, changeTimeout);
 				}
@@ -151,18 +153,19 @@ describe("WatchDetection", () => {
 				 */
 				function step4() {
 					onChange = () => {
-						expect(compiler.modifiedFiles).not.toBe(undefined);
-						expect(compiler.removedFiles).not.toBe(undefined);
+						expect(compiler.modifiedFiles).toBeDefined();
+						expect(compiler.removedFiles).toBeDefined();
 						if (
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
 								.includes("correct")
-						)
+						) {
 							step5();
+						}
 					};
 
-					fs.writeFile(file2Path, "correct", "utf-8", handleError);
+					fs.writeFile(file2Path, "correct", "utf8", handleError);
 				}
 
 				/**

@@ -3,11 +3,12 @@
  * @returns {EXPECTED_FUNCTION[]} functions
  */
 function createFunctionArrayFromUseArray(useArray) {
-	return useArray.map(function (useItem) {
-		return function () {
-			return useItem;
-		};
-	});
+	return useArray.map(
+		useItem =>
+			function () {
+				return useItem;
+			}
+	);
 }
 
 const useArray = createFunctionArrayFromUseArray([

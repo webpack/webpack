@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import { constants, writeFile } from "fs";
 import { Bench, hrtimeNow } from "tinybench";
 import { fileURLToPath, pathToFileURL } from "url";
-import simpleGit from "simple-git";
+import { simpleGit } from "simple-git";
 import { withCodSpeed } from "@codspeed/tinybench-plugin";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,7 +14,8 @@ const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
 const getV8Flags = () => {
 	const nodeVersionMajor = Number.parseInt(
-		process.version.slice(1).split(".")[0]
+		process.version.slice(1).split(".")[0],
+		10
 	);
 	const flags = [
 		"--hash-seed=1",
@@ -205,7 +206,7 @@ for (const baselineInfo of baselineRevisions) {
 			webpack: async () => {
 				const webpack = (
 					await import(
-						pathToFileURL(path.resolve(baselinePath, `./lib/index.js`))
+						pathToFileURL(path.resolve(baselinePath, "./lib/index.js"))
 					)
 				).default;
 
@@ -358,7 +359,7 @@ async function registerSuite(bench, test, baselines) {
 
 	const realConfig = (
 		await import(
-			`${pathToFileURL(path.join(testDirectory, `webpack.config.js`))}`
+			`${pathToFileURL(path.join(testDirectory, "webpack.config.js"))}`
 		)
 	).default;
 
@@ -384,7 +385,7 @@ async function registerSuite(bench, test, baselines) {
 
 					if (scenario.watch) {
 						const entry = path.resolve(config.entry);
-						const originalEntryContent = await fs.readFile(entry, "utf-8");
+						const originalEntryContent = await fs.readFile(entry, "utf8");
 
 						let watching;
 						let watchingResolve;

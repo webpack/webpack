@@ -1,6 +1,7 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const { createFsFromVolume, Volume } = require("memfs");
 const webpack = require("..");
@@ -30,7 +31,7 @@ const createMultiCompiler = options => {
 	return compiler;
 };
 
-describe("MultiCompiler", function () {
+describe("MultiCompiler", () => {
 	jest.setTimeout(20000);
 
 	it("should trigger 'run' for each child compiler", done => {
@@ -72,6 +73,7 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
 	it("should not be running twice at a time (watch)", done => {
 		const compiler = createMultiCompiler();
 		compiler.watch({}, (err, stats) => {
@@ -83,6 +85,7 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
 	it("should not be running twice at a time (run - watch)", done => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
@@ -94,6 +97,7 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
 	it("should not be running twice at a time (watch - run)", done => {
 		const compiler = createMultiCompiler();
 		compiler.watch({}, (err, stats) => {
@@ -105,6 +109,7 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
 	it("should not be running twice at a time (instance cb)", done => {
 		const compiler = webpack(
 			{
@@ -125,6 +130,7 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
 	it("should run again correctly after first compilation", done => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
@@ -136,6 +142,7 @@ describe("MultiCompiler", function () {
 			});
 		});
 	});
+
 	it("should watch again correctly after first compilation", done => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
@@ -147,6 +154,7 @@ describe("MultiCompiler", function () {
 			});
 		});
 	});
+
 	it("should run again correctly after first closed watch", done => {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, stats) => {
@@ -159,6 +167,7 @@ describe("MultiCompiler", function () {
 			});
 		});
 	});
+
 	it("should watch again correctly after first closed watch", done => {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, stats) => {
@@ -171,6 +180,7 @@ describe("MultiCompiler", function () {
 			});
 		});
 	});
+
 	it("should respect parallelism and dependencies for running", done => {
 		const compiler = createMultiCompiler({
 			parallelism: 1,
@@ -207,6 +217,7 @@ describe("MultiCompiler", function () {
 			compiler.close(done);
 		});
 	});
+
 	it("should respect parallelism and dependencies for watching", done => {
 		const compiler = webpack(
 			Object.assign(
@@ -280,8 +291,8 @@ describe("MultiCompiler", function () {
 							c:
 							  c compiled successfully"
 					`);
-					expect(compiler.compilers[0].modifiedFiles).toBe(undefined);
-					expect(compiler.compilers[0].removedFiles).toBe(undefined);
+					expect(compiler.compilers[0].modifiedFiles).toBeUndefined();
+					expect(compiler.compilers[0].removedFiles).toBeUndefined();
 					expect(events).toMatchInlineSnapshot(`
 				Array [
 				  "b run",

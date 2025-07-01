@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	entry: {
 		app: { import: "./app.js", dependOn: ["other-vendors"] },

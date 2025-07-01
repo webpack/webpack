@@ -1,6 +1,7 @@
 "use strict";
 
 const { itemsToRegexp } = require("../lib/util/compileBooleanMatcher");
+
 describe("itemsToRegexp", () => {
 	const expectCompiled = (name, input, fn) => {
 		it(`should compile ${name}`, () => {

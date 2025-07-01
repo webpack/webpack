@@ -97,6 +97,7 @@ if (${options.type === "module"}) {
 			this._onmessage = undefined;
 		}
 
+		// eslint-disable-next-line accessor-pairs
 		set onmessage(value) {
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			this.worker.on(

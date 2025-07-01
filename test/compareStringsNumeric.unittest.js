@@ -1,4 +1,4 @@
-const { compareStringsNumeric } = require("../lib/util/comparators.js");
+const { compareStringsNumeric } = require("../lib/util/comparators");
 
 /**
  * @param {string} a string
@@ -85,6 +85,7 @@ describe(compareStringsNumeric.name, () => {
 
 	for (const testCase of testCases) {
 		const [a, b, expected] = testCase;
+
 		it(`returns ${expected} when comparing "${a}" to "${b}"`, () => {
 			expect(referenceComparer(a, b)).toBe(expected);
 			expect(compareStringsNumeric(a, b)).toBe(expected);

@@ -9,8 +9,8 @@ module.exports = {
 	},
 	plugins: [
 		function () {
-			this.hooks.compilation.tap("TestPlugin", function (compilation) {
-				compilation.hooks.processAssets.tap("TestPlugin", function (assets) {
+			this.hooks.compilation.tap("TestPlugin", compilation => {
+				compilation.hooks.processAssets.tap("TestPlugin", assets => {
 					delete compilation.assets["b.js"];
 				});
 			});

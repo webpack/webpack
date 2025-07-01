@@ -18,7 +18,7 @@ describe("LocalModulesHelpers", () => {
 				idx: 2,
 				used: false
 			});
-			expect(state.localModules.length).toBe(3);
+			expect(state.localModules).toHaveLength(3);
 		});
 	});
 
@@ -35,7 +35,7 @@ describe("LocalModulesHelpers", () => {
 					}
 				]
 			};
-			expect(getLocalModule(state, "local_module_sample")).toBe(null);
+			expect(getLocalModule(state, "local_module_sample")).toBeNull();
 		});
 
 		it("returns local module information", () => {

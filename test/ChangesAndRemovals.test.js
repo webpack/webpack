@@ -9,6 +9,7 @@ const rimraf = require("rimraf");
 
 const createCompiler = config => {
 	const webpack = require("..");
+
 	const compiler = webpack(config);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
@@ -61,25 +62,19 @@ function createFiles() {
 	fs.writeFileSync(
 		tempFilePath,
 		"module.exports = function temp() {return 'temp file';};\n require('./temp-file2')",
-		"utf-8"
+		"utf8"
 	);
 
 	fs.writeFileSync(
 		tempFile2Path,
 		"module.exports = function temp2() {return 'temp file 2';};",
-		"utf-8"
+		"utf8"
 	);
 }
 
+jest.setTimeout(30000);
+
 describe("ChangesAndRemovals", () => {
-	if (process.env.NO_WATCH_TESTS) {
-		// eslint-disable-next-line jest/no-disabled-tests
-		it.skip("watch tests excluded", () => {});
-		return;
-	}
-
-	jest.setTimeout(30000);
-
 	beforeEach(done => {
 		cleanup(err => {
 			if (err) return done(err);
@@ -89,7 +84,15 @@ describe("ChangesAndRemovals", () => {
 			setTimeout(done, 2500);
 		});
 	});
+
 	afterEach(cleanup);
+
+	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
+		it.skip("watch tests excluded", () => {});
+
+		return;
+	}
 
 	it("should not track modified/removed files during initial watchRun", done => {
 		const compiler = createSingleCompiler();

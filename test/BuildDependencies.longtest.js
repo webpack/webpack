@@ -12,6 +12,7 @@ const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 const exec = (n, options = {}) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
+
 		const coverageEnabled = webpack.toString().includes("++");
 
 		const p = childProcess.execFile(
@@ -80,8 +81,9 @@ const exec = (n, options = {}) =>
 				);
 			}
 			if (code === 0) {
-				if (!options.ignoreErrors && /<[ew]>/.test(stdout))
+				if (!options.ignoreErrors && /<[ew]>/.test(stdout)) {
 					return reject(new Error(stdout));
+				}
 				resolve(stdout);
 			} else {
 				reject(new Error(`Code ${code}: ${stdout}`));
@@ -98,18 +100,15 @@ const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
 	beforeEach(done => {
-		rimraf(cacheDirectory, done);
-	});
-	beforeEach(done => {
-		rimraf(outputDirectory, done);
+		rimraf(cacheDirectory, () => {
+			rimraf(outputDirectory, () => {
+				rimraf(inputDirectory, () => {
+					fs.mkdir(inputDirectory, { recursive: true }, done);
+				});
+			});
+		});
 	});
 
-	beforeEach(done => {
-		rimraf(inputDirectory, done);
-	});
-	beforeEach(done => {
-		fs.mkdir(inputDirectory, { recursive: true }, done);
-	});
 	it("should capture loader and config dependencies", async () => {
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "package.json"),

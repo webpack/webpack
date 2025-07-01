@@ -28,12 +28,15 @@ module.exports = {
 				resolve(context, request, callback);
 			} else {
 				resolve(context, request, (err, resolved, resolveRequest) => {
-					if (err) callback(err);
-					else if (
+					if (err) {
+						callback(err);
+					} else if (
 						resolved !== /** @type {ResolveRequest} */ (resolveRequest).path
-					)
+					) {
 						callback(new Error("Error"));
-					else callback(null, `var ${JSON.stringify(resolved)}`);
+					} else {
+						callback(null, `var ${JSON.stringify(resolved)}`);
+					}
 				});
 			}
 		}

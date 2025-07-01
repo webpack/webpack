@@ -34,10 +34,12 @@ module.exports = class EventSource {
 		this.response.destroy();
 	}
 
+	// eslint-disable-next-line accessor-pairs
 	set onopen(value) {
 		throw new Error("not implemented");
 	}
 
+	// eslint-disable-next-line accessor-pairs
 	set onmessage(value) {
 		throw new Error("not implemented");
 	}

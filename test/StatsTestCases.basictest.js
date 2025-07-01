@@ -1,6 +1,7 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
@@ -29,6 +30,7 @@ const tests = fs
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 			describe.skip(testName, () => it("filtered", () => {}));
+
 			return false;
 		}
 		return true;
@@ -37,12 +39,15 @@ const tests = fs
 describe("StatsTestCases", () => {
 	jest.setTimeout(30000);
 	let stderr;
+
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
 	});
+
 	afterEach(() => {
 		stderr.restore();
 	});
+
 	for (const testName of tests) {
 		// eslint-disable-next-line no-loop-func
 		it(`should print correct stats for ${testName}`, done => {
@@ -77,8 +82,9 @@ describe("StatsTestCases", () => {
 				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
-				if (options.optimization.minimize === undefined)
+				if (options.optimization.minimize === undefined) {
 					options.optimization.minimize = false;
+				}
 				if (
 					options.cache &&
 					options.cache !== true &&
@@ -106,9 +112,10 @@ describe("StatsTestCases", () => {
 						args.concat([
 							(err, result) => {
 								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0]))
+								if (!/\.(js|json|txt)$/.test(args[0])) {
 									return callback(null, result);
-								callback(null, result.toString("utf-8").replace(/\r/g, ""));
+								}
+								callback(null, result.toString("utf8").replace(/\r/g, ""));
 							}
 						])
 					);
@@ -155,7 +162,7 @@ describe("StatsTestCases", () => {
 						context: path.join(base, testName),
 						colors: false
 					}),
-					"utf-8"
+					"utf8"
 				);
 
 				let toStringOptions = {
@@ -165,10 +172,12 @@ describe("StatsTestCases", () => {
 				let hasColorSetting = false;
 				if (typeof c.options.stats !== "undefined") {
 					toStringOptions = c.options.stats;
-					if (toStringOptions === null || typeof toStringOptions !== "object")
+					if (toStringOptions === null || typeof toStringOptions !== "object") {
 						toStringOptions = { preset: toStringOptions };
-					if (!toStringOptions.context)
+					}
+					if (!toStringOptions.context) {
 						toStringOptions.context = path.join(base, testName);
+					}
 					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
 				if (Array.isArray(c.options) && !toStringOptions.children) {

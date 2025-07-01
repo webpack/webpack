@@ -1,4 +1,5 @@
 "use strict";
+
 const fs = require("graceful-fs");
 const path = require("path");
 
@@ -29,8 +30,9 @@ const explain = object => {
 				value = JSON.stringify(value);
 			}
 			let msg = `${key} = ${value}`;
-			if (key !== "stack" && key !== "details" && msg.length > 100)
+			if (key !== "stack" && key !== "details" && msg.length > 100) {
 				msg = `${msg.slice(0, 97)}...`;
+			}
 			return msg;
 		})
 		.join("; ");
@@ -83,7 +85,9 @@ module.exports = function checkArrayExpectation(
 	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
+
 		let expected = require(expectedFilename);
+
 		if (typeof expected === "function") {
 			expected = expected(options);
 		}

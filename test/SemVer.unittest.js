@@ -153,10 +153,11 @@ describe("SemVer", () => {
 		};
 		for (const key of Object.keys(cases)) {
 			describe(key, () => {
-				for (const c of cases[key])
+				for (const c of cases[key]) {
 					it(`should be equal ${c}`, () => {
 						expect(parseRange(c)).toEqual(parseRange(key));
 					});
+				}
 			});
 		}
 	});
@@ -567,6 +568,7 @@ describe("SemVer", () => {
 				it(`should be able to parse ${range}`, () => {
 					parseRange(range);
 				});
+
 				for (const item of cases[range]) {
 					for (const [name, fn] of [
 						["normal", satisfy],

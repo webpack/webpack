@@ -8,7 +8,7 @@ module.exports = {
 
 		for (const file of files) {
 			const filename = path.resolve(outputPath, file);
-			const source = fs.readFileSync(filename, "utf-8");
+			const source = fs.readFileSync(filename, "utf8");
 
 			switch (file) {
 				case "resource-with-bom.ext": {

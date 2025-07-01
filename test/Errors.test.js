@@ -133,7 +133,7 @@ async function compile(options) {
 		}
 	});
 
-	expect(typeof stats).toEqual("object");
+	expect(typeof stats).toBe("object");
 	const statsResult = stats.toJson({ errorDetails: false });
 	expect(typeof statsResult).toBe("object");
 	const { errors, warnings } = statsResult;
@@ -143,12 +143,13 @@ async function compile(options) {
 	return { errors, warnings };
 }
 
-it("should emit warning for missingFile", async () => {
-	await expect(
-		compile({
-			entry: "./missingFile"
-		})
-	).resolves.toMatchInlineSnapshot(`
+describe("Errors", () => {
+	it("should emit warning for missingFile", async () => {
+		await expect(
+			compile({
+				entry: "./missingFile"
+			})
+		).resolves.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [
 					    Object {
@@ -173,11 +174,11 @@ it("should emit warning for missingFile", async () => {
 					  "warnings": Array [],
 					}
 				`);
-}, 20000);
+	}, 20000);
 
-it("should emit warning for require.extensions", async () => {
-	await expect(compile({ entry: "./require.extensions" })).resolves
-		.toMatchInlineSnapshot(`
+	it("should emit warning for require.extensions", async () => {
+		await expect(compile({ entry: "./require.extensions" })).resolves
+			.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [],
 					  "warnings": Array [
@@ -193,11 +194,11 @@ it("should emit warning for require.extensions", async () => {
 					  ],
 					}
 				`);
-});
+	});
 
-it("should emit warning for require.main.require", async () => {
-	await expect(compile({ entry: "./require.main.require" })).resolves
-		.toMatchInlineSnapshot(`
+	it("should emit warning for require.main.require", async () => {
+		await expect(compile({ entry: "./require.main.require" })).resolves
+			.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [],
 					  "warnings": Array [
@@ -213,10 +214,11 @@ it("should emit warning for require.main.require", async () => {
 					  ],
 					}
 				`);
-});
-it("should emit warning for module.parent.require", async () => {
-	await expect(compile({ entry: "./module.parent.require" })).resolves
-		.toMatchInlineSnapshot(`
+	});
+
+	it("should emit warning for module.parent.require", async () => {
+		await expect(compile({ entry: "./module.parent.require" })).resolves
+			.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [],
 					  "warnings": Array [
@@ -232,18 +234,18 @@ it("should emit warning for module.parent.require", async () => {
 					  ],
 					}
 				`);
-});
+	});
 
-const isCaseInsensitiveFilesystem = fs.existsSync(
-	path.resolve(__dirname, "fixtures", "errors", "FILE.js")
-);
-if (isCaseInsensitiveFilesystem) {
-	it("should emit warning for case-preserved disk", async () => {
-		const result = await compile({
-			mode: "development",
-			entry: "./case-sensitive"
-		});
-		expect(result).toMatchInlineSnapshot(`
+	const isCaseInsensitiveFilesystem = fs.existsSync(
+		path.resolve(__dirname, "fixtures", "errors", "FILE.js")
+	);
+	if (isCaseInsensitiveFilesystem) {
+		it("should emit warning for case-preserved disk", async () => {
+			const result = await compile({
+				mode: "development",
+				entry: "./case-sensitive"
+			});
+			expect(result).toMatchInlineSnapshot(`
 		Object {
 		  "errors": Array [],
 		  "warnings": Array [
@@ -272,14 +274,14 @@ if (isCaseInsensitiveFilesystem) {
 		  ],
 		}
 	`);
-	});
-} else {
-	it("should emit error for case-sensitive", async () => {
-		const result = await compile({
-			mode: "development",
-			entry: "./case-sensitive"
 		});
-		expect(result).toMatchInlineSnapshot(`
+	} else {
+		it("should emit error for case-sensitive", async () => {
+			const result = await compile({
+				mode: "development",
+				entry: "./case-sensitive"
+			});
+			expect(result).toMatchInlineSnapshot(`
 		Object {
 		  "errors": Array [
 		    Object {
@@ -295,12 +297,12 @@ if (isCaseInsensitiveFilesystem) {
 		  "warnings": Array [],
 		}
 	`);
-	});
-}
+		});
+	}
 
-it("should emit warning for undef mode", async () => {
-	await expect(compile({ mode: undefined, entry: "./entry-point" })).resolves
-		.toMatchInlineSnapshot(`
+	it("should emit warning for undef mode", async () => {
+		await expect(compile({ mode: undefined, entry: "./entry-point" })).resolves
+			.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [],
 					  "warnings": Array [
@@ -311,20 +313,22 @@ it("should emit warning for undef mode", async () => {
 					  ],
 					}
 				`);
-});
-it("should emit no errors or warnings for no-errors-deprecate", async () => {
-	await expect(compile({ mode: "production", entry: "./no-errors-deprecate" }))
-		.resolves.toMatchInlineSnapshot(`
+	});
+
+	it("should emit no errors or warnings for no-errors-deprecate", async () => {
+		await expect(
+			compile({ mode: "production", entry: "./no-errors-deprecate" })
+		).resolves.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [],
 					  "warnings": Array [],
 					}
 				`);
-});
+	});
 
-it("should emit errors for missingFile for production", async () => {
-	await expect(compile({ mode: "production", entry: "./missingFile" })).resolves
-		.toMatchInlineSnapshot(`
+	it("should emit errors for missingFile for production", async () => {
+		await expect(compile({ mode: "production", entry: "./missingFile" }))
+			.resolves.toMatchInlineSnapshot(`
 		Object {
 		  "errors": Array [
 		    Object {
@@ -349,11 +353,11 @@ it("should emit errors for missingFile for production", async () => {
 		  "warnings": Array [],
 		}
 	`);
-});
+	});
 
-it("should emit module build errors", async () => {
-	await expect(compile({ entry: "./has-syntax-error" })).resolves
-		.toMatchInlineSnapshot(`
+	it("should emit module build errors", async () => {
+		await expect(compile({ entry: "./has-syntax-error" })).resolves
+			.toMatchInlineSnapshot(`
 					Object {
 					  "errors": Array [
 					    Object {
@@ -369,30 +373,30 @@ it("should emit module build errors", async () => {
 					  "warnings": Array [],
 					}
 				`);
-});
+	});
 
-it("should bao; thrown sync error from plugin", async () => {
-	await expect(
-		compile({
-			entry: "./no-errors-deprecate",
-			plugins: [require("./fixtures/errors/throw-error-plugin")]
-		})
-	).rejects.toMatchInlineSnapshot(`
+	it("should bao; thrown sync error from plugin", async () => {
+		await expect(
+			compile({
+				entry: "./no-errors-deprecate",
+				plugins: [require("./fixtures/errors/throw-error-plugin")]
+			})
+		).rejects.toMatchInlineSnapshot(`
 					Object {
 					  "message": "foo",
 					  "stack": "Error: foo",
 					}
 				`);
-});
+	});
 
-it("should emit warning when 'output.iife'=false is used with 'output.library.type'='umd'", async () => {
-	await expect(
-		compile({
-			mode: "production",
-			entry: "./false-iife-umd.js",
-			output: { library: { type: "umd" }, iife: false }
-		})
-	).resolves.toMatchInlineSnapshot(`
+	it("should emit warning when 'output.iife'=false is used with 'output.library.type'='umd'", async () => {
+		await expect(
+			compile({
+				mode: "production",
+				entry: "./false-iife-umd.js",
+				output: { library: { type: "umd" }, iife: false }
+			})
+		).resolves.toMatchInlineSnapshot(`
 		Object {
 		  "errors": Array [],
 		  "warnings": Array [
@@ -403,9 +407,10 @@ it("should emit warning when 'output.iife'=false is used with 'output.library.ty
 		  ],
 		}
 	`);
+	});
 });
 
-describe("loaders", () => {
+describe("Loaders", () => {
 	it("should emit error thrown at module level", async () => {
 		await expect(
 			compile({
@@ -427,6 +432,7 @@ describe("loaders", () => {
 					}
 				`);
 	});
+
 	it("should emit errors & warnings for emit-error-loader", async () => {
 		await expect(compile({ entry: "./entry-point-error-loader-required.js" }))
 			.resolves.toMatchInlineSnapshot(`
@@ -510,6 +516,7 @@ describe("loaders", () => {
 					}
 				`);
 	});
+
 	it("should emit error for json-loader when not json", async () => {
 		await expect(compile({ entry: "json-loader!./not-a-json.js" })).resolves
 			.toMatchInlineSnapshot(`
@@ -585,6 +592,7 @@ describe("loaders", () => {
 					}
 				`);
 	});
+
 	it("should emit error thrown from yaw loader", async () => {
 		await expect(compile({ entry: "./throw-error-loader!./entry-point.js" }))
 			.resolves.toMatchInlineSnapshot(`

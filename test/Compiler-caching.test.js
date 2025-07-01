@@ -13,6 +13,7 @@ describe("Compiler (caching)", () => {
 
 	function compile(entry, options, callback) {
 		const webpack = require("..");
+
 		options = webpack.config.getNormalizedWebpackOptions(options);
 		options.mode = "none";
 		options.cache = true;
@@ -33,13 +34,13 @@ describe("Compiler (caching)", () => {
 		c.outputFileSystem = {
 			mkdir(path, callback) {
 				logs.mkdir.push(path);
-				const err = new Error();
+				const err = new Error("error");
 				err.code = "EEXIST";
 				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);
-				files[name] = content.toString("utf-8");
+				files[name] = content.toString("utf8");
 				callback();
 			},
 			stat(path, callback) {
@@ -101,6 +102,7 @@ describe("Compiler (caching)", () => {
 	}
 
 	beforeAll(cleanup);
+
 	afterAll(cleanup);
 
 	/**

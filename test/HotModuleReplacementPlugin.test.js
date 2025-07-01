@@ -7,6 +7,7 @@ const webpack = require("..");
 
 describe("HotModuleReplacementPlugin", () => {
 	jest.setTimeout(20000);
+
 	it("should not have circular hashes but equal if unmodified", done => {
 		const entryFile = path.join(
 			__dirname,
@@ -57,7 +58,7 @@ describe("HotModuleReplacementPlugin", () => {
 				chunkIds: "size"
 			}
 		});
-		fs.writeFileSync(entryFile, "1", "utf-8");
+		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, stats) => {
 			if (err) throw err;
 			const oldHash1 = stats.toJson().hash;
@@ -67,19 +68,19 @@ describe("HotModuleReplacementPlugin", () => {
 				const lastHash1 = stats.toJson().hash;
 				fs.writeFileSync(statsFile2, stats.toString());
 				expect(lastHash1).toBe(oldHash1); // hash shouldn't change when bundle stay equal
-				fs.writeFileSync(entryFile, "2", "utf-8");
+				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, stats) => {
 					if (err) throw err;
 					const lastHash2 = stats.toJson().hash;
 					fs.writeFileSync(statsFile1, stats.toString());
 					expect(lastHash2).not.toBe(lastHash1); // hash should change when bundle changes
-					fs.writeFileSync(entryFile, "1", "utf-8");
+					fs.writeFileSync(entryFile, "1", "utf8");
 					compiler.run((err, stats) => {
 						if (err) throw err;
 						const currentHash1 = stats.toJson().hash;
 						fs.writeFileSync(statsFile2, stats.toString());
 						expect(currentHash1).not.toBe(lastHash1); // hash shouldn't change to the first hash if bundle changed back to first bundle
-						fs.writeFileSync(entryFile, "2", "utf-8");
+						fs.writeFileSync(entryFile, "2", "utf8");
 						compiler.run((err, stats) => {
 							if (err) throw err;
 							const currentHash2 = stats.toJson().hash;
@@ -110,7 +111,7 @@ describe("HotModuleReplacementPlugin", () => {
 		} catch (_err) {
 			// empty
 		}
-		fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+		fs.writeFileSync(entryFile, `${++step}`, "utf8");
 		const updates = new Set();
 		const hasFile = file => {
 			try {
@@ -155,7 +156,7 @@ describe("HotModuleReplacementPlugin", () => {
 						expect(hasFile(file)).toBe(true);
 					}
 					return setTimeout(() => {
-						fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+						fs.writeFileSync(entryFile, `${++step}`, "utf8");
 						compiler.run(err => {
 							if (err) return done(err);
 							for (const file of updates) {
@@ -167,7 +168,7 @@ describe("HotModuleReplacementPlugin", () => {
 			}
 
 			updates.add(hmrUpdateMainFileName);
-			fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+			fs.writeFileSync(entryFile, `${++step}`, "utf8");
 			compiler.run(callback);
 		};
 
@@ -211,7 +212,7 @@ describe("HotModuleReplacementPlugin", () => {
 				chunkIds: "named"
 			}
 		});
-		fs.writeFileSync(entryFile, "1", "utf-8");
+		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, stats) => {
 			if (err) throw err;
 			const jsonStats = stats.toJson();
@@ -221,14 +222,14 @@ describe("HotModuleReplacementPlugin", () => {
 			compiler.run((err, stats) => {
 				if (err) throw err;
 				fs.writeFileSync(statsFile4, stats.toString());
-				fs.writeFileSync(entryFile, "2", "utf-8");
+				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, stats) => {
 					if (err) throw err;
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
 						fs.readFileSync(
 							path.join(outputPath, `0.${hash}.hot-update.json`),
-							"utf-8"
+							"utf8"
 						)
 					).c;
 					expect(result).toEqual([chunkName]);
@@ -298,14 +299,14 @@ describe("HotModuleReplacementPlugin", () => {
 				chunkIds: "named"
 			}
 		});
-		fs.writeFileSync(entryFile, "1", "utf-8");
+		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, stats) => {
 				if (err) return done(err);
 				fs.writeFileSync(statsFile4, stats.toString());
-				fs.writeFileSync(entryFile, "2", "utf-8");
+				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, stats) => {
 					if (err) return done(err);
 					fs.writeFileSync(statsFile3, stats.toString());

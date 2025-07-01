@@ -1,5 +1,7 @@
 const createTestCases = require("../_helpers/createTestCases");
+
 const base = ["getNameA", "getNameB"];
+
 module.exports = createTestCases({
 	nothing: {
 		usedExports: [],
@@ -43,7 +45,6 @@ module.exports = createTestCases({
 			"./assert": [...base, "definiteEqual"]
 		}
 	},
-	// eslint-disable-next-line camelcase
 	ExportCls1_2: {
 		usedExports: ["ExportCls1", "ExportCls2"],
 		expect: {
