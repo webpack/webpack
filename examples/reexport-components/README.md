@@ -233,7 +233,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.49 KiB [emitted] [minimized] (name: main)
+asset output.js 2.47 KiB [emitted] [minimized] (name: main)
 asset pages_Dashboard_js.output.js 450 bytes [emitted] [minimized]
 asset pages_Login_js.output.js 444 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.51 KiB (runtime) [entry] [rendered]

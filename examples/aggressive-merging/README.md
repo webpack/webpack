@@ -119,9 +119,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageC.bundle.js 1.74 KiB [emitted] [minimized] (name: pageC)
-asset pageA.bundle.js 1.73 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 1.73 KiB [emitted] [minimized] (name: pageB)
+asset pageC.bundle.js 1.73 KiB [emitted] [minimized] (name: pageC)
+asset pageA.bundle.js 1.71 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 1.71 KiB [emitted] [minimized] (name: pageB)
 asset 531.chunk.js 154 bytes [emitted] [minimized]
 asset 78.chunk.js 103 bytes [emitted] [minimized]
 chunk (runtime: pageC) 78.chunk.js 42 bytes [rendered]

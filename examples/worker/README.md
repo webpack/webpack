@@ -687,7 +687,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-(()=>{var e={},r={};function o(t){var a=r[t];if(void 0!==a)return a.exports;var s=r[t]={exports:{}};return e[t](s,s.exports,o),s.exports}o.m=e,o.d=(e,r)=>{for(var t in r)o.o(r,t)&&!o.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:r[t]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce(((r,t)=>(o.f[t](e,r),r)),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.p="/dist/",(()=>{var e={721:1};o.f.i=(r,t)=>{e[r]||importScripts(o.p+o.u(r))};var r=self.webpackChunk=self.webpackChunk||[],t=r.push.bind(r);r.push=r=>{var[a,s,p]=r;for(var n in s)o.o(s,n)&&(o.m[n]=s[n]);for(p&&p(o);a.length;)e[a.pop()]=1;t(r)}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)}})();
+(()=>{var e={},r={};function o(t){var a=r[t];if(void 0!==a)return a.exports;var s=r[t]={exports:{}};return e[t](s,s.exports,o),s.exports}o.m=e,o.d=(e,r)=>{for(var t in r)o.o(r,t)&&!o.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:r[t]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((r,t)=>(o.f[t](e,r),r),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.p="/dist/",(()=>{var e={721:1};o.f.i=(r,t)=>{e[r]||importScripts(o.p+o.u(r))};var r=self.webpackChunk=self.webpackChunk||[],t=r.push.bind(r);r.push=r=>{var[a,s,p]=r;for(var n in s)o.o(s,n)&&(o.m[n]=s[n]);for(p&&p(o);a.length;)e[a.pop()]=1;t(r)}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)}})();
 ```
 
 # dist/129.js
@@ -759,8 +759,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.29 KiB [emitted] [minimized] (name: main)
-asset workers/fibonacci.js 778 bytes [emitted] [minimized] (name: fibonacci)
+asset main.js 3.27 KiB [emitted] [minimized] (name: main)
+asset workers/fibonacci.js 776 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 159 bytes [emitted] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]

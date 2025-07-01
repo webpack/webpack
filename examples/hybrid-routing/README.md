@@ -582,13 +582,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.bundle.js 2.85 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 2.85 KiB [emitted] [minimized] (name: pageB)
-asset router_js.bundle.js 544 bytes [emitted] [minimized]
+asset pageA.bundle.js 2.84 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.84 KiB [emitted] [minimized] (name: pageB)
+asset router_js.bundle.js 538 bytes [emitted] [minimized]
 asset aPage.bundle.js 117 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 117 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.5 KiB = router_js.bundle.js 544 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.85 KiB
-Entrypoint pageB 3.5 KiB = router_js.bundle.js 544 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.85 KiB
+Entrypoint pageA 3.48 KiB = router_js.bundle.js 538 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.84 KiB
+Entrypoint pageB 3.48 KiB = router_js.bundle.js 538 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.84 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
