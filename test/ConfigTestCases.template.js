@@ -87,7 +87,7 @@ const describeCases = config => {
 								require(path.join(testDirectory, "webpack.config.js")),
 								{ testPath: outputDirectory }
 							);
-							optionsArr = [].concat(options);
+							optionsArr = [...(Array.isArray(options) ? options : [options])];
 							for (const [idx, options] of optionsArr.entries()) {
 								if (!options.context) options.context = testDirectory;
 								if (!options.mode) options.mode = "production";
@@ -281,7 +281,7 @@ const describeCases = config => {
 										}
 										const allModules = children
 											? children.reduce(
-													(all, { modules }) => all.concat(modules),
+													(all, { modules }) => [...all, ...modules],
 													modules || []
 												)
 											: modules;

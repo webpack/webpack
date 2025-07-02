@@ -130,11 +130,10 @@ describe("WatchSuspend", () => {
 										"'baz'"
 									);
 									expect(
-										compiler.modifiedFiles &&
-											Array.from(compiler.modifiedFiles).sort()
+										compiler.modifiedFiles && [...compiler.modifiedFiles].sort()
 									).toEqual([filePath]);
 									expect(
-										compiler.removedFiles && Array.from(compiler.removedFiles)
+										compiler.removedFiles && [...compiler.removedFiles]
 									).toEqual([]);
 									onChange = null;
 									resolve();

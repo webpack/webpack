@@ -74,6 +74,7 @@ ${RuntimeGlobals.ensureChunkHandlers}.localization = (chunkId, promises) => {
  */
 const definitions = ["node", "async-node", "web"].reduce(
 	(arr, target) =>
+		// eslint-disable-next-line unicorn/prefer-spread
 		arr.concat([
 			{
 				TARGET: JSON.stringify(target),

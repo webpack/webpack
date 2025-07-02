@@ -41,8 +41,8 @@ const getChanges = compiler => {
 	const modifiedFiles = compiler.modifiedFiles;
 	const removedFiles = compiler.removedFiles;
 	return {
-		removed: removedFiles && Array.from(removedFiles),
-		modified: modifiedFiles && Array.from(modifiedFiles)
+		removed: removedFiles && [...removedFiles],
+		modified: modifiedFiles && [...modifiedFiles]
 	};
 };
 

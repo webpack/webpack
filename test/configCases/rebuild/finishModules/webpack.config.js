@@ -34,7 +34,7 @@ const testPlugin = compiler => {
 					);
 				}
 
-				const module = Array.from(modules).find(matcher);
+				const module = [...modules].find(matcher);
 
 				if (!module) {
 					throw new Error("something went wrong");

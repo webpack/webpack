@@ -151,7 +151,7 @@ const printData = async (data, indent) => {
 			printLine(String(item));
 		}
 	}
-	const refCounters = Array.from(referencedValuesCounters);
+	const refCounters = [...referencedValuesCounters];
 	refCounters.sort(([a, A], [b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {

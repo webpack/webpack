@@ -298,7 +298,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", expr => {
 					if (!testParser.state.fgh) testParser.state.fgh = [];
 					testParser.state.fgh.push(
-						Array.from(testParser.scope.definitions.asSet()).join(" ")
+						[...testParser.scope.definitions.asSet()].join(" ")
 					);
 					return true;
 				});

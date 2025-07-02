@@ -68,8 +68,6 @@ export default defineConfig([
 			"prefer-destructuring": "off",
 			// TODO enable me in future, we need to ignore Object.define
 			"func-names": "off",
-			// TODO enable me in future
-			"unicorn/prefer-spread": "off",
 			// TODO need patch in tooling, now we are doing weird order for destructuring in cjs import
 			"import/order": "off",
 			// TODO We need allow to have `_arg` in tooling and use `after-used` value for `args`

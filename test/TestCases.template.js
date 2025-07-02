@@ -189,21 +189,24 @@ const describeCases = config => {
 									}
 								]
 							},
-							plugins: (config.plugins || []).concat(function () {
-								this.hooks.compilation.tap("TestCasesTest", compilation => {
-									for (const hook of [
-										"optimize",
-										"optimizeModules",
-										"optimizeChunks",
-										"afterOptimizeTree",
-										"afterOptimizeAssets"
-									]) {
-										compilation.hooks[hook].tap("TestCasesTest", () =>
-											compilation.checkConstraints()
-										);
-									}
-								});
-							}),
+							plugins: [
+								...(config.plugins || []),
+								function () {
+									this.hooks.compilation.tap("TestCasesTest", compilation => {
+										for (const hook of [
+											"optimize",
+											"optimizeModules",
+											"optimizeChunks",
+											"afterOptimizeTree",
+											"afterOptimizeAssets"
+										]) {
+											compilation.hooks[hook].tap("TestCasesTest", () =>
+												compilation.checkConstraints()
+											);
+										}
+									});
+								}
+							],
 							experiments: {
 								asyncWebAssembly: true,
 								topLevelAwait: true,
