@@ -17769,20 +17769,26 @@ declare namespace exports {
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;
 		}
 		export namespace runtime {
-			export let compareRuntime: (a?: any, b?: any) => 0 | 1 | -1;
-			export let filterRuntime: (runtime?: any, filter?: any) => any;
+			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
+			export let filterRuntime: (
+				runtime: RuntimeSpec,
+				filter: (runtime?: RuntimeSpec) => boolean
+			) => undefined | string | boolean | SortableSet<string>;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
 				fn: (runtime?: string) => void,
 				deterministicOrder?: boolean
 			) => void;
 			export let getEntryRuntime: (
-				compilation?: any,
-				name?: any,
-				options?: any
-			) => any;
+				compilation: Compilation,
+				name: string,
+				options?: EntryOptions
+			) => RuntimeSpec;
 			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
-			export let intersectRuntime: (a?: any, b?: any) => any;
+			export let intersectRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
 			export let keyToRuntime: (key: string) => RuntimeSpec;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
 			export let mergeRuntimeCondition: (
@@ -17799,7 +17805,9 @@ declare namespace exports {
 				a: RuntimeSpec,
 				b: RuntimeSpec
 			) => RuntimeSpec;
-			export let runtimeConditionToString: (runtimeCondition?: any) => string;
+			export let runtimeConditionToString: (
+				runtimeCondition: RuntimeCondition
+			) => string;
 			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
 			export let runtimeToString: (runtime: RuntimeSpec) => string;
 			export let subtractRuntime: (
