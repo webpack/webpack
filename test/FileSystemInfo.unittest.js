@@ -1,7 +1,7 @@
 "use strict";
 
-const { createFsFromVolume, Volume } = require("memfs");
 const util = require("util");
+const { Volume, createFsFromVolume } = require("memfs");
 const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");
 

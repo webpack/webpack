@@ -3,15 +3,15 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const fs = require("graceful-fs");
+const { URL, pathToFileURL } = require("url");
 const vm = require("vm");
-const { pathToFileURL, URL } = require("url");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const asModule = require("./helpers/asModule");
+const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const captureStdio = require("./helpers/captureStdio");
-const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");

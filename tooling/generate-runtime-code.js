@@ -1,9 +1,9 @@
 "use strict";
 
-const path = require("path");
 const fs = require("fs");
-const terser = require("terser");
+const path = require("path");
 const prettier = require("prettier");
+const terser = require("terser");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files

@@ -1,4 +1,4 @@
-const { randomBytes, createHash } = require("crypto");
+const { createHash, randomBytes } = require("crypto");
 
 const wasmHashes = {
 	xxhash64: () => {

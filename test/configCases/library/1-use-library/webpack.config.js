@@ -1,8 +1,8 @@
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 
-const webpack = require("../../../../");
 const path = require("path");
+const webpack = require("../../../../");
 const supportsAsync = require("../../../helpers/supportsAsync");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */

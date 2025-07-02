@@ -1,4 +1,4 @@
-const { resolve, join } = require("path");
+const { join, resolve } = require("path");
 const { NormalModule } = require("../../../../");
 
 /**

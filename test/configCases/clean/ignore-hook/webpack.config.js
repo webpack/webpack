@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const webpack = require("../../../../");
 const { RawSource } = require("webpack-sources");
+const webpack = require("../../../../");
 const readDir = require("../enabled/readdir");
 
 /** @type {import("../../../../").Configuration} */

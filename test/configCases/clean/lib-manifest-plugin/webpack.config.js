@@ -1,6 +1,6 @@
 const path = require("path");
-const readDir = require("./readdir");
 const webpack = require("../../../../");
+const readDir = require("./readdir");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

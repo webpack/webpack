@@ -1,5 +1,5 @@
-const { describeCases } = require("./TestCases.template");
 const vm = require("vm");
+const { describeCases } = require("./TestCases.template");
 
 describe("TestCases", () => {
 	if (!vm.SourceTextModule) {

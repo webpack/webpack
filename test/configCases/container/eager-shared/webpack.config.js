@@ -1,5 +1,5 @@
-const { dependencies } = require("./package.json");
 const { ModuleFederationPlugin } = require("../../../../").container;
+const { dependencies } = require("./package.json");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

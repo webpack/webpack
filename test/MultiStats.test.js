@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 
 describe("MultiStats", () => {
 	it("should create JSON of children stats", done => {

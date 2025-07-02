@@ -5,8 +5,8 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const captureStdio = require("./helpers/captureStdio");
 const webpack = require("..");
+const captureStdio = require("./helpers/captureStdio");
 
 /**
  * Escapes regular expression metacharacters

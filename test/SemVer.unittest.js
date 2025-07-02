@@ -1,15 +1,15 @@
 "use strict";
 
 const {
+	parseRange,
 	parseVersion,
 	parseVersionRuntimeCode,
-	versionLt,
-	versionLtRuntimeCode,
-	parseRange,
 	rangeToString,
 	rangeToStringRuntimeCode,
 	satisfy,
-	satisfyRuntimeCode
+	satisfyRuntimeCode,
+	versionLt,
+	versionLtRuntimeCode
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {

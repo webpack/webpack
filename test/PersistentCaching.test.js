@@ -1,10 +1,10 @@
 require("./helpers/warmup-webpack");
 
+const fs = require("fs");
 const path = require("path");
 const util = require("util");
-const fs = require("fs");
-const rimraf = require("rimraf");
 const vm = require("vm");
+const rimraf = require("rimraf");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);

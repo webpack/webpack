@@ -1,5 +1,5 @@
-const svgToMiniDataURI = require("mini-svg-data-uri");
 const mimeTypes = require("mime-types");
+const svgToMiniDataURI = require("mini-svg-data-uri");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

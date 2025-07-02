@@ -2,8 +2,8 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {

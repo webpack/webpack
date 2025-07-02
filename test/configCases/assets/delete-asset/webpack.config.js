@@ -1,5 +1,5 @@
-const { Compilation, BannerPlugin } = require("../../../../");
 const TerserPlugin = require("terser-webpack-plugin");
+const { BannerPlugin, Compilation } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

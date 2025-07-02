@@ -1,5 +1,5 @@
-const webpack = require("../../../../");
 const path = require("path");
+const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -1,7 +1,7 @@
 "use strict";
 
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");

@@ -1,6 +1,6 @@
 const fs = require("fs");
-const url = require("url");
 const path = require("path");
+const url = require("url");
 
 module.exports = {
 	findBundle(i, options) {

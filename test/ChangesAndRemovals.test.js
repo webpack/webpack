@@ -3,8 +3,8 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
 const fs = require("graceful-fs");
+const { Volume, createFsFromVolume } = require("memfs");
 const rimraf = require("rimraf");
 
 const createCompiler = config => {

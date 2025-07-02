@@ -1,9 +1,9 @@
 "use strict";
 
-const NormalModule = require("../lib/NormalModule");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
+const NormalModule = require("../lib/NormalModule");
 
 describe("NormalModule", () => {
 	let normalModule;

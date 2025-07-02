@@ -1,8 +1,8 @@
 "use strict";
 
-const path = require("path");
 const childProcess = require("child_process");
 const fs = require("fs");
+const path = require("path");
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");

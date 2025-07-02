@@ -8,13 +8,13 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
+const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const prepareOptions = require("./helpers/prepareOptions");
-const { parseResource } = require("../lib/util/identifier");
-const captureStdio = require("./helpers/captureStdio");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
+const prepareOptions = require("./helpers/prepareOptions");
 const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "configCases");
