@@ -3032,8 +3032,8 @@ declare interface Configuration {
 }
 type ConnectionState =
 	| boolean
-	| typeof TRANSITIVE_ONLY
-	| typeof CIRCULAR_CONNECTION;
+	| typeof CIRCULAR_CONNECTION
+	| typeof TRANSITIVE_ONLY;
 declare class ConstDependency extends NullDependency {
 	constructor(
 		expression: string,
@@ -7758,8 +7758,9 @@ declare class JavascriptParser extends Parser {
 				getMembers: () => string[];
 		  };
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
-	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
+	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
+	static VariableInfo: typeof VariableInfo;
 	static getImportAttributes: (
 		node:
 			| ImportDeclarationJavascriptParser
@@ -7767,7 +7768,6 @@ declare class JavascriptParser extends Parser {
 			| ExportAllDeclarationJavascriptParser
 			| ImportExpressionJavascriptParser
 	) => undefined | ImportAttributes;
-	static VariableInfo: typeof VariableInfo;
 }
 
 /**
@@ -9981,12 +9981,12 @@ declare class ModuleGraphConnection {
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
 	active: void;
+	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
+	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static addConnectionStates: (
 		a: ConnectionState,
 		b: ConnectionState
 	) => ConnectionState;
-	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
-	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 }
 type ModuleId = string | number;
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
@@ -16630,8 +16630,8 @@ declare class Template {
 		runtimeModules: RuntimeModule[],
 		renderContext: RenderContextJavascriptModulesPlugin
 	): Source;
-	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
+	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 }
 type TemplatePath =
 	| string
@@ -17457,85 +17457,85 @@ declare namespace exports {
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
 	export namespace OptimizationStages {
+		export let STAGE_ADVANCED: 10;
 		export let STAGE_BASIC: -10;
 		export let STAGE_DEFAULT: 0;
-		export let STAGE_ADVANCED: 10;
 	}
 	export namespace RuntimeGlobals {
-		export let require: "__webpack_require__";
-		export let requireScope: "__webpack_require__.*";
-		export let exports: "__webpack_exports__";
-		export let thisAsExports: "top-level-this-exports";
-		export let returnExportsFromRuntime: "return-exports-from-runtime";
-		export let module: "module";
-		export let moduleId: "module.id";
-		export let moduleLoaded: "module.loaded";
-		export let publicPath: "__webpack_require__.p";
-		export let entryModuleId: "__webpack_require__.s";
-		export let moduleCache: "__webpack_require__.c";
-		export let moduleFactories: "__webpack_require__.m";
-		export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+		export let amdDefine: "__webpack_require__.amdD";
+		export let amdOptions: "__webpack_require__.amdO";
+		export let asyncModule: "__webpack_require__.a";
+		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
+		export let asyncModuleExportSymbol: "__webpack_require__.aE";
+		export let baseURI: "__webpack_require__.b";
+		export let chunkCallback: "webpackChunk";
+		export let chunkName: "__webpack_require__.cn";
+		export let compatGetDefaultExport: "__webpack_require__.n";
+		export let createFakeNamespaceObject: "__webpack_require__.t";
+		export let createScript: "__webpack_require__.ts";
+		export let createScriptUrl: "__webpack_require__.tu";
+		export let currentRemoteGetScope: "__webpack_require__.R";
+		export let definePropertyGetters: "__webpack_require__.d";
 		export let ensureChunk: "__webpack_require__.e";
 		export let ensureChunkHandlers: "__webpack_require__.f";
 		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
+		export let entryModuleId: "__webpack_require__.s";
+		export let exports: "__webpack_exports__";
+		export let externalInstallChunk: "__webpack_require__.C";
+		export let getChunkCssFilename: "__webpack_require__.k";
+		export let getChunkScriptFilename: "__webpack_require__.u";
+		export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+		export let getFullHash: "__webpack_require__.h";
+		export let getTrustedTypesPolicy: "__webpack_require__.tt";
+		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+		export let global: "__webpack_require__.g";
+		export let harmonyModuleDecorator: "__webpack_require__.hmd";
+		export let hasCssModules: "has css modules";
+		export let hasFetchPriority: "has fetch priority";
+		export let hasOwnProperty: "__webpack_require__.o";
+		export let hmrDownloadManifest: "__webpack_require__.hmrM";
+		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
+		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+		export let hmrModuleData: "__webpack_require__.hmrD";
+		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
+		export let initializeSharing: "__webpack_require__.I";
+		export let instantiateWasm: "__webpack_require__.v";
+		export let interceptModuleExecution: "__webpack_require__.i";
+		export let loadScript: "__webpack_require__.l";
+		export let makeDeferredNamespaceObject: "__webpack_require__.z";
+		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
+		export let makeNamespaceObject: "__webpack_require__.r";
+		export let module: "module";
+		export let moduleCache: "__webpack_require__.c";
+		export let moduleFactories: "__webpack_require__.m";
+		export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+		export let moduleId: "module.id";
+		export let moduleLoaded: "module.loaded";
+		export let nodeModuleDecorator: "__webpack_require__.nmd";
+		export let onChunksLoaded: "__webpack_require__.O";
 		export let prefetchChunk: "__webpack_require__.E";
 		export let prefetchChunkHandlers: "__webpack_require__.F";
 		export let preloadChunk: "__webpack_require__.G";
 		export let preloadChunkHandlers: "__webpack_require__.H";
-		export let definePropertyGetters: "__webpack_require__.d";
-		export let makeNamespaceObject: "__webpack_require__.r";
-		export let makeDeferredNamespaceObject: "__webpack_require__.z";
-		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
-		export let createFakeNamespaceObject: "__webpack_require__.t";
-		export let compatGetDefaultExport: "__webpack_require__.n";
-		export let harmonyModuleDecorator: "__webpack_require__.hmd";
-		export let nodeModuleDecorator: "__webpack_require__.nmd";
-		export let getFullHash: "__webpack_require__.h";
-		export let wasmInstances: "__webpack_require__.w";
-		export let instantiateWasm: "__webpack_require__.v";
-		export let uncaughtErrorHandler: "__webpack_require__.oe";
-		export let scriptNonce: "__webpack_require__.nc";
-		export let loadScript: "__webpack_require__.l";
-		export let createScript: "__webpack_require__.ts";
-		export let createScriptUrl: "__webpack_require__.tu";
-		export let getTrustedTypesPolicy: "__webpack_require__.tt";
-		export let hasFetchPriority: "has fetch priority";
-		export let chunkName: "__webpack_require__.cn";
+		export let publicPath: "__webpack_require__.p";
+		export let relativeUrl: "__webpack_require__.U";
+		export let require: "__webpack_require__";
+		export let requireScope: "__webpack_require__.*";
+		export let returnExportsFromRuntime: "return-exports-from-runtime";
 		export let runtimeId: "__webpack_require__.j";
-		export let getChunkScriptFilename: "__webpack_require__.u";
-		export let getChunkCssFilename: "__webpack_require__.k";
-		export let hasCssModules: "has css modules";
-		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
-		export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+		export let scriptNonce: "__webpack_require__.nc";
+		export let shareScopeMap: "__webpack_require__.S";
 		export let startup: "__webpack_require__.x";
+		export let startupEntrypoint: "__webpack_require__.X";
 		export let startupNoDefault: "__webpack_require__.x (no default handler)";
 		export let startupOnlyAfter: "__webpack_require__.x (only after)";
 		export let startupOnlyBefore: "__webpack_require__.x (only before)";
-		export let chunkCallback: "webpackChunk";
-		export let startupEntrypoint: "__webpack_require__.X";
-		export let onChunksLoaded: "__webpack_require__.O";
-		export let externalInstallChunk: "__webpack_require__.C";
-		export let interceptModuleExecution: "__webpack_require__.i";
-		export let global: "__webpack_require__.g";
-		export let shareScopeMap: "__webpack_require__.S";
-		export let initializeSharing: "__webpack_require__.I";
-		export let currentRemoteGetScope: "__webpack_require__.R";
-		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
-		export let hmrDownloadManifest: "__webpack_require__.hmrM";
-		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
-		export let hmrModuleData: "__webpack_require__.hmrD";
-		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
-		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
-		export let amdDefine: "__webpack_require__.amdD";
-		export let amdOptions: "__webpack_require__.amdO";
 		export let system: "__webpack_require__.System";
-		export let hasOwnProperty: "__webpack_require__.o";
 		export let systemContext: "__webpack_require__.y";
-		export let baseURI: "__webpack_require__.b";
-		export let relativeUrl: "__webpack_require__.U";
-		export let asyncModule: "__webpack_require__.a";
-		export let asyncModuleExportSymbol: "__webpack_require__.aE";
-		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
+		export let thisAsExports: "top-level-this-exports";
+		export let uncaughtErrorHandler: "__webpack_require__.oe";
+		export let wasmInstances: "__webpack_require__.w";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
@@ -17586,9 +17586,6 @@ declare namespace exports {
 	}
 	export namespace optimize {
 		export namespace InnerGraph {
-			export let bailout: (parserState: ParserState) => void;
-			export let enable: (parserState: ParserState) => void;
-			export let isEnabled: (parserState: ParserState) => boolean;
 			export let addUsage: (
 				state: ParserState,
 				symbol: null | TopLevelSymbol,
@@ -17599,28 +17596,8 @@ declare namespace exports {
 				name: string,
 				usage: string | true | TopLevelSymbol
 			) => void;
-			export let inferDependencyUsage: (state: ParserState) => void;
-			export let onUsage: (
-				state: ParserState,
-				onUsageCallback: (value?: boolean | Set<string>) => void
-			) => void;
-			export let setTopLevelSymbol: (
-				state: ParserState,
-				symbol?: TopLevelSymbol
-			) => void;
-			export let getTopLevelSymbol: (
-				state: ParserState
-			) => void | TopLevelSymbol;
-			export let tagTopLevelSymbol: (
-				parser: JavascriptParser,
-				name: string
-			) => undefined | TopLevelSymbol;
-			export let isDependencyUsedByExports: (
-				dependency: Dependency,
-				usedByExports: boolean | Set<string>,
-				moduleGraph: ModuleGraph,
-				runtime: RuntimeSpec
-			) => boolean;
+			export let bailout: (parserState: ParserState) => void;
+			export let enable: (parserState: ParserState) => void;
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
 				usedByExports: undefined | boolean | Set<string>,
@@ -17632,6 +17609,29 @@ declare namespace exports {
 						moduleGraphConnection: ModuleGraphConnection,
 						runtime: RuntimeSpec
 				  ) => ConnectionState);
+			export let getTopLevelSymbol: (
+				state: ParserState
+			) => void | TopLevelSymbol;
+			export let inferDependencyUsage: (state: ParserState) => void;
+			export let isDependencyUsedByExports: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph,
+				runtime: RuntimeSpec
+			) => boolean;
+			export let isEnabled: (parserState: ParserState) => boolean;
+			export let onUsage: (
+				state: ParserState,
+				onUsageCallback: (value?: boolean | Set<string>) => void
+			) => void;
+			export let setTopLevelSymbol: (
+				state: ParserState,
+				symbol?: TopLevelSymbol
+			) => void;
+			export let tagTopLevelSymbol: (
+				parser: JavascriptParser,
+				name: string
+			) => undefined | TopLevelSymbol;
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {
@@ -17714,17 +17714,38 @@ declare namespace exports {
 	export namespace util {
 		export const createHash: (algorithm: HashFunction) => Hash;
 		export namespace comparators {
+			export let compareChunkGroupsByIndex: (
+				a: ChunkGroup,
+				b: ChunkGroup
+			) => 0 | 1 | -1;
+			export let compareChunks: ParameterizedComparator<ChunkGraph, Chunk>;
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
-			export let compareModulesByIdentifier: (
-				a: Module,
-				b: Module
+			export let compareChunksNatural: (
+				chunkGraph: ChunkGraph
+			) => Comparator<Chunk>;
+			export let compareIds: (
+				a: string | number,
+				b: string | number
+			) => 0 | 1 | -1;
+			export let compareIterables: <T>(
+				elementComparator: Comparator<T>
+			) => Comparator<Iterable<T>>;
+			export let compareLocations: (
+				a: DependencyLocation,
+				b: DependencyLocation
 			) => 0 | 1 | -1;
 			export let compareModulesById: ParameterizedComparator<
 				ChunkGraph,
 				Module
 			>;
-			export let compareNumbers: (a: number, b: number) => 0 | 1 | -1;
-			export let compareStringsNumeric: (a: string, b: string) => 0 | 1 | -1;
+			export let compareModulesByIdOrIdentifier: ParameterizedComparator<
+				ChunkGraph,
+				Module
+			>;
+			export let compareModulesByIdentifier: (
+				a: Module,
+				b: Module
+			) => 0 | 1 | -1;
 			export let compareModulesByPostOrderIndexOrIdentifier: ParameterizedComparator<
 				ModuleGraph,
 				Module
@@ -17733,60 +17754,36 @@ declare namespace exports {
 				ModuleGraph,
 				Module
 			>;
-			export let compareModulesByIdOrIdentifier: ParameterizedComparator<
-				ChunkGraph,
-				Module
-			>;
-			export let compareChunks: ParameterizedComparator<ChunkGraph, Chunk>;
-			export let compareIds: (
-				a: string | number,
-				b: string | number
-			) => 0 | 1 | -1;
+			export let compareNumbers: (a: number, b: number) => 0 | 1 | -1;
+			export let compareSelect: <T, R>(
+				getter: Selector<T, R>,
+				comparator: Comparator<R>
+			) => Comparator<T>;
 			export let compareStrings: (a: string, b: string) => 0 | 1 | -1;
-			export let compareChunkGroupsByIndex: (
-				a: ChunkGroup,
-				b: ChunkGroup
-			) => 0 | 1 | -1;
+			export let compareStringsNumeric: (a: string, b: string) => 0 | 1 | -1;
 			export let concatComparators: <T>(
 				c1: Comparator<T>,
 				c2: Comparator<T>,
 				...cRest: Comparator<T>[]
 			) => Comparator<T>;
-			export let compareSelect: <T, R>(
-				getter: Selector<T, R>,
-				comparator: Comparator<R>
-			) => Comparator<T>;
-			export let compareIterables: <T>(
-				elementComparator: Comparator<T>
-			) => Comparator<Iterable<T>>;
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;
-			export let compareChunksNatural: (
-				chunkGraph: ChunkGraph
-			) => Comparator<Chunk>;
-			export let compareLocations: (
-				a: DependencyLocation,
-				b: DependencyLocation
-			) => 0 | 1 | -1;
 		}
 		export namespace runtime {
-			export let getEntryRuntime: (
-				compilation: Compilation,
-				name: string,
-				options?: EntryOptions
-			) => RuntimeSpec;
+			export let compareRuntime: (a?: any, b?: any) => 0 | 1 | -1;
+			export let filterRuntime: (runtime?: any, filter?: any) => any;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
 				fn: (runtime?: string) => void,
 				deterministicOrder?: boolean
 			) => void;
+			export let getEntryRuntime: (
+				compilation?: any,
+				name?: any,
+				options?: any
+			) => any;
 			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
+			export let intersectRuntime: (a?: any, b?: any) => any;
 			export let keyToRuntime: (key: string) => RuntimeSpec;
-			export let runtimeToString: (runtime: RuntimeSpec) => string;
-			export let runtimeConditionToString: (
-				runtimeCondition: RuntimeCondition
-			) => string;
-			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
-			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
 			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
 			export let mergeRuntimeCondition: (
 				a: RuntimeCondition,
@@ -17802,10 +17799,9 @@ declare namespace exports {
 				a: RuntimeSpec,
 				b: RuntimeSpec
 			) => RuntimeSpec;
-			export let intersectRuntime: (
-				a: RuntimeSpec,
-				b: RuntimeSpec
-			) => RuntimeSpec;
+			export let runtimeConditionToString: (runtimeCondition?: any) => string;
+			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
+			export let runtimeToString: (runtime: RuntimeSpec) => string;
 			export let subtractRuntime: (
 				a: RuntimeSpec,
 				b: RuntimeSpec
@@ -17815,10 +17811,6 @@ declare namespace exports {
 				b: RuntimeCondition,
 				runtime: RuntimeSpec
 			) => RuntimeCondition;
-			export let filterRuntime: (
-				runtime: RuntimeSpec,
-				filter: (runtime?: RuntimeSpec) => boolean
-			) => undefined | string | boolean | SortableSet<string>;
 			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
 		export namespace serialization {
