@@ -9,6 +9,7 @@ describe("deterministicGrouping", () => {
 			getKey: ([key]) => `${100000 + key}`,
 			getSize: ([, size]) => size
 		}).map(group => ({ items: group.items.map(([i]) => i), size: group.size }));
+
 	it("should split large chunks with different size types", () => {
 		expect(
 			group(
@@ -45,6 +46,7 @@ describe("deterministicGrouping", () => {
 		]
 	`);
 	});
+
 	it("should separate items with different size types when unsplittable", () => {
 		expect(
 			group(
@@ -105,6 +107,7 @@ describe("deterministicGrouping", () => {
 		]
 	`);
 	});
+
 	it("should handle entangled size types (case 1)", () => {
 		expect(
 			group(
@@ -141,6 +144,7 @@ describe("deterministicGrouping", () => {
 		]
 	`);
 	});
+
 	it("should handle entangled size types (case 2)", () => {
 		expect(
 			group(

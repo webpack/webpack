@@ -1,6 +1,7 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
@@ -42,15 +43,18 @@ const createLogger = appendTarget => ({
 const describeCases = config => {
 	describe(config.name, () => {
 		let stderr;
+
 		beforeEach(() => {
 			stderr = captureStdio(process.stderr, true);
 		});
+
 		afterEach(() => {
 			stderr.restore();
 		});
+
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
-			describe(category.name, function () {
+			describe(category.name, () => {
 				jest.setTimeout(20000);
 
 				for (const testName of category.tests.filter(test => {
@@ -61,6 +65,7 @@ const describeCases = config => {
 						describe.skip(test, () => {
 							it("filtered", () => {});
 						});
+
 						return false;
 					}
 					return true;
@@ -89,7 +94,9 @@ const describeCases = config => {
 						if (fs.existsSync(testConfigPath)) {
 							testConfig = require(testConfigPath);
 						}
+
 						const TerserPlugin = require("terser-webpack-plugin");
+
 						const terserForTesting = new TerserPlugin({
 							parallel: false
 						});
@@ -208,15 +215,19 @@ const describeCases = config => {
 								console: createLogger(infraStructureLog)
 							}
 						};
+
+						beforeAll(done => {
+							rimraf(cacheDirectory, done);
+						});
+
 						const cleanups = [];
+
 						afterAll(() => {
 							options = undefined;
 							testConfig = undefined;
 							for (const fn of cleanups) fn();
 						});
-						beforeAll(done => {
-							rimraf(cacheDirectory, done);
-						});
+
 						if (config.cache) {
 							it(
 								`${testName} should pre-compile to fill disk cache (1st)`,
@@ -228,7 +239,9 @@ const describeCases = config => {
 									);
 									infraStructureLog.length = 0;
 									const deprecationTracker = deprecationTracking.start();
+
 									const webpack = require("..");
+
 									webpack(options, err => {
 										deprecationTracker();
 										options.output.path = oldPath;
@@ -259,6 +272,7 @@ const describeCases = config => {
 								},
 								testConfig.timeout || 60000
 							);
+
 							it(
 								`${testName} should pre-compile to fill disk cache (2nd)`,
 								done => {
@@ -269,7 +283,9 @@ const describeCases = config => {
 									);
 									infraStructureLog.length = 0;
 									const deprecationTracker = deprecationTracking.start();
+
 									const webpack = require("..");
+
 									webpack(options, err => {
 										deprecationTracker();
 										options.output.path = oldPath;
@@ -301,11 +317,14 @@ const describeCases = config => {
 								testConfig.cachedTimeout || testConfig.timeout || 10000
 							);
 						}
+
 						it(
 							`${testName} should compile`,
 							done => {
 								infraStructureLog.length = 0;
+
 								const webpack = require("..");
+
 								const compiler = webpack(options);
 								const run = () => {
 									const deprecationTracker = deprecationTracking.start();
@@ -345,7 +364,7 @@ const describeCases = config => {
 											fs.writeFileSync(
 												path.join(outputDirectory, "stats.txt"),
 												stats.toString(statOptions),
-												"utf-8"
+												"utf8"
 											);
 											const jsonStats = stats.toJson({
 												errorDetails: true,
@@ -439,7 +458,7 @@ const describeCases = config => {
 							function _require(module, esmMode) {
 								if (module.startsWith("./")) {
 									const p = path.join(outputDirectory, module);
-									const content = fs.readFileSync(p, "utf-8");
+									const content = fs.readFileSync(p, "utf8");
 									if (p.endsWith(".mjs")) {
 										let esm;
 										try {
@@ -510,8 +529,9 @@ const describeCases = config => {
 							Promise.resolve()
 								.then(() => _require(`./${options.output.filename}`))
 								.then(() => {
-									if (getNumberOfTests() === 0)
+									if (getNumberOfTests() === 0) {
 										return done(new Error("No tests exported by test case"));
+									}
 									done();
 								}, done);
 						}, 10000);

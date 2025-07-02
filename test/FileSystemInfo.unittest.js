@@ -244,7 +244,7 @@ ${details(snapshot)}`)
 	};
 
 	const updateFile = (fs, filename) => {
-		const oldContent = fs.readFileSync(filename, "utf-8");
+		const oldContent = fs.readFileSync(filename, "utf8");
 		if (filename.endsWith(".json")) {
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
@@ -494,7 +494,7 @@ ${details(snapshot)}`)
 				missing,
 				["timestamp", { timestamp: true }],
 				(err, snapshot) => {
-					expect(snapshot).toBe(null);
+					expect(snapshot).toBeNull();
 					done();
 				}
 			);

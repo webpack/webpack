@@ -1,6 +1,7 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
@@ -23,6 +24,7 @@ const tests = fs
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 			describe.skip(testName, () => it("filtered"));
+
 			return false;
 		}
 		return true;
@@ -31,6 +33,7 @@ const tests = fs
 describe("MemoryLimitTestCases", () => {
 	jest.setTimeout(40000);
 	let stderr;
+
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
 		if (global.gc) {
@@ -38,9 +41,11 @@ describe("MemoryLimitTestCases", () => {
 			global.gc();
 		}
 	});
+
 	afterEach(() => {
 		stderr.restore();
 	});
+
 	for (const testName of tests) {
 		let testConfig = {
 			heapSizeLimitBytes: 250 * 1024 * 1024
@@ -55,6 +60,7 @@ describe("MemoryLimitTestCases", () => {
 			// ignored
 		}
 		const size = toMiB(testConfig.heapSizeLimitBytes);
+
 		// eslint-disable-next-line no-loop-func
 		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, done => {
 			const outputDirectory = path.join(outputBase, testName);
@@ -78,8 +84,9 @@ describe("MemoryLimitTestCases", () => {
 				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
-				if (options.optimization.minimize === undefined)
+				if (options.optimization.minimize === undefined) {
 					options.optimization.minimize = false;
+				}
 			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
@@ -97,9 +104,10 @@ describe("MemoryLimitTestCases", () => {
 						args.concat([
 							(err, result) => {
 								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0]))
+								if (!/\.(js|json|txt)$/.test(args[0])) {
 									return callback(null, result);
-								callback(null, result.toString("utf-8").replace(/\r/g, ""));
+								}
+								callback(null, result.toString("utf8").replace(/\r/g, ""));
 							}
 						])
 					);

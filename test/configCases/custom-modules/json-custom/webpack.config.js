@@ -14,7 +14,8 @@ module.exports = [
 					/** @type {ParserOptionsByModuleTypeKnown['json']} */
 					parser: {
 						parse(input) {
-							expect(arguments.length).toBe(1);
+							// eslint-disable-next-line prefer-rest-params
+							expect(arguments).toHaveLength(1);
 							return toml.parse(input);
 						}
 					}

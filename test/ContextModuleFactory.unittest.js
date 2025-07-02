@@ -7,10 +7,12 @@ describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {
 		let factory;
 		let memfs;
+
 		beforeEach(() => {
 			factory = new ContextModuleFactory([]);
 			memfs = createFsFromVolume(new Volume());
 		});
+
 		it("should not report an error when ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
@@ -30,11 +32,12 @@ describe("ContextModuleFactory", () => {
 				(err, res) => {
 					expect(err).toBeFalsy();
 					expect(Array.isArray(res)).toBe(true);
-					expect(res.length).toBe(0);
+					expect(res).toHaveLength(0);
 					done();
 				}
 			);
 		});
+
 		it("should report an error when non-ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
@@ -58,6 +61,7 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
+
 		it("should return callback with [] if circular symlinks exist", done => {
 			let statDirStatus = 0;
 			memfs.readdir = (dir, callback) => {
@@ -88,6 +92,7 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
+
 		it("should not return callback with [] if there are no circular symlinks", done => {
 			let statDirStatus = 0;
 			memfs.readdir = (dir, callback) => {
@@ -115,7 +120,7 @@ describe("ContextModuleFactory", () => {
 				(err, res) => {
 					expect(res).not.toStrictEqual([]);
 					expect(Array.isArray(res)).toBe(true);
-					expect(res.length).toBe(1);
+					expect(res).toHaveLength(1);
 					done();
 				}
 			);

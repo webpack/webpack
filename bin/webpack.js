@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+"use strict";
+
 /**
  * @param {string} command process to run
  * @param {string[]} args command line arguments
@@ -7,6 +9,7 @@
  */
 const runCommand = (command, args) => {
 	const cp = require("child_process");
+
 	return new Promise((resolve, reject) => {
 		const executedCommand = cp.spawn(command, args, {
 			stdio: "inherit",
@@ -75,7 +78,9 @@ const isInstalled = packageName => {
  */
 const runCli = cli => {
 	const path = require("path");
+
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
+
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {

@@ -1,3 +1,4 @@
+const path = require("path");
 const webpack = require("../../");
 
 /** @type {import("../../").Configuration} */
@@ -9,5 +10,5 @@ module.exports = {
 		hashDigestLength: 4
 	},
 	plugins: [new webpack.HotModuleReplacementPlugin()],
-	recordsPath: `${__dirname}/records.json` // this is not required for the webpack-dev-server, but when compiled.
+	recordsPath: path.resolve(__dirname, "./records.json") // this is not required for the webpack-dev-server, but when compiled.
 };

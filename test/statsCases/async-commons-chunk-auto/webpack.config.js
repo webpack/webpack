@@ -1,4 +1,5 @@
 const path = require("path");
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -96,11 +97,12 @@ module.exports = [
 						const name = module.nameForCondition();
 						if (!name) return;
 						const match = /[\\/](xyz|x)\.js/.exec(name);
-						if (match)
+						if (match) {
 							return {
 								name: `libs-${match[1]}`,
 								enforce: true
 							};
+						}
 					},
 					vendors: path.resolve(__dirname, "node_modules")
 				}

@@ -26,7 +26,7 @@ module.exports = {
 				const png = stats.compilation.getAsset("assets/file.png");
 				const jpg = stats.compilation.getAsset("assets/file.jpg");
 				if (png) {
-					expect(jpg).toBe(undefined);
+					expect(jpg).toBeUndefined();
 					expect(png).toHaveProperty(
 						"info",
 						expect.objectContaining({ sourceFilename: "file.png" })

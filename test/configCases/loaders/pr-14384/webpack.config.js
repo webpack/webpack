@@ -1,4 +1,4 @@
-const PluginWithLoader = require("./PluginWithLoader.js");
+const PluginWithLoader = require("./PluginWithLoader");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

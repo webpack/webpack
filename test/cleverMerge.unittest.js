@@ -658,6 +658,7 @@ describe("cleverMerge", () => {
 	};
 	for (const key of Object.keys(cases)) {
 		const testCase = cases[key];
+
 		it(`should merge ${key} correctly`, () => {
 			let merged = cleverMerge(testCase[0], testCase[1]);
 			let merged1 = cachedCleverMerge(testCase[0], testCase[1]);

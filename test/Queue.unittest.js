@@ -43,14 +43,14 @@ describe("Queue", () => {
 		q.enqueue("item1");
 		q.enqueue("item2");
 
-		expect(q.length).toBe(2);
+		expect(q).toHaveLength(2);
 
 		q.dequeue();
 
-		expect(q.length).toBe(1);
+		expect(q).toHaveLength(1);
 
 		q.dequeue();
 
-		expect(q.length).toBe(0);
+		expect(q).toHaveLength(0);
 	});
 });

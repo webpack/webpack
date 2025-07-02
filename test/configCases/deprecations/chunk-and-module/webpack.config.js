@@ -46,7 +46,7 @@ module.exports = {
 					).toMatch(/should compile with deprecations/);
 					expect(m.hash).toMatch(/^[0-9a-f]{32}$/);
 					expect(m.renderedHash).toMatch(/^[0-9a-f]{20}$/);
-					expect(m.profile).toBe(undefined);
+					expect(m.profile).toBeUndefined();
 					expect(m.index).toBe(0);
 					m.index = 1000;
 					expect(m.index).toBe(1000);
@@ -56,7 +56,7 @@ module.exports = {
 					expect(m.depth).toBe(0);
 					m.depth = 1000;
 					expect(m.depth).toBe(1000);
-					expect(m.issuer).toBe(null);
+					expect(m.issuer).toBeNull();
 					m.issuer = module;
 					expect(m.issuer).toBe(module);
 					expect(

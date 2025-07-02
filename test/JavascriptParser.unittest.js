@@ -1,5 +1,7 @@
 "use strict";
 
+/* eslint-disable no-unused-expressions, no-unassigned-vars */
+
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
@@ -69,6 +71,7 @@ describe("JavascriptParser", () => {
 		"member expression": [
 			function () {
 				test[memberExpr];
+
 				// eslint-disable-next-line no-implicit-coercion
 				test[+memberExpr];
 			},
@@ -237,7 +240,7 @@ describe("JavascriptParser", () => {
 		],
 		"new Foo(...)": [
 			function () {
-				// eslint-disable-next-line new-cap
+				// eslint-disable-next-line new-cap, no-new
 				new xyz("membertest");
 			},
 			{
@@ -587,26 +590,31 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isBigInt()) result.push(`bigint=${evalExpr.bigint}`);
 				if (evalExpr.isBoolean()) result.push(`bool=${evalExpr.bool}`);
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
-				if (evalExpr.isConditional())
+				if (evalExpr.isConditional()) {
 					result.push(
 						`options=[${evalExpr.options.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isArray())
+				}
+				if (evalExpr.isArray()) {
 					result.push(
 						`items=[${evalExpr.items.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isConstArray())
+				}
+				if (evalExpr.isConstArray()) {
 					result.push(`array=[${evalExpr.array.join("],[")}]`);
-				if (evalExpr.isTemplateString())
+				}
+				if (evalExpr.isTemplateString()) {
 					result.push(
 						`template=[${evalExpr.quasis.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isWrapped())
+				}
+				if (evalExpr.isWrapped()) {
 					result.push(
 						`wrapped=[${evalExprToString(evalExpr.prefix)}]+[${evalExprToString(
 							evalExpr.postfix
 						)}]`
 					);
+				}
 				if (evalExpr.range) {
 					const start = evalExpr.range[0] - 5;
 					const end = evalExpr.range[1] - 5;
@@ -638,12 +646,14 @@ describe("JavascriptParser", () => {
 			const parser = new JavascriptParser();
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
 					const actual = parser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			}
 		});
+
 		describe("should parse await", () => {
 			const cases = {
 				require: [
@@ -687,6 +697,7 @@ describe("JavascriptParser", () => {
 			};
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
@@ -818,6 +829,7 @@ describe("JavascriptParser", () => {
 			};
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
 					const parser = new JavascriptParser();
 					const actual = JavascriptParser._parse(expr.code);

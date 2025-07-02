@@ -78,7 +78,7 @@ describe("walkCssTokens", () => {
 		.filter(test => /\.css/.test(test))
 		.map(item => [
 			item,
-			fs.readFileSync(path.resolve(casesPath, item), "utf-8")
+			fs.readFileSync(path.resolve(casesPath, item), "utf8")
 		]);
 
 	for (const [name, code] of tests) {

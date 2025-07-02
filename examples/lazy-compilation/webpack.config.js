@@ -1,3 +1,5 @@
+"use strict";
+
 const { HotModuleReplacementPlugin } = require("../../");
 
 module.exports = {

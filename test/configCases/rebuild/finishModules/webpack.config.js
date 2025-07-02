@@ -20,7 +20,7 @@ const testPlugin = compiler => {
 		);
 		compilation.hooks.finishModules.tapAsync(
 			"TestPlugin",
-			function (modules, callback) {
+			(modules, callback) => {
 				const src = resolve(join(__dirname, "other-file.js"));
 
 				/**
@@ -45,8 +45,9 @@ const testPlugin = compiler => {
 				if (
 					/** @type {NonNullable<Module["buildInfo"]>} */
 					(module.buildInfo)._isReplaced
-				)
+				) {
 					return callback();
+				}
 
 				shouldReplace = true;
 				compilation.rebuildModule(module, err => {

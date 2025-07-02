@@ -6,6 +6,7 @@ describe("Template", () => {
 	it("should generate valid identifiers", () => {
 		expect(Template.toIdentifier("0abc-def9")).toBe("_0abc_def9");
 	});
+
 	it("should generate valid number identifiers", () => {
 		const items = [];
 		let item;
@@ -16,6 +17,7 @@ describe("Template", () => {
 			items.push(item);
 		}
 	});
+
 	// cspell:ignore sdfas sadfome
 	it("should generate sanitized path identifiers", () => {
 		expect(Template.toPath("path/to-sdfas/sadfome$$.js")).toBe(

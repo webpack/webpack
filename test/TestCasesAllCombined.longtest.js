@@ -13,6 +13,7 @@ describe("TestCases", () => {
 		plugins: [
 			c => {
 				const webpack = require("..");
+
 				new webpack.HotModuleReplacementPlugin().apply(c);
 			}
 		]

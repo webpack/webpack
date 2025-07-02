@@ -11,6 +11,7 @@ describe("ArrayHelpers", () => {
 			[1, 3, 5]
 		]);
 	});
+
 	it("groupBy works with empty array", () => {
 		expect(ArrayHelpers.groupBy([], x => x % 2 === 0)).toStrictEqual([[], []]);
 	});

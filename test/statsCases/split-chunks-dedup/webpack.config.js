@@ -1,10 +1,11 @@
 /** @typedef {import("../../../").Module} Module */
 
 const webpack = require("../../../");
-const { ModuleFederationPlugin } = webpack.container;
 const {
 	WEBPACK_MODULE_TYPE_PROVIDE
 } = require("../../../lib/ModuleTypeConstants");
+
+const { ModuleFederationPlugin } = webpack.container;
 
 const chunkIdChunkNameMap = new Map();
 const usedSharedModuleNames = new Set();

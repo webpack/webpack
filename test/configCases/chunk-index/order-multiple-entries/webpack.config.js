@@ -110,10 +110,10 @@ module.exports = {
 								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
-					expect(indices).toEqual(
+					expect(indices).toBe(
 						"0: ./entry1.js, 1: ./a.js, 2: ./shared.js, 3: ./b.js, 4: ./c.js, 5: ./entry2.js, 6: ./async.js"
 					);
-					expect(indices2).toEqual(
+					expect(indices2).toBe(
 						"0: ./shared.js, 1: ./a.js, 2: ./b.js, 3: ./c.js, 4: ./entry1.js, 5: ./entry2.js, 6: ./async.js"
 					);
 				});

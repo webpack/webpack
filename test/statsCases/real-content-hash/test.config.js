@@ -16,7 +16,7 @@ module.exports = {
 			const b = stats.stats[i + 1].toJson({
 				assets: true
 			});
-			expect(Object.keys(a.assetsByChunkName).length).toBe(5);
+			expect(Object.keys(a.assetsByChunkName)).toHaveLength(5);
 			expect(a.assetsByChunkName.main).toEqual(b.assetsByChunkName.main);
 			expect(a.assetsByChunkName.lazy).toEqual(b.assetsByChunkName.lazy);
 			expect(a.assetsByChunkName.a).toEqual(b.assetsByChunkName.a);
@@ -29,7 +29,7 @@ module.exports = {
 			});
 			for (const name of Object.keys(hashedFiles)) {
 				const asset = statsData.assets.find(hashedFiles[name]);
-				expect(asset).not.toBe(undefined);
+				expect(asset).toBeDefined();
 				const content = fs.readFileSync(path.resolve(__dirname, "a", name));
 				const hash = createHash("md4")
 					.update(content)

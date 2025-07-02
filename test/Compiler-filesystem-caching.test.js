@@ -19,6 +19,7 @@ describe("Compiler (filesystem caching)", () => {
 
 	function compile(entry, onSuccess, onError) {
 		const webpack = require("..");
+
 		const options = webpack.config.getNormalizedWebpackOptions({});
 		options.cache = {
 			type: "filesystem",
@@ -68,13 +69,13 @@ describe("Compiler (filesystem caching)", () => {
 								const result = await cacheItem.getPromise(ident);
 
 								if (result) {
-									expect(result.number).toEqual(42);
-									expect(result.number1).toEqual(3.14);
-									expect(result.number2).toEqual(6.2);
-									expect(result.string).toEqual("string");
+									expect(result.number).toBe(42);
+									expect(result.number1).toBe(3.14);
+									expect(result.number2).toBe(6.2);
+									expect(result.string).toBe("string");
 
 									if (isErrorCaseSupported) {
-										expect(result.error.cause.message).toEqual("cause");
+										expect(result.error.cause.message).toBe("cause");
 										expect(result.error1.cause.string).toBe("string");
 										expect(result.error1.cause.number).toBe(42);
 									}
@@ -84,21 +85,21 @@ describe("Compiler (filesystem caching)", () => {
 											new Error("first", { cause: "nested cause" }),
 											"second"
 										]);
-										expect(result.aggregateError.message).toEqual(
+										expect(result.aggregateError.message).toBe(
 											"aggregate error"
 										);
 										expect(result.aggregateError.cause.message).toBe("cause");
 									}
 
 									if (isBigIntSupported) {
-										expect(result.bigint).toEqual(5n);
-										expect(result.bigint1).toEqual(124n);
-										expect(result.bigint2).toEqual(125n);
-										expect(result.bigint3).toEqual(12345678901234567890n);
-										expect(result.bigint4).toEqual(5n);
-										expect(result.bigint5).toEqual(1000000n);
-										expect(result.bigint6).toEqual(128n);
-										expect(result.bigint7).toEqual(2147483647n);
+										expect(result.bigint).toBe(5n);
+										expect(result.bigint1).toBe(124n);
+										expect(result.bigint2).toBe(125n);
+										expect(result.bigint3).toBe(12345678901234567890n);
+										expect(result.bigint4).toBe(5n);
+										expect(result.bigint5).toBe(1000000n);
+										expect(result.bigint6).toBe(128n);
+										expect(result.bigint7).toBe(2147483647n);
 										expect(result.obj.foo).toBe(BigInt(-10));
 										expect(Array.from(result.set)).toEqual([
 											BigInt(1),
@@ -196,6 +197,7 @@ describe("Compiler (filesystem caching)", () => {
 	}
 
 	beforeAll(cleanup);
+
 	afterAll(cleanup);
 
 	/**

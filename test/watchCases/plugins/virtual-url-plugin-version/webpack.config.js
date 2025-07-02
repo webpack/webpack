@@ -1,6 +1,9 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
+
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 let watchStep = -1;
@@ -13,7 +16,7 @@ module.exports = {
 				source: () =>
 					fs.readFileSync(path.join(__dirname, `./${watchStep}/v.js`), "utf8"),
 				version: () => {
-					watchStep = watchStep + 1;
+					watchStep += 1;
 					return `v${watchStep}`;
 				}
 			},

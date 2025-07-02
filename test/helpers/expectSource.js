@@ -1,4 +1,4 @@
-const regexEscape = require("./regexEscape.js");
+const regexEscape = require("./regexEscape");
 
 // These expect* methods are necessary because 'source' contains the code for this test file, which will always contain the string
 // being tested for, so we have to use the "DO NOT MATCH BELOW..." technique to exclude the actual testing code from the test.

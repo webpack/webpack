@@ -150,8 +150,9 @@ module.exports = definitions.map((defs, i) => ({
 							/** @type {Module[]} */
 							const localizationModules = [];
 							for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
-								if (module.getSourceTypes().has("localization"))
+								if (module.getSourceTypes().has("localization")) {
 									localizationModules.push(module);
+								}
 							}
 
 							result.push({

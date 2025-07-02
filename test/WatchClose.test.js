@@ -17,6 +17,7 @@ describe("WatchClose", () => {
 
 		beforeEach(() => {
 			const webpack = require("../");
+
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,

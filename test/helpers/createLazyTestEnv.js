@@ -1,4 +1,3 @@
-// eslint-disable-next-line jest/no-export
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
 	let currentDescribeBlock;
@@ -59,9 +58,11 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		try {
 			fn();
 		} catch (err) {
+			/* eslint-disable no-unused-expressions */
 			// avoid leaking memory
 			/** @type {EXPECTED_ANY} */
 			(err).stack;
+			/* eslint-enable no-unused-expressions */
 			throw err;
 		}
 		state.currentDescribeBlock = oldCurrentDescribeBlock;
@@ -93,7 +94,6 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
 				// @ts-expect-error expected
-				// eslint-disable-next-line jest/no-disabled-tests
 				it(...args);
 				fixAsyncError(
 					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
@@ -101,8 +101,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			});
 		},
 		beforeEach(...args) {
-			if (runTests >= numberOfTests)
+			if (runTests >= numberOfTests) {
 				throw new Error("beforeEach called too late");
+			}
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
 				// @ts-expect-error expected
@@ -113,8 +114,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			});
 		},
 		afterEach(...args) {
-			if (runTests >= numberOfTests)
+			if (runTests >= numberOfTests) {
 				throw new Error("afterEach called too late");
+			}
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
 				// @ts-expect-error expected

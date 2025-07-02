@@ -9,19 +9,19 @@ module.exports = (env, { srcPath }) => {
 		plugins: [
 			new webpack.DefinePlugin({
 				TEST_VALUE: webpack.DefinePlugin.runtimeValue(
-					() => JSON.stringify(fs.readFileSync(valueFile, "utf-8").trim()),
+					() => JSON.stringify(fs.readFileSync(valueFile, "utf8").trim()),
 					[valueFile]
 				),
 				TEST_VALUE2: webpack.DefinePlugin.runtimeValue(
-					() => JSON.stringify(fs.readFileSync(valueFile, "utf-8").trim()),
+					() => JSON.stringify(fs.readFileSync(valueFile, "utf8").trim()),
 					[]
 				),
 				TEST_VALUE3: webpack.DefinePlugin.runtimeValue(
-					() => JSON.stringify(fs.readFileSync(valueFile, "utf-8").trim()),
+					() => JSON.stringify(fs.readFileSync(valueFile, "utf8").trim()),
 					true
 				),
 				TEST_VALUE4: webpack.DefinePlugin.runtimeValue(
-					() => JSON.stringify(fs.readFileSync(valueFile, "utf-8").trim()),
+					() => JSON.stringify(fs.readFileSync(valueFile, "utf8").trim()),
 					{
 						fileDependencies: [valueFile]
 					}
@@ -29,7 +29,7 @@ module.exports = (env, { srcPath }) => {
 				TEST_VALUE5: webpack.DefinePlugin.runtimeValue(
 					({ version, key }) => JSON.stringify({ version, key }),
 					{
-						version: () => fs.readFileSync(valueFile, "utf-8").trim()
+						version: () => fs.readFileSync(valueFile, "utf8").trim()
 					}
 				)
 			})

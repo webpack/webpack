@@ -11,7 +11,7 @@ module.exports = {
 	findBundle(i, options) {
 		const source = fs.readFileSync(
 			path.resolve(options.output.path, "bundle0.css"),
-			"utf-8"
+			"utf8"
 		);
 
 		if (

@@ -1,9 +1,85 @@
 {
   "name": "webpack",
   "version": "5.99.9",
-  "author": "Tobias Koppers @sokra",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
+  "homepage": "https://github.com/webpack/webpack",
+  "bugs": "https://github.com/webpack/webpack/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webpack/webpack.git"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/webpack"
+  },
   "license": "MIT",
+  "author": "Tobias Koppers @sokra",
+  "main": "lib/index.js",
+  "types": "types.d.ts",
+  "bin": {
+    "webpack": "bin/webpack.js"
+  },
+  "files": [
+    "lib/",
+    "bin/",
+    "hot/",
+    "schemas/",
+    "SECURITY.md",
+    "module.d.ts",
+    "types.d.ts"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "setup": "node ./setup/setup.js",
+    "prelint": "yarn setup",
+    "lint": "yarn lint:code && yarn lint:special && yarn lint:types && yarn lint:types-test && yarn lint:types-module-test && yarn lint:yarn && yarn fmt:check && yarn lint:spellcheck",
+    "lint:code": "node node_modules/eslint/bin/eslint.js --cache .",
+    "lint:special": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
+    "lint:types": "tsc",
+    "lint:types-test": "tsc -p tsconfig.types.test.json",
+    "lint:types-module-test": "tsc -p tsconfig.module.test.json",
+    "lint:yarn": "yarn-deduplicate --fail --list -s highest yarn.lock",
+    "lint:spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",
+    "report:types": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
+    "validate:types": "tsc -p tsconfig.validation.json",
+    "fmt": "yarn fmt:base --log-level warn --write",
+    "fmt:check": "yarn fmt:base --check",
+    "fmt:base": "node node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
+    "fix": "yarn fix:code && yarn fix:yarn && yarn fix:special && yarn fmt",
+    "fix:code": "yarn lint:code --fix",
+    "fix:yarn": "yarn-deduplicate -s highest yarn.lock",
+    "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
+    "build:examples": "cd examples && node buildAll.js",
+    "benchmark": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
+    "pretest": "yarn lint",
+    "test": "yarn test:base",
+    "test:update-snapshots": "yarn test:base -u",
+    "test:basic": "yarn test:base --testMatch \"<rootDir>/test/*.basictest.js\"",
+    "test:unit": "yarn test:base --testMatch \"<rootDir>/test/*.unittest.js\"",
+    "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
+    "test:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
+    "cover": "yarn cover:all && yarn cover:report",
+    "cover:clean": "rimraf .nyc_output coverage",
+    "cover:all": "yarn cover:base --coverage",
+    "cover:unit": "yarn cover:base --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
+    "cover:basic": "yarn cover:base --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
+    "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
+    "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
+    "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
+    "cover:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
+    "cover:types": "node node_modules/tooling/type-coverage",
+    "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
+    "cover:report": "nyc report --reporter=lcov  --reporter=text -t coverage"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs}": [
+      "node node_modules/eslint/bin/eslint.js --cache --fix"
+    ],
+    "*": [
+      "node node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown",
+      "cspell --cache --no-must-find-files"
+    ]
+  },
   "dependencies": {
     "@types/eslint-scope": "^3.7.7",
     "@types/estree": "^1.0.8",
@@ -30,16 +106,12 @@
     "watchpack": "^2.4.1",
     "webpack-sources": "^3.3.3"
   },
-  "peerDependenciesMeta": {
-    "webpack-cli": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
     "@codspeed/tinybench-plugin": "^4.0.1",
     "@eslint/js": "^9.29.0",
+    "@eslint/markdown": "^6.6.0",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@types/glob-to-regexp": "^0.4.4",
     "@types/graceful-fs": "^4.1.9",
@@ -60,11 +132,13 @@
     "es6-promise-polyfill": "^1.2.0",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-config-webpack": "^4.3.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jest": "^29.0.1",
-    "eslint-plugin-jsdoc": "^51.2.2",
+    "eslint-plugin-jsdoc": "^51.2.3",
     "eslint-plugin-n": "^17.20.0",
     "eslint-plugin-prettier": "^5.5.0",
-    "eslint-plugin-unicorn": "^59.0.0",
+    "eslint-plugin-unicorn": "^59.0.1",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "globals": "^16.0.0",
@@ -118,84 +192,13 @@
     "yamljs": "^0.3.0",
     "yarn-deduplicate": "^6.0.1"
   },
+  "peerDependenciesMeta": {
+    "webpack-cli": {
+      "optional": true
+    }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "engines": {
     "node": ">=10.13.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/webpack/webpack.git"
-  },
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/webpack"
-  },
-  "homepage": "https://github.com/webpack/webpack",
-  "bugs": "https://github.com/webpack/webpack/issues",
-  "main": "lib/index.js",
-  "bin": {
-    "webpack": "bin/webpack.js"
-  },
-  "types": "types.d.ts",
-  "files": [
-    "lib/",
-    "bin/",
-    "hot/",
-    "schemas/",
-    "SECURITY.md",
-    "module.d.ts",
-    "types.d.ts"
-  ],
-  "scripts": {
-    "prepare": "husky",
-    "setup": "node ./setup/setup.js",
-    "prelint": "yarn setup",
-    "lint": "yarn lint:code && yarn lint:special && yarn lint:types && yarn lint:types-test && yarn lint:types-module-test && yarn lint:yarn && yarn fmt:check && yarn lint:spellcheck",
-    "lint:code": "node node_modules/eslint/bin/eslint.js --cache .",
-    "lint:special": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/format-file-header && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
-    "lint:types": "tsc",
-    "lint:types-test": "tsc -p tsconfig.types.test.json",
-    "lint:types-module-test": "tsc -p tsconfig.module.test.json",
-    "lint:yarn": "yarn-deduplicate --fail --list -s highest yarn.lock",
-    "lint:spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",
-    "report:types": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
-    "validate:types": "tsc -p tsconfig.validation.json",
-    "fmt": "yarn fmt:base --log-level warn --write",
-    "fmt:check": "yarn fmt:base --check",
-    "fmt:base": "node node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
-    "fix": "yarn fix:code && yarn fix:yarn && yarn fix:special && yarn fmt",
-    "fix:code": "yarn lint:code --fix",
-    "fix:yarn": "yarn-deduplicate -s highest yarn.lock",
-    "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
-    "build:examples": "cd examples && node buildAll.js",
-    "benchmark": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
-    "pretest": "yarn lint",
-    "test": "yarn test:base",
-    "test:update-snapshots": "yarn test:base -u",
-    "test:basic": "yarn test:base --testMatch \"<rootDir>/test/*.basictest.js\"",
-    "test:unit": "yarn test:base --testMatch \"<rootDir>/test/*.unittest.js\"",
-    "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
-    "test:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
-    "cover": "yarn cover:all && yarn cover:report",
-    "cover:clean": "rimraf .nyc_output coverage",
-    "cover:all": "yarn cover:base --coverage",
-    "cover:unit": "yarn cover:base --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
-    "cover:basic": "yarn cover:base --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
-    "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
-    "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
-    "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
-    "cover:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
-    "cover:types": "node node_modules/tooling/type-coverage",
-    "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
-    "cover:report": "nyc report --reporter=lcov  --reporter=text -t coverage"
-  },
-  "lint-staged": {
-    "*.{js,cjs,mjs}": [
-      "node node_modules/eslint/bin/eslint.js --cache --fix"
-    ],
-    "*": [
-      "node node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown",
-      "cspell --cache --no-must-find-files"
-    ]
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

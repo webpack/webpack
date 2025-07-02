@@ -39,11 +39,11 @@ module.exports = {
 								// Read the external module files
 								const externalA = fs.readFileSync(
 									path.join(__dirname, "external-a.mjs"),
-									"utf-8"
+									"utf8"
 								);
 								const externalB = fs.readFileSync(
 									path.join(__dirname, "external-b.mjs"),
-									"utf-8"
+									"utf8"
 								);
 
 								// Emit them as assets

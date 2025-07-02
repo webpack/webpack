@@ -24,8 +24,9 @@ module.exports = {
 								/** @type {string} */
 								(request.path)
 							)
-						)
+						) {
 							throw new Error("Trying to resolve as root path");
+						}
 					});
 				}
 			}

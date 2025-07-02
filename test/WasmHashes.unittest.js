@@ -4,7 +4,8 @@ const wasmHashes = {
 	xxhash64: () => {
 		const createHash = require("../lib/util/hash/xxhash64");
 		const createReferenceHash =
-			require("hash-wasm/dist/xxhash64.umd.min.js").createXXHash64;
+			require("hash-wasm/dist/xxhash64.umd.min").createXXHash64;
+
 		return {
 			createHash,
 			createReferenceHash: async () => (await createReferenceHash()).init(),
@@ -14,6 +15,7 @@ const wasmHashes = {
 	"xxhash64-createHash": () => {
 		const createXxHash = require("../lib/util/hash/xxhash64");
 		const createHash = require("../lib/util/createHash");
+
 		return {
 			createHash: () => createHash("xxhash64"),
 			createReferenceHash: createXxHash,
@@ -22,6 +24,7 @@ const wasmHashes = {
 	},
 	md4: () => {
 		const createMd4Hash = require("../lib/util/hash/md4");
+
 		return {
 			createHash: createMd4Hash,
 			createReferenceHash:
@@ -34,6 +37,7 @@ const wasmHashes = {
 	"md4-createHash": () => {
 		const createMd4Hash = require("../lib/util/hash/md4");
 		const createHash = require("../lib/util/createHash");
+
 		return {
 			createHash: () => createHash("md4"),
 			createReferenceHash: createMd4Hash,
@@ -109,9 +113,13 @@ for (const name of Object.keys(wasmHashes)) {
 				test(`two updates ${size1} + ${size2} bytes`, [size1, size2]);
 			}
 		}
+
 		test("many updates 1", sizes);
+
 		test("many updates 2", sizes.slice().reverse());
+
 		test("many updates 3", sizes.concat(sizes.slice().reverse()));
+
 		test("many updates 4", sizes.slice().reverse().concat(sizes));
 
 		const unicodeTest = (name, codePoints) => {

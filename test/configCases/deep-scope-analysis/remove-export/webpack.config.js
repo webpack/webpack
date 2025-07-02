@@ -17,8 +17,9 @@ module.exports = {
 						const module =
 							/** @type {Module} */
 							(compilation.moduleGraph.getParentModule(dep));
-						if (!module.identifier().endsWith("module.js"))
+						if (!module.identifier().endsWith("module.js")) {
 							return referencedExports;
+						}
 						const refModule = compilation.moduleGraph.getModule(dep);
 						if (
 							refModule &&

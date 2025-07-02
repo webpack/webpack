@@ -9,6 +9,7 @@ describe("Validation", () => {
 
 			try {
 				const webpack = require("..");
+
 				webpack(config);
 			} catch (err) {
 				if (err.name !== "ValidationError") throw err;

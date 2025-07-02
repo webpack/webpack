@@ -54,9 +54,7 @@ module.exports = {
 			wurst: "suppe",
 			suppe: "wurst",
 			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(
-				function ({ module }) {
-					return module instanceof Module;
-				}
+				({ module }) => module instanceof Module
 			),
 			A_DOT_J: '"a.j"',
 			OBJECT2: {

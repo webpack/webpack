@@ -7,7 +7,7 @@ const plugins = [
 			for (const asset of compilation.getAssets()) {
 				const result = asset.source.sourceAndMap();
 				try {
-					expect(result.map).toBe(null);
+					expect(result.map).toBeNull();
 				} catch (_err) {
 					const err = /** @type {Error} */ (_err);
 					err.message += `\nfor asset ${asset.name}`;

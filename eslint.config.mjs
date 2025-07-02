@@ -1,15 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import js from "@eslint/js";
-import prettier from "eslint-plugin-prettier";
-import nodePlugin from "eslint-plugin-n";
-import jest from "eslint-plugin-jest";
-import jsdoc from "eslint-plugin-jsdoc";
-import prettierConfig from "eslint-config-prettier";
+import config from "eslint-config-webpack";
+import configs from "eslint-config-webpack/configs.js";
 import globals from "globals";
-import stylistic from "@stylistic/eslint-plugin";
-import unicorn from "eslint-plugin-unicorn";
-
-const jsdocConfig = jsdoc.configs["flat/recommended-typescript-flavor-error"];
 
 export default defineConfig([
 	globalIgnores([
@@ -31,6 +23,10 @@ export default defineConfig([
 		"!test/_helpers/**/*.mjs",
 		"test/js/**/*.*",
 
+		// TODO fix me
+		// This is not exactly typescript
+		"assembly/**/*.ts",
+
 		// Ignore some folders
 		"benchmark",
 		"coverage",
@@ -48,64 +44,35 @@ export default defineConfig([
 		"lib/util/semver.js",
 
 		// Ignore some examples files
-		"examples/**/*.js",
-		"examples/**/*.mjs",
+		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*/webpack.config.js"
 	]),
 	{
-		files: ["**/*.mjs"],
-		languageOptions: {
-			sourceType: "module"
-		}
-	},
-	{
-		files: ["**/*.{js,cjs}"],
-		languageOptions: {
-			ecmaVersion: 2018,
-			sourceType: "commonjs",
-			globals: {
-				...globals.node,
-				...globals.es2018,
-				WebAssembly: true
-			}
-		}
-	},
-	...nodePlugin.configs["flat/mixed-esm-and-cjs"],
-	{
-		plugins: {
-			n: nodePlugin
-		},
+		ignores: ["lib/**/*.runtime.js", "hot/*.js"],
+		extends: [config],
 		rules: {
-			"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
-			"n/no-unsupported-features/node-builtins": [
+			// Revisit it in future
+			"id-length": "off",
+			// Revisit it in future
+			"no-use-before-define": "off",
+			// We have helpers for the default configuration
+			"new-cap": [
 				"error",
 				{
-					ignores: [
-						"zlib.createBrotliCompress",
-						"zlib.createBrotliDecompress",
-						"EventSource"
-					]
+					newIsCapExceptions: [],
+					capIsNewExceptions: ["A", "F", "D", "MODULES_GROUPERS"]
 				}
 			],
-			"n/exports-style": "error"
-		}
-	},
-	{
-		...js.configs.recommended,
-		linterOptions: {
-			reportUnusedDisableDirectives: true
-		},
-		rules: {
-			...js.configs.recommended.rules,
-			"no-template-curly-in-string": "error",
-			"no-caller": "error",
-			"no-control-regex": "off",
-			yoda: "error",
-			eqeqeq: "error",
-			"eol-last": "error",
-			"no-extra-bind": "warn",
-			"no-process-exit": "warn",
-			"no-use-before-define": "off",
+
+			// TODO enable me in future
+			"prefer-destructuring": "off",
+			// TODO enable me in future, we need to ignore Object.define
+			"func-names": "off",
+			// TODO enable me in future
+			"unicorn/prefer-spread": "off",
+			// TODO need patch in tooling, now we are doing weird order for destructuring in cjs import
+			"import/order": "off",
+			// TODO We need allow to have `_arg` in tooling and use `after-used` value for `args`
 			"no-unused-vars": [
 				"error",
 				{
@@ -115,357 +82,28 @@ export default defineConfig([
 					argsIgnorePattern: "^_",
 					caughtErrors: "all",
 					caughtErrorsIgnorePattern: "^_",
-					ignoreRestSiblings: true
+					destructuredArrayIgnorePattern: "^_",
+					ignoreRestSiblings: true,
+					ignoreClassWithStaticInitBlock: false,
+					reportUsedIgnorePattern: false
 				}
 			],
-			"no-inner-declarations": "error",
-			"prefer-const": [
-				"error",
-				{
-					destructuring: "all",
-					ignoreReadBeforeAssign: true
-				}
-			],
-			"object-shorthand": "error",
-			"no-else-return": "error",
-			"no-lonely-if": "error",
-			"no-undef-init": "error",
-			// Disallow ts-ignore directive. Use ts-expect-error instead
-			"no-warning-comments": ["error", { terms: ["@ts-ignore"] }],
-			"no-constructor-return": "error",
-			"symbol-description": "error",
-			"array-callback-return": [
-				"error",
-				{
-					allowImplicit: true
-				}
-			],
-			"no-promise-executor-return": "error",
-			"no-undef": "error",
-			"guard-for-in": "error",
-			"no-constant-condition": "error",
-			camelcase: [
-				"error",
-				{
-					allow: [
-						"__webpack_require__",
-						"__webpack_public_path__",
-						"__webpack_base_uri__",
-						"__webpack_modules__",
-						"__webpack_chunk_load__",
-						"__non_webpack_require__",
-						"__webpack_nonce__",
-						"__webpack_hash__",
-						"__webpack_chunkname__",
-						"__webpack_get_script_filename__",
-						"__webpack_runtime_id__",
-						"__system_context__",
-						"__webpack_share_scopes__",
-						"__webpack_init_sharing__",
-						"__webpack_require_module__",
-						"_stream_duplex",
-						"_stream_passthrough",
-						"_stream_readable",
-						"_stream_transform",
-						"_stream_writable",
-						"string_decoder"
-					]
-				}
-			],
-			"prefer-exponentiation-operator": "error",
-			"no-useless-return": "error",
-			"no-return-assign": "error",
-			"default-case-last": "error",
-			"default-param-last": "error",
-			"dot-notation": "error",
-			"grouped-accessor-pairs": "error",
-			"id-match": [
-				"error",
-				"^[$a-zA-Z_][$a-zA-Z0-9_]*$",
-				{
-					properties: true
-				}
-			],
-			"no-console": "error",
-			"no-extra-label": "error",
-			"no-label-var": "error",
-			"no-lone-blocks": "error",
-			"no-multi-str": "error",
-			"no-new-func": "error",
-			"no-unneeded-ternary": ["error", { defaultAssignment: false }],
-			"no-useless-call": "error",
-			"no-useless-concat": "error",
-			"prefer-object-spread": "error",
-			"prefer-regex-literals": "error",
-			"prefer-rest-params": "error",
-			"no-var": "error",
-			"one-var": ["error", "never"],
-			"prefer-template": "error",
-			"no-implicit-coercion": [
-				"error",
-				{
-					boolean: true,
-					number: true,
-					string: true
-				}
-			],
-			"arrow-body-style": ["error", "as-needed"],
-			"new-cap": [
-				"error",
-				{
-					newIsCapExceptions: [],
-					capIsNewExceptions: ["A", "F", "D", "MODULES_GROUPERS"]
-				}
-			],
-			"func-style": [
-				"error",
-				"declaration",
-				{
-					allowArrowFunctions: true
-				}
-			],
-			"no-loop-func": "error",
-			"no-unreachable-loop": "error",
-			"no-unmodified-loop-condition": "error",
-			"prefer-spread": "error",
-			"no-sequences": "error",
-			// TODO Enable
-			"id-length": "off",
-			"prefer-destructuring": "off"
-		}
-	},
-	{
-		plugins: {
-			unicorn
-		},
-		rules: {
-			"unicorn/catch-error-name": [
-				"error",
-				{ name: "err", ignore: [/(^_|[0-9]+$)/i] }
-			],
-			"unicorn/prefer-includes": "error",
-			"unicorn/no-zero-fractions": "error",
-			"unicorn/prefer-string-starts-ends-with": "error",
-			"unicorn/prefer-default-parameters": "error",
-			"unicorn/prefer-negative-index": "error",
-			"unicorn/prefer-ternary": ["error", "only-single-line"],
-			"unicorn/prefer-array-find": "error",
-			"unicorn/no-lonely-if": "error",
-			"unicorn/no-hex-escape": "error",
-			"unicorn/escape-case": "error",
-			"unicorn/no-array-for-each": "error",
-			"unicorn/prefer-number-properties": "error",
-			"unicorn/prefer-native-coercion-functions": "error",
-			// TODO Enable
-			"unicorn/prefer-spread": "off"
-		}
-	},
-	{
-		plugins: {
-			"@stylistic": stylistic
-		},
-		rules: {
-			"@stylistic/lines-between-class-members": "error",
-			"@stylistic/quotes": [
-				"error",
-				"double",
-				{ avoidEscape: true, allowTemplateLiterals: false }
-			],
-			"@stylistic/spaced-comment": [
-				"error",
-				"always",
-				{
-					line: {
-						markers: ["=", "!"], // Space here to support sprockets directives
-						exceptions: ["-", "+"]
-					},
-					block: {
-						markers: ["=", "!"], // Space here to support sprockets directives
-						exceptions: ["-", "+"],
-						balanced: true
-					}
-				}
-			]
-		}
-	},
-	{
-		...jsdocConfig,
-		settings: {
-			jsdoc: {
-				mode: "typescript",
-				// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
-				tagNamePreference: {
-					...["memberof", "yields", "member"].reduce((acc, tag) => {
-						acc[tag] = {
-							message: `@${tag} currently not supported in TypeScript`
-						};
-						return acc;
-					}, {}),
-					extends: "extends",
-					return: "returns",
-					constructor: "constructor",
-					prop: "property",
-					arg: "param",
-					augments: "extends",
-					description: false,
-					desc: false,
-					inheritdoc: false,
-					class: "constructor"
-				},
-				overrideReplacesDocs: false
-			}
-		},
-		rules: {
-			...jsdocConfig.rules,
-			// Override recommended
-			//
-			// Doesn't support function overloading/tuples/`readonly`/module keyword/etc
-			// Also `typescript` reports this itself
-			"jsdoc/valid-types": "off",
-			// A lot of false positive with loops/`switch`/`if`/etc
-			"jsdoc/require-returns-check": "off",
-			// TODO fix and enable in future
+
+			// Too noise
 			"jsdoc/require-property-description": "off",
 
-			// More rules
-			"jsdoc/check-indentation": "error",
-			"jsdoc/check-line-alignment": ["error", "never"],
-			"jsdoc/require-asterisk-prefix": "error",
-			"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-			"jsdoc/require-template": "error",
-			"jsdoc/no-bad-blocks": "error",
-			"jsdoc/no-blank-block-descriptions": "error",
-			"jsdoc/no-blank-blocks": "error",
-			"jsdoc/no-restricted-syntax": [
-				"error",
-				{
-					contexts: [
-						// Prefer TypeScript syntax for functions
-						{
-							comment: "JsdocBlock:has(JsdocTypeFunction[arrow=false])",
-							message:
-								"Please use TypeScript syntax - `(a: string, b: boolean) => number`"
-						},
-						// Prefer `{string=}` over `{string} [arg]`
-						{
-							comment:
-								"JsdocBlock:has(JsdocTag[tag=/^(property|param)$/][name=/[\\[\\]]/])",
-							message:
-								"Please use `@property {string=} property`/`@param {string=} arg` instead `[arg]` for optional properties and parameters"
-						},
-						// No `*` type
-						{
-							comment: "JsdocBlock:has(JsdocTypeAny)",
-							message: "Please use `any` or `EXPECTED_ANY` type."
-						},
-						// No `?` type
-						{
-							comment: "JsdocBlock:has(JsdocTypeUnknown)",
-							message: "Please use `unknown` or `any` (or `EXPECTED_ANY`) type"
-						},
-						// No `any` type
-						{
-							comment: "JsdocBlock:has(JsdocTypeName[value=/^any$/])",
-							message: "Please use provide types instead `any`"
-						},
-						// No `Function` type
-						{
-							comment:
-								"JsdocBlock:has(JsdocTypeName[value=/^(function|Function)$/])",
-							message:
-								"Please use provide types for function  - `(a: number, b: number) -> number` instead `Function`/`function` or use `EXPECTED_FUNCTION` type"
-						},
-						// No `Object`
-						{
-							comment:
-								"JsdocBlock:has(JsdocTag[tag!=/^(typedef|template|param)$/]:has(JsdocTypeName[value=/^(Object|object)$/]))",
-							message:
-								"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object`/`object` or use `EXPECTED_OBJECT` type"
-						},
-						{
-							comment:
-								"JsdocBlock:has(JsdocTag[tag=typedef][parsedType.type!=JsdocTypeName]:has(JsdocTypeName[value=/^(Object|object)$/]))",
-							message:
-								"Please use provide types for object  - `{ property: number:, result: () => number}` instead `Object`/`object` or use `EXPECTED_OBJECT` type"
-						}
-					]
-				}
-			]
+			// TODO enable me in future
+			"unicorn/prefer-regexp-test": "off",
+			"unicorn/prefer-string-slice": "off",
+
+			// TODO false positive, need to fix in upstream
+			"n/prefer-node-protocol": "off",
+			"n/prefer-global/url": "off"
 		}
 	},
 	{
-		...jest.configs["flat/recommended"],
-		files: ["test/**/*.{js,cjs,mjs}"],
-		languageOptions: {
-			ecmaVersion: "latest",
-			globals: {
-				...globals.jest,
-				nsObj: false
-			}
-		},
-		rules: {
-			...jest.configs["flat/recommended"].rules,
-			"jest/no-standalone-expect": "off",
-			"jest/valid-title": [
-				"error",
-				{
-					ignoreTypeOfDescribeName: true,
-					ignoreTypeOfTestName: true
-				}
-			],
-			"jest/no-done-callback": "off",
-			"jest/expect-expect": "off",
-			"jest/no-conditional-expect": "off",
-			"no-console": "off",
-			"jsdoc/require-jsdoc": "off",
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					version: ">=22",
-					ignores: []
-				}
-			],
-			"n/no-unsupported-features/es-builtins": [
-				"error",
-				{
-					version: ">=22",
-					ignores: []
-				}
-			],
-			"n/no-unsupported-features/node-builtins": [
-				"error",
-				{
-					allowExperimental: true,
-					version: ">=22",
-					ignores: []
-				}
-			]
-		}
-	},
-	{
-		files: ["lib/**/*.runtime.js", "hot/*.js"],
-		languageOptions: {
-			ecmaVersion: 5,
-			globals: {
-				...globals.browser,
-				...globals.es5
-			}
-		},
-		rules: {
-			"prefer-const": "off",
-			"object-shorthand": "off",
-			"no-undef-init": "off",
-			"no-var": "off",
-			"n/exports-style": "off",
-			"prefer-template": "off",
-			"no-implicit-coercion": "off",
-			"no-console": "off",
-			"func-style": "off",
-			"unicorn/prefer-includes": "off",
-			"unicorn/no-useless-undefined": "off",
-			"unicorn/no-array-for-each": "off",
-			"jsdoc/require-jsdoc": "off"
-		}
+		files: ["lib/**/*.js"],
+		extends: [configs["webpack/special"]]
 	},
 	{
 		files: ["bin/**/*.js"],
@@ -475,6 +113,8 @@ export default defineConfig([
 		},
 		rules: {
 			"no-console": "off",
+
+			// Allow to use `dynamic` import and hashbang
 			"n/no-unsupported-features/es-syntax": [
 				"error",
 				{
@@ -484,34 +124,108 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["setup/**/*.js", "tooling/**/*.js"],
-		// Allow to use `dynamic` import
+		files: ["lib/**/*.runtime.js", "hot/*.js"],
+		extends: [configs["javascript/es5"]],
 		languageOptions: {
-			ecmaVersion: 2020
+			sourceType: "commonjs",
+			globals: {
+				...globals.browser,
+				...globals.es5,
+				Promise: false,
+				Map: false,
+				Set: false,
+				process: false
+			}
+		},
+		rules: {
+			strict: "off",
+
+			"block-scoped-var": "off",
+
+			// Allow logging
+			"no-console": "off",
+
+			// We replace `$VAR$` on real code
+			"no-unused-vars": "off",
+			"no-undef-init": "off",
+
+			"id-length": "off",
+
+			"unicorn/no-array-for-each": "off",
+			"unicorn/prefer-includes": "off",
+
+			"jsdoc/require-jsdoc": "off",
+
+			// Revisit it in future
+			"no-use-before-define": "off",
+			"func-names": "off",
+			"func-style": "off"
+		}
+	},
+	{
+		files: ["test/**/*.js"],
+		rules: {
+			// TODO enable me
+			strict: "off",
+
+			// No need here, we have custom test logic, so except can be placed in different places
+			"jest/no-standalone-expect": "off",
+
+			// We have a lot of custom tests
+			"jest/expect-expect": "off",
+
+			// We have a lot of custom tests
+			"jest/no-confusing-set-timeout": "off"
+		}
+	},
+	{
+		files: ["test/helpers/**/*.{js,cjs,mjs}"],
+		languageOptions: {
+			globals: {
+				...globals.jest
+			}
+		},
+		rules: {
+			"no-eval": "off",
+			"no-console": "off",
+
+			// Allow to use any builtins, syntax and node API in tests
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		files: ["test/**/*.mjs"],
+		languageOptions: {
+			ecmaVersion: 2022
+		}
+	},
+	{
+		files: ["setup/**/*.js", "tooling/**/*.js"],
+		languageOptions: {
+			ecmaVersion: 2022
 		},
 		rules: {
 			"no-console": "off"
 		}
 	},
 	{
-		files: [
-			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
-			"examples/**/*.js",
-			"test/NodeTemplatePlugin.test.js"
-		],
-		rules: {
-			"n/no-missing-require": "off"
+		files: ["test/Compiler-filesystem-caching.test.js"],
+		languageOptions: {
+			ecmaVersion: 2022
 		}
 	},
 	{
-		...prettierConfig,
-		plugins: {
-			...prettierConfig.plugins,
-			prettier
-		},
+		files: [
+			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
+			"examples/**/*.js",
+			"test/NodeTemplatePlugin.test.js",
+			"test/PersistentCaching.test.js"
+		],
 		rules: {
-			...prettierConfig.rules,
-			"prettier/prettier": "error"
+			"import/extensions": "off",
+			"import/no-unresolved": "off"
 		}
 	}
 ]);

@@ -46,12 +46,15 @@ const createLogger = appendTarget => ({
 const describeCases = config => {
 	describe(config.name, () => {
 		let stderr;
+
 		beforeEach(() => {
 			stderr = captureStdio(process.stderr, true);
 		});
+
 		afterEach(() => {
 			stderr.restore();
 		});
+
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
@@ -59,7 +62,7 @@ const describeCases = config => {
 			describe(category.name, () => {
 				for (const testName of category.tests) {
 					// eslint-disable-next-line no-loop-func
-					describe(testName, function () {
+					describe(testName, () => {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -67,6 +70,7 @@ const describeCases = config => {
 							describe.skip(testName, () => {
 								it("filtered", () => {});
 							});
+
 							return;
 						}
 						const infraStructureLog = [];
@@ -77,6 +81,7 @@ const describeCases = config => {
 						let options;
 						let optionsArr;
 						let testConfig;
+
 						beforeAll(() => {
 							options = prepareOptions(
 								require(path.join(testDirectory, "webpack.config.js")),
@@ -87,8 +92,9 @@ const describeCases = config => {
 								if (!options.context) options.context = testDirectory;
 								if (!options.mode) options.mode = "production";
 								if (!options.optimization) options.optimization = {};
-								if (options.optimization.minimize === undefined)
+								if (options.optimization.minimize === undefined) {
 									options.optimization.minimize = false;
+								}
 								if (options.optimization.minimizer === undefined) {
 									options.optimization.minimizer = [
 										new (require("terser-webpack-plugin"))({
@@ -100,14 +106,16 @@ const describeCases = config => {
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
 								if (!options.output.path) options.output.path = outputDirectory;
-								if (typeof options.output.pathinfo === "undefined")
+								if (typeof options.output.pathinfo === "undefined") {
 									options.output.pathinfo = true;
-								if (!options.output.filename)
+								}
+								if (!options.output.filename) {
 									options.output.filename = `bundle${idx}${
 										options.experiments && options.experiments.outputModule
 											? ".mjs"
 											: ".js"
 									}`;
+								}
 								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
@@ -157,15 +165,19 @@ const describeCases = config => {
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 						});
+
+						// eslint-disable-next-line jest/no-duplicate-hooks
+						beforeAll(() => {
+							rimraf.sync(cacheDirectory);
+						});
+
 						afterAll(() => {
 							// cleanup
 							options = undefined;
 							optionsArr = undefined;
 							testConfig = undefined;
 						});
-						beforeAll(() => {
-							rimraf.sync(cacheDirectory);
-						});
+
 						const handleFatalError = (err, done) => {
 							const fakeStats = {
 								errors: [
@@ -196,7 +208,9 @@ const describeCases = config => {
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
 								const deprecationTracker = deprecationTracking.start();
+
 								const compiler = require("..")(options);
+
 								compiler.run(err => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
@@ -237,12 +251,15 @@ const describeCases = config => {
 									});
 								});
 							}, 60000);
+
 							it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
 								const deprecationTracker = deprecationTracking.start();
+
 								const compiler = require("..")(options);
+
 								compiler.run((err, stats) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
@@ -312,6 +329,7 @@ const describeCases = config => {
 								});
 							}, 40000);
 						}
+
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
@@ -328,7 +346,7 @@ const describeCases = config => {
 								fs.writeFileSync(
 									path.join(outputDirectory, "stats.txt"),
 									stats.toString(statOptions),
-									"utf-8"
+									"utf8"
 								);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -336,7 +354,7 @@ const describeCases = config => {
 								fs.writeFileSync(
 									path.join(outputDirectory, "stats.json"),
 									JSON.stringify(jsonStats, null, 2),
-									"utf-8"
+									"utf8"
 								);
 								if (
 									checkArrayExpectation(
@@ -459,8 +477,9 @@ const describeCases = config => {
 								}
 								Promise.all(results)
 									.then(() => {
-										if (testConfig.afterExecute)
+										if (testConfig.afterExecute) {
 											testConfig.afterExecute(options);
+										}
 										for (const key of Object.keys(global)) {
 											if (key.includes("webpack")) delete global[key];
 										}
@@ -474,6 +493,7 @@ const describeCases = config => {
 							if (config.cache) {
 								try {
 									const compiler = require("..")(options);
+
 									compiler.run(err => {
 										if (err) return handleFatalError(err, done);
 										compiler.run((error, stats) => {

@@ -1,3 +1,5 @@
+"use strict";
+
 const toml = require("toml");
 const json5 = require("json5");
 const yaml = require("yamljs");

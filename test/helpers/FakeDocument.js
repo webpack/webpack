@@ -181,7 +181,7 @@ class FakeSheet {
 					.replace(/^https:\/\/test\.cases\/path\//, "")
 					.replace(/^https:\/\/example\.com\//, "")
 			),
-			"utf-8"
+			"utf8"
 		);
 
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
@@ -198,7 +198,7 @@ class FakeSheet {
 					this._basePath,
 					url.replace(/^https:\/\/test\.cases\/path\//, "")
 				),
-				"utf-8"
+				"utf8"
 			);
 		});
 
@@ -207,6 +207,7 @@ class FakeSheet {
 
 	get cssRules() {
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
+
 		const rules = [];
 		let currentRule = { getPropertyValue };
 		let selector;
@@ -228,7 +229,7 @@ class FakeSheet {
 						.replace(/^https:\/\/example\.com\/public\/path\//, "")
 						.replace(/^https:\/\/example\.com\//, "")
 				);
-		let css = fs.readFileSync(filepath, "utf-8");
+		let css = fs.readFileSync(filepath, "utf8");
 		css = css
 			// Remove comments
 			// @ts-expect-error we use es2018 for such tests
@@ -247,7 +248,7 @@ class FakeSheet {
 						this._basePath,
 						url.replace(/^https:\/\/test\.cases\/path\//, "")
 					),
-					"utf-8"
+					"utf8"
 				);
 			});
 		walkCssTokens(css, 0, {

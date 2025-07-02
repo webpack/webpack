@@ -43,6 +43,7 @@ expect.extend({
 if (process.env.ALTERNATIVE_SORT) {
 	const oldSort = Array.prototype.sort;
 
+	// eslint-disable-next-line no-extend-native
 	Array.prototype.sort = function (cmp) {
 		oldSort.call(this, cmp);
 		if (cmp) {
@@ -116,6 +117,7 @@ if (process.env.DEBUG_INFO) {
 			);
 		}
 	};
+
 	// eslint-disable-next-line no-global-assign
 	it = addDebugInfo(it);
 }

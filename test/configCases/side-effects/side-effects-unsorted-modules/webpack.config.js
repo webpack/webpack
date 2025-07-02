@@ -2,8 +2,6 @@
 /** @typedef {import("../../../../").NormalModule} NormalModule */
 
 class ReorderModulesPlugin {
-	constructor() {}
-
 	/**
 	 * @param {Compiler} compiler compiler
 	 */
