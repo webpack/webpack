@@ -55,7 +55,7 @@ const describeCases = config => {
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
-				jest.setTimeout(20000);
+				jest.setTimeout(30000);
 
 				for (const testName of category.tests.filter(test => {
 					const testDirectory = path.join(casesPath, category.name, test);

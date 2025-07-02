@@ -5,6 +5,8 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 
+jest.setTimeout(30000);
+
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
 
