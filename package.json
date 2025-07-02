@@ -178,7 +178,7 @@
     "strip-ansi": "^6.0.0",
     "style-loader": "^4.0.0",
     "terser": "^5.43.1",
-    "three": "^0.177.0",
+    "three": "^0.178.0",
     "tinybench": "^4.0.1",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.24.0",
