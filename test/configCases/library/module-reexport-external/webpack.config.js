@@ -24,7 +24,7 @@ module.exports = {
 		concatenateModules: true
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 */

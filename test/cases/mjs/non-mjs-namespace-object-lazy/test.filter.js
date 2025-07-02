@@ -1,3 +1,1 @@
-module.exports = function (config) {
-	return !config.minimize;
-};
+module.exports = config => !config.minimize;

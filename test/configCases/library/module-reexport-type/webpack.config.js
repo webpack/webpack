@@ -45,7 +45,7 @@ module.exports = {
 		]
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 */

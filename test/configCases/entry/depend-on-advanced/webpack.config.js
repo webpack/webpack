@@ -27,7 +27,7 @@ module.exports = {
 		/**
 		 * @this {Compiler} compiler
 		 */
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}

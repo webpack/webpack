@@ -23,7 +23,7 @@ util.deprecate = (fn, message, _code) => {
 	const original = originalDeprecate(fn, message, _code);
 
 	// @ts-expect-error expected
-	return function (...args) {
+	return function deprecate(...args) {
 		if (interception) {
 			interception.set(`${_code}: ${message}`, {
 				code: /** @type {string} */ (_code),

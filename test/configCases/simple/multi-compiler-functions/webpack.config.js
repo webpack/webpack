@@ -1,6 +1,6 @@
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	function () {
+	function empty() {
 		return {};
 	}
 ];

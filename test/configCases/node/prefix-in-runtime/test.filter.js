@@ -1,3 +1,1 @@
-module.exports = function () {
-	return !process.version.startsWith("v10.");
-};
+module.exports = () => !process.version.startsWith("v10.");

@@ -13,7 +13,7 @@ module.exports = {
 		chunkIds: "named"
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}

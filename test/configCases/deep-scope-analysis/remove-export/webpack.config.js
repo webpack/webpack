@@ -9,7 +9,7 @@ module.exports = {
 		sideEffects: false
 	},
 	plugins: [
-		function () {
+		function apply() {
 			this.hooks.compilation.tap("Test", compilation => {
 				compilation.hooks.dependencyReferencedExports.tap(
 					"Test",

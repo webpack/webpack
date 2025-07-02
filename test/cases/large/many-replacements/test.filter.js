@@ -1,3 +1,1 @@
-module.exports = function (config) {
-	return !process.env.CI;
-};
+module.exports = () => !process.env.CI;

@@ -1,3 +1,1 @@
-module.exports = function (config) {
-	return config.target === "web";
-};
+module.exports = config => config.target === "web";

@@ -44,7 +44,7 @@ if (process.env.ALTERNATIVE_SORT) {
 	const oldSort = Array.prototype.sort;
 
 	// eslint-disable-next-line no-extend-native
-	Array.prototype.sort = function (cmp) {
+	Array.prototype.sort = function sort(cmp) {
 		oldSort.call(this, cmp);
 		if (cmp) {
 			for (let i = 1; i < this.length; i++) {

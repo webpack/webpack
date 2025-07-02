@@ -191,7 +191,7 @@ const describeCases = config => {
 							},
 							plugins: [
 								...(config.plugins || []),
-								function () {
+								function testCasesTest() {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										for (const hook of [
 											"optimize",

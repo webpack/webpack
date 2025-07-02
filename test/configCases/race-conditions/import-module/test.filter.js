@@ -1,4 +1,4 @@
-module.exports = function (config) {
+module.exports = () => {
 	const [major] = process.versions.node.split(".").map(Number);
 
 	return major >= 18;

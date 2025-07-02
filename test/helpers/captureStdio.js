@@ -6,7 +6,7 @@ module.exports = (stdio, tty) => {
 	const write = stdio.write;
 	const isTTY = stdio.isTTY;
 
-	stdio.write = function (str) {
+	stdio.write = function write(str) {
 		logs.push(str);
 	};
 	if (tty !== undefined) stdio.isTTY = tty;

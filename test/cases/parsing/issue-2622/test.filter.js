@@ -1,5 +1,3 @@
 const supportsDefaultArgs = require("../../../helpers/supportsDefaultArgs");
 
-module.exports = function (config) {
-	return supportsDefaultArgs();
-};
+module.exports = () => supportsDefaultArgs();
