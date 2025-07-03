@@ -1,9 +1,9 @@
-const { URL } = require("url");
 const fs = require("fs");
 const path = require("path");
+const { URL } = require("url");
 
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return "./bundle.mjs";
 	},
 	moduleScope(scope) {
