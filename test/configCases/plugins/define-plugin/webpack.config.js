@@ -64,7 +64,10 @@ module.exports = {
 					used: 1,
 					unused: "(() => throw new Error('unused property was rendered'))()"
 				}
-			}
+			},
+			"FOO.BAR.BAZ": 1,
+			"FOO.BAR.BAZZ": 2,
+			"X.Y.BAZ": 3
 		})
 	]
 };
