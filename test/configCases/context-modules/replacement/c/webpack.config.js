@@ -1,7 +1,7 @@
 const path = require("path");
-const webpack = require("../../../../");
+const webpack = require("../../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @type {import("../../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new webpack.ContextReplacementPlugin(

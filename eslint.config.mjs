@@ -83,12 +83,8 @@ export default defineConfig([
 					reportUsedIgnorePattern: false
 				}
 			],
-			// TODO enable me in future
-			"unicorn/prefer-regexp-test": "off",
-			"unicorn/prefer-string-slice": "off",
 			// TODO false positive, need to fix in upstream
 			"n/prefer-node-protocol": "off",
-			"n/prefer-global/url": "off",
 			// TODO enable me in future
 			"prefer-destructuring": "off"
 		}
