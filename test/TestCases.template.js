@@ -3,15 +3,15 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const fs = require("graceful-fs");
+const { URL, pathToFileURL } = require("url");
 const vm = require("vm");
-const { pathToFileURL, URL } = require("url");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const asModule = require("./helpers/asModule");
+const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const captureStdio = require("./helpers/captureStdio");
-const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
@@ -55,7 +55,7 @@ const describeCases = config => {
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
-				jest.setTimeout(20000);
+				jest.setTimeout(30000);
 
 				for (const testName of category.tests.filter(test => {
 					const testDirectory = path.join(casesPath, category.name, test);
@@ -189,21 +189,24 @@ const describeCases = config => {
 									}
 								]
 							},
-							plugins: (config.plugins || []).concat(function () {
-								this.hooks.compilation.tap("TestCasesTest", compilation => {
-									for (const hook of [
-										"optimize",
-										"optimizeModules",
-										"optimizeChunks",
-										"afterOptimizeTree",
-										"afterOptimizeAssets"
-									]) {
-										compilation.hooks[hook].tap("TestCasesTest", () =>
-											compilation.checkConstraints()
-										);
-									}
-								});
-							}),
+							plugins: [
+								...(config.plugins || []),
+								function testCasesTest() {
+									this.hooks.compilation.tap("TestCasesTest", compilation => {
+										for (const hook of [
+											"optimize",
+											"optimizeModules",
+											"optimizeChunks",
+											"afterOptimizeTree",
+											"afterOptimizeAssets"
+										]) {
+											compilation.hooks[hook].tap("TestCasesTest", () =>
+												compilation.checkConstraints()
+											);
+										}
+									});
+								}
+							],
 							experiments: {
 								asyncWebAssembly: true,
 								topLevelAwait: true,

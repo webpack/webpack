@@ -5,8 +5,8 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const captureStdio = require("./helpers/captureStdio");
 const webpack = require("..");
+const captureStdio = require("./helpers/captureStdio");
 
 const toMiB = bytes => `${Math.round(bytes / 1024 / 1024)}MiB`;
 const base = path.join(__dirname, "memoryLimitCases");
@@ -94,23 +94,21 @@ describe("MemoryLimitTestCases", () => {
 			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function () {
+				c.inputFileSystem.readFile = function readFile() {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
-					// eslint-disable-next-line prefer-spread
-					ifs.readFile.apply(
-						ifs,
-						args.concat([
-							(err, result) => {
-								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0])) {
-									return callback(null, result);
-								}
-								callback(null, result.toString("utf8").replace(/\r/g, ""));
+					// eslint-disable-next-line no-useless-call
+					ifs.readFile.apply(ifs, [
+						...args,
+						(err, result) => {
+							if (err) return callback(err);
+							if (!/\.(js|json|txt)$/.test(args[0])) {
+								return callback(null, result);
 							}
-						])
-					);
+							callback(null, result.toString("utf8").replace(/\r/g, ""));
+						}
+					]);
 				};
 			}
 			c.run((err, stats) => {

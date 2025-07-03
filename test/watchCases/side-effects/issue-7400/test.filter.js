@@ -1,3 +1,2 @@
-module.exports = function (config) {
-	return !(config.experiments && config.experiments.cacheUnaffected);
-};
+module.exports = config =>
+	!(config.experiments && config.experiments.cacheUnaffected);

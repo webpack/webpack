@@ -1,10 +1,10 @@
 require("./helpers/warmup-webpack");
 
+const fs = require("fs");
 const path = require("path");
 const util = require("util");
-const fs = require("fs");
-const rimraf = require("rimraf");
 const vm = require("vm");
+const rimraf = require("rimraf");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -161,7 +161,7 @@ export { style };
 		await updateSrc(data);
 		const c = items => {
 			const entry = {};
-			for (const item of items.split("")) entry[item] = `./src/${item}.js`;
+			for (const item of items) entry[item] = `./src/${item}.js`;
 			return compile({ entry, cache: { compression: false } });
 		};
 		await c("abcde");

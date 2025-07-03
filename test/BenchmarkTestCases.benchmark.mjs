@@ -1,10 +1,10 @@
-import path from "path";
-import fs from "fs/promises";
 import { constants, writeFile } from "fs";
-import { Bench, hrtimeNow } from "tinybench";
+import fs from "fs/promises";
+import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { simpleGit } from "simple-git";
 import { withCodSpeed } from "@codspeed/tinybench-plugin";
+import { simpleGit } from "simple-git";
+import { Bench, hrtimeNow } from "tinybench";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");

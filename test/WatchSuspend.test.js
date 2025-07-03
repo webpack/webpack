@@ -2,8 +2,8 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
@@ -130,11 +130,10 @@ describe("WatchSuspend", () => {
 										"'baz'"
 									);
 									expect(
-										compiler.modifiedFiles &&
-											Array.from(compiler.modifiedFiles).sort()
+										compiler.modifiedFiles && [...compiler.modifiedFiles].sort()
 									).toEqual([filePath]);
 									expect(
-										compiler.removedFiles && Array.from(compiler.removedFiles)
+										compiler.removedFiles && [...compiler.removedFiles]
 									).toEqual([]);
 									onChange = null;
 									resolve();

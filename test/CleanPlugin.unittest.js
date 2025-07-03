@@ -18,13 +18,13 @@ describe("CleanPlugin", () => {
 		it("should extract root directory from single file path", () => {
 			const assets = new Map([["./static.js", 0]]);
 			const result = _getDirectories(assets);
-			expect(Array.from(result)).toEqual(["."]);
+			expect([...result]).toEqual(["."]);
 		});
 
 		it("should extract all parent directories from deep nested path", () => {
 			const assets = new Map([["this/dir/should/not/be/removed/file.ext", 0]]);
 			const result = _getDirectories(assets);
-			expect(Array.from(result)).toEqual([
+			expect([...result]).toEqual([
 				"this/dir/should/not/be/removed",
 				"this/dir/should/not/be",
 				"this/dir/should/not",
@@ -41,7 +41,7 @@ describe("CleanPlugin", () => {
 				["./js/main.js", 0]
 			]);
 			const result = _getDirectories(assets);
-			expect(Array.from(result)).toEqual([".", "./js"]);
+			expect([...result]).toEqual([".", "./js"]);
 		});
 
 		it("should extract all nested directory levels", () => {
@@ -51,12 +51,7 @@ describe("CleanPlugin", () => {
 				["./static/js/main.js", 0]
 			]);
 			const result = _getDirectories(assets);
-			expect(Array.from(result)).toEqual([
-				".",
-				"./js",
-				"./static/js",
-				"./static"
-			]);
+			expect([...result]).toEqual([".", "./js", "./static/js", "./static"]);
 		});
 	});
 

@@ -1,4 +1,4 @@
-const { randomBytes, createHash } = require("crypto");
+const { createHash, randomBytes } = require("crypto");
 
 const wasmHashes = {
 	xxhash64: () => {
@@ -116,11 +116,11 @@ for (const name of Object.keys(wasmHashes)) {
 
 		test("many updates 1", sizes);
 
-		test("many updates 2", sizes.slice().reverse());
+		test("many updates 2", [...sizes].reverse());
 
-		test("many updates 3", sizes.concat(sizes.slice().reverse()));
+		test("many updates 3", [...sizes, ...[...sizes].reverse()]);
 
-		test("many updates 4", sizes.slice().reverse().concat(sizes));
+		test("many updates 4", [...[...sizes].reverse(), ...sizes]);
 
 		const unicodeTest = (name, codePoints) => {
 			it(`${name} should hash unicode chars correctly`, async () => {

@@ -1,7 +1,7 @@
 "use strict";
 
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
@@ -151,7 +151,7 @@ const printData = async (data, indent) => {
 			printLine(String(item));
 		}
 	}
-	const refCounters = Array.from(referencedValuesCounters);
+	const refCounters = [...referencedValuesCounters];
 	refCounters.sort(([a, A], [b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {

@@ -176,8 +176,9 @@ if (!cli.installed) {
 		);
 
 		runCommand(
-			/** @type {string} */ (packageManager),
-			installOptions.concat(cli.package)
+			/** @type {string} */
+			(packageManager),
+			[...installOptions, cli.package]
 		)
 			.then(() => {
 				runCli(cli);

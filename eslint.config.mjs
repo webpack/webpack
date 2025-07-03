@@ -51,10 +51,8 @@ export default defineConfig([
 		ignores: ["lib/**/*.runtime.js", "hot/*.js"],
 		extends: [config],
 		rules: {
-			// Revisit it in future
-			"id-length": "off",
-			// Revisit it in future
-			"no-use-before-define": "off",
+			// Too noise
+			"jsdoc/require-property-description": "off",
 			// We have helpers for the default configuration
 			"new-cap": [
 				"error",
@@ -63,15 +61,11 @@ export default defineConfig([
 					capIsNewExceptions: ["A", "F", "D", "MODULES_GROUPERS"]
 				}
 			],
+			// Revisit it in future
+			"id-length": "off",
+			// Revisit it in future
+			"no-use-before-define": "off",
 
-			// TODO enable me in future
-			"prefer-destructuring": "off",
-			// TODO enable me in future, we need to ignore Object.define
-			"func-names": "off",
-			// TODO enable me in future
-			"unicorn/prefer-spread": "off",
-			// TODO need patch in tooling, now we are doing weird order for destructuring in cjs import
-			"import/order": "off",
 			// TODO We need allow to have `_arg` in tooling and use `after-used` value for `args`
 			"no-unused-vars": [
 				"error",
@@ -88,17 +82,14 @@ export default defineConfig([
 					reportUsedIgnorePattern: false
 				}
 			],
-
-			// Too noise
-			"jsdoc/require-property-description": "off",
-
 			// TODO enable me in future
 			"unicorn/prefer-regexp-test": "off",
 			"unicorn/prefer-string-slice": "off",
-
 			// TODO false positive, need to fix in upstream
 			"n/prefer-node-protocol": "off",
-			"n/prefer-global/url": "off"
+			"n/prefer-global/url": "off",
+			// TODO enable me in future
+			"prefer-destructuring": "off"
 		}
 	},
 	{

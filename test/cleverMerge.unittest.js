@@ -1,11 +1,11 @@
 "use strict";
 
 const {
-	cleverMerge,
 	DELETE,
+	cachedCleverMerge,
+	cleverMerge,
 	removeOperations,
-	resolveByProperty,
-	cachedCleverMerge
+	resolveByProperty
 } = require("../lib/util/cleverMerge");
 
 describe("cleverMerge", () => {

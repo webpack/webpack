@@ -1,8 +1,8 @@
 "use strict";
 
+const path = require("path");
 const RawModule = require("../lib/RawModule");
 const RequestShortener = require("../lib/RequestShortener");
-const path = require("path");
 
 describe("RawModule", () => {
 	const source = "sourceStr attribute";

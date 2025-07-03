@@ -23,7 +23,7 @@ util.deprecate = (fn, message, _code) => {
 	const original = originalDeprecate(fn, message, _code);
 
 	// @ts-expect-error expected
-	return function (...args) {
+	return function deprecate(...args) {
 		if (interception) {
 			interception.set(`${_code}: ${message}`, {
 				code: /** @type {string} */ (_code),
@@ -49,7 +49,7 @@ module.exports.start = handler => {
 	return () => {
 		const map = interception;
 		interception = undefined;
-		return Array.from(map || [])
+		return [...(map || [])]
 			.sort(([a], [b]) => {
 				if (a < b) return -1;
 				if (a > b) return 1;

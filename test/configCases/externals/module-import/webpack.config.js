@@ -21,7 +21,7 @@ module.exports = {
 	},
 	externalsType: "module-import",
 	externals: [
-		function (
+		function externals(
 			{ context, request, contextInfo, getResolve, dependencyType },
 			callback
 		) {

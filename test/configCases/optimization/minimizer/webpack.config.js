@@ -17,7 +17,7 @@ module.exports = {
 			 * @this {Compiler} the compiler
 			 * @param {Compiler} compiler the compiler
 			 */
-			function (compiler) {
+			function apply(compiler) {
 				expect(compiler).toBe(this);
 				expect(compiler).toBeInstanceOf(Compiler);
 			}

@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("graceful-fs");
 const path = require("path");
+const fs = require("graceful-fs");
 
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
@@ -39,8 +39,8 @@ const explain = object => {
 };
 
 const diffItems = (actual, expected, kind) => {
-	const tooMuch = actual.slice();
-	const missing = expected.slice();
+	const tooMuch = [...actual];
+	const missing = [...expected];
 	for (let i = 0; i < missing.length; i++) {
 		const current = missing[i];
 		for (let j = 0; j < tooMuch.length; j++) {

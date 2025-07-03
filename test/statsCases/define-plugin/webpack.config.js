@@ -1,6 +1,6 @@
-const webpack = require("../../../");
 const fs = require("fs");
 const join = require("path").join;
+const webpack = require("../../../");
 
 /**
  * @param {string} path path

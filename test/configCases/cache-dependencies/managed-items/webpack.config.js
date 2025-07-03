@@ -8,7 +8,7 @@ module.exports = {
 	plugins: [
 		compiler => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
-				const fileDeps = Array.from(compilation.fileDependencies);
+				const fileDeps = [...compilation.fileDependencies];
 				expect(fileDeps).toContain(
 					path.resolve(__dirname, "node_modules/package/index.js")
 				);

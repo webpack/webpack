@@ -1,3 +1,1 @@
-module.exports = function (config) {
-	return !config.module;
-};
+module.exports = config => !config.module;

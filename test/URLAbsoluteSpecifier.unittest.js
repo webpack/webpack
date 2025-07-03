@@ -1,4 +1,4 @@
-const { getScheme, getProtocol } = require("../lib/util/URLAbsoluteSpecifier");
+const { getProtocol, getScheme } = require("../lib/util/URLAbsoluteSpecifier");
 
 /**
  * @type {Array<{specifier: string, expected: string|undefined}>}

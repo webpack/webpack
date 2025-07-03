@@ -1,6 +1,6 @@
 "use strict";
 
-/* eslint-disable no-unused-expressions, no-unassigned-vars */
+/* eslint-disable no-unused-expressions, no-unassigned-vars, func-names */
 
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
@@ -298,7 +298,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", expr => {
 					if (!testParser.state.fgh) testParser.state.fgh = [];
 					testParser.state.fgh.push(
-						Array.from(testParser.scope.definitions.asSet()).join(" ")
+						[...testParser.scope.definitions.asSet()].join(" ")
 					);
 					return true;
 				});

@@ -3,7 +3,7 @@ module.exports = {
 	plugins: [
 		compiler => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
-				const items1 = Array.from(compilation.fileDependencies);
+				const items1 = [...compilation.fileDependencies];
 				const items2 = new Set(compilation.fileDependencies.keys());
 				const items3 = new Set(compilation.fileDependencies.values());
 				const items4 = new Set(compilation.fileDependencies.entries());

@@ -1,4 +1,4 @@
-const { resolve, join } = require("path");
+const { join, resolve } = require("path");
 const { NormalModule } = require("../../../../");
 
 /** @typedef {import("../../../../").Module} Module */
@@ -32,7 +32,7 @@ const testPlugin = compiler => {
 					);
 				}
 
-				const module = Array.from(modules).find(matcher);
+				const module = [...modules].find(matcher);
 
 				if (!module) {
 					throw new Error("something went wrong");

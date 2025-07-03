@@ -2,9 +2,9 @@
 
 require("./helpers/warmup-webpack");
 
-const _ = require("lodash");
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
+const _ = require("lodash");
+const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 

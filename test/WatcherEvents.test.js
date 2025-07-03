@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
 const createCompiler = config => {

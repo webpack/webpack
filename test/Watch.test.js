@@ -3,8 +3,8 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
+const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
-const { createFsFromVolume, Volume } = require("memfs");
 
 jest.setTimeout(10000);
 

@@ -1,5 +1,5 @@
-const numberHash = require("../lib/util/numberHash");
 const { numberToIdentifier } = require("../lib/Template");
+const numberHash = require("../lib/util/numberHash");
 
 describe("numberHash", () => {
 	for (const n of [10, 100, 1000, 10000]) {

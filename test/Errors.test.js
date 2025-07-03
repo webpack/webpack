@@ -4,8 +4,8 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
-const webpack = require("..");
 const prettyFormat = require("pretty-format").default;
+const webpack = require("..");
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;

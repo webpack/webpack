@@ -5,8 +5,8 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const captureStdio = require("./helpers/captureStdio");
 const webpack = require("..");
+const captureStdio = require("./helpers/captureStdio");
 
 /**
  * Escapes regular expression metacharacters
@@ -102,23 +102,21 @@ describe("StatsTestCases", () => {
 			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function () {
+				c.inputFileSystem.readFile = function readFile() {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
-					// eslint-disable-next-line prefer-spread
-					ifs.readFile.apply(
-						ifs,
-						args.concat([
-							(err, result) => {
-								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0])) {
-									return callback(null, result);
-								}
-								callback(null, result.toString("utf8").replace(/\r/g, ""));
+					// eslint-disable-next-line no-useless-call
+					ifs.readFile.apply(ifs, [
+						...args,
+						(err, result) => {
+							if (err) return callback(err);
+							if (!/\.(js|json|txt)$/.test(args[0])) {
+								return callback(null, result);
 							}
-						])
-					);
+							callback(null, result.toString("utf8").replace(/\r/g, ""));
+						}
+					]);
 				};
 				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
 					for (const hook of [
@@ -137,9 +135,9 @@ describe("StatsTestCases", () => {
 			}
 			c.run((err, stats) => {
 				if (err) return done(err);
-				for (const compilation of []
-					.concat(stats.stats || stats)
-					.map(s => s.compilation)) {
+				for (const compilation of [
+					...(stats.stats ? stats.stats : [stats])
+				].map(s => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
 				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
@@ -184,7 +182,7 @@ describe("StatsTestCases", () => {
 					toStringOptions.children = c.options.map(o => o.stats);
 				}
 				// mock timestamps
-				for (const { compilation: s } of [].concat(stats.stats || stats)) {
+				for (const { compilation: s } of stats.stats ? stats.stats : [stats]) {
 					expect(s.startTime).toBeGreaterThan(0);
 					expect(s.endTime).toBeGreaterThan(0);
 					s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();

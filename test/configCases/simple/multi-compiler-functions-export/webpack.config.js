@@ -1,5 +1,5 @@
 module.exports.default = [
-	function () {
+	function empty() {
 		return {};
 	}
 ];

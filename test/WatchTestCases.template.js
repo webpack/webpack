@@ -10,9 +10,9 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const { remove } = require("./helpers/remove");
-const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
+const prepareOptions = require("./helpers/prepareOptions");
+const { remove } = require("./helpers/remove");
 const { TestRunner } = require("./runner");
 
 /**

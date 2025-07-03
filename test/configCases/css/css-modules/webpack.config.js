@@ -1,5 +1,5 @@
-const webpack = require("../../../../");
 const path = require("path");
+const webpack = require("../../../../");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [

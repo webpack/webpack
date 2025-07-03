@@ -24,7 +24,7 @@ module.exports = {
 		/**
 		 * @this {Compiler} compiler
 		 */
-		function () {
+		function test() {
 			this.hooks.compilation.tap("Test", compilation => {
 				AsyncWebAssemblyModulesPlugin.getCompilationHooks(
 					compilation

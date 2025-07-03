@@ -1,3 +1,1 @@
-module.exports = function (config) {
-	return config.mode !== "development";
-};
+module.exports = config => config.mode !== "development";

@@ -14,7 +14,7 @@ module.exports = {
 		concatenateModules: false
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
@@ -43,12 +43,8 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort(
-							(a, b) => a[1] - b[1]
-						);
-						const sortedModules2 = Array.from(modules2).sort(
-							(a, b) => a[1] - b[1]
-						);
+						const sortedModules = [...modules].sort((a, b) => a[1] - b[1]);
+						const sortedModules2 = [...modules2].sort((a, b) => a[1] - b[1]);
 						const text = sortedModules
 							.map(
 								([m, index]) =>
@@ -80,7 +76,7 @@ module.exports = {
 						asyncIndex: "0: ./async.js",
 						asyncIndex2: "0: ./async.js"
 					});
-					const indices = Array.from(compilation.modules)
+					const indices = [...compilation.modules]
 						.map(
 							m =>
 								/** @type {[number, Module]} */ ([
@@ -95,7 +91,7 @@ module.exports = {
 								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
-					const indices2 = Array.from(compilation.modules)
+					const indices2 = [...compilation.modules]
 						.map(
 							m =>
 								/** @type {[number, Module]} */ ([

@@ -70,7 +70,7 @@ module.exports = {
 					expect(m.isEntryModule()).toBe(true);
 					expect(m.getChunks()).toEqual([chunk]);
 					expect(m.getNumberOfChunks()).toBe(1);
-					expect(Array.from(m.chunksIterable)).toEqual([chunk]);
+					expect([...m.chunksIterable]).toEqual([chunk]);
 					expect(m.isProvided("testExport")).toBe(true);
 					expect(m.isProvided("otherExport")).toBe(false);
 				}

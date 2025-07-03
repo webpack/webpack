@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 
 const webpack = require("..");
 

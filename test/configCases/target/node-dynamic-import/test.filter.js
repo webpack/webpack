@@ -1,5 +1,3 @@
 const supportsArrowFn = require("../../../helpers/supportsArrowFunctionExpression");
 
-module.exports = function (config) {
-	return supportsArrowFn();
-};
+module.exports = () => supportsArrowFn();

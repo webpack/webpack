@@ -3,8 +3,8 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
+const { Volume, createFsFromVolume } = require("memfs");
 const Stats = require("../lib/Stats");
-const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
 const deprecationTracking = require("./helpers/deprecationTracking");
 

@@ -1,6 +1,4 @@
-const supportsWorker = require("../../../helpers/supportsWorker");
 const supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
+const supportsWorker = require("../../../helpers/supportsWorker");
 
-module.exports = function (config) {
-	return supportsWorker() && supportsOptionalChaining();
-};
+module.exports = () => supportsWorker() && supportsOptionalChaining();

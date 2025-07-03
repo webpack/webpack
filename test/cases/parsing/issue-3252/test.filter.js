@@ -1,5 +1,3 @@
 const supportsDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
 
-module.exports = function (config) {
-	return supportsDefaultAssignment();
-};
+module.exports = () => supportsDefaultAssignment();

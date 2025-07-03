@@ -25,7 +25,7 @@ module.exports = function PluginEnvironment() {
 		return hookName.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`);
 	}
 
-	this.getEnvironmentStub = function () {
+	this.getEnvironmentStub = function getEnvironmentStub() {
 		const hooks = new Map();
 		return {
 			plugin: addEvent,
@@ -60,7 +60,7 @@ module.exports = function PluginEnvironment() {
 		};
 	};
 
-	this.getEventBindings = function () {
+	this.getEventBindings = function getEventBindings() {
 		return events;
 	};
 };

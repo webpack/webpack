@@ -3,8 +3,8 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
 const fs = require("graceful-fs");
+const { Volume, createFsFromVolume } = require("memfs");
 const rimraf = require("rimraf");
 
 const createCompiler = config => {
@@ -41,8 +41,8 @@ const getChanges = compiler => {
 	const modifiedFiles = compiler.modifiedFiles;
 	const removedFiles = compiler.removedFiles;
 	return {
-		removed: removedFiles && Array.from(removedFiles),
-		modified: modifiedFiles && Array.from(modifiedFiles)
+		removed: removedFiles && [...removedFiles],
+		modified: modifiedFiles && [...modifiedFiles]
 	};
 };
 

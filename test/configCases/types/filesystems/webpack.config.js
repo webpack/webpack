@@ -1,5 +1,5 @@
-const memfs = require("memfs");
 const fs = require("fs");
+const memfs = require("memfs");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -5,7 +5,7 @@
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(
 		useItem =>
-			function () {
+			function fn() {
 				return useItem;
 			}
 	);

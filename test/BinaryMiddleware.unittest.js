@@ -58,11 +58,9 @@ describe("BinaryMiddleware", () => {
 			mw
 		)
 	];
+	itemsWithLazy.push(SerializerMiddleware.createLazy([...itemsWithLazy], mw));
 	itemsWithLazy.push(
-		SerializerMiddleware.createLazy(itemsWithLazy.slice(), mw)
-	);
-	itemsWithLazy.push(
-		SerializerMiddleware.createLazy(itemsWithLazy.slice(), other)
+		SerializerMiddleware.createLazy([...itemsWithLazy], other)
 	);
 
 	items.push(undefined);

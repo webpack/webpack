@@ -1,6 +1,4 @@
-const supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
 const supportsResponse = require("../../../helpers/supportsResponse");
+const supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
 
-module.exports = function (config) {
-	return supportsWebAssembly() && supportsResponse();
-};
+module.exports = () => supportsWebAssembly() && supportsResponse();

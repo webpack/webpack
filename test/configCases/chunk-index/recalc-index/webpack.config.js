@@ -9,7 +9,7 @@ module.exports = {
 		css: true
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
@@ -31,9 +31,7 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort(
-							(a, b) => a[1] - b[1]
-						);
+						const sortedModules = [...modules].sort((a, b) => a[1] - b[1]);
 						const text = sortedModules
 							.map(
 								([m, index]) =>

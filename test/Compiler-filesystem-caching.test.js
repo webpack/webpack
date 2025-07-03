@@ -101,10 +101,7 @@ describe("Compiler (filesystem caching)", () => {
 										expect(result.bigint6).toBe(128n);
 										expect(result.bigint7).toBe(2147483647n);
 										expect(result.obj.foo).toBe(BigInt(-10));
-										expect(Array.from(result.set)).toEqual([
-											BigInt(1),
-											BigInt(2)
-										]);
+										expect([...result.set]).toEqual([BigInt(1), BigInt(2)]);
 										expect(result.arr).toEqual([256n, 257n, 258n]);
 									}
 

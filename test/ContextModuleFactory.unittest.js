@@ -1,6 +1,6 @@
 "use strict";
 
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 const ContextModuleFactory = require("../lib/ContextModuleFactory");
 
 describe("ContextModuleFactory", () => {
