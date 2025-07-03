@@ -1,12 +1,6 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	output: {
-		// TODO: not sure why CI set optionalChaining to true on Node 10 and fails the test
-		environment: {
-			optionalChaining: false
-		}
-	},
-	optimization: {},
+	target: [`async-node${process.versions.node.split(".").map(Number)[0]}`],
 	experiments: {
 		deferImport: true
 	}
