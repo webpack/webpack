@@ -2760,12 +2760,15 @@ declare interface ConcatenationBailoutReasonContext {
 declare class ConcatenationScope {
 	constructor(
 		modulesMap: ModuleInfo[] | Map<Module, ModuleInfo>,
-		currentModule: ConcatenatedModuleInfo
+		currentModule: ConcatenatedModuleInfo,
+		usedNames: Set<string>
 	);
+	usedNames: Set<string>;
 	isModuleInScope(module: Module): boolean;
 	registerExport(exportName: string, symbol: string): void;
 	registerRawExport(exportName: string, expression: string): void;
 	registerNamespaceExport(symbol: string): void;
+	registerUsedName(symbol: string): boolean;
 	createModuleReference(
 		module: Module,
 		__1: Partial<ModuleReferenceOptions>
@@ -5204,6 +5207,11 @@ declare interface ExternalModuleInfo {
 	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
 	 */
 	deferredNamespaceObjectName?: string;
+	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
+	runtimeRequirements?: ReadonlySet<string>;
+	exportMap?: Map<string, string | string[] | { name: string[] }>;
+	rawExportMap?: Map<string, string | string[]>;
+	namespaceExportSymbol?: string;
 
 	/**
 	 * "default-with-named" namespace

@@ -10138,3 +10138,211 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 
 "
 `;
+
+exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 1`] = `
+"import { a, b } from \\"externals0\\";
+import { a as a_0 } from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 5 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+
+;// ./lib.js
+
+b;
+
+;// ./test.js
+
+;
+
+
+
+
+
+a_0;
+default_0;
+
+export { a as a1 };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 2`] = `
+"import { a, b } from \\"externals0\\";
+import { a as a_0 } from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 5 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+
+;// ./lib.js
+
+b;
+
+;// ./test.js
+
+;
+
+
+
+
+
+a_0;
+default_0;
+
+export { a as a1 };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (1st) 1`] = `
+"import { a, b } from \\"externals0\\";
+import { a as a_0 } from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 5 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+
+;// ./lib.js
+
+b;
+
+;// ./test.js
+
+;
+
+
+
+
+
+a_0;
+default_0;
+
+export { a as a1 };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (2nd) 1`] = `
+"import { a, b } from \\"externals0\\";
+import { a as a_0 } from \\"externals1\\";
+import { default as default_0 } from \\"externals2\\";
+import \\"externals3\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 5 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+
+;// ./lib.js
+
+b;
+
+;// ./test.js
+
+;
+
+
+
+
+
+a_0;
+default_0;
+
+export { a as a1 };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should compile 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should compile 2`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should pre-compile to fill disk cache (1st) 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
+
+exports[`ConfigCacheTestCases library modern-module-tree-shaking-simple modern-module-tree-shaking-simple should pre-compile to fill disk cache (2nd) 1`] = `
+"import { debounce, throttle } from \\"lodash\\";
+/*!*****************************!*\\\\
+  !*** ./test.js + 1 modules ***!
+  \\\\*****************************/
+
+;// external \\"lodash\\"
+
+;// ./test.js
+
+
+
+export { debounce, throttle };
+"
+`;
