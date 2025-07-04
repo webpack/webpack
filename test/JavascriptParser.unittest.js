@@ -367,6 +367,42 @@ describe("JavascriptParser", () => {
 		}
 	});
 
+	it("issue #18113", () => {
+		const source = `
+
+		new TopLevelClass();
+		topLevelFunction();
+		`.trim();
+
+		const testParser = new JavascriptParser({});
+		let foundClassExpression;
+		let foundFunctionExpression;
+
+		testParser.hooks.new
+			.for("TopLevelClass")
+			.tap("JavascriptParserTest", expression => {
+				foundClassExpression = expression;
+			});
+
+		testParser.hooks.call
+			.for("topLevelFunction")
+			.tap("JavascriptParserTest", expression => {
+				foundFunctionExpression = expression;
+			});
+
+		testParser.parse(source, {});
+
+		expect(foundClassExpression).toBeTruthy();
+		expect(foundClassExpression.type).toBe("NewExpression");
+		expect(foundClassExpression.callee.type).toBe("Identifier");
+		expect(foundClassExpression.callee.name).toBe("TopLevelClass");
+
+		expect(foundFunctionExpression).toBeTruthy();
+		expect(foundFunctionExpression.type).toBe("CallExpression");
+		expect(foundFunctionExpression.callee.type).toBe("Identifier");
+		expect(foundFunctionExpression.callee.name).toBe("topLevelFunction");
+	});
+
 	describe("expression evaluation", () => {
 		/**
 		 * @param {string} source source
