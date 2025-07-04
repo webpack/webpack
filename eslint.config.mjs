@@ -21,6 +21,7 @@ export default defineConfig([
 		"!test/helpers/*.*",
 		"!test/benchmarkCases/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
+		"!test/runner/*.js",
 		"test/js/**/*.*",
 
 		// TODO fix me
