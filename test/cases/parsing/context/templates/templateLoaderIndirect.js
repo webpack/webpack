@@ -1,3 +1,6 @@
+/**
+ * @param {string} name
+ */
 module.exports = function(name) {
 	var a = load(require, name);
 	var r = require;
@@ -6,6 +9,10 @@ module.exports = function(name) {
 	return a;
 }
 
+/**
+ * @param {Function} requireFunction
+ * @param {string} name
+ */
 function load(requireFunction, name) {
 	return requireFunction(name);
 }
