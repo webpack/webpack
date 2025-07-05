@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
+const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
-const { pathToFileURL, fileURLToPath } = require("url");
 
 /**
- * @param {string} path
- * @returns {string}
+ * @param {string} path path
+ * @returns {string} subPath
  */
 const getSubPath = path => {
 	let subPath = "";
@@ -28,15 +28,15 @@ const getSubPath = path => {
 };
 
 /**
- * @param {string} path
- * @returns {boolean}
+ * @param {string} path path
+ * @returns {boolean} whether path is a relative path
  */
 const isRelativePath = path => /^\.\.?\//.test(path);
 
 /**
- * @param {string} url
- * @param {string} outputDirectory
- * @returns {string}
+ * @param {string} url url
+ * @param {string} outputDirectory outputDirectory
+ * @returns {string} absolute path
  */
 const urlToPath = (url, outputDirectory) => {
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
@@ -45,8 +45,8 @@ const urlToPath = (url, outputDirectory) => {
 };
 
 /**
- * @param {string} url
- * @returns {string}
+ * @param {string} url url
+ * @returns {string} relative path
  */
 const urlToRelativePath = url => {
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
@@ -55,23 +55,23 @@ const urlToRelativePath = url => {
 };
 
 /**
- * @typedef {Object} TestMeta
+ * @typedef {object} TestMeta
  * @property {string} category
  * @property {string} name
- * @property {"jsdom"} [env]
- * @property {number} [round]
+ * @property {"jsdom"=} env
+ * @property {number=} round
  */
 
 /**
- * @typedef {Object} TestConfig
- * @property {Function} [resolveModule]
- * @property {Function} [moduleScope]
- * @property {Function} [nonEsmThis]
- * @property {boolean} [evaluateScriptOnAttached]
+ * @typedef {object} TestConfig
+ * @property {EXPECTED_FUNCTION=} resolveModule
+ * @property {EXPECTED_FUNCTION=} moduleScope
+ * @property {EXPECTED_FUNCTION=} nonEsmThis
+ * @property {boolean=} evaluateScriptOnAttached
  */
 
 /**
- * @typedef {Object} TestRunnerOptions
+ * @typedef {object} TestRunnerOptions
  * @property {string|string[]} target
  * @property {string} outputDirectory
  * @property {TestMeta} testMeta
@@ -80,19 +80,19 @@ const urlToRelativePath = url => {
  */
 
 /**
- * @typedef {Object} ModuleInfo
+ * @typedef {object} ModuleInfo
  * @property {string} subPath
  * @property {string} modulePath
  * @property {string} content
  */
 
 /**
- * @typedef {Object} RequireContext
+ * @typedef {object} RequireContext
  * @property {"unlinked"|"evaluated"} esmMode
  */
 
 /**
- * @typedef {Object} ModuleRunner
+ * @typedef {object} ModuleRunner
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} cjs
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json
@@ -101,7 +101,7 @@ const urlToRelativePath = url => {
 
 class TestRunner {
 	/**
-	 * @param {TestRunnerOptions} options
+	 * @param {TestRunnerOptions} options test runner options
 	 */
 	constructor({
 		target,
@@ -119,10 +119,11 @@ class TestRunner {
 		this._globalContext = this.createBaseGlobalContext();
 		this._moduleScope = this.createBaseModuleScope();
 		this._moduleRunners = this.createModuleRunners();
+		this._esmContext = this.createBaseEsmContext();
 	}
 
 	/**
-	 * @returns {ModuleRunner}
+	 * @returns {ModuleRunner} module runners
 	 */
 	createModuleRunners() {
 		return {
@@ -132,16 +133,26 @@ class TestRunner {
 			raw: this.createRawRunner()
 		};
 	}
+
 	/**
 	 * @returns {EXPECTED_ANY} globalContext
 	 */
 	createBaseGlobalContext() {
-		let base = { console, expect, setTimeout, clearTimeout };
+		const base = { console, expect, setTimeout, clearTimeout };
 		Object.assign(base, this.setupEnv());
 		return base;
 	}
+
 	/**
-	 * @returns {boolean}
+	 * @param {EXPECTED_ANY} esmContext esm context
+	 * @returns {EXPECTED_ANY} esm context
+	 */
+	mergeEsmContext(esmContext) {
+		return Object.assign(this._esmContext, esmContext);
+	}
+
+	/**
+	 * @returns {boolean} whether target is web
 	 */
 	isTargetWeb() {
 		return (
@@ -151,17 +162,19 @@ class TestRunner {
 				(this.target.includes("web") || this.target.includes("webworker")))
 		);
 	}
+
 	/**
-	 * @returns {boolean}
+	 * @returns {boolean} whether env is jsdom
 	 */
 	jsDom() {
 		return this.testMeta.env === "jsdom" || this.isTargetWeb();
 	}
+
 	/**
 	 * @returns {EXPECTED_ANY} moduleScope
 	 */
 	createBaseModuleScope() {
-		let base = {
+		const base = {
 			console,
 			expect,
 			jest,
@@ -179,24 +192,42 @@ class TestRunner {
 		}
 		return base;
 	}
+
 	/**
-	 * @param {EXPECTED_ANY} globalContext
-	 * @returns {EXPECTED_ANY}
+	 * @returns {EXPECTED_ANY} esm context
+	 */
+	createBaseEsmContext() {
+		const base = {
+			global,
+			process,
+			setTimeout,
+			setImmediate,
+			URL,
+			Buffer
+		};
+		return base;
+	}
+
+	/**
+	 * @param {EXPECTED_ANY} globalContext global context
+	 * @returns {EXPECTED_ANY} global context
 	 */
 	mergeGlobalContext(globalContext) {
 		return Object.assign(this._globalContext, globalContext);
 	}
+
 	/**
-	 * @param {EXPECTED_ANY} moduleScope
-	 * @returns {EXPECTED_ANY}
+	 * @param {EXPECTED_ANY} moduleScope module scope
+	 * @returns {EXPECTED_ANY} module scope
 	 */
 	mergeModuleScope(moduleScope) {
 		return Object.assign(this._moduleScope, moduleScope);
 	}
+
 	/**
-	 * @param {string} currentDirectory
-	 * @param {string|string[]} module
-	 * @returns {ModuleInfo}
+	 * @param {string} currentDirectory current directory
+	 * @param {string|string[]} module module
+	 * @returns {ModuleInfo} module info
 	 */
 	_resolveModule(currentDirectory, module) {
 		if (Array.isArray(module)) {
@@ -212,14 +243,14 @@ class TestRunner {
 			return {
 				subPath: getSubPath(module),
 				modulePath: path.join(currentDirectory, module),
-				content: fs.readFileSync(path.join(currentDirectory, module), "utf-8")
+				content: fs.readFileSync(path.join(currentDirectory, module), "utf8")
 			};
 		}
 		if (path.isAbsolute(module)) {
 			return {
 				subPath: "",
 				modulePath: module,
-				content: fs.readFileSync(module, "utf-8")
+				content: fs.readFileSync(module, "utf8")
 			};
 		}
 		if (module.startsWith("https://test.")) {
@@ -227,16 +258,16 @@ class TestRunner {
 			return {
 				subPath: "",
 				modulePath: realPath,
-				content: fs.readFileSync(realPath, "utf-8")
+				content: fs.readFileSync(realPath, "utf8")
 			};
 		}
 	}
 
 	/**
-	 * @param {string} currentDirectory
-	 * @param {string|string[]} module
-	 * @param {RequireContext} [context={}]
-	 * @returns {EXPECTED_ANY}
+	 * @param {string} currentDirectory current directory
+	 * @param {string|string[]} module module
+	 * @param {RequireContext=} context context
+	 * @returns {EXPECTED_ANY} require result
 	 */
 	require(currentDirectory, module, context = {}) {
 		if (this.testConfig.modules && module in this.testConfig.modules) {
@@ -249,7 +280,7 @@ class TestRunner {
 				this.webpackOptions
 			);
 		}
-		let moduleInfo = this._resolveModule(currentDirectory, module);
+		const moduleInfo = this._resolveModule(currentDirectory, module);
 		if (!moduleInfo) {
 			return require(module.startsWith("node:") ? module.slice(5) : module);
 		}
@@ -269,24 +300,29 @@ class TestRunner {
 		}
 		return this._moduleRunners.cjs(moduleInfo, context);
 	}
+
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY}
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} cjs runner
 	 */
 	createCjsRunner() {
 		const requireCache = Object.create(null);
-		return (moduleInfo, context) => {
+		return (moduleInfo, _context) => {
 			const { modulePath, subPath, content } = moduleInfo;
 			let _content = content;
 			if (modulePath in requireCache) {
 				return requireCache[modulePath].exports;
 			}
 			const mod = {
-				exports: {}
+				exports: {},
+				webpackTestSuiteModule: true
 			};
 			requireCache[modulePath] = mod;
 			const moduleScope = {
 				...this._moduleScope,
-				require: this.require.bind(this, path.dirname(modulePath)),
+				require: Object.assign(
+					this.require.bind(this, path.dirname(modulePath)),
+					this.require
+				),
 				importScripts: url => {
 					expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
 					this.require(this.outputDirectory, urlToRelativePath(url));
@@ -301,8 +337,9 @@ class TestRunner {
 			if (this.testConfig.moduleScope) {
 				this.testConfig.moduleScope(moduleScope, this.webpackOptions);
 			}
-			if (!this._runInNewContext)
+			if (!this._runInNewContext) {
 				_content = `Object.assign(global, _globalAssign); ${content}`;
+			}
 			const args = Object.keys(moduleScope);
 			const argValues = args.map(arg => moduleScope[arg]);
 			const code = `(function(${args.join(", ")}) {${_content}\n})`;
@@ -320,6 +357,7 @@ class TestRunner {
 			};
 			if (document) {
 				const CurrentScript = require("../helpers/CurrentScript");
+
 				const oldCurrentScript = document.currentScript;
 				document.currentScript = new CurrentScript(subPath);
 				try {
@@ -333,28 +371,36 @@ class TestRunner {
 			return mod.exports;
 		};
 	}
+
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>}
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm runner
 	 */
 	createEsmRunner() {
+		const createEsmContext = () =>
+			vm.createContext(
+				{ ...this._moduleScope, ...this._esmContext },
+				{
+					name: "context for esm"
+				}
+			);
 		const esmCache = new Map();
 		const { category, name, round } = this.testMeta;
 		const esmIdentifier = `${category.name}-${name}-${round || 0}`;
 		let esmContext = null;
 		return (moduleInfo, context) => {
 			const asModule = require("../helpers/asModule");
+
 			// lazy bind esm context
 			if (!esmContext) {
-				esmContext = vm.createContext(this._moduleScope, {
-					name: "context for esm"
-				});
+				esmContext = createEsmContext();
 			}
-			const { modulePath, subPath, content } = moduleInfo;
+			const { modulePath, content } = moduleInfo;
 			const { esmMode } = context;
-			if (!vm.SourceTextModule)
+			if (!vm.SourceTextModule) {
 				throw new Error(
 					"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
 				);
+			}
 			let esm = esmCache.get(modulePath);
 			if (!esm) {
 				esm = new vm.SourceTextModule(content, {
@@ -416,22 +462,32 @@ class TestRunner {
 			})();
 		};
 	}
+
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json runner
+	 */
 	createJSONRunner() {
-		return moduleInfo => {
-			return JSON.parse(moduleInfo.content);
-		};
+		return moduleInfo => JSON.parse(moduleInfo.content);
 	}
+
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw runner
+	 */
 	createRawRunner() {
-		return moduleInfo => {
-			return moduleInfo.content;
-		};
+		return moduleInfo => moduleInfo.content;
 	}
+
+	/**
+	 * @returns {EXPECTED_ANY} env
+	 */
 	setupEnv() {
 		if (this.jsDom()) {
 			const outputDirectory = this.outputDirectory;
+
 			const FakeDocument = require("../helpers/FakeDocument");
 			const createFakeWorker = require("../helpers/createFakeWorker");
 			const EventSource = require("../helpers/EventSourceForNode");
+
 			const document = new FakeDocument(outputDirectory);
 			if (this.testConfig.evaluateScriptOnAttached) {
 				document.onScript = src => {
@@ -448,7 +504,7 @@ class TestRunner {
 					return {
 						status: 200,
 						ok: true,
-						json: async () => JSON.parse(buffer.toString("utf-8"))
+						json: async () => JSON.parse(buffer.toString("utf8"))
 					};
 				} catch (err) {
 					if (err.code === "ENOENT") {
@@ -460,7 +516,7 @@ class TestRunner {
 					throw err;
 				}
 			};
-			let env = {
+			const env = {
 				setTimeout,
 				document,
 				location: {

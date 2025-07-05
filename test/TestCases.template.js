@@ -3,16 +3,14 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const { URL, pathToFileURL } = require("url");
-const vm = require("vm");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const asModule = require("./helpers/asModule");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
+const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
@@ -434,109 +432,33 @@ const describeCases = config => {
 						);
 
 						it(`${testName} should load the compiled tests`, done => {
-							const esmContext = vm.createContext({
-								it: _it,
-								expect,
-								process,
-								global,
-								URL,
-								Buffer,
-								setTimeout,
-								setImmediate,
-								nsObj(m) {
-									Object.defineProperty(m, Symbol.toStringTag, {
-										value: "Module"
-									});
-									return m;
-								}
+							const runner = new TestRunner({
+								target: options.target,
+								outputDirectory,
+								testMeta: {
+									category: category.name,
+									name: testName
+								},
+								testConfig,
+								webpackOptions: options
 							});
-							cleanups.push(() => (esmContext.it = undefined));
-
-							/**
-							 * @param {string} module a module
-							 * @param {"evaluated" | "unlinked"=} esmMode esm mode
-							 * @returns {EXPECTED_ANY} required module
-							 * @private
-							 */
-							function _require(module, esmMode) {
-								if (module.startsWith("./")) {
-									const p = path.join(outputDirectory, module);
-									const content = fs.readFileSync(p, "utf8");
-									if (p.endsWith(".mjs")) {
-										let esm;
-										try {
-											esm = new vm.SourceTextModule(content, {
-												identifier: p,
-												context: esmContext,
-												initializeImportMeta: (meta, module) => {
-													meta.url = pathToFileURL(p).href;
-												},
-												importModuleDynamically: async (specifier, module) => {
-													const result = await _require(specifier, "evaluated");
-													return await asModule(result, module.context);
-												}
-											});
-											cleanups.push(() => (esmContext.it = undefined));
-										} catch (err) {
-											console.log(err);
-											err.message += `\nwhile parsing ${p}`;
-											throw err;
-										}
-										if (esmMode === "unlinked") return esm;
-										return (async () => {
-											await esm.link(
-												async (specifier, module) =>
-													await asModule(
-														await _require(specifier, "unlinked"),
-														module.context,
-														true
-													)
-											);
-											// node.js 10 needs instantiate
-											if (esm.instantiate) esm.instantiate();
-											await esm.evaluate();
-											if (esmMode === "evaluated") return esm;
-											const ns = esm.namespace;
-											return ns.default && ns.default instanceof Promise
-												? ns.default
-												: ns;
-										})();
-									}
-									const fn = vm.runInThisContext(
-										"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-											"global.expect = expect;" +
-											`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
-												content
-											}\n})`,
-										p
-									);
-									const m = {
-										exports: {},
-										webpackTestSuiteModule: true
-									};
-									fn.call(
-										m.exports,
-										_require,
-										m,
-										m.exports,
-										outputDirectory,
-										p,
-										_it,
-										expect
-									);
-									return m.exports;
-								}
-								return require(module);
+							runner.mergeModuleScope({
+								it: _it
+							});
+							if (testConfig.moduleScope) {
+								testConfig.moduleScope(runner._moduleScope, options);
 							}
-							_require.webpackTestSuiteRequire = true;
-							Promise.resolve()
-								.then(() => _require(`./${options.output.filename}`))
-								.then(() => {
-									if (getNumberOfTests() === 0) {
-										return done(new Error("No tests exported by test case"));
-									}
-									done();
-								}, done);
+							runner.require.webpackTestSuiteRequire = true;
+							const results = [];
+							results.push(
+								runner.require(outputDirectory, `./${options.output.filename}`)
+							);
+							Promise.all(results).then(() => {
+								if (getNumberOfTests() === 0) {
+									return done(new Error("No tests exported by test case"));
+								}
+								done();
+							}, done);
 						}, 10000);
 
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
