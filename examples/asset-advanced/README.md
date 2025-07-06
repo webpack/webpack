@@ -38,6 +38,8 @@ function createImageElement(title, src) {
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const svgToMiniDataURI = require("mini-svg-data-uri");
 
 module.exports = {

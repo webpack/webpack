@@ -14,6 +14,8 @@ console.log(pMap4);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// enable debug logging to see network requests!
 	// stats: {

@@ -27,6 +27,8 @@ exports.exampleValue = subtract(add(42, 2), 2);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	output: {

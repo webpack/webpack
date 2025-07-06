@@ -1,8 +1,11 @@
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 const { ModuleFederationPlugin } = require("../../").container;
+
 const rules = [
 	{
 		test: /\.js$/,
@@ -25,6 +28,7 @@ const stats = {
 	chunkModules: true,
 	chunkOrigins: true
 };
+
 module.exports = (env = "development") => [
 	// For this example we have 3 configs in a single file
 	// In practice you probably would have separate config

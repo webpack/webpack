@@ -62,8 +62,10 @@ document.querySelector('#app').innerHTML = [toml, yaml, json].map(data => `
 # webpack.config.js
 
 ```javascript
-const toml = require("toml");
+"use strict";
+
 const json5 = require("json5");
+const toml = require("toml");
 const yaml = require("yamljs");
 
 module.exports = {
