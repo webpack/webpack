@@ -40,6 +40,8 @@ function createImageElement(title, src) {
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"

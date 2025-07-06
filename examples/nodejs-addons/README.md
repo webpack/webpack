@@ -23,6 +23,8 @@ console.log(myModule.exports.hello());
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	target: "node",

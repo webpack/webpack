@@ -203,9 +203,12 @@ const AlternativeCreateUserAction = async name => {
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
-/******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		var hasSymbol = typeof Symbol === "function";
+/******/ 		var webpackQueues = hasSymbol ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 		var webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 		var webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		
+/******/ 		
 /******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
@@ -215,6 +218,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		}
 /******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
 /******/ 					var queue = [];
@@ -227,6 +231,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 						resolveQueue(queue);
 /******/ 					});
 /******/ 					var obj = {};
+/******/ 		
 /******/ 					obj[webpackQueues] = (fn) => (fn(queue));
 /******/ 					return obj;
 /******/ 				}
@@ -251,10 +256,11 @@ const AlternativeCreateUserAction = async name => {
 /******/ 			promise[webpackExports] = exports;
 /******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
 /******/ 			module.exports = promise;
-/******/ 			body((deps) => {
+/******/ 			var handle = (deps) => {
 /******/ 				currentDeps = wrapDeps(deps);
 /******/ 				var fn;
 /******/ 				var getResult = () => (currentDeps.map((d) => {
+/******/ 		
 /******/ 					if(d[webpackError]) throw d[webpackError];
 /******/ 					return d[webpackExports];
 /******/ 				}))
@@ -265,7 +271,9 @@ const AlternativeCreateUserAction = async name => {
 /******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
-/******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
+/******/ 			}
+/******/ 			var done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 			body(handle, done);
 /******/ 			queue && queue.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
@@ -579,7 +587,7 @@ __webpack_async_result__();
 ## Unoptimized
 
 ```
-asset output.js 15 KiB [emitted] (name: main)
+asset output.js 15.1 KiB [emitted] (name: main)
 asset UserApi_js.output.js 2.97 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -590,9 +598,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.56 KiB 9 modules
+  runtime modules 7.59 KiB 9 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -604,7 +612,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.93 KiB [emitted] [minimized] (name: main)
+asset output.js 2.89 KiB [emitted] [minimized] (name: main)
 asset UserApi_js.output.js 532 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -614,9 +622,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.56 KiB 9 modules
+  runtime modules 7.59 KiB 9 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]

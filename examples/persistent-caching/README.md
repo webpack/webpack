@@ -17,7 +17,10 @@ console.log(_);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
+
 module.exports = (env = "development") => ({
 	mode: env,
 	infrastructureLogging: {

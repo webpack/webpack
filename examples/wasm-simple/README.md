@@ -225,9 +225,12 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
-/******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		var hasSymbol = typeof Symbol === "function";
+/******/ 		var webpackQueues = hasSymbol ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 		var webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 		var webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		
+/******/ 		
 /******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
@@ -237,6 +240,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		}
 /******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
 /******/ 					var queue = [];
@@ -249,6 +253,7 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 						resolveQueue(queue);
 /******/ 					});
 /******/ 					var obj = {};
+/******/ 		
 /******/ 					obj[webpackQueues] = (fn) => (fn(queue));
 /******/ 					return obj;
 /******/ 				}
@@ -273,10 +278,11 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 			promise[webpackExports] = exports;
 /******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
 /******/ 			module.exports = promise;
-/******/ 			body((deps) => {
+/******/ 			var handle = (deps) => {
 /******/ 				currentDeps = wrapDeps(deps);
 /******/ 				var fn;
 /******/ 				var getResult = () => (currentDeps.map((d) => {
+/******/ 		
 /******/ 					if(d[webpackError]) throw d[webpackError];
 /******/ 					return d[webpackExports];
 /******/ 				}))
@@ -287,7 +293,9 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
-/******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
+/******/ 			}
+/******/ 			var done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 			body(handle, done);
 /******/ 			queue && queue.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
@@ -375,13 +383,13 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 ## Unoptimized
 
 ```
-asset output.js 13.2 KiB [emitted] (name: main)
+asset output.js 13.3 KiB [emitted] (name: main)
 asset 5a6637e8d63cdf9c72da.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 35a58b7c95860d720a3c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0eaeab8b9fa3cef100d1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.68 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.72 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.68 KiB 6 modules
+  runtime modules 3.72 KiB 6 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
@@ -393,13 +401,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.85 KiB [emitted] [minimized] (name: main)
+asset output.js 2.8 KiB [emitted] [minimized] (name: main)
 asset 93de874acf2fa7def7d9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 5055869d769f484de216.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset db91ebd6538fd6985888.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.45 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.42 KiB 5 modules
+  runtime modules 3.45 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]

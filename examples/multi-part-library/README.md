@@ -15,6 +15,8 @@ Note: When your library has dependencies that should not be included in the comp
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 
 module.exports = {

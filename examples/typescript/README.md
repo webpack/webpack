@@ -21,6 +21,8 @@ console.log(getArray(1, 2, 3));
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = (env = "development") => ({

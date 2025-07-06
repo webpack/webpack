@@ -34,6 +34,8 @@ export { c } from "./cjs";
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 const webpack = require("../../");
 

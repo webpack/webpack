@@ -99,6 +99,8 @@ export var y = "y";
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	optimization: {

@@ -25,6 +25,8 @@ Note: decreasing `maxInitial/AsyncRequest` will increase duplication further to 
 ## webpack.config.js
 
 ```
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: {

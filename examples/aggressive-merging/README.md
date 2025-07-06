@@ -29,6 +29,8 @@ a big file...
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 const { AggressiveMergingPlugin } = require("../..").optimize;
 

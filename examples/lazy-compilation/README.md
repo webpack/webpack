@@ -42,6 +42,8 @@ document.body.appendChild(pre);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const { HotModuleReplacementPlugin } = require("../../");
 
 module.exports = {
