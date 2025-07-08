@@ -7971,6 +7971,17 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
+declare abstract class JsonData {
+	get():
+		| undefined
+		| null
+		| string
+		| number
+		| boolean
+		| JsonObjectFs
+		| JsonValueFs[];
+	updateHash(hash: Hash): void;
+}
 
 /**
  * Generator options for json modules.
@@ -8197,6 +8208,11 @@ declare interface KnownBuildInfo {
 	/**
 	 * using in NormalModule
 	 */
+	assetsInfo?: Map<string, undefined | AssetInfo>;
+
+	/**
+	 * using in NormalModule
+	 */
 	hash?: string;
 
 	/**
@@ -8217,17 +8233,32 @@ declare interface KnownBuildInfo {
 	/**
 	 * for assets modules
 	 */
-	assetsInfo?: Map<string, undefined | AssetInfo>;
+	dataUrl?: boolean;
 
 	/**
 	 * for assets modules
 	 */
-	dataUrl?: boolean;
+	assetInfo?: AssetInfo;
+
+	/**
+	 * for external modules
+	 */
+	javascriptModule?: boolean;
+
+	/**
+	 * for lazy compilation modules
+	 */
+	active?: boolean;
 
 	/**
 	 * for css modules
 	 */
 	cssData?: CssData;
+
+	/**
+	 * for json modules
+	 */
+	jsonData?: JsonData;
 
 	/**
 	 * top level declaration names
@@ -8242,6 +8273,7 @@ declare interface KnownBuildMeta {
 	sideEffectFree?: boolean;
 	exportsFinalName?: Record<string, string>;
 	isCSSModule?: boolean;
+	jsIncompatibleExports?: Record<string, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
