@@ -12,5 +12,6 @@
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
     "declarations.test.d.ts"
-  ]
+  ],
+  "exclude": ["test/js/**/*"]
 }

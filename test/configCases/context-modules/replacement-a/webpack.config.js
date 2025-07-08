@@ -4,7 +4,7 @@ const webpack = require("../../../../");
 module.exports = {
 	plugins: [
 		new webpack.ContextReplacementPlugin(
-			/context-replacement.a$/,
+			/replacement.a$/,
 			"new-context",
 			true,
 			/^replaced$/

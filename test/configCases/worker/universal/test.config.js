@@ -4,7 +4,7 @@ module.exports = {
 			delete scope.Worker;
 		}
 	},
-	findBundle(i, options) {
+	findBundle() {
 		return ["web-main.mjs"];
 	}
 };

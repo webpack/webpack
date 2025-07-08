@@ -21,10 +21,7 @@ module.exports = {
 	},
 	externalsType: "module-import",
 	externals: [
-		function externals(
-			{ context, request, contextInfo, getResolve, dependencyType },
-			callback
-		) {
+		function externals({ request }, callback) {
 			if (request === "external2") {
 				return callback(null, "node-commonjs external2");
 			}

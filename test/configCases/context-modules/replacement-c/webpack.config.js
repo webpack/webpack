@@ -3,15 +3,17 @@ const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	resolve: {
-		modules: ["...", path.resolve(__dirname, "new-context/modules")]
-	},
 	plugins: [
 		new webpack.ContextReplacementPlugin(
-			/context-replacement.e$/,
-			"new-context",
-			true,
-			/^replaced$|^\.\/modules\/rep/
+			/replacement.c$/,
+			path.resolve(__dirname, "modules"),
+			{
+				a: "./a",
+				b: "./module-b",
+				"./c": "./module-b",
+				d: "d",
+				"./d": "d"
+			}
 		)
 	]
 };

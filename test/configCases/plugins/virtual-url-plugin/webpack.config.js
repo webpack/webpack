@@ -10,7 +10,7 @@ const watchDir = path.join(__dirname, "./routes");
 const config = {
 	plugins: [
 		new VirtualUrlPlugin({
-			routes(loaderContext) {
+			routes() {
 				const files = fs.readdirSync(watchDir);
 				return `
 					export const routes = {

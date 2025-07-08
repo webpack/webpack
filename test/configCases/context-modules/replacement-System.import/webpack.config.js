@@ -5,7 +5,7 @@ var webpack = require("../../../../");
 module.exports = {
 	plugins: [
 		new webpack.ContextReplacementPlugin(
-			/context-replacement/,
+			/replacement/,
 			path.resolve(__dirname, "modules"),
 			{
 				a: "./module-b"

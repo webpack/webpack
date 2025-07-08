@@ -26,7 +26,7 @@ const createMultiCompiler = options => {
 	);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	compiler.watchFileSystem = {
-		watch(a, b, c, d, e, f, g) {}
+		watch(_a, _b, _c, _d, _e, _f, _g) {}
 	};
 	return compiler;
 };
@@ -64,10 +64,10 @@ describe("MultiCompiler", () => {
 
 	it("should not be running twice at a time (run)", done => {
 		const compiler = createMultiCompiler();
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) {
 				compiler.close(done);
 			}
@@ -76,10 +76,10 @@ describe("MultiCompiler", () => {
 
 	it("should not be running twice at a time (watch)", done => {
 		const compiler = createMultiCompiler();
-		compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
-		compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, _stats) => {
 			if (err) {
 				compiler.close(done);
 			}
@@ -88,10 +88,10 @@ describe("MultiCompiler", () => {
 
 	it("should not be running twice at a time (run - watch)", done => {
 		const compiler = createMultiCompiler();
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
-		compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, _stats) => {
 			if (err) {
 				compiler.close(done);
 			}
@@ -100,10 +100,10 @@ describe("MultiCompiler", () => {
 
 	it("should not be running twice at a time (watch - run)", done => {
 		const compiler = createMultiCompiler();
-		compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) {
 				compiler.close(done);
 			}
@@ -124,7 +124,7 @@ describe("MultiCompiler", () => {
 			() => {}
 		);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) {
 				compiler.close(done);
 			}
@@ -133,10 +133,10 @@ describe("MultiCompiler", () => {
 
 	it("should run again correctly after first compilation", done => {
 		const compiler = createMultiCompiler();
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) return done(err);
 
-			compiler.run((err, stats) => {
+			compiler.run((err, _stats) => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
@@ -145,10 +145,10 @@ describe("MultiCompiler", () => {
 
 	it("should watch again correctly after first compilation", done => {
 		const compiler = createMultiCompiler();
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) return done(err);
 
-			compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
@@ -157,11 +157,11 @@ describe("MultiCompiler", () => {
 
 	it("should run again correctly after first closed watch", done => {
 		const compiler = createMultiCompiler();
-		const watching = compiler.watch({}, (err, stats) => {
+		const watching = compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
 		watching.close(() => {
-			compiler.run((err, stats) => {
+			compiler.run((err, _stats) => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
@@ -170,11 +170,11 @@ describe("MultiCompiler", () => {
 
 	it("should watch again correctly after first closed watch", done => {
 		const compiler = createMultiCompiler();
-		const watching = compiler.watch({}, (err, stats) => {
+		const watching = compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
 		watching.close(() => {
-			compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
@@ -210,7 +210,7 @@ describe("MultiCompiler", () => {
 				events.push(`${c.name} done`);
 			});
 		}
-		compiler.run((err, stats) => {
+		compiler.run((_err, _stats) => {
 			expect(events.join(" ")).toBe(
 				"a run a done b run b done d run d done e run e done c run c done"
 			);
@@ -628,7 +628,7 @@ describe("MultiCompiler", () => {
 				}
 			}
 		};
-		compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 			compiler.close(done);
 		});

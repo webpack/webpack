@@ -1,5 +1,5 @@
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
-module.exports = (env, { srcPath }) => ({
+/** @type {() => import("../../../../").Configuration} */
+module.exports = () => ({
 	mode: "development",
 	cache: {
 		type: "memory"

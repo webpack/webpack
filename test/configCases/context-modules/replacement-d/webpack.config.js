@@ -13,7 +13,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.ContextReplacementPlugin(
-			/context-replacement.d$/,
+			/replacement.d$/,
 			path.resolve(__dirname, "modules?cats=meow"),
 			{
 				a: "./a"

@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["split-foo.js", "foo.js", "main.js"];
 	}
 };

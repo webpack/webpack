@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return [
 			"module-avoidEntryIife-false.mjs",
 			"module-avoidEntryIife-true.mjs",

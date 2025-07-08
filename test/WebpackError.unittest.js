@@ -4,7 +4,7 @@ const WebpackError = require("../lib/WebpackError");
 
 describe("WebpackError", () => {
 	class CustomError extends WebpackError {
-		constructor(message) {
+		constructor() {
 			super();
 
 			this.name = "CustomError";

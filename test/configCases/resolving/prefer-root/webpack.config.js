@@ -16,7 +16,7 @@ module.exports = {
 				 * @param {Resolver & { hooks: { file: SyncBailHook<[ResolveRequest, ResolveContext], void> } }} resolver resolver
 				 */
 				apply(resolver) {
-					resolver.hooks.file.tap("Test", (request, resolverContext) => {
+					resolver.hooks.file.tap("Test", request => {
 						if (request.path === "/index.js") {
 							throw new Error("Trying to resolve as absolute path");
 						}

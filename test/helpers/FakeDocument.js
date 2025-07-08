@@ -91,7 +91,7 @@ class FakeElement {
 		}
 	}
 
-	insertBefore(node, before) {
+	insertBefore(node) {
 		this._attach(node);
 		this._load(node);
 	}

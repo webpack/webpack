@@ -38,7 +38,7 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
-		const watcher = compiler.watch({}, (err, stats) => {
+		const watcher = compiler.watch({}, (err, _stats) => {
 			expect(called).toBe(true);
 			done(err);
 		});
@@ -56,7 +56,7 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createMultiCompiler();
-		const watcher = compiler.watch({}, (err, stats) => {
+		const watcher = compiler.watch({}, (err, _stats) => {
 			expect(called).toBe(true);
 			done(err);
 		});

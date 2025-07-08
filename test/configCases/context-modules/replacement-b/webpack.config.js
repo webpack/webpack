@@ -2,7 +2,5 @@ const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	plugins: [
-		new webpack.ContextReplacementPlugin(/context-replacement.b$/, /^\.\/only/)
-	]
+	plugins: [new webpack.ContextReplacementPlugin(/replacement.b$/, /^\.\/only/)]
 };

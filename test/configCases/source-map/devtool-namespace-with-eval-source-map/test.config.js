@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["entry-a-bundle.js", "entry-b-bundle.js"];
 	}
 };

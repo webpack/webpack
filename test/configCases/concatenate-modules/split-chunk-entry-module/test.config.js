@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["runtime.js", "common-index_js.js", "main.js"];
 	}
 };

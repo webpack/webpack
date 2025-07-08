@@ -21,7 +21,7 @@ module.exports = (env, { srcPath }) => ({
 					name: "webpack.config.js",
 					stage: -1000
 				},
-				(identifier, etag) => {
+				identifier => {
 					if (identifier.includes(path.join(srcPath, "module.js"))) {
 						return null;
 					}

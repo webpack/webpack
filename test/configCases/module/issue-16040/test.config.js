@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["main.mjs", "vendor.mjs", "runtime.mjs"];
 	}
 };
