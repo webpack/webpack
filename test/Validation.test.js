@@ -27,6 +27,30 @@ describe("Validation", () => {
 		});
 	};
 
+	const createTestCaseOnlyValidate = (name, config, fn) => {
+		it(`should fail validation for ${name}`, () => {
+			let errored;
+
+			try {
+				const webpack = require("..");
+
+				webpack.validate(config);
+			} catch (err) {
+				if (err.name !== "ValidationError") throw err;
+				errored = err;
+				fn(err.message);
+
+				return;
+			}
+
+			if (!errored) {
+				throw new Error("Validation didn't fail");
+			}
+
+			expect(errored.message).toMatch(/^Invalid configuration object./);
+		});
+	};
+
 	createTestCase("undefined configuration", undefined, msg =>
 		expect(msg).toMatchInlineSnapshot(`
 		"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
@@ -567,6 +591,38 @@ describe("Validation", () => {
 			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
 			   BREAKING CHANGE since webpack 5: The devtool option is more strict.
 			   Please strictly follow the order of the keywords in the pattern."
+		`)
+	);
+
+	createTestCaseOnlyValidate(
+		"devtool",
+		{
+			devtool: "cheap-eval-nosource-source-map"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
+			   BREAKING CHANGE since webpack 5: The devtool option is more strict.
+			   Please strictly follow the order of the keywords in the pattern."
+		`)
+	);
+
+	createTestCaseOnlyValidate(
+		"devtool",
+		[
+			{
+				devtool: "cheap-eval-nosource-source-map"
+			},
+			{
+				devtool: "unknown"
+			}
+		],
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration[0].devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
+			 - configuration[1].devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\"."
 		`)
 	);
 
