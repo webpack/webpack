@@ -1,5 +1,8 @@
 const babel = require("@babel/core");
 
+/** @typedef {import("@babel/core").BabelFileResult} BabelFileResult */
+/** @typedef {import("@babel/core").TransformOptions} TransformOptions */
+
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function(source, inputSourceMap) {
   const callback = this.async();
@@ -7,11 +10,15 @@ module.exports = function(source, inputSourceMap) {
 	babel.transform(source, {
 		filename: this.resourcePath,
 		sourceFileName: this.resourcePath,
-		inputSourceMap: inputSourceMap,
+		inputSourceMap: /** @type {NonNullable<TransformOptions["inputSourceMap"]>} */
+			(inputSourceMap),
 		sourceMaps: this.sourceMap,
 		plugins: [function() {
 			return {
 				visitor: {
+					/**
+					 * @param {EXPECTED_ANY} path path
+					 */
 					NumericLiteral(path) {
 						path.node.value = 43;
 					},
@@ -24,6 +31,8 @@ module.exports = function(source, inputSourceMap) {
 			return;
 		}
 
-		callback(null, result.code, JSON.stringify(result.map));
+		const { code, map } = /** @type {BabelFileResult} */ (result);
+
+		callback(null, /** @type {string} */ (code), JSON.stringify(map));
 	});
 };
