@@ -529,6 +529,9 @@ declare interface BannerPluginOptions {
 	 */
 	test?: string | RegExp | Rule[];
 }
+declare interface BaseDependencyMeta {
+	attributes?: { [index: string]: string | number | boolean };
+}
 declare interface BaseResolveRequest {
 	/**
 	 * path
@@ -5154,9 +5157,9 @@ declare class ExternalModule extends Module {
 		type: string,
 		userRequest: string,
 		dependencyMeta?:
-			| ImportDependencyMeta
-			| CssImportDependencyMeta
-			| AssetDependencyMeta
+			| (ImportDependencyMeta & BaseDependencyMeta)
+			| (CssImportDependencyMeta & BaseDependencyMeta)
+			| (AssetDependencyMeta & BaseDependencyMeta)
 	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
@@ -5173,6 +5176,8 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
+	isLazy(): undefined | boolean;
+	isExternalForLazyCompilation(): boolean;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
@@ -8946,7 +8951,11 @@ declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
-	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
+	constructor(
+		withCreateScriptUrl?: boolean,
+		withFetchPriority?: boolean,
+		withExternalSupport?: boolean
+	);
 	static getCompilationHooks(
 		compilation: Compilation
 	): LoadScriptCompilationHooks;
