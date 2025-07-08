@@ -3,6 +3,6 @@
 import "ignored-module";
 import "./ignored-module";
 
-it("should remove all ignored moduels", function() {
+it("should remove all ignored modules", function() {
 	expect(Object.keys(__webpack_modules__).length).toBe(1);
 });
