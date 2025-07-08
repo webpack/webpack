@@ -5674,8 +5674,15 @@ declare interface GenerateContext {
 	/**
 	 * get access to the code generation data
 	 */
-	getData?: () => Map<string, any>;
+	getData?: () => GenerateContextData;
 }
+type GenerateContextData = Map<"url", { [index: string]: string }> &
+	Map<"fullContentHash", string> &
+	Map<"contentHash", string> &
+	Map<"filename", string> &
+	Map<"assetInfo", AssetInfo> &
+	Map<"chunkInitFragments", InitFragment<GenerateContext>[]> &
+	Record<string, any>;
 declare interface GeneratedSourceInfo {
 	/**
 	 * generated line
