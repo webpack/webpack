@@ -10546,7 +10546,7 @@ declare class NormalModule extends Module {
 	createSource(
 		context: string,
 		content: string | Buffer,
-		sourceMap?: null | string | SourceMapSource,
+		sourceMap?: null | string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
@@ -10581,7 +10581,14 @@ declare interface NormalModuleCompilationHooks {
 		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
-		[[string | Buffer, string | SourceMapSource, PreparsedAst], NormalModule]
+		[
+			[
+				string | Buffer,
+				undefined | string | RawSourceMap,
+				undefined | PreparsedAst
+			],
+			NormalModule
+		]
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
@@ -10594,7 +10601,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * module type. When deserializing, this is set to an empty string "".
 	 */
-	type: "" | "javascript/auto" | "javascript/dynamic" | "javascript/esm";
+	type: string;
 
 	/**
 	 * request string
@@ -10693,7 +10700,15 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			SyncBailHook<[GeneratorOptions], void | Generator>
 		>;
 		generator: HookMap<SyncBailHook<[any, GeneratorOptions], void>>;
-		createModuleClass: HookMap<SyncBailHook<[any, ResolveData], void | Module>>;
+		createModuleClass: HookMap<
+			SyncBailHook<
+				[
+					Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
+					ResolveData
+				],
+				void | Module
+			>
+		>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
