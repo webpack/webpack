@@ -1,7 +1,7 @@
 const path = require("path");
-const webpack = require("../../../../../");
+const webpack = require("../../../../");
 
-/** @type {import("../../../../../").Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [
@@ -13,7 +13,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.ContextReplacementPlugin(
-			/context-replacement.d$/,
+			/replacement.d$/,
 			path.resolve(__dirname, "modules?cats=meow"),
 			{
 				a: "./a"

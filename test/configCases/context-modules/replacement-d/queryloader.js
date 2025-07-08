@@ -1,4 +1,4 @@
-/** @type {import("../../../../../").LoaderDefinition} */
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (content) {
 	return (
 		"module.exports = " +

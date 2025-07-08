@@ -1,2 +1,2 @@
-/** @type {import("../../../../../").Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {};
