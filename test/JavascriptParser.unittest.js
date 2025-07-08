@@ -270,10 +270,10 @@ describe("JavascriptParser", () => {
 			const testParser = new JavascriptParser({});
 			testParser.hooks.canRename
 				.for("abc")
-				.tap("JavascriptParserTest", expr => true);
+				.tap("JavascriptParserTest", _expr => true);
 			testParser.hooks.canRename
 				.for("ijk")
-				.tap("JavascriptParserTest", expr => true);
+				.tap("JavascriptParserTest", _expr => true);
 			testParser.hooks.call.for("abc").tap("JavascriptParserTest", expr => {
 				if (!testParser.state.abc) testParser.state.abc = [];
 				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
@@ -295,7 +295,7 @@ describe("JavascriptParser", () => {
 				});
 			testParser.hooks.expression
 				.for("fgh")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", _expr => {
 					if (!testParser.state.fgh) testParser.state.fgh = [];
 					testParser.state.fgh.push(
 						[...testParser.scope.definitions.asSet()].join(" ")
@@ -304,7 +304,7 @@ describe("JavascriptParser", () => {
 				});
 			testParser.hooks.expression
 				.for("fgh.sub")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", _expr => {
 					if (!testParser.state.fghsub) testParser.state.fghsub = [];
 					testParser.state.fghsub.push(
 						testParser.scope.inTry ? "try" : "notry"
@@ -313,7 +313,7 @@ describe("JavascriptParser", () => {
 				});
 			testParser.hooks.expression
 				.for("ijk.sub")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", _expr => {
 					if (!testParser.state.ijksub) testParser.state.ijksub = [];
 					testParser.state.ijksub.push("test");
 					return true;
@@ -710,7 +710,7 @@ describe("JavascriptParser", () => {
 
 			const parser = new JavascriptParser();
 
-			parser.hooks.statement.tap("JavascriptParserTest", expr => {
+			parser.hooks.statement.tap("JavascriptParserTest", _expr => {
 				definitions = parser.scope.definitions;
 				return true;
 			});

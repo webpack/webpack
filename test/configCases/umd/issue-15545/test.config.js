@@ -1,7 +1,7 @@
 const CONTEXT = {};
 
 module.exports = {
-	nonEsmThis(module) {
+	nonEsmThis() {
 		return CONTEXT;
 	},
 	findBundle() {

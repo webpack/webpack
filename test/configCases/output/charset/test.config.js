@@ -1,5 +1,5 @@
 module.exports = {
-	moduleScope(scope, options) {
+	moduleScope(scope) {
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";
 		link.href = "chunk1.css";

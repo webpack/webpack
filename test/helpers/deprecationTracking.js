@@ -40,10 +40,9 @@ util.deprecate = (fn, message, _code) => {
 };
 
 /**
- * @param {EXPECTED_ANY} handler handler
  * @returns {() => EXPECTED_ANY} result
  */
-module.exports.start = handler => {
+module.exports.start = () => {
 	interception = new Map();
 
 	return () => {
@@ -55,6 +54,6 @@ module.exports.start = handler => {
 				if (a > b) return 1;
 				return 0;
 			})
-			.map(([key, data]) => data);
+			.map(([_key, data]) => data);
 	};
 };

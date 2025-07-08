@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["runtime~vendor.js", "vendor.js"];
 	}
 };

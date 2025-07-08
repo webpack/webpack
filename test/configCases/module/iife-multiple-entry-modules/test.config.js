@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["bundle0.mjs", "test.js"];
 	}
 };

@@ -1,5 +1,5 @@
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
-module.exports = (env, { testPath }) => ({
+/** @type {() => import("../../../../").Configuration} */
+module.exports = () => ({
 	target: "web",
 	mode: "development",
 	experiments: {

@@ -4,6 +4,6 @@ module.exports = {
 	findBundle(i, options) {
 		const files = findOutputFiles(options, new RegExp(/\.js$/));
 
-		return files.sort((a, b) => (a.startsWith("main") ? 1 : 0));
+		return files.sort((a, _b) => (a.startsWith("main") ? 1 : 0));
 	}
 };

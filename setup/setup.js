@@ -43,7 +43,7 @@ async function runSetupSymlinkAsync() {
  * @returns {Promise<boolean>} result
  */
 function checkSymlinkExistsAsync() {
-	return new Promise((resolve, reject) => {
+	return new Promise(resolve => {
 		if (
 			fs.existsSync(nodeModulesFolder) &&
 			fs.existsSync(webpackDependencyFolder) &&

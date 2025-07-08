@@ -30,7 +30,7 @@ module.exports = {
 					expect(chunk.isEmpty()).toBe(false);
 					expect(chunk.modulesSize()).toBeTypeOf("number");
 					expect(chunk.size()).toBe(chunk.modulesSize() * 10 + 10000);
-					expect(chunk.getChunkModuleMaps(m => true)).toEqual({
+					expect(chunk.getChunkModuleMaps(() => true)).toEqual({
 						id: {},
 						hash: {}
 					});

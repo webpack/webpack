@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle(i) {
 		switch (i) {
 			case 0:
 				return [`bundle${i}.js`];

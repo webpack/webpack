@@ -14,7 +14,7 @@ module.exports = {
 				compiler.hooks.compilation.tap("Test", compilation => {
 					compilation.hooks.additionalTreeRuntimeRequirements.tap(
 						"Test",
-						(module, set, context) => {
+						(module, set, _context) => {
 							// To prevent the runtime error `ReferenceError: __webpack_exports__ is not defined`,
 							// which occurs because the default `output.library` setting is `commonjs2`,
 							// resulting in adding `module.exports = __webpack_exports__;`.

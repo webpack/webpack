@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle(i) {
 		return [
 			`style_module_css_as-is.bundle${i}.js`,
 			`style_module_css_camel-case.bundle${i}.js`,

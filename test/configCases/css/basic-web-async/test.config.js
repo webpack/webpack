@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle(i, options) {
+	findBundle() {
 		return ["style2_css.bundle0.js", "bundle0.js"];
 	},
 	moduleScope(scope) {

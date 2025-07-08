@@ -83,8 +83,6 @@ export default defineConfig([
 					reportUsedIgnorePattern: false
 				}
 			],
-			// TODO false positive, need to fix in upstream
-			"n/prefer-node-protocol": "off",
 			// TODO enable me in future
 			"prefer-destructuring": "off"
 		}
@@ -155,6 +153,9 @@ export default defineConfig([
 		rules: {
 			// TODO enable me
 			strict: "off",
+
+			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
+			"n/prefer-node-protocol": "off",
 
 			// No need here, we have custom test logic, so except can be placed in different places
 			"jest/no-standalone-expect": "off",

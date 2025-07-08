@@ -212,7 +212,7 @@ const describeCases = config => {
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
 									"WatchTestCasesTest",
-									(filename, mtime) => {
+									(filename, _mtime) => {
 										triggeringFilename = filename;
 									}
 								);

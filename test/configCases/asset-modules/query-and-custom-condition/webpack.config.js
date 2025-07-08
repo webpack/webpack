@@ -10,7 +10,7 @@ module.exports = {
 				type: "asset",
 				/** @type {ParserOptionsByModuleTypeKnown['asset']} */
 				parser: {
-					dataUrlCondition: (source, { filename, module }) =>
+					dataUrlCondition: (source, { filename }) =>
 						filename.includes("?foo=bar")
 				}
 			}
