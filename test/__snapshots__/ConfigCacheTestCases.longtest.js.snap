@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases css build-http exported tests should work with URLs in CSS 1`] = `
 Array [
@@ -10140,8 +10140,8 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
 import { default as default_0 } from \\"externals2\\";
 import \\"externals3\\";
 /*!*****************************!*\\\\
@@ -10151,33 +10151,56 @@ import \\"externals3\\";
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
-
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
 ;// external \\"externals2\\"
 
 ;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
+// Namespace import tests
 
 
-a_0;
+
+// Reexport cases
+
+
+
+
+;
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
 default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
 
-export { a as a1 };
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3 };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should compile 2`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
 import { default as default_0 } from \\"externals2\\";
 import \\"externals3\\";
 /*!*****************************!*\\\\
@@ -10187,33 +10210,56 @@ import \\"externals3\\";
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
-
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
 ;// external \\"externals2\\"
 
 ;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
+// Namespace import tests
 
 
-a_0;
+
+// Reexport cases
+
+
+
+
+;
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
 default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
 
-export { a as a1 };
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3 };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (1st) 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
 import { default as default_0 } from \\"externals2\\";
 import \\"externals3\\";
 /*!*****************************!*\\\\
@@ -10223,33 +10269,56 @@ import \\"externals3\\";
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
-
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
 ;// external \\"externals2\\"
 
 ;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
+// Namespace import tests
 
 
-a_0;
+
+// Reexport cases
+
+
+
+
+;
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
 default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
 
-export { a as a1 };
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3 };
 "
 `;
 
 exports[`ConfigCacheTestCases library modern-module-named-import-externals modern-module-named-import-externals should pre-compile to fill disk cache (2nd) 1`] = `
-"import { a, b } from \\"externals0\\";
-import { a as a_0 } from \\"externals1\\";
+"import { a, b, c } from \\"externals0\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals1__ from \\"externals1\\";
 import { default as default_0 } from \\"externals2\\";
 import \\"externals3\\";
 /*!*****************************!*\\\\
@@ -10259,27 +10328,50 @@ import \\"externals3\\";
 ;// external \\"externals0\\"
 
 ;// external \\"externals1\\"
-
+const external_externals1_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals1__;
 ;// external \\"externals2\\"
 
 ;// external \\"externals3\\"
 
 ;// ./lib.js
 
+
+
+// Test namespace reexport
+
+
+// Test mixed reexports
+
+
 b;
+default_0;
 
 ;// ./test.js
+// Original named import/export tests
 
 ;
 
 
 
+// Namespace import tests
 
 
-a_0;
+
+// Reexport cases
+
+
+
+
+;
+
+// Use the imports to ensure they're not tree-shaken
+external_externals1_namespaceObject.a;
 default_0;
+a;
+b;
+external_externals1_namespaceObject.a;
 
-export { a as a1 };
+export { a as a1, b as b1, c as c1, external_externals1_namespaceObject as ns3 };
 "
 `;
 
