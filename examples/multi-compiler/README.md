@@ -10,6 +10,8 @@ console.log("Running " + ENV + " build");
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 const webpack = require("../../");
 

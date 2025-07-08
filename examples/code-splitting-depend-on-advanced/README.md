@@ -3,6 +3,8 @@ This example shows how to use Code Splitting with entrypoint dependOn
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	entry: {
 		app: { import: "./app.js", dependOn: ["other-vendors"] },

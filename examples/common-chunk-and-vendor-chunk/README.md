@@ -34,6 +34,8 @@ With this bundle configuration, you would load your third party libraries, then 
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 
 module.exports = {

@@ -18,6 +18,8 @@ import("./async2");
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 
 module.exports = {

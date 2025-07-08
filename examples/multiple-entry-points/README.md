@@ -50,6 +50,8 @@ require.ensure(["./shared"], function(require) {
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: {

@@ -22,6 +22,8 @@ require.ensure(["./a", "./e"], function(require) {
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 module.exports = {
 	// mode: "development" || "production",
 	optimization: {
