@@ -10378,7 +10378,7 @@ declare class MultiCompiler {
 	runWithDependencies(
 		compilers: Compiler[],
 		fn: (compiler: Compiler, callback: CallbackFunction_1<MultiStats>) => any,
-		callback: CallbackFunction_1<MultiStats>
+		callback: CallbackFunction_1<Stats[]>
 	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
@@ -10903,6 +10903,9 @@ declare class NullDependency extends Dependency {
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
+}
+declare interface ObjectConfiguration {
+	[index: string]: any;
 }
 declare interface ObjectDeserializerContext {
 	read: () => any;
@@ -16728,6 +16731,9 @@ type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[];
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
+declare interface Values {
+	[index: string]: Value[];
+}
 declare class VariableInfo {
 	constructor(
 		declaredScope: ScopeInfo,
@@ -17452,8 +17458,8 @@ declare namespace exports {
 		) => Flags;
 		export let processArguments: (
 			args: Flags,
-			config: any,
-			values: Record<string, Value[]>
+			config: ObjectConfiguration,
+			values: Values
 		) => null | Problem[];
 	}
 	export namespace ModuleFilenameHelpers {
