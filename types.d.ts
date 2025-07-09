@@ -5674,8 +5674,15 @@ declare interface GenerateContext {
 	/**
 	 * get access to the code generation data
 	 */
-	getData?: () => Map<string, any>;
+	getData?: () => GenerateContextData;
 }
+type GenerateContextData = Map<"url", { [index: string]: string }> &
+	Map<"fullContentHash", string> &
+	Map<"contentHash", string> &
+	Map<"filename", string> &
+	Map<"assetInfo", AssetInfo> &
+	Map<"chunkInitFragments", InitFragment<GenerateContext>[]> &
+	Record<string, any>;
 declare interface GeneratedSourceInfo {
 	/**
 	 * generated line
@@ -7971,6 +7978,17 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
+declare abstract class JsonData {
+	get():
+		| undefined
+		| null
+		| string
+		| number
+		| boolean
+		| JsonObjectFs
+		| JsonValueFs[];
+	updateHash(hash: Hash): void;
+}
 
 /**
  * Generator options for json modules.
@@ -8197,6 +8215,11 @@ declare interface KnownBuildInfo {
 	/**
 	 * using in NormalModule
 	 */
+	assetsInfo?: Map<string, undefined | AssetInfo>;
+
+	/**
+	 * using in NormalModule
+	 */
 	hash?: string;
 
 	/**
@@ -8217,17 +8240,32 @@ declare interface KnownBuildInfo {
 	/**
 	 * for assets modules
 	 */
-	assetsInfo?: Map<string, undefined | AssetInfo>;
+	dataUrl?: boolean;
 
 	/**
 	 * for assets modules
 	 */
-	dataUrl?: boolean;
+	assetInfo?: AssetInfo;
+
+	/**
+	 * for external modules
+	 */
+	javascriptModule?: boolean;
+
+	/**
+	 * for lazy compilation modules
+	 */
+	active?: boolean;
 
 	/**
 	 * for css modules
 	 */
 	cssData?: CssData;
+
+	/**
+	 * for json modules
+	 */
+	jsonData?: JsonData;
 
 	/**
 	 * top level declaration names
@@ -8242,6 +8280,7 @@ declare interface KnownBuildMeta {
 	sideEffectFree?: boolean;
 	exportsFinalName?: Record<string, string>;
 	isCSSModule?: boolean;
+	jsIncompatibleExports?: Record<string, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
@@ -10346,7 +10385,7 @@ declare class MultiCompiler {
 	runWithDependencies(
 		compilers: Compiler[],
 		fn: (compiler: Compiler, callback: CallbackFunction_1<MultiStats>) => any,
-		callback: CallbackFunction_1<MultiStats>
+		callback: CallbackFunction_1<Stats[]>
 	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
@@ -10546,7 +10585,7 @@ declare class NormalModule extends Module {
 	createSource(
 		context: string,
 		content: string | Buffer,
-		sourceMap?: null | string | SourceMapSource,
+		sourceMap?: null | string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
@@ -10581,7 +10620,14 @@ declare interface NormalModuleCompilationHooks {
 		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
-		[[string | Buffer, string | SourceMapSource, PreparsedAst], NormalModule]
+		[
+			[
+				string | Buffer,
+				undefined | string | RawSourceMap,
+				undefined | PreparsedAst
+			],
+			NormalModule
+		]
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
@@ -10594,7 +10640,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * module type. When deserializing, this is set to an empty string "".
 	 */
-	type: "" | "javascript/auto" | "javascript/dynamic" | "javascript/esm";
+	type: string;
 
 	/**
 	 * request string
@@ -10693,7 +10739,15 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			SyncBailHook<[GeneratorOptions], void | Generator>
 		>;
 		generator: HookMap<SyncBailHook<[any, GeneratorOptions], void>>;
-		createModuleClass: HookMap<SyncBailHook<[any, ResolveData], void | Module>>;
+		createModuleClass: HookMap<
+			SyncBailHook<
+				[
+					Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
+					ResolveData
+				],
+				void | Module
+			>
+		>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
@@ -10856,6 +10910,9 @@ declare class NullDependency extends Dependency {
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
+}
+declare interface ObjectConfiguration {
+	[index: string]: any;
 }
 declare interface ObjectDeserializerContext {
 	read: () => any;
@@ -16681,6 +16738,9 @@ type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[];
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
+declare interface Values {
+	[index: string]: Value[];
+}
 declare class VariableInfo {
 	constructor(
 		declaredScope: ScopeInfo,
@@ -17405,8 +17465,8 @@ declare namespace exports {
 		) => Flags;
 		export let processArguments: (
 			args: Flags,
-			config: any,
-			values: Record<string, Value[]>
+			config: ObjectConfiguration,
+			values: Values
 		) => null | Problem[];
 	}
 	export namespace ModuleFilenameHelpers {

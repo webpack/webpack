@@ -147,14 +147,17 @@ declare module "neo-async" {
 
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
-	export type AST = TODO;
+	export class AST extends Node {
+		type: "Program";
+		body: [Module];
+	}
 	export interface Visitor {
 		ModuleImport?: (p: NodePath<ModuleImport>) => void;
 		ModuleExport?: (p: NodePath<ModuleExport>) => void;
 		Start?: (p: NodePath<Start>) => void;
 		Global?: (p: NodePath<Global>) => void;
 	}
-	export function traverse(ast: AST, visitor: Visitor): void;
+	export function traverse(node: Node, visitor: Visitor): void;
 	export class NodePath<T> {
 		node: T;
 		remove(): void;
@@ -169,9 +172,9 @@ declare module "@webassemblyjs/ast" {
 		index: Identifier;
 	}
 	export class Module extends Node {
-		id: TODO;
+		id: string;
 		fields: Node[];
-		metadata: TODO;
+		metadata?: Record<string, EXPECTED_ANY>;
 	}
 	export class ModuleImportDescription {
 		type: string;
@@ -189,7 +192,7 @@ declare module "@webassemblyjs/ast" {
 		name: string;
 		descr: ModuleExportDescr;
 	}
-	type Index = Identifier | NumberLiteral;
+	type Index = NumberLiteral;
 	export class ModuleExportDescr extends Node {
 		type: string;
 		exportType: string;
@@ -273,7 +276,10 @@ declare module "@webassemblyjs/ast" {
 		args: string[];
 		result: string[];
 	}
-	export function moduleContextFromModuleAST(module: Module): TODO;
+	export function moduleContextFromModuleAST(module: Module): {
+		getFunction(i: number): FuncSignature;
+		getStart(): Index;
+	};
 
 	// Node matcher
 	export function isGlobalType(n: Node): boolean;
