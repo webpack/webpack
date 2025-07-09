@@ -6,6 +6,8 @@ const webpack = require("../../");
 
 const routesPath = path.join(__dirname, "./routes");
 
+const VERSION = "1.0.0";
+
 module.exports = (env = "development") => ({
 	mode: env,
 	// Just for examples, you can use any target
@@ -31,9 +33,9 @@ module.exports = (env = "development") => ({
 			},
 			"build-info": {
 				source() {
-					return `export const buildTime = ${Date.now()}`;
+					return `export const version = "${VERSION}"`;
 				},
-				// Reevaluate this value on each build, useful when you use cache
+				// Re-evaluate this value at each compilation, useful when getting a value from a variable
 				version: true
 			},
 			"my-json-modules": {
@@ -43,7 +45,10 @@ module.exports = (env = "development") => ({
 			// Loaders will work with virtual modules
 			"my-typescript-module": {
 				type: ".ts",
-				source: () => 'const value: string = "value-from-typescript"; export default value;'
+				source: () => `
+const value: string = "value-from-typescript";
+
+export default value;`
 			},
 			routes: {
 				source(loaderContext) {
@@ -68,14 +73,16 @@ module.exports = (env = "development") => ({
 					const code = await fs.promises.readFile(pathToFile, "utf8");
 
 					return code;
-				},
-			},
+				}
+			}
 		}),
-		new webpack.experiments.schemes.VirtualUrlPlugin({
-			"my-module":
-`const msg = "from virtual module with custom scheme";
+		new webpack.experiments.schemes.VirtualUrlPlugin(
+			{
+				"my-module": `const msg = "from virtual module with custom scheme";
 
-export default msg`,
-		}, "my-custom-scheme")
+export default msg`
+			},
+			"my-custom-scheme"
+		)
 	]
 });
