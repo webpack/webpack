@@ -58,7 +58,6 @@ const urlToRelativePath = url => {
  * @typedef {object} TestMeta
  * @property {string} category
  * @property {string} name
- * @property {"jsdom"=} env
  * @property {number=} round
  */
 
@@ -68,6 +67,7 @@ const urlToRelativePath = url => {
  * @property {EXPECTED_FUNCTION=} moduleScope
  * @property {EXPECTED_FUNCTION=} nonEsmThis
  * @property {boolean=} evaluateScriptOnAttached
+ * @property {"jsdom"=} env
  */
 
 /**
@@ -110,15 +110,25 @@ class TestRunner {
 		testConfig,
 		webpackOptions
 	}) {
+		/** @type {string|string[]} */
 		this.target = target;
+		/** @type {string} */
 		this.outputDirectory = outputDirectory;
+		/** @type {TestConfig} */
 		this.testConfig = testConfig || {};
+		/** @type {TestMeta} */
 		this.testMeta = testMeta || {};
+		/** @type {EXPECTED_ANY} */
 		this.webpackOptions = webpackOptions || {};
+		/** @type {boolean} */
 		this._runInNewContext = this.isTargetWeb();
+		/** @type {EXPECTED_ANY} */
 		this._globalContext = this.createBaseGlobalContext();
+		/** @type {EXPECTED_ANY} */
 		this._moduleScope = this.createBaseModuleScope();
+		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
+		/** @type {EXPECTED_ANY} */
 		this._esmContext = this.createBaseEsmContext();
 	}
 
@@ -167,7 +177,7 @@ class TestRunner {
 	 * @returns {boolean} whether env is jsdom
 	 */
 	jsDom() {
-		return this.testMeta.env === "jsdom" || this.isTargetWeb();
+		return this.testConfig.env === "jsdom" || this.isTargetWeb();
 	}
 
 	/**
