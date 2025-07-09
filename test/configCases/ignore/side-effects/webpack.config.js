@@ -1,5 +1,7 @@
 "use strict";
 
+const webpack = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: "./test.js",
@@ -9,6 +11,7 @@ module.exports = {
 			"./ignored-module": false
 		}
 	},
+	plugins: [new webpack.IgnorePlugin({ resourceRegExp: /(b\.js|b)$/ })],
 	optimization: {
 		sideEffects: true
 	}
