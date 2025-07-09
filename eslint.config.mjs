@@ -216,5 +216,18 @@ export default defineConfig([
 			"import/extensions": "off",
 			"import/no-unresolved": "off"
 		}
+	},
+
+	{
+		files: ["examples/**/*.js"],
+		rules: {
+			// For examples purposes
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off",
+
+			"import/extensions": "off",
+			"import/no-unresolved": "off"
+		}
 	}
 ]);
