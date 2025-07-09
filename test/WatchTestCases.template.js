@@ -305,8 +305,7 @@ const describeCases = config => {
 											outputDirectory,
 											testMeta: {
 												category: category.name,
-												name: testName,
-												env: "jsdom"
+												name: testName
 											},
 											testConfig: {
 												...testConfig,
