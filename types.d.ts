@@ -4158,7 +4158,8 @@ declare class DynamicEntryPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface Effect {
+type Effect = EffectUse | EffectBasic;
+declare interface EffectBasic {
 	type: string;
 	value: any;
 }
@@ -4176,6 +4177,15 @@ declare interface EffectData {
 	issuer: string;
 	issuerLayer: string;
 }
+declare interface EffectUse {
+	type: EffectUseType;
+	value: {
+		loader: string;
+		options?: null | string | Record<string, any>;
+		ident?: string;
+	};
+}
+type EffectUseType = "use" | "use-pre" | "use-post";
 declare class ElectronTargetPlugin {
 	constructor(context?: "main" | "preload" | "renderer");
 
