@@ -1,5 +1,8 @@
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
+	cache: {
+		type: "memory" // Enable memory cache to test serialization
+	},
 	mode: "none",
 	entry: { main: "./index.js", test: "./test.js" },
 	output: {
