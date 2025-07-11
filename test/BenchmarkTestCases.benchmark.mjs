@@ -324,7 +324,13 @@ const bench = withCodSpeed(
 		now: hrtimeNow,
 		throws: true,
 		warmup: true,
-		time: 30000
+		time: 30000,
+		setup(task, mode) {
+			console.log(`Setup (${mode} mode): ${task.name}`);
+		},
+		teardown(task, mode) {
+			console.log(`Teardown (${mode} mode): ${task.name}`);
+		}
 	})
 );
 
@@ -625,7 +631,7 @@ bench.addEventListener("cycle", event => {
 	const collectBy = task.collectBy;
 	const allStats = statsByTests.get(collectBy);
 
-	console.log(`Done: ${task.name} ${confidence} (${runs} runs sampled)`);
+	console.log(`Cycle: ${task.name} ${confidence} (${runs} runs sampled)`);
 
 	const info = { ...latency, text, minConfidence, maxConfidence };
 
@@ -653,4 +659,12 @@ for (const name of bench.tasks.map(task => task.name)) {
 	task.opts = task.fnOpts;
 }
 
-await bench.run();
+const tasks = await bench.run();
+
+console.log("\nResult:\n");
+
+for (const task of tasks) {
+	const runs = task.runs;
+
+	console.log(`- ${task.name} (${runs} runs sampled)`);
+}
