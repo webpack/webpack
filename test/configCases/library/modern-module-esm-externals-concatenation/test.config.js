@@ -18,6 +18,22 @@ module.exports = {
 			unusedExport2: "unused-2",
 			usedExport: "used-export"
 		};
+		scope.external_never_used = {
+			default: "never-used-default",
+			export1: "never-used-1",
+			export2: "never-used-2"
+		};
+		scope.external_totally_unused = {
+			default: "totally-unused-default",
+			export1: "totally-unused-1",
+			export2: "totally-unused-2"
+		};
+		scope.external_partially_unused = {
+			default: "partially-unused-default",
+			neverUsed1: "never-used-1",
+			neverUsed2: "never-used-2",
+			usedExport: "used-export"
+		};
 		scope.external_nested = {
 			nested: {
 				value: "nested-value"
@@ -25,6 +41,25 @@ module.exports = {
 		};
 		scope.external_deferred = {
 			default: "deferred-default"
+		};
+		scope.external_commonjs = {
+			default: "commonjs-default-export",
+			named1: "commonjs-named-1",
+			named2: "commonjs-named-2"
+		};
+		scope.external_complex_nested = {
+			default: {
+				level1: {
+					data: "level1-data",
+					level2: {
+						data: "level2-data",
+						level3: {
+							data: "level3-data",
+							value: "deep-nested-value"
+						}
+					}
+				}
+			}
 		};
 	}
 };

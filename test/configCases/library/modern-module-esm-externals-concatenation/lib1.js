@@ -6,3 +6,7 @@ export function helper() {
 export function anotherHelper() {
 	return "another";
 }
+
+export function internalHelper() {
+	return "internal1";
+}

@@ -17,14 +17,23 @@ module.exports = {
 		chunkFormat: "module"
 	},
 	experiments: {
-		outputModule: true
+		outputModule: true,
+		deferImport: true
 	},
 	externalsType: "module",
 	externals: {
 		external_esm: "external_esm",
 		external_unused: "external_unused",
+		external_never_used: "external_never_used",
+		external_totally_unused: "external_totally_unused",
+		external_partially_unused: "external_partially_unused",
 		external_nested: "external_nested",
-		external_deferred: "external_deferred"
+		external_deferred: "external_deferred",
+		external_commonjs: {
+			commonjs: "external_commonjs",
+			module: "external_commonjs"
+		},
+		external_complex_nested: "external_complex_nested"
 	},
 	optimization: {
 		concatenateModules: true,
