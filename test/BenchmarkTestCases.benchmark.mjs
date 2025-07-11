@@ -400,6 +400,8 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
+								console.time(`Time: ${benchName}`);
+
 								const watchingPromise = new Promise(res => {
 									watchingResolve = res;
 								});
@@ -418,6 +420,7 @@ async function registerSuite(bench, test, baselines) {
 
 												// Construct and print stats to be more accurate with real life projects
 												stats.toString();
+												console.timeEnd(`Time: ${benchName}`);
 												resolve();
 											});
 										}
@@ -496,6 +499,8 @@ async function registerSuite(bench, test, baselines) {
 							benchName,
 							async () => {
 								await new Promise((resolve, reject) => {
+									console.time(`Time: ${benchName}`);
+
 									const baseCompiler = webpack(config);
 
 									baseCompiler.run((err, stats) => {
@@ -516,7 +521,7 @@ async function registerSuite(bench, test, baselines) {
 
 											// Construct and print stats to be more accurate with real life projects
 											stats.toString();
-
+											console.timeEnd(`Time: ${benchName}`);
 											resolve();
 										});
 									});
