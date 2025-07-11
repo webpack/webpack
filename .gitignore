@@ -4,6 +4,7 @@
 /test/fixtures/temp-*
 /test/temp
 /test/ChangesAndRemovals
+/test/ChangesAndRemovalsTemp
 /test/**/dev-defaults.webpack.lock
 /test/**/generated/**
 /examples/**/dist
