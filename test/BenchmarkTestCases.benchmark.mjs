@@ -324,7 +324,14 @@ const bench = withCodSpeed(
 		now: hrtimeNow,
 		throws: true,
 		warmup: true,
-		time: 30000
+		time: 30000,
+		iterations: 96,
+		setup(task, mode) {
+			console.log(`Setup (${mode} mode): ${task.name}`);
+		},
+		teardown(task, mode) {
+			console.log(`Teardown (${mode} mode): ${task.name}`);
+		}
 	})
 );
 
@@ -393,6 +400,8 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
+								console.time(`Time: ${benchName}`);
+
 								const watchingPromise = new Promise(res => {
 									watchingResolve = res;
 								});
@@ -407,9 +416,11 @@ async function registerSuite(bench, test, baselines) {
 											}
 
 											watchingPromise.then(stats => {
+												watchingResolve = undefined;
+
 												// Construct and print stats to be more accurate with real life projects
 												stats.toString();
-
+												console.timeEnd(`Time: ${benchName}`);
 												resolve();
 											});
 										}
@@ -420,6 +431,10 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
+									const watchingPromise = new Promise(res => {
+										watchingResolve = res;
+									});
+
 									watching = await runWatch(webpack(config));
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
@@ -429,6 +444,27 @@ async function registerSuite(bench, test, baselines) {
 											}
 										}
 									);
+
+									// Make extra run (initial changes) to warmup before rebuilds
+									await new Promise((resolve, reject) => {
+										writeFile(
+											entry,
+											`${originalEntryContent};console.log('watch test')`,
+											err => {
+												if (err) {
+													reject(err);
+												}
+
+												watchingPromise.then(stats => {
+													watchingResolve = undefined;
+
+													// Construct and print stats to be more accurate with real life projects
+													stats.toString();
+													resolve();
+												});
+											}
+										);
+									});
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
@@ -463,6 +499,8 @@ async function registerSuite(bench, test, baselines) {
 							benchName,
 							async () => {
 								await new Promise((resolve, reject) => {
+									console.time(`Time: ${benchName}`);
+
 									const baseCompiler = webpack(config);
 
 									baseCompiler.run((err, stats) => {
@@ -483,7 +521,7 @@ async function registerSuite(bench, test, baselines) {
 
 											// Construct and print stats to be more accurate with real life projects
 											stats.toString();
-
+											console.timeEnd(`Time: ${benchName}`);
 											resolve();
 										});
 									});
@@ -625,7 +663,7 @@ bench.addEventListener("cycle", event => {
 	const collectBy = task.collectBy;
 	const allStats = statsByTests.get(collectBy);
 
-	console.log(`Done: ${task.name} ${confidence} (${runs} runs sampled)`);
+	console.log(`Cycle: ${task.name} ${confidence} (${runs} runs sampled)`);
 
 	const info = { ...latency, text, minConfidence, maxConfidence };
 
@@ -653,4 +691,12 @@ for (const name of bench.tasks.map(task => task.name)) {
 	task.opts = task.fnOpts;
 }
 
-await bench.run();
+const tasks = await bench.run();
+
+console.log("\nResult:\n");
+
+for (const task of tasks) {
+	const runs = task.runs;
+
+	console.log(`- ${task.name} (${runs} runs sampled)`);
+}
