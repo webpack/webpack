@@ -252,21 +252,6 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: EnumValue[];
 }
-type ArrayBufferLike = ArrayBuffer | SharedArrayBuffer;
-type ArrayBufferView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> =
-	| Uint8Array
-	| Uint8ClampedArray
-	| Uint16Array
-	| Uint32Array
-	| Int8Array
-	| Int16Array
-	| Int32Array
-	| BigUint64Array
-	| BigInt64Array
-	| Float16Array
-	| Float32Array
-	| Float64Array
-	| DataView;
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -6356,7 +6341,7 @@ declare interface IntermediateFileSystemExtras {
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
 	open: Open;
-	read: Read<ArrayBufferView<ArrayBufferLike>>;
+	read: Read<NodeJS.ArrayBufferView>;
 	close: (
 		df: number,
 		callback: (err: null | NodeJS.ErrnoException) => void
@@ -12797,8 +12782,7 @@ declare interface RawSourceMap {
 	ignoreList?: number[];
 }
 declare interface Read<
-	TBuffer extends
-		ArrayBufferView<ArrayBufferLike> = ArrayBufferView<ArrayBufferLike>
+	TBuffer extends NodeJS.ArrayBufferView = NodeJS.ArrayBufferView
 > {
 	(
 		fd: number,
@@ -12826,13 +12810,11 @@ declare interface Read<
 		callback: (
 			err: null | NodeJS.ErrnoException,
 			bytesRead: number,
-			buffer: ArrayBufferView<ArrayBufferLike>
+			buffer: NodeJS.ArrayBufferView
 		) => void
 	): void;
 }
-declare interface ReadAsyncOptions<
-	TBuffer extends ArrayBufferView<ArrayBufferLike>
-> {
+declare interface ReadAsyncOptions<TBuffer extends NodeJS.ArrayBufferView> {
 	offset?: number;
 	length?: number;
 	position?: null | number | bigint;
@@ -17330,41 +17312,13 @@ declare interface WithOptions {
 declare interface WriteFile {
 	(
 		file: PathOrFileDescriptorFs,
-		data:
-			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float16Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+		data: string | NodeJS.ArrayBufferView,
 		options: WriteFileOptions,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 	(
 		file: PathOrFileDescriptorFs,
-		data:
-			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float16Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+		data: string | NodeJS.ArrayBufferView,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }

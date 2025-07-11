@@ -44,7 +44,7 @@ jobs:
       - run: yarn lint
       - name: Validate types using old typescript version
         run: |
-          yarn upgrade typescript@5.0
+          yarn upgrade typescript@5.0 @types/node@20
           yarn --frozen-lockfile
           yarn validate:types
   validate-legacy-node:
