@@ -325,6 +325,7 @@ const bench = withCodSpeed(
 		throws: true,
 		warmup: true,
 		time: 30000,
+		iterations: 96,
 		setup(task, mode) {
 			console.log(`Setup (${mode} mode): ${task.name}`);
 		},
@@ -413,9 +414,10 @@ async function registerSuite(bench, test, baselines) {
 											}
 
 											watchingPromise.then(stats => {
+												watchingResolve = undefined;
+
 												// Construct and print stats to be more accurate with real life projects
 												stats.toString();
-
 												resolve();
 											});
 										}
@@ -426,6 +428,10 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
+									const watchingPromise = new Promise(res => {
+										watchingResolve = res;
+									});
+
 									watching = await runWatch(webpack(config));
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
@@ -435,6 +441,27 @@ async function registerSuite(bench, test, baselines) {
 											}
 										}
 									);
+
+									// Make extra run (initial changes) to warmup before rebuilds
+									await new Promise((resolve, reject) => {
+										writeFile(
+											entry,
+											`${originalEntryContent};console.log('watch test')`,
+											err => {
+												if (err) {
+													reject(err);
+												}
+
+												watchingPromise.then(stats => {
+													watchingResolve = undefined;
+
+													// Construct and print stats to be more accurate with real life projects
+													stats.toString();
+													resolve();
+												});
+											}
+										);
+									});
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
