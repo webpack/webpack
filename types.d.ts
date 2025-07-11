@@ -9874,6 +9874,7 @@ declare class ModuleGraph {
 		module: Module,
 		indexInBlock?: number
 	): void;
+	setParentDependenciesBlockIndex(dependency: Dependency, index: number): void;
 	getParentModule(dependency: Dependency): undefined | Module;
 	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
@@ -9883,6 +9884,11 @@ declare class ModuleGraph {
 		module: Module
 	): void;
 	updateModule(dependency: Dependency, module: Module): void;
+	updateParent(
+		dependency: Dependency,
+		connection?: ModuleGraphConnection,
+		parentModule?: Module
+	): void;
 	removeConnection(dependency: Dependency): void;
 	addExplanation(dependency: Dependency, explanation: string): void;
 	cloneModuleAttributes(sourceModule: Module, targetModule: Module): void;

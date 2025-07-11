@@ -3446,8 +3446,8 @@ cacheable modules X bytes
   ./first.js X bytes [built] [code generated]
   ./second.js X bytes [built] [code generated]
   ./vendor.js X bytes [built] [code generated]
-  ./module_first.js X bytes [built] [code generated]
   ./common2.js X bytes [built] [code generated]
+  ./module_first.js X bytes [built] [code generated]
   ./lazy_first.js X bytes [built] [code generated]
   ./lazy_shared.js X bytes [built] [code generated]
   ./lazy_second.js X bytes [built] [code generated]
@@ -3473,8 +3473,8 @@ cacheable modules X bytes
       ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js: Module ./common_lazy_shared.js is referenced from different chunks by these modules: ./lazy_shared.js
     ./common_lazy_shared.js X bytes [built] [code generated]
   orphan modules X bytes [orphan]
-    ./module_first.js X bytes [orphan] [built]
     ./common2.js X bytes [orphan] [built]
+    ./module_first.js X bytes [orphan] [built]
     ./common.js X bytes [orphan] [built]
       ModuleConcatenation bailout: Module is not in any chunk
     ./common_lazy.js X bytes [orphan] [built]
@@ -3548,10 +3548,10 @@ cacheable modules X KiB
     |   [no exports]
     |   [no exports used]
     |   Statement (ExpressionStatement) with side effects in source code at 4:0-30
-    | ./node_modules/module-with-export/index.js X KiB [built]
-    |   [only some exports used: smallVar]
     | ./node_modules/big-module/a.js X bytes [built]
     |   [only some exports used: a]
+    | ./node_modules/module-with-export/index.js X KiB [built]
+    |   [only some exports used: smallVar]
   ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
     [used exports unknown]
     ModuleConcatenation bailout: Module is not an ECMAScript module
