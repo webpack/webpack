@@ -2,6 +2,9 @@
 module.exports = {
 	entry: "./index",
 	cache: {
-		type: "filesystem"
+		type: "filesystem",
+		// For benchmark stability
+		maxMemoryGenerations: 0,
+		idleTimeoutForInitialStore: 0
 	}
 };
