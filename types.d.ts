@@ -17312,41 +17312,13 @@ declare interface WithOptions {
 declare interface WriteFile {
 	(
 		file: PathOrFileDescriptorFs,
-		data:
-			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float16Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+		data: string | NodeJS.ArrayBufferView,
 		options: WriteFileOptions,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 	(
 		file: PathOrFileDescriptorFs,
-		data:
-			| string
-			| Uint8Array
-			| Uint8ClampedArray
-			| Uint16Array
-			| Uint32Array
-			| Int8Array
-			| Int16Array
-			| Int32Array
-			| BigUint64Array
-			| BigInt64Array
-			| Float16Array
-			| Float32Array
-			| Float64Array
-			| DataView,
+		data: string | NodeJS.ArrayBufferView,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
