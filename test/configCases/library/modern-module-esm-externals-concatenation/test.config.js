@@ -39,14 +39,6 @@ module.exports = {
 				value: "nested-value"
 			}
 		};
-		scope.external_deferred = {
-			default: "deferred-default"
-		};
-		scope.external_commonjs = {
-			default: "commonjs-default-export",
-			named1: "commonjs-named-1",
-			named2: "commonjs-named-2"
-		};
 		scope.external_complex_nested = {
 			default: {
 				level1: {

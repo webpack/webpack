@@ -10,11 +10,6 @@ import "external_never_used";
 
 import { nested } from "external_nested";
 
-// Deferred external
-import("external_deferred").then(module => {
-	console.log(module);
-});
-
 export { namedExport1, namedExport2 } from "external_esm";
 export * as reexportedNamespace from "external_esm";
 
@@ -29,30 +24,11 @@ export function useImports() {
 	};
 }
 
-// Export deferred test functions
-export {
-	testDeferredNamespace,
-	testDeferredNamed,
-	testDeferredDefault,
-	evaluateDeferred
-} from "./deferred-test";
-
-export {
-	testDeferredCommonJsNamespace,
-	accessDeferredCommonJs
-} from "./deferred-commonjs-test";
-
 // Export selective export functions
 export {
 	useSelectiveExports,
 	getUnusedNamespace
 } from "./selective-export";
-
-// Export deferred ESM module functions
-export {
-	getDeferredESM,
-	testDeferredESMAccess
-} from "./deferred-esm-module";
 
 // Export array exports functions
 export {

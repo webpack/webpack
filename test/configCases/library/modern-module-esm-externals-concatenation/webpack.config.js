@@ -17,8 +17,7 @@ module.exports = {
 		chunkFormat: "module"
 	},
 	experiments: {
-		outputModule: true,
-		deferImport: true
+		outputModule: true
 	},
 	externalsType: "module",
 	externals: {
@@ -28,11 +27,6 @@ module.exports = {
 		external_totally_unused: "external_totally_unused",
 		external_partially_unused: "external_partially_unused",
 		external_nested: "external_nested",
-		external_deferred: "external_deferred",
-		external_commonjs: {
-			commonjs: "external_commonjs",
-			module: "external_commonjs"
-		},
 		external_complex_nested: "external_complex_nested"
 	},
 	optimization: {
