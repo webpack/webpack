@@ -1,0 +1,8 @@
+{
+  "name": "css-order",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "devDependencies": {
+    "mini-css-extract-plugin": "^2.9.0"
+  }
+}
