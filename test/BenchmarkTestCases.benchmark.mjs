@@ -2,9 +2,155 @@ import { constants, writeFile } from "fs";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { withCodSpeed } from "@codspeed/tinybench-plugin";
+import {
+	Measurement,
+	getGitDir,
+	mongoMeasurement,
+	setupCore,
+	teardownCore
+} from "@codspeed/core";
 import { simpleGit } from "simple-git";
 import { Bench, hrtimeNow } from "tinybench";
+
+function getCallingFile() {
+	const stack = getStackTrace();
+	let callingFile = stack[2].getFileName(); // [here, withCodSpeed, actual caller]
+	const gitDir = getGitDir(callingFile);
+	if (gitDir === undefined) {
+		throw new Error("Could not find a git repository");
+	}
+	if (callingFile.startsWith("file://")) {
+		callingFile = fileURLToPath(callingFile);
+	}
+	return path.relative(gitDir, callingFile);
+}
+
+const createErrorEvent = (target, error) => {
+	const event = new Event("error");
+	Object.defineProperty(event, "task", {
+		configurable: false,
+		enumerable: true,
+		value: target,
+		writable: false
+	});
+	Object.defineProperty(event, "error", {
+		configurable: false,
+		enumerable: true,
+		value: error,
+		writable: false
+	});
+	return event;
+};
+
+const getStackTrace = (belowFn) => {
+	const oldLimit = Error.stackTraceLimit;
+	Error.stackTraceLimit = Infinity;
+	const dummyObject = {};
+	const v8Handler = Error.prepareStackTrace;
+	Error.prepareStackTrace = (dummyObject, v8StackTrace) => v8StackTrace;
+	Error.captureStackTrace(dummyObject, belowFn || getStackTrace);
+	const v8StackTrace = dummyObject.stack;
+	Error.prepareStackTrace = v8Handler;
+	Error.stackTraceLimit = oldLimit;
+	return v8StackTrace;
+};
+
+function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
+	if (!Measurement.isInstrumented()) {
+		const rawRun = bench.run;
+		bench.run = async () => {
+			console.warn(
+				`[CodSpeed] ${bench.tasks.length} benches detected but no instrumentation found, falling back to tinybench`
+			);
+			return await rawRun.bind(bench)();
+		};
+		return bench;
+	}
+
+	const rawAdd = bench.add;
+	bench.add = (name, fn, opts) => {
+		const callingFile = getCallingFile();
+		const uri = `${callingFile}::${name}`;
+		const options = { ...opts, uri };
+		return rawAdd.bind(bench)(name, fn, options);
+	};
+	const rootCallingFile = getCallingFile();
+	bench.run = async function run() {
+		const time = bench.opts.time;
+		const iterations = bench.opts.iterations;
+		console.log("[CodSpeed] running");
+		setupCore();
+		if (bench.opts.warmup) {
+			await bench.warmupTasks();
+		}
+		for (const task of bench.tasks) {
+			if (task.fnOpts.beforeAll) await task.fnOpts.beforeAll.call(task);
+			try {
+				let totalTime = 0; // ms
+				const samples = [];
+				const promises = [];
+				async function benchmarkTask() {
+					if (task.fnOpts.beforeEach) {
+						await task.fnOpts.beforeEach.call(task, "run");
+					}
+					let taskTime = 0; // ms;
+					if (task.async) {
+						const taskStart = bench.opts.now();
+						await task.fn();
+						taskTime = bench.opts.now() - taskStart;
+					} else {
+						const taskStart = bench.opts.now();
+						task.fn();
+						taskTime = bench.opts.now() - taskStart;
+					}
+					samples.push(taskTime);
+					totalTime += taskTime;
+					if (task.fnOpts.afterEach) {
+						await task.fnOpts.afterEach.call(this, "run");
+					}
+				}
+				while (
+					(totalTime < time || samples.length < iterations) &&
+					!bench.opts.signal?.aborted
+				) {
+					await benchmarkTask();
+				}
+				if (!bench.opts.signal?.aborted && promises.length > 0) {
+					await Promise.all(promises);
+				}
+			} catch (error) {
+				task.mergeTaskResult({ error });
+				task.dispatchEvent(createErrorEvent(task, error));
+				bench.dispatchEvent(createErrorEvent(task, error));
+				if (bench.opts.throws) {
+					throw error;
+				}
+			}
+			// Codspeed Measure
+			const uri =
+				task.opts && "uri" in task.options
+					? task.opts.uri
+					: `${rootCallingFile}::${task.name}`;
+			if (task.fnOpts.beforeEach) await task.fnOpts.beforeEach.call(task);
+			await mongoMeasurement.start(uri);
+			global.gc?.();
+			await (async function __codspeed_root_frame__() {
+				Measurement.startInstrumentation();
+				await task.fn();
+				Measurement.stopInstrumentation(uri);
+			})();
+			if (task.fnOpts.afterEach) await task.fnOpts.afterEach.call(task);
+			await mongoMeasurement.stop(uri);
+			if (task.fnOpts.afterAll) await task.fnOpts.afterAll.call(task);
+			// print results
+			console.log(`    ✔ Measured ${uri}`);
+		}
+		teardownCore();
+		console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
+		return bench.tasks;
+	};
+	return bench;
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
@@ -324,7 +470,14 @@ const bench = withCodSpeed(
 		now: hrtimeNow,
 		throws: true,
 		warmup: true,
-		time: 30000
+		warmupIterations: 8,
+		iterations: 96,
+		setup(task, mode) {
+			console.log(`Setup (${mode} mode): ${task.name}`);
+		},
+		teardown(task, mode) {
+			console.log(`Teardown (${mode} mode): ${task.name}`);
+		}
 	})
 );
 
@@ -393,6 +546,8 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
+								console.time(`Time: ${benchName}`);
+
 								const watchingPromise = new Promise((res) => {
 									watchingResolve = res;
 								});
@@ -407,9 +562,11 @@ async function registerSuite(bench, test, baselines) {
 											}
 
 											watchingPromise.then((stats) => {
+												watchingResolve = undefined;
+
 												// Construct and print stats to be more accurate with real life projects
 												stats.toString();
-
+												console.timeEnd(`Time: ${benchName}`);
 												resolve();
 											});
 										}
@@ -420,6 +577,10 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
+									const watchingPromise = new Promise((res) => {
+										watchingResolve = res;
+									});
+
 									watching = await runWatch(webpack(config));
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
@@ -429,6 +590,27 @@ async function registerSuite(bench, test, baselines) {
 											}
 										}
 									);
+
+									// Make extra run (initial changes) to warmup before rebuilds
+									await new Promise((resolve, reject) => {
+										writeFile(
+											entry,
+											`${originalEntryContent};console.log('watch test')`,
+											(err) => {
+												if (err) {
+													reject(err);
+												}
+
+												watchingPromise.then((stats) => {
+													watchingResolve = undefined;
+
+													// Construct and print stats to be more accurate with real life projects
+													stats.toString();
+													resolve();
+												});
+											}
+										);
+									});
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
@@ -463,6 +645,8 @@ async function registerSuite(bench, test, baselines) {
 							benchName,
 							async () => {
 								await new Promise((resolve, reject) => {
+									console.time(`Time: ${benchName}`);
+
 									const baseCompiler = webpack(config);
 
 									baseCompiler.run((err, stats) => {
@@ -483,7 +667,7 @@ async function registerSuite(bench, test, baselines) {
 
 											// Construct and print stats to be more accurate with real life projects
 											stats.toString();
-
+											console.timeEnd(`Time: ${benchName}`);
 											resolve();
 										});
 									});
@@ -625,7 +809,7 @@ bench.addEventListener("cycle", (event) => {
 	const collectBy = task.collectBy;
 	const allStats = statsByTests.get(collectBy);
 
-	console.log(`Done: ${task.name} ${confidence} (${runs} runs sampled)`);
+	console.log(`Cycle: ${task.name} ${confidence} (${runs} runs sampled)`);
 
 	const info = { ...latency, text, minConfidence, maxConfidence };
 
@@ -646,11 +830,12 @@ bench.addEventListener("cycle", (event) => {
 	);
 });
 
-// Fix for https://github.com/CodSpeedHQ/codspeed-node/issues/44
-for (const name of bench.tasks.map((task) => task.name)) {
-	const task = bench.getTask(name);
+const tasks = await bench.run();
 
-	task.opts = task.fnOpts;
+console.log("\nResult:\n");
+
+for (const task of tasks) {
+	const runs = task.runs;
+
+	console.log(`- ${task.name} (${runs} runs sampled)`);
 }
-
-await bench.run();
