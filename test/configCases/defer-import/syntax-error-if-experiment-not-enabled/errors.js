@@ -1,1 +1,1 @@
-module.exports = [[/cannot be used unless experimental\.deferImport is true/]];
+module.exports = [/Module parse failed: Unexpected token \(1:13\)/];

@@ -4,6 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
+import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
 import { Scope } from "eslint-scope";
 import {
@@ -6436,7 +6437,7 @@ declare class JavascriptModulesPlugin {
 	): TemplatePath;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
-declare class JavascriptParser extends Parser {
+declare class JavascriptParser extends ParserClass {
 	constructor(sourceType?: "module" | "auto" | "script");
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -7764,6 +7765,9 @@ declare class JavascriptParser extends Parser {
 				rootInfo: ExportedVariableInfo;
 				getMembers: () => string[];
 		  };
+	static extend(
+		...plugins: ((BaseParser: typeof ParserImport) => typeof ParserImport)[]
+	): typeof JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
@@ -10554,7 +10558,7 @@ declare class NormalModule extends Module {
 	userRequest: string;
 	rawRequest: string;
 	binary: boolean;
-	parser?: Parser;
+	parser?: ParserClass;
 	parserOptions?: ParserOptions;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
@@ -10685,7 +10689,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the parser used
 	 */
-	parser: Parser;
+	parser: ParserClass;
 
 	/**
 	 * the options of the parser used
@@ -10733,7 +10737,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				ResolveData
 			]
 		>;
-		createParser: HookMap<SyncBailHook<[ParserOptions], void | Parser>>;
+		createParser: HookMap<SyncBailHook<[ParserOptions], void | ParserClass>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
 		createGenerator: HookMap<
 			SyncBailHook<[GeneratorOptions], void | Generator>
@@ -10753,7 +10757,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
+	parserCache: Map<string, WeakMap<ParserOptions, ParserClass>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
@@ -10776,8 +10780,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext: ResolveContext,
 		callback: CallbackNormalModuleFactory<LoaderItem[]>
 	): void;
-	getParser(type: string, parserOptions?: ParserOptions): Parser;
-	createParser(type: string, parserOptions?: ParserOptions): Parser;
+	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
+	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
 	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
 	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
 	getResolver(
@@ -12243,7 +12247,7 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
-declare class Parser {
+declare class ParserClass {
 	constructor();
 	parse(
 		source: string | Buffer | PreparsedAst,
@@ -18061,7 +18065,7 @@ declare namespace exports {
 		NormalModule,
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
-		Parser,
+		ParserClass as Parser,
 		PlatformPlugin,
 		PrefetchPlugin,
 		ProgressPlugin,
