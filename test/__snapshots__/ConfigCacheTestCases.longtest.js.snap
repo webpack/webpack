@@ -3496,6 +3496,8 @@ exports[`ConfigCacheTestCases css css-modules-no-space exported tests should all
 "
 `;
 
+exports[`ConfigCacheTestCases css css-order2 exported tests keep consistent css order 1`] = `".dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
+
 exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 1`] = `
 Object {
   "#": "_style_modules_css-#",
