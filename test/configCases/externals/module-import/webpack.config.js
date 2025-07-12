@@ -14,7 +14,8 @@ module.exports = {
 		main: "./index"
 	},
 	optimization: {
-		concatenateModules: true
+		concatenateModules: true,
+		usedExports: true
 	},
 	experiments: {
 		outputModule: true
