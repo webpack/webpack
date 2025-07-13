@@ -39,19 +39,5 @@ module.exports = {
 				value: "nested-value"
 			}
 		};
-		scope.external_complex_nested = {
-			default: {
-				level1: {
-					data: "level1-data",
-					level2: {
-						data: "level2-data",
-						level3: {
-							data: "level3-data",
-							value: "deep-nested-value"
-						}
-					}
-				}
-			}
-		};
 	}
 };

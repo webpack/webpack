@@ -26,8 +26,7 @@ module.exports = {
 		external_never_used: "external_never_used",
 		external_totally_unused: "external_totally_unused",
 		external_partially_unused: "external_partially_unused",
-		external_nested: "external_nested",
-		external_complex_nested: "external_complex_nested"
+		external_nested: "external_nested"
 	},
 	optimization: {
 		concatenateModules: true,

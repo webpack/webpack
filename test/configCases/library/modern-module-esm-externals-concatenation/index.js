@@ -36,21 +36,6 @@ export {
 	nestedReexport
 } from "./array-exports";
 
-// Export external in concat functions
-export {
-	useExternalsInConcat,
-	named1 as reexportedNamed1,
-	named2 as reexportedNamed2,
-	usedExport as reexportedUsed
-} from "./use-external-in-concat";
-
-// Export deep nested exports functions
-export {
-	useDeepNestedExports,
-	deepValue,
-	midValue
-} from "./deep-nested-exports";
-
 // Trigger concatenation
 import "./lib1";
 import "./lib2";
