@@ -58,10 +58,10 @@ module.exports = (env = "development") => ({
 ## Unoptimized
 
 ```
-asset output.js 3.6 MiB [emitted] (name: main)
+asset output.js 3.61 MiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 2.24 MiB (javascript) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.24 MiB (javascript) 1.29 KiB (runtime) [cached] 1514 modules
+  cached modules 2.24 MiB (javascript) 1.29 KiB (runtime) [cached] 1516 modules
 webpack X.X.X compiled successfully
 ```
 
@@ -69,9 +69,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 548 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 2.18 MiB (javascript) 1.29 KiB (runtime) [entry]
+chunk (runtime: main) output.js (main) 2.19 MiB (javascript) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.18 MiB (javascript) 1.29 KiB (runtime) [cached] 891 modules
+  cached modules 2.19 MiB (javascript) 1.29 KiB (runtime) [cached] 893 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
