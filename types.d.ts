@@ -8149,7 +8149,7 @@ declare interface KnownAssetInfo {
 	/**
 	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
 	 */
-	related?: Record<string, string | string[]>;
+	related?: Record<string, null | string | string[]>;
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
