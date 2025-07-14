@@ -112,7 +112,7 @@
     "@babel/preset-react": "^7.27.1",
     "@codspeed/tinybench-plugin": "^4.0.1",
     "@eslint/js": "^9.29.0",
-    "@eslint/markdown": "^6.6.0",
+    "@eslint/markdown": "^7.0.0",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@types/glob-to-regexp": "^0.4.4",
     "@types/graceful-fs": "^4.1.9",
