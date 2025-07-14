@@ -3500,6 +3500,8 @@ exports[`ConfigTestCases css css-order exported tests keep consistent css order 
 
 exports[`ConfigTestCases css css-order2 exported tests keep consistent css order 1`] = `".dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
 
+exports[`ConfigTestCases css css-order3 exported tests keep consistent css order 1`] = `".dependency3::before {	content: \\"dependency3\\";}.dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
+
 exports[`ConfigTestCases css escape-unescape exported tests should work with URLs in CSS: classes 1`] = `
 Object {
   "#": "_style_modules_css-#",
