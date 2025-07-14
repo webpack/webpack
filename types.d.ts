@@ -3720,6 +3720,17 @@ declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
 }
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
+declare interface DependencySourceOrder {
+	/**
+	 * the main source order
+	 */
+	main: number;
+
+	/**
+	 * the sub source order
+	 */
+	sub: number;
+}
 declare class DependencyTemplate {
 	constructor();
 	apply(
@@ -17801,6 +17812,10 @@ declare namespace exports {
 				...cRest: Comparator<T>[]
 			) => Comparator<T>;
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;
+			export let sortWithSourceOrder: (
+				dependencies: Dependency[],
+				dependencySourceOrderMap: WeakMap<Dependency, DependencySourceOrder>
+			) => void;
 		}
 		export namespace runtime {
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
