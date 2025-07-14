@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { Module } = require("module");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
@@ -292,7 +293,11 @@ class TestRunner {
 		}
 		const moduleInfo = this._resolveModule(currentDirectory, module);
 		if (!moduleInfo) {
-			return require(module.startsWith("node:") ? module.slice(5) : module);
+			// node v12.2.0+ has Module.createRequire
+			const rawRequire = Module.createRequire
+				? Module.createRequire(currentDirectory)
+				: require;
+			return rawRequire(module.startsWith("node:") ? module.slice(5) : module);
 		}
 		const { modulePath } = moduleInfo;
 		if (
