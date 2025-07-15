@@ -1868,9 +1868,9 @@ abort-controller@^3.0.0:
     event-target-shim "^5.0.0"
 
 acorn-import-phases@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/acorn-import-phases/-/acorn-import-phases-1.0.3.tgz#30394a1dccee5f380aecb8205b8c69b4f7ae688e"
-  integrity sha512-jtKLnfoOzm28PazuQ4dVBcE9Jeo6ha1GAJvq3N0LlNOszmTfx+wSycBehn+FN0RnyeR77IBxN/qVYMw0Rlj0Xw==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/acorn-import-phases/-/acorn-import-phases-1.0.4.tgz#16eb850ba99a056cb7cbfe872ffb8972e18c8bd7"
+  integrity sha512-wKmbr/DDiIXzEOiWrTTUcDm24kQ2vGfZQvM2fwg2vXqR5uW6aapr7ObPtj1th32b9u90/Pf4AItvdTh42fBmVQ==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -3315,9 +3315,9 @@ eslint-config-prettier@^10.1.1:
   integrity sha512-zc1UmCpNltmVY34vuLRV61r1K27sWuX39E+uyUnY8xS2Bex88VV9cugG+UZbRSRGtGyFboj+D8JODyme1plMpw==
 
 eslint-config-webpack@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.3.0.tgz#2ffb28164b827c15977e0dedb85b7b863ec5aea5"
-  integrity sha512-G2mePdT5zOOPS+lYtNKAdLqIgSSRCswirgrWh1+Lk1R2UY2r7q5XTtJbTguOR3ukfFySpYx0vHPTdN8TxpFQtw==
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.3.4.tgz#995c7036898f015078b5d59716c4ec8fc8cfd0e6"
+  integrity sha512-u0wlSpmIaxEvPGzMi3hKtSxOmj933oMVM+pTabghQTrqLP27ZzYr1l/cs/WrnT2ZKP9VyccV16IVp9V2YZrh+w==
   dependencies:
     detect-indent "^7.0.1"
     jsonc-eslint-parser "^2.4.0"
