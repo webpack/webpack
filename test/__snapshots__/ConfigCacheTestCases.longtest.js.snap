@@ -3498,6 +3498,8 @@ exports[`ConfigCacheTestCases css css-modules-no-space exported tests should all
 
 exports[`ConfigCacheTestCases css css-order exported tests keep consistent css order 1`] = `".button-module {  padding: 8px 16px;  background-color: #007bff;  color: white;  border: none;  border-radius: 4px;}.teaser-module {  padding: 20px;  border: 1px solid #ddd;  border-radius: 8px;  margin: 16px;}.teaser-module {  background-color: orange;}"`;
 
+exports[`ConfigCacheTestCases css css-order-reexport exported tests keep consistent css order 1`] = `".dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
+
 exports[`ConfigCacheTestCases css css-order2 exported tests keep consistent css order 1`] = `".dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
 
 exports[`ConfigCacheTestCases css css-order3 exported tests keep consistent css order 1`] = `".dependency3::before {	content: \\"dependency3\\";}.dependency2::before {	content: \\"dependency2\\";}.dependency::before {	content: \\"dependency\\";}"`;
