@@ -1,3 +1,5 @@
+"use strict";
+
 const devtool = "eval-nosources-source-map";
 
 /** @type {import("../../../../").Configuration[]} */

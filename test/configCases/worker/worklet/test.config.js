@@ -1,3 +1,5 @@
+"use strict";
+
 let outputDirectory;
 
 module.exports = {

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsLogicalAssignment() {
 	try {
 		const f = eval(

@@ -1,3 +1,5 @@
+"use strict";
+
 const { ProvideSharedPlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */

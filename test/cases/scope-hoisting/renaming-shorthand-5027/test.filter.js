@@ -1,3 +1,5 @@
+"use strict";
+
 const supportDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
 const supportsES6 = require("../../../helpers/supportsES6");
 const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");

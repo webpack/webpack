@@ -1,3 +1,5 @@
+"use strict";
+
 require("./helpers/warmup-webpack");
 
 const fs = require("fs");

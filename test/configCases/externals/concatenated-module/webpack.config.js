@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {(variant: boolean) => import("../../../../").Configuration} */
 const config = o => ({
 	externals: {

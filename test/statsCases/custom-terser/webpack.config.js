@@ -1,3 +1,5 @@
+"use strict";
+
 const TerserPlugin = require("terser-webpack-plugin");
 
 /** @type {import("../../../").Configuration} */

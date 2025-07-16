@@ -1,3 +1,5 @@
+"use strict";
+
 const supportsDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
 const supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
 

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsObjectDestructuring() {
 	try {
 		const f = eval("(function f({x, y}) { return x + y; })");

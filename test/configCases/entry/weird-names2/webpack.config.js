@@ -1,3 +1,5 @@
+"use strict";
+
 const entry = {
 	"././../weird-names2-out/entry/point/./../entry": "./index.js",
 	"..//weird-names2-out////entry": "./index.js"

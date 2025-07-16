@@ -1,3 +1,5 @@
+"use strict";
+
 const System = {
 	register: (name, deps, fn) => {
 		if (!System.registry) {

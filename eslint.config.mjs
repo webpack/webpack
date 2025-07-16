@@ -151,9 +151,6 @@ export default defineConfig([
 	{
 		files: ["test/**/*.js"],
 		rules: {
-			// TODO enable me
-			strict: "off",
-
 			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
 			"n/prefer-node-protocol": "off",
 

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration} */

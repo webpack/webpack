@@ -1,3 +1,5 @@
+"use strict";
+
 const { getArguments, processArguments } = require("../").cli;
 
 describe("Cli", () => {

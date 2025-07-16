@@ -1,3 +1,5 @@
+"use strict";
+
 const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
 const supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
 

@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../../../");
 const readDir = require("./readdir");

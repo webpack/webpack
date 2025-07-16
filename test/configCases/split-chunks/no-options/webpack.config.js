@@ -1,3 +1,5 @@
+"use strict";
+
 const { SplitChunksPlugin } = require("../../../../").optimize;
 
 /** @type {import("../../../../").Configuration} */

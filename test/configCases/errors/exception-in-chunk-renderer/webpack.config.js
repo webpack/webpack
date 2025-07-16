@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compiler} Compiler */
 
 class ThrowsExceptionInRender {

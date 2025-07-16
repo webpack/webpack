@@ -1,3 +1,5 @@
+"use strict";
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /** @type {import("../../../../types").Configuration} */

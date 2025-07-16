@@ -1,3 +1,5 @@
+"use strict";
+
 const DefinePlugin = require("../../../../").DefinePlugin;
 
 const nullValue = null;

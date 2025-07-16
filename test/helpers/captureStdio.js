@@ -1,3 +1,5 @@
+"use strict";
+
 const stripVTControlCharacters = require("strip-ansi");
 
 module.exports = (stdio, tty) => {

@@ -1,3 +1,5 @@
+"use strict";
+
 const webpack = require("../../../../");
 
 /**

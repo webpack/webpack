@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Chunk} Chunk */
 
 /** @type {import("../../../../").Configuration} */

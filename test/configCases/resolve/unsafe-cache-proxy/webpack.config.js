@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 
 let getCounter = 0;

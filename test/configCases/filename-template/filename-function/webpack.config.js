@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Chunk & { name: string }} Chunk */
 /** @typedef {import("../../../../").PathData & { chunk: Chunk }} PathData */
 

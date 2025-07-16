@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsUsing() {
 	try {
 		const f = eval(`(function f() {

@@ -1,3 +1,5 @@
+"use strict";
+
 require("./helpers/warmup-webpack");
 
 const path = require("path");

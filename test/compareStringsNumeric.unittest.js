@@ -1,3 +1,5 @@
+"use strict";
+
 const { compareStringsNumeric } = require("../lib/util/comparators");
 
 /**

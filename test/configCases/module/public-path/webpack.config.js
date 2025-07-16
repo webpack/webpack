@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */

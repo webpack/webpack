@@ -1,3 +1,5 @@
+"use strict";
+
 const NodeEnvironment =
 	// For jest@29
 	require("jest-environment-node").TestEnvironment ||

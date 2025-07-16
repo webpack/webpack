@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration} */

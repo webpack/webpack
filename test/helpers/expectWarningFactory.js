@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = () => {
 	const warnings = [];
 	let oldWarn;

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").WebpackPluginInstance} WebpackPluginInstance */
 
 const { DefinePlugin } = require("../../../../");

@@ -1,3 +1,5 @@
+"use strict";
+
 const DefinePlugin = require("../../../../").DefinePlugin;
 
 /** @type {import("../../../../").Configuration} */

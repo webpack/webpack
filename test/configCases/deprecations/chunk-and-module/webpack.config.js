@@ -1,3 +1,5 @@
+"use strict";
+
 const { ChunkGraph, ExternalModule } = require("../../../../");
 
 /** @typedef {import("../../../../").Module} Module */
