@@ -4,7 +4,7 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
-const createCompiler = config => {
+const createCompiler = (config) => {
 	const compiler = webpack(config);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
@@ -34,7 +34,7 @@ describe("WatcherEvents", () => {
 
 	jest.setTimeout(10000);
 
-	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", done => {
+	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", (done) => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
@@ -52,7 +52,7 @@ describe("WatcherEvents", () => {
 		});
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", done => {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", (done) => {
 		let called = false;
 
 		const compiler = createMultiCompiler();

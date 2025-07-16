@@ -77,7 +77,7 @@ const ${identifier} = new WebAssembly.Module(
 			match = regexp.exec(content);
 		}
 
-		const newContent = content.replace(regexp, match => replaces.get(match));
+		const newContent = content.replace(regexp, (match) => replaces.get(match));
 
 		if (newContent !== content) {
 			if (doWrite) {

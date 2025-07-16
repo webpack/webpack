@@ -49,8 +49,8 @@ module.exports = {
 		]
 	},
 	plugins: [
-		compiler =>
-			compiler.hooks.done.tap("test case", stats => {
+		(compiler) =>
+			compiler.hooks.done.tap("test case", (stats) => {
 				try {
 					expect(stats.compilation.getAsset("assets/file.png")).toHaveProperty(
 						"info",

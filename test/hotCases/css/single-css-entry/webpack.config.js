@@ -13,7 +13,7 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.additionalTreeRuntimeRequirements.tap(
 						"Test",
 						(module, set, _context) => {

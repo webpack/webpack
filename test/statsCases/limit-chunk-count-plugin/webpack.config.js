@@ -3,7 +3,7 @@
 const webpack = require("../../../");
 
 /** @type {import("../../../").Configuration[]} */
-module.exports = [1, 2, 3, 4].map(n => ({
+module.exports = [1, 2, 3, 4].map((n) => ({
 	name: `${n} chunks`,
 	mode: "production",
 	entry: "./index",

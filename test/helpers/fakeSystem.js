@@ -14,7 +14,7 @@ const System = {
 			fn = deps;
 			deps = [];
 		}
-		const dynamicExport = result => {
+		const dynamicExport = (result) => {
 			if (System.registry[name] !== entry) {
 				throw new Error(`Module ${name} calls dynamicExport too late`);
 			}
@@ -74,10 +74,10 @@ const System = {
 	registry: undefined,
 	_require: undefined,
 	_nextName: "(anonym)",
-	setRequire: req => {
+	setRequire: (req) => {
 		System._require = req;
 	},
-	init: modules => {
+	init: (modules) => {
 		System.registry = {};
 		if (modules) {
 			for (const name of Object.keys(modules)) {
@@ -88,13 +88,13 @@ const System = {
 			}
 		}
 	},
-	execute: name => {
+	execute: (name) => {
 		const m = System.registry[name];
 		if (!m) throw new Error(`Module ${name} not registered`);
 		if (m.executed) throw new Error(`Module ${name} was already executed`);
 		return System.ensureExecuted(name);
 	},
-	ensureExecuted: name => {
+	ensureExecuted: (name) => {
 		let m = System.registry[name];
 		if (!m && System._require) {
 			const oldName = System._nextName;

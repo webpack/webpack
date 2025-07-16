@@ -31,7 +31,7 @@ const createMultiCompiler = (progressOptions, configOptions) => {
 	return compiler;
 };
 
-const createSimpleCompiler = progressOptions => {
+const createSimpleCompiler = (progressOptions) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js",
@@ -51,7 +51,7 @@ const createSimpleCompiler = progressOptions => {
 	return compiler;
 };
 
-const createSimpleCompilerWithCustomHandler = options => {
+const createSimpleCompilerWithCustomHandler = (options) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js"
@@ -68,11 +68,11 @@ const createSimpleCompilerWithCustomHandler = options => {
 	return compiler;
 };
 
-const getLogs = logsStr => logsStr.split(/\r/).filter(v => v !== " ");
+const getLogs = (logsStr) => logsStr.split(/\r/).filter((v) => v !== " ");
 
-const runCompilerAsync = compiler =>
+const runCompilerAsync = (compiler) =>
 	new Promise((resolve, reject) => {
-		compiler.run(err => {
+		compiler.run((err) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -97,7 +97,7 @@ describe("ProgressPlugin", () => {
 		stdout && stdout.restore();
 	});
 
-	const nanTest = createCompiler => () => {
+	const nanTest = (createCompiler) => () => {
 		const compiler = createCompiler();
 
 		return runCompilerAsync(compiler).then(() => {
@@ -121,7 +121,7 @@ describe("ProgressPlugin", () => {
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
 
-	it("should start print only on call run/watch", done => {
+	it("should start print only on call run/watch", (done) => {
 		const compiler = createSimpleCompiler();
 
 		const logs = getLogs(stderr.toString());
@@ -162,7 +162,7 @@ describe("ProgressPlugin", () => {
 		});
 	});
 
-	const monotonicTest = createCompiler => () => {
+	const monotonicTest = (createCompiler) => () => {
 		const handlerCalls = [];
 		const compiler = createCompiler({
 			handler: (p, ...args) => {
@@ -195,7 +195,7 @@ describe("ProgressPlugin", () => {
 
 	it(
 		"should have monotonic increasing progress (multi compiler, parallelism)",
-		monotonicTest(o => createMultiCompiler(o, { parallelism: 1 }))
+		monotonicTest((o) => createMultiCompiler(o, { parallelism: 1 }))
 	);
 
 	it("should not print lines longer than stderr.columns", () => {

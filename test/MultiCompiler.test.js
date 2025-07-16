@@ -6,7 +6,7 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
-const createMultiCompiler = options => {
+const createMultiCompiler = (options) => {
 	const compiler = webpack(
 		Object.assign(
 			[
@@ -34,12 +34,12 @@ const createMultiCompiler = options => {
 describe("MultiCompiler", () => {
 	jest.setTimeout(20000);
 
-	it("should trigger 'run' for each child compiler", done => {
+	it("should trigger 'run' for each child compiler", (done) => {
 		const compiler = createMultiCompiler();
 		let called = 0;
 
 		compiler.hooks.run.tap("MultiCompiler test", () => called++);
-		compiler.run(err => {
+		compiler.run((err) => {
 			if (err) {
 				throw err;
 			}
@@ -48,12 +48,12 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should trigger 'watchRun' for each child compiler", done => {
+	it("should trigger 'watchRun' for each child compiler", (done) => {
 		const compiler = createMultiCompiler();
 		let called = 0;
 
 		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
-		compiler.watch(1000, err => {
+		compiler.watch(1000, (err) => {
 			if (err) {
 				throw err;
 			}
@@ -62,7 +62,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (run)", done => {
+	it("should not be running twice at a time (run)", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
@@ -74,7 +74,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (watch)", done => {
+	it("should not be running twice at a time (watch)", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
@@ -86,7 +86,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (run - watch)", done => {
+	it("should not be running twice at a time (run - watch)", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
@@ -98,7 +98,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (watch - run)", done => {
+	it("should not be running twice at a time (watch - run)", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
@@ -110,7 +110,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (instance cb)", done => {
+	it("should not be running twice at a time (instance cb)", (done) => {
 		const compiler = webpack(
 			{
 				context: __dirname,
@@ -131,7 +131,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should run again correctly after first compilation", done => {
+	it("should run again correctly after first compilation", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
@@ -143,7 +143,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should watch again correctly after first compilation", done => {
+	it("should watch again correctly after first compilation", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
@@ -155,7 +155,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should run again correctly after first closed watch", done => {
+	it("should run again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
@@ -168,7 +168,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should watch again correctly after first closed watch", done => {
+	it("should watch again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
@@ -181,7 +181,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should respect parallelism and dependencies for running", done => {
+	it("should respect parallelism and dependencies for running", (done) => {
 		const compiler = createMultiCompiler({
 			parallelism: 1,
 			2: {
@@ -218,7 +218,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should respect parallelism and dependencies for watching", done => {
+	it("should respect parallelism and dependencies for watching", (done) => {
 		const compiler = webpack(
 			Object.assign(
 				[
@@ -390,7 +390,7 @@ describe("MultiCompiler", () => {
 		});
 	});
 
-	it("should respect parallelism when using invalidate", done => {
+	it("should respect parallelism when using invalidate", (done) => {
 		const configs = [
 			{
 				name: "a",
@@ -425,7 +425,7 @@ describe("MultiCompiler", () => {
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 		let state = 0;
-		const watching = compiler.watch({}, error => {
+		const watching = compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -443,7 +443,7 @@ describe("MultiCompiler", () => {
 		`);
 			events.length = 0;
 
-			watching.invalidate(err => {
+			watching.invalidate((err) => {
 				try {
 					if (err) return done(err);
 
@@ -470,7 +470,7 @@ describe("MultiCompiler", () => {
 		});
 	}, 2000);
 
-	it("should respect dependencies when using invalidate", done => {
+	it("should respect dependencies when using invalidate", (done) => {
 		const compiler = webpack([
 			{
 				name: "a",
@@ -504,7 +504,7 @@ describe("MultiCompiler", () => {
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 		let state = 0;
-		const watching = compiler.watch({}, error => {
+		const watching = compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -522,7 +522,7 @@ describe("MultiCompiler", () => {
 		`);
 			events.length = 0;
 
-			watching.invalidate(err => {
+			watching.invalidate((err) => {
 				try {
 					if (err) return done(err);
 
@@ -549,7 +549,7 @@ describe("MultiCompiler", () => {
 		});
 	}, 2000);
 
-	it("shouldn't hang when invalidating watchers", done => {
+	it("shouldn't hang when invalidating watchers", (done) => {
 		const entriesA = { a: "./a.js" };
 		const entriesB = { b: "./b.js" };
 		const compiler = webpack([
@@ -570,7 +570,7 @@ describe("MultiCompiler", () => {
 		compiler.watchFileSystem = { watch() {} };
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 
-		const watching = compiler.watch({}, error => {
+		const watching = compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -579,14 +579,14 @@ describe("MultiCompiler", () => {
 			entriesA.b = "./b.js";
 			entriesB.a = "./a.js";
 
-			watching.invalidate(err => {
+			watching.invalidate((err) => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
 		});
 	}, 2000);
 
-	it("shouldn't hang when invalidating during build", done => {
+	it("shouldn't hang when invalidating during build", (done) => {
 		const compiler = webpack(
 			Object.assign([
 				{

@@ -16,7 +16,7 @@ const config = {
 				const files = fs.readdirSync(watchDir);
 				return `
 					export const routes = {
-						${files.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
+						${files.map((key) => `${key.split(".")[0]}: () => import('./routes/${key}')`).join(",\n")}
 					}
 				`;
 			},

@@ -85,7 +85,7 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 
 		const prettierConfig = await prettier.resolveConfig(filePath);
 		const newContent = await prettier.format(
-			content.replace(regexp, match => replaces.get(match)),
+			content.replace(regexp, (match) => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);
 

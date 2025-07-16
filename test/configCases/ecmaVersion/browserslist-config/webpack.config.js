@@ -6,8 +6,8 @@ const path = require("path");
 module.exports = {
 	target: `browserslist:${path.join(__dirname, ".browserslistrc")}`,
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": false,

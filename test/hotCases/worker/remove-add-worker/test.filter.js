@@ -2,4 +2,4 @@
 
 const supportsWorker = require("../../../helpers/supportsWorker");
 
-module.exports = config => supportsWorker() && config.target !== "async-node";
+module.exports = (config) => supportsWorker() && config.target !== "async-node";

@@ -14,18 +14,18 @@ const { TestRunner } = require("./runner/index");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
-categories = categories.map(cat => ({
+categories = categories.map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter(folder => !folder.includes("_"))
+		.filter((folder) => !folder.includes("_"))
 }));
 
-const createLogger = appendTarget => ({
-	log: l => appendTarget.push(l),
-	debug: l => appendTarget.push(l),
-	trace: l => appendTarget.push(l),
-	info: l => appendTarget.push(l),
+const createLogger = (appendTarget) => ({
+	log: (l) => appendTarget.push(l),
+	debug: (l) => appendTarget.push(l),
+	trace: (l) => appendTarget.push(l),
+	info: (l) => appendTarget.push(l),
 	warn: console.warn.bind(console),
 	error: console.error.bind(console),
 	logTime: () => {},
@@ -38,7 +38,7 @@ const createLogger = appendTarget => ({
 	status: () => {}
 });
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
 		let stderr;
 
@@ -55,7 +55,7 @@ const describeCases = config => {
 			describe(category.name, () => {
 				jest.setTimeout(30000);
 
-				for (const testName of category.tests.filter(test => {
+				for (const testName of category.tests.filter((test) => {
 					const testDirectory = path.join(casesPath, category.name, test);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -190,7 +190,7 @@ const describeCases = config => {
 							plugins: [
 								...(config.plugins || []),
 								function testCasesTest() {
-									this.hooks.compilation.tap("TestCasesTest", compilation => {
+									this.hooks.compilation.tap("TestCasesTest", (compilation) => {
 										for (const hook of [
 											"optimize",
 											"optimizeModules",
@@ -217,7 +217,7 @@ const describeCases = config => {
 							}
 						};
 
-						beforeAll(done => {
+						beforeAll((done) => {
 							rimraf(cacheDirectory, done);
 						});
 
@@ -232,7 +232,7 @@ const describeCases = config => {
 						if (config.cache) {
 							it(
 								`${testName} should pre-compile to fill disk cache (1st)`,
-								done => {
+								(done) => {
 									const oldPath = options.output.path;
 									options.output.path = path.join(
 										options.output.path,
@@ -243,7 +243,7 @@ const describeCases = config => {
 
 									const webpack = require("..");
 
-									webpack(options, err => {
+									webpack(options, (err) => {
 										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
@@ -276,7 +276,7 @@ const describeCases = config => {
 
 							it(
 								`${testName} should pre-compile to fill disk cache (2nd)`,
-								done => {
+								(done) => {
 									const oldPath = options.output.path;
 									options.output.path = path.join(
 										options.output.path,
@@ -287,7 +287,7 @@ const describeCases = config => {
 
 									const webpack = require("..");
 
-									webpack(options, err => {
+									webpack(options, (err) => {
 										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
@@ -321,7 +321,7 @@ const describeCases = config => {
 
 						it(
 							`${testName} should compile`,
-							done => {
+							(done) => {
 								infraStructureLog.length = 0;
 
 								const webpack = require("..");
@@ -353,7 +353,7 @@ const describeCases = config => {
 										) {
 											return;
 										}
-										compiler.close(err => {
+										compiler.close((err) => {
 											if (err) return done(err);
 											const statOptions = {
 												preset: "verbose",
@@ -417,7 +417,7 @@ const describeCases = config => {
 								if (config.cache) {
 									// pre-compile to fill memory cache
 									const deprecationTracker = deprecationTracking.start();
-									compiler.run(err => {
+									compiler.run((err) => {
 										deprecationTracker();
 										if (err) return done(err);
 										run();
@@ -431,7 +431,7 @@ const describeCases = config => {
 								(config.cache ? 20000 : 60000)
 						);
 
-						it(`${testName} should load the compiled tests`, done => {
+						it(`${testName} should load the compiled tests`, (done) => {
 							const runner = new TestRunner({
 								target: options.target,
 								outputDirectory,

@@ -13,7 +13,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		if (!fn) return null;
 		const rfn =
 			fn.length >= 1
-				? done => {
+				? (done) => {
 						fn((...args) => {
 							if (isTest) runTests++;
 							done(...args);
@@ -37,7 +37,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			it("should run the exported tests", () => {
 				runTests++;
 			});
-			afterAll(done => {
+			afterAll((done) => {
 				for (const dispose of disposables) {
 					dispose();
 				}
@@ -48,7 +48,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		}
 	);
 	let numberOfTests = 0;
-	const inSuite = fn => {
+	const inSuite = (fn) => {
 		const {
 			currentDescribeBlock: oldCurrentDescribeBlock,
 			currentlyRunningTest: oldCurrentlyRunningTest,
@@ -71,7 +71,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;
 	};
-	const fixAsyncError = block => {
+	const fixAsyncError = (block) => {
 		// By default jest leaks memory as it stores asyncError
 		// for each "it" call to track the origin test suite
 		// We want to evaluate this early here to avoid leaking memory

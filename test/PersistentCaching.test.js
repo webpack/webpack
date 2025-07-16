@@ -48,11 +48,11 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	beforeEach(done => {
+	beforeEach((done) => {
 		rimraf(tempPath, done);
 	});
 
-	const updateSrc = async data => {
+	const updateSrc = async (data) => {
 		const ts = new Date(Date.now() - 10000);
 		await mkdir(srcPath, { recursive: true });
 		for (const key of Object.keys(data)) {
@@ -84,7 +84,7 @@ describe("Persistent Caching", () => {
 
 	const execute = () => {
 		const cache = {};
-		const require = name => {
+		const require = (name) => {
 			if (cache[name]) return cache[name].exports;
 			if (!name.endsWith(".js")) name += ".js";
 			const p = path.resolve(outputPath, name);
@@ -161,7 +161,7 @@ export { style };
 			"e.js": 'import "lodash";'
 		};
 		await updateSrc(data);
-		const c = items => {
+		const c = (items) => {
 			const entry = {};
 			for (const item of items) entry[item] = `./src/${item}.js`;
 			return compile({ entry, cache: { compression: false } });
@@ -233,7 +233,7 @@ sum([1,2,3])
 		const firstCacheFiles = (await readdir(cachePath)).sort();
 		// cSpell:words Mtimes
 		const firstMtimes = firstCacheFiles.map(
-			f => fs.statSync(path.join(cachePath, f)).mtime
+			(f) => fs.statSync(path.join(cachePath, f)).mtime
 		);
 
 		await updateSrc({
@@ -251,7 +251,7 @@ import 'lodash';
 		const cacheFiles = (await readdir(cachePath)).sort();
 		expect(cacheFiles).toStrictEqual(firstCacheFiles);
 		expect(
-			firstCacheFiles.map(f => fs.statSync(path.join(cachePath, f)).mtime)
+			firstCacheFiles.map((f) => fs.statSync(path.join(cachePath, f)).mtime)
 			// cSpell:words Mtimes
 		).toStrictEqual(firstMtimes);
 	}, 20000);

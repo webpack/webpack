@@ -23,7 +23,7 @@ module.exports = {
 			 * @param {import("../../../../").Entrypoint} entrypoint The entrypoint to generate runtime chunk name for
 			 * @returns {string} The generated runtime chunk name
 			 */
-			name: entrypoint => `runtime-${entrypoint.name}`
+			name: (entrypoint) => `runtime-${entrypoint.name}`
 		}
 	},
 	output: {

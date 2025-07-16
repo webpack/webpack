@@ -9,14 +9,14 @@ module.exports = {
 	},
 	plugins: [
 		{
-			apply: compiler => {
-				compiler.hooks.compilation.tap("TestPlugin", compilation => {
+			apply: (compiler) => {
+				compiler.hooks.compilation.tap("TestPlugin", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "TestPlugin",
 							additionalAssets: true
 						},
-						assets => {
+						(assets) => {
 							for (const asset of Object.keys(assets)) {
 								switch (asset) {
 									case "images/file.svg": {
@@ -24,7 +24,7 @@ module.exports = {
 											custom: true,
 											related: { first: ["first"] }
 										});
-										compilation.updateAsset(asset, assets[asset], info => ({
+										compilation.updateAsset(asset, assets[asset], (info) => ({
 											...info,
 											related: {
 												.../** @type {{ related: Record<string, string | string[]> }} */ (

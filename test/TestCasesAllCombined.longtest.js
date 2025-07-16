@@ -13,7 +13,7 @@ describe("TestCases", () => {
 			chunkIds: "named"
 		},
 		plugins: [
-			c => {
+			(c) => {
 				const webpack = require("..");
 
 				new webpack.HotModuleReplacementPlugin().apply(c);

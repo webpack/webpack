@@ -20,7 +20,7 @@ module.exports = {
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					/** @type {Record<string, string>} */
 					const data = {};

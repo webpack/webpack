@@ -4,7 +4,7 @@ const path = require("path");
 const webpack = require("../../../");
 
 /** @type {import("../../../").Configuration[]} */
-module.exports = ["fitting", "content-change"].map(type => ({
+module.exports = ["fitting", "content-change"].map((type) => ({
 	name: type,
 	mode: "production",
 	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets

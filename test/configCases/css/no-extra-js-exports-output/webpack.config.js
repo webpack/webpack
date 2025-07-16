@@ -8,7 +8,7 @@ const webpack = require("../../../../");
  * @param {0 | 1 | 2} i index
  * @returns {{ main: string[] }} entry
  */
-const entry = i => {
+const entry = (i) => {
 	switch (i) {
 		case 0:
 			return {
@@ -29,7 +29,7 @@ const entry = i => {
  * @param {0 | 1 | 2} i param
  * @returns {import("../../../../").Configuration} return
  */
-const common = i => ({
+const common = (i) => ({
 	entry: {
 		...entry(i)
 	},
@@ -47,7 +47,7 @@ const common = i => ({
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-webpack-plugin",
@@ -72,4 +72,4 @@ const common = i => ({
 });
 
 /** @type {import("../../../../").Configuration[]} */
-module.exports = /** @type {(0 | 1 | 2)[]} */ ([0, 1]).map(i => common(i));
+module.exports = /** @type {(0 | 1 | 2)[]} */ ([0, 1]).map((i) => common(i));

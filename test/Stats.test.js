@@ -4,7 +4,7 @@ require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
 
-const compile = options =>
+const compile = (options) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("..");
 

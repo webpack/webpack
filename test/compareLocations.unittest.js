@@ -2,7 +2,7 @@
 
 const { compareLocations } = require("../lib/util/comparators");
 
-const createPosition = overrides => ({
+const createPosition = (overrides) => ({
 	line: 10,
 	column: 5,
 	...overrides

@@ -30,8 +30,8 @@ module.exports = {
 			/**
 			 * @param {Compilation} compilation compilation
 			 */
-			const handler = compilation => {
-				compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+			const handler = (compilation) => {
+				compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 					const source = assets["test.js"].source();
 					expect(source).toContain("export const value");
 				});

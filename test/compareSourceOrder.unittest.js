@@ -23,7 +23,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["c", "a", "d", "b"]);
+		expect(deps.map((d) => d.name)).toEqual(["c", "a", "d", "b"]);
 	});
 
 	it("should sort dependencies by main order when both in map", () => {
@@ -40,7 +40,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["c", "b", "a"]);
+		expect(deps.map((d) => d.name)).toEqual(["c", "b", "a"]);
 	});
 
 	it("should sort by sub order when main order is same", () => {
@@ -57,7 +57,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["a", "c", "b"]);
+		expect(deps.map((d) => d.name)).toEqual(["a", "c", "b"]);
 	});
 
 	it("should sort mixed dependencies - some in map, some not", () => {
@@ -72,7 +72,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["a", "b", "c"]);
+		expect(deps.map((d) => d.name)).toEqual(["a", "b", "c"]);
 	});
 
 	it("should sort by sourceOrder when none in map", () => {
@@ -84,7 +84,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["a", "b", "c"]);
+		expect(deps.map((d) => d.name)).toEqual(["a", "b", "c"]);
 	});
 
 	it("should sort complex scenario with negative and decimal values", () => {
@@ -106,7 +106,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["a", "b", "e", "c", "f", "d"]);
+		expect(deps.map((d) => d.name)).toEqual(["a", "b", "e", "c", "f", "d"]);
 	});
 
 	it("should maintain stable sort for equal values", () => {
@@ -118,6 +118,6 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map(d => d.name)).toEqual(["b", "a", "c"]);
+		expect(deps.map((d) => d.name)).toEqual(["b", "a", "c"]);
 	});
 });

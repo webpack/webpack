@@ -20,7 +20,7 @@ const common = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-webpack-plugin",
@@ -44,7 +44,7 @@ const common = {
 	],
 	optimization: {
 		runtimeChunk: {
-			name: entrypoint => `runtime~${entrypoint.name}`
+			name: (entrypoint) => `runtime~${entrypoint.name}`
 		}
 	}
 };
@@ -53,7 +53,7 @@ const common = {
  * @param {number} i index
  * @returns {import("../../../../").Configuration | undefined} configuration
  */
-const entry = i => {
+const entry = (i) => {
 	switch (i % 4) {
 		case 0:
 			return {
@@ -91,7 +91,7 @@ const entry = i => {
  * @param {number} i index
  * @returns {import("../../../../").Configuration} configuration
  */
-const esm = i => ({
+const esm = (i) => ({
 	...common,
 	...entry(i),
 	output: {
@@ -112,7 +112,7 @@ const esm = i => ({
  * @param {number} i index
  * @returns {import("../../../../").Configuration} configuration
  */
-const node = i => ({
+const node = (i) => ({
 	...common,
 	...entry(i),
 	output: {
@@ -129,7 +129,7 @@ const node = i => ({
  * @param {number} i index
  * @returns {import("../../../../").Configuration} configuration
  */
-const web = i => ({
+const web = (i) => ({
 	...common,
 	...entry(i),
 	output: {
@@ -145,9 +145,9 @@ const web = i => ({
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	// web
-	...[0, 1, 2, 3].map(i => web(i)),
+	...[0, 1, 2, 3].map((i) => web(i)),
 	// node
-	...[4, 5, 6, 7].map(i => node(i)),
+	...[4, 5, 6, 7].map((i) => node(i)),
 	// ESM
-	...[8, 9, 10, 11].map(i => esm(i))
+	...[8, 9, 10, 11].map((i) => esm(i))
 ];

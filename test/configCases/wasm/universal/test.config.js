@@ -10,7 +10,7 @@ module.exports = {
 			delete scope.document;
 			delete scope.self;
 		} else {
-			scope.fetch = resource =>
+			scope.fetch = (resource) =>
 				new Promise((resolve, reject) => {
 					fs.readFile(url.fileURLToPath(resource), (err, data) => {
 						if (err) {

@@ -18,7 +18,7 @@ describe("Examples", () => {
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 			describe.skip(relativePath, () =>
-				it("filtered", done => {
+				it("filtered", (done) => {
 					done();
 				})
 			);
@@ -26,7 +26,7 @@ describe("Examples", () => {
 			continue;
 		}
 
-		it(`should compile ${relativePath}`, done => {
+		it(`should compile ${relativePath}`, (done) => {
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath =

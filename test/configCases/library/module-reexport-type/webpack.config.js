@@ -7,7 +7,7 @@ module.exports = {
 	mode: "none",
 	entry: { main: "./index.ts" },
 	ignoreWarnings: [
-		warning => {
+		(warning) => {
 			// when using swc-loader or `transpileOnly: true` with ts-loader, the warning is expected
 			expect(warning.message).toContain(
 				"export 'T' (reexported as 'T') was not found in './re-export' (possible exports: value)"
@@ -51,8 +51,8 @@ module.exports = {
 			/**
 			 * @param {Compilation} compilation compilation
 			 */
-			const handler = compilation => {
-				compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+			const handler = (compilation) => {
+				compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 					const source = assets["bundle0.mjs"].source();
 					expect(source).toContain(
 						"export { file_namespaceObject as logo, value };"

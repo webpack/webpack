@@ -18,7 +18,7 @@ module.exports = {
 		}
 	},
 	moduleScope(scope, options) {
-		scope.fetch = resource =>
+		scope.fetch = (resource) =>
 			new Promise((resolve, reject) => {
 				const file = /^file:/i.test(resource)
 					? url.fileURLToPath(resource)

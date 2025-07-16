@@ -14,7 +14,7 @@ module.exports = {
 			 * @param {PathData} data data
 			 * @returns {string} filename
 			 */
-			filename: data =>
+			filename: (data) =>
 				`${data.chunk.name + data.chunk.name + data.chunk.name}.js`
 		}
 	},
@@ -23,11 +23,11 @@ module.exports = {
 		 * @param {PathData} data data
 		 * @returns {string} filename
 		 */
-		filename: data => `${data.chunk.name + data.chunk.name}.js`,
+		filename: (data) => `${data.chunk.name + data.chunk.name}.js`,
 		/**
 		 * @param {PathData} data data
 		 * @returns {string} filename
 		 */
-		chunkFilename: data => `${data.chunk.name + data.chunk.name}.js`
+		chunkFilename: (data) => `${data.chunk.name + data.chunk.name}.js`
 	}
 };

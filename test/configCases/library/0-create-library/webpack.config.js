@@ -429,7 +429,7 @@ module.exports = (env, { testPath }) => [
 				"external-named": "./non-external-named"
 			}
 		},
-		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
+		ignoreWarnings: [(error) => error.name === "FalseIIFEUmdWarning"]
 	},
 	{
 		output: {
@@ -446,7 +446,7 @@ module.exports = (env, { testPath }) => [
 				"external-named": "./non-external-named"
 			}
 		},
-		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
+		ignoreWarnings: [(error) => error.name === "FalseIIFEUmdWarning"]
 	},
 	{
 		output: {

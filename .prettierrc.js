@@ -5,7 +5,7 @@ module.exports = {
 	useTabs: true,
 	tabWidth: 2,
 	trailingComma: "none",
-	arrowParens: "avoid",
+	arrowParens: "always",
 	overrides: [
 		{
 			files: "*.json",

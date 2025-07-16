@@ -8,9 +8,9 @@ const check = (expected, actual) => {
 		expected = { message: expected };
 	}
 	if (Array.isArray(expected)) {
-		return expected.every(e => check(e, actual));
+		return expected.every((e) => check(e, actual));
 	}
-	return Object.keys(expected).every(key => {
+	return Object.keys(expected).every((key) => {
 		let value = actual[key];
 		if (typeof value === "object") {
 			value = JSON.stringify(value);
@@ -19,12 +19,12 @@ const check = (expected, actual) => {
 	});
 };
 
-const explain = object => {
+const explain = (object) => {
 	if (object instanceof RegExp) {
 		object = { message: object };
 	}
 	return Object.keys(object)
-		.map(key => {
+		.map((key) => {
 			let value = object[key];
 			if (typeof value === "object" && !(value instanceof RegExp)) {
 				value = JSON.stringify(value);
@@ -55,11 +55,11 @@ const diffItems = (actual, expected, kind) => {
 	const diff = [];
 	if (missing.length > 0) {
 		diff.push(`The following expected ${kind}s are missing:
-${missing.map(item => `${explain(item)}`).join("\n\n")}`);
+${missing.map((item) => `${explain(item)}`).join("\n\n")}`);
 	}
 	if (tooMuch.length > 0) {
 		diff.push(`The following ${kind}s are unexpected:
-${tooMuch.map(item => `${explain(item)}`).join("\n\n")}`);
+${tooMuch.map((item) => `${explain(item)}`).join("\n\n")}`);
 	}
 	return diff.join("\n\n");
 };
@@ -81,7 +81,7 @@ module.exports = function checkArrayExpectation(
 	}
 	let array = object[`${kind}s`];
 	if (Array.isArray(array) && kind === "warning") {
-		array = array.filter(item => !/from Terser/.test(item));
+		array = array.filter((item) => !/from Terser/.test(item));
 	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);

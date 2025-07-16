@@ -1,7 +1,7 @@
 "use strict";
 
 /** @type {(variant: boolean) => import("../../../../").Configuration} */
-const config = o => ({
+const config = (o) => ({
 	externals: {
 		"module-fs": o ? "module fs" : "module fs/promises",
 		fs: o ? "node-commonjs fs" : "node-commonjs fs/promises",

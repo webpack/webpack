@@ -10,8 +10,8 @@ const { Compilation } = require("../../../");
  * @param {string[]} exts extensions
  * @returns {(compiler: Compiler) => void} callback for comperssion
  */
-const compression = exts => compiler => {
-	compiler.hooks.thisCompilation.tap("Test", compilation => {
+const compression = (exts) => (compiler) => {
+	compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 		compilation.hooks.processAssets.tap(
 			{
 				name: "Test",
@@ -41,7 +41,7 @@ const compression = exts => compiler => {
  * @param {string} name name
  * @returns {Configuration} configuration
  */
-const base = name => ({
+const base = (name) => ({
 	name,
 	mode: "development",
 	devtool: "source-map",
