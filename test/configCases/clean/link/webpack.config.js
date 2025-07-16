@@ -10,7 +10,7 @@ module.exports = {
 		clean: true
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			let once = true;
 			compiler.hooks.environment.tap("Test", () => {
 				if (once) {
@@ -29,7 +29,7 @@ module.exports = {
 					once = false;
 				}
 			});
-			compiler.hooks.afterEmit.tap("Test", compilation => {
+			compiler.hooks.afterEmit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
 				expect(readDir(outputPath)).toMatchInlineSnapshot(`
 			Object {

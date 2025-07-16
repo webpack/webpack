@@ -17,8 +17,8 @@ module.exports = {
 		concatenateModules: false
 	},
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.afterModuleHash.tap("Test", () => {
 					const hashes = [];
 					expect(() => {

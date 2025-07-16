@@ -10,7 +10,7 @@ const vm = require("vm");
  * @param {string} path path
  * @returns {string} subPath
  */
-const getSubPath = path => {
+const getSubPath = (path) => {
 	let subPath = "";
 	const lastSlash = path.lastIndexOf("/");
 	let firstSlash = path.indexOf("/");
@@ -34,7 +34,7 @@ const getSubPath = path => {
  * @param {string} path path
  * @returns {boolean} whether path is a relative path
  */
-const isRelativePath = path => /^\.\.?\//.test(path);
+const isRelativePath = (path) => /^\.\.?\//.test(path);
 
 /**
  * @param {string} url url
@@ -51,7 +51,7 @@ const urlToPath = (url, outputDirectory) => {
  * @param {string} url url
  * @returns {string} relative path
  */
-const urlToRelativePath = url => {
+const urlToRelativePath = (url) => {
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
 	return `./${url}`;
@@ -191,7 +191,7 @@ class TestRunner {
 			console,
 			expect,
 			jest,
-			nsObj: m => {
+			nsObj: (m) => {
 				Object.defineProperty(m, Symbol.toStringTag, {
 					value: "Module"
 				});
@@ -248,7 +248,7 @@ class TestRunner {
 				subPath: "",
 				modulePath: path.join(currentDirectory, ".array-require.js"),
 				content: `module.exports = (${module
-					.map(arg => `require(${JSON.stringify(`./${arg}`)})`)
+					.map((arg) => `require(${JSON.stringify(`./${arg}`)})`)
 					.join(", ")});`
 			};
 		}
@@ -340,7 +340,7 @@ class TestRunner {
 					this.require.bind(this, path.dirname(modulePath)),
 					this.require
 				),
-				importScripts: url => {
+				importScripts: (url) => {
 					expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
 					this.require(this.outputDirectory, urlToRelativePath(url));
 				},
@@ -358,7 +358,7 @@ class TestRunner {
 				_content = `Object.assign(global, _globalAssign); ${content}`;
 			}
 			const args = Object.keys(moduleScope);
-			const argValues = args.map(arg => moduleScope[arg]);
+			const argValues = args.map((arg) => moduleScope[arg]);
 			const code = `(function(${args.join(", ")}) {${_content}\n})`;
 			const document = this._moduleScope.document;
 			const fn = this._runInNewContext
@@ -484,14 +484,14 @@ class TestRunner {
 	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json runner
 	 */
 	createJSONRunner() {
-		return moduleInfo => JSON.parse(moduleInfo.content);
+		return (moduleInfo) => JSON.parse(moduleInfo.content);
 	}
 
 	/**
 	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw runner
 	 */
 	createRawRunner() {
-		return moduleInfo => moduleInfo.content;
+		return (moduleInfo) => moduleInfo.content;
 	}
 
 	/**
@@ -507,11 +507,11 @@ class TestRunner {
 
 			const document = new FakeDocument(outputDirectory);
 			if (this.testConfig.evaluateScriptOnAttached) {
-				document.onScript = src => {
+				document.onScript = (src) => {
 					this.require(outputDirectory, urlToRelativePath(src));
 				};
 			}
-			const fetch = async url => {
+			const fetch = async (url) => {
 				try {
 					const buffer = await new Promise((resolve, reject) => {
 						fs.readFile(urlToPath(url, this.outputDirectory), (err, b) =>

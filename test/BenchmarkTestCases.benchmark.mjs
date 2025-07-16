@@ -42,7 +42,7 @@ const checkV8Flags = () => {
 	const requiredFlags = getV8Flags();
 	const actualFlags = process.execArgv;
 	const missingFlags = requiredFlags.filter(
-		flag => !actualFlags.includes(flag)
+		(flag) => !actualFlags.includes(flag)
 	);
 	if (missingFlags.length > 0) {
 		console.warn(`Missing required flags: ${missingFlags.join(", ")}`);
@@ -364,11 +364,11 @@ async function registerSuite(bench, test, baselines) {
 	).default;
 
 	await Promise.all(
-		baselines.map(async baseline => {
+		baselines.map(async (baseline) => {
 			const webpack = await baseline.webpack();
 
 			await Promise.all(
-				scenarios.map(async scenario => {
+				scenarios.map(async (scenario) => {
 					const config = buildConfiguration(
 						test,
 						baseline,
@@ -393,7 +393,7 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
-								const watchingPromise = new Promise(res => {
+								const watchingPromise = new Promise((res) => {
 									watchingResolve = res;
 								});
 
@@ -401,12 +401,12 @@ async function registerSuite(bench, test, baselines) {
 									writeFile(
 										entry,
 										`${originalEntryContent};console.log('watch test')`,
-										err => {
+										(err) => {
 											if (err) {
 												reject(err);
 											}
 
-											watchingPromise.then(stats => {
+											watchingPromise.then((stats) => {
 												// Construct and print stats to be more accurate with real life projects
 												stats.toString();
 
@@ -423,7 +423,7 @@ async function registerSuite(bench, test, baselines) {
 									watching = await runWatch(webpack(config));
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
-										stats => {
+										(stats) => {
 											if (watchingResolve) {
 												watchingResolve(stats);
 											}
@@ -432,7 +432,7 @@ async function registerSuite(bench, test, baselines) {
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
-										writeFile(entry, originalEntryContent, err => {
+										writeFile(entry, originalEntryContent, (err) => {
 											if (err) {
 												reject(err);
 												return;
@@ -445,7 +445,7 @@ async function registerSuite(bench, test, baselines) {
 								async afterAll() {
 									await new Promise((resolve, reject) => {
 										if (watching) {
-											watching.close(closeErr => {
+											watching.close((closeErr) => {
 												if (closeErr) {
 													reject(closeErr);
 													return;
@@ -475,7 +475,7 @@ async function registerSuite(bench, test, baselines) {
 											throw new Error(stats.toString());
 										}
 
-										baseCompiler.close(closeErr => {
+										baseCompiler.close((closeErr) => {
 											if (closeErr) {
 												reject(closeErr);
 												return;
@@ -517,15 +517,15 @@ const NEGATIVE_FILTER =
 const casesPath = path.join(__dirname, "benchmarkCases");
 const allBenchmarks = (await fs.readdir(casesPath))
 	.filter(
-		item =>
+		(item) =>
 			!item.includes("_") &&
 			(FILTER ? FILTER.test(item) : true) &&
 			(NEGATIVE_FILTER ? !NEGATIVE_FILTER.test(item) : true)
 	)
 	.sort((a, b) => a.localeCompare(b));
 
-const benchmarks = allBenchmarks.filter(item => !item.includes("-long"));
-const longBenchmarks = allBenchmarks.filter(item => item.includes("-long"));
+const benchmarks = allBenchmarks.filter((item) => !item.includes("-long"));
+const longBenchmarks = allBenchmarks.filter((item) => item.includes("-long"));
 const i = Math.floor(benchmarks.length / longBenchmarks.length);
 
 for (const [index, value] of longBenchmarks.entries()) {
@@ -534,7 +534,7 @@ for (const [index, value] of longBenchmarks.entries()) {
 
 const shard =
 	typeof process.env.SHARD !== "undefined"
-		? process.env.SHARD.split("/").map(item => Number.parseInt(item, 10))
+		? process.env.SHARD.split("/").map((item) => Number.parseInt(item, 10))
 		: [1, 1];
 
 if (
@@ -568,7 +568,7 @@ if (countOfBenchmarks < shard[1]) {
 }
 
 await Promise.all(
-	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map(benchmark =>
+	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map((benchmark) =>
 		registerSuite(bench, benchmark, baselines)
 	)
 );
@@ -607,7 +607,7 @@ function formatTime(value) {
 
 const statsByTests = new Map();
 
-bench.addEventListener("cycle", event => {
+bench.addEventListener("cycle", (event) => {
 	const task = event.task;
 	const runs = task.runs;
 	const nSqrt = Math.sqrt(runs);
@@ -647,7 +647,7 @@ bench.addEventListener("cycle", event => {
 });
 
 // Fix for https://github.com/CodSpeedHQ/codspeed-node/issues/44
-for (const name of bench.tasks.map(task => task.name)) {
+for (const name of bench.tasks.map((task) => task.name)) {
 	const task = bench.getTask(name);
 
 	task.opts = task.fnOpts;

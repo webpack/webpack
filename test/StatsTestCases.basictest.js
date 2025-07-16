@@ -13,18 +13,18 @@ const captureStdio = require("./helpers/captureStdio");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
 const tests = fs
 	.readdirSync(base)
 	.filter(
-		testName =>
+		(testName) =>
 			fs.existsSync(path.join(base, testName, "index.js")) ||
 			fs.existsSync(path.join(base, testName, "webpack.config.js"))
 	)
-	.filter(testName => {
+	.filter((testName) => {
 		const testDirectory = path.join(base, testName);
 		const filterPath = path.join(testDirectory, "test.filter.js");
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
@@ -50,7 +50,7 @@ describe("StatsTestCases", () => {
 
 	for (const testName of tests) {
 		// eslint-disable-next-line no-loop-func
-		it(`should print correct stats for ${testName}`, done => {
+		it(`should print correct stats for ${testName}`, (done) => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -118,7 +118,7 @@ describe("StatsTestCases", () => {
 						}
 					]);
 				};
-				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
+				c.hooks.compilation.tap("StatsTestCasesTest", (compilation) => {
 					for (const hook of [
 						"optimize",
 						"optimizeModules",
@@ -137,7 +137,7 @@ describe("StatsTestCases", () => {
 				if (err) return done(err);
 				for (const compilation of [
 					...(stats.stats ? stats.stats : [stats])
-				].map(s => s.compilation)) {
+				].map((s) => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
 				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
@@ -179,7 +179,7 @@ describe("StatsTestCases", () => {
 					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
 				if (Array.isArray(c.options) && !toStringOptions.children) {
-					toStringOptions.children = c.options.map(o => o.stats);
+					toStringOptions.children = c.options.map((o) => o.stats);
 				}
 				// mock timestamps
 				for (const { compilation: s } of stats.stats ? stats.stats : [stats]) {
@@ -216,7 +216,7 @@ describe("StatsTestCases", () => {
 					.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 					.replace(
 						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
-						match => `${match.replace(/[0-9a-f]/g, "X")}`
+						(match) => `${match.replace(/[0-9a-f]/g, "X")}`
 					)
 					// Normalize stack traces between Jest v27 and v30
 					// Jest v27: at Object.<anonymous>.module.exports

@@ -14,7 +14,7 @@ const cont = (base, count) => {
 const mw = new BinaryMiddleware();
 const other = { other: true };
 
-const resolveLazy = item => {
+const resolveLazy = (item) => {
 	if (SerializerMiddleware.isLazy(item)) {
 		const data = item();
 		if (Array.isArray(data)) return { resolvesTo: data.map(resolveLazy) };
@@ -68,7 +68,7 @@ describe("BinaryMiddleware", () => {
 	items.push(undefined);
 
 	const cases = [
-		...itemsWithLazy.map(item => [item]),
+		...itemsWithLazy.map((item) => [item]),
 		[(true, true)],
 		[false, true],
 		[true, false],
@@ -109,7 +109,7 @@ describe("BinaryMiddleware", () => {
 				for (const append of items) {
 					if (c > 1 && append !== undefined) continue;
 					const data = [prepend, ...caseData, append].filter(
-						x => x !== undefined
+						(x) => x !== undefined
 					);
 					if (data.length * c > 200000) continue;
 					if (data.length === 0) continue;

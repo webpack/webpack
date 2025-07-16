@@ -12,7 +12,7 @@ module.exports = {
 		cacheUnaffected: false
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			const base = {
 				DEFINE: "{}",
 				RUN: DefinePlugin.runtimeValue(

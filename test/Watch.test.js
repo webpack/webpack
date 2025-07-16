@@ -9,7 +9,7 @@ const webpack = require("..");
 jest.setTimeout(10000);
 
 describe("Watch", () => {
-	it("should only compile a single time", done => {
+	it("should only compile a single time", (done) => {
 		let counterBeforeCompile = 0;
 		let counterDone = 0;
 		let counterHandler = 0;
@@ -34,7 +34,7 @@ describe("Watch", () => {
 					]
 				},
 				plugins: [
-					c => {
+					(c) => {
 						c.hooks.beforeCompile.tap("test", () => {
 							counterBeforeCompile++;
 						});

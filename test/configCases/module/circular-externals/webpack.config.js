@@ -30,7 +30,7 @@ module.exports = {
 			apply(compiler) {
 				compiler.hooks.thisCompilation.tap(
 					"copy-external-files",
-					compilation => {
+					(compilation) => {
 						compilation.hooks.processAssets.tap(
 							{
 								name: "copy-external-files",

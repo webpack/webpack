@@ -95,7 +95,7 @@ module.exports = [
 				minSize: 0, // enforce all
 				chunks: "all",
 				cacheGroups: {
-					libs: module => {
+					libs: (module) => {
 						const name = module.nameForCondition();
 						if (!name) return;
 						const match = /[\\/](xyz|x)\.js/.exec(name);

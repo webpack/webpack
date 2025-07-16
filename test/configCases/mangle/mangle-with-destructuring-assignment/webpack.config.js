@@ -22,7 +22,7 @@ module.exports = {
 		function getJsonCodeGeneratedSource(compiler) {
 			compiler.hooks.compilation.tap(
 				getJsonCodeGeneratedSource.name,
-				compilation => {
+				(compilation) => {
 					compilation.hooks.processAssets.tap(
 						getJsonCodeGeneratedSource.name,
 						() => {

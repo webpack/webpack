@@ -25,7 +25,7 @@ module.exports = {
 				/** @type {GeneratorOptionsByModuleTypeKnown['asset/resource']} */
 				generator: {
 					binary: false,
-					filename: pathInfo =>
+					filename: (pathInfo) =>
 						/** @type {string} */
 						(pathInfo.filename).replace(/\.scss/gi, ".css")
 				},

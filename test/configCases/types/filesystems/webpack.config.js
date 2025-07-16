@@ -6,7 +6,7 @@ const memfs = require("memfs");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			// eslint-disable-next-line no-warning-comments
 			// @ts-ignore
 			compiler.outputFileSystem = memfs.fs;

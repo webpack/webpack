@@ -6,7 +6,7 @@ const { ItemCacheFacade, MultiItemCache } = require("../lib/CacheFacade");
 describe("MultiItemCache", () => {
 	it("throws when getting items from an empty Cache", () => {
 		const multiItemCache = new MultiItemCache(generateItemCaches(0));
-		expect(() => multiItemCache.get(_ => _())).toThrow(/_ is not a function/);
+		expect(() => multiItemCache.get((_) => _())).toThrow(/_ is not a function/);
 	});
 
 	it("returns the single ItemCacheFacade when passed an array of length 1", () => {

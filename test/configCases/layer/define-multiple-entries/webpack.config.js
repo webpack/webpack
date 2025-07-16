@@ -32,7 +32,7 @@ module.exports = {
 	plugins: [
 		new DefinePlugin({
 			FREE_VERSION: DefinePlugin.runtimeValue(
-				ctx => ctx.module.layer === "free"
+				(ctx) => ctx.module.layer === "free"
 			)
 		})
 	]

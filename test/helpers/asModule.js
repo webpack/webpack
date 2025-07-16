@@ -15,7 +15,7 @@ module.exports = async (something, context, unlinked) => {
 	context[SYNTHETIC_MODULES_STORE].push(something);
 	const code = [...new Set(["default", ...Object.keys(something)])]
 		.map(
-			name =>
+			(name) =>
 				`const _${name} = ${SYNTHETIC_MODULES_STORE}[${i}]${
 					name === "default" ? "" : `[${JSON.stringify(name)}]`
 				}; export { _${name} as ${name}};`

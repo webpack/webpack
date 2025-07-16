@@ -22,14 +22,14 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "Test",
 							stage:
 								compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
 						},
-						assets => {
+						(assets) => {
 							if (
 								assets["bundle0.mjs"]
 									.source()

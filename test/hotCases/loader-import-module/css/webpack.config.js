@@ -23,8 +23,8 @@ module.exports = {
 		]
 	},
 	plugins: [
-		compiler =>
-			compiler.hooks.done.tap("test case", stats => {
+		(compiler) =>
+			compiler.hooks.done.tap("test case", (stats) => {
 				const png = stats.compilation.getAsset("assets/file.png");
 				const jpg = stats.compilation.getAsset("assets/file.jpg");
 				if (png) {

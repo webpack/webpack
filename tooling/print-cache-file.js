@@ -22,7 +22,7 @@ const lazySizes = [];
  * @param {(Buffer | (() => Promise<Buffer[]>))[]} data data
  * @returns {Promise<SizeInfo>} size info
  */
-const captureSize = async data => {
+const captureSize = async (data) => {
 	let size = 0;
 	let lazySize = 0;
 	for (const b of data) {
@@ -78,7 +78,7 @@ const printData = async (data, indent) => {
 	/**
 	 * @param {string} content content
 	 */
-	const printLine = content => {
+	const printLine = (content) => {
 		console.log(`${indent}${content}`);
 	};
 	printLine(`Version: ${read()}`);

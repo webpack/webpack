@@ -12,7 +12,7 @@ module.exports = {
 	},
 	plugins: [
 		function apply() {
-			this.hooks.compilation.tap("Test", compilation => {
+			this.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.dependencyReferencedExports.tap(
 					"Test",
 					(referencedExports, dep) => {
@@ -27,14 +27,14 @@ module.exports = {
 							refModule &&
 							refModule.identifier().endsWith("reference.js") &&
 							referencedExports.some(
-								names =>
+								(names) =>
 									Array.isArray(names) &&
 									names.length === 1 &&
 									names[0] === "unused"
 							)
 						) {
 							return referencedExports.filter(
-								names =>
+								(names) =>
 									(Array.isArray(names) && names.length !== 1) ||
 									/** @type {string[]} */
 									(names)[0] !== "unused"

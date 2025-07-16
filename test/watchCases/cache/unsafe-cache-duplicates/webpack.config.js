@@ -13,17 +13,17 @@ module.exports = (env, { srcPath }) => ({
 		idleTimeout: 1
 	},
 	module: {
-		unsafeCache: module =>
+		unsafeCache: (module) =>
 			/module\.js/.test(/** @type {NormalModule} */ (module).resource)
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.cache.hooks.get.tap(
 				{
 					name: "webpack.config.js",
 					stage: -1000
 				},
-				identifier => {
+				(identifier) => {
 					if (identifier.includes(path.join(srcPath, "module.js"))) {
 						return null;
 					}

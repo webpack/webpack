@@ -13,9 +13,9 @@ module.exports = {
 		}
 	},
 	plugins: [
-		compiler => {
-			compiler.hooks.thisCompilation.tap("Test", compilation => {
-				compilation.hooks.processAssets.tap("Test", assets => {
+		(compiler) => {
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+				compilation.hooks.processAssets.tap("Test", (assets) => {
 					const outputPath = compilation.getPath(compiler.outputPath, {});
 					const customDir = path.join(outputPath, "this/dir/should/be/removed");
 					fs.mkdirSync(customDir, { recursive: true });
@@ -23,7 +23,7 @@ module.exports = {
 					assets["this/dir/should/not/be/removed/file.ext"] = new RawSource("");
 				});
 			});
-			compiler.hooks.afterEmit.tap("Test", compilation => {
+			compiler.hooks.afterEmit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
 				expect(readDir(outputPath)).toMatchInlineSnapshot(`
 			Object {

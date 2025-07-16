@@ -9,7 +9,7 @@ module.exports = {
 		b: "./b"
 	},
 	output: {
-		filename: data =>
+		filename: (data) =>
 			`${/** @type {Chunk} */ (data.chunk).name || /** @type {Chunk} */ (data.chunk).id}.js`,
 		libraryTarget: "commonjs2"
 	},
@@ -20,7 +20,7 @@ module.exports = {
 				shared: {
 					chunks: "all",
 					test: /shared/,
-					filename: data =>
+					filename: (data) =>
 						`shared-${/** @type {Chunk} */ (data.chunk).name || /** @type {Chunk} */ (data.chunk).id}.js`,
 					enforce: true
 				},

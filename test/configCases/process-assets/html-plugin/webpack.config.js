@@ -26,7 +26,7 @@ class VerifyAdditionalAssetsPlugin {
 	apply(compiler) {
 		compiler.hooks.compilation.tap(
 			"VerifyAdditionalAssetsPlugin",
-			compilation => {
+			(compilation) => {
 				const alreadySeenAssets = new Set();
 				compilation.hooks.processAssets.tap(
 					{
@@ -34,7 +34,7 @@ class VerifyAdditionalAssetsPlugin {
 						stage: this.stage,
 						additionalAssets: true
 					},
-					assets => {
+					(assets) => {
 						for (const asset of Object.keys(assets)) {
 							expect(alreadySeenAssets).not.toContain(asset);
 							alreadySeenAssets.add(asset);
@@ -58,7 +58,7 @@ class HtmlPlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.compilation.tap("html-plugin", compilation => {
+		compiler.hooks.compilation.tap("html-plugin", (compilation) => {
 			compilation.hooks.processAssets.tap(
 				{
 					name: "html-plugin",
@@ -78,19 +78,19 @@ class HtmlPlugin {
 					 * @param {string} file file
 					 * @returns {string} content of script tag
 					 */
-					const toScriptTag = file => {
+					const toScriptTag = (file) => {
 						const asset = /** @type {Asset} */ (compilation.getAsset(file));
 						const hash = createHash("sha512");
 						hash.update(asset.source.source());
 						const integrity = `sha512-${hash.digest("base64")}`;
 						compilation.updateAsset(
 							file,
-							x => x,
+							(x) => x,
 							/**
 							 * @param {AssetInfo} assetInfo asset info
 							 * @returns {AssetInfo} new asset info
 							 */
-							assetInfo => ({
+							(assetInfo) => ({
 								...assetInfo,
 								contenthash: Array.isArray(assetInfo.contenthash)
 									? [...new Set([...assetInfo.contenthash, integrity])]
@@ -108,7 +108,7 @@ class HtmlPlugin {
 						new OriginalSource(
 							`<html>
 	<body>
-${files.map(file => `		${toScriptTag(file)}`).join("\n")}
+${files.map((file) => `		${toScriptTag(file)}`).join("\n")}
 	</body>
 </html>`,
 							"index.html"
@@ -132,14 +132,14 @@ class HtmlInlinePlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.compilation.tap("html-inline-plugin", compilation => {
+		compiler.hooks.compilation.tap("html-inline-plugin", (compilation) => {
 			compilation.hooks.processAssets.tap(
 				{
 					name: "html-inline-plugin",
 					stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE,
 					additionalAssets: true
 				},
-				assets => {
+				(assets) => {
 					const publicPath =
 						/** @type {string} */
 						(compilation.outputOptions.publicPath);
@@ -193,7 +193,7 @@ class SriHashSupportPlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.compilation.tap("sri-hash-support-plugin", compilation => {
+		compiler.hooks.compilation.tap("sri-hash-support-plugin", (compilation) => {
 			RealContentHashPlugin.getCompilationHooks(compilation).updateHash.tap(
 				"sri-hash-support-plugin",
 				(input, oldHash) => {
@@ -213,24 +213,24 @@ class HtmlMinimizePlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.compilation.tap("html-minimize-plugin", compilation => {
+		compiler.hooks.compilation.tap("html-minimize-plugin", (compilation) => {
 			compilation.hooks.processAssets.tap(
 				{
 					name: "html-minimize-plugin",
 					stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
 					additionalAssets: true
 				},
-				assets => {
+				(assets) => {
 					for (const name of Object.keys(assets)) {
 						if (/\.html$/.test(name)) {
 							compilation.updateAsset(
 								name,
-								source =>
+								(source) =>
 									new RawSource(
 										/** @type {string} */
 										(source.source()).replace(/\s+/g, " ")
 									),
-								assetInfo => ({
+								(assetInfo) => ({
 									...assetInfo,
 									minimized: true
 								})

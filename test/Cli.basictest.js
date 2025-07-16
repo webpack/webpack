@@ -59,9 +59,9 @@ describe("Cli", () => {
 		});
 	};
 
-	test("none", {}, {}, e => e.toMatchInlineSnapshot("Object {}"));
+	test("none", {}, {}, (e) => e.toMatchInlineSnapshot("Object {}"));
 
-	test("root boolean", { bail: true }, {}, e =>
+	test("root boolean", { bail: true }, {}, (e) =>
 		e.toMatchInlineSnapshot(`
 		Object {
 		  "bail": true,
@@ -69,7 +69,7 @@ describe("Cli", () => {
 	`)
 	);
 
-	test("root single item of multiple", { entry: "./a.js" }, {}, e =>
+	test("root single item of multiple", { entry: "./a.js" }, {}, (e) =>
 		e.toMatchInlineSnapshot(`
 		Object {
 		  "entry": Array [
@@ -83,7 +83,7 @@ describe("Cli", () => {
 		"root single item of multiple with existing item",
 		{ entry: "./a.js" },
 		{ entry: "./old.js" },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "entry": Array [
@@ -98,7 +98,7 @@ describe("Cli", () => {
 		"root single item of multiple with existing items",
 		{ entry: "./a.js" },
 		{ entry: ["./old1.js", "./old2.js"] },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "entry": Array [
@@ -110,7 +110,7 @@ describe("Cli", () => {
 		`)
 	);
 
-	test("root multiple items", { entry: ["./a.js", "./b.js"] }, {}, e =>
+	test("root multiple items", { entry: ["./a.js", "./b.js"] }, {}, (e) =>
 		e.toMatchInlineSnapshot(`
 		Object {
 		  "entry": Array [
@@ -125,7 +125,7 @@ describe("Cli", () => {
 		"root multiple items with existing item",
 		{ entry: ["./a.js", "./b.js"] },
 		{ entry: "./old.js" },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "entry": Array [
@@ -141,7 +141,7 @@ describe("Cli", () => {
 		"root multiple items with existing items",
 		{ entry: ["./a.js", "./b.js"] },
 		{ entry: ["./old1.js", "./old2.js"] },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "entry": Array [
@@ -154,7 +154,7 @@ describe("Cli", () => {
 		`)
 	);
 
-	test("nested boolean", { "experiments-top-level-await": true }, {}, e =>
+	test("nested boolean", { "experiments-top-level-await": true }, {}, (e) =>
 		e.toMatchInlineSnapshot(`
 		Object {
 		  "experiments": Object {
@@ -168,7 +168,7 @@ describe("Cli", () => {
 		"nested regexp",
 		{ "stats-warnings-filter": ["/module/", "path"] },
 		{},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "stats": Object {
@@ -188,7 +188,7 @@ describe("Cli", () => {
 			"module-rules-use": ["css-loader", "babel-loader"]
 		},
 		{},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "module": Object {
@@ -227,7 +227,7 @@ describe("Cli", () => {
 				]
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "module": Object {
@@ -259,7 +259,7 @@ describe("Cli", () => {
 			"output-chunk-load-timeout": "20000"
 		},
 		{},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "output": Object {
@@ -285,7 +285,7 @@ describe("Cli", () => {
 			amd: "false"
 		},
 		{},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "amd": false,
@@ -328,7 +328,7 @@ describe("Cli", () => {
 				library: "hello"
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			Array [
 			  Object {

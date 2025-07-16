@@ -76,7 +76,7 @@ describe("WatchSuspend", () => {
 			}
 		});
 
-		it("should compile successfully", done => {
+		it("should compile successfully", (done) => {
 			onChange = () => {
 				expect(fs.readFileSync(outputFile, "utf8")).toContain("'foo'");
 				onChange = null;
@@ -84,7 +84,7 @@ describe("WatchSuspend", () => {
 			};
 		});
 
-		it("should suspend compilation", done => {
+		it("should suspend compilation", (done) => {
 			onChange = jest.fn();
 			watching.suspend();
 			fs.writeFileSync(filePath, "'bar'", "utf8");
@@ -95,7 +95,7 @@ describe("WatchSuspend", () => {
 			}, 1000);
 		});
 
-		it("should resume compilation", done => {
+		it("should resume compilation", (done) => {
 			onChange = () => {
 				expect(fs.readFileSync(outputFile, "utf8")).toContain("'bar'");
 				onChange = null;
@@ -110,14 +110,14 @@ describe("WatchSuspend", () => {
 				it(`should not ignore changes during resumed compilation (changeBefore: ${changeBefore}, delay: ${delay}ms)`, async () => {
 					// aggregateTimeout must be long enough for this test
 					//  So set-up new watcher and wait when initial compilation is done
-					await new Promise(resolve => {
+					await new Promise((resolve) => {
 						watching.close(() => {
 							watching = compiler.watch({ aggregateTimeout: 1000 }, () => {
 								resolve();
 							});
 						});
 					});
-					return new Promise(resolve => {
+					return new Promise((resolve) => {
 						if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf8");
 						setTimeout(() => {
 							watching.suspend();
@@ -146,7 +146,7 @@ describe("WatchSuspend", () => {
 			}
 		}
 
-		it("should not drop changes when suspended", done => {
+		it("should not drop changes when suspended", (done) => {
 			const aggregateTimeout = 50;
 			// Trigger initial compilation with file2.js (assuming correct)
 			fs.writeFileSync(

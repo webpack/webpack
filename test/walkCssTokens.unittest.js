@@ -77,13 +77,13 @@ describe("walkCssTokens", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
-		.filter(test => /\.css/.test(test))
-		.map(item => [
+		.filter((test) => /\.css/.test(test))
+		.map((item) => [
 			item,
 			fs.readFileSync(path.resolve(casesPath, item), "utf8")
 		]);
 
 	for (const [name, code] of tests) {
-		test(name, code, e => e.toMatchSnapshot());
+		test(name, code, (e) => e.toMatchSnapshot());
 	}
 });

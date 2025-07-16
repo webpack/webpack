@@ -30,7 +30,7 @@ const common = (i, options) => ({
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-webpack-plugin",

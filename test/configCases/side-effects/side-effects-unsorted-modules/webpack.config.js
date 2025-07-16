@@ -8,7 +8,7 @@ class ReorderModulesPlugin {
 	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
-		compiler.hooks.compilation.tap("ReorderModulesPlugin", compilation => {
+		compiler.hooks.compilation.tap("ReorderModulesPlugin", (compilation) => {
 			compilation.hooks.seal.tap("ReorderModulesPlugin", () => {
 				const sortedModules = [...compilation.modules].sort((a, _b) =>
 					/** @type {NormalModule} */

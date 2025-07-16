@@ -11,8 +11,8 @@ module.exports = {
 	},
 	devtool: "source-map",
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.processAssets.tap(
 					{
 						name: "Test",

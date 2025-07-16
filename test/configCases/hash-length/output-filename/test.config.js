@@ -3,7 +3,7 @@
 const fs = require("fs");
 
 const findFile = (files, regex) =>
-	files.find(file => {
+	files.find((file) => {
 		if (regex.test(file)) {
 			return true;
 		}

@@ -7,7 +7,7 @@ const { ChunkGraph, ExternalModule } = require("../../../../");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
 				const { chunkGraph } = compilation;
 				for (const chunk of compilation.chunks) {
@@ -23,7 +23,7 @@ module.exports = {
 					expect(chunk.getNumberOfModules()).toBe(4);
 					expect(new Set(chunk.modulesIterable)).toContain(module);
 					expect(new Set(chunk.getModules())).toContain(chunk.entryModule);
-					expect(chunk.hasModuleInGraph(m => m === module)).toBe(true);
+					expect(chunk.hasModuleInGraph((m) => m === module)).toBe(true);
 					expect(chunk.containsModule(module)).toBe(true);
 					chunk.removeModule(module);
 					module.removeChunk(chunk);

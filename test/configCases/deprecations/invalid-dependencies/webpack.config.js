@@ -14,9 +14,9 @@ module.exports = {
 		]
 	},
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
-				compilation.hooks.succeedModule.tap("Test", module => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
+				compilation.hooks.succeedModule.tap("Test", (module) => {
 					const fileDeps = new webpack.util.LazySet();
 					const contextDeps = new webpack.util.LazySet();
 					const missingDeps = new webpack.util.LazySet();

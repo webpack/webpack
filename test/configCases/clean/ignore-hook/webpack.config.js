@@ -12,17 +12,17 @@ module.exports = {
 		clean: true
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			let once = true;
-			compiler.hooks.thisCompilation.tap("Test", compilation => {
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 				webpack.CleanPlugin.getCompilationHooks(compilation).keep.tap(
 					"Test",
-					asset => {
+					(asset) => {
 						if (/[/\\]ignored[/\\]dir[/\\]/.test(asset)) return true;
 						if (asset.includes("ignored/too")) return true;
 					}
 				);
-				compilation.hooks.processAssets.tap("Test", assets => {
+				compilation.hooks.processAssets.tap("Test", (assets) => {
 					if (once) {
 						const outputPath = compilation.getPath(compiler.outputPath, {});
 						const customDir = path.join(
@@ -48,7 +48,7 @@ module.exports = {
 					assets["this/dir/should/not/be/removed/file.ext"] = new RawSource("");
 				});
 			});
-			compiler.hooks.afterEmit.tap("Test", compilation => {
+			compiler.hooks.afterEmit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
 				expect(readDir(outputPath)).toMatchInlineSnapshot(`
 			Object {

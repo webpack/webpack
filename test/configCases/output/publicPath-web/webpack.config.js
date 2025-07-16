@@ -21,7 +21,7 @@ module.exports = {
 		};
 	},
 	output: {
-		filename: data =>
+		filename: (data) =>
 			/^[ac]$/.test(
 				/** @type {string} */ (
 					/** @type {Chunk} */

@@ -12,7 +12,7 @@ module.exports = {
 		scope.AudioContext = class AudioContext {
 			constructor() {
 				this.audioWorklet = {
-					addModule: url => Promise.resolve(FakeWorker.bind(null, url))
+					addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
 				};
 			}
 		};

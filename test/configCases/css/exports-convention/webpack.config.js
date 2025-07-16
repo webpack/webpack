@@ -48,7 +48,7 @@ const common = {
 						resourceQuery: /\?upper$/,
 						/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 						generator: {
-							exportsConvention: name => name.toUpperCase()
+							exportsConvention: (name) => name.toUpperCase()
 						}
 					}
 				]

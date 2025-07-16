@@ -104,7 +104,7 @@ if (${options.type === "module"}) {
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			this.worker.on(
 				"message",
-				(this._onmessage = data => {
+				(this._onmessage = (data) => {
 					value({
 						data
 					});

@@ -137,9 +137,6 @@ export default defineConfig([
 
 			"id-length": "off",
 
-			"unicorn/no-array-for-each": "off",
-			"unicorn/prefer-includes": "off",
-
 			"jsdoc/require-jsdoc": "off",
 
 			// Revisit it in future
@@ -205,7 +202,6 @@ export default defineConfig([
 	{
 		files: [
 			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
-			"examples/**/*.js",
 			"test/NodeTemplatePlugin.test.js",
 			"test/PersistentCaching.test.js"
 		],

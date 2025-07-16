@@ -18,7 +18,7 @@ module.exports = class LogTestPlugin {
 		/**
 		 * @param {ReturnType<Compilation["getLogger"]>} logger logger
 		 */
-		const logSome = logger => {
+		const logSome = (logger) => {
 			logger.group("Group");
 			if (!this.noTraced) {
 				logger.error("Error");
@@ -38,7 +38,7 @@ module.exports = class LogTestPlugin {
 			logger.log("End");
 		};
 		logSome(compiler.getInfrastructureLogger("LogTestPlugin"));
-		compiler.hooks.compilation.tap("LogTestPlugin", compilation => {
+		compiler.hooks.compilation.tap("LogTestPlugin", (compilation) => {
 			const logger = compilation.getLogger("LogTestPlugin");
 			logSome(logger);
 

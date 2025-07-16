@@ -8,7 +8,7 @@ const webpack = require("..");
 describe("HotModuleReplacementPlugin", () => {
 	jest.setTimeout(20000);
 
-	it("should not have circular hashes but equal if unmodified", done => {
+	it("should not have circular hashes but equal if unmodified", (done) => {
 		const entryFile = path.join(
 			__dirname,
 			"js",
@@ -100,7 +100,7 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	}, 120000);
 
-	it("output.clean=true should keep 1 last update", done => {
+	it("output.clean=true should keep 1 last update", (done) => {
 		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
@@ -113,7 +113,7 @@ describe("HotModuleReplacementPlugin", () => {
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf8");
 		const updates = new Set();
-		const hasFile = file => {
+		const hasFile = (file) => {
 			try {
 				fs.statSync(path.join(outputPath, file));
 				return true;
@@ -157,7 +157,7 @@ describe("HotModuleReplacementPlugin", () => {
 					}
 					return setTimeout(() => {
 						fs.writeFileSync(entryFile, `${++step}`, "utf8");
-						compiler.run(err => {
+						compiler.run((err) => {
 							if (err) return done(err);
 							for (const file of updates) {
 								expect(hasFile(file)).toBe(false);
@@ -175,7 +175,7 @@ describe("HotModuleReplacementPlugin", () => {
 		compiler.run(callback);
 	}, 20000);
 
-	it("should correct working when entry is Object and key is a number", done => {
+	it("should correct working when entry is Object and key is a number", (done) => {
 		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const statsFile3 = path.join(
@@ -239,7 +239,7 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	});
 
-	it("should handle entryFile that contains path variable", done => {
+	it("should handle entryFile that contains path variable", (done) => {
 		const entryFile = path.join(
 			__dirname,
 			"js",

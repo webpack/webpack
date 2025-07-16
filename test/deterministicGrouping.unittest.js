@@ -10,7 +10,10 @@ describe("deterministicGrouping", () => {
 			maxSize,
 			getKey: ([key]) => `${100000 + key}`,
 			getSize: ([, size]) => size
-		}).map(group => ({ items: group.items.map(([i]) => i), size: group.size }));
+		}).map((group) => ({
+			items: group.items.map(([i]) => i),
+			size: group.size
+		}));
 
 	it("should split large chunks with different size types", () => {
 		expect(

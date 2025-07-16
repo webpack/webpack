@@ -8,17 +8,17 @@ const rimraf = require("rimraf");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
-const toMiB = bytes => `${Math.round(bytes / 1024 / 1024)}MiB`;
+const toMiB = (bytes) => `${Math.round(bytes / 1024 / 1024)}MiB`;
 const base = path.join(__dirname, "memoryLimitCases");
 const outputBase = path.join(__dirname, "js", "memoryLimit");
 const tests = fs
 	.readdirSync(base)
 	.filter(
-		testName =>
+		(testName) =>
 			fs.existsSync(path.join(base, testName, "index.js")) ||
 			fs.existsSync(path.join(base, testName, "webpack.config.js"))
 	)
-	.filter(testName => {
+	.filter((testName) => {
 		const testDirectory = path.join(base, testName);
 		const filterPath = path.join(testDirectory, "test.filter.js");
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
@@ -62,7 +62,7 @@ describe("MemoryLimitTestCases", () => {
 		const size = toMiB(testConfig.heapSizeLimitBytes);
 
 		// eslint-disable-next-line no-loop-func
-		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, done => {
+		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, (done) => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });

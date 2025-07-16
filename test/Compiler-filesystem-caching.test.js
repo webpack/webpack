@@ -53,7 +53,7 @@ describe("Compiler (filesystem caching)", () => {
 				apply(compiler) {
 					const name = "TestCachePlugin";
 
-					compiler.hooks.thisCompilation.tap(name, compilation => {
+					compiler.hooks.thisCompilation.tap(name, (compilation) => {
 						compilation.hooks.processAssets.tapPromise(
 							{
 								name,
@@ -158,7 +158,7 @@ describe("Compiler (filesystem caching)", () => {
 			const c = webpack(options);
 			c.hooks.compilation.tap(
 				"CompilerCachingTest",
-				compilation => (compilation.bail = true)
+				(compilation) => (compilation.bail = true)
 			);
 			c.run((err, stats) => {
 				if (err) throw err;
@@ -224,14 +224,14 @@ describe("Compiler (filesystem caching)", () => {
 		};
 	}
 
-	it("should compile again when cached asset has changed but loader output remains the same", done => {
+	it("should compile again when cached asset has changed but loader output remains the same", (done) => {
 		const tempFixture = createTempFixture();
 
-		const onError = error => done(error);
+		const onError = (error) => done(error);
 
 		const helper = compile(
 			tempFixture.usesAssetFilepath,
-			stats => {
+			(stats) => {
 				// Not cached the first time
 				expect(stats.assets[0].name).toBe("bundle.js");
 				expect(stats.assets[0].emitted).toBe(true);
@@ -239,7 +239,7 @@ describe("Compiler (filesystem caching)", () => {
 				expect(stats.assets[1].name).toMatch(/\w+\.svg$/);
 				expect(stats.assets[0].emitted).toBe(true);
 
-				helper.runAgain(stats => {
+				helper.runAgain((stats) => {
 					// Cached the second run
 					expect(stats.assets[0].name).toBe("bundle.js");
 					expect(stats.assets[0].emitted).toBe(false);
@@ -254,7 +254,7 @@ describe("Compiler (filesystem caching)", () => {
 
 					fs.writeFileSync(tempFixture.svgFilepath, svgContent);
 
-					helper.runAgain(stats => {
+					helper.runAgain((stats) => {
 						// Still cached after file modification because loader always returns empty
 						expect(stats.assets[0].name).toBe("bundle.js");
 						expect(stats.assets[0].emitted).toBe(false);

@@ -20,7 +20,7 @@ module.exports = {
 				 * @param {Resolver & { hooks: { file: SyncBailHook<[ResolveRequest, ResolveContext], void> } }} resolver resolver
 				 */
 				apply(resolver) {
-					resolver.hooks.file.tap("Test", request => {
+					resolver.hooks.file.tap("Test", (request) => {
 						if (
 							/test.configCases.*test.configCases/.test(
 								/** @type {string} */
