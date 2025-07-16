@@ -1496,9 +1496,9 @@
   integrity sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==
 
 "@types/node@*", "@types/node@^24.0.13":
-  version "24.0.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.13.tgz#93ed8c05c7b188a59760be0ce2ee3fa7ad0f83f6"
-  integrity sha512-Qm9OYVOFHFYg3wJoTSrz80hoec5Lia/dPp84do3X7dZvLikQvM1YpmvTBEdIr/e+U8HTkFjLHLnl78K/qjf+jQ==
+  version "24.0.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.14.tgz#6e3d4fb6d858c48c69707394e1a0e08ce1ecc1bc"
+  integrity sha512-4zXMWD91vBLGRtHK3YbIoFMia+1nqEz72coM42C5ETjnNCa/heoj7NT1G67iAfOqMmcfhuCZ4uNpyz8EjlAejw==
   dependencies:
     undici-types "~7.8.0"
 
@@ -3315,9 +3315,9 @@ eslint-config-prettier@^10.1.1:
   integrity sha512-zc1UmCpNltmVY34vuLRV61r1K27sWuX39E+uyUnY8xS2Bex88VV9cugG+UZbRSRGtGyFboj+D8JODyme1plMpw==
 
 eslint-config-webpack@^4.3.0:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.3.4.tgz#995c7036898f015078b5d59716c4ec8fc8cfd0e6"
-  integrity sha512-u0wlSpmIaxEvPGzMi3hKtSxOmj933oMVM+pTabghQTrqLP27ZzYr1l/cs/WrnT2ZKP9VyccV16IVp9V2YZrh+w==
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.4.0.tgz#56fae0c217c1226b3ce9f3e00f4ce62d8f1cc6b1"
+  integrity sha512-W0hMYVayDR4Sk+owcKtJDNEoiFDTHNzQJk/wnIBOxh6xjgOVj9MnHPtIP6AB3Ru2Suc+T8juIjfxyn3vuM0ptg==
   dependencies:
     detect-indent "^7.0.1"
     jsonc-eslint-parser "^2.4.0"
