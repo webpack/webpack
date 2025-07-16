@@ -1,3 +1,5 @@
+"use strict";
+
 const { CachedSource } = require("webpack-sources");
 const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 

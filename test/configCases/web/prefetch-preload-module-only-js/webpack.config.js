@@ -1,3 +1,5 @@
+"use strict";
+
 const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
 
 /** @type {import("../../../../").Configuration} */

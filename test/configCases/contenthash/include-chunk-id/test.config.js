@@ -1,3 +1,5 @@
+"use strict";
+
 const findOutputFiles = require("../../../helpers/findOutputFiles");
 
 const allFilenameHashes = new Set();

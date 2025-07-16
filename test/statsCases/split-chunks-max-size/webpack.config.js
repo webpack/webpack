@@ -1,3 +1,5 @@
+"use strict";
+
 const stats = {
 	hash: false,
 	timings: false,

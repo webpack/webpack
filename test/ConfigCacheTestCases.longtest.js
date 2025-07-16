@@ -1,3 +1,5 @@
+"use strict";
+
 const { describeCases } = require("./ConfigTestCases.template");
 
 describeCases({

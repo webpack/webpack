@@ -1,3 +1,5 @@
+"use strict";
+
 const { WebpackError } = require("../../../");
 
 /** @type {import("../../../").Configuration[]} */

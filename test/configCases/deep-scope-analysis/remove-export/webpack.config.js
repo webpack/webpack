@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compilation} Compilation */
 /** @typedef {import("../../../../").Module} Module */
 

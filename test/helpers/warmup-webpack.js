@@ -1,3 +1,5 @@
+"use strict";
+
 describe("warmup", () => {
 	it("should warmup webpack", done => {
 		/** @type {typeof import("../../") | undefined} */

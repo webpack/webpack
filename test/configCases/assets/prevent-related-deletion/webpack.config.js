@@ -1,3 +1,5 @@
+"use strict";
+
 const { Compilation } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../../../");
 const supportsAsync = require("../../../helpers/supportsAsync");

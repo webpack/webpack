@@ -1,3 +1,5 @@
+"use strict";
+
 const {
 	sources: { RawSource, OriginalSource, ReplaceSource },
 	Compilation,

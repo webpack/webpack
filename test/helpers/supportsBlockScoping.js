@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsBlockScoping() {
 	try {
 		const f = eval(

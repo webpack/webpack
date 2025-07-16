@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/http:\/\/localhost:9990\/index\.css\?cache used to have no-cache lockfile entry and has content now, but lockfile is frozen/

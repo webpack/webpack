@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	/Expected URL in '@import nourl\(test\.css\);'/,
 	/Expected URL in '@import ;'/,

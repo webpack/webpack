@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsDefaultArgs() {
 	try {
 		const f = eval("(function f(a = 123) { return a; })");

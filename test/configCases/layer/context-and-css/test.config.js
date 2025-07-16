@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	moduleScope(scope) {
 		const light = scope.window.document.createElement("link");

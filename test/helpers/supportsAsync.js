@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsAsync() {
 	// Node.js@10 has a bug with nested async/await
 	if (process.version.startsWith("v10.")) {

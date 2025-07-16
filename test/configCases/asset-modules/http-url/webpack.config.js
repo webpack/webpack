@@ -1,3 +1,5 @@
+"use strict";
+
 const {
 	experiments: {
 		schemes: { HttpUriPlugin }

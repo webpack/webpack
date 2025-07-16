@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("webpack-sources").Source} Source */
 
 /** @type {import("../../../../").Configuration} */

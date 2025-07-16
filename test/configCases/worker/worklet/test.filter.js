@@ -1,3 +1,5 @@
+"use strict";
+
 const supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
 const supportsWorker = require("../../../helpers/supportsWorker");
 

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @this {import("../../../../").Compiler} the compiler
  */

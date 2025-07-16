@@ -1,3 +1,5 @@
+"use strict";
+
 const deterministicGrouping = require("../lib/util/deterministicGrouping");
 
 describe("deterministicGrouping", () => {

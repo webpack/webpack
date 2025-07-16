@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	validate(stats) {
 		for (const item of stats.stats) {

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[/Missing whitespace after ':global' in ':global\.class \{/],
 	[

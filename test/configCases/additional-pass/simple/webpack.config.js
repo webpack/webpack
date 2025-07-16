@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").WebpackPluginFunction} */
 function testPlugin() {
 	let counter = 1;

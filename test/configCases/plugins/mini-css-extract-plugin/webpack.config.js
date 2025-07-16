@@ -1,3 +1,5 @@
+"use strict";
+
 const MCEP = require("mini-css-extract-plugin");
 
 /** @typedef {import("../../../../").StatsCompilation} StatsCompilation */

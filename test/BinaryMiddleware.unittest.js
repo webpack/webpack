@@ -1,3 +1,5 @@
+"use strict";
+
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 

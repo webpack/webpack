@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function (config) {
 	try {
 		eval("class A { static {} }");

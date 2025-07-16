@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../").Module} Module */
 /** @typedef {import("../../../").WebpackError} WebpackError */
 

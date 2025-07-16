@@ -1,3 +1,5 @@
+"use strict";
+
 const Source = require("webpack-sources").Source;
 const Compilation = require("../../../../").Compilation;
 

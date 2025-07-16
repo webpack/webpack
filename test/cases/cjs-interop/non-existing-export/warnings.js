@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/export 'named' \(imported as 'named'\) was not found in '\.\/module' \(possible exports: default\)/

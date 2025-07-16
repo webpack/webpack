@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function PluginEnvironment() {
 	/**
 	 * @type {{ name: string, handler: EXPECTED_FUNCTION }[]}

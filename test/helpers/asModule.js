@@ -1,3 +1,5 @@
+"use strict";
+
 const vm = require("vm");
 
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";

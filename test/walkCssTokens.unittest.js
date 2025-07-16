@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const walkCssTokens = require("../lib/css/walkCssTokens");

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	moduleScope(scope) {
 		scope.global = scope.global || {};

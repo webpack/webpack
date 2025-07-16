@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @param {EXPECTED_ANY[]} useArray use array
  * @returns {EXPECTED_FUNCTION[]} functions
