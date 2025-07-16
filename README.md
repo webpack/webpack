@@ -133,16 +133,6 @@ loaders](https://webpack.js.org/api/loaders/) using Node.js.
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
-#### Files
-
-|       Name        |   Status   | Install Size | Description                                              |
-| :---------------: | :--------: | :----------: | :------------------------------------------------------- |
-| [val-loader][val] | ![val-npm] | ![val-size]  | Executes code as module and considers exports as JS code |
-
-[val]: https://github.com/webpack-contrib/val-loader
-[val-npm]: https://img.shields.io/npm/v/val-loader.svg
-[val-size]: https://packagephobia.com/badge?p=val-loader
-
 #### JSON
 
 |                                                                   Name                                                                    |   Status    | Install Size |           Description            |
