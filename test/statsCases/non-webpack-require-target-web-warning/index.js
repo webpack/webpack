@@ -1,0 +1,1 @@
+__non_webpack_require__("./a.js");

@@ -1,7 +1,7 @@
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	entry: "./index.js",
-	target: ["web"],
+	target: ["web", "node"],
 	mode: "production",
 	experiments: {
 		outputModule: true

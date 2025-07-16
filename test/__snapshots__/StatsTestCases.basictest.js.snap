@@ -1929,7 +1929,18 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
-exports[`StatsTestCases should print correct stats for non-webpack-require-web-warning 1`] = `
+exports[`StatsTestCases should print correct stats for non-webpack-require-target-array-warning 1`] = `
+"asset main.mjs X bytes [emitted] [javascript module] (name: main)
+./index.js X bytes [built] [code generated]
+
+WARNING in ./index.js 1:0-23
+APIPlugin
+__non_webpack_require__ is only allowed in target node
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for non-webpack-require-target-web-warning 1`] = `
 "asset main.mjs X bytes [emitted] [javascript module] (name: main)
 ./index.js X bytes [built] [code generated]
 
