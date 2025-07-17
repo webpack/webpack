@@ -2562,7 +2562,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	inlineInRuntimeBailout: SyncBailHook<
-		[Module, RenderBootstrapContext],
+		[Module, Partial<RenderBootstrapContext>],
 		string | void
 	>;
 	embedInRuntimeBailout: SyncBailHook<
