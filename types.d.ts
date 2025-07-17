@@ -10467,6 +10467,7 @@ declare interface MultiCompilerOptions {
 	 */
 	parallelism?: number;
 }
+type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
 declare abstract class MultiStats {
 	stats: Stats[];
 	get hash(): string;
@@ -17442,23 +17443,24 @@ declare interface WriteStreamOptions {
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
-): Compiler;
+): null | Compiler;
 declare function exports(
-	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
+	options: MultiConfiguration,
 	callback?: CallbackWebpack<MultiStats>
-): MultiCompiler;
+): null | MultiCompiler;
 declare namespace exports {
 	export const webpack: {
-		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
-			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
+			options: Configuration,
+			callback?: CallbackWebpack<Stats>
+		): null | Compiler;
+		(
+			options: MultiConfiguration,
 			callback?: CallbackWebpack<MultiStats>
-		): MultiCompiler;
+		): null | MultiCompiler;
 	};
 	export const validate: (
-		configuration:
-			| Configuration
-			| (ReadonlyArray<Configuration> & MultiCompilerOptions)
+		configuration: Configuration | MultiConfiguration
 	) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
@@ -18157,6 +18159,7 @@ declare namespace exports {
 		AssetEmittedInfo,
 		Entrypoint,
 		MultiCompilerOptions,
+		MultiConfiguration,
 		MultiStats,
 		MultiStatsOptions,
 		ResolveData,
