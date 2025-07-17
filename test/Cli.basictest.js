@@ -448,9 +448,15 @@ describe("Cli", () => {
 		});
 
 		it("env TERM", () => {
+			const isCI =
+				"CI" in process.env &&
+				("GITHUB_ACTIONS" in process.env ||
+					"GITLAB_CI" in process.env ||
+					"CIRCLECI" in process.env);
+
 			process.env.TERM = "dumb";
 
-			expect(isColorSupported()).toBe(false);
+			expect(isColorSupported()).toBe(isCI);
 		});
 
 		it("env CI", () => {
