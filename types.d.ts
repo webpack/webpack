@@ -1951,6 +1951,49 @@ type CodeValuePrimitive =
 	| boolean
 	| Function
 	| RegExp;
+declare interface Colors {
+	reset: (value?: any) => string;
+	bold: (value?: any) => string;
+	dim: (value?: any) => string;
+	italic: (value?: any) => string;
+	underline: (value?: any) => string;
+	inverse: (value?: any) => string;
+	hidden: (value?: any) => string;
+	strikethrough: (value?: any) => string;
+	black: (value?: any) => string;
+	red: (value?: any) => string;
+	green: (value?: any) => string;
+	yellow: (value?: any) => string;
+	blue: (value?: any) => string;
+	magenta: (value?: any) => string;
+	cyan: (value?: any) => string;
+	white: (value?: any) => string;
+	gray: (value?: any) => string;
+	bgBlack: (value?: any) => string;
+	bgRed: (value?: any) => string;
+	bgGreen: (value?: any) => string;
+	bgYellow: (value?: any) => string;
+	bgBlue: (value?: any) => string;
+	bgMagenta: (value?: any) => string;
+	bgCyan: (value?: any) => string;
+	bgWhite: (value?: any) => string;
+	blackBright: (value?: any) => string;
+	redBright: (value?: any) => string;
+	greenBright: (value?: any) => string;
+	yellowBright: (value?: any) => string;
+	blueBright: (value?: any) => string;
+	magentaBright: (value?: any) => string;
+	cyanBright: (value?: any) => string;
+	whiteBright: (value?: any) => string;
+	bgBlackBright: (value?: any) => string;
+	bgRedBright: (value?: any) => string;
+	bgGreenBright: (value?: any) => string;
+	bgYellowBright: (value?: any) => string;
+	bgBlueBright: (value?: any) => string;
+	bgMagentaBright: (value?: any) => string;
+	bgCyanBright: (value?: any) => string;
+	bgWhiteBright: (value?: any) => string;
+}
 declare interface Comparator<T> {
 	(a: T, b: T): 0 | 1 | -1;
 }
@@ -17412,6 +17455,7 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
+		export let createColors: (__0?: { useColor?: boolean }) => Colors;
 		export let getArguments: (
 			schema?:
 				| (JSONSchema4 & {
@@ -17448,6 +17492,7 @@ declare namespace exports {
 						};
 				  })
 		) => Flags;
+		export let isColorSupported: () => boolean;
 		export let processArguments: (
 			args: Flags,
 			config: ObjectConfiguration,
