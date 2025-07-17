@@ -160,6 +160,12 @@ declare class AbstractLibraryPlugin<T> {
 		renderContext: StartupRenderContext,
 		libraryContext: LibraryContext<T>
 	): Source;
+	renderModuleContent(
+		source: Source,
+		module: Module,
+		renderContext: ModuleContentRenderContext,
+		libraryContext: LibraryContext<{}>
+	): Source;
 	chunkHash(
 		chunk: Chunk,
 		hash: Hash,
@@ -2550,7 +2556,7 @@ declare interface CompilationHooksCssModulesPlugin {
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
+		[Source, Module, ModuleContentRenderContext]
 	>;
 	renderModuleContainer: SyncWaterfallHook<
 		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
@@ -8348,12 +8354,15 @@ declare interface KnownBuildMeta {
 	strictHarmonyModule?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
-	exportsFinalName?: Record<string, string>;
 	isCSSModule?: boolean;
 	jsIncompatibleExports?: Record<string, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
+}
+declare interface KnownGenerationMeta {
+	exportsFinalName?: Record<string, string>;
+	exportsBindingStmt?: string;
 }
 declare interface KnownHooks {
 	/**
@@ -9651,6 +9660,7 @@ declare class Module extends DependenciesBlock {
 	useSimpleSourceMap: boolean;
 	hot: boolean;
 	buildMeta?: BuildMeta;
+	generationMeta?: KnownGenerationMeta;
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
@@ -9808,6 +9818,8 @@ declare class ModuleConcatenationPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ModuleContentRenderContext = ChunkRenderContextJavascriptModulesPlugin &
+	Partial<{ factory: boolean }>;
 declare class ModuleDependency extends Dependency {
 	constructor(request: string);
 	request: string;
@@ -10395,7 +10407,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					source: Source,
 					module: Module,
-					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					moduleContentRenderContext: ModuleContentRenderContext,
 					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
@@ -10408,7 +10420,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					source: Source,
 					module: Module,
-					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					moduleContentRenderContext: ModuleContentRenderContext,
 					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
