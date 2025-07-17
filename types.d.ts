@@ -1180,6 +1180,7 @@ declare interface CallbackWebpack<T> {
 	(err: null | Error, stats?: T): void;
 }
 type Cell<T> = undefined | T;
+type ChildrenStatsOptions = undefined | string | boolean | StatsOptions;
 declare class Chunk {
 	constructor(name?: null | string, backCompat?: boolean);
 	id: null | string | number;
@@ -1993,6 +1994,12 @@ declare interface Colors {
 	bgMagentaBright: (value?: any) => string;
 	bgCyanBright: (value?: any) => string;
 	bgWhiteBright: (value?: any) => string;
+}
+declare interface ColorsOptions {
+	/**
+	 * force use colors
+	 */
+	useColor?: boolean;
 }
 declare interface Comparator<T> {
 	(a: T, b: T): 0 | 1 | -1;
@@ -10465,9 +10472,12 @@ declare abstract class MultiStats {
 	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
-	toString(options?: string | boolean | StatsOptions): string;
+	toJson(options?: string | boolean | MultiStatsOptions): StatsCompilation;
+	toString(options?: string | boolean | MultiStatsOptions): string;
 }
+type MultiStatsOptions = Omit<StatsOptions, "children"> & {
+	children?: string | boolean | StatsOptions | ChildrenStatsOptions[];
+};
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
@@ -10920,43 +10930,43 @@ declare class NormalModuleReplacementPlugin {
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
-		| "context"
-		| "chunkGroups"
-		| "requestShortener"
-		| "chunksSort"
-		| "modulesSort"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
 		| "assetsSort"
-		| "ids"
-		| "cachedAssets"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByPath"
-		| "groupAssetsByExtension"
 		| "assetsSpace"
-		| "excludeAssets"
-		| "excludeModules"
-		| "warningsFilter"
+		| "cachedAssets"
 		| "cachedModules"
-		| "orphanModules"
-		| "dependentModules"
-		| "runtimeModules"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByLayer"
-		| "groupModulesByAttributes"
-		| "groupModulesByPath"
-		| "groupModulesByExtension"
-		| "groupModulesByType"
-		| "entrypoints"
 		| "chunkGroupAuxiliary"
 		| "chunkGroupChildren"
 		| "chunkGroupMaxAssets"
-		| "modulesSpace"
+		| "chunkGroups"
 		| "chunkModulesSpace"
-		| "nestedModulesSpace"
+		| "chunksSort"
+		| "context"
+		| "dependentModules"
+		| "entrypoints"
+		| "excludeAssets"
+		| "excludeModules"
+		| "groupAssetsByEmitStatus"
+		| "groupAssetsByExtension"
+		| "groupAssetsByPath"
+		| "groupModulesByAttributes"
+		| "groupModulesByCacheStatus"
+		| "groupModulesByExtension"
+		| "groupModulesByLayer"
+		| "groupModulesByPath"
+		| "groupModulesByType"
+		| "ids"
 		| "logging"
 		| "loggingDebug"
 		| "loggingTrace"
+		| "modulesSort"
+		| "modulesSpace"
+		| "nestedModulesSpace"
+		| "orphanModules"
+		| "runtimeModules"
+		| "warningsFilter"
+		| "requestShortener"
+		| "chunkModulesSort"
+		| "nestedModulesSort"
 		| "_env"
 	> &
 	Record<string, any>;
@@ -12617,7 +12627,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	percentBy?: null | "modules" | "entries" | "dependencies";
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -12682,7 +12692,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	percentBy?: null | "modules" | "entries" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -17446,7 +17456,9 @@ declare namespace exports {
 		): MultiCompiler;
 	};
 	export const validate: (
-		configuration: Configuration | Configuration[]
+		configuration:
+			| Configuration
+			| (ReadonlyArray<Configuration> & MultiCompilerOptions)
 	) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
@@ -17455,7 +17467,7 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
-		export let createColors: (__0?: { useColor?: boolean }) => Colors;
+		export let createColors: (__0?: ColorsOptions) => Colors;
 		export let getArguments: (
 			schema?:
 				| (JSONSchema4 & {
@@ -18146,6 +18158,7 @@ declare namespace exports {
 		Entrypoint,
 		MultiCompilerOptions,
 		MultiStats,
+		MultiStatsOptions,
 		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
@@ -18153,6 +18166,8 @@ declare namespace exports {
 		Watching,
 		Argument,
 		Problem,
+		Colors,
+		ColorsOptions,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,
