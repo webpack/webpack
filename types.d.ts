@@ -160,6 +160,12 @@ declare class AbstractLibraryPlugin<T> {
 		renderContext: StartupRenderContext,
 		libraryContext: LibraryContext<T>
 	): Source;
+	renderModuleContent(
+		source: Source,
+		module: Module,
+		renderContext: ModuleRenderContext,
+		libraryContext: Omit<LibraryContext<T>, "options">
+	): Source;
 	chunkHash(
 		chunk: Chunk,
 		hash: Hash,
@@ -2549,15 +2555,11 @@ declare interface CompilationHooksCssModulesPlugin {
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
 	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
+		[Source, Module, ModuleRenderContext]
 	>;
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextJavascriptModulesPlugin]
-	>;
+	renderModulePackage: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
 	renderChunk: SyncWaterfallHook<
 		[Source, RenderContextJavascriptModulesPlugin]
 	>;
@@ -6449,9 +6451,8 @@ declare class JavascriptModulesPlugin {
 	apply(compiler: Compiler): void;
 	renderModule(
 		module: Module,
-		renderContext: ChunkRenderContextJavascriptModulesPlugin,
-		hooks: CompilationHooksJavascriptModulesPlugin,
-		factory: boolean
+		renderContext: ModuleRenderContext,
+		hooks: CompilationHooksJavascriptModulesPlugin
 	): null | Source;
 	renderChunk(
 		renderContext: RenderContextJavascriptModulesPlugin,
@@ -8338,9 +8339,10 @@ declare interface KnownBuildMeta {
 	strictHarmonyModule?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
-	exportsFinalName?: Record<string, string>;
 	isCSSModule?: boolean;
 	jsIncompatibleExports?: Record<string, string>;
+	exportsFinalName?: Record<string, string>;
+	factoryExportsBinding?: string;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
@@ -10316,6 +10318,57 @@ declare interface ModuleReferenceOptions {
 	 */
 	asiSafe?: boolean;
 }
+declare interface ModuleRenderContext {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the dependency templates
+	 */
+	dependencyTemplates: DependencyTemplates;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * init fragments for the chunk
+	 */
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
+
+	/**
+	 * rendering in strict context
+	 */
+	strictMode?: boolean;
+
+	/**
+	 * true: renders as factory method, false: pure module content
+	 */
+	factory: boolean;
+
+	/**
+	 * the inlined entry module is wrapped in an IIFE, existing only when `factory` is set to false
+	 */
+	inlinedInIIFE?: boolean;
+}
 declare interface ModuleResult {
 	client: string;
 	data: string;
@@ -10363,7 +10416,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					source: Source,
 					module: Module,
-					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					moduleRenderContext: ModuleRenderContext,
 					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
@@ -10376,7 +10429,7 @@ declare abstract class ModuleTemplate {
 				fn: (
 					source: Source,
 					module: Module,
-					chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
+					moduleRenderContext: ModuleRenderContext,
 					dependencyTemplates: DependencyTemplates
 				) => Source
 			) => void;
@@ -15936,9 +15989,52 @@ declare abstract class StackedMap<K, V> {
 	get size(): number;
 	createChild(): StackedMap<K, V>;
 }
-type StartupRenderContext = RenderContextJavascriptModulesPlugin & {
+declare interface StartupRenderContext {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the dependency templates
+	 */
+	dependencyTemplates: DependencyTemplates;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * rendering in strict context
+	 */
+	strictMode?: boolean;
+
+	/**
+	 * inlined
+	 */
 	inlined: boolean;
-};
+
+	/**
+	 * the inlined entry module is wrapped in an IIFE
+	 */
+	inlinedInIIFE?: boolean;
+}
 declare interface StatFs {
 	(
 		path: PathLikeFs,
