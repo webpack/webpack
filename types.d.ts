@@ -8495,7 +8495,7 @@ declare interface KnownStatsChunkOrigin {
 	moduleId?: string | number;
 }
 declare interface KnownStatsCompilation {
-	env?: Record<string, any>;
+	env?: any;
 	name?: string;
 	hash?: string;
 	version?: string;
