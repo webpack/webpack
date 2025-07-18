@@ -77,6 +77,22 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		entry: "./esm-with-commonjs",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-with-commonjs-avoid-entry-iife.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-with-commonjs")
+			})
+		]
+	},
+	{
 		entry: "./module-export-test.js",
 		resolve: {
 			alias: {
