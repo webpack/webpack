@@ -1,6 +1,6 @@
 import { HomeLayout as aaa } from 'externals0';
 
-const { HomeLayout = aaa } = {};
+const { HomeLayout = 123 } = {};
 console.log({ HomeLayout });
 {
     const { HomeLayout = aaa } = {};

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	cache: {
@@ -20,13 +22,19 @@ module.exports = {
 		extensions: [".js"]
 	},
 	externalsType: "module",
-	externals: ["externals0", "externals1", "externals2", "externals3"],
+	externals: [
+		"externals0",
+		"externals1",
+		"externals2",
+		"externals3",
+		"externals4"
+	],
 	optimization: {
-		concatenateModules: true,
+		concatenateModules: false,
 		usedExports: true
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.compilation.tap(
 				"testcase",
 				(
