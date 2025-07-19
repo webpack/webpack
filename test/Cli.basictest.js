@@ -429,6 +429,14 @@ describe("Cli", () => {
 			// Most important - it clears the cache
 			jest.resetModules();
 			process.env = { ...OLD_ENV };
+			// Prevent `process.env.FORCE_COLOR` from being auto set by `jest-worker`
+			if (OLD_ENV.FORCE_COLOR) {
+				delete process.env.FORCE_COLOR;
+			}
+			// Prevent `process.env.TERM` default value
+			if (OLD_ENV.TERM) {
+				delete process.env.TERM;
+			}
 		});
 
 		afterAll(() => {
@@ -459,25 +467,22 @@ describe("Cli", () => {
 			expect(isColorSupported()).toBe(isCI);
 		});
 
-		it("env CI", () => {
-			process.env.CI = "1";
-
-			expect(isColorSupported()).toBe(true);
-		});
-
 		it("env GITHUB_ACTIONS", () => {
+			process.env.CI = "1";
 			process.env.GITHUB_ACTIONS = "1";
 
 			expect(isColorSupported()).toBe(true);
 		});
 
 		it("env GITLAB_CI", () => {
+			process.env.CI = "1";
 			process.env.GITLAB_CI = "1";
 
 			expect(isColorSupported()).toBe(true);
 		});
 
 		it("env CIRCLECI", () => {
+			process.env.CI = "1";
 			process.env.CIRCLECI = "1";
 
 			expect(isColorSupported()).toBe(true);
