@@ -76,7 +76,6 @@ function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
 	};
 	const rootCallingFile = getCallingFile();
 	bench.run = async function run() {
-		const time = bench.opts.time;
 		const iterations = bench.opts.iterations;
 		console.log("[CodSpeed] running");
 		setupCore();
@@ -84,16 +83,15 @@ function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
 			await bench.warmupTasks();
 		}
 		for (const task of bench.tasks) {
+			if (bench.opts.setup) await bench.opts.setup(task, "run");
 			if (task.fnOpts.beforeAll) await task.fnOpts.beforeAll.call(task);
+			const samples = [];
 			try {
-				let totalTime = 0; // ms
-				const samples = [];
-				const promises = [];
 				async function benchmarkTask() {
 					if (task.fnOpts.beforeEach) {
 						await task.fnOpts.beforeEach.call(task, "run");
 					}
-					let taskTime = 0; // ms;
+					let taskTime = 0;
 					if (task.async) {
 						const taskStart = bench.opts.now();
 						await task.fn();
@@ -104,19 +102,13 @@ function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
 						taskTime = bench.opts.now() - taskStart;
 					}
 					samples.push(taskTime);
-					totalTime += taskTime;
 					if (task.fnOpts.afterEach) {
 						await task.fnOpts.afterEach.call(this, "run");
 					}
 				}
-				while (
-					(totalTime < time || samples.length < iterations) &&
-					!bench.opts.signal?.aborted
-				) {
+
+				while (samples.length < iterations) {
 					await benchmarkTask();
-				}
-				if (!bench.opts.signal?.aborted && promises.length > 0) {
-					await Promise.all(promises);
 				}
 			} catch (error) {
 				task.mergeTaskResult({ error });
@@ -133,17 +125,18 @@ function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
 					: `${rootCallingFile}::${task.name}`;
 			if (task.fnOpts.beforeEach) await task.fnOpts.beforeEach.call(task);
 			await mongoMeasurement.start(uri);
-			global.gc?.();
 			await (async function __codspeed_root_frame__() {
-				Measurement.startInstrumentation();
+				// Measurement.startInstrumentation();
 				await task.fn();
-				Measurement.stopInstrumentation(uri);
+				// Measurement.stopInstrumentation(uri);
 			})();
 			if (task.fnOpts.afterEach) await task.fnOpts.afterEach.call(task);
 			await mongoMeasurement.stop(uri);
+			console.log(`[Codspeed] ✔ Measured ${uri}`);
+
 			if (task.fnOpts.afterAll) await task.fnOpts.afterAll.call(task);
-			// print results
-			console.log(`    ✔ Measured ${uri}`);
+			if (bench.opts.teardown) await bench.opts.teardown(task, "run");
+			task.processRunResult({ latencySamples: samples });
 		}
 		teardownCore();
 		console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
@@ -469,10 +462,10 @@ const bench = withCodSpeed(
 	new Bench({
 		now: hrtimeNow,
 		throws: true,
-		warmup: true,
-		warmupIterations: 8,
-		iterations: 96,
+		warmup: false,
+		iterations: 15, // one additional iteration for real Codspeed measurement, resulting in a total of 8
 		setup(task, mode) {
+			if (global.gc) global.gc();
 			console.log(`Setup (${mode} mode): ${task.name}`);
 		},
 		teardown(task, mode) {
@@ -577,10 +570,6 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
-									const watchingPromise = new Promise((res) => {
-										watchingResolve = res;
-									});
-
 									watching = await runWatch(webpack(config));
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
@@ -590,27 +579,6 @@ async function registerSuite(bench, test, baselines) {
 											}
 										}
 									);
-
-									// Make extra run (initial changes) to warmup before rebuilds
-									await new Promise((resolve, reject) => {
-										writeFile(
-											entry,
-											`${originalEntryContent};console.log('watch test')`,
-											(err) => {
-												if (err) {
-													reject(err);
-												}
-
-												watchingPromise.then((stats) => {
-													watchingResolve = undefined;
-
-													// Construct and print stats to be more accurate with real life projects
-													stats.toString();
-													resolve();
-												});
-											}
-										);
-									});
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
@@ -830,12 +798,4 @@ bench.addEventListener("cycle", (event) => {
 	);
 });
 
-const tasks = await bench.run();
-
-console.log("\nResult:\n");
-
-for (const task of tasks) {
-	const runs = task.runs;
-
-	console.log(`- ${task.name} (${runs} runs sampled)`);
-}
+bench.run();
