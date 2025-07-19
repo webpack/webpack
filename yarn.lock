@@ -350,14 +350,6 @@
     form-data "^4.0.0"
     node-gyp-build "^4.6.0"
 
-"@codspeed/tinybench-plugin@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@codspeed/tinybench-plugin/-/tinybench-plugin-4.0.1.tgz#b0e27a963c03e6ca84c99685ee86abdbd3aa5c9f"
-  integrity sha512-hga1xif6XU8p/FZqTHzUrDPrBSLqxc3NuxMX8m4P8AIdhORsPrvgSNe09uVYlVOtD6jG7kPsmx5DZscez4wKrQ==
-  dependencies:
-    "@codspeed/core" "^4.0.1"
-    stack-trace "1.0.0-pre2"
-
 "@cspell/cspell-bundled-dicts@9.1.3":
   version "9.1.3"
   resolved "https://registry.yarnpkg.com/@cspell/cspell-bundled-dicts/-/cspell-bundled-dicts-9.1.3.tgz#ad26ab92489fb5ac45e3a967ba2afd71560d8aab"
@@ -7466,11 +7458,6 @@ ssri@^12.0.0:
   integrity sha512-S7iGNosepx9RadX82oimUkvr0Ct7IjJbEbs4mJcTxst8um95J3sDYU1RBEOvdu6oL1Wek2ODI5i4MAw+dZ6cAQ==
   dependencies:
     minipass "^7.0.3"
-
-stack-trace@1.0.0-pre2:
-  version "1.0.0-pre2"
-  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-1.0.0-pre2.tgz#46a83a79f1b287807e9aaafc6a5dd8bcde626f9c"
-  integrity sha512-2ztBJRek8IVofG9DBJqdy2N5kulaacX30Nz7xmkYF6ale9WBVmIy6mFBchvGX7Vx/MyjBhx+Rcxqrj+dbOnQ6A==
 
 stack-utils@^2.0.6:
   version "2.0.6"
