@@ -1,5 +1,7 @@
+"use strict";
+
 // Mock document.head structure for testing
-const mockCreateElement = tagName => {
+const mockCreateElement = (tagName) => {
 	const element = {
 		_type: tagName,
 		_attributes: {},

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	// Invalid fetchPriority value warning
 	[

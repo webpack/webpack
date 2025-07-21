@@ -1,3 +1,5 @@
+"use strict";
+
 // This file is used to generate expected warnings during compilation
 
 // Invalid fetchPriority value - should generate warning
