@@ -18,7 +18,7 @@ it("should preload an image asset", () => {
 	expect(url.href).toMatch(/preload-image\.png$/);
 });
 
-it("should prefetch with order", () => {
+it("should handle numeric prefetch values with warning", () => {
 	const url = new URL(
 		/* webpackPrefetch: 10 */
 		"./order-image.png",
