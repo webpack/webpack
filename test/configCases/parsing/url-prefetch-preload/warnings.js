@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	// Numeric prefetch value (not boolean)
 	[/`webpackPrefetch` expected true, but received: 10\./],
