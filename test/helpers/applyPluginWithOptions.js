@@ -1,3 +1,5 @@
+"use strict";
+
 const PluginEnvironment = require("./PluginEnvironment");
 
 module.exports = function applyPluginWithOptions(Plugin) {

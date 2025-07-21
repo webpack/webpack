@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Chunk} Chunk */
 
 /** @type {import("../../../../").Configuration} */
@@ -9,7 +11,7 @@ module.exports = {
 		};
 	},
 	output: {
-		filename: data =>
+		filename: (data) =>
 			/** @type {Chunk} */
 			(data.chunk).name === "a"
 				? `${/** @type {Chunk} */ (data.chunk).name}.js`

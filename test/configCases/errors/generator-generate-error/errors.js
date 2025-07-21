@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	/javascript\/auto error message/,
 	/asset\/inline error message/,

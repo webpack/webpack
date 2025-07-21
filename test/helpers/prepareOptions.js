@@ -1,6 +1,6 @@
 "use strict";
 
-const handleExport = options => {
+const handleExport = (options) => {
 	const isES6DefaultExported =
 		typeof options === "object" &&
 		options !== null &&
@@ -22,7 +22,7 @@ module.exports = (options, argv) => {
 	options = handleExport(options);
 
 	options = Array.isArray(options)
-		? options.map(_options => handleFunction(_options, argv))
+		? options.map((_options) => handleFunction(_options, argv))
 		: handleFunction(options, argv);
 	return options;
 };

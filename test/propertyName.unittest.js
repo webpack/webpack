@@ -1,3 +1,5 @@
+"use strict";
+
 const { propertyName } = require("../lib/util/propertyName");
 
 describe("propertyName", () => {

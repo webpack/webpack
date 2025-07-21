@@ -1,3 +1,5 @@
+"use strict";
+
 const { RawSource } = require("webpack-sources");
 const Generator = require("../../../../").Generator;
 const RuntimeModule = require("../../../../").RuntimeModule;
@@ -133,7 +135,7 @@ module.exports = definitions.map((defs, i) => ({
 		/**
 		 * @param {Compiler} compiler the compiler
 		 */
-		compiler => {
+		(compiler) => {
 			compiler.hooks.thisCompilation.tap(
 				"LocalizationPlugin",
 				(compilation, { normalModuleFactory }) => {
@@ -190,7 +192,7 @@ module.exports = definitions.map((defs, i) => ({
 						.tap("LocalizationPlugin", (chunk, set) => {
 							const chunkGraph = compilation.chunkGraph;
 							if (
-								!chunkGraph.hasModuleInGraph(chunk, m =>
+								!chunkGraph.hasModuleInGraph(chunk, (m) =>
 									m.type.startsWith("localization")
 								)
 							) {

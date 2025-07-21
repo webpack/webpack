@@ -14,5 +14,5 @@ module.exports = function findOutputFiles(options, regexp, subpath) {
 		subpath ? path.join(options.output.path, subpath) : options.output.path
 	);
 
-	return files.filter(file => regexp.test(file));
+	return files.filter((file) => regexp.test(file));
 };

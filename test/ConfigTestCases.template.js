@@ -18,19 +18,19 @@ const prepareOptions = require("./helpers/prepareOptions");
 const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "configCases");
-const categories = fs.readdirSync(casesPath).map(cat => ({
+const categories = fs.readdirSync(casesPath).map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter(folder => !folder.startsWith("_"))
+		.filter((folder) => !folder.startsWith("_"))
 		.sort()
 }));
 
-const createLogger = appendTarget => ({
-	log: l => appendTarget.push(l),
-	debug: l => appendTarget.push(l),
-	trace: l => appendTarget.push(l),
-	info: l => appendTarget.push(l),
+const createLogger = (appendTarget) => ({
+	log: (l) => appendTarget.push(l),
+	debug: (l) => appendTarget.push(l),
+	trace: (l) => appendTarget.push(l),
+	info: (l) => appendTarget.push(l),
 	warn: console.warn.bind(console),
 	error: console.error.bind(console),
 	logTime: () => {},
@@ -43,7 +43,7 @@ const createLogger = appendTarget => ({
 	status: () => {}
 });
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
 		let stderr;
 
@@ -203,7 +203,7 @@ const describeCases = config => {
 							setTimeout(done, 200);
 						};
 						if (config.cache) {
-							it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+							it(`${testName} should pre-compile to fill disk cache (1st)`, (done) => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
@@ -211,7 +211,7 @@ const describeCases = config => {
 
 								const compiler = require("..")(options);
 
-								compiler.run(err => {
+								compiler.run((err) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
 									const infrastructureLogging = stderr.toString();
@@ -245,14 +245,14 @@ const describeCases = config => {
 									) {
 										return;
 									}
-									compiler.close(closeErr => {
+									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
 										done();
 									});
 								});
 							}, 60000);
 
-							it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+							it(`${testName} should pre-compile to fill disk cache (2nd)`, (done) => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
@@ -287,7 +287,7 @@ const describeCases = config => {
 											: modules;
 										if (
 											allModules.some(
-												m => m.type !== "cached modules" && !m.cached
+												(m) => m.type !== "cached modules" && !m.cached
 											)
 										) {
 											return done(
@@ -322,7 +322,7 @@ const describeCases = config => {
 									) {
 										return;
 									}
-									compiler.close(closeErr => {
+									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
 										done();
 									});
@@ -330,7 +330,7 @@ const describeCases = config => {
 							}, 40000);
 						}
 
-						it(`${testName} should compile`, done => {
+						it(`${testName} should compile`, (done) => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							infraStructureLog.length = 0;
@@ -494,10 +494,10 @@ const describeCases = config => {
 								try {
 									const compiler = require("..")(options);
 
-									compiler.run(err => {
+									compiler.run((err) => {
 										if (err) return handleFatalError(err, done);
 										compiler.run((error, stats) => {
-											compiler.close(err => {
+											compiler.close((err) => {
 												if (err) return handleFatalError(err, done);
 												onCompiled(error, stats);
 											});

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 
@@ -29,8 +31,8 @@ module.exports = (env, { testPath }) => [
 				 * @param {Compilation} compilation compilation
 				 * @returns {void}
 				 */
-				const handler = compilation => {
-					compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+				const handler = (compilation) => {
+					compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 						for (const asset of Object.keys(assets)) {
 							const source = assets[asset].source();
 							expect(source).not.toContain('"a"');

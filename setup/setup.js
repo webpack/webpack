@@ -12,7 +12,7 @@ const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
  */
 function setup() {
 	return checkSymlinkExistsAsync()
-		.then(async hasSymlink => {
+		.then(async (hasSymlink) => {
 			if (!hasSymlink) {
 				await ensureYarnInstalledAsync();
 				await runSetupSymlinkAsync();
@@ -24,7 +24,7 @@ function setup() {
 		.then(() => {
 			process.exitCode = 0;
 		})
-		.catch(err => {
+		.catch((err) => {
 			console.error(err);
 			process.exitCode = 1;
 		});
@@ -43,7 +43,7 @@ async function runSetupSymlinkAsync() {
  * @returns {Promise<boolean>} result
  */
 function checkSymlinkExistsAsync() {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		if (
 			fs.existsSync(nodeModulesFolder) &&
 			fs.existsSync(webpackDependencyFolder) &&
@@ -94,10 +94,10 @@ function exec(command, args, description) {
 			shell: true
 		});
 
-		cp.on("error", error => {
+		cp.on("error", (error) => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
-		cp.on("exit", exitCode => {
+		cp.on("exit", (exitCode) => {
 			if (exitCode) {
 				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
@@ -122,10 +122,10 @@ function execGetOutput(command, args, description) {
 			shell: true
 		});
 
-		cp.on("error", error => {
+		cp.on("error", (error) => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
-		cp.on("exit", exitCode => {
+		cp.on("exit", (exitCode) => {
 			if (exitCode) {
 				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
@@ -134,7 +134,7 @@ function execGetOutput(command, args, description) {
 		});
 		/** @type {Buffer[]} */
 		const buffers = [];
-		cp.stdout.on("data", data => buffers.push(data));
+		cp.stdout.on("data", (data) => buffers.push(data));
 	});
 }
 

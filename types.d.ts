@@ -4,6 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
+import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
 import { Scope } from "eslint-scope";
 import {
@@ -1179,6 +1180,7 @@ declare interface CallbackWebpack<T> {
 	(err: null | Error, stats?: T): void;
 }
 type Cell<T> = undefined | T;
+type ChildrenStatsOptions = undefined | string | boolean | StatsOptions;
 declare class Chunk {
 	constructor(name?: null | string, backCompat?: boolean);
 	id: null | string | number;
@@ -1950,6 +1952,55 @@ type CodeValuePrimitive =
 	| boolean
 	| Function
 	| RegExp;
+declare interface Colors {
+	reset: (value?: any) => string;
+	bold: (value?: any) => string;
+	dim: (value?: any) => string;
+	italic: (value?: any) => string;
+	underline: (value?: any) => string;
+	inverse: (value?: any) => string;
+	hidden: (value?: any) => string;
+	strikethrough: (value?: any) => string;
+	black: (value?: any) => string;
+	red: (value?: any) => string;
+	green: (value?: any) => string;
+	yellow: (value?: any) => string;
+	blue: (value?: any) => string;
+	magenta: (value?: any) => string;
+	cyan: (value?: any) => string;
+	white: (value?: any) => string;
+	gray: (value?: any) => string;
+	bgBlack: (value?: any) => string;
+	bgRed: (value?: any) => string;
+	bgGreen: (value?: any) => string;
+	bgYellow: (value?: any) => string;
+	bgBlue: (value?: any) => string;
+	bgMagenta: (value?: any) => string;
+	bgCyan: (value?: any) => string;
+	bgWhite: (value?: any) => string;
+	blackBright: (value?: any) => string;
+	redBright: (value?: any) => string;
+	greenBright: (value?: any) => string;
+	yellowBright: (value?: any) => string;
+	blueBright: (value?: any) => string;
+	magentaBright: (value?: any) => string;
+	cyanBright: (value?: any) => string;
+	whiteBright: (value?: any) => string;
+	bgBlackBright: (value?: any) => string;
+	bgRedBright: (value?: any) => string;
+	bgGreenBright: (value?: any) => string;
+	bgYellowBright: (value?: any) => string;
+	bgBlueBright: (value?: any) => string;
+	bgMagentaBright: (value?: any) => string;
+	bgCyanBright: (value?: any) => string;
+	bgWhiteBright: (value?: any) => string;
+}
+declare interface ColorsOptions {
+	/**
+	 * force use colors
+	 */
+	useColor?: boolean;
+}
 declare interface Comparator<T> {
 	(a: T, b: T): 0 | 1 | -1;
 }
@@ -2518,7 +2569,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	inlineInRuntimeBailout: SyncBailHook<
-		[Module, RenderBootstrapContext],
+		[Module, Partial<RenderBootstrapContext>],
 		string | void
 	>;
 	embedInRuntimeBailout: SyncBailHook<
@@ -3719,6 +3770,17 @@ declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
 }
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
+declare interface DependencySourceOrder {
+	/**
+	 * the main source order
+	 */
+	main: number;
+
+	/**
+	 * the sub source order
+	 */
+	sub: number;
+}
 declare class DependencyTemplate {
 	constructor();
 	apply(
@@ -6431,7 +6493,7 @@ declare class JavascriptModulesPlugin {
 	): TemplatePath;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
-declare class JavascriptParser extends Parser {
+declare class JavascriptParser extends ParserClass {
 	constructor(sourceType?: "module" | "auto" | "script");
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -7759,6 +7821,9 @@ declare class JavascriptParser extends Parser {
 				rootInfo: ExportedVariableInfo;
 				getMembers: () => string[];
 		  };
+	static extend(
+		...plugins: ((BaseParser: typeof ParserImport) => typeof ParserImport)[]
+	): typeof JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
@@ -8145,7 +8210,7 @@ declare interface KnownAssetInfo {
 	/**
 	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
 	 */
-	related?: Record<string, string | string[]>;
+	related?: Record<string, null | string | string[]>;
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
@@ -8430,7 +8495,7 @@ declare interface KnownStatsChunkOrigin {
 	moduleId?: string | number;
 }
 declare interface KnownStatsCompilation {
-	env?: Record<string, any>;
+	env?: any;
 	name?: string;
 	hash?: string;
 	version?: string;
@@ -9874,6 +9939,7 @@ declare class ModuleGraph {
 		module: Module,
 		indexInBlock?: number
 	): void;
+	setParentDependenciesBlockIndex(dependency: Dependency, index: number): void;
 	getParentModule(dependency: Dependency): undefined | Module;
 	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
@@ -9883,6 +9949,11 @@ declare class ModuleGraph {
 		module: Module
 	): void;
 	updateModule(dependency: Dependency, module: Module): void;
+	updateParent(
+		dependency: Dependency,
+		connection?: ModuleGraphConnection,
+		parentModule?: Module
+	): void;
 	removeConnection(dependency: Dependency): void;
 	addExplanation(dependency: Dependency, explanation: string): void;
 	cloneModuleAttributes(sourceModule: Module, targetModule: Module): void;
@@ -10396,14 +10467,18 @@ declare interface MultiCompilerOptions {
 	 */
 	parallelism?: number;
 }
+type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
 declare abstract class MultiStats {
 	stats: Stats[];
 	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
-	toString(options?: string | boolean | StatsOptions): string;
+	toJson(options?: string | boolean | MultiStatsOptions): StatsCompilation;
+	toString(options?: string | boolean | MultiStatsOptions): string;
 }
+type MultiStatsOptions = Omit<StatsOptions, "children"> & {
+	children?: string | boolean | StatsOptions | ChildrenStatsOptions[];
+};
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
@@ -10549,7 +10624,7 @@ declare class NormalModule extends Module {
 	userRequest: string;
 	rawRequest: string;
 	binary: boolean;
-	parser?: Parser;
+	parser?: ParserClass;
 	parserOptions?: ParserOptions;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
@@ -10680,7 +10755,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the parser used
 	 */
-	parser: Parser;
+	parser: ParserClass;
 
 	/**
 	 * the options of the parser used
@@ -10728,7 +10803,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				ResolveData
 			]
 		>;
-		createParser: HookMap<SyncBailHook<[ParserOptions], void | Parser>>;
+		createParser: HookMap<SyncBailHook<[ParserOptions], void | ParserClass>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
 		createGenerator: HookMap<
 			SyncBailHook<[GeneratorOptions], void | Generator>
@@ -10748,7 +10823,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptions, Parser>>;
+	parserCache: Map<string, WeakMap<ParserOptions, ParserClass>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
@@ -10771,8 +10846,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext: ResolveContext,
 		callback: CallbackNormalModuleFactory<LoaderItem[]>
 	): void;
-	getParser(type: string, parserOptions?: ParserOptions): Parser;
-	createParser(type: string, parserOptions?: ParserOptions): Parser;
+	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
+	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
 	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
 	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
 	getResolver(
@@ -10856,43 +10931,43 @@ declare class NormalModuleReplacementPlugin {
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
-		| "context"
-		| "chunkGroups"
-		| "requestShortener"
-		| "chunksSort"
-		| "modulesSort"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
 		| "assetsSort"
-		| "ids"
-		| "cachedAssets"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByPath"
-		| "groupAssetsByExtension"
 		| "assetsSpace"
-		| "excludeAssets"
-		| "excludeModules"
-		| "warningsFilter"
+		| "cachedAssets"
 		| "cachedModules"
-		| "orphanModules"
-		| "dependentModules"
-		| "runtimeModules"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByLayer"
-		| "groupModulesByAttributes"
-		| "groupModulesByPath"
-		| "groupModulesByExtension"
-		| "groupModulesByType"
-		| "entrypoints"
 		| "chunkGroupAuxiliary"
 		| "chunkGroupChildren"
 		| "chunkGroupMaxAssets"
-		| "modulesSpace"
+		| "chunkGroups"
 		| "chunkModulesSpace"
-		| "nestedModulesSpace"
+		| "chunksSort"
+		| "context"
+		| "dependentModules"
+		| "entrypoints"
+		| "excludeAssets"
+		| "excludeModules"
+		| "groupAssetsByEmitStatus"
+		| "groupAssetsByExtension"
+		| "groupAssetsByPath"
+		| "groupModulesByAttributes"
+		| "groupModulesByCacheStatus"
+		| "groupModulesByExtension"
+		| "groupModulesByLayer"
+		| "groupModulesByPath"
+		| "groupModulesByType"
+		| "ids"
 		| "logging"
 		| "loggingDebug"
 		| "loggingTrace"
+		| "modulesSort"
+		| "modulesSpace"
+		| "nestedModulesSpace"
+		| "orphanModules"
+		| "runtimeModules"
+		| "warningsFilter"
+		| "requestShortener"
+		| "chunkModulesSort"
+		| "nestedModulesSort"
 		| "_env"
 	> &
 	Record<string, any>;
@@ -12238,7 +12313,7 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
-declare class Parser {
+declare class ParserClass {
 	constructor();
 	parse(
 		source: string | Buffer | PreparsedAst,
@@ -12553,7 +12628,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	percentBy?: null | "modules" | "entries" | "dependencies";
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -12618,7 +12693,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	percentBy?: null | "modules" | "entries" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -17368,21 +17443,24 @@ declare interface WriteStreamOptions {
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
-): Compiler;
+): null | Compiler;
 declare function exports(
-	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
+	options: MultiConfiguration,
 	callback?: CallbackWebpack<MultiStats>
-): MultiCompiler;
+): null | MultiCompiler;
 declare namespace exports {
 	export const webpack: {
-		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
-			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
+			options: Configuration,
+			callback?: CallbackWebpack<Stats>
+		): null | Compiler;
+		(
+			options: MultiConfiguration,
 			callback?: CallbackWebpack<MultiStats>
-		): MultiCompiler;
+		): null | MultiCompiler;
 	};
 	export const validate: (
-		configuration: Configuration | Configuration[]
+		configuration: Configuration | MultiConfiguration
 	) => void;
 	export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
@@ -17391,6 +17469,7 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
+		export let createColors: (__0?: ColorsOptions) => Colors;
 		export let getArguments: (
 			schema?:
 				| (JSONSchema4 & {
@@ -17427,6 +17506,7 @@ declare namespace exports {
 						};
 				  })
 		) => Flags;
+		export let isColorSupported: () => boolean;
 		export let processArguments: (
 			args: Flags,
 			config: ObjectConfiguration,
@@ -17791,6 +17871,10 @@ declare namespace exports {
 				...cRest: Comparator<T>[]
 			) => Comparator<T>;
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;
+			export let sortWithSourceOrder: (
+				dependencies: Dependency[],
+				dependencySourceOrderMap: WeakMap<Dependency, DependencySourceOrder>
+			) => void;
 		}
 		export namespace runtime {
 			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
@@ -18025,7 +18109,7 @@ declare namespace exports {
 		NormalModule,
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
-		Parser,
+		ParserClass as Parser,
 		PlatformPlugin,
 		PrefetchPlugin,
 		ProgressPlugin,
@@ -18075,7 +18159,9 @@ declare namespace exports {
 		AssetEmittedInfo,
 		Entrypoint,
 		MultiCompilerOptions,
+		MultiConfiguration,
 		MultiStats,
+		MultiStatsOptions,
 		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
@@ -18083,6 +18169,8 @@ declare namespace exports {
 		Watching,
 		Argument,
 		Problem,
+		Colors,
+		ColorsOptions,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,

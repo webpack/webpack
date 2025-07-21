@@ -1,3 +1,5 @@
+"use strict";
+
 const rootPath = "../../../../";
 
 const webpack = require(rootPath);

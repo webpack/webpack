@@ -1,3 +1,5 @@
+"use strict";
+
 const propertyAccess = require("../lib/util/propertyAccess");
 
 describe("propertyAccess", () => {

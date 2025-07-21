@@ -50,7 +50,7 @@ function copyDiff(src, dest, initial) {
 	}
 }
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
 		beforeAll(() => {
 			let dest = path.join(__dirname, "js");
@@ -67,12 +67,12 @@ const describeCases = config => {
 		}
 
 		const casesPath = path.join(__dirname, "watchCases");
-		const categories = fs.readdirSync(casesPath).map(cat => ({
+		const categories = fs.readdirSync(casesPath).map((cat) => ({
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
-				.filter(folder => !folder.includes("_"))
-				.filter(testName => {
+				.filter((folder) => !folder.includes("_"))
+				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -113,16 +113,16 @@ const describeCases = config => {
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
-							.filter(name =>
+							.filter((name) =>
 								fs.statSync(path.join(testDirectory, name)).isDirectory()
 							)
-							.map(name => ({ name }));
+							.map((name) => ({ name }));
 
-						beforeAll(done => {
+						beforeAll((done) => {
 							rimraf(tempDirectory, done);
 						});
 
-						it(`${testName} should compile`, done => {
+						it(`${testName} should compile`, (done) => {
 							const outputDirectory = path.join(
 								__dirname,
 								"js",
@@ -323,14 +323,14 @@ const describeCases = config => {
 										});
 										const getBundle = (outputDirectory, module) => {
 											if (Array.isArray(module)) {
-												return module.map(arg =>
+												return module.map((arg) =>
 													path.join(outputDirectory, arg)
 												);
 											} else if (module instanceof RegExp) {
 												return fs
 													.readdirSync(outputDirectory)
-													.filter(f => module.test(f))
-													.map(f => path.join(outputDirectory, f));
+													.filter((f) => module.test(f))
+													.map((f) => path.join(outputDirectory, f));
 											}
 											return [path.join(outputDirectory, module)];
 										};
@@ -356,7 +356,7 @@ const describeCases = config => {
 
 										run.it(
 											"should compile the next step",
-											done => {
+											(done) => {
 												runIdx++;
 												if (runIdx < runs.length) {
 													run = runs[runIdx];
@@ -406,7 +406,7 @@ const describeCases = config => {
 							run.it = _it;
 							run.getNumberOfTests = getNumberOfTests;
 
-							it(`${run.name} should allow to read stats`, done => {
+							it(`${run.name} should allow to read stats`, (done) => {
 								if (run.stats) {
 									run.stats.toString({ all: true });
 									run.stats = undefined;

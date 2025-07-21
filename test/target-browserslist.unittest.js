@@ -1,3 +1,5 @@
+"use strict";
+
 const { resolve } = require("../lib/config/browserslistTargetHandler");
 
 describe("browserslist target", () => {

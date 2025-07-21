@@ -1,9 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: ["browserslist"],
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": true,

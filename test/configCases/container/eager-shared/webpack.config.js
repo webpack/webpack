@@ -1,3 +1,5 @@
+"use strict";
+
 const { ModuleFederationPlugin } = require("../../../../").container;
 const { dependencies } = require("./package.json");
 

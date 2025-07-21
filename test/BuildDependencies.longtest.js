@@ -37,9 +37,9 @@ const exec = (n, options = {}) =>
 			}
 		);
 		const chunks = [];
-		p.stderr.on("data", chunk => chunks.push(chunk));
-		p.stdout.on("data", chunk => chunks.push(chunk));
-		p.once("exit", code => {
+		p.stderr.on("data", (chunk) => chunks.push(chunk));
+		p.stdout.on("data", (chunk) => chunks.push(chunk));
+		p.once("exit", (code) => {
 			const errors = [];
 			const warnings = [];
 			const rawStdout = chunks.join("");
@@ -61,7 +61,7 @@ const exec = (n, options = {}) =>
 				);
 			}
 			for (const regexp of options.warnings || []) {
-				const idx = warnings.findIndex(w => regexp.test(w));
+				const idx = warnings.findIndex((w) => regexp.test(w));
 				if (idx < 0) {
 					return reject(
 						new Error(
@@ -89,7 +89,7 @@ const exec = (n, options = {}) =>
 				reject(new Error(`Code ${code}: ${stdout}`));
 			}
 		});
-		p.once("error", err => {
+		p.once("error", (err) => {
 			const stdout = chunks.join("");
 			console.log(stdout);
 			reject(err);
@@ -99,7 +99,7 @@ const exec = (n, options = {}) =>
 const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
-	beforeEach(done => {
+	beforeEach((done) => {
 		rimraf(cacheDirectory, () => {
 			rimraf(outputDirectory, () => {
 				rimraf(inputDirectory, () => {

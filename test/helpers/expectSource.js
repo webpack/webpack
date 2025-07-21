@@ -1,3 +1,5 @@
+"use strict";
+
 const regexEscape = require("./regexEscape");
 
 // These expect* methods are necessary because 'source' contains the code for this test file, which will always contain the string

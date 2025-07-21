@@ -1,1 +1,3 @@
-module.exports = config => !config.module;
+"use strict";
+
+module.exports = (config) => !config.module;

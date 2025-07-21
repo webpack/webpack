@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/export 'default' \(imported as 'def'\) was not found in '\.\/module' \(possible exports: b, c, d\)/

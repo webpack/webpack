@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[/name 'x'/, /\.\/a\?3/, /\.\/b\?3/],
 	[/name 'x'/, /\.\/a\?4/, /\.\/b\?4/],

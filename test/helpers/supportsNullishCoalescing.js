@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsNullishCoalescing() {
 	try {
 		const f = eval("(function f() { return null ?? true; })");

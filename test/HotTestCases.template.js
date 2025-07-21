@@ -12,15 +12,15 @@ const { TestRunner } = require("./runner");
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
 	.readdirSync(casesPath)
-	.filter(dir => fs.statSync(path.join(casesPath, dir)).isDirectory());
-categories = categories.map(cat => ({
+	.filter((dir) => fs.statSync(path.join(casesPath, dir)).isDirectory());
+categories = categories.map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter(folder => !folder.includes("_"))
+		.filter((folder) => !folder.includes("_"))
 }));
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
 		for (const category of categories) {
 			describe(category.name, () => {
@@ -39,12 +39,12 @@ const describeCases = config => {
 					describe(testName, () => {
 						let compiler;
 
-						afterAll(callback => {
+						afterAll((callback) => {
 							compiler.close(callback);
 							compiler = undefined;
 						});
 
-						it(`${testName} should compile`, done => {
+						it(`${testName} should compile`, (done) => {
 							const webpack = require("..");
 
 							const outputDirectory = path.join(
@@ -252,7 +252,7 @@ const describeCases = config => {
 
 										done();
 									},
-									err => {
+									(err) => {
 										console.log(err);
 										done(err);
 									}

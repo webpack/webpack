@@ -1,3 +1,5 @@
+"use strict";
+
 const toml = require("toml");
 
 /** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */

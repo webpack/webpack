@@ -1,3 +1,5 @@
+"use strict";
+
 const nodeVersion = process.versions.node.split(".").map(Number);
 
 module.exports = function supportsWorker() {

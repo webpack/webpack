@@ -1,3 +1,5 @@
+"use strict";
+
 const PluginWithLoader = require("./PluginWithLoader");
 
 /** @type {import("../../../../").Configuration} */

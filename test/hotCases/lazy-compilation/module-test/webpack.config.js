@@ -5,7 +5,7 @@ module.exports = {
 	experiments: {
 		lazyCompilation: {
 			entries: false,
-			test: module =>
+			test: (module) =>
 				!/moduleB/.test(/** @type {string} */ (module.nameForCondition()))
 		}
 	}

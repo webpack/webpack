@@ -1,3 +1,5 @@
+"use strict";
+
 const DelegatedPlugin = require("../../../../").DelegatedPlugin;
 
 /** @type {import("../../../../").Configuration} */

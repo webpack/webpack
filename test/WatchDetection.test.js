@@ -53,7 +53,7 @@ describe("WatchDetection", () => {
 				fs.writeFileSync(file2Path, "original", "utf8");
 			});
 
-			afterAll(done => {
+			afterAll((done) => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
@@ -74,7 +74,7 @@ describe("WatchDetection", () => {
 				}, 100); // cool down a bit
 			});
 
-			it("should build the bundle correctly", done => {
+			it("should build the bundle correctly", (done) => {
 				const compiler = webpack({
 					mode: "development",
 					entry: `${loaderPath}!${filePath}`,

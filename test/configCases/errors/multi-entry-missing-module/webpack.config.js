@@ -1,3 +1,5 @@
+"use strict";
+
 const IgnorePlugin = require("../../../../").IgnorePlugin;
 
 /** @type {import("../../../../").Configuration} */

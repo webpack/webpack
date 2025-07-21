@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("webpack-sources").Source} Source */
 
 /** @type {import("../../../../").Configuration} */
@@ -20,7 +22,7 @@ module.exports = {
 		function getJsonCodeGeneratedSource(compiler) {
 			compiler.hooks.compilation.tap(
 				getJsonCodeGeneratedSource.name,
-				compilation => {
+				(compilation) => {
 					compilation.hooks.processAssets.tap(
 						getJsonCodeGeneratedSource.name,
 						() => {

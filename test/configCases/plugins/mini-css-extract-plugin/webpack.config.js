@@ -1,3 +1,5 @@
+"use strict";
+
 const MCEP = require("mini-css-extract-plugin");
 
 /** @typedef {import("../../../../").StatsCompilation} StatsCompilation */
@@ -37,12 +39,12 @@ const config = (i, options) => ({
 	},
 	plugins: [
 		new MCEP(options),
-		compiler => {
-			compiler.hooks.done.tap("Test", stats => {
+		(compiler) => {
+			compiler.hooks.done.tap("Test", (stats) => {
 				const chunkIds =
 					/** @type {NonNullable<StatsCompilation["chunks"]>} */
 					(stats.toJson({ all: false, chunks: true, ids: true }).chunks)
-						.map(c => c.id)
+						.map((c) => c.id)
 						.sort();
 				expect(chunkIds).toEqual([
 					"a",

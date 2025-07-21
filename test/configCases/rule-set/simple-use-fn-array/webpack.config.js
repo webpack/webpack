@@ -1,10 +1,12 @@
+"use strict";
+
 /**
  * @param {EXPECTED_ANY[]} useArray use array
  * @returns {EXPECTED_FUNCTION[]} functions
  */
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(
-		useItem =>
+		(useItem) =>
 			function fn() {
 				return useItem;
 			}

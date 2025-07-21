@@ -1,10 +1,12 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const createHash = require("../../../lib/util/createHash");
 
 const hashedFiles = {
-	"file.jpg": a => a.name.endsWith(".jpg"),
-	"file.png": a => a.name.endsWith(".png")
+	"file.jpg": (a) => a.name.endsWith(".jpg"),
+	"file.png": (a) => a.name.endsWith(".png")
 };
 
 module.exports = {

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @param {{ config: import("../../../../").Configuration }} config configuration
  * @returns {import("../../../../").Configuration} configuration

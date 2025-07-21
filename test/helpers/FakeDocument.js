@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 
@@ -212,7 +214,7 @@ class FakeSheet {
 		let currentRule = { getPropertyValue };
 		let selector;
 		let last = 0;
-		const processDeclaration = str => {
+		const processDeclaration = (str) => {
 			const colon = str.indexOf(":");
 			if (colon > 0) {
 				const property = str.slice(0, colon).trim();

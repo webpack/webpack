@@ -1,3 +1,5 @@
+"use strict";
+
 const { MinChunkSizePlugin } = require("../../../").optimize;
 
 /** @type {import("../../../").Configuration} */

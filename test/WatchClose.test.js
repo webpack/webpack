@@ -40,7 +40,7 @@ describe("WatchClose", () => {
 		 * @returns {Promise<void>}
 		 */
 		function close(watcher, callback) {
-			return new Promise(res => {
+			return new Promise((res) => {
 				const onClose = () => {
 					callback();
 					res();

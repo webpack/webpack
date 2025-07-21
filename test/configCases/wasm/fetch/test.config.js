@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
@@ -16,7 +18,7 @@ module.exports = {
 		}
 	},
 	moduleScope(scope, options) {
-		scope.fetch = resource =>
+		scope.fetch = (resource) =>
 			new Promise((resolve, reject) => {
 				const file = /^file:/i.test(resource)
 					? url.fileURLToPath(resource)

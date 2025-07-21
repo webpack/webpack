@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../../../");
 const supportsAsync = require("../../../helpers/supportsAsync");
@@ -427,7 +429,7 @@ module.exports = (env, { testPath }) => [
 				"external-named": "./non-external-named"
 			}
 		},
-		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
+		ignoreWarnings: [(error) => error.name === "FalseIIFEUmdWarning"]
 	},
 	{
 		output: {
@@ -444,7 +446,7 @@ module.exports = (env, { testPath }) => [
 				"external-named": "./non-external-named"
 			}
 		},
-		ignoreWarnings: [error => error.name === "FalseIIFEUmdWarning"]
+		ignoreWarnings: [(error) => error.name === "FalseIIFEUmdWarning"]
 	},
 	{
 		output: {

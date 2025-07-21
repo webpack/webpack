@@ -1,3 +1,5 @@
+"use strict";
+
 const vm = require("vm");
 const { describeCases } = require("./TestCases.template");
 

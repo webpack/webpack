@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import('webpack').Configuration} */
 const config = {
 	devtool: "source-map",

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	entry: {
 		tst_examples_uiform: "./tst_examples_uiform",

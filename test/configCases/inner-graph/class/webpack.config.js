@@ -1,3 +1,5 @@
+"use strict";
+
 const createTestCases = require("../_helpers/createTestCases");
 
 const base = ["getNameA", "getNameB"];

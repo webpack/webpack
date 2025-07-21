@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Chunk} Chunk */
 
 /** @type {import("../../../../").Configuration} */
@@ -19,7 +21,7 @@ module.exports = {
 		};
 	},
 	output: {
-		filename: data =>
+		filename: (data) =>
 			/^[ac]$/.test(
 				/** @type {string} */ (
 					/** @type {Chunk} */

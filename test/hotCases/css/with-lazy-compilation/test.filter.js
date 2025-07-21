@@ -1,1 +1,3 @@
-module.exports = config => config.target === "web";
+"use strict";
+
+module.exports = (config) => config.target === "web";

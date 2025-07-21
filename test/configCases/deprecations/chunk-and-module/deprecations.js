@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	{ code: /DEP_WEBPACK_CHUNK_ADD_MODULE/ },
 	{ code: /DEP_WEBPACK_CHUNK_CONTAINS_MODULE/ },

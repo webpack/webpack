@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	findBundle(i, options) {
 		const ext = options.output.module ? "mjs" : "js";

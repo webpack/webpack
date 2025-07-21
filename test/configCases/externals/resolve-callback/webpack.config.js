@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("enhanced-resolve").ResolveRequest} ResolveRequest */
 /** @typedef {import("../../../../").ExternalItemFunctionData} ExternalItemFunctionData */
 

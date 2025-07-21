@@ -1,3 +1,5 @@
+"use strict";
+
 const { createHash, randomBytes } = require("crypto");
 
 const wasmHashes = {

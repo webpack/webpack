@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsSpread() {
 	try {
 		const x = { a: true };

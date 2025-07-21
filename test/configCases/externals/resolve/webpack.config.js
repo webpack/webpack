@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").ExternalItemFunctionData} ExternalItemFunctionData */
 /** @typedef {import("../../../../").ExternalItemFunctionPromise} ExternalItemFunctionPromise */
 /** @typedef {import("../../../../").ExternalItemFunctionDataGetResolve} ExternalItemFunctionDataGetResolve */

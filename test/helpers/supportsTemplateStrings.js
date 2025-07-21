@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsTemplateStrings() {
 	try {
 		const f = eval("(function f() { return String.raw`a\\b`; })");

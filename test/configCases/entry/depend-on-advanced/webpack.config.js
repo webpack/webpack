@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 /** @typedef {import("../../../../").Configuration} Configuration */
@@ -32,7 +34,7 @@ module.exports = {
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const { chunkGraph } = compilation;
 					/** @type {Record<string, Set<string>>} */

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../types").Compilation} Compilation */
 /** @typedef {import("../../../../types").Module} Module */
 /** @type {import("../../../../types").Configuration} */
@@ -14,7 +16,7 @@ module.exports = {
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					/** @type {Record<string, string>} */
 					const data = {};

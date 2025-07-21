@@ -1,0 +1,3 @@
+.dependency2::before {
+	content: "dependency2";
+}

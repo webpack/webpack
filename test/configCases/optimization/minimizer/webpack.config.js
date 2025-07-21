@@ -1,3 +1,5 @@
+"use strict";
+
 const Compiler = require("../../../../").Compiler;
 
 /** @type {import("../../../../").Configuration} */

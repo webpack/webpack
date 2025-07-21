@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportDefaultAssignment() {
 	try {
 		// eslint-disable-next-line no-unused-vars

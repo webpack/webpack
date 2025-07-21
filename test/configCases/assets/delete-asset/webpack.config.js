@@ -1,3 +1,5 @@
+"use strict";
+
 const TerserPlugin = require("terser-webpack-plugin");
 const { BannerPlugin, Compilation } = require("../../../../");
 
@@ -19,8 +21,8 @@ module.exports = {
 		new BannerPlugin({
 			banner: "Test"
 		}),
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.processAssets.tap(
 					{
 						name: "Test",

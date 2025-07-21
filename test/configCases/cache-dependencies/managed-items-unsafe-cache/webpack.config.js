@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 
 /** @type {import("../../../../").Configuration} */
@@ -6,7 +8,7 @@ module.exports = {
 		managedPaths: [path.resolve(__dirname, "node_modules")]
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
 				const fileDeps = [...compilation.fileDependencies];
 				expect(fileDeps).toContain(

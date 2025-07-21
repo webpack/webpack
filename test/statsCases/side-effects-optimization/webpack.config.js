@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../").Configuration} */
 const baseConfig = {
 	mode: "production",

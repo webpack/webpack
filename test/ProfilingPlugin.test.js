@@ -9,7 +9,7 @@ const rimraf = require("rimraf");
 describe("Profiling Plugin", () => {
 	jest.setTimeout(120000);
 
-	it("should handle output path with folder creation", done => {
+	it("should handle output path with folder creation", (done) => {
 		const webpack = require("../");
 
 		const outputPath = path.join(__dirname, "js/profilingPath");
@@ -53,7 +53,7 @@ describe("Profiling Plugin", () => {
 					backCompat: false
 				}
 			});
-			compiler.run(err => {
+			compiler.run((err) => {
 				if (err) return done(err);
 				const testDuration = process.hrtime(startTime);
 				if (!fs.existsSync(outputPath)) {
@@ -68,7 +68,7 @@ describe("Profiling Plugin", () => {
 				expect(duration).toBeLessThan(
 					testDuration[0] * 1000000 + testDuration[1] / 1000
 				);
-				const cpuProfile = data.find(entry => entry.name === "CpuProfile");
+				const cpuProfile = data.find((entry) => entry.name === "CpuProfile");
 				expect(cpuProfile).toBeTypeOf("object");
 				const profile = cpuProfile.args.data.cpuProfile;
 				expect(profile.startTime).toBeGreaterThanOrEqual(minTs);

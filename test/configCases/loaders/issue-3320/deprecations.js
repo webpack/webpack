@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	{
 		code: /DEP_WEBPACK_RULE_LOADER_OPTIONS_STRING/,

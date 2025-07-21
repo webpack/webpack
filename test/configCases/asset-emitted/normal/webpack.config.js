@@ -1,10 +1,12 @@
+"use strict";
+
 const Source = require("webpack-sources").Source;
 const Compilation = require("../../../../").Compilation;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			/** @type {Record<string, boolean>} */
 			const files = {};
 			compiler.hooks.assetEmitted.tap(

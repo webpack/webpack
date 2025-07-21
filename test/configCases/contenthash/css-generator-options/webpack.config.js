@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 const common = {
 	target: "web",
@@ -81,7 +83,7 @@ module.exports = [
 					type: "css/module",
 					/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 					generator: {
-						exportsConvention: name => name.toUpperCase()
+						exportsConvention: (name) => name.toUpperCase()
 					}
 				}
 			]

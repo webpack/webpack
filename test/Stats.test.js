@@ -4,7 +4,7 @@ require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
 
-const compile = options =>
+const compile = (options) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("..");
 
@@ -20,6 +20,52 @@ const compile = options =>
 	});
 
 describe("Stats", () => {
+	it("should work with a boolean value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(stats.toJson(false)).toMatchInlineSnapshot("Object {}");
+		expect(stats.toString(false)).toMatchInlineSnapshot('""');
+	});
+
+	it("should work with a string value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(stats.toJson("none")).toMatchInlineSnapshot("Object {}");
+		expect(stats.toString("none")).toMatchInlineSnapshot('""');
+	});
+
+	it("should work with an object value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(
+			stats.toJson({
+				all: false,
+				version: false,
+				errorsCount: true,
+				warningsCount: true
+			})
+		).toMatchInlineSnapshot(`
+		Object {
+		  "errorsCount": 0,
+		  "warningsCount": 1,
+		}
+	`);
+		expect(
+			stats.toString({
+				all: false,
+				version: false,
+				errorsCount: true,
+				warningsCount: true
+			})
+		).toMatchInlineSnapshot('"webpack compiled with 1 warning"');
+	});
+
 	it("should print env string in stats", async () => {
 		const stats = await compile({
 			context: __dirname,

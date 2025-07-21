@@ -1,3 +1,5 @@
+"use strict";
+
 const mimeTypes = require("mime-types");
 const svgToMiniDataURI = require("mini-svg-data-uri");
 

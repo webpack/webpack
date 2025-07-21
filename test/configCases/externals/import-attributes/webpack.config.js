@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const {
@@ -19,7 +21,7 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("html-plugin", compilation => {
+				compiler.hooks.compilation.tap("html-plugin", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-plugin",

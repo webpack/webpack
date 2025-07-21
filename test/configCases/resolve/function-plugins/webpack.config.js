@@ -1,3 +1,5 @@
+"use strict";
+
 let pluginExecutionCounter = 0;
 
 /** @type {import("../../../../").Configuration} */

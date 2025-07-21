@@ -1,3 +1,5 @@
+"use strict";
+
 const LazySet = require("../lib/util/LazySet");
 
 describe("LazySet", () => {

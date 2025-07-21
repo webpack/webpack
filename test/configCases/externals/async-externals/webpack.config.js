@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	target: ["web", "es2020"],
 	output: {

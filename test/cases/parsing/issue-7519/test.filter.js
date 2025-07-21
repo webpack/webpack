@@ -1,1 +1,3 @@
-module.exports = config => config.mode !== "development";
+"use strict";
+
+module.exports = (config) => config.mode !== "development";

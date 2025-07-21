@@ -1,3 +1,5 @@
+"use strict";
+
 const entry = {
 	a: "./a",
 	b: "./b",

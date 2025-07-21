@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -63,7 +65,7 @@ module.exports = {
 		},
 		{
 			external2: "var 42",
-			byLayer: layer => {
+			byLayer: (layer) => {
 				if (layer === "layer") {
 					return {
 						external2: "var 43"

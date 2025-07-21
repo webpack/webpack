@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	// each time returns different OriginalSource in webpack.config.js:78
 	// this prevents hit in inmemory cache

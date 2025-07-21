@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compilation} Compilation */
 /** @typedef {import("../../../../").Module} Module */
 
@@ -16,7 +18,7 @@ module.exports = {
 				 * @param {Compilation} compilation the compilation
 				 * @returns {void}
 				 */
-				compilation => {
+				(compilation) => {
 					compilation.hooks.dependencyReferencedExports.tap(
 						"Test",
 						(referencedExports, dep) => {
@@ -31,14 +33,14 @@ module.exports = {
 								refModule &&
 								refModule.identifier().endsWith("reference.js") &&
 								referencedExports.some(
-									names =>
+									(names) =>
 										Array.isArray(names) &&
 										names.length === 1 &&
 										names[0] === "unused"
 								)
 							) {
 								return referencedExports.filter(
-									names =>
+									(names) =>
 										(Array.isArray(names) && names.length !== 1) ||
 										/** @type {string[]} */
 										(names)[0] !== "unused"

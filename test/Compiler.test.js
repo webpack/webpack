@@ -49,7 +49,7 @@ describe("Compiler", () => {
 		};
 		c.hooks.compilation.tap(
 			"CompilerTest",
-			compilation => (compilation.bail = true)
+			(compilation) => (compilation.bail = true)
 		);
 		c.run((err, stats) => {
 			if (err) throw err;
@@ -67,7 +67,7 @@ describe("Compiler", () => {
 				throw stats.errors[0];
 			}
 			stats.logs = logs;
-			c.close(err => {
+			c.close((err) => {
 				if (err) return callback(err);
 				callback(stats, files, compilation);
 			});
@@ -76,7 +76,7 @@ describe("Compiler", () => {
 
 	let compiler;
 
-	afterEach(callback => {
+	afterEach((callback) => {
 		if (compiler) {
 			compiler.close(callback);
 			compiler = undefined;
@@ -85,7 +85,7 @@ describe("Compiler", () => {
 		}
 	});
 
-	it("should compile a single file to deep output", done => {
+	it("should compile a single file to deep output", (done) => {
 		compile(
 			"./c",
 			{
@@ -101,7 +101,7 @@ describe("Compiler", () => {
 		);
 	});
 
-	it("should compile a single file", done => {
+	it("should compile a single file", (done) => {
 		compile("./c", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -119,7 +119,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a complex file", done => {
+	it("should compile a complex file", (done) => {
 		compile("./main1", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -140,7 +140,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with transitive dependencies", done => {
+	it("should compile a file with transitive dependencies", (done) => {
 		compile("./abc", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -163,7 +163,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with multiple chunks", done => {
+	it("should compile a file with multiple chunks", (done) => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
 			expect(Object.keys(files)).toEqual(["/main.js", "/78.js"]);
@@ -189,7 +189,7 @@ describe("Compiler", () => {
 	});
 
 	// cspell:word asmjs
-	it("should not evaluate constants in asm.js", done => {
+	it("should not evaluate constants in asm.js", (done) => {
 		compile("./asmjs", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -224,7 +224,7 @@ describe("Compiler", () => {
 			});
 		});
 
-		afterEach(callback => {
+		afterEach((callback) => {
 			if (compiler) {
 				compiler.close(callback);
 				compiler = undefined;
@@ -233,7 +233,7 @@ describe("Compiler", () => {
 			}
 		});
 
-		it("default platform info", done => {
+		it("default platform info", (done) => {
 			const platform = compiler.platform;
 			expect(platform.web).toBe(true);
 			expect(platform.node).toBe(false);
@@ -241,7 +241,7 @@ describe("Compiler", () => {
 		});
 
 		describe("purgeInputFileSystem", () => {
-			it("invokes purge() if inputFileSystem.purge", done => {
+			it("invokes purge() if inputFileSystem.purge", (done) => {
 				const mockPurge = jest.fn();
 				compiler.inputFileSystem = {
 					purge: mockPurge
@@ -251,7 +251,7 @@ describe("Compiler", () => {
 				done();
 			});
 
-			it("does NOT invoke purge() if !inputFileSystem.purge", done => {
+			it("does NOT invoke purge() if !inputFileSystem.purge", (done) => {
 				const mockPurge = jest.fn();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
@@ -261,7 +261,7 @@ describe("Compiler", () => {
 		});
 
 		describe("isChild", () => {
-			it("returns booleanized this.parentCompilation", done => {
+			it("returns booleanized this.parentCompilation", (done) => {
 				compiler.parentCompilation = "stringyStringString";
 				const response1 = compiler.isChild();
 				expect(response1).toBe(true);
@@ -304,7 +304,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("platformPlugin", done => {
+	it("platformPlugin", (done) => {
 		const webpack = require("..");
 
 		const compiler = webpack({
@@ -315,7 +315,7 @@ describe("Compiler", () => {
 			},
 			plugins: [
 				new (require("../lib/PlatformPlugin"))({ node: true }),
-				compiler => {
+				(compiler) => {
 					compiler.hooks.afterEnvironment.tap("test", () => {
 						const platform = compiler.platform;
 						expect(platform.node).toBe(true);
@@ -327,7 +327,7 @@ describe("Compiler", () => {
 		compiler.close(done);
 	});
 
-	it("should not emit on errors", done => {
+	it("should not emit on errors", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -352,7 +352,7 @@ describe("Compiler", () => {
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		let errored;
 		try {
-			const createCompiler = options =>
+			const createCompiler = (options) =>
 				new Promise((resolve, reject) => {
 					const webpack = require("..");
 
@@ -392,7 +392,7 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = options =>
+		const createStats = (options) =>
 			new Promise((resolve, reject) => {
 				const webpack = require("..");
 
@@ -417,7 +417,7 @@ describe("Compiler", () => {
 		expect(stats).toBeInstanceOf(Stats);
 	});
 
-	it("should not emit on errors (watch)", done => {
+	it("should not emit on errors (watch)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -440,7 +440,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (run)", done => {
+	it("should not be running twice at a time (run)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -461,7 +461,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (watch)", done => {
+	it("should not be running twice at a time (watch)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -482,7 +482,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (run - watch)", done => {
+	it("should not be running twice at a time (run - watch)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -503,7 +503,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (watch - run)", done => {
+	it("should not be running twice at a time (watch - run)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -524,7 +524,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should not be running twice at a time (instance cb)", done => {
+	it("should not be running twice at a time (instance cb)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack(
@@ -545,7 +545,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should run again correctly after first compilation", done => {
+	it("should run again correctly after first compilation", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -569,7 +569,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should watch again correctly after first compilation", done => {
+	it("should watch again correctly after first compilation", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -592,7 +592,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should run again correctly after first closed watch", done => {
+	it("should run again correctly after first closed watch", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -616,7 +616,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should set compiler.watching correctly", done => {
+	it("should set compiler.watching correctly", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -636,7 +636,7 @@ describe("Compiler", () => {
 		expect(compiler.watching).toBe(watching);
 	});
 
-	it("should watch again correctly after first closed watch", done => {
+	it("should watch again correctly after first closed watch", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -660,7 +660,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should run again correctly inside afterDone hook", done => {
+	it("should run again correctly inside afterDone hook", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -687,7 +687,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should call afterDone hook after other callbacks (run)", done => {
+	it("should call afterDone hook after other callbacks (run)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -714,7 +714,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should call afterDone hook after other callbacks (instance cb)", done => {
+	it("should call afterDone hook after other callbacks (instance cb)", (done) => {
 		const instanceCb = jest.fn();
 
 		const webpack = require("..");
@@ -744,7 +744,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should call afterDone hook after other callbacks (watch)", done => {
+	it("should call afterDone hook after other callbacks (watch)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -779,7 +779,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should call afterDone hook after other callbacks (watch close)", done => {
+	it("should call afterDone hook after other callbacks (watch close)", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -814,7 +814,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should flag watchMode as true in watch", done => {
+	it("should flag watchMode as true in watch", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -829,7 +829,7 @@ describe("Compiler", () => {
 
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 
-		const watch = compiler.watch({}, err => {
+		const watch = compiler.watch({}, (err) => {
 			if (err) return done(err);
 			expect(compiler.watchMode).toBeTruthy();
 			watch.close(() => {
@@ -839,7 +839,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should use cache on second run call", done => {
+	it("should use cache on second run call", (done) => {
 		const webpack = require("..");
 
 		compiler = webpack({
@@ -864,7 +864,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should call the failed-hook on error", done => {
+	it("should call the failed-hook on error", (done) => {
 		const failedSpy = jest.fn();
 
 		const webpack = require("..");
@@ -916,7 +916,7 @@ describe("Compiler", () => {
 			capture.restore();
 		});
 
-		const escapeAnsi = stringRaw =>
+		const escapeAnsi = (stringRaw) =>
 			stringRaw
 				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
@@ -940,7 +940,7 @@ describe("Compiler", () => {
 			}
 		}
 
-		it("should log to the console (verbose)", done => {
+		it("should log to the console (verbose)", (done) => {
 			const webpack = require("..");
 
 			compiler = webpack({
@@ -973,7 +973,7 @@ describe("Compiler", () => {
 			});
 		});
 
-		it("should log to the console (debug mode)", done => {
+		it("should log to the console (debug mode)", (done) => {
 			const webpack = require("..");
 
 			compiler = webpack({
@@ -1008,7 +1008,7 @@ describe("Compiler", () => {
 			});
 		});
 
-		it("should log to the console (none)", done => {
+		it("should log to the console (none)", (done) => {
 			const webpack = require("..");
 
 			compiler = webpack({
@@ -1030,7 +1030,7 @@ describe("Compiler", () => {
 			});
 		});
 
-		it("should log to the console with colors (verbose)", done => {
+		it("should log to the console with colors (verbose)", (done) => {
 			const webpack = require("..");
 
 			compiler = webpack({
@@ -1064,7 +1064,7 @@ describe("Compiler", () => {
 			});
 		});
 
-		it("should log to the console with colors (debug mode)", done => {
+		it("should log to the console with colors (debug mode)", (done) => {
 			const webpack = require("..");
 
 			compiler = webpack({

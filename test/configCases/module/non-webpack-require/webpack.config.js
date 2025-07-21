@@ -1,3 +1,5 @@
+"use strict";
+
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
@@ -20,7 +22,7 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-webpack-plugin",

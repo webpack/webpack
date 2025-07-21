@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").RuleSetUseFunction} RuleSetUseFunction */
 /** @typedef {import("../../../../").RuleSetUseItem} RuleSetUseItem */
 

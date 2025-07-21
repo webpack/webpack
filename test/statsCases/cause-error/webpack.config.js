@@ -1,3 +1,5 @@
+"use strict";
+
 const WebpackError = require("../../../lib/WebpackError");
 
 /** @typedef {Error & { cause?: unknown }} ErrorWithCause */
@@ -71,8 +73,8 @@ module.exports = {
 	mode: "development",
 	entry: "./index.js",
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				const errCauseErr = createErrorWithCause("error with case", {
 					cause: new Error("error case")
 				});

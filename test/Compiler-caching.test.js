@@ -49,7 +49,7 @@ describe("Compiler (caching)", () => {
 		};
 		c.hooks.compilation.tap(
 			"CompilerCachingTest",
-			compilation => (compilation.bail = true)
+			(compilation) => (compilation.bail = true)
 		);
 
 		let compilerIteration = 1;
@@ -129,7 +129,7 @@ describe("Compiler (caching)", () => {
 		};
 	}
 
-	it("should cache single file (with manual 1s wait)", done => {
+	it("should cache single file (with manual 1s wait)", (done) => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
@@ -163,7 +163,7 @@ describe("Compiler (caching)", () => {
 		});
 	});
 
-	it("should cache single file (even with no timeout)", done => {
+	it("should cache single file (even with no timeout)", (done) => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
@@ -199,7 +199,7 @@ describe("Compiler (caching)", () => {
 		});
 	});
 
-	it("should only build when modified (with manual 2s wait)", done => {
+	it("should only build when modified (with manual 2s wait)", (done) => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
@@ -244,7 +244,7 @@ describe("Compiler (caching)", () => {
 		});
 	});
 
-	it("should build when modified (even with no timeout)", done => {
+	it("should build when modified (even with no timeout)", (done) => {
 		const options = {};
 		const tempFixture = createTempFixture();
 

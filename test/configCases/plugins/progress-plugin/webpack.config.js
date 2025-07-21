@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../../../");
 const data = require("./data");
@@ -14,8 +16,8 @@ module.exports = {
 			data.push(messages.join("|"));
 		}),
 		{
-			apply: compiler => {
-				compiler.hooks.compilation.tap("CustomPlugin", compilation => {
+			apply: (compiler) => {
+				compiler.hooks.compilation.tap("CustomPlugin", (compilation) => {
 					compilation.hooks.optimize.tap("CustomPlugin", () => {
 						const reportProgress =
 							/** @type {NonNullable<ReturnType<typeof webpack.ProgressPlugin['getReporter']>>} */

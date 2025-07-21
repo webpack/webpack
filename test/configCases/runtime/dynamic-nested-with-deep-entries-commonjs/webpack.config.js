@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
@@ -14,7 +16,7 @@ module.exports = {
 	},
 	optimization: {
 		runtimeChunk: {
-			name: entrypoint =>
+			name: (entrypoint) =>
 				`dir5/dir6/runtime~${entrypoint.name.split("/").pop()}`
 		}
 	}

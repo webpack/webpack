@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../../../");
 
@@ -16,10 +18,10 @@ module.exports = (env, { testPath }) => ({
 			maxLength: 3,
 			failOnConflict: true,
 			fixedLength: true,
-			test: m => m.type.startsWith("css")
+			test: (m) => m.type.startsWith("css")
 		}),
 		new webpack.experiments.ids.SyncModuleIdsPlugin({
-			test: m => m.type.startsWith("css"),
+			test: (m) => m.type.startsWith("css"),
 			path: path.resolve(testPath, "module-ids.json"),
 			mode: "create"
 		})

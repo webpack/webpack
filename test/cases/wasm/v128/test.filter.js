@@ -1,3 +1,5 @@
+"use strict";
+
 // const supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
 // const supportsFeature = require("webassembly-feature");
 

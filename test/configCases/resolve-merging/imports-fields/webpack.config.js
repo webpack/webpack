@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	entry: "./index.js",
 	resolve: {

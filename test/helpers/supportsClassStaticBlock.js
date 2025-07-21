@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsClassStaticBLock() {
 	try {
 		eval("(function f({x, y}) { class Foo { static {} } })");

@@ -1,3 +1,5 @@
+"use strict";
+
 const { getProtocol, getScheme } = require("../lib/util/URLAbsoluteSpecifier");
 
 /**

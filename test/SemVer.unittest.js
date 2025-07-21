@@ -13,7 +13,7 @@ const {
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {
-	const createRuntimeFunction = runtimeCodeFunction => {
+	const createRuntimeFunction = (runtimeCodeFunction) => {
 		const runtimeFunction = runtimeCodeFunction({
 			basicFunction: (args, body) => `(${args}) => {\n${body.join("\n")}\n}`,
 			supportsArrowFunction: () => true

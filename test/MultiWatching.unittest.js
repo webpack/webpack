@@ -57,7 +57,7 @@ describe("MultiWatching", () => {
 
 	describe("close", () => {
 		let callback;
-		const callClosedFinishedCallback = watching => {
+		const callClosedFinishedCallback = (watching) => {
 			watching.close.mock.calls[0][0]();
 		};
 

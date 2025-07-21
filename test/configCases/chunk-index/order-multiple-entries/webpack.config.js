@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compilation} Compilation */
 /** @typedef {import("../../../../").Module} Module */
 
@@ -19,7 +21,7 @@ module.exports = {
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				const moduleGraph = compilation.moduleGraph;
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					/** @type {Record<string, string>} */
@@ -78,13 +80,13 @@ module.exports = {
 					});
 					const indices = [...compilation.modules]
 						.map(
-							m =>
+							(m) =>
 								/** @type {[number, Module]} */ ([
 									moduleGraph.getPreOrderIndex(m),
 									m
 								])
 						)
-						.filter(p => typeof p[0] === "number")
+						.filter((p) => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
 						.map(
 							([i, m]) =>
@@ -93,13 +95,13 @@ module.exports = {
 						.join(", ");
 					const indices2 = [...compilation.modules]
 						.map(
-							m =>
+							(m) =>
 								/** @type {[number, Module]} */ ([
 									moduleGraph.getPostOrderIndex(m),
 									m
 								])
 						)
-						.filter(p => typeof p[0] === "number")
+						.filter((p) => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
 						.map(
 							([i, m]) =>

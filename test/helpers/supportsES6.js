@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportsES6() {
 	try {
 		eval("class A {}");

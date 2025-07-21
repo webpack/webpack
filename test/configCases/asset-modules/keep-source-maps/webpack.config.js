@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration} */
@@ -23,7 +25,7 @@ module.exports = {
 				/** @type {GeneratorOptionsByModuleTypeKnown['asset/resource']} */
 				generator: {
 					binary: false,
-					filename: pathInfo =>
+					filename: (pathInfo) =>
 						/** @type {string} */
 						(pathInfo.filename).replace(/\.scss/gi, ".css")
 				},

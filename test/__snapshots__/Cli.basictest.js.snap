@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Cli should generate the correct cli flags 1`] = `
+exports[`Cli getArguments should generate the correct cli flags 1`] = `
 Object {
   "amd": Object {
     "configs": Array [
@@ -10385,7 +10385,7 @@ Object {
 }
 `;
 
-exports[`Cli should generate the correct cli flags with custom schema 1`] = `
+exports[`Cli getArguments should generate the correct cli flags with custom schema 1`] = `
 Object {
   "with-both-cli-and-negative-description": Object {
     "configs": Array [

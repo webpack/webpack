@@ -1,3 +1,5 @@
+"use strict";
+
 const { numberToIdentifier } = require("../lib/Template");
 const numberHash = require("../lib/util/numberHash");
 

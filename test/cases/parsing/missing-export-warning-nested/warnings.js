@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/export 'A' \(imported as 'm'\) was not found in '.\/a' \(possible exports: a, x\)/

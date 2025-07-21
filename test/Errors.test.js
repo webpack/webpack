@@ -120,7 +120,7 @@ async function compile(options) {
 				if (bailedError) {
 					return reject(bailedError);
 				}
-				compiler.close(closeError => {
+				compiler.close((closeError) => {
 					if (closeError) {
 						return reject(closeError);
 					}

@@ -1,7 +1,9 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
 				for (const c of compilation.chunks) {
 					const chunk =
