@@ -14966,7 +14966,7 @@ declare abstract class RuntimeTemplate {
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): undefined | boolean;
 	supportNodePrefixForCoreModules(): undefined | boolean;
-	renderNameBuiltInNodeCoreModule(mod: string): string;
+	renderNodePrefixForCoreModule(mod: string): string;
 	returningFunction(returnValue: string, args?: string): string;
 	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;
