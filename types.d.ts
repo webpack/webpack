@@ -5656,9 +5656,9 @@ declare abstract class FileSystemInfo {
 	): void;
 	createSnapshot(
 		startTime: undefined | null | number,
-		files: null | Iterable<string>,
-		directories: null | Iterable<string>,
-		missing: null | Iterable<string>,
+		files: undefined | null | Iterable<string>,
+		directories: undefined | null | Iterable<string>,
+		missing: undefined | null | Iterable<string>,
 		options: undefined | null | SnapshotOptionsFileSystemInfo,
 		callback: (err: null | WebpackError, snapshot: null | Snapshot) => void
 	): void;
