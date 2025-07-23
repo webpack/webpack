@@ -9,6 +9,9 @@ module.exports = {
 		}
 	},
 	output: {
-		filename: "[name]-[contenthash].js"
+		filename: "[name]-[contenthash].js",
+		environment: {
+			nodePrefixForCoreModules: false
+		}
 	}
 };
