@@ -11,7 +11,10 @@ module.exports = {
 		d: { import: "./index.js?d", filename: "[name].js" }
 	},
 	output: {
-		filename: "[name].[contenthash].js"
+		filename: "[name].[contenthash].js",
+		environment: {
+			nodePrefixForCoreModules: false
+		}
 	},
 	plugins: [new webpack.HotModuleReplacementPlugin()]
 };
