@@ -2,148 +2,8 @@ import { constants, writeFile } from "fs";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import {
-	Measurement,
-	getGitDir,
-	mongoMeasurement,
-	setupCore,
-	teardownCore
-} from "@codspeed/core";
 import { simpleGit } from "simple-git";
 import { Bench, hrtimeNow } from "tinybench";
-
-function getCallingFile() {
-	const stack = getStackTrace();
-	let callingFile = stack[2].getFileName(); // [here, withCodSpeed, actual caller]
-	const gitDir = getGitDir(callingFile);
-	if (gitDir === undefined) {
-		throw new Error("Could not find a git repository");
-	}
-	if (callingFile.startsWith("file://")) {
-		callingFile = fileURLToPath(callingFile);
-	}
-	return path.relative(gitDir, callingFile);
-}
-
-const createErrorEvent = (target, error) => {
-	const event = new Event("error");
-	Object.defineProperty(event, "task", {
-		configurable: false,
-		enumerable: true,
-		value: target,
-		writable: false
-	});
-	Object.defineProperty(event, "error", {
-		configurable: false,
-		enumerable: true,
-		value: error,
-		writable: false
-	});
-	return event;
-};
-
-const getStackTrace = (belowFn) => {
-	const oldLimit = Error.stackTraceLimit;
-	Error.stackTraceLimit = Infinity;
-	const dummyObject = {};
-	const v8Handler = Error.prepareStackTrace;
-	Error.prepareStackTrace = (dummyObject, v8StackTrace) => v8StackTrace;
-	Error.captureStackTrace(dummyObject, belowFn || getStackTrace);
-	const v8StackTrace = dummyObject.stack;
-	Error.prepareStackTrace = v8Handler;
-	Error.stackTraceLimit = oldLimit;
-	return v8StackTrace;
-};
-
-function withCodSpeed(/** @type {import("tinybench").Bench} */ bench) {
-	if (!Measurement.isInstrumented()) {
-		const rawRun = bench.run;
-		bench.run = async () => {
-			console.warn(
-				`[CodSpeed] ${bench.tasks.length} benches detected but no instrumentation found, falling back to tinybench`
-			);
-			return await rawRun.bind(bench)();
-		};
-		return bench;
-	}
-
-	const rawAdd = bench.add;
-	bench.add = (name, fn, opts) => {
-		const callingFile = getCallingFile();
-		const uri = `${callingFile}::${name}`;
-		const options = { ...opts, uri };
-		return rawAdd.bind(bench)(name, fn, options);
-	};
-	const rootCallingFile = getCallingFile();
-	bench.run = async function run() {
-		const iterations = bench.opts.iterations;
-		console.log("[CodSpeed] running");
-		setupCore();
-		if (bench.opts.warmup) {
-			await bench.warmupTasks();
-		}
-		for (const task of bench.tasks) {
-			if (bench.opts.setup) await bench.opts.setup(task, "run");
-			if (task.fnOpts.beforeAll) await task.fnOpts.beforeAll.call(task);
-			const samples = [];
-			try {
-				async function benchmarkTask() {
-					if (task.fnOpts.beforeEach) {
-						await task.fnOpts.beforeEach.call(task, "run");
-					}
-					let taskTime = 0;
-					if (task.async) {
-						const taskStart = bench.opts.now();
-						await task.fn();
-						taskTime = bench.opts.now() - taskStart;
-					} else {
-						const taskStart = bench.opts.now();
-						task.fn();
-						taskTime = bench.opts.now() - taskStart;
-					}
-					samples.push(taskTime);
-					if (task.fnOpts.afterEach) {
-						await task.fnOpts.afterEach.call(this, "run");
-					}
-				}
-
-				while (samples.length < iterations) {
-					await benchmarkTask();
-				}
-			} catch (error) {
-				task.mergeTaskResult({ error });
-				task.dispatchEvent(createErrorEvent(task, error));
-				bench.dispatchEvent(createErrorEvent(task, error));
-				if (bench.opts.throws) {
-					throw error;
-				}
-			}
-			// Codspeed Measure
-			const uri =
-				task.opts && "uri" in task.options
-					? task.opts.uri
-					: `${rootCallingFile}::${task.name}`;
-			if (task.fnOpts.beforeEach) await task.fnOpts.beforeEach.call(task);
-			await mongoMeasurement.start(uri);
-			await (async function __codspeed_root_frame__() {
-				// Measurement.startInstrumentation();
-				await task.fn();
-				// Measurement.stopInstrumentation(uri);
-			})();
-			if (task.fnOpts.afterEach) await task.fnOpts.afterEach.call(task);
-			await mongoMeasurement.stop(uri);
-			console.log(`[Codspeed] ✔ Measured ${uri}`);
-
-			if (task.fnOpts.afterAll) await task.fnOpts.afterAll.call(task);
-			if (bench.opts.teardown) await bench.opts.teardown(task, "run");
-			task.processRunResult({ latencySamples: samples });
-		}
-		teardownCore();
-		console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
-		return bench.tasks;
-	};
-	return bench;
-}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
@@ -416,11 +276,15 @@ function buildConfiguration(
 		`baseline-${baseline.name}`
 	);
 	config.plugins = config.plugins || [];
-
 	if (config.cache) {
 		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
 	}
-
+	if (watch) {
+		config.cache = {
+			type: "memory",
+			maxGenerations: 1
+		};
+	}
 	return config;
 }
 
@@ -458,14 +322,115 @@ const scenarios = [
 
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
-const bench = withCodSpeed(
+const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
+	const { Measurement, getGitDir, mongoMeasurement, setupCore, teardownCore } =
+		await import("@codspeed/core");
+
+	if (!Measurement.isInstrumented()) {
+		const rawRun = bench.run;
+		bench.run = async () => {
+			console.warn(
+				`[CodSpeed] ${bench.tasks.length} benches detected but no instrumentation found, falling back to tinybench`
+			);
+			return await rawRun.bind(bench)();
+		};
+		return bench;
+	}
+
+	const getStackTrace = (belowFn) => {
+		const oldLimit = Error.stackTraceLimit;
+		Error.stackTraceLimit = Infinity;
+		const dummyObject = {};
+		const v8Handler = Error.prepareStackTrace;
+		Error.prepareStackTrace = (dummyObject, v8StackTrace) => v8StackTrace;
+		Error.captureStackTrace(dummyObject, belowFn || getStackTrace);
+		const v8StackTrace = dummyObject.stack;
+		Error.prepareStackTrace = v8Handler;
+		Error.stackTraceLimit = oldLimit;
+		return v8StackTrace;
+	};
+
+	const getCallingFile = () => {
+		const stack = getStackTrace();
+		let callingFile = stack[2].getFileName(); // [here, withCodSpeed, actual caller]
+		const gitDir = getGitDir(callingFile);
+		if (gitDir === undefined) {
+			throw new Error("Could not find a git repository");
+		}
+		if (callingFile.startsWith("file://")) {
+			callingFile = fileURLToPath(callingFile);
+		}
+		return path.relative(gitDir, callingFile);
+	};
+
+	const rawAdd = bench.add;
+	bench.add = (name, fn, opts) => {
+		const callingFile = getCallingFile();
+		const uri = `${callingFile}::${name}`;
+		const options = { ...opts, uri };
+		return rawAdd.bind(bench)(name, fn, options);
+	};
+	const rootCallingFile = getCallingFile();
+	bench.run = async function run() {
+		const iterations = bench.opts.iterations - 1;
+		console.log("[CodSpeed] running");
+		setupCore();
+		for (const task of bench.tasks) {
+			await bench.opts.setup?.(task, "run");
+			await task.fnOpts.beforeAll?.call(task);
+			const samples = [];
+			async function iteration() {
+				try {
+					await task.fnOpts.beforeEach?.call(task, "run");
+					const start = bench.opts.now();
+					await task.fn();
+					samples.push(bench.opts.now() - start || 0);
+					await task.fnOpts.afterEach?.call(this, "run");
+				} catch (err) {
+					if (bench.opts.throws) {
+						throw err;
+					}
+				}
+			}
+			while (samples.length < iterations) {
+				await iteration();
+			}
+			// Codspeed Measure
+			const uri =
+				task.opts && "uri" in task.options
+					? task.opts.uri
+					: `${rootCallingFile}::${task.name}`;
+			await task.fnOpts.beforeEach?.call(task);
+			await mongoMeasurement.start(uri);
+			await (async function __codspeed_root_frame__() {
+				Measurement.startInstrumentation();
+				await task.fn();
+				Measurement.stopInstrumentation(uri);
+			})();
+			await mongoMeasurement.stop(uri);
+			await task.fnOpts.afterEach?.call(task);
+			console.log(`[Codspeed] ✔ Measured ${uri}`);
+			await task.fnOpts.afterAll?.call(task);
+
+			await bench.opts.teardown?.(task, "run");
+			task.processRunResult({ latencySamples: samples });
+		}
+		teardownCore();
+		console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
+		return bench.tasks;
+	};
+	return bench;
+};
+
+const bench = await withCodSpeed(
 	new Bench({
 		now: hrtimeNow,
 		throws: true,
-		warmup: false,
-		iterations: 15, // one additional iteration for real Codspeed measurement, resulting in a total of 8
+		warmup: true,
+		warmupIterations: 2,
+		iterations: 8,
 		setup(task, mode) {
-			if (global.gc) global.gc();
+			global.gc();
 			console.log(`Setup (${mode} mode): ${task.name}`);
 		},
 		teardown(task, mode) {
