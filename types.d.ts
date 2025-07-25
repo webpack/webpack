@@ -17617,6 +17617,10 @@ declare namespace exports {
 		export let ensureChunkHandlers: "__webpack_require__.f";
 		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
 		export let entryModuleId: "__webpack_require__.s";
+		export let esmId: "__webpack_esm_id__";
+		export let esmIds: "__webpack_esm_ids__";
+		export let esmModules: "__webpack_esm_modules__";
+		export let esmRuntime: "__webpack_esm_runtime__";
 		export let exports: "__webpack_exports__";
 		export let externalInstallChunk: "__webpack_require__.C";
 		export let getChunkCssFilename: "__webpack_require__.k";
