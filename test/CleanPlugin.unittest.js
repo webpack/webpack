@@ -1,10 +1,6 @@
 "use strict";
 
-const {
-	_getDirectories,
-	_hasFile,
-	_isEqualPath
-} = require("../lib/CleanPlugin");
+const { _getDirectories } = require("../lib/CleanPlugin");
 
 describe("CleanPlugin", () => {
 	describe("_getDirectories", () => {
@@ -52,31 +48,6 @@ describe("CleanPlugin", () => {
 			]);
 			const result = _getDirectories(assets);
 			expect([...result]).toEqual([".", "./js", "./static/js", "./static"]);
-		});
-	});
-
-	describe("_isEqualPath", () => {
-		it("should normalize paths before comparison", () => {
-			expect(_isEqualPath("this", "this")).toBe(true);
-			expect(_isEqualPath("this", "./this")).toBe(true);
-			expect(_isEqualPath("this/a", "./this/a")).toBe(true);
-			expect(_isEqualPath("this", "this/a")).toBe(false);
-		});
-	});
-
-	describe("_hasFile", () => {
-		it("should find file in Set collection", () => {
-			const files = new Set(["this"]);
-			expect(_hasFile(files, "./this")).toBe(true);
-			expect(_hasFile(files, "this")).toBe(true);
-			expect(_hasFile(files, "this/a")).toBe(false);
-		});
-
-		it("should find file in Map collection", () => {
-			const files = new Map([["this", 0]]);
-			expect(_hasFile(files, "this")).toBe(true);
-			expect(_hasFile(files, "./this")).toBe(true);
-			expect(_hasFile(files, "this/a")).toBe(false);
 		});
 	});
 });
