@@ -3287,6 +3287,9 @@ export interface JavascriptParserOptions {
 	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
 	 */
 	createRequire?: boolean | string;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
 	deferImport?: boolean;
 	/**
 	 * Specifies global fetchPriority for dynamic import.

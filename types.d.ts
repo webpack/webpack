@@ -5967,7 +5967,8 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
 		sourceOrder: number,
-		attributes?: ImportAttributes
+		attributes?: ImportAttributes,
+		defer?: boolean
 	);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
@@ -7877,6 +7878,10 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
 	 */
 	createRequire?: string | boolean;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
 	deferImport?: boolean;
 
 	/**
