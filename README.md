@@ -252,6 +252,18 @@ you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
 friendly** by using hashes.
 
+### Developer Tools
+
+If you're working on webpack itself, or building advanced plugins or integrations, the tools below can help you explore internal mechanics, debug plugin life-cycles, and build custom tooling.
+
+#### Instrumentation
+
+| Name                                                      | Status                | Description                                                                                                                       |
+| --------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [tapable-tracer](https://github.com/ertgl/tapable-tracer) | ![tapable-tracer-npm] | Traces tapable hook execution in real-time and collects structured stack frames. Can export to UML for generating visualizations. |
+
+[tapable-tracer-npm]: https://img.shields.io/npm/v/tapable-tracer.svg
+
 <h2>Contributing</h2>
 
 **We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](https://github.com/webpack) or [webpack-contrib organization](https://github.com/webpack-contrib) which houses all of our loaders and plugins.
