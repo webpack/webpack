@@ -258,9 +258,9 @@ If you're working on webpack itself, or building advanced plugins or integration
 
 #### Instrumentation
 
-| Name | Status | Description |
-| ---- | ------ | ----------- |
-| [tapable-tracer](https://github.com/ertgl/tapable-tracer) | ![tapable-tracer-npm] | Traces tapable hook execution in real-time and collects structured stack frames. Can export to UML for generating visualizations.
+| Name                                                      | Status                | Description                                                                                                                       |
+| --------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [tapable-tracer](https://github.com/ertgl/tapable-tracer) | ![tapable-tracer-npm] | Traces tapable hook execution in real-time and collects structured stack frames. Can export to UML for generating visualizations. |
 
 [tapable-tracer-npm]: https://img.shields.io/npm/v/tapable-tracer.svg
 
