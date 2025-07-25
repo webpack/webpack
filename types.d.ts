@@ -2751,6 +2751,7 @@ declare interface ConcatenatedModuleInfo {
 	rawExportMap?: Map<string, string>;
 	namespaceExportSymbol?: string;
 	namespaceObjectName?: string;
+	concatenationScope?: ConcatenationScope;
 
 	/**
 	 * "default-with-named" namespace
@@ -2796,12 +2797,17 @@ declare interface ConcatenationBailoutReasonContext {
 declare class ConcatenationScope {
 	constructor(
 		modulesMap: ModuleInfo[] | Map<Module, ModuleInfo>,
-		currentModule: ConcatenatedModuleInfo
+		currentModule: ConcatenatedModuleInfo,
+		usedNames: Set<string>
 	);
+	usedNames: Set<string>;
 	isModuleInScope(module: Module): boolean;
 	registerExport(exportName: string, symbol: string): void;
 	registerRawExport(exportName: string, expression: string): void;
+	getRawExport(exportName: string): undefined | string;
+	setRawExportMap(exportName: string, expression: string): void;
 	registerNamespaceExport(symbol: string): void;
+	registerUsedName(symbol: string): boolean;
 	createModuleReference(
 		module: Module,
 		__1: Partial<ModuleReferenceOptions>
@@ -5230,6 +5236,7 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
+	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
@@ -6276,6 +6283,7 @@ type ImportSource =
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral;
+type Imported = true | [string, string][];
 
 /**
  * Options for infrastructure level logging.
@@ -6338,6 +6346,8 @@ declare class InitFragment<GenerateContext> {
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
 	merge: any;
+	getImported: any;
+	setImported: any;
 	static addToSource<Context, T>(
 		source: Source,
 		initFragments: InitFragment<T>[],
@@ -9808,6 +9818,28 @@ declare class ModuleDependency extends Dependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static TRANSITIVE: typeof TRANSITIVE;
+}
+declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
+	constructor(
+		request: string,
+		imported: Imported,
+		ident?: string,
+		dependencyMeta?: ImportDependencyMeta,
+		hashFunction?: string | typeof Hash
+	);
+	getNamespaceIdentifier(): string;
+	static addToSource<Context, T>(
+		source: Source,
+		initFragments: InitFragment<T>[],
+		context: Context
+	): Source;
+	static STAGE_CONSTANTS: number;
+	static STAGE_ASYNC_BOUNDARY: number;
+	static STAGE_HARMONY_EXPORTS: number;
+	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_PROVIDES: number;
+	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
 declare abstract class ModuleFactory {
 	create(
