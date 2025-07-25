@@ -97,6 +97,7 @@ describe("snapshots", () => {
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
 		    "css": undefined,
+		    "deferImport": false,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
@@ -1804,15 +1805,15 @@ describe("snapshots", () => {
 		{ optimization: { runtimeChunk: "single" } },
 		(e) =>
 			e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
+					- Expected
+					+ Received
 
-		@@ ... @@
-		-     "runtimeChunk": false,
-		+     "runtimeChunk": Object {
-		+       "name": [Function name],
-		+     },
-	`)
+					@@ ... @@
+					-     "runtimeChunk": false,
+					+     "runtimeChunk": Object {
+					+       "name": [Function name],
+					+     },
+			`)
 	);
 
 	test(
@@ -2025,9 +2026,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
@@ -2491,9 +2493,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
@@ -2637,9 +2640,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": false,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
