@@ -243,6 +243,7 @@ describe("snapshots", () => {
 		      },
 		      "javascript": Object {
 		        "createRequire": false,
+		        "deferImport": false,
 		        "dynamicImportFetchPriority": false,
 		        "dynamicImportMode": "lazy",
 		        "dynamicImportPrefetch": false,
