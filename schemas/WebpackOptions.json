@@ -1874,6 +1874,9 @@
             }
           ]
         },
+        "deferImport": {
+          "type": "boolean"
+        },
         "dynamicImportFetchPriority": {
           "description": "Specifies global fetchPriority for dynamic import.",
           "enum": ["low", "high", "auto", false]

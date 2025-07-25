@@ -7877,6 +7877,7 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
 	 */
 	createRequire?: string | boolean;
+	deferImport?: boolean;
 
 	/**
 	 * Specifies global fetchPriority for dynamic import.
