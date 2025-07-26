@@ -1874,6 +1874,10 @@
             }
           ]
         },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+          "type": "boolean"
+        },
         "dynamicImportFetchPriority": {
           "description": "Specifies global fetchPriority for dynamic import.",
           "enum": ["low", "high", "auto", false]

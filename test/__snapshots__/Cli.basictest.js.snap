@@ -1989,6 +1989,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-dynamic-import-fetch-priority": Object {
     "configs": Array [
       Object {
@@ -2638,6 +2651,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-amd": Object {
     "configs": Array [
       Object {
@@ -2711,6 +2737,19 @@ Object {
     "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-dynamic-dynamic-import-fetch-priority": Object {
     "configs": Array [
@@ -3458,6 +3497,19 @@ Object {
     "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-esm-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-esm-dynamic-import-fetch-priority": Object {
     "configs": Array [
