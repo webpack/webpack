@@ -1,0 +1,72 @@
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Help us understand your proposal by providing detailed information.
+
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Provide a clear and concise description of the feature you'd like
+      placeholder: I would like webpack to support...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Goals
+      description: What problems would this feature solve?
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: How does webpack currently handle this use case?
+      placeholder: Currently, webpack requires users to...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Proposed Solution
+      description: How should this feature work? Include API examples if applicable
+      placeholder: |
+        I propose adding a new option:
+        ```js
+        module.exports = {
+          newFeature: {
+            enabled: true
+          }
+        }
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternatives Considered
+      description: What other solutions have you considered?
+      placeholder: |
+        - Using plugin X, but it doesn't support Y
+        - Writing custom loader, but it's too complex
+        - Current workaround using...
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Use Cases
+      description: Provide specific examples of how this feature would be used
+      placeholder: |
+        This would be useful for:
+        - Projects that need to...
+        - When building applications with...
+        - Teams that want to...
+    validations:
+      required: true
