@@ -86,15 +86,27 @@ it("should handle multiple URLs with different priorities", () => {
 });
 
 it("should prefer preload over prefetch when both are specified", () => {
-	// Note: The warning for both hints is tested in generate-warnings.js
-	// Here we just verify that preload takes precedence
-	const bothUrl = new URL(/* webpackPreload: true */ /* webpackFetchPriority: "high" */ "./assets/images/test.png", import.meta.url);
+	// When both prefetch and preload are specified, preload takes precedence
+	const bothUrl = new URL(/* webpackPrefetch: true */ /* webpackPreload: true */ /* webpackFetchPriority: "high" */ "./assets/images/both-hints.png", import.meta.url);
 
 	expect(document.head._children).toHaveLength(1);
 	const link1 = document.head._children[0];
 	expect(link1._type).toBe("link");
 	expect(link1.rel).toBe("preload"); // Preload takes precedence
 	expect(link1._attributes.fetchpriority).toBe("high");
+});
+
+it("should handle webpackPreloadType for CSS files", () => {
+	// Test preload with custom type
+	const cssUrl = new URL(/* webpackPreload: true */ /* webpackPreloadType: "text/css" */ "./assets/styles/typed.css", import.meta.url);
+
+	expect(document.head._children).toHaveLength(1);
+	const link1 = document.head._children[0];
+	expect(link1._type).toBe("link");
+	expect(link1.rel).toBe("preload");
+	expect(link1.as).toBe("style");
+	expect(link1.type).toBe("text/css");
+	expect(link1.href.toString()).toMatch(/typed\.css$/);
 });
 
 it("should handle different asset types correctly", () => {
