@@ -9,7 +9,8 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js",
-		assetModuleFilename: "[name][ext]"
+		assetModuleFilename: "[name][ext]",
+		publicPath: "/public/"
 	},
 	target: "web",
 	module: {
