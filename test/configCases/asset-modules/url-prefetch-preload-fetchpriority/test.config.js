@@ -58,6 +58,8 @@ module.exports = {
 	},
 
 	moduleScope(scope) {
+		// Make document available in the module scope
+		scope.document = global.document;
 		// Inject runtime globals that would normally be provided by webpack
 		scope.__webpack_require__ = {
 			PA(url, as, fetchPriority, type) {
