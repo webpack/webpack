@@ -58,6 +58,11 @@ it("should generate all prefetch and preload links", () => {
 			/* webpackPrefetch: true */
 			"./assets/images/test.png",
 			import.meta.url
+		),
+		preloadFont: new URL(
+			/* webpackPreload: true */
+			"./assets/fonts/test.woff2",
+			import.meta.url
 		)
 	};
 	
@@ -120,6 +125,16 @@ it("should generate all prefetch and preload links", () => {
 		rel: "prefetch",
 		as: "image",
 		fetchPriority: undefined
+	});
+	
+	const fontPreloadLink = document.head._children.find(
+		link => link.href.includes("test.woff2") && link.rel === "preload"
+	);
+	expect(fontPreloadLink).toBeTruthy();
+	verifyLink(fontPreloadLink, {
+		rel: "preload",
+		as: "font",
+		href: /test\.woff2$/
 	});
 });
 
