@@ -2,36 +2,11 @@
 
 // Warnings are generated in generate-warnings.js to avoid duplication
 
-// Mock for document.head structure
-global.document = {
-	head: {
-		_children: [],
-		appendChild: function(element) {
-			this._children.push(element);
-		}
-	},
-	createElement: function(tagName) {
-		const element = {
-			_type: tagName,
-			_attributes: {},
-			setAttribute: function(name, value) {
-				this._attributes[name] = value;
-				// Also set as property for fetchPriority
-				if (name === 'fetchpriority') {
-					this.fetchPriority = value;
-				}
-			},
-			getAttribute: function(name) {
-				return this._attributes[name];
-			}
-		};
-		return element;
-	}
-};
-
 // Clear document.head before each test
 beforeEach(() => {
-	document.head._children = [];
+	if (global.document && global.document.head) {
+		global.document.head._children = [];
+	}
 });
 
 it("should generate prefetch link with fetchPriority for new URL() assets", () => {

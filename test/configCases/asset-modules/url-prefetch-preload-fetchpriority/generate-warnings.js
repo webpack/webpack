@@ -5,7 +5,7 @@
 // Invalid fetchPriority value - should generate warning
 const invalidPriorityUrl = new URL(/* webpackPrefetch: true */ /* webpackFetchPriority: "invalid" */ "./assets/images/priority-invalid.png", import.meta.url);
 
-// Both prefetch and preload specified - should generate warning
+// Both prefetch and preload specified - no warning anymore (preload takes precedence)
 const bothHintsUrl = new URL(/* webpackPrefetch: true */ /* webpackPreload: true */ /* webpackFetchPriority: "high" */ "./assets/images/both-hints.png", import.meta.url);
 
 export default {};

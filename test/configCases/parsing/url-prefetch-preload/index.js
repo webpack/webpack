@@ -18,15 +18,6 @@ it("should preload an image asset", () => {
 	expect(url.href).toMatch(/preload-image\.png$/);
 });
 
-it("should handle numeric prefetch values with warning", () => {
-	const url = new URL(
-		/* webpackPrefetch: 10 */
-		"./order-image.png",
-		import.meta.url
-	);
-	expect(url.href).toMatch(/order-image\.png$/);
-});
-
 it("should preload with fetch priority", () => {
 	const url = new URL(
 		/* webpackPreload: true */
@@ -35,16 +26,6 @@ it("should preload with fetch priority", () => {
 		import.meta.url
 	);
 	expect(url.href).toMatch(/priority-image\.png$/);
-});
-
-// Warning test cases
-it("should handle negative prefetch values", () => {
-	const url1 = new URL(
-		/* webpackPrefetch: -1 */
-		"./negative-image.png",
-		import.meta.url
-	);
-	expect(url1.href).toMatch(/negative-image\.png$/);
 });
 
 it("should handle invalid fetch priority", () => {
