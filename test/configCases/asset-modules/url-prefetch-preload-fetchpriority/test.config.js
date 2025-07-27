@@ -60,10 +60,11 @@ module.exports = {
 	moduleScope(scope) {
 		// Inject runtime globals that would normally be provided by webpack
 		scope.__webpack_require__ = {
-			PA(url, as, fetchPriority) {
+			PA(url, as, fetchPriority, type) {
 				const link = global.document.createElement("link");
 				link.rel = "prefetch";
 				if (as) link.as = as;
+				if (type) link.type = type;
 				link.href = url;
 				if (fetchPriority) {
 					link.fetchPriority = fetchPriority;
@@ -71,10 +72,11 @@ module.exports = {
 				}
 				global.document.head.appendChild(link);
 			},
-			LA(url, as, fetchPriority) {
+			LA(url, as, fetchPriority, type) {
 				const link = global.document.createElement("link");
 				link.rel = "preload";
 				if (as) link.as = as;
+				if (type) link.type = type;
 				link.href = url;
 				if (fetchPriority) {
 					link.fetchPriority = fetchPriority;
