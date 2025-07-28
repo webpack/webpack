@@ -5972,6 +5972,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
+	getModuleExports(__0: DependencyTemplateContext): string;
 	getImportStatement(
 		update: boolean,
 		__1: DependencyTemplateContext
