@@ -3288,6 +3288,10 @@ export interface JavascriptParserOptions {
 	 */
 	createRequire?: boolean | string;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: boolean;
+	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */
 	dynamicImportFetchPriority?: "low" | "high" | "auto" | false;
