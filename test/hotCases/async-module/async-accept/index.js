@@ -6,10 +6,8 @@ it("should support async accept", (done) => {
 	expect(a).toEqual(1);
 
 	import.meta.webpackHot.accept(["./module-a"], () => {
-		debugger
 		return new Promise((resolve) => {
 			setTimeout(() => {
-				debugger
 				test = 1;
 				resolve();
 			}, 3000);
