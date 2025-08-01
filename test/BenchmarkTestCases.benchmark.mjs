@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { constants, writeFile } from "fs";
 import fs from "fs/promises";
 import path from "path";
@@ -134,8 +135,8 @@ async function getBaselineRevs() {
 
 	if (!revList) throw new Error("Invalid result from git rev-list");
 
-	const head = await getHead(revList);
-	const base = await getBase(head, revList);
+	const head = revList[1];
+	const base = revList[2];
 
 	if (!head || !base) {
 		throw new Error("No baseline found");
@@ -286,22 +287,6 @@ function buildConfiguration(
 		};
 	}
 	return config;
-}
-
-function runWatch(compiler) {
-	return new Promise((resolve, reject) => {
-		const watching = compiler.watch({}, (err, stats) => {
-			if (err) {
-				reject(err);
-			}
-
-			if (stats.hasWarnings() || stats.hasErrors()) {
-				reject(new Error(stats.toString()));
-			}
-
-			resolve(watching);
-		});
-	});
 }
 
 const scenarios = [
@@ -498,18 +483,11 @@ async function registerSuite(bench, test, baselines) {
 						const entry = path.resolve(config.entry);
 						const originalEntryContent = await fs.readFile(entry, "utf8");
 
-						let watching;
-						let watchingResolve;
-
+						let baseCompiler;
 						bench.add(
 							benchName,
 							async () => {
 								console.time(`Time: ${benchName}`);
-
-								const watchingPromise = new Promise((res) => {
-									watchingResolve = res;
-								});
-
 								await new Promise((resolve, reject) => {
 									writeFile(
 										entry,
@@ -518,32 +496,25 @@ async function registerSuite(bench, test, baselines) {
 											if (err) {
 												reject(err);
 											}
-
-											watchingPromise.then((stats) => {
-												watchingResolve = undefined;
-
-												// Construct and print stats to be more accurate with real life projects
-												stats.toString();
-												console.timeEnd(`Time: ${benchName}`);
+											baseCompiler.watching.invalidate((err) => {
+												if (err) {
+													reject(err);
+													return;
+												}
 												resolve();
+												console.timeEnd(`Time: ${benchName}`);
 											});
 										}
 									);
 								});
 							},
 							{
-								async beforeAll() {
+								beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
-
-									watching = await runWatch(webpack(config));
-									watching.compiler.hooks.afterDone.tap(
-										"WatchingBenchmarkPlugin",
-										(stats) => {
-											if (watchingResolve) {
-												watchingResolve(stats);
-											}
-										}
-									);
+									baseCompiler = webpack(config);
+									baseCompiler.watch({}, (err) => {
+										if (err) throw err;
+									});
 								},
 								async afterEach() {
 									await new Promise((resolve, reject) => {
@@ -552,23 +523,13 @@ async function registerSuite(bench, test, baselines) {
 												reject(err);
 												return;
 											}
-
 											resolve();
 										});
 									});
 								},
-								async afterAll() {
-									await new Promise((resolve, reject) => {
-										if (watching) {
-											watching.close((closeErr) => {
-												if (closeErr) {
-													reject(closeErr);
-													return;
-												}
-
-												resolve();
-											});
-										}
+								afterAll() {
+									baseCompiler.watching.close((closeErr) => {
+										if (closeErr) throw closeErr;
 									});
 								}
 							}
