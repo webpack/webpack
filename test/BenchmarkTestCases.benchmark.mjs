@@ -491,7 +491,7 @@ async function registerSuite(bench, test, baselines) {
 								await new Promise((resolve, reject) => {
 									writeFile(
 										entry,
-										`${originalEntryContent};console.log('watch test')`,
+										`${originalEntryContent}; console.log('watch test')`,
 										(err) => {
 											if (err) {
 												reject(err);
