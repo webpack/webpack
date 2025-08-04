@@ -49,14 +49,14 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset 20d7a312b158a10e97d4.js 36.3 KiB [emitted] [immutable] (name: main)
-asset 1bacc8037d20ba374848.js 12 KiB [emitted] [immutable]
-chunk (runtime: main) 20d7a312b158a10e97d4.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
+asset bbcffa7c4f56815af0bf.js 36.3 KiB [emitted] [immutable] (name: main)
+asset 8fcdb60f2e0d017abc05.js 12 KiB [emitted] [immutable]
+chunk (runtime: main) bbcffa7c4f56815af0bf.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example main
   runtime modules 4.94 KiB 6 modules
   dependent modules 16.9 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
-chunk (runtime: main) 1bacc8037d20ba374848.js 7.83 KiB [rendered]
+chunk (runtime: main) 8fcdb60f2e0d017abc05.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
@@ -66,13 +66,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 8f8c433db3f22b7d7f5a.js 9.01 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
-asset ca29c65736cc562c09a7.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
-chunk (runtime: main) ca29c65736cc562c09a7.js 7.83 KiB [rendered]
+asset 96397c7d076bf9133366.js 9.01 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 884de97388a30170a22f.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
+chunk (runtime: main) 884de97388a30170a22f.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-chunk (runtime: main) 8f8c433db3f22b7d7f5a.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) 96397c7d076bf9133366.js (main) 16.9 KiB (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example main
   runtime modules 4.94 KiB 6 modules
   dependent modules 16.9 KiB [dependent] 2 modules
