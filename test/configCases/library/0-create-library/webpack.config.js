@@ -65,6 +65,29 @@ module.exports = (env, { testPath }) => [
 		}
 	},
 	{
+		entry: "./esm-with-commonjs.js",
+		output: {
+			uniqueName: "esm-with-commonjs",
+			filename: "esm-with-commonjs-avoid-entry-iife.js",
+			library: {
+				type: "module"
+			}
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		optimization: {
+			avoidEntryIife: false
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
 		output: {
 			uniqueName: "esm-export",
 			filename: "esm-export.js",
