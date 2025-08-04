@@ -58,4 +58,47 @@ describe("Watch", () => {
 			compiler.close(done);
 		}, 5000);
 	});
+
+	it("should correctly emit asset when invalidation occurs again", (done) => {
+		function handleError(err) {
+			if (err) done(err);
+		}
+		let calls = 0;
+		const compiler = webpack({
+			mode: "development",
+			context: path.resolve(__dirname, "fixtures/watch"),
+			plugins: [
+				(c) => {
+					// Ensure the second invalidation can occur during compiler running
+					let once = false;
+					c.hooks.afterCompile.tapAsync("LongTask", (_, cb) => {
+						if (once) cb();
+						once = true;
+						setTimeout(() => {
+							cb();
+						}, 1000);
+					});
+				},
+				(c) => {
+					c.hooks.done.tap("Test", () => {
+						// Should emit assets twice, instead of once
+						expect(calls).toBe(2);
+						done();
+					});
+				}
+			]
+		});
+
+		compiler.watch({}, handleError);
+		compiler.hooks.emit.tap("Test", () => {
+			calls++;
+		});
+
+		// First invalidation
+		compiler.watching.invalidate();
+		// Second invalidation while compiler is still running
+		setTimeout(() => {
+			compiler.watching.invalidate();
+		}, 50);
+	});
 });
