@@ -8077,7 +8077,7 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
-type JsonObjectFs = { [index: string]: JsonValueFs } & {
+declare interface JsonObjectFs {
 	[index: string]:
 		| undefined
 		| null
@@ -8086,8 +8086,8 @@ type JsonObjectFs = { [index: string]: JsonValueFs } & {
 		| boolean
 		| JsonObjectFs
 		| JsonValueFs[];
-};
-type JsonObjectTypes = { [index: string]: JsonValueTypes } & {
+}
+declare interface JsonObjectTypes {
 	[index: string]:
 		| undefined
 		| null
@@ -8096,7 +8096,7 @@ type JsonObjectTypes = { [index: string]: JsonValueTypes } & {
 		| boolean
 		| JsonObjectTypes
 		| JsonValueTypes[];
-};
+}
 
 /**
  * Parser options for JSON modules.
