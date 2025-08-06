@@ -17758,8 +17758,10 @@ declare namespace exports {
 		export let moduleLoaded: "module.loaded";
 		export let nodeModuleDecorator: "__webpack_require__.nmd";
 		export let onChunksLoaded: "__webpack_require__.O";
+		export let prefetchAsset: "__webpack_require__.PA";
 		export let prefetchChunk: "__webpack_require__.E";
 		export let prefetchChunkHandlers: "__webpack_require__.F";
+		export let preloadAsset: "__webpack_require__.LA";
 		export let preloadChunk: "__webpack_require__.G";
 		export let preloadChunkHandlers: "__webpack_require__.H";
 		export let publicPath: "__webpack_require__.p";
