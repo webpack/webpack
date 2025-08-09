@@ -1,6 +1,5 @@
 it("should have the hoisted container references", async () => {
 	const before = __webpack_modules__;
-	debugger;
 
 	// Initialize tracker array
 	const tracker = [];
@@ -12,7 +11,6 @@ it("should have the hoisted container references", async () => {
 	await Promise.all(tracker);
 
 	const after = __webpack_modules__;
-	debugger;
 
 	// Verify that tracker contains hoisted container references
 	expect(tracker).not.toHaveLength(0);
