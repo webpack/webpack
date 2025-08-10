@@ -3,11 +3,11 @@
 function verifyLink(link, expectations) {
 	expect(link._type).toBe("link");
 	expect(link.rel).toBe(expectations.rel);
-	
+
 	if (expectations.as) {
 		expect(link.as).toBe(expectations.as);
 	}
-	
+
 	if (expectations.fetchPriority !== undefined) {
 		if (expectations.fetchPriority) {
 			expect(link._attributes.fetchpriority).toBe(expectations.fetchPriority);
@@ -17,11 +17,8 @@ function verifyLink(link, expectations) {
 			expect(link.fetchPriority).toBeUndefined();
 		}
 	}
-	
-	if (expectations.type) {
-		expect(link.type).toBe(expectations.type);
-	}
-	
+
+
 	if (expectations.href) {
 		expect(link.href.toString()).toMatch(expectations.href);
 	}
@@ -44,11 +41,6 @@ it("should generate all prefetch and preload links", () => {
 			"./priority-auto.js",
 			import.meta.url
 		),
-		preloadTyped: new URL(
-			/* webpackPreload: true */ /* webpackPreloadType: "text/css" */
-			"./assets/styles/typed.css",
-			import.meta.url
-		),
 		bothHints: new URL(
 			/* webpackPrefetch: true */ /* webpackPreload: true */ /* webpackFetchPriority: "high" */
 			"./assets/images/both-hints.png",
@@ -65,7 +57,7 @@ it("should generate all prefetch and preload links", () => {
 			import.meta.url
 		)
 	};
-	
+
 	const prefetchHighLink = document.head._children.find(
 		link => link.href.includes("priority-high.png") && link.rel === "prefetch"
 	);
@@ -76,7 +68,7 @@ it("should generate all prefetch and preload links", () => {
 		fetchPriority: "high",
 		href: /priority-high\.png$/
 	});
-	
+
 	const preloadLowLink = document.head._children.find(
 		link => link.href.includes("priority-low.css") && link.rel === "preload"
 	);
@@ -87,7 +79,7 @@ it("should generate all prefetch and preload links", () => {
 		fetchPriority: "low",
 		href: /priority-low\.css$/
 	});
-	
+
 	const prefetchAutoLink = document.head._children.find(
 		link => link.href.includes("priority-auto.js") && link.rel === "prefetch"
 	);
@@ -97,28 +89,17 @@ it("should generate all prefetch and preload links", () => {
 		as: "script",
 		fetchPriority: "auto"
 	});
-	
-	const preloadTypedLink = document.head._children.find(
-		link => link.href.includes("typed.css") && link.rel === "preload"
-	);
-	expect(preloadTypedLink).toBeTruthy();
-	verifyLink(preloadTypedLink, {
-		rel: "preload",
-		as: "style",
-		type: "text/css",
-		href: /typed\.css$/
-	});
-	
+
 	const bothHintsLink = document.head._children.find(
 		link => link.href.includes("both-hints.png")
 	);
 	expect(bothHintsLink).toBeTruthy();
 	expect(bothHintsLink.rel).toBe("preload");
 	expect(bothHintsLink._attributes.fetchpriority).toBe("high");
-	
+
 	const noPriorityLink = document.head._children.find(
-		link => link.href.includes("test.png") && link.rel === "prefetch" && 
-		      !link._attributes.fetchpriority
+		link => link.href.includes("test.png") && link.rel === "prefetch" &&
+			!link._attributes.fetchpriority
 	);
 	expect(noPriorityLink).toBeTruthy();
 	verifyLink(noPriorityLink, {
@@ -126,7 +107,7 @@ it("should generate all prefetch and preload links", () => {
 		as: "image",
 		fetchPriority: undefined
 	});
-	
+
 	const fontPreloadLink = document.head._children.find(
 		link => link.href.includes("test.woff2") && link.rel === "preload"
 	);

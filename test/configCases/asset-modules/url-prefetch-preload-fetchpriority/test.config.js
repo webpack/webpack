@@ -22,6 +22,7 @@ const mockCreateElement = (tagName) => {
 		element.rel = "";
 		element.as = "";
 		element.href = "";
+		element.type = undefined;
 		element.fetchPriority = undefined;
 	} else if (tagName === "script") {
 		element.src = "";
@@ -60,33 +61,5 @@ module.exports = {
 	moduleScope(scope) {
 		// Make document available in the module scope
 		scope.document = global.document;
-		// Inject runtime globals that would normally be provided by webpack
-		scope.__webpack_require__ = {
-			PA(url, as, fetchPriority, type) {
-				const link = global.document.createElement("link");
-				link.rel = "prefetch";
-				if (as) link.as = as;
-				if (type) link.type = type;
-				link.href = url;
-				if (fetchPriority) {
-					link.fetchPriority = fetchPriority;
-					link.setAttribute("fetchpriority", fetchPriority);
-				}
-				global.document.head.appendChild(link);
-			},
-			LA(url, as, fetchPriority, type) {
-				const link = global.document.createElement("link");
-				link.rel = "preload";
-				if (as) link.as = as;
-				if (type) link.type = type;
-				link.href = url;
-				if (fetchPriority) {
-					link.fetchPriority = fetchPriority;
-					link.setAttribute("fetchpriority", fetchPriority);
-				}
-				global.document.head.appendChild(link);
-			},
-			b: "https://test.example.com/" // baseURI
-		};
 	}
 };
