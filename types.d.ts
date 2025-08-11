@@ -9851,7 +9851,8 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
-declare abstract class ModuleFactory {
+declare class ModuleFactory {
+	constructor();
 	create(
 		data: ModuleFactoryCreateData,
 		callback: (err?: null | Error, result?: ModuleFactoryResult) => void
@@ -18244,6 +18245,7 @@ declare namespace exports {
 		LoaderOptionsPlugin,
 		LoaderTargetPlugin,
 		Module,
+		ModuleFactory,
 		ModuleGraph,
 		ModuleGraphConnection,
 		NoEmitOnErrorsPlugin,
@@ -18307,6 +18309,9 @@ declare namespace exports {
 		ParserState,
 		ResolvePluginInstance,
 		Resolver,
+		RenderManifestEntry,
+		RenderManifestOptions,
+		TemplatePath,
 		Watching,
 		Argument,
 		Problem,
