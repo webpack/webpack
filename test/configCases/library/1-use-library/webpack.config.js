@@ -687,5 +687,24 @@ module.exports = (env, { testPath }) => [
 				NAME: JSON.stringify("entryC")
 			})
 		]
+	},
+	{
+		entry: "./esm-with-bundled-commonjs",
+		output: {
+			module: true
+		},
+		experiments: { outputModule: true },
+		externals: {
+			library: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm.mjs"
+			)
+		},
+		externalsType: "module-import",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-bundle-to-esm")
+			})
+		]
 	}
 ];

@@ -802,5 +802,18 @@ module.exports = (env, { testPath }) => [
 				"external-named": "./non-external-named"
 			}
 		}
+	},
+	{
+		entry: "./class-commonjs",
+		output: {
+			filename: "commonjs-bundle-to-esm.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
 	}
 ];
