@@ -1373,6 +1373,7 @@ declare class ChunkGraph {
 	getNumberOfRuntimeModules(chunk: Chunk): number;
 	getChunkEntryModulesIterable(chunk: Chunk): Iterable<Module>;
 	getChunkEntryDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
+	getChunkEntryDependOnChunksIterable(chunk: Chunk): Iterable<Chunk>;
 	hasChunkEntryDependentChunks(chunk: Chunk): boolean;
 	getChunkRuntimeModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkRuntimeModulesInOrder(chunk: Chunk): RuntimeModule[];
