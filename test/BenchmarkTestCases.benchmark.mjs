@@ -618,7 +618,7 @@ async function registerSuite(bench, test, baselines) {
 											async () => (watching = await runWatch(webpack, config))
 										);
 									} else {
-										await runWatch(webpack, config);
+										watching = await runWatch(webpack, config);
 									}
 
 									watching.compiler.hooks.afterDone.tap(
