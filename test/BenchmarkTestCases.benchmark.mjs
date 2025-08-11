@@ -1,5 +1,6 @@
 import { constants, writeFile } from "fs";
 import fs from "fs/promises";
+import { Session } from "inspector";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { simpleGit } from "simple-git";
@@ -51,6 +52,7 @@ const checkV8Flags = () => {
 checkV8Flags();
 
 const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
+const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 
 /**
  * @param {(string | undefined)[]} revList rev list
@@ -288,7 +290,82 @@ function buildConfiguration(
 	return config;
 }
 
-function runWatch(compiler) {
+// Filename sanitization
+function sanitizeFilename(filename) {
+	// Replace invalid filesystem characters with underscores
+	return filename
+		.replace(/[<>:"/\\|?*]/g, "_")
+		.replace(/[\u0000-\u001F\u0080-\u009F]/g, "_")
+		.replace(/^\.+/, "_")
+		.replace(/\.+$/, "_")
+		.replace(/\s+/g, "_")
+		.slice(0, 200); // Limit filename length
+}
+
+async function withProfiling(name, fn) {
+	// Ensure the profiles directory exists
+	await fs.mkdir(path.join(baseOutputPath, "profiles"), { recursive: true });
+
+	const session = new Session();
+	session.connect();
+
+	// Enable and start profiling
+	await new Promise((resolve, reject) => {
+		session.post("Profiler.enable", (err) => {
+			if (err) return reject(err);
+			session.post("Profiler.start", (err) => {
+				if (err) return reject(err);
+				resolve();
+			});
+		});
+	});
+
+	// Run the benchmarked function
+	// No need to `console.time`, it'll be included in the
+	// CPU Profile.
+	await fn();
+
+	// Stop profiling and get the CPU profile
+	const profile = await new Promise((resolve, reject) => {
+		session.post("Profiler.stop", (err, { profile }) => {
+			if (err) return reject(err);
+			resolve(profile);
+		});
+	});
+
+	session.disconnect();
+
+	const outputFile = `${sanitizeFilename(name)}-${Date.now()}.cpuprofile`;
+
+	await fs.writeFile(
+		path.join(baseOutputPath, "profiles", outputFile),
+		JSON.stringify(profile),
+		"utf8"
+	);
+
+	console.log(`CPU profile saved to ${outputFile}`);
+}
+
+function runWebpack(webpack, config) {
+	return new Promise((resolve, reject) => {
+		const compiler = webpack(config);
+		compiler.run((err, stats) => {
+			if (err) return reject(err);
+			if (stats && (stats.hasWarnings() || stats.hasErrors())) {
+				return reject(new Error(stats.toString()));
+			}
+
+			compiler.close((closeErr) => {
+				if (closeErr) return reject(closeErr);
+				if (stats) stats.toString(); // Force stats computation
+				resolve();
+			});
+		});
+	});
+}
+
+function runWatch(webpack, config) {
+	const compiler = webpack(config);
 	return new Promise((resolve, reject) => {
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) {
@@ -535,7 +612,15 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
-									watching = await runWatch(webpack(config));
+									if (GENERATE_PROFILE) {
+										await withProfiling(
+											benchName,
+											async () => (watching = await runWatch(webpack, config))
+										);
+									} else {
+										watching = await runWatch(webpack, config);
+									}
+
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
 										(stats) => {
@@ -577,34 +662,15 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
-								await new Promise((resolve, reject) => {
+								if (GENERATE_PROFILE) {
+									await withProfiling(benchName, () =>
+										runWebpack(webpack, config)
+									);
+								} else {
 									console.time(`Time: ${benchName}`);
-
-									const baseCompiler = webpack(config);
-
-									baseCompiler.run((err, stats) => {
-										if (err) {
-											reject(err);
-											return;
-										}
-
-										if (stats.hasWarnings() || stats.hasErrors()) {
-											throw new Error(stats.toString());
-										}
-
-										baseCompiler.close((closeErr) => {
-											if (closeErr) {
-												reject(closeErr);
-												return;
-											}
-
-											// Construct and print stats to be more accurate with real life projects
-											stats.toString();
-											console.timeEnd(`Time: ${benchName}`);
-											resolve();
-										});
-									});
-								});
+									await runWebpack(webpack, config);
+									console.timeEnd(`Time: ${benchName}`);
+								}
 							},
 							{
 								beforeAll() {
