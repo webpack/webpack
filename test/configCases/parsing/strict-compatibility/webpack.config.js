@@ -2,6 +2,11 @@
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = (() => {
+	/**
+	 * Build a data URI JavaScript entry from inline source.
+	 * @param {string} code inline JavaScript source
+	 * @returns {string} data URI for webpack entry
+	 */
 	const js = (code) => `data:text/javascript,${encodeURIComponent(code)}`;
 
 	return [
