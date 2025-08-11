@@ -364,7 +364,8 @@ function runWebpack(webpack, config) {
 	});
 }
 
-function runWatch(compiler) {
+function runWatch(webpack, config) {
+	const compiler = webpack(config);
 	return new Promise((resolve, reject) => {
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) {
@@ -611,7 +612,15 @@ async function registerSuite(bench, test, baselines) {
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
-									watching = await runWatch(webpack(config));
+									if (GENERATE_PROFILE) {
+										await withProfiling(
+											benchName,
+											async () => (watching = await runWatch(webpack, config))
+										);
+									} else {
+										await runWatch(webpack, config);
+									}
+
 									watching.compiler.hooks.afterDone.tap(
 										"WatchingBenchmarkPlugin",
 										(stats) => {
