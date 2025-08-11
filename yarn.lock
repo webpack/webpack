@@ -5079,7 +5079,7 @@ jest-watcher@30.0.5:
     jest-util "30.0.5"
     string-length "^4.0.2"
 
-jest-worker@30.0.5:
+jest-worker@30.0.5, jest-worker@^30.0.5:
   version "30.0.5"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-30.0.5.tgz#0b85cbab10610303e8d84e214f94d8f052c3cd04"
   integrity sha512-ojRXsWzEP16NdUuBw/4H/zkZdHOa7MMYCk4E430l+8fELeLg/mqmMlRhjL7UNZvQrDmnovWZV4DxX03fZF48fQ==
