@@ -806,7 +806,46 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./class-commonjs",
 		output: {
-			filename: "commonjs-bundle-to-esm.mjs",
+			filename: "commonjs-bundle-to-esm-1.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./exports-shortcut-cjs",
+		output: {
+			filename: "commonjs-bundle-to-esm-2.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./overrides-exports-cjs",
+		output: {
+			filename: "commonjs-bundle-to-esm-3.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./self-reference-cjs",
+		output: {
+			filename: "commonjs-bundle-to-esm-4.mjs",
 			module: true,
 			library: {
 				type: "module"

@@ -695,9 +695,21 @@ module.exports = (env, { testPath }) => [
 		},
 		experiments: { outputModule: true },
 		externals: {
-			library: path.resolve(
+			lib1: path.resolve(
 				testPath,
-				"../0-create-library/commonjs-bundle-to-esm.mjs"
+				"../0-create-library/commonjs-bundle-to-esm-1.mjs"
+			),
+			lib2: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-2.mjs"
+			),
+			lib3: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-3.mjs"
+			),
+			lib4: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-4.mjs"
 			)
 		},
 		externalsType: "module-import",
