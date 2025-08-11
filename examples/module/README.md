@@ -40,13 +40,46 @@ export function reset() {
 # dist/output.js
 
 ```javascript
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+```
+
+</details>
+
+``` js
+var __webpack_exports__ = {};
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
 /*! namespace exports */
 /*! export inc [provided] [used in main] [could be renamed] -> ./counter.js .increment */
 /*! export print [provided] [used in main] [could be renamed] -> ./methods.js .print */
-/*! runtime requirements:  */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 
 ;// ./counter.js
 let value = 0;
@@ -92,9 +125,10 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),o=0,c(o
 ## Unoptimized
 
 ```
-asset output.js 710 bytes [emitted] [javascript module] (name: main)
-chunk (runtime: main) output.js (main) 453 bytes [entry] [rendered]
+asset output.js 1.68 KiB [emitted] [javascript module] (name: main)
+chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
+  runtime modules 396 bytes 2 modules
   ./example.js + 2 modules 453 bytes [built] [code generated]
     [exports: inc, print]
     [all exports used]
@@ -107,8 +141,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 110 bytes [emitted] [javascript module] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 453 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
+  runtime modules 396 bytes 2 modules
   ./example.js + 2 modules 453 bytes [built] [code generated]
     [exports: inc, print]
     [all exports used]
