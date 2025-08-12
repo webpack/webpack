@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -50,7 +50,7 @@ jobs:
   validate-legacy-node:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -69,7 +69,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-tags: true
           fetch-depth: 0
@@ -93,7 +93,7 @@ jobs:
   basic:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -106,7 +106,7 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -159,7 +159,7 @@ jobs:
             part: a
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/github-script@v7
         id: calculate_architecture
         with:
