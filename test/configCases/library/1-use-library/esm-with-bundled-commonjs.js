@@ -12,7 +12,8 @@ it(
 		expect(lib2).toMatchObject({});
 		expect(lib3.name).toBe("overrides-exports-cjs");
 		expect(lib3.foo).toBe(undefined);
-		expect(lib4).toMatchObject({});
-		expect(lib5).toMatchObject({});
+		expect(lib4).toEqual({});
+		expect(lib5.name).toBe("adding-exports-cjs")
+		expect(lib5.foo).toBe("foo")
 	}
 );
