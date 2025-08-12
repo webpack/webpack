@@ -806,6 +806,7 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./class-commonjs",
 		output: {
+			uniqueName: "class-commonjs",
 			filename: "commonjs-bundle-to-esm-1.mjs",
 			module: true,
 			library: {
@@ -819,6 +820,7 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./exports-shortcut-cjs",
 		output: {
+			uniqueName: "exports-shortcut-cjs",
 			filename: "commonjs-bundle-to-esm-2.mjs",
 			module: true,
 			library: {
@@ -832,6 +834,7 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./overrides-exports-cjs",
 		output: {
+			uniqueName: "overrides-exports-cjs",
 			filename: "commonjs-bundle-to-esm-3.mjs",
 			module: true,
 			library: {
@@ -845,7 +848,22 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./self-reference-cjs",
 		output: {
+			uniqueName: "self-reference-cjs",
 			filename: "commonjs-bundle-to-esm-4.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./adding-exports-cjs",
+		output: {
+			uniqueName: "adding-exports-cjs",
+			filename: "commonjs-bundle-to-esm-5.mjs",
 			module: true,
 			library: {
 				type: "module"

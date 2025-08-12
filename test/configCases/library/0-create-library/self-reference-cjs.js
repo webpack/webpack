@@ -1,3 +1,3 @@
-console.log(exports)
-console.log(module)
-console.log(this)
+exports.name
+module.name
+this.name
