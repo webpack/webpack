@@ -19,7 +19,8 @@ module.exports = {
 			compiler.hooks.finishMake.tap("test", (compilation) => {
 				for (const module of compilation.modules) {
 					const name = module.nameForCondition();
-					const { topLevelDeclarations } = module.buildInfo;
+					const topLevelDeclarations =
+						module.buildInfo && module.buildInfo.topLevelDeclarations;
 					if (
 						name &&
 						name.includes("top-level-declarations/index.js") &&
