@@ -20,11 +20,8 @@ module.exports = {
 		function testPlugin(compiler) {
 			compiler.hooks.finishMake.tap("test", (compilation) => {
 				for (const module of compilation.modules) {
-					if (
-						module
-							.nameForCondition()
-							.includes("top-level-declarations/index.js")
-					) {
+					const name = module.nameForCondition();
+					if (name && name.includes("top-level-declarations/index.js")) {
 						const topLevelIdents = new Set([
 							"a",
 							"createRequire",
