@@ -8830,6 +8830,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-context-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-context-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
