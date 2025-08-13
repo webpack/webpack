@@ -5022,6 +5022,21 @@
             }
           }
         },
+        "contextModule": {
+          "description": "Options for snapshotting the context module to determine if it needs to be built again.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
         "immutablePaths": {
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
