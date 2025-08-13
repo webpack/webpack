@@ -7715,7 +7715,12 @@ declare class JavascriptParser extends ParserClass {
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr: Expression): boolean;
 	getTagData(name: string, tag: symbol): undefined | TagData;
-	tagVariable(name: string, tag: symbol, data?: TagData): void;
+	tagVariable(
+		name: string,
+		tag: symbol,
+		data?: TagData,
+		flags?: 0 | 1 | 2 | 4
+	): void;
 	defineVariable(name: string): void;
 	undefineVariable(name: string): void;
 	isVariableDefined(name: string): boolean;
@@ -7793,6 +7798,9 @@ declare class JavascriptParser extends ParserClass {
 	getFreeInfoFromVariable(
 		varName: string
 	): undefined | { name: string; info: string | VariableInfo };
+	getNameInfoFromVariable(
+		varName: string
+	): undefined | { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression:
 			| ImportExpressionImport
@@ -7841,6 +7849,12 @@ declare class JavascriptParser extends ParserClass {
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static VariableInfo: typeof VariableInfo;
+	static VariableInfoFlags: Readonly<{
+		Evaluated: 0;
+		Free: 1;
+		Normal: 2;
+		Tagged: 4;
+	}>;
 	static getImportAttributes: (
 		node:
 			| ImportDeclarationJavascriptParser
@@ -16947,13 +16961,18 @@ declare interface Values {
 declare class VariableInfo {
 	constructor(
 		declaredScope: ScopeInfo,
-		freeName?: string | true,
+		name: undefined | string,
+		flags: VariableInfoFlagsType,
 		tagInfo?: TagInfo
 	);
 	declaredScope: ScopeInfo;
-	freeName?: string | true;
+	name?: string;
+	flags: VariableInfoFlagsType;
 	tagInfo?: TagInfo;
+	isFree(): boolean;
+	isTagged(): boolean;
 }
+type VariableInfoFlagsType = 0 | 1 | 2 | 4;
 declare interface VirtualModuleConfig {
 	/**
 	 * - The module type
