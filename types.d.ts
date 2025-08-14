@@ -7057,6 +7057,40 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
+	 * Module pre walking iterates the scope for import entries
+	 */
+	modulePreWalkStatements(
+		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		)[]
+	): void;
+
+	/**
 	 * Pre walking iterates the scope for variable declarations
 	 */
 	preWalkStatements(
@@ -7295,12 +7329,15 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
-	blockPreWalkImportDeclaration(
+	modulePreWalkImportDeclaration(
 		statement: ImportDeclarationJavascriptParser
 	): void;
 	enterDeclaration(
 		declaration: Declaration,
 		onIdent: (ident: string, identifier: Identifier) => void
+	): void;
+	modulePreWalkExportNamedDeclaration(
+		statement: ExportNamedDeclarationJavascriptParser
 	): void;
 	blockPreWalkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
@@ -7312,7 +7349,7 @@ declare class JavascriptParser extends ParserClass {
 		statement: ExportDefaultDeclaration
 	): void;
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
-	blockPreWalkExportAllDeclaration(
+	modulePreWalkExportAllDeclaration(
 		statement: ExportAllDeclarationJavascriptParser
 	): void;
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
