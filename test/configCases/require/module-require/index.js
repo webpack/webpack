@@ -2,7 +2,8 @@ import { createRequire as _createRequire } from "module";
 import { createRequire as __createRequire, builtinModules } from "module";
 import { createRequire as ___createRequire } from "node:module";
 
-var varRequire2 = _createRequireForVar(import.meta.url);
+let topLetRequire = _createRequireForVar(import.meta.url);
+var topVarRequire = _createRequireForVar(import.meta.url);
 import { createRequire as _createRequireForVar } from "node:module";
 
 it("should evaluate require/createRequire", () => {
@@ -80,5 +81,6 @@ it("should import Node.js module", () => {
 var varRequire = _createRequireForVar(import.meta.url);
 it("should works with top-level var declarations", () => {
 	expect(varRequire("./a")).toBe(1);
-	expect(varRequire2("./b")).toBe(2);
+	expect(topVarRequire("./b")).toBe(2);
+	expect(topLetRequire("./c")).toBe(3);
 });
