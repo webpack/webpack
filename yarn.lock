@@ -3295,9 +3295,9 @@ eslint-config-prettier@^10.1.1:
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
 eslint-config-webpack@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.5.1.tgz#553f591d027bb9a869059ed1d328b6cee104483a"
-  integrity sha512-Qiq0PSjx7P1ncI9PCTvfW8c76OqkXAFr91TQGa+u1FAMHXMur3in8hwL7fXYPi2oF8ytI1Zuoc2TmDzX0ZO4tA==
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.6.0.tgz#3bf4cdad654cf8b7929c997c817247e57800eaa4"
+  integrity sha512-EcOVuPRz5WGjZ3XgEpynvUoQbR4WCFosLTnCZjNTqLuISjix+RSrR2c0zp1r0jo3+BOhqcDNgbN5ZwD5ns3IAg==
   dependencies:
     detect-indent "^7.0.1"
     jsonc-eslint-parser "^2.4.0"
@@ -7745,9 +7745,9 @@ timers-ext@^0.1.7:
     next-tick "^1.1.0"
 
 tinybench@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-4.0.1.tgz#ff5940b4e4a63892ef0cad3daf148d5fd8a3725b"
-  integrity sha512-Nb1srn7dvzkVx0J5h1vq8f48e3TIcbrS7e/UfAI/cDSef/n8yLh4zsAEsFkfpw6auTY+ZaspEvam/xs8nMnotQ==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-4.1.0.tgz#090118e51159eb105f3cc2ef5cf371f3f8adc7bf"
+  integrity sha512-8JZoQRJgWWEIIeAmpiNmMHIREmUY3oGX8GRmlmNapLr/qtgMe+K76vM2qabh85hNScnE2lqTVTajVETjuD9Ixg==
 
 tinyglobby@^0.2.12, tinyglobby@^0.2.14:
   version "0.2.14"
