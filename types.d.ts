@@ -1373,7 +1373,7 @@ declare class ChunkGraph {
 	getNumberOfRuntimeModules(chunk: Chunk): number;
 	getChunkEntryModulesIterable(chunk: Chunk): Iterable<Module>;
 	getChunkEntryDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
-	getChunkEntryDependOnChunksIterable(chunk: Chunk): Iterable<Chunk>;
+	getRuntimeChunkDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
 	hasChunkEntryDependentChunks(chunk: Chunk): boolean;
 	getChunkRuntimeModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkRuntimeModulesInOrder(chunk: Chunk): RuntimeModule[];
@@ -4534,6 +4534,8 @@ declare abstract class Entrypoint extends ChunkGroup {
 	 * (or at least the execution of them)
 	 */
 	getEntrypointChunk(): Chunk;
+	addDependOn(entrypoint: Entrypoint): void;
+	dependOn(entrypoint: Entrypoint): boolean;
 }
 type EnumValue =
 	| null
