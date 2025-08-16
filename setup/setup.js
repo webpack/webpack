@@ -35,8 +35,16 @@ function setup() {
  */
 async function runSetupSymlinkAsync() {
 	await exec("yarn", ["install"], "Install dependencies");
-	await exec("yarn", ["link"], "Create webpack symlink");
-	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
+
+	// Check if webpack is already linked before trying to link again
+	const isAlreadyLinked = await checkSymlinkExistsAsync();
+
+	if (!isAlreadyLinked) {
+		await exec("yarn", ["link"], "Create webpack symlink");
+		await exec("yarn", ["link", "webpack"], "Link webpack into itself");
+	} else {
+		console.log("Setup: Webpack is already linked, skipping link step");
+	}
 }
 
 /**
