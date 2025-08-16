@@ -663,12 +663,12 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| SwitchCase
-		| CatchClause
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern
+		| SwitchCase
+		| CatchClause
 		| Property
 		| AssignmentProperty
 		| ClassBody
@@ -894,12 +894,12 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| SwitchCase
-			| CatchClause
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| SwitchCase
+			| CatchClause
 			| Property
 			| AssignmentProperty
 			| ClassBody
@@ -6855,6 +6855,10 @@ declare class JavascriptParser extends ParserClass {
 		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		collectDestructuringAssignmentProperties: SyncBailHook<
+			[Expression],
+			boolean | void
+		>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
@@ -7329,6 +7333,38 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
+	enterDestructuringAssignment(
+		pattern: Pattern,
+		expression: Expression
+	):
+		| undefined
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression;
 	modulePreWalkImportDeclaration(
 		statement: ImportDeclarationJavascriptParser
 	): void;
@@ -7874,7 +7910,7 @@ declare class JavascriptParser extends ParserClass {
 		allowedTypes: number
 	): undefined | CallExpressionInfo | ExpressionExpressionInfo;
 	getNameForExpression(
-		expression: MemberExpression
+		expression: Expression
 	):
 		| undefined
 		| {
