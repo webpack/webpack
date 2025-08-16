@@ -4018,6 +4018,10 @@ export interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: ("warn" | "error") | boolean;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -4039,6 +4043,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: ("warn" | "error") | boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

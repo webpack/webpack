@@ -1,6 +1,6 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {import("../../../../types").Configuration[]} */
 module.exports = (() => {
 	/**
 	 * Build a data URI JavaScript entry from inline source.
@@ -17,23 +17,23 @@ module.exports = (() => {
 				filename: "[name].bundle0.js"
 			},
 			entry: {
-				// top-level this becomes undefined in strict mode
+				// [NOT-A-VIOLATION] 'this' behavior change only (Annex C 10.2.1.2)
 				warn_top_this: js("module.exports = this;"),
-				// arguments.callee is forbidden in strict mode (runtime TypeError)
+				// [PLUGIN-WARN] TypeError on access (Annex C 10.4.4.6)
 				warn_args_callee: js(
 					"function f(){ return arguments.callee } module.exports = f;"
 				),
-				// arguments.caller is restricted in strict mode (runtime TypeError)
+				// [PLUGIN-WARN] Implementation restriction (Annex C last paragraph)
 				warn_args_caller: js(
 					"function f(){ return arguments.caller } module.exports = f;"
 				),
-				// Accessing Function#caller is restricted in strict mode
+				// [PLUGIN-WARN] Implementation restriction (Annex C last paragraph)
 				warn_fn_caller: js("function g(){} module.exports = g.caller;")
 			},
 			module: {
 				parser: {
 					javascript: {
-						strictCompatibility: "warn"
+						strictModeChecks: "warn"
 					}
 				}
 			}
@@ -45,25 +45,25 @@ module.exports = (() => {
 				filename: "[name].bundle0.js"
 			},
 			entry: {
-				// with statement is forbidden in strict mode
+				// [PARSER-ERROR] SyntaxError (Annex C 14.11.1)
 				err_with: js("var obj={a:1}; with(obj){ module.exports = a }"),
-				// delete on unqualified identifier is SyntaxError in strict mode
+				// [PARSER-ERROR] SyntaxError on direct reference (Annex C 13.5.1.1)
 				err_delete_ident: js("var x=1; delete x; module.exports = x"),
-				// duplicate function parameters are SyntaxError in strict mode
+				// [PARSER-ERROR] SyntaxError on duplicate params (Annex C 15.2.1)
 				err_dup_params: js("function g(a,a){ return a } module.exports = g"),
-				// using eval/arguments as identifiers is SyntaxError in strict mode
+				// [PARSER-ERROR] SyntaxError on eval/arguments as BindingIdentifier (Annex C 13.1.1)
 				err_reserved_ident: js(
 					"var eval=1; function arguments(){} module.exports = eval"
 				),
-				// legacy octal numeric literal is not allowed in strict mode
+				// [PARSER-ERROR] Must disallow LegacyOctalIntegerLiteral (Annex C paragraph 2)
 				err_octal_num: js("module.exports = 0644"),
-				// legacy octal escape in string is not allowed in strict mode
+				// [PARSER-ERROR] Must disallow LegacyOctalEscapeSequence (Annex C paragraph 3)
 				err_octal_escape: js('module.exports = \\"\\\\123\\"')
 			},
 			module: {
 				parser: {
 					javascript: {
-						strictCompatibility: "error"
+						strictModeChecks: "error"
 					}
 				}
 			}
@@ -75,21 +75,21 @@ module.exports = (() => {
 				filename: "[name].bundle0.js"
 			},
 			entry: {
-				// assignment to undeclared identifier -> ReferenceError in strict mode
+				// [PLUGIN-ERROR] ReferenceError on unresolvable reference (Annex C 6.2.5.6)
 				err_assign_undeclared: js("function t(){ x = 1 } module.exports = t"),
-				// assignment to read-only global 'undefined'
+				// [PLUGIN-ERROR] TypeError on [[Writable]]: false (Annex C 13.15)
 				err_assign_readonly: js("undefined = 1; module.exports = 1"),
-				// assignment to 'eval' is not allowed in strict mode
+				// [PARSER-ERROR] eval as LeftHandSideExpression (Annex C 13.15)
 				err_assign_eval: js("eval = 1; module.exports = eval"),
-				// update expression on 'eval' is not allowed in strict mode
+				// [PARSER-ERROR] eval in UpdateExpression (Annex C 13.4)
 				err_update_eval: js("eval++; module.exports = 1"),
-				// catch parameter named 'arguments' is not allowed in strict mode
+				// [PARSER-ERROR] SyntaxError on catch(eval/arguments) (Annex C 14.15.1)
 				err_catch_arguments: js("try{}catch(arguments){} module.exports = 1")
 			},
 			module: {
 				parser: {
 					javascript: {
-						strictCompatibility: "error"
+						strictModeChecks: "error"
 					}
 				}
 			}
@@ -101,12 +101,13 @@ module.exports = (() => {
 				filename: "[name].bundle0.js"
 			},
 			entry: {
+				// [NO-ERROR] Valid strict mode code
 				ok_clean: js("export const x=1; export default x;")
 			},
 			module: {
 				parser: {
 					javascript: {
-						strictCompatibility: "warn"
+						strictModeChecks: "warn"
 					}
 				}
 			}

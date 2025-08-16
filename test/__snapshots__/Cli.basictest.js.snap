@@ -828,6 +828,29 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-strict-mode-checks": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable strict mode compatibility checks.",
+        "multiple": false,
+        "path": "experiments.strictModeChecks",
+        "type": "enum",
+        "values": Array [
+          "warn",
+          "error",
+        ],
+      },
+      Object {
+        "description": "Enable strict mode compatibility checks.",
+        "multiple": false,
+        "path": "experiments.strictModeChecks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable strict mode compatibility checks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "experiments-sync-web-assembly": Object {
     "configs": Array [
       Object {
