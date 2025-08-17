@@ -173,7 +173,8 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          # TODO: Remove version override when https://github.com/nodejs/node/issues/59480 is fixed
+          node-version: ${{ matrix.node-version == '24.x' && '24.5.0' || matrix.node-version }}
           architecture: ${{ steps.calculate_architecture.outputs.result }}
           cache: "yarn"
       # Install old `jest` version and deps for legacy node versions
