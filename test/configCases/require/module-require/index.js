@@ -1,6 +1,10 @@
 import { createRequire as _createRequire } from "module";
 import { createRequire as __createRequire, builtinModules } from "module";
-import { createRequire as ___createRequire} from "node:module";
+import { createRequire as ___createRequire } from "node:module";
+
+let topLetRequire = _createRequireForVar(import.meta.url);
+var topVarRequire = _createRequireForVar(import.meta.url);
+import { createRequire as _createRequireForVar } from "node:module";
 
 it("should evaluate require/createRequire", () => {
 	expect(
@@ -72,4 +76,11 @@ it("should add warning on using require.main", () => {
 
 it("should import Node.js module", () => {
 	expect(Array.isArray(builtinModules)).toBe(true);
+});
+
+var varRequire = _createRequireForVar(import.meta.url);
+it("should works with top-level var declarations", () => {
+	expect(varRequire("./a")).toBe(1);
+	expect(topVarRequire("./b")).toBe(2);
+	expect(topLetRequire("./c")).toBe(3);
 });

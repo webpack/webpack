@@ -663,12 +663,12 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| SwitchCase
-		| CatchClause
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern
+		| SwitchCase
+		| CatchClause
 		| Property
 		| AssignmentProperty
 		| ClassBody
@@ -894,12 +894,12 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| SwitchCase
-			| CatchClause
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| SwitchCase
+			| CatchClause
 			| Property
 			| AssignmentProperty
 			| ClassBody
@@ -1373,6 +1373,7 @@ declare class ChunkGraph {
 	getNumberOfRuntimeModules(chunk: Chunk): number;
 	getChunkEntryModulesIterable(chunk: Chunk): Iterable<Module>;
 	getChunkEntryDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
+	getRuntimeChunkDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
 	hasChunkEntryDependentChunks(chunk: Chunk): boolean;
 	getChunkRuntimeModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkRuntimeModulesInOrder(chunk: Chunk): RuntimeModule[];
@@ -4533,6 +4534,8 @@ declare abstract class Entrypoint extends ChunkGroup {
 	 * (or at least the execution of them)
 	 */
 	getEntrypointChunk(): Chunk;
+	addDependOn(entrypoint: Entrypoint): void;
+	dependOn(entrypoint: Entrypoint): boolean;
 }
 type EnumValue =
 	| null
@@ -6862,6 +6865,10 @@ declare class JavascriptParser extends ParserClass {
 		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		collectDestructuringAssignmentProperties: SyncBailHook<
+			[Expression],
+			boolean | void
+		>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
@@ -7061,6 +7068,40 @@ declare class JavascriptParser extends ParserClass {
 	): undefined | string | VariableInfo;
 	walkClass(
 		classy: ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+	): void;
+
+	/**
+	 * Module pre walking iterates the scope for import entries
+	 */
+	modulePreWalkStatements(
+		statements: (
+			| ImportDeclarationJavascriptParser
+			| ExportNamedDeclarationJavascriptParser
+			| ExportAllDeclarationJavascriptParser
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		)[]
 	): void;
 
 	/**
@@ -7302,12 +7343,47 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
-	blockPreWalkImportDeclaration(
+	enterDestructuringAssignment(
+		pattern: Pattern,
+		expression: Expression
+	):
+		| undefined
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression;
+	modulePreWalkImportDeclaration(
 		statement: ImportDeclarationJavascriptParser
 	): void;
 	enterDeclaration(
 		declaration: Declaration,
 		onIdent: (ident: string, identifier: Identifier) => void
+	): void;
+	modulePreWalkExportNamedDeclaration(
+		statement: ExportNamedDeclarationJavascriptParser
 	): void;
 	blockPreWalkExportNamedDeclaration(
 		statement: ExportNamedDeclarationJavascriptParser
@@ -7319,7 +7395,7 @@ declare class JavascriptParser extends ParserClass {
 		statement: ExportDefaultDeclaration
 	): void;
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
-	blockPreWalkExportAllDeclaration(
+	modulePreWalkExportAllDeclaration(
 		statement: ExportAllDeclarationJavascriptParser
 	): void;
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
@@ -7725,7 +7801,12 @@ declare class JavascriptParser extends ParserClass {
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr: Expression): boolean;
 	getTagData(name: string, tag: symbol): undefined | TagData;
-	tagVariable(name: string, tag: symbol, data?: TagData): void;
+	tagVariable(
+		name: string,
+		tag: symbol,
+		data?: TagData,
+		flags?: 0 | 1 | 2 | 4
+	): void;
 	defineVariable(name: string): void;
 	undefineVariable(name: string): void;
 	isVariableDefined(name: string): boolean;
@@ -7803,6 +7884,9 @@ declare class JavascriptParser extends ParserClass {
 	getFreeInfoFromVariable(
 		varName: string
 	): undefined | { name: string; info: string | VariableInfo };
+	getNameInfoFromVariable(
+		varName: string
+	): undefined | { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression:
 			| ImportExpressionImport
@@ -7836,7 +7920,7 @@ declare class JavascriptParser extends ParserClass {
 		allowedTypes: number
 	): undefined | CallExpressionInfo | ExpressionExpressionInfo;
 	getNameForExpression(
-		expression: MemberExpression
+		expression: Expression
 	):
 		| undefined
 		| {
@@ -7851,6 +7935,12 @@ declare class JavascriptParser extends ParserClass {
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static VariableInfo: typeof VariableInfo;
+	static VariableInfoFlags: Readonly<{
+		Evaluated: 0;
+		Free: 1;
+		Normal: 2;
+		Tagged: 4;
+	}>;
 	static getImportAttributes: (
 		node:
 			| ImportDeclarationJavascriptParser
@@ -9860,7 +9950,8 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
-declare abstract class ModuleFactory {
+declare class ModuleFactory {
+	constructor();
 	create(
 		data: ModuleFactoryCreateData,
 		callback: (err?: null | Error, result?: ModuleFactoryResult) => void
@@ -16957,13 +17048,18 @@ declare interface Values {
 declare class VariableInfo {
 	constructor(
 		declaredScope: ScopeInfo,
-		freeName?: string | true,
+		name: undefined | string,
+		flags: VariableInfoFlagsType,
 		tagInfo?: TagInfo
 	);
 	declaredScope: ScopeInfo;
-	freeName?: string | true;
+	name?: string;
+	flags: VariableInfoFlagsType;
 	tagInfo?: TagInfo;
+	isFree(): boolean;
+	isTagged(): boolean;
 }
+type VariableInfoFlagsType = 0 | 1 | 2 | 4;
 declare interface VirtualModuleConfig {
 	/**
 	 * - The module type
@@ -18253,6 +18349,7 @@ declare namespace exports {
 		LoaderOptionsPlugin,
 		LoaderTargetPlugin,
 		Module,
+		ModuleFactory,
 		ModuleGraph,
 		ModuleGraphConnection,
 		NoEmitOnErrorsPlugin,
@@ -18316,6 +18413,9 @@ declare namespace exports {
 		ParserState,
 		ResolvePluginInstance,
 		Resolver,
+		RenderManifestEntry,
+		RenderManifestOptions,
+		TemplatePath,
 		Watching,
 		Argument,
 		Problem,

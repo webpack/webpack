@@ -402,7 +402,7 @@ class TestRunner {
 			);
 		const esmCache = new Map();
 		const { category, name, round } = this.testMeta;
-		const esmIdentifier = `${category.name}-${name}-${round || 0}`;
+		const esmIdentifier = `${category}-${name}-${round || 0}`;
 		let esmContext = null;
 		return (moduleInfo, context) => {
 			const asModule = require("../helpers/asModule");
