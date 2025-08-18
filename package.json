@@ -180,7 +180,7 @@
     "style-loader": "^4.0.0",
     "terser": "^5.43.1",
     "three": "^0.179.1",
-    "tinybench": "^4.0.1",
+    "tinybench": "^5.0.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.24.3",
     "ts-loader": "^9.5.1",
