@@ -4807,6 +4807,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: boolean | "error" | "warn";
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 
@@ -4833,6 +4838,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: boolean | "error" | "warn";
 }
 type ExportAllDeclarationJavascriptParser = ExportAllDeclarationImport & {
 	attributes?: ImportAttribute[];
