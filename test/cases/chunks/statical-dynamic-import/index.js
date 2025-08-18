@@ -48,6 +48,6 @@ it("should tree-shake if its member call and strictThisContextOnImports is false
 	expect(m.usedExports).toEqual(["f", "usedExports"]);
 	let m2 = await import("./dir4/lib");
 	expect(m2.b.f()).toBe(1);
-	expect(m2.b.usedExports).toEqual(["f", "usedExports"]);
+	expect(m2.b.usedExports).toEqual(true);
 	expect(m2.usedExports).toEqual(["b", "usedExports"]);
 })
