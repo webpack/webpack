@@ -889,6 +889,13 @@ export type OptimizationRuntimeChunkNormalized =
 			 */
 			name?: import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
 	  };
+/**
+ * Add additional plugins to the compiler.
+ */
+export type PluginsNormalized = (
+	| WebpackPluginInstance
+	| WebpackPluginFunction
+)[];
 
 /**
  * Options object as provided by the user.
@@ -3602,7 +3609,7 @@ export interface OptimizationNormalized {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
+	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
@@ -3956,7 +3963,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins: Plugins;
+	plugins: PluginsNormalized;
 	/**
 	 * Capture timing information for each module.
 	 */

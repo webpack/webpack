@@ -58,7 +58,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	hashFunction: HashFunction;
 	hashDigest: HashDigest;
 	hashDigestLength: HashDigestLength;
-	hashSalt: HashSalt;
+	hashSalt?: HashSalt;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
