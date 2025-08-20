@@ -1891,7 +1891,7 @@ declare interface CodeGenerationResult {
 	/**
 	 * the resulting data for all source types
 	 */
-	data?: Map<string, any>;
+	data?: CodeGenerationResultData;
 
 	/**
 	 * the runtime requirements
@@ -1903,6 +1903,13 @@ declare interface CodeGenerationResult {
 	 */
 	hash?: string;
 }
+type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
+	Map<"chunkInitFragments", InitFragment<any>[]> &
+	Map<"url", { "css-url": string }> &
+	Map<"filename", string> &
+	Map<"assetInfo", AssetInfo> &
+	Map<"fullContentHash", string> &
+	Map<string, any>;
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
@@ -5771,15 +5778,8 @@ declare interface GenerateContext {
 	/**
 	 * get access to the code generation data
 	 */
-	getData?: () => GenerateContextData;
+	getData?: () => CodeGenerationResultData;
 }
-type GenerateContextData = Map<"url", { [index: string]: string }> &
-	Map<"fullContentHash", string> &
-	Map<"contentHash", string> &
-	Map<"filename", string> &
-	Map<"assetInfo", AssetInfo> &
-	Map<"chunkInitFragments", InitFragment<GenerateContext>[]> &
-	Record<string, any>;
 declare interface GeneratedSourceInfo {
 	/**
 	 * generated line
@@ -10105,57 +10105,57 @@ declare interface ModuleFederationPluginOptions {
 }
 declare interface ModuleFilenameTemplateContext {
 	/**
-	 * The identifier of the module.
+	 * the identifier of the module
 	 */
 	identifier: string;
 
 	/**
-	 * The shortened identifier of the module.
+	 * the shortened identifier of the module
 	 */
 	shortIdentifier: string;
 
 	/**
-	 * The resource of the module request.
+	 * the resource of the module request
 	 */
 	resource: string;
 
 	/**
-	 * The resource path of the module request.
+	 * the resource path of the module request
 	 */
 	resourcePath: string;
 
 	/**
-	 * The absolute resource path of the module request.
+	 * the absolute resource path of the module request
 	 */
 	absoluteResourcePath: string;
 
 	/**
-	 * The loaders of the module request.
+	 * the loaders of the module request
 	 */
 	loaders: string;
 
 	/**
-	 * The all loaders of the module request.
+	 * the all loaders of the module request
 	 */
 	allLoaders: string;
 
 	/**
-	 * The query of the module identifier.
+	 * the query of the module identifier
 	 */
 	query: string;
 
 	/**
-	 * The module id of the module.
+	 * the module id of the module
 	 */
 	moduleId: string;
 
 	/**
-	 * The hash of the module identifier.
+	 * the hash of the module identifier
 	 */
 	hash: string;
 
 	/**
-	 * The module namespace.
+	 * the module namespace
 	 */
 	namespace: string;
 }
