@@ -2,13 +2,15 @@ import { readFileSync, writeFileSync as aaa } from 'fs'
 import * as path from 'path'
 import * as fs from 'fs'
 
+function doNothing(obj) {}
+
 const { writeFileSync = aaa } = {}
-console.log({ writeFileSync });
+doNothing({ writeFileSync });
 
 
 {
 	const { writeFileSync = aaa } = {}
-	console.log({ writeFileSync });
+	doNothing({ writeFileSync });
 }
 
 it('should handle external modules with concatenation and caching', () => {

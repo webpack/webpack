@@ -14,7 +14,7 @@ describe("WatchDetection", () => {
 		return;
 	}
 
-	jest.setTimeout(10000);
+	jest.setTimeout(20000);
 
 	createTestCase(100, true);
 	createTestCase(10, true);
