@@ -609,7 +609,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: TODO) => string)"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },

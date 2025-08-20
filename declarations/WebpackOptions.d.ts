@@ -517,7 +517,7 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
