@@ -2182,73 +2182,7 @@ declare class Compilation {
 	compilerPath: string;
 	logger: WebpackLogger;
 	options: WebpackOptionsNormalizedWithDefaults;
-	outputOptions: OutputNormalized & {
-		uniqueName: string;
-		filename: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		cssFilename: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		chunkFilename: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		cssChunkFilename: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		hotUpdateChunkFilename: string;
-		hotUpdateGlobal: string;
-		assetModuleFilename: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		webassemblyModuleFilename: string;
-		sourceMapFilename: string;
-		hotUpdateMainFilename: string;
-		devtoolNamespace: string;
-		publicPath: NonNullable<
-			| undefined
-			| string
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string)
-		>;
-		workerPublicPath: string;
-		workerWasmLoading: NonNullable<undefined | string | false>;
-		workerChunkLoading: NonNullable<undefined | string | false>;
-		chunkFormat: NonNullable<undefined | string | false>;
-		module: NonNullable<undefined | boolean>;
-		asyncChunks: NonNullable<undefined | boolean>;
-		charset: NonNullable<undefined | boolean>;
-		iife: NonNullable<undefined | boolean>;
-		globalObject: string;
-		scriptType: NonNullable<undefined | false | "module" | "text/javascript">;
-		path: string;
-		pathinfo: NonNullable<undefined | boolean | "verbose">;
-		hashFunction: NonNullable<undefined | string | typeof Hash>;
-		hashDigest: string;
-		hashDigestLength: number;
-		chunkLoadTimeout: number;
-		chunkLoading: NonNullable<undefined | string | false>;
-		chunkLoadingGlobal: string;
-		compareBeforeEmit: NonNullable<undefined | boolean>;
-		strictModuleErrorHandling: NonNullable<undefined | boolean>;
-		strictModuleExceptionHandling: NonNullable<undefined | boolean>;
-		importFunctionName: string;
-		importMetaName: string;
-		environment: RecursiveNonNullable<Environment>;
-		crossOriginLoading: NonNullable<
-			undefined | false | "anonymous" | "use-credentials"
-		>;
-		wasmLoading: NonNullable<undefined | string | false>;
-	};
+	outputOptions: OutputNormalizedWithDefaults;
 	bail: boolean;
 	profile: boolean;
 	params: CompilationParams;
@@ -12805,7 +12739,7 @@ declare interface ParserStateBase {
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
-	options: OptimizationNormalizedWithDefaults;
+	options: WebpackOptionsNormalizedWithDefaults;
 }
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
