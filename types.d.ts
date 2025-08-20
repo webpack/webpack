@@ -1786,7 +1786,7 @@ declare abstract class ChunkTemplate {
 			) => void;
 		};
 	}>;
-	get outputOptions(): Output;
+	get outputOptions(): OutputNormalizedWithDefaults;
 }
 
 /**
@@ -2181,8 +2181,8 @@ declare class Compilation {
 	requestShortener: RequestShortener;
 	compilerPath: string;
 	logger: WebpackLogger;
-	options: WebpackOptionsNormalized;
-	outputOptions: OutputNormalized;
+	options: WebpackOptionsNormalizedWithDefaults;
+	outputOptions: OutputNormalizedWithDefaults;
 	bail: boolean;
 	profile: boolean;
 	params: CompilationParams;
@@ -2436,6 +2436,11 @@ declare class Compilation {
 		name: string,
 		outputOptions?: Partial<OutputNormalized>,
 		plugins?: (
+			| undefined
+			| null
+			| false
+			| ""
+			| 0
 			| ((this: Compiler, compiler: Compiler) => void)
 			| WebpackPluginInstance
 		)[]
@@ -2699,7 +2704,15 @@ declare class Compiler {
 		compilerName: string,
 		compilerIndex: number,
 		outputOptions?: Partial<OutputNormalized>,
-		plugins?: WebpackPluginInstance[]
+		plugins?: (
+			| undefined
+			| null
+			| false
+			| ""
+			| 0
+			| ((this: Compiler, compiler: Compiler) => void)
+			| WebpackPluginInstance
+		)[]
 	): Compiler;
 	isChild(): boolean;
 	createCompilation(params: CompilationParams): Compilation;
@@ -3616,7 +3629,7 @@ declare class CssModulesPlugin {
 	): CompilationHooksCssModulesPlugin;
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
-		outputOptions: OutputNormalized
+		outputOptions: OutputNormalizedWithDefaults
 	): TemplatePath;
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
@@ -4664,7 +4677,7 @@ declare interface EvalDevToolModulePluginOptions {
 	moduleFilenameTemplate?: string | ((context?: any) => string);
 }
 declare class EvalSourceMapDevToolPlugin {
-	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
+	constructor(inputOptions?: string | SourceMapDevToolPluginOptions);
 	sourceMapComment: string;
 	moduleFilenameTemplate: string | ((context?: any) => string);
 	namespace: string;
@@ -5318,8 +5331,8 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: undefined | string, externals: Externals);
-	type?: string;
+	constructor(type: string, externals: Externals);
+	type: string;
 	externals: Externals;
 
 	/**
@@ -5372,6 +5385,15 @@ declare interface ExternalsPresets {
 	 */
 	webAsync?: boolean;
 }
+type ExternalsPresetsNormalizedWithDefaults = ExternalsPresets & {
+	web: NonNullable<undefined | boolean>;
+	node: NonNullable<undefined | boolean>;
+	nwjs: NonNullable<undefined | boolean>;
+	electron: NonNullable<undefined | boolean>;
+	electronMain: NonNullable<undefined | boolean>;
+	electronPreload: NonNullable<undefined | boolean>;
+	electronRenderer: NonNullable<undefined | boolean>;
+};
 type ExternalsType =
 	| "import"
 	| "var"
@@ -6335,6 +6357,26 @@ declare interface InfrastructureLogging {
 		rows?: number;
 	};
 }
+type InfrastructureLoggingNormalizedWithDefaults = InfrastructureLogging & {
+	stream: NodeJS.WritableStream & {
+		isTTY?: boolean;
+		columns?: number;
+		rows?: number;
+	};
+	level: NonNullable<
+		undefined | "none" | "error" | "warn" | "info" | "log" | "verbose"
+	>;
+	debug: NonNullable<
+		| undefined
+		| string
+		| boolean
+		| RegExp
+		| FilterItemTypes[]
+		| ((value: string) => boolean)
+	>;
+	colors: NonNullable<undefined | boolean>;
+	appendOnly: NonNullable<undefined | boolean>;
+};
 declare class InitFragment<GenerateContext> {
 	constructor(
 		content: undefined | string | Source,
@@ -6505,7 +6547,7 @@ declare class JavascriptModulesPlugin {
 	): CompilationHooksJavascriptModulesPlugin;
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
-		outputOptions: Output
+		outputOptions: OutputNormalizedWithDefaults
 	): TemplatePath;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
@@ -9455,8 +9497,8 @@ type LogTypeEnum =
 	| "warn"
 	| "info"
 	| "log"
-	| "debug"
 	| "profile"
+	| "debug"
 	| "trace"
 	| "group"
 	| "groupCollapsed"
@@ -9820,7 +9862,7 @@ declare class Module extends DependenciesBlock {
 	identifier(): string;
 	readableIdentifier(requestShortener: RequestShortener): string;
 	build(
-		options: WebpackOptionsNormalized,
+		options: WebpackOptionsNormalizedWithDefaults,
 		compilation: Compilation,
 		resolver: ResolverWithOptions,
 		fs: InputFileSystem,
@@ -10650,7 +10692,8 @@ declare interface MultiCompilerOptions {
 	 */
 	parallelism?: number;
 }
-type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
+type MultiConfiguration = ReadonlyArray<WebpackOptionsNormalized> &
+	MultiCompilerOptions;
 declare abstract class MultiStats {
 	stats: Stats[];
 	get hash(): string;
@@ -10801,6 +10844,7 @@ declare interface NodeTemplatePluginOptions {
 	 */
 	asyncChunkLoading?: boolean;
 }
+type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData);
 	request: string;
@@ -11090,7 +11134,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	hashFunction: HashFunction;
 	hashDigest: string;
 	hashDigestLength: number;
-	hashSalt: string;
+	hashSalt?: string;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
@@ -11479,11 +11523,6 @@ declare interface OptimizationNormalized {
 	 * Minimizer(s) to use for minimizing the output.
 	 */
 	minimizer?: (
-		| undefined
-		| null
-		| false
-		| ""
-		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 		| "..."
@@ -11556,6 +11595,60 @@ declare interface OptimizationNormalized {
 	 */
 	usedExports?: boolean | "global";
 }
+type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
+	runtimeChunk: NonNullable<
+		| undefined
+		| false
+		| {
+				/**
+				 * The name factory for the runtime chunks.
+				 */
+				name?: (entrypoint: { name: string }) => string;
+		  }
+	>;
+	splitChunks: NonNullable<undefined | false | OptimizationSplitChunksOptions>;
+	mergeDuplicateChunks: NonNullable<undefined | boolean>;
+	removeAvailableModules: NonNullable<undefined | boolean>;
+	removeEmptyChunks: NonNullable<undefined | boolean>;
+	flagIncludedChunks: NonNullable<undefined | boolean>;
+	moduleIds: NonNullable<
+		| undefined
+		| false
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "hashed"
+	>;
+	chunkIds: NonNullable<
+		| undefined
+		| false
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+	>;
+	sideEffects: NonNullable<undefined | boolean | "flag">;
+	providedExports: NonNullable<undefined | boolean>;
+	usedExports: NonNullable<undefined | boolean | "global">;
+	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
+	innerGraph: NonNullable<undefined | boolean>;
+	concatenateModules: NonNullable<undefined | boolean>;
+	avoidEntryIife: NonNullable<undefined | boolean>;
+	emitOnErrors: NonNullable<undefined | boolean>;
+	checkWasmTypes: NonNullable<undefined | boolean>;
+	mangleWasmImports: NonNullable<undefined | boolean>;
+	portableRecords: NonNullable<undefined | boolean>;
+	realContentHash: NonNullable<undefined | boolean>;
+	minimize: NonNullable<undefined | boolean>;
+	minimizer: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+		| "..."
+	)[];
+	nodeEnv: NonNullable<undefined | string | false>;
+};
 
 /**
  * Options object for describing behavior of a cache group selecting modules that should be cached together.
@@ -11859,9 +11952,9 @@ declare interface Options {
 }
 declare abstract class OptionsApply {
 	process(
-		options: WebpackOptionsNormalized,
+		options: WebpackOptionsNormalizedWithDefaults,
 		compiler: Compiler
-	): WebpackOptionsNormalized;
+	): WebpackOptionsNormalizedWithDefaults;
 }
 declare interface OriginRecord {
 	module: null | Module;
@@ -12457,6 +12550,61 @@ declare interface OutputNormalized {
 	 */
 	workerWasmLoading?: string | false;
 }
+type OutputNormalizedWithDefaults = OutputNormalized & {
+	uniqueName: string;
+	filename: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	cssFilename: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	chunkFilename: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	cssChunkFilename: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	hotUpdateChunkFilename: string;
+	hotUpdateGlobal: string;
+	assetModuleFilename: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	webassemblyModuleFilename: string;
+	sourceMapFilename: string;
+	hotUpdateMainFilename: string;
+	devtoolNamespace: string;
+	publicPath: NonNullable<
+		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+	>;
+	workerPublicPath: string;
+	workerWasmLoading: NonNullable<undefined | string | false>;
+	workerChunkLoading: NonNullable<undefined | string | false>;
+	chunkFormat: NonNullable<undefined | string | false>;
+	module: NonNullable<undefined | boolean>;
+	asyncChunks: NonNullable<undefined | boolean>;
+	charset: NonNullable<undefined | boolean>;
+	iife: NonNullable<undefined | boolean>;
+	globalObject: string;
+	scriptType: NonNullable<undefined | false | "module" | "text/javascript">;
+	path: string;
+	pathinfo: NonNullable<undefined | boolean | "verbose">;
+	hashFunction: NonNullable<undefined | string | typeof Hash>;
+	hashDigest: string;
+	hashDigestLength: number;
+	chunkLoadTimeout: number;
+	chunkLoading: NonNullable<undefined | string | false>;
+	chunkLoadingGlobal: string;
+	compareBeforeEmit: NonNullable<undefined | boolean>;
+	strictModuleErrorHandling: NonNullable<undefined | boolean>;
+	strictModuleExceptionHandling: NonNullable<undefined | boolean>;
+	importFunctionName: string;
+	importMetaName: string;
+	environment: RecursiveNonNullable<Environment>;
+	crossOriginLoading: NonNullable<
+		undefined | false | "anonymous" | "use-credentials"
+	>;
+	wasmLoading: NonNullable<undefined | string | false>;
+};
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
@@ -12591,7 +12739,7 @@ declare interface ParserStateBase {
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
-	options: WebpackOptionsNormalized;
+	options: WebpackOptionsNormalizedWithDefaults;
 }
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
@@ -13674,6 +13822,7 @@ type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| RecursiveArrayOrRecord<T>[]
 	| T;
+declare interface RecursiveNonNullable<T> {}
 type ReferenceableItem = string | object;
 declare interface ReferencedExport {
 	/**
@@ -13839,7 +13988,7 @@ declare interface RenderManifestOptions {
 	chunk: Chunk;
 	hash: string;
 	fullHash: string;
-	outputOptions: Output;
+	outputOptions: OutputNormalizedWithDefaults;
 	codeGenerationResults: CodeGenerationResults;
 	moduleTemplates: { javascript: ModuleTemplate };
 	dependencyTemplates: DependencyTemplates;
@@ -15131,24 +15280,24 @@ declare class RuntimeSpecSet {
 }
 declare abstract class RuntimeTemplate {
 	compilation: Compilation;
-	outputOptions: OutputNormalized;
+	outputOptions: OutputNormalizedWithDefaults;
 	requestShortener: RequestShortener;
 	globalObject: string;
 	contentHashReplacement: string;
-	isIIFE(): undefined | boolean;
-	isModule(): undefined | boolean;
+	isIIFE(): boolean;
+	isModule(): boolean;
 	isNeutralPlatform(): boolean;
-	supportsConst(): undefined | boolean;
-	supportsArrowFunction(): undefined | boolean;
-	supportsAsyncFunction(): undefined | boolean;
-	supportsOptionalChaining(): undefined | boolean;
-	supportsForOf(): undefined | boolean;
-	supportsDestructuring(): undefined | boolean;
-	supportsBigIntLiteral(): undefined | boolean;
-	supportsDynamicImport(): undefined | boolean;
-	supportsEcmaScriptModuleSyntax(): undefined | boolean;
-	supportTemplateLiteral(): undefined | boolean;
-	supportNodePrefixForCoreModules(): undefined | boolean;
+	supportsConst(): boolean;
+	supportsArrowFunction(): boolean;
+	supportsAsyncFunction(): boolean;
+	supportsOptionalChaining(): boolean;
+	supportsForOf(): boolean;
+	supportsDestructuring(): boolean;
+	supportsBigIntLiteral(): boolean;
+	supportsDynamicImport(): boolean;
+	supportsEcmaScriptModuleSyntax(): boolean;
+	supportTemplateLiteral(): boolean;
+	supportNodePrefixForCoreModules(): boolean;
 	renderNodePrefixForCoreModule(mod: string): string;
 	returningFunction(returnValue: string, args?: string): string;
 	basicFunction(args: string, body: string | string[]): string;
@@ -15768,6 +15917,51 @@ declare abstract class Snapshot {
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
 }
+type SnapshotNormalizedWithDefaults = SnapshotOptionsWebpackOptions & {
+	managedPaths: (string | RegExp)[];
+	unmanagedPaths: (string | RegExp)[];
+	immutablePaths: (string | RegExp)[];
+	resolveBuildDependencies: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	buildDependencies: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	module: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	resolve: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+};
 declare interface SnapshotOptionsFileSystemInfo {
 	/**
 	 * should use hash to snapshot
@@ -17528,11 +17722,6 @@ declare interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: (
-		| undefined
-		| null
-		| false
-		| ""
-		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
@@ -17587,6 +17776,49 @@ declare interface WebpackOptionsNormalized {
 	 */
 	watchOptions: WatchOptions;
 }
+type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
+	context: string;
+} & { infrastructureLogging: InfrastructureLoggingNormalizedWithDefaults } & {
+	target: NonNullable<undefined | string | false | string[]>;
+} & { output: OutputNormalizedWithDefaults } & {
+	optimization: OptimizationNormalizedWithDefaults;
+} & { devtool: NonNullable<undefined | string | false> } & {
+	stats: NonNullable<StatsValue>;
+} & { node: NonNullable<Node> } & {
+	profile: NonNullable<undefined | boolean>;
+} & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
+	externalsPresets: ExternalsPresetsNormalizedWithDefaults;
+} & {
+	externalsType: NonNullable<
+		| undefined
+		| "import"
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "commonjs-static"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| "promise"
+		| "module-import"
+		| "script"
+		| "node-commonjs"
+	>;
+} & { watch: NonNullable<undefined | boolean> } & {
+	performance: NonNullable<undefined | false | PerformanceOptions>;
+} & { recordsInputPath: NonNullable<undefined | string | false> } & {
+	recordsOutputPath: NonNullable<undefined | string | false>;
+};
 
 /**
  * Plugin instance.

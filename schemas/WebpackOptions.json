@@ -2929,9 +2929,6 @@
                 "enum": ["..."]
               },
               {
-                "$ref": "#/definitions/Falsy"
-              },
-              {
                 "$ref": "#/definitions/WebpackPluginInstance"
               },
               {
@@ -4054,6 +4051,21 @@
           {
             "$ref": "#/definitions/Falsy"
           },
+          {
+            "$ref": "#/definitions/WebpackPluginInstance"
+          },
+          {
+            "$ref": "#/definitions/WebpackPluginFunction"
+          }
+        ]
+      }
+    },
+    "PluginsNormalized": {
+      "description": "Add additional plugins to the compiler.",
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function.",
+        "anyOf": [
           {
             "$ref": "#/definitions/WebpackPluginInstance"
           },
@@ -5865,7 +5877,7 @@
           "$ref": "#/definitions/Performance"
         },
         "plugins": {
-          "$ref": "#/definitions/Plugins"
+          "$ref": "#/definitions/PluginsNormalized"
         },
         "profile": {
           "$ref": "#/definitions/Profile"
