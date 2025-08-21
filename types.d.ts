@@ -88,13 +88,18 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { IncomingMessage, ServerOptions } from "http";
+import {
+	IncomingMessage,
+	Server as ServerImportHttp,
+	ServerOptions
+} from "http";
+import { Server as ServerImportHttps } from "https";
 import {
 	Session as SessionImportInspectorClass_1,
 	Session as SessionImportInspectorClass_2
 } from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
-import { ListenOptions, Server } from "net";
+import { ListenOptions } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
@@ -1177,7 +1182,7 @@ declare interface CallExpressionInfo {
 	getMemberRanges: () => [number, number][];
 }
 declare interface CallbackAsyncQueue<T> {
-	(err?: null | WebpackError, result?: null | T): any;
+	(err?: null | WebpackError, result?: null | T): void;
 }
 declare interface CallbackCacheCache<T> {
 	(err: null | WebpackError, result?: T): void;
@@ -1185,20 +1190,14 @@ declare interface CallbackCacheCache<T> {
 declare interface CallbackCacheCacheFacade<T> {
 	(err?: null | Error, result?: null | T): void;
 }
-declare interface CallbackFunction_1<T> {
-	(err: null | Error, result?: T): any;
-}
-declare interface CallbackFunction_2<T> {
-	(err?: null | Error, result?: T): any;
-}
 declare interface CallbackNormalErrorCache<T> {
 	(err?: null | Error, result?: T): void;
 }
-declare interface CallbackNormalModuleFactory<T> {
-	(err?: null | Error, stats?: T): void;
+declare interface CallbackWebpackFunction_1<T> {
+	(err: null | Error, result?: T): void;
 }
-declare interface CallbackWebpack<T> {
-	(err: null | Error, stats?: T): void;
+declare interface CallbackWebpackFunction_2<T, R = void> {
+	(err: null | Error, result?: T): R;
 }
 type Cell<T> = undefined | T;
 type ChildrenStatsOptions = undefined | string | boolean | StatsOptions;
@@ -2705,8 +2704,11 @@ declare class Compiler {
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
-	watch(watchOptions: WatchOptions, handler: RunCallback<Stats>): Watching;
-	run(callback: RunCallback<Stats>): void;
+	watch(
+		watchOptions: WatchOptions,
+		handler: CallbackWebpackFunction_2<Stats, void>
+	): undefined | Watching;
+	run(callback: CallbackWebpackFunction_2<Stats, void>): void;
 	runAsChild(
 		callback: (
 			err: null | Error,
@@ -2717,10 +2719,10 @@ declare class Compiler {
 	purgeInputFileSystem(): void;
 	emitAssets(
 		compilation: Compilation,
-		callback: CallbackFunction_2<void>
+		callback: (err: null | Error, result?: void) => void
 	): void;
-	emitRecords(callback: CallbackFunction_2<void>): void;
-	readRecords(callback: CallbackFunction_2<void>): void;
+	emitRecords(callback: (err: null | Error, result?: void) => void): void;
+	readRecords(callback: (err: null | Error, result?: void) => void): void;
 	createChildCompiler(
 		compilation: Compilation,
 		compilerName: string,
@@ -2745,8 +2747,8 @@ declare class Compiler {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
 	};
-	compile(callback: RunCallback<Compilation>): void;
-	close(callback: RunCallback<void>): void;
+	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
+	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
@@ -8976,7 +8978,10 @@ declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * Specifies where to listen to from the server.
 	 */
-	listen?: number | ListenOptions | ((server: Server) => void);
+	listen?:
+		| number
+		| ListenOptions
+		| ((server: ServerLazyCompilationBackend) => void);
 
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
@@ -8989,7 +8994,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	server?:
 		| ServerOptions<typeof IncomingMessage>
 		| HttpsServerOptions
-		| (() => Server);
+		| (() => ServerLazyCompilationBackend);
 }
 
 /**
@@ -9306,8 +9311,8 @@ declare interface LoaderDefinitionFunction<
 declare interface LoaderItem {
 	loader: string;
 	options?: null | string | Record<string, any>;
-	ident: null | string;
-	type: null | string;
+	ident?: string;
+	type?: string;
 }
 declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
 	default?:
@@ -10787,19 +10792,24 @@ declare class MultiCompiler {
 	intermediateFileSystem: IntermediateFileSystem;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
-	validateDependencies(callback: CallbackFunction_1<MultiStats>): boolean;
+	validateDependencies(
+		callback: CallbackWebpackFunction_2<MultiStats, void>
+	): boolean;
 	runWithDependencies(
 		compilers: Compiler[],
-		fn: (compiler: Compiler, callback: CallbackFunction_1<MultiStats>) => any,
-		callback: CallbackFunction_1<Stats[]>
+		fn: (
+			compiler: Compiler,
+			callback: CallbackWebpackFunction_2<MultiStats, void>
+		) => any,
+		callback: CallbackWebpackFunction_2<Stats[], void>
 	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
-		handler: CallbackFunction_1<MultiStats>
-	): MultiWatching;
-	run(callback: CallbackFunction_1<MultiStats>): void;
+		handler: CallbackWebpackFunction_2<MultiStats, void>
+	): undefined | MultiWatching;
+	run(callback: CallbackWebpackFunction_2<MultiStats, void>): void;
 	purgeInputFileSystem(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare interface MultiCompilerOptions {
 	/**
@@ -10823,10 +10833,10 @@ type MultiStatsOptions = Omit<StatsOptions, "children"> & {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(callback?: CallbackFunction_2<void>): void;
+	invalidate(callback?: (err: null | Error, result?: void) => void): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_2<void>): void;
+	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: NamedChunkIdsPluginOptions);
@@ -11186,7 +11196,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		array: LoaderItem[],
 		resolver: ResolverWithOptions,
 		resolveContext: ResolveContext,
-		callback: CallbackNormalModuleFactory<LoaderItem[]>
+		callback: CallbackWebpackFunction_1<LoaderItem[]>
 	): void;
 	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
 	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
@@ -15318,9 +15328,6 @@ type RuleSetUseItem =
 			 */
 			options?: string | { [index: string]: any };
 	  };
-declare interface RunCallback<T> {
-	(err: null | Error, result?: T): any;
-}
 declare class RuntimeChunkPlugin {
 	constructor(options?: {
 		/**
@@ -15886,6 +15893,9 @@ declare abstract class SerializerMiddleware<
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
 }
+type ServerLazyCompilationBackend =
+	| ServerImportHttp<typeof IncomingMessage>
+	| ServerImportHttps<typeof IncomingMessage>;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
 	[Symbol.iterator](): SetIterator<T>;
 	[Symbol.dispose](): void;
@@ -17541,8 +17551,8 @@ declare interface WatcherInfo {
 declare abstract class Watching {
 	startTime: null | number;
 	invalid: boolean;
-	handler: CallbackFunction_1<Stats>;
-	callbacks: CallbackFunction_1<void>[];
+	handler: CallbackWebpackFunction_2<Stats, void>;
+	callbacks: ((err: null | Error, result?: void) => void)[];
 	closed: boolean;
 	suspended: boolean;
 	blocked: boolean;
@@ -17557,10 +17567,10 @@ declare abstract class Watching {
 		dirs: Iterable<string>,
 		missing: Iterable<string>
 	): void;
-	invalidate(callback?: CallbackFunction_1<void>): void;
+	invalidate(callback?: (err: null | Error, result?: void) => void): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare abstract class WeakTupleMap<K extends any[], V> {
 	set(...args: [K, ...V[]]): void;
@@ -18038,21 +18048,21 @@ declare interface WriteStreamOptions {
 }
 declare function exports(
 	options: Configuration,
-	callback?: CallbackWebpack<Stats>
+	callback?: CallbackWebpackFunction_2<Stats, void>
 ): null | Compiler;
 declare function exports(
 	options: MultiConfiguration,
-	callback?: CallbackWebpack<MultiStats>
+	callback?: CallbackWebpackFunction_2<MultiStats, void>
 ): null | MultiCompiler;
 declare namespace exports {
 	export const webpack: {
 		(
 			options: Configuration,
-			callback?: CallbackWebpack<Stats>
+			callback?: CallbackWebpackFunction_2<Stats, void>
 		): null | Compiler;
 		(
 			options: MultiConfiguration,
-			callback?: CallbackWebpack<MultiStats>
+			callback?: CallbackWebpackFunction_2<MultiStats, void>
 		): null | MultiCompiler;
 	};
 	export const validate: (

@@ -3474,7 +3474,7 @@ export interface LazyCompilationDefaultBackendOptions {
 	listen?:
 		| number
 		| import("net").ListenOptions
-		| ((server: import("net").Server) => void);
+		| import("../lib/hmr/lazyCompilationBackend").Listen;
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
 	 */

@@ -2139,7 +2139,7 @@
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "((server: import(\"net\").Server) => void)"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
             }
           ]
         },
