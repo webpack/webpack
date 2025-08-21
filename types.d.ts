@@ -189,6 +189,20 @@ declare interface AdditionalData {
 	[index: string]: any;
 	webpackAST: object;
 }
+type AfterContextResolveData = ContextResolveData &
+	ContextOptions & {
+		resource: any;
+		resourceQuery?: string;
+		resourceFragment?: string;
+		resolveDependencies: (
+			fs: InputFileSystem,
+			options: ContextModuleOptions,
+			callback: (
+				err: null | Error,
+				dependencies?: ContextElementDependency[]
+			) => any
+		) => void;
+	};
 declare class AggressiveMergingPlugin {
 	constructor(options?: AggressiveMergingPluginOptions);
 	options: AggressiveMergingPluginOptions;
@@ -910,6 +924,7 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
+type BeforeContextResolveData = ContextResolveData & ContextOptions;
 declare interface Bootstrap {
 	header: string[];
 	beforeStartup: string[];
@@ -3263,6 +3278,19 @@ declare interface ContextAlternativeRequest {
 	context: string;
 	request: string;
 }
+declare abstract class ContextDependency extends Dependency {
+	options: ContextDependencyOptions;
+	userRequest: string;
+	critical?: string | false;
+	hadGlobalOrStickyRegExp: boolean;
+	request: any;
+	range: any;
+	valueRange: any;
+	inShorthand?: string | boolean;
+	replaces: any;
+	prepend: any;
+}
+type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
 	referencedExports?: null | string[][];
 }
@@ -3295,8 +3323,8 @@ type ContextMode =
 	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
-		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
-		afterResolve: AsyncSeriesWaterfallHook<[any]>;
+		beforeResolve: AsyncSeriesWaterfallHook<[BeforeContextResolveData]>;
+		afterResolve: AsyncSeriesWaterfallHook<[AfterContextResolveData]>;
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: FakeHook<
 			Pick<
@@ -3318,11 +3346,17 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		) => any
 	): void;
 }
-
-declare interface ContextModuleOptions {
+type ContextModuleOptions = ContextOptions & ContextModuleOptionsExtras;
+declare interface ContextModuleOptionsExtras {
+	resource: string | false | string[];
+	resourceQuery?: string;
+	resourceFragment?: string;
+	resolveOptions?: ResolveOptions;
+}
+declare interface ContextOptions {
 	mode: ContextMode;
 	recursive: boolean;
-	regExp: RegExp;
+	regExp: null | false | RegExp;
 	namespaceObject?: boolean | "strict";
 	addon?: string;
 	chunkName?: null | string;
@@ -3336,12 +3370,8 @@ declare interface ContextModuleOptions {
 	 * exports referenced from modules (won't be mangled)
 	 */
 	referencedExports?: null | string[][];
-	layer?: string;
+	layer?: null | string;
 	attributes?: ImportAttributes;
-	resource: string | false | string[];
-	resourceQuery?: string;
-	resourceFragment?: string;
-	resolveOptions?: ResolveOptions;
 }
 declare class ContextReplacementPlugin {
 	constructor(
@@ -3367,6 +3397,15 @@ declare class ContextReplacementPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ContextResolveData {
+	context: string;
+	request: string;
+	resolveOptions?: ResolveOptions;
+	fileDependencies: LazySet<string>;
+	missingDependencies: LazySet<string>;
+	contextDependencies: LazySet<string>;
+	dependencies: ContextDependency[];
 }
 type ContextTimestamp = null | ContextFileSystemInfoEntry | "ignore";
 declare interface ContextTimestampAndHash {
@@ -6225,7 +6264,9 @@ declare class IgnorePlugin {
 	/**
 	 * Note that if "contextRegExp" is given, both the "resourceRegExp" and "contextRegExp" have to match.
 	 */
-	checkIgnore(resolveData: ResolveData): undefined | false;
+	checkIgnore(
+		resolveData: ResolveData | BeforeContextResolveData
+	): undefined | false;
 
 	/**
 	 * Apply the plugin
@@ -6481,6 +6522,7 @@ declare interface InterpolatedPathAndAssetInfo {
 	path: string;
 	info: AssetInfo;
 }
+type IssuerLayer = null | string;
 declare interface Item<T> {
 	[index: string]: string | string[] | T;
 }
@@ -10015,7 +10057,7 @@ declare interface ModuleFactoryCreateData {
 }
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
-	issuerLayer?: null | string;
+	issuerLayer: IssuerLayer;
 	compiler?: string;
 }
 declare interface ModuleFactoryResult {
@@ -17993,6 +18035,7 @@ declare interface WriteStreamOptions {
 	start?: number;
 	signal?: null | AbortSignal;
 	fs?: null | CreateWriteStreamFSImplementation;
+	flush?: boolean;
 }
 declare function exports(
 	options: Configuration,
