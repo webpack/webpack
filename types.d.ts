@@ -4744,7 +4744,6 @@ type ExcludeModulesType = "module" | "chunk" | "root-of-chunk" | "nested";
 declare interface ExecuteModuleArgument {
 	module: Module;
 	moduleObject?: ExecuteModuleObject;
-	preparedInfo: any;
 	codeGenerationResult: CodeGenerationResult;
 }
 declare interface ExecuteModuleContext {
