@@ -6400,12 +6400,9 @@ declare class InitFragment<GenerateContext> {
 	getEndContent(context: GenerateContext): undefined | string | Source;
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
-	merge: any;
-	getImported: any;
-	setImported: any;
-	static addToSource<Context, T>(
+	static addToSource<Context>(
 		source: Source,
-		initFragments: InitFragment<T>[],
+		initFragments: MaybeMergeableInitFragment<Context>[],
 		context: Context
 	): Source;
 	static STAGE_CONSTANTS: number;
@@ -9676,6 +9673,19 @@ declare interface MatchObject {
 	exclude?: string | RegExp | (string | RegExp)[];
 }
 type Matcher = string | RegExp | (string | RegExp)[];
+declare interface MaybeMergeableInitFragment<GenerateContext> {
+	key?: string;
+	stage: number;
+	position: number;
+	getContent: (context: GenerateContext) => undefined | string | Source;
+	getEndContent: (context: GenerateContext) => undefined | string | Source;
+	merge?: (
+		fragments: MaybeMergeableInitFragment<GenerateContext>
+	) => MaybeMergeableInitFragment<GenerateContext>;
+	mergeAll?: (
+		fragments: MaybeMergeableInitFragment<GenerateContext>[]
+	) => MaybeMergeableInitFragment<GenerateContext>[];
+}
 type Media = undefined | string;
 
 /**
@@ -9974,10 +9984,12 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 		dependencyMeta?: ImportDependencyMeta,
 		hashFunction?: string | typeof Hash
 	);
+	getImported(): Imported;
+	setImported(imported: Imported): void;
 	getNamespaceIdentifier(): string;
-	static addToSource<Context, T>(
+	static addToSource<Context>(
 		source: Source,
-		initFragments: InitFragment<T>[],
+		initFragments: MaybeMergeableInitFragment<Context>[],
 		context: Context
 	): Source;
 	static STAGE_CONSTANTS: number;
