@@ -5925,10 +5925,10 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 }
-declare interface GroupConfig {
-	getKeys: (item?: any) => undefined | string[];
-	createGroup: (key: string, children: any[], items: any[]) => object;
-	getOptions?: (name: string, items: any[]) => GroupOptions;
+declare interface GroupConfig<T, R> {
+	getKeys: (item: T) => undefined | string[];
+	createGroup: (key: string, children: (T | R)[], items: T[]) => R;
+	getOptions?: (name: string, items: T[]) => GroupOptions;
 }
 declare interface GroupOptions {
 	groupChildren?: boolean;
@@ -16648,7 +16648,7 @@ declare interface StatsFactoryHooks {
 		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
 	>;
 	groupResults: HookMap<
-		SyncBailHook<[GroupConfig[], StatsFactoryContext], void>
+		SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>
 	>;
 	sortResults: HookMap<
 		SyncBailHook<
