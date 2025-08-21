@@ -11175,7 +11175,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			res?: string | false,
 			req?: ResolveRequest
 		) => void
-	): any;
+	): void;
 	getResolve(options?: ResolveOptionsWithDependencyType): {
 		(
 			context: string,
