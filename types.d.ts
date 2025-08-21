@@ -9969,7 +9969,7 @@ declare class ModuleDependency extends Dependency {
 	constructor(request: string);
 	request: string;
 	userRequest: string;
-	range: any;
+	range?: [number, number];
 	assertions?: ImportAttributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
