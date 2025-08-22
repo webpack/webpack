@@ -12,9 +12,9 @@ exports[`getSourceMappingURL should work with "/*#sourceMappingURL=absolute-sour
 
 exports[`getSourceMappingURL should work with "// # sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+"" url: result 1`] = `"data:application/json;base64,"`;
 
-exports[`getSourceMappingURL should work with "// #sourceMappingURL = //sampledomain.com/external-source-map2.map" url: result 1`] = `"//sampledomain.com/external-source-map2.map"`;
+exports[`getSourceMappingURL should work with "// #sourceMappingURL = //hello.com/external-source-map2.map" url: result 1`] = `"//hello.com/external-source-map2.map"`;
 
-exports[`getSourceMappingURL should work with "// #sourceMappingURL = http://sampledomain.com/external-source-map2.map" url: result 1`] = `"http://sampledomain.com/external-source-map2.map"`;
+exports[`getSourceMappingURL should work with "// #sourceMappingURL = http://hello.com/external-source-map2.map" url: result 1`] = `"http://hello.com/external-source-map2.map"`;
 
 exports[`getSourceMappingURL should work with "// @sourceMappingURL=data:application/source-map;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5saW5lLXNvdXJjZS1tYXAuanMiLCJzb3VyY2VzIjpbImlubGluZS1zb3VyY2UtbWFwLnR4dCJdLCJzb3VyY2VzQ29udGVudCI6WyJ3aXRoIFNvdXJjZU1hcCJdLCJtYXBwaW5ncyI6IkFBQUEifQ==" url: result 1`] = `"data:application/source-map;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5saW5lLXNvdXJjZS1tYXAuanMiLCJzb3VyY2VzIjpbImlubGluZS1zb3VyY2UtbWFwLnR4dCJdLCJzb3VyY2VzQ29udGVudCI6WyJ3aXRoIFNvdXJjZU1hcCJdLCJtYXBwaW5ncyI6IkFBQUEifQ=="`;
 
