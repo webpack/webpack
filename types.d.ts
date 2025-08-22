@@ -106,14 +106,17 @@ import { ValidationErrorConfiguration } from "schema-utils/declarations/validate
 import {
 	AsArray,
 	AsyncParallelHook,
-	AsyncSeriesBailHook,
-	AsyncSeriesHook,
+	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_1,
+	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_2,
+	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_1,
+	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_2,
 	AsyncSeriesWaterfallHook,
 	HookMap,
 	IfSet,
 	MultiHook,
 	SyncBailHook,
-	SyncHook,
+	SyncHook as SyncHookImportTapableClass_1,
+	SyncHook as SyncHookImportTapableClass_2,
 	SyncWaterfallHook,
 	TapOptions
 } from "tapable";
@@ -422,11 +425,11 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 }
 declare abstract class AsyncQueue<T, K, R> {
 	hooks: {
-		beforeAdd: AsyncSeriesHook<[T]>;
-		added: SyncHook<[T]>;
-		beforeStart: AsyncSeriesHook<[T]>;
-		started: SyncHook<[T]>;
-		result: SyncHook<
+		beforeAdd: AsyncSeriesHookImportTapableClass_2<[T]>;
+		added: SyncHookImportTapableClass_2<[T]>;
+		beforeStart: AsyncSeriesHookImportTapableClass_2<[T]>;
+		started: SyncHookImportTapableClass_2<[T]>;
+		result: SyncHookImportTapableClass_2<
 			[T, undefined | null | WebpackError, undefined | null | R]
 		>;
 	};
@@ -1005,7 +1008,7 @@ declare const CIRCULAR_CONNECTION: unique symbol;
 declare class CacheClass {
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<
+		get: AsyncSeriesBailHookImportTapableClass_2<
 			[
 				string,
 				null | Etag,
@@ -1015,7 +1018,7 @@ declare class CacheClass {
 		>;
 		store: AsyncParallelHook<[string, null | Etag, any]>;
 		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
-		beginIdle: SyncHook<[]>;
+		beginIdle: SyncHookImportTapableClass_2<[]>;
 		endIdle: AsyncParallelHook<[]>;
 		shutdown: AsyncParallelHook<[]>;
 	};
@@ -2042,152 +2045,182 @@ declare class Compilation {
 	 */
 	constructor(compiler: Compiler, params: CompilationParams);
 	hooks: Readonly<{
-		buildModule: SyncHook<[Module]>;
-		rebuildModule: SyncHook<[Module]>;
-		failedModule: SyncHook<[Module, WebpackError]>;
-		succeedModule: SyncHook<[Module]>;
-		stillValidModule: SyncHook<[Module]>;
-		addEntry: SyncHook<[Dependency, EntryOptions]>;
-		failedEntry: SyncHook<[Dependency, EntryOptions, Error]>;
-		succeedEntry: SyncHook<[Dependency, EntryOptions, Module]>;
-		dependencyReferencedExports: SyncWaterfallHook<
-			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec]
+		buildModule: SyncHookImportTapableClass_2<[Module]>;
+		rebuildModule: SyncHookImportTapableClass_2<[Module]>;
+		failedModule: SyncHookImportTapableClass_2<[Module, WebpackError]>;
+		succeedModule: SyncHookImportTapableClass_2<[Module]>;
+		stillValidModule: SyncHookImportTapableClass_2<[Module]>;
+		addEntry: SyncHookImportTapableClass_2<[Dependency, EntryOptions]>;
+		failedEntry: SyncHookImportTapableClass_2<
+			[Dependency, EntryOptions, Error]
 		>;
-		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
+		succeedEntry: SyncHookImportTapableClass_2<
+			[Dependency, EntryOptions, Module]
+		>;
+		dependencyReferencedExports: SyncWaterfallHook<
+			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec],
+			(string[] | ReferencedExport)[]
+		>;
+		executeModule: SyncHookImportTapableClass_2<
+			[ExecuteModuleArgument, ExecuteModuleContext]
+		>;
 		prepareModuleExecution: AsyncParallelHook<
 			[ExecuteModuleArgument, ExecuteModuleContext]
 		>;
-		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
-		finishRebuildingModule: AsyncSeriesHook<[Module]>;
-		unseal: SyncHook<[]>;
-		seal: SyncHook<[]>;
-		beforeChunks: SyncHook<[]>;
+		finishModules: AsyncSeriesHookImportTapableClass_2<[Iterable<Module>]>;
+		finishRebuildingModule: AsyncSeriesHookImportTapableClass_2<[Module]>;
+		unseal: SyncHookImportTapableClass_2<[]>;
+		seal: SyncHookImportTapableClass_2<[]>;
+		beforeChunks: SyncHookImportTapableClass_2<[]>;
 		/**
 		 * The `afterChunks` hook is called directly after the chunks and module graph have
 		 * been created and before the chunks and modules have been optimized. This hook is useful to
 		 * inspect, analyze, and/or modify the chunk graph.
 		 */
-		afterChunks: SyncHook<[Iterable<Chunk>]>;
+		afterChunks: SyncHookImportTapableClass_2<[Iterable<Chunk>]>;
 		optimizeDependencies: SyncBailHook<[Iterable<Module>], boolean | void>;
-		afterOptimizeDependencies: SyncHook<[Iterable<Module>]>;
-		optimize: SyncHook<[]>;
+		afterOptimizeDependencies: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		optimize: SyncHookImportTapableClass_2<[]>;
 		optimizeModules: SyncBailHook<[Iterable<Module>], boolean | void>;
-		afterOptimizeModules: SyncHook<[Iterable<Module>]>;
+		afterOptimizeModules: SyncHookImportTapableClass_2<[Iterable<Module>]>;
 		optimizeChunks: SyncBailHook<
 			[Iterable<Chunk>, ChunkGroup[]],
 			boolean | void
 		>;
-		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, ChunkGroup[]]>;
-		optimizeTree: AsyncSeriesHook<[Iterable<Chunk>, Iterable<Module>]>;
-		afterOptimizeTree: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
-		optimizeChunkModules: AsyncSeriesBailHook<
+		afterOptimizeChunks: SyncHookImportTapableClass_2<
+			[Iterable<Chunk>, ChunkGroup[]]
+		>;
+		optimizeTree: AsyncSeriesHookImportTapableClass_2<
+			[Iterable<Chunk>, Iterable<Module>]
+		>;
+		afterOptimizeTree: SyncHookImportTapableClass_2<
+			[Iterable<Chunk>, Iterable<Module>]
+		>;
+		optimizeChunkModules: AsyncSeriesBailHookImportTapableClass_2<
 			[Iterable<Chunk>, Iterable<Module>],
 			void
 		>;
-		afterOptimizeChunkModules: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
+		afterOptimizeChunkModules: SyncHookImportTapableClass_2<
+			[Iterable<Chunk>, Iterable<Module>]
+		>;
 		shouldRecord: SyncBailHook<[], boolean | void>;
-		additionalChunkRuntimeRequirements: SyncHook<
+		additionalChunkRuntimeRequirements: SyncHookImportTapableClass_2<
 			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInChunk: HookMap<
 			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], void>
 		>;
-		additionalModuleRuntimeRequirements: SyncHook<
+		additionalModuleRuntimeRequirements: SyncHookImportTapableClass_2<
 			[Module, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInModule: HookMap<
 			SyncBailHook<[Module, Set<string>, RuntimeRequirementsContext], void>
 		>;
-		additionalTreeRuntimeRequirements: SyncHook<
+		additionalTreeRuntimeRequirements: SyncHookImportTapableClass_2<
 			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
 		runtimeRequirementInTree: HookMap<
 			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], void>
 		>;
-		runtimeModule: SyncHook<[RuntimeModule, Chunk]>;
-		reviveModules: SyncHook<[Iterable<Module>, Records]>;
-		beforeModuleIds: SyncHook<[Iterable<Module>]>;
-		moduleIds: SyncHook<[Iterable<Module>]>;
-		optimizeModuleIds: SyncHook<[Iterable<Module>]>;
-		afterOptimizeModuleIds: SyncHook<[Iterable<Module>]>;
-		reviveChunks: SyncHook<[Iterable<Chunk>, Records]>;
-		beforeChunkIds: SyncHook<[Iterable<Chunk>]>;
-		chunkIds: SyncHook<[Iterable<Chunk>]>;
-		optimizeChunkIds: SyncHook<[Iterable<Chunk>]>;
-		afterOptimizeChunkIds: SyncHook<[Iterable<Chunk>]>;
-		recordModules: SyncHook<[Iterable<Module>, Records]>;
-		recordChunks: SyncHook<[Iterable<Chunk>, Records]>;
-		optimizeCodeGeneration: SyncHook<[Iterable<Module>]>;
-		beforeModuleHash: SyncHook<[]>;
-		afterModuleHash: SyncHook<[]>;
-		beforeCodeGeneration: SyncHook<[]>;
-		afterCodeGeneration: SyncHook<[]>;
-		beforeRuntimeRequirements: SyncHook<[]>;
-		afterRuntimeRequirements: SyncHook<[]>;
-		beforeHash: SyncHook<[]>;
-		contentHash: SyncHook<[Chunk]>;
-		afterHash: SyncHook<[]>;
-		recordHash: SyncHook<[Records]>;
-		record: SyncHook<[Compilation, Records]>;
-		beforeModuleAssets: SyncHook<[]>;
+		runtimeModule: SyncHookImportTapableClass_2<[RuntimeModule, Chunk]>;
+		reviveModules: SyncHookImportTapableClass_2<[Iterable<Module>, Records]>;
+		beforeModuleIds: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		moduleIds: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		optimizeModuleIds: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		afterOptimizeModuleIds: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		reviveChunks: SyncHookImportTapableClass_2<[Iterable<Chunk>, Records]>;
+		beforeChunkIds: SyncHookImportTapableClass_2<[Iterable<Chunk>]>;
+		chunkIds: SyncHookImportTapableClass_2<[Iterable<Chunk>]>;
+		optimizeChunkIds: SyncHookImportTapableClass_2<[Iterable<Chunk>]>;
+		afterOptimizeChunkIds: SyncHookImportTapableClass_2<[Iterable<Chunk>]>;
+		recordModules: SyncHookImportTapableClass_2<[Iterable<Module>, Records]>;
+		recordChunks: SyncHookImportTapableClass_2<[Iterable<Chunk>, Records]>;
+		optimizeCodeGeneration: SyncHookImportTapableClass_2<[Iterable<Module>]>;
+		beforeModuleHash: SyncHookImportTapableClass_2<[]>;
+		afterModuleHash: SyncHookImportTapableClass_2<[]>;
+		beforeCodeGeneration: SyncHookImportTapableClass_2<[]>;
+		afterCodeGeneration: SyncHookImportTapableClass_2<[]>;
+		beforeRuntimeRequirements: SyncHookImportTapableClass_2<[]>;
+		afterRuntimeRequirements: SyncHookImportTapableClass_2<[]>;
+		beforeHash: SyncHookImportTapableClass_2<[]>;
+		contentHash: SyncHookImportTapableClass_2<[Chunk]>;
+		afterHash: SyncHookImportTapableClass_2<[]>;
+		recordHash: SyncHookImportTapableClass_2<[Records]>;
+		record: SyncHookImportTapableClass_2<[Compilation, Records]>;
+		beforeModuleAssets: SyncHookImportTapableClass_2<[]>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean | void>;
-		beforeChunkAssets: SyncHook<[]>;
+		beforeChunkAssets: SyncHookImportTapableClass_2<[]>;
 		additionalChunkAssets: FakeHook<
 			Pick<
-				AsyncSeriesHook<[Set<Chunk>]>,
+				AsyncSeriesHookImportTapableClass_2<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		additionalAssets: FakeHook<
-			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
+			Pick<
+				AsyncSeriesHookImportTapableClass_2<[]>,
+				"name" | "tap" | "tapAsync" | "tapPromise"
+			>
 		>;
 		optimizeChunkAssets: FakeHook<
 			Pick<
-				AsyncSeriesHook<[Set<Chunk>]>,
+				AsyncSeriesHookImportTapableClass_2<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
-				AsyncSeriesHook<[Set<Chunk>]>,
+				AsyncSeriesHookImportTapableClass_2<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		optimizeAssets: AsyncSeriesHook<
+		optimizeAssets: AsyncSeriesHookImportTapableClass_2<
 			[CompilationAssets],
 			ProcessAssetsAdditionalOptions
 		>;
-		afterOptimizeAssets: SyncHook<[CompilationAssets]>;
-		processAssets: AsyncSeriesHook<
+		afterOptimizeAssets: SyncHookImportTapableClass_2<[CompilationAssets]>;
+		processAssets: AsyncSeriesHookImportTapableClass_2<
 			[CompilationAssets],
 			ProcessAssetsAdditionalOptions
 		>;
-		afterProcessAssets: SyncHook<[CompilationAssets]>;
-		processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>;
+		afterProcessAssets: SyncHookImportTapableClass_2<[CompilationAssets]>;
+		processAdditionalAssets: AsyncSeriesHookImportTapableClass_2<
+			[CompilationAssets]
+		>;
 		needAdditionalSeal: SyncBailHook<[], boolean | void>;
-		afterSeal: AsyncSeriesHook<[]>;
+		afterSeal: AsyncSeriesHookImportTapableClass_2<[]>;
 		renderManifest: SyncWaterfallHook<
-			[RenderManifestEntry[], RenderManifestOptions]
+			[RenderManifestEntry[], RenderManifestOptions],
+			RenderManifestEntry[]
 		>;
-		fullHash: SyncHook<[Hash]>;
-		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-		moduleAsset: SyncHook<[Module, string]>;
-		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, PathData, undefined | AssetInfo]>;
+		fullHash: SyncHookImportTapableClass_2<[Hash]>;
+		chunkHash: SyncHookImportTapableClass_2<[Chunk, Hash, ChunkHashContext]>;
+		moduleAsset: SyncHookImportTapableClass_2<[Module, string]>;
+		chunkAsset: SyncHookImportTapableClass_2<[Chunk, string]>;
+		assetPath: SyncWaterfallHook<
+			[string, PathData, undefined | AssetInfo],
+			string
+		>;
 		needAdditionalPass: SyncBailHook<[], boolean | void>;
-		childCompiler: SyncHook<[Compiler, string, number]>;
+		childCompiler: SyncHookImportTapableClass_2<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], boolean | void>;
-		processWarnings: SyncWaterfallHook<[Error[]]>;
-		processErrors: SyncWaterfallHook<[Error[]]>;
+		processWarnings: SyncWaterfallHook<[Error[]], Error[]>;
+		processErrors: SyncWaterfallHook<[Error[]], Error[]>;
 		statsPreset: HookMap<
-			SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>
+			SyncHookImportTapableClass_2<
+				[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]
+			>
 		>;
-		statsNormalize: SyncHook<
+		statsNormalize: SyncHookImportTapableClass_2<
 			[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]
 		>;
-		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
-		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		get normalModuleLoader(): SyncHook<
+		statsFactory: SyncHookImportTapableClass_2<
+			[StatsFactory, NormalizedStatsOptions]
+		>;
+		statsPrinter: SyncHookImportTapableClass_2<
+			[StatsPrinter, NormalizedStatsOptions]
+		>;
+		get normalModuleLoader(): SyncHookImportTapableClass_2<
 			[LoaderContextObject<any>, NormalModule]
 		>;
 	}>;
@@ -2572,31 +2605,51 @@ declare interface CompilationAssets {
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, WebAssemblyRenderContext]
+		[Source, Module, WebAssemblyRenderContext],
+		Source
 	>;
 }
 declare interface CompilationHooksCssModulesPlugin {
 	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextCssModulesPlugin]
+		[Source, Module, ChunkRenderContextCssModulesPlugin],
+		Source
 	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+	chunkHash: SyncHookImportTapableClass_2<[Chunk, Hash, ChunkHashContext]>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
+	renderModuleContent: SyncWaterfallHook<
+		[Source, Module, ModuleRenderContext],
+		Source
+	>;
 	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext]
+		[Source, Module, ModuleRenderContext],
+		Source
 	>;
-	renderModulePackage: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
+	renderModulePackage: SyncWaterfallHook<
+		[Source, Module, ModuleRenderContext],
+		Source
+	>;
 	renderChunk: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin]
+		[Source, RenderContextJavascriptModulesPlugin],
+		Source
 	>;
-	renderMain: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
+	renderMain: SyncWaterfallHook<
+		[Source, RenderContextJavascriptModulesPlugin],
+		Source
+	>;
 	renderContent: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin]
+		[Source, RenderContextJavascriptModulesPlugin],
+		Source
 	>;
-	render: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
-	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
-	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
+	render: SyncWaterfallHook<
+		[Source, RenderContextJavascriptModulesPlugin],
+		Source
+	>;
+	renderStartup: SyncWaterfallHook<
+		[Source, Module, StartupRenderContext],
+		Source
+	>;
+	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext], string>;
 	inlineInRuntimeBailout: SyncBailHook<
 		[Module, Partial<RenderBootstrapContext>],
 		string | void
@@ -2609,15 +2662,15 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 		[RenderContextJavascriptModulesPlugin],
 		string | void
 	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+	chunkHash: SyncHookImportTapableClass_2<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<
 		[Chunk, RenderContextJavascriptModulesPlugin],
 		boolean | void
 	>;
 }
 declare interface CompilationHooksModuleFederationPlugin {
-	addContainerEntryDependency: SyncHook<Dependency>;
-	addFederationRuntimeDependency: SyncHook<Dependency>;
+	addContainerEntryDependency: SyncHookImportTapableClass_2<Dependency>;
+	addFederationRuntimeDependency: SyncHookImportTapableClass_2<Dependency>;
 }
 declare interface CompilationHooksRealContentHashPlugin {
 	updateHash: SyncBailHook<[Buffer[], string], string | void>;
@@ -2629,40 +2682,44 @@ declare interface CompilationParams {
 declare class Compiler {
 	constructor(context: string, options?: WebpackOptionsNormalized);
 	hooks: Readonly<{
-		initialize: SyncHook<[]>;
+		initialize: SyncHookImportTapableClass_2<[]>;
 		shouldEmit: SyncBailHook<[Compilation], boolean | void>;
-		done: AsyncSeriesHook<[Stats]>;
-		afterDone: SyncHook<[Stats]>;
-		additionalPass: AsyncSeriesHook<[]>;
-		beforeRun: AsyncSeriesHook<[Compiler]>;
-		run: AsyncSeriesHook<[Compiler]>;
-		emit: AsyncSeriesHook<[Compilation]>;
-		assetEmitted: AsyncSeriesHook<[string, AssetEmittedInfo]>;
-		afterEmit: AsyncSeriesHook<[Compilation]>;
-		thisCompilation: SyncHook<[Compilation, CompilationParams]>;
-		compilation: SyncHook<[Compilation, CompilationParams]>;
-		normalModuleFactory: SyncHook<[NormalModuleFactory]>;
-		contextModuleFactory: SyncHook<[ContextModuleFactory]>;
-		beforeCompile: AsyncSeriesHook<[CompilationParams]>;
-		compile: SyncHook<[CompilationParams]>;
+		done: AsyncSeriesHookImportTapableClass_2<[Stats]>;
+		afterDone: SyncHookImportTapableClass_2<[Stats]>;
+		additionalPass: AsyncSeriesHookImportTapableClass_2<[]>;
+		beforeRun: AsyncSeriesHookImportTapableClass_2<[Compiler]>;
+		run: AsyncSeriesHookImportTapableClass_2<[Compiler]>;
+		emit: AsyncSeriesHookImportTapableClass_2<[Compilation]>;
+		assetEmitted: AsyncSeriesHookImportTapableClass_2<
+			[string, AssetEmittedInfo]
+		>;
+		afterEmit: AsyncSeriesHookImportTapableClass_2<[Compilation]>;
+		thisCompilation: SyncHookImportTapableClass_2<
+			[Compilation, CompilationParams]
+		>;
+		compilation: SyncHookImportTapableClass_2<[Compilation, CompilationParams]>;
+		normalModuleFactory: SyncHookImportTapableClass_2<[NormalModuleFactory]>;
+		contextModuleFactory: SyncHookImportTapableClass_2<[ContextModuleFactory]>;
+		beforeCompile: AsyncSeriesHookImportTapableClass_2<[CompilationParams]>;
+		compile: SyncHookImportTapableClass_2<[CompilationParams]>;
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
-		afterCompile: AsyncSeriesHook<[Compilation]>;
-		readRecords: AsyncSeriesHook<[]>;
-		emitRecords: AsyncSeriesHook<[]>;
-		watchRun: AsyncSeriesHook<[Compiler]>;
-		failed: SyncHook<[Error]>;
-		invalid: SyncHook<[null | string, number]>;
-		watchClose: SyncHook<[]>;
-		shutdown: AsyncSeriesHook<[]>;
+		afterCompile: AsyncSeriesHookImportTapableClass_2<[Compilation]>;
+		readRecords: AsyncSeriesHookImportTapableClass_2<[]>;
+		emitRecords: AsyncSeriesHookImportTapableClass_2<[]>;
+		watchRun: AsyncSeriesHookImportTapableClass_2<[Compiler]>;
+		failed: SyncHookImportTapableClass_2<[Error]>;
+		invalid: SyncHookImportTapableClass_2<[null | string, number]>;
+		watchClose: SyncHookImportTapableClass_2<[]>;
+		shutdown: AsyncSeriesHookImportTapableClass_2<[]>;
 		infrastructureLog: SyncBailHook<
 			[string, string, undefined | any[]],
 			true | void
 		>;
-		environment: SyncHook<[]>;
-		afterEnvironment: SyncHook<[]>;
-		afterPlugins: SyncHook<[Compiler]>;
-		afterResolvers: SyncHook<[Compiler]>;
+		environment: SyncHookImportTapableClass_2<[]>;
+		afterEnvironment: SyncHookImportTapableClass_2<[]>;
+		afterPlugins: SyncHookImportTapableClass_2<[Compiler]>;
+		afterResolvers: SyncHookImportTapableClass_2<[Compiler]>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean | void>;
 	}>;
 	webpack: typeof exports;
@@ -3325,17 +3382,27 @@ type ContextMode =
 	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
-		beforeResolve: AsyncSeriesWaterfallHook<[BeforeContextResolveData]>;
-		afterResolve: AsyncSeriesWaterfallHook<[AfterContextResolveData]>;
-		contextModuleFiles: SyncWaterfallHook<[string[]]>;
+		beforeResolve: AsyncSeriesWaterfallHook<
+			[BeforeContextResolveData],
+			BeforeContextResolveData
+		>;
+		afterResolve: AsyncSeriesWaterfallHook<
+			[AfterContextResolveData],
+			AfterContextResolveData
+		>;
+		contextModuleFiles: SyncWaterfallHook<[string[]], string[]>;
 		alternatives: FakeHook<
 			Pick<
-				AsyncSeriesWaterfallHook<[ContextAlternativeRequest[]]>,
+				AsyncSeriesWaterfallHook<
+					[ContextAlternativeRequest[]],
+					ContextAlternativeRequest[]
+				>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
-			[ContextAlternativeRequest[], ContextModuleOptions]
+			[ContextAlternativeRequest[], ContextModuleOptions],
+			ContextAlternativeRequest[]
 		>;
 	}>;
 	resolverFactory: ResolverFactory;
@@ -3585,9 +3652,9 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface CssLoadingRuntimeModulePluginHooks {
-	createStylesheet: SyncWaterfallHook<[string, Chunk]>;
-	linkPreload: SyncWaterfallHook<[string, Chunk]>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
+	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
+	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
@@ -8333,8 +8400,8 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface JsonpCompilationPluginHooks {
-	linkPreload: SyncWaterfallHook<[string, Chunk]>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
+	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare class JsonpTemplatePlugin {
 	constructor();
@@ -8546,9 +8613,9 @@ declare interface KnownHooks {
 	/**
 	 * resolve step hook
 	 */
-	resolveStep: SyncHook<
+	resolveStep: SyncHookImportTapableClass_1<
 		[
-			AsyncSeriesBailHook<
+			AsyncSeriesBailHookImportTapableClass_1<
 				[ResolveRequest, ResolveContext],
 				null | ResolveRequest
 			>,
@@ -8559,12 +8626,12 @@ declare interface KnownHooks {
 	/**
 	 * no resolve hook
 	 */
-	noResolve: SyncHook<[ResolveRequest, Error]>;
+	noResolve: SyncHookImportTapableClass_1<[ResolveRequest, Error]>;
 
 	/**
 	 * resolve hook
 	 */
-	resolve: AsyncSeriesBailHook<
+	resolve: AsyncSeriesBailHookImportTapableClass_1<
 		[ResolveRequest, ResolveContext],
 		null | ResolveRequest
 	>;
@@ -8572,7 +8639,7 @@ declare interface KnownHooks {
 	/**
 	 * result hook
 	 */
-	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
+	result: AsyncSeriesHookImportTapableClass_1<[ResolveRequest, ResolveContext]>;
 }
 declare interface KnownNormalizedStatsOptions {
 	context: string;
@@ -9242,7 +9309,7 @@ declare interface LimitChunkCountPluginOptions {
 }
 type Literal = SimpleLiteral | RegExpLiteral | BigIntLiteral;
 declare interface LoadScriptCompilationHooks {
-	createScript: SyncWaterfallHook<[string, Chunk]>;
+	createScript: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
@@ -9679,14 +9746,15 @@ declare abstract class MainTemplate {
 		globalHash: { tap: () => void };
 		hotBootstrap: { tap: () => never };
 		bootstrap: SyncWaterfallHook<
-			[string, Chunk, string, ModuleTemplate, DependencyTemplates]
+			[string, Chunk, string, ModuleTemplate, DependencyTemplates],
+			string
 		>;
-		localVars: SyncWaterfallHook<[string, Chunk, string]>;
-		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
-		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
-		get jsonpScript(): SyncWaterfallHook<[string, Chunk]>;
-		get linkPrefetch(): SyncWaterfallHook<[string, Chunk]>;
-		get linkPreload(): SyncWaterfallHook<[string, Chunk]>;
+		localVars: SyncWaterfallHook<[string, Chunk, string], string>;
+		requireExtensions: SyncWaterfallHook<[string, Chunk, string], string>;
+		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string], string>;
+		get jsonpScript(): SyncWaterfallHook<[string, Chunk], string>;
+		get linkPrefetch(): SyncWaterfallHook<[string, Chunk], string>;
+		get linkPreload(): SyncWaterfallHook<[string, Chunk], string>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
 	getPublicPath: (options: PathData) => string;
@@ -10772,11 +10840,11 @@ declare class MultiCompiler {
 		options: MultiCompilerOptions
 	);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats]>;
-		invalid: MultiHook<SyncHook<[null | string, number]>>;
-		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
-		watchClose: SyncHook<[]>;
-		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
+		done: SyncHookImportTapableClass_2<[MultiStats]>;
+		invalid: MultiHook<SyncHookImportTapableClass_2<[null | string, number]>>;
+		run: MultiHook<AsyncSeriesHookImportTapableClass_2<[Compiler]>>;
+		watchClose: SyncHookImportTapableClass_2<[]>;
+		watchRun: MultiHook<AsyncSeriesHookImportTapableClass_2<[Compiler]>>;
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
@@ -11027,19 +11095,27 @@ declare class NormalModule extends Module {
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[LoaderContextObject<any>, NormalModule]>;
-	beforeLoaders: SyncHook<
+	loader: SyncHookImportTapableClass_2<
+		[LoaderContextObject<any>, NormalModule]
+	>;
+	beforeLoaders: SyncHookImportTapableClass_2<
 		[LoaderItem[], NormalModule, LoaderContextObject<any>]
 	>;
-	beforeParse: SyncHook<[NormalModule]>;
-	beforeSnapshot: SyncHook<[NormalModule]>;
+	beforeParse: SyncHookImportTapableClass_2<[NormalModule]>;
+	beforeSnapshot: SyncHookImportTapableClass_2<[NormalModule]>;
 	readResourceForScheme: HookMap<
 		FakeHook<
-			AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+			AsyncSeriesBailHookImportTapableClass_2<
+				[string, NormalModule],
+				null | string | Buffer
+			>
 		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
+		AsyncSeriesBailHookImportTapableClass_2<
+			[LoaderContextObject<any>],
+			null | string | Buffer
+		>
 	>;
 	processResult: SyncWaterfallHook<
 		[
@@ -11049,9 +11125,17 @@ declare interface NormalModuleCompilationHooks {
 				undefined | PreparsedAst
 			],
 			NormalModule
+		],
+		[
+			string | Buffer,
+			undefined | string | RawSourceMap,
+			undefined | PreparsedAst
 		]
 	>;
-	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
+	needBuild: AsyncSeriesBailHookImportTapableClass_2<
+		[NormalModule, NeedBuildContext],
+		boolean
+	>;
 }
 declare interface NormalModuleCreateData {
 	/**
@@ -11131,17 +11215,35 @@ declare interface NormalModuleCreateData {
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
-		resolve: AsyncSeriesBailHook<[ResolveData], false | void | Module>;
+		resolve: AsyncSeriesBailHookImportTapableClass_2<
+			[ResolveData],
+			false | void | Module
+		>;
 		resolveForScheme: HookMap<
-			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
+			AsyncSeriesBailHookImportTapableClass_2<
+				[ResourceDataWithData, ResolveData],
+				true | void
+			>
 		>;
 		resolveInScheme: HookMap<
-			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
+			AsyncSeriesBailHookImportTapableClass_2<
+				[ResourceDataWithData, ResolveData],
+				true | void
+			>
 		>;
-		factorize: AsyncSeriesBailHook<[ResolveData], undefined | Module>;
-		beforeResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
-		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
-		createModule: AsyncSeriesBailHook<
+		factorize: AsyncSeriesBailHookImportTapableClass_2<
+			[ResolveData],
+			undefined | Module
+		>;
+		beforeResolve: AsyncSeriesBailHookImportTapableClass_2<
+			[ResolveData],
+			false | void
+		>;
+		afterResolve: AsyncSeriesBailHookImportTapableClass_2<
+			[ResolveData],
+			false | void
+		>;
+		createModule: AsyncSeriesBailHookImportTapableClass_2<
 			[
 				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
 				ResolveData
@@ -11153,7 +11255,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Module,
 				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
 				ResolveData
-			]
+			],
+			Module
 		>;
 		createParser: HookMap<SyncBailHook<[ParserOptions], void | ParserClass>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
@@ -14770,22 +14873,22 @@ declare abstract class Resolver {
 	ensureHook(
 		name:
 			| string
-			| AsyncSeriesBailHook<
+			| AsyncSeriesBailHookImportTapableClass_1<
 					[ResolveRequest, ResolveContext],
 					null | ResolveRequest
 			  >
-	): AsyncSeriesBailHook<
+	): AsyncSeriesBailHookImportTapableClass_1<
 		[ResolveRequest, ResolveContext],
 		null | ResolveRequest
 	>;
 	getHook(
 		name:
 			| string
-			| AsyncSeriesBailHook<
+			| AsyncSeriesBailHookImportTapableClass_1<
 					[ResolveRequest, ResolveContext],
 					null | ResolveRequest
 			  >
-	): AsyncSeriesBailHook<
+	): AsyncSeriesBailHookImportTapableClass_1<
 		[ResolveRequest, ResolveContext],
 		null | ResolveRequest
 	>;
@@ -14802,7 +14905,7 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	doResolve(
-		hook: AsyncSeriesBailHook<
+		hook: AsyncSeriesBailHookImportTapableClass_1<
 			[ResolveRequest, ResolveContext],
 			null | ResolveRequest
 		>,
@@ -14825,10 +14928,13 @@ declare interface ResolverCache {
 declare abstract class ResolverFactory {
 	hooks: Readonly<{
 		resolveOptions: HookMap<
-			SyncWaterfallHook<[ResolveOptionsWithDependencyType]>
+			SyncWaterfallHook<
+				[ResolveOptionsWithDependencyType],
+				ResolveOptionsWithDependencyType
+			>
 		>;
 		resolver: HookMap<
-			SyncHook<
+			SyncHookImportTapableClass_2<
 				[
 					Resolver,
 					ResolveOptionsResolverFactoryObject2,
@@ -17201,7 +17307,7 @@ declare interface StatsPrintHooks {
 	print: HookMap<
 		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
 	>;
-	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
+	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext], string>>;
 }
 declare abstract class StatsPrinter {
 	hooks: StatsPrintHooks;
