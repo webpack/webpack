@@ -1363,6 +1363,22 @@
         "node-commonjs"
       ]
     },
+    "ExtractSourceMapOptions": {
+      "description": "Options for extracting source maps.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "errorSeverity": {
+          "description": "Severity of the error when source map is not found.",
+          "enum": ["none", "warn", "error"]
+        },
+        "filterSourceMappingUrl": {
+          "description": "Filter function for source mapping URLs.",
+          "instanceof": "Function",
+          "tsType": "(sourceMappingURL: string, resourcePath: string) => string"
+        }
+      }
+    },
     "Falsy": {
       "description": "These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.",
       "cli": {
@@ -4731,6 +4747,17 @@
           "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
+            }
+          ]
+        },
+        "extractSourceMap": {
+          "description": "Enable/Disable extracting source map or provide configuration options.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/ExtractSourceMapOptions"
             }
           ]
         },
