@@ -33,7 +33,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): Logger;
-	resolve(context: string, request: string, callback: ResolveCallback): any;
+	resolve(context: string, request: string, callback: ResolveCallback): void;
 	getResolve(
 		options?: ResolveOptionsWithDependencyType
 	): ((context: string, request: string, callback: ResolveCallback) => void) &

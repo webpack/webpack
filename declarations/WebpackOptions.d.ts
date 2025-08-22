@@ -517,7 +517,7 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
@@ -3474,7 +3474,7 @@ export interface LazyCompilationDefaultBackendOptions {
 	listen?:
 		| number
 		| import("net").ListenOptions
-		| ((server: import("net").Server) => void);
+		| import("../lib/hmr/lazyCompilationBackend").Listen;
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
 	 */

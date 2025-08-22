@@ -55,7 +55,7 @@ declare module "neo-async" {
 		(err?: E, result?: T): void;
 	}
 	export interface AsyncResultArrayCallback<T, E> {
-		(err?: E, results?: Array<T | undefined>): void;
+		(err: E | null, results?: Array<T | undefined>): void;
 	}
 	export interface AsyncResultObjectCallback<T, E> {
 		(err: E | undefined, results: Dictionary<T | undefined>): void;
