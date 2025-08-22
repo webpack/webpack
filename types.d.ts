@@ -9311,8 +9311,8 @@ declare interface LoaderDefinitionFunction<
 declare interface LoaderItem {
 	loader: string;
 	options?: null | string | Record<string, any>;
-	ident?: string;
-	type?: string;
+	ident?: null | string;
+	type?: null | string;
 }
 declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
 	default?:
