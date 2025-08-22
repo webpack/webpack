@@ -2672,9 +2672,9 @@ core-js-compat@^3.44.0:
     browserslist "^4.25.1"
 
 core-js@^3.43.0:
-  version "3.45.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.45.0.tgz#556c2af44a2d9c73ea7b49504392474a9f7c947e"
-  integrity sha512-c2KZL9lP4DjkN3hk/an4pWn5b5ZefhRJnAc42n6LJ19kSnbeRbdQZE5dSeE2LBol1OwJD3X1BQvFTAsa8ReeDA==
+  version "3.45.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.45.1.tgz#5810e04a1b4e9bc5ddaa4dd12e702ff67300634d"
+  integrity sha512-L4NPsJlCfZsPeXukyzHFlg/i7IIVwHSItR0wg0FLNqYClJ4MQYTYLbC7EkjKYRLZF2iof2MUgN0EGy7MdQFChg==
 
 core-util-is@^1.0.3:
   version "1.0.3"
@@ -3318,9 +3318,9 @@ eslint-config-prettier@^10.1.1:
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
 eslint-config-webpack@^4.5.1:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.6.0.tgz#3bf4cdad654cf8b7929c997c817247e57800eaa4"
-  integrity sha512-EcOVuPRz5WGjZ3XgEpynvUoQbR4WCFosLTnCZjNTqLuISjix+RSrR2c0zp1r0jo3+BOhqcDNgbN5ZwD5ns3IAg==
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.6.1.tgz#4de554e44e8c66af9d7056a3995e6b260497a660"
+  integrity sha512-TJEHjDq2NFdCcTdEB2JkYpM2UqN/uqCfxWwLa4Y+5b18GM8ae98ryZzB8FTUWF9mXSLQabfehmQoRlMTebK3FQ==
   dependencies:
     detect-indent "^7.0.1"
     jsonc-eslint-parser "^2.4.0"
@@ -5672,9 +5672,9 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.14.0:
-  version "4.36.3"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.36.3.tgz#ff0b3ebb01a29766fb1a60ad36f82d64d98b032c"
-  integrity sha512-rZIVsNPGdZDPls/ckWhIsod2zRNsI2f2kEru0gMldkrEve+fPn7CVBTvfKLNyHQ9rZDWwzVBF8tPsZivzDPiZQ==
+  version "4.37.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.37.0.tgz#f6525a1754b6bb402451b9d3f9eb678d823b498c"
+  integrity sha512-HHyq+8m5pAhJNylj0kp0G5AfkoFdGPnhGKeox03UfUJbnuJWe7smSUQOnFz+WO+26ayxNsvoaaTraQaC68bhFg==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.11.0"
     "@jsonjoy.com/util" "^1.9.0"
@@ -6209,9 +6209,9 @@ node-gyp-build@^4.6.0:
   integrity sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==
 
 node-gyp@^11.2.0:
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-11.3.0.tgz#e543e3dcd69877e4a9a682ce355150c5d6a6947b"
-  integrity sha512-9J0+C+2nt3WFuui/mC46z2XCZ21/cKlFDuywULmseD/LlmnOrSeEAE4c/1jw6aybXLmpZnQY3/LmOJfgyHIcng==
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-11.4.1.tgz#b4ce9597e71d4e59efb3d4cdae2af8338151b2c4"
+  integrity sha512-GiVxQ1e4TdZSSVmFDYUn6uUsrEUP68pa8C/xBzCfL/FcLHa4reWrxxTP7tRGhNdviYrNsL5kRolBL5LNYEutCw==
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
