@@ -1468,6 +1468,10 @@ export interface RuleSetRule {
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Enable/Disable extracting source map or provide configuration options.
+	 */
+	extractSourceMap?: boolean | ExtractSourceMapOptions;
+	/**
 	 * The options for the module generator.
 	 */
 	generator?: {
@@ -1595,6 +1599,22 @@ export interface RuleSetLogicalConditionsAbsolute {
 	 * Logical OR.
 	 */
 	or?: RuleSetConditionsAbsolute;
+}
+/**
+ * Options for extracting source maps.
+ */
+export interface ExtractSourceMapOptions {
+	/**
+	 * Severity of the error when source map is not found.
+	 */
+	errorSeverity?: "none" | "warn" | "error";
+	/**
+	 * Filter function for source mapping URLs.
+	 */
+	filterSourceMappingUrl?: (
+		sourceMappingURL: string,
+		resourcePath: string
+	) => string;
 }
 /**
  * Options object for resolving requests.

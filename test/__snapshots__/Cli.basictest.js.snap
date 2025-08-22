@@ -4748,6 +4748,37 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-extract-source-map": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable extracting source map or provide configuration options.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/Disable extracting source map or provide configuration options.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "module-rules-extract-source-map-error-severity": Object {
+    "configs": Array [
+      Object {
+        "description": "Severity of the error when source map is not found.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap.errorSeverity",
+        "type": "enum",
+        "values": Array [
+          "none",
+          "warn",
+          "error",
+        ],
+      },
+    ],
+    "description": "Severity of the error when source map is not found.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-include": Object {
     "configs": Array [
       Object {

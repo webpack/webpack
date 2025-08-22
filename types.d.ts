@@ -5470,6 +5470,24 @@ type ExternalsType =
 	| "module-import"
 	| "script"
 	| "node-commonjs";
+
+/**
+ * Options for extracting source maps.
+ */
+declare interface ExtractSourceMapOptions {
+	/**
+	 * Severity of the error when source map is not found.
+	 */
+	errorSeverity?: "none" | "error" | "warn";
+
+	/**
+	 * Filter function for source mapping URLs.
+	 */
+	filterSourceMappingUrl?: (
+		sourceMappingURL: string,
+		resourcePath: string
+	) => string;
+}
 declare interface FSImplementation {
 	open?: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -10678,6 +10696,11 @@ declare interface ModuleSettings {
 	type?: string;
 
 	/**
+	 * Enable/Disable extracting source map or provide configuration options.
+	 */
+	extractSourceMap?: boolean | ExtractSourceMapOptions;
+
+	/**
 	 * Options for the resolver.
 	 */
 	resolve?: ResolveOptions;
@@ -10984,6 +11007,7 @@ declare class NormalModule extends Module {
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
 	loaders: LoaderItem[];
+	extractSourceMap?: boolean | ExtractSourceMapOptions;
 	error: null | WebpackError;
 
 	/**
@@ -11128,6 +11152,11 @@ declare interface NormalModuleCreateData {
 	 * options used for resolving requests from this module
 	 */
 	resolveOptions?: ResolveOptions;
+
+	/**
+	 * enable/disable extracting source map
+	 */
+	extractSourceMap?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -15034,6 +15063,11 @@ declare interface RuleSetRule {
 		| ((value: string) => boolean)
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
+
+	/**
+	 * Enable/Disable extracting source map or provide configuration options.
+	 */
+	extractSourceMap?: boolean | ExtractSourceMapOptions;
 
 	/**
 	 * The options for the module generator.
