@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`getSourceMappingURL should work with " //  #  sourceMappingURL  =   absolute-sourceRoot-source-map.map  " url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with " //  #sourceMappingURL=absolute-sourceRoot-source-map.map" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with ""\\n        /*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+" */";" url: result 1`] = `""`;
+
+exports[`getSourceMappingURL should work with "/*  #sourceMappingURL=absolute-sourceRoot-source-map.map  */" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with "/*#sourceMappingURL=absolute-sourceRoot-source-map.map*/" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with "// # sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+"" url: result 1`] = `"data:application/json;base64,"`;
+
+exports[`getSourceMappingURL should work with "// #sourceMappingURL = //sampledomain.com/external-source-map2.map" url: result 1`] = `"//sampledomain.com/external-source-map2.map"`;
+
+exports[`getSourceMappingURL should work with "// #sourceMappingURL = http://sampledomain.com/external-source-map2.map" url: result 1`] = `"http://sampledomain.com/external-source-map2.map"`;
+
+exports[`getSourceMappingURL should work with "// @sourceMappingURL=data:application/source-map;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5saW5lLXNvdXJjZS1tYXAuanMiLCJzb3VyY2VzIjpbImlubGluZS1zb3VyY2UtbWFwLnR4dCJdLCJzb3VyY2VzQ29udGVudCI6WyJ3aXRoIFNvdXJjZU1hcCJdLCJtYXBwaW5ncyI6IkFBQUEifQ==" url: result 1`] = `"data:application/source-map;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5saW5lLXNvdXJjZS1tYXAuanMiLCJzb3VyY2VzIjpbImlubGluZS1zb3VyY2UtbWFwLnR4dCJdLCJzb3VyY2VzQ29udGVudCI6WyJ3aXRoIFNvdXJjZU1hcCJdLCJtYXBwaW5ncyI6IkFBQUEifQ=="`;
+
+exports[`getSourceMappingURL should work with "//#sourceMappingURL=absolute-sourceRoot-source-map.map" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with "//@sourceMappingURL=absolute-sourceRoot-source-map.map" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
+
+exports[`getSourceMappingURL should work with "\\n        with SourceMap\\n        // #sourceMappingURL = /sample-source-map-1.map\\n        // #sourceMappingURL = /sample-source-map-2.map\\n        // #sourceMappingURL = /sample-source-map-last.map\\n        // comment\\n        " url: result 1`] = `"/sample-source-map-last.map"`;
+
+exports[`getSourceMappingURL should work with "\\n        with SourceMap\\n    \\n        // #sourceMappingURL = /sample-source-map.map\\n        // comment\\n        " url: result 1`] = `"/sample-source-map.map"`;
+
+exports[`getSourceMappingURL should work with "anInvalidDirective = "\\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+" */";" url: result 1`] = `""`;
