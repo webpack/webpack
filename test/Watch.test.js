@@ -72,7 +72,7 @@ describe("Watch", () => {
 					// Ensure the second invalidation can occur during compiler running
 					let once = false;
 					c.hooks.afterCompile.tapAsync("LongTask", (_, cb) => {
-						if (once) cb();
+						if (once) return cb();
 						once = true;
 						setTimeout(() => {
 							cb();
