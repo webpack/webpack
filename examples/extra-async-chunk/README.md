@@ -130,7 +130,6 @@ require.ensure(["./a"], function(require) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -354,7 +353,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.14 KiB [emitted] (name: main)
+asset output.js 9.11 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 341 bytes [emitted]
 asset d_js.output.js 341 bytes [emitted]
@@ -383,9 +382,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -395,7 +394,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.82 KiB [emitted] [minimized] (name: main)
+asset output.js 1.8 KiB [emitted] [minimized] (name: main)
 asset a_js-b_js.output.js 112 bytes [emitted] [minimized]
 asset c_js.output.js 84 bytes [emitted] [minimized]
 asset d_js.output.js 84 bytes [emitted] [minimized]
@@ -424,9 +423,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

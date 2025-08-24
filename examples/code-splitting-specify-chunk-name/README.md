@@ -178,7 +178,6 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -363,9 +362,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -392,7 +391,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.42 KiB [emitted] [minimized] (name: main)
+asset output.js 2.41 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 129 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 126 bytes [emitted] [minimized] (name: chunk-bar-baz2)
@@ -403,9 +402,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

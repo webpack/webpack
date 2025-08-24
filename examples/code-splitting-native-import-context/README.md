@@ -186,7 +186,6 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -359,7 +358,7 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-asset output.js 11 KiB [emitted] (name: main)
+asset output.js 10.9 KiB [emitted] (name: main)
 asset 717.output.js 858 bytes [emitted]
 asset 776.output.js 858 bytes [emitted]
 asset 0.output.js 856 bytes [emitted]
@@ -387,9 +386,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [used exports unknown]
@@ -400,7 +399,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.4 KiB [emitted] [minimized] (name: main)
+asset output.js 2.39 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 130 bytes [emitted] [minimized]
 asset 776.output.js 130 bytes [emitted] [minimized]
 asset 0.output.js 124 bytes [emitted] [minimized]
@@ -425,9 +424,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [no exports used]
