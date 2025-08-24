@@ -223,7 +223,6 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -422,9 +421,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.89 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.89 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -436,7 +435,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.89 KiB [emitted] [minimized] (name: main)
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
 asset 140.output.js 69 bytes [emitted] [minimized]
 asset 197.output.js 69 bytes [emitted] [minimized]
 asset 414.output.js 69 bytes [emitted] [minimized]
@@ -459,9 +458,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.63 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.65 KiB 9 modules
+  runtime modules 6.63 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]

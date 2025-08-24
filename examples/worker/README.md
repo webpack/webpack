@@ -254,7 +254,6 @@ export const add = (content, from) => {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -723,7 +722,7 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 11.9 KiB [emitted] (name: main)
+asset main.js 11.8 KiB [emitted] (name: main)
 asset workers/fibonacci.js 4.99 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
 asset 129.js 741 bytes [emitted]
@@ -747,9 +746,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.41 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.41 KiB 7 modules
+  runtime modules 5.39 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -759,7 +758,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.27 KiB [emitted] [minimized] (name: main)
+asset main.js 3.26 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 776 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 159 bytes [emitted] [minimized]
@@ -783,9 +782,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.41 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.41 KiB 7 modules
+  runtime modules 5.39 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

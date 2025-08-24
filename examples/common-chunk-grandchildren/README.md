@@ -190,7 +190,6 @@ module.exports = {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -450,14 +449,14 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.08 KiB [emitted] (name: main)
+asset output.js 9.04 KiB [emitted] (name: main)
 asset pageB_js.output.js 772 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
 asset pageC_js.output.js 559 bytes [emitted]
 asset reusableComponent_js.output.js 453 bytes [emitted]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -493,14 +492,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.82 KiB [emitted] [minimized] (name: main)
+asset output.js 1.8 KiB [emitted] [minimized] (name: main)
 asset pageB_js.output.js 231 bytes [emitted] [minimized]
 asset reusableComponent_js.output.js 142 bytes [emitted] [minimized]
 asset pageC_js.output.js 141 bytes [emitted] [minimized]
 asset pageA_js.output.js 140 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -163,7 +163,6 @@ __webpack_require__.r(module.exports = {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -545,7 +544,7 @@ body {
 ## Unoptimized
 
 ```
-assets by path *.js 16.3 KiB
+assets by path *.js 16.2 KiB
   asset output.js 15.9 KiB [emitted] (name: main)
   asset 1.output.js 357 bytes [emitted]
 assets by path *.css 1.19 KiB
@@ -553,9 +552,9 @@ assets by path *.css 1.19 KiB
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 Entrypoint main 17 KiB (14.6 KiB) = output.js 15.9 KiB output.css 1.06 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 265 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.82 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 265 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.82 KiB 9 modules
+  runtime modules 8.8 KiB 9 modules
   dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 89 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
@@ -573,17 +572,17 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.42 KiB
-  asset output.js 3.34 KiB [emitted] [minimized] (name: main)
+assets by path *.js 3.41 KiB
+  asset output.js 3.32 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 87 bytes [emitted] [minimized]
 assets by path *.css 490 bytes
   asset output.css 466 bytes [emitted] (name: main)
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.79 KiB (14.6 KiB) = output.js 3.34 KiB output.css 466 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 299 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.82 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.78 KiB (14.6 KiB) = output.js 3.32 KiB output.css 466 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 299 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.82 KiB 9 modules
+  runtime modules 8.8 KiB 9 modules
   dependent modules 14.6 KiB (asset) 42 bytes (css-url) 119 bytes (javascript) 279 bytes (css) 42 bytes (css-import) [dependent] 4 modules
   cacheable modules 180 bytes (javascript) 175 bytes (css)
     ./example.js + 2 modules 178 bytes [built] [code generated]

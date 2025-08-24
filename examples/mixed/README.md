@@ -231,7 +231,6 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -492,9 +491,9 @@ module.exports = function() {
 ```
 asset output.js 13.8 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 2.28 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.75 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.77 KiB 9 modules
+  runtime modules 5.75 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -512,11 +511,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.51 KiB [emitted] [minimized] (name: main)
+asset output.js 2.5 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.75 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.77 KiB 9 modules
+  runtime modules 5.75 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

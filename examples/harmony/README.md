@@ -167,7 +167,6 @@ function add() {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -336,7 +335,7 @@ __webpack_require__.e(/*! import() */ 655).then(__webpack_require__.bind(__webpa
 ## Unoptimized
 
 ```
-asset output.js 11.8 KiB [emitted] (name: main)
+asset output.js 11.7 KiB [emitted] (name: main)
 asset 655.output.js 773 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
@@ -344,9 +343,9 @@ chunk (runtime: main) 655.output.js 24 bytes [rendered]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 225 bytes [dependent] 2 modules
   ./example.js 175 bytes [built] [code generated]
     [no exports]
@@ -358,16 +357,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.02 KiB [emitted] [minimized] (name: main)
+asset output.js 2.01 KiB [emitted] [minimized] (name: main)
 asset 655.output.js 124 bytes [emitted] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.5 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   ./example.js + 2 modules 400 bytes [built] [code generated]
     [no exports]
     [no exports used]

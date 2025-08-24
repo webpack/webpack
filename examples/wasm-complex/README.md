@@ -86,7 +86,8 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.js */ 1);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_magic_js__WEBPACK_IMPORTED_MODULE_0__]);
-_magic_js__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+_magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
 
 
 // accessing memory
@@ -126,7 +127,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_magic_wat__WEBPACK_IMPORTED_MODULE_0__]);
-_magic_wat__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+_magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
 // reexporting
 
 
@@ -420,7 +422,7 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-asset output.js 14 KiB [emitted] (name: main)
+asset output.js 14.1 KiB [emitted] (name: main)
 asset daa529a2a650ee3943a9.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.72 KiB (runtime) [entry] [rendered]
   > ./example.js main
