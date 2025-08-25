@@ -1392,7 +1392,7 @@ built modules X bytes [built]
     ./templates/baz.js X bytes [optional] [built] [code generated]
     ./templates/foo.js X bytes [optional] [built] [code generated]
   ./entry.js X bytes [built] [code generated]
-  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ na...(truncated) X bytes [optional] [built] [code generated]
+  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ referencedExp...(truncated) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
