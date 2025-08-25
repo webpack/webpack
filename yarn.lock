@@ -824,7 +824,7 @@
   resolved "https://registry.yarnpkg.com/@eslint/config-helpers/-/config-helpers-0.3.1.tgz#d316e47905bd0a1a931fa50e669b9af4104d1617"
   integrity sha512-xR93k9WhrDYpXHORXpxVL5oHj3Era7wo6k/Wd8/IsQNnZUTzkGS29lyn3nAT05v6ltUuTFVCCYDEGfy2Or/sPA==
 
-"@eslint/core@^0.15.1", "@eslint/core@^0.15.2":
+"@eslint/core@^0.15.2":
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/@eslint/core/-/core-0.15.2.tgz#59386327d7862cc3603ebc7c78159d2dcc4a868f"
   integrity sha512-78Md3/Rrxh83gCxoUc0EiciuOHsIITzLy53m3d9UyiW8y9Dj2D29FeETqyKA+BRK76tnTp6RXWb3pCay8Oyomg==
@@ -846,31 +846,32 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@eslint/js@9.33.0", "@eslint/js@^9.29.0":
-  version "9.33.0"
-  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.33.0.tgz#475c92fdddab59b8b8cab960e3de2564a44bf368"
-  integrity sha512-5K1/mKhWaMfreBGJTwval43JJmkip0RmM+3+IuqupeSKNC/Th2Kc7ucaq5ovTSra/OOKB9c58CGSz3QMVbWt0A==
+"@eslint/js@9.34.0", "@eslint/js@^9.29.0":
+  version "9.34.0"
+  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.34.0.tgz#fc423168b9d10e08dea9088d083788ec6442996b"
+  integrity sha512-EoyvqQnBNsV1CWaEJ559rxXL4c8V92gxirbawSmVUOWXlsRxxQXl6LmCpdUblgxgSkDIqKnhzba2SjRTI/A5Rw==
 
 "@eslint/markdown@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@eslint/markdown/-/markdown-7.1.0.tgz#c35be3f16d9e74077ca238ceca184ded0bac74bc"
-  integrity sha512-Y+X1B1j+/zupKDVJfkKc8uYMjQkGzfnd8lt7vK3y8x9Br6H5dBuhAfFrQ6ff7HAMm/1BwgecyEiRFkYCWPRxmA==
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@eslint/markdown/-/markdown-7.2.0.tgz#664599b516304b2e482e2319ff3bc5ac53a73cd1"
+  integrity sha512-cmDloByulvKzofM0tIkSGWwxMcrKOLsXZC+EM0FLkRIrxKzW+2RkZAt9TAh37EtQRmx1M4vjBEmlC6R0wiGkog==
   dependencies:
-    "@eslint/core" "^0.15.1"
-    "@eslint/plugin-kit" "^0.3.4"
+    "@eslint/core" "^0.15.2"
+    "@eslint/plugin-kit" "^0.3.5"
     github-slugger "^2.0.0"
     mdast-util-from-markdown "^2.0.2"
     mdast-util-frontmatter "^2.0.1"
     mdast-util-gfm "^3.1.0"
     micromark-extension-frontmatter "^2.0.0"
     micromark-extension-gfm "^3.0.0"
+    micromark-util-normalize-identifier "^2.0.1"
 
 "@eslint/object-schema@^2.1.6":
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.6.tgz#58369ab5b5b3ca117880c0f6c0b0f32f6950f24f"
   integrity sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==
 
-"@eslint/plugin-kit@^0.3.3", "@eslint/plugin-kit@^0.3.4", "@eslint/plugin-kit@^0.3.5":
+"@eslint/plugin-kit@^0.3.3", "@eslint/plugin-kit@^0.3.5":
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/@eslint/plugin-kit/-/plugin-kit-0.3.5.tgz#fd8764f0ee79c8ddab4da65460c641cefee017c5"
   integrity sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==
@@ -3318,9 +3319,9 @@ eslint-config-prettier@^10.1.1:
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
 eslint-config-webpack@^4.5.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.6.1.tgz#4de554e44e8c66af9d7056a3995e6b260497a660"
-  integrity sha512-TJEHjDq2NFdCcTdEB2JkYpM2UqN/uqCfxWwLa4Y+5b18GM8ae98ryZzB8FTUWF9mXSLQabfehmQoRlMTebK3FQ==
+  version "4.6.3"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.6.3.tgz#1c94c0481096802202cdc6efaad9c5e3a15de3c1"
+  integrity sha512-nKUWDmJ1SYwibd/zI5ntk6alKQ26e5ly0d5EQpDDRWtBJuBqvCyJtvphBtS0m58EsLLkQgCrSaWJVU4yGjSneg==
   dependencies:
     detect-indent "^7.0.1"
     jsonc-eslint-parser "^2.4.0"
@@ -3474,9 +3475,9 @@ eslint-visitor-keys@^4.2.1:
   integrity sha512-Uhdk5sfqcee/9H/rCOJikYz67o0a2Tw2hGRPOG2Y1R2dg7brRe1uG0yaNQDHu+TO/uQPF/5eCapvYSmHUjt7JQ==
 
 eslint@^9.29.0:
-  version "9.33.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-9.33.0.tgz#cc186b3d9eb0e914539953d6a178a5b413997b73"
-  integrity sha512-TS9bTNIryDzStCpJN93aC5VRSW3uTx9sClUn4B87pwiCaJh220otoI0X8mJKr+VcPtniMdN8GKjlwgWGUv5ZKA==
+  version "9.34.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-9.34.0.tgz#0ea1f2c1b5d1671db8f01aa6b8ce722302016f7b"
+  integrity sha512-RNCHRX5EwdrESy3Jc9o8ie8Bog+PeYvvSR8sDGoZxNFTvZ4dlxUB3WzQ3bQMztFrSRODGrLLj8g6OFuGY/aiQg==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.12.1"
@@ -3484,7 +3485,7 @@ eslint@^9.29.0:
     "@eslint/config-helpers" "^0.3.1"
     "@eslint/core" "^0.15.2"
     "@eslint/eslintrc" "^3.3.1"
-    "@eslint/js" "9.33.0"
+    "@eslint/js" "9.34.0"
     "@eslint/plugin-kit" "^0.3.5"
     "@humanfs/node" "^0.16.6"
     "@humanwhocodes/module-importer" "^1.0.1"
@@ -4045,6 +4046,11 @@ glob-parent@^6.0.2:
   integrity sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==
   dependencies:
     is-glob "^4.0.3"
+
+glob-to-regex.js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/glob-to-regex.js/-/glob-to-regex.js-1.0.1.tgz#f71cc9cb8441471a9318626160bc8a35e1306b21"
+  integrity sha512-CG/iEvgQqfzoVsMUbxSJcwbG2JwyZ3naEqPkeltwl0BSS8Bp83k3xlGms+0QdWFUAwV+uvo80wNswKF6FWEkKg==
 
 glob-to-regexp@^0.4.1:
   version "0.4.1"
@@ -5672,12 +5678,13 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.14.0:
-  version "4.37.0"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.37.0.tgz#f6525a1754b6bb402451b9d3f9eb678d823b498c"
-  integrity sha512-HHyq+8m5pAhJNylj0kp0G5AfkoFdGPnhGKeox03UfUJbnuJWe7smSUQOnFz+WO+26ayxNsvoaaTraQaC68bhFg==
+  version "4.38.1"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.38.1.tgz#43cc07ee74dc321dbd0cba778db6cd94a4648895"
+  integrity sha512-exfrOkkU3m0EpbQ0iQJP93HUbkprnIBU7IUnobSNAzHkBUzsklLwENGLEm8ZwJmMuLoFEfv1pYQ54wSpkay4kQ==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.11.0"
     "@jsonjoy.com/util" "^1.9.0"
+    glob-to-regex.js "^1.0.1"
     thingies "^2.5.0"
     tree-dump "^1.0.3"
     tslib "^2.0.0"
@@ -5928,7 +5935,7 @@ micromark-util-html-tag-name@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-util-html-tag-name/-/micromark-util-html-tag-name-2.0.1.tgz#e40403096481986b41c106627f98f72d4d10b825"
   integrity sha512-2cNEiYDhCWKI+Gs9T0Tiysk136SnR13hhO8yW6BGNyhOC4qYFnwF1nKfD3HFAIXA5c45RrIG1ub11GiXeYd1xA==
 
-micromark-util-normalize-identifier@^2.0.0:
+micromark-util-normalize-identifier@^2.0.0, micromark-util-normalize-identifier@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/micromark-util-normalize-identifier/-/micromark-util-normalize-identifier-2.0.1.tgz#c30d77b2e832acf6526f8bf1aa47bc9c9438c16d"
   integrity sha512-sxPqmo70LyARJs0w2UclACPUUEqltCkJ6PhKdMIDuJ3gSf/Q+/GIe3WKl0Ijb/GyH9lOpUkRAO2wp0GVkLvS9Q==
@@ -7769,9 +7776,9 @@ timers-ext@^0.1.7:
     next-tick "^1.1.0"
 
 tinybench@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.0.0.tgz#bb0b7141f84d8917b5d95951d05e0e8db570be04"
-  integrity sha512-iqp7HhNk6IQXuE5fyJsX4ENpnWcw9k+QS5hsLXZq47J8hH/cL/WjNr6Fr9kXMqCGYMhFSLX8xwoJl6rgB0Pz/A==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.0.1.tgz#e2f6b0b034f7aaa3f319883f521a888503e1d012"
+  integrity sha512-aNVgWQZY4veCZLQJRftDA1X9OoLUIjDWNfC90nledkX7Lx205IpSEFYnsu4slyofoPGpJ+NIQj+BNSt4U5edMg==
 
 tinyglobby@^0.2.12, tinyglobby@^0.2.14:
   version "0.2.14"
