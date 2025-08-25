@@ -653,6 +653,9 @@ describe("snapshots", () => {
 		      "hash": true,
 		      "timestamp": true,
 		    },
+		    "contextModule": Object {
+		      "timestamp": true,
+		    },
 		    "immutablePaths": Array [],
 		    "managedPaths": Array [
 		      "<cwd>/node_modules/",
