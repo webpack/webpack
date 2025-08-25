@@ -773,6 +773,8 @@ describe("snapshots", () => {
 		+       "hash": true,
 		@@ ... @@
 		+       "hash": true,
+		@@ ... @@
+		+       "hash": true,
 	`)
 	);
 
@@ -839,6 +841,8 @@ describe("snapshots", () => {
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+   },
+		@@ ... @@
+		+       "hash": true,
 		@@ ... @@
 		+       "hash": true,
 		@@ ... @@
