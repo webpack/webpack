@@ -3352,11 +3352,11 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<
 			[BeforeContextResolveData],
-			BeforeContextResolveData
+			false | void | BeforeContextResolveData
 		>;
 		afterResolve: AsyncSeriesWaterfallHook<
 			[AfterContextResolveData],
-			AfterContextResolveData
+			false | void | AfterContextResolveData
 		>;
 		contextModuleFiles: SyncWaterfallHook<[string[]], string[]>;
 		alternatives: FakeHook<
@@ -8609,6 +8609,10 @@ declare interface KnownHooks {
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
+declare interface KnownMeta {
+	importVarMap?: Map<Module, string>;
+	deferredImportVarMap?: Map<Module, string>;
+}
 declare interface KnownNormalizedStatsOptions {
 	context: string;
 	requestShortener: RequestShortener;
@@ -9808,10 +9812,7 @@ declare interface MergeDuplicateChunksPluginOptions {
 	 */
 	stage?: number;
 }
-type Meta = Record<
-	"importVarMap" | "deferredImportVarMap",
-	Map<Module, string>
-> &
+type Meta = KnownMeta &
 	Record<
 		| typeof idsSymbolCommonJsExportRequireDependency
 		| typeof idsSymbolHarmonyImportSpecifierDependency
