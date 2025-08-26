@@ -1468,7 +1468,7 @@ export interface RuleSetRule {
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Enable/Disable extracting source map or provide configuration options.
+	 * Enable/Disable extracting source map.
 	 */
 	extractSourceMap?: boolean;
 	/**

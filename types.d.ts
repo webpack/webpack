@@ -10714,7 +10714,7 @@ declare interface ModuleSettings {
 	type?: string;
 
 	/**
-	 * Enable/Disable extracting source map or provide configuration options.
+	 * Enable/Disable extracting source map.
 	 */
 	extractSourceMap?: boolean;
 
@@ -15092,7 +15092,7 @@ declare interface RuleSetRule {
 		| RuleSetConditionAbsolute[];
 
 	/**
-	 * Enable/Disable extracting source map or provide configuration options.
+	 * Enable/Disable extracting source map.
 	 */
 	extractSourceMap?: boolean;
 

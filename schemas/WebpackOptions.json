@@ -4735,7 +4735,7 @@
           ]
         },
         "extractSourceMap": {
-          "description": "Enable/Disable extracting source map or provide configuration options.",
+          "description": "Enable/Disable extracting source map.",
           "type": "boolean"
         },
         "generator": {
