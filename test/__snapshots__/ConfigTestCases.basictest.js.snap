@@ -10474,3 +10474,35 @@ Array [
   "webpack:///./extract3.js",
 ]
 `;
+
+exports[`ConfigTestCases source-map extract-source-map-css exported tests should compile 1`] = `
+Array [
+  "/*!*********************!*\\\\
+  !*** css ./app.css ***!
+  \\\\*********************/
+* {
+	box-sizing: border-box; }
+  
+  .row {
+	display: flex;
+	margin-right: -15px;
+	margin-left: -15px; }
+  
+  .col-inner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	height: 50px;
+	background: coral; }
+  
+  .col-s3 {
+	flex: 0 1 25%;
+	padding: 0 15px; }
+  
+  
+  
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;
