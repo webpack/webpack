@@ -9,9 +9,7 @@ module.exports = [
 		module: {
 			rules: [
 				{
-					extractSourceMap: {
-						errorSeverity: "warn"
-					}
+					extractSourceMap: true
 				}
 			]
 		}
