@@ -1,0 +1,22 @@
+* {
+	box-sizing: border-box; }
+  
+  .row {
+	display: flex;
+	margin-right: -15px;
+	margin-left: -15px; }
+  
+  .col-inner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	height: 50px;
+	background: coral; }
+  
+  .col-s3 {
+	flex: 0 1 25%;
+	padding: 0 15px; }
+  
+  
+  /*# sourceMappingURL=app.css.map*/
