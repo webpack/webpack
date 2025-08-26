@@ -9808,6 +9808,17 @@ declare interface MergeDuplicateChunksPluginOptions {
 	 */
 	stage?: number;
 }
+type Meta = Record<
+	"importVarMap" | "deferredImportVarMap",
+	Map<Module, string>
+> &
+	Record<
+		| typeof idsSymbolCommonJsExportRequireDependency
+		| typeof idsSymbolHarmonyImportSpecifierDependency
+		| typeof idsSymbolHarmonyExportImportedSpecifierDependency,
+		string[]
+	> &
+	Record<string, any>;
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
 	options: MinChunkSizePluginOptions;
@@ -10345,8 +10356,8 @@ declare class ModuleGraph {
 	isAsync(module: Module): boolean;
 	isDeferred(module: Module): boolean;
 	setAsync(module: Module): void;
-	getMeta(thing: object): any;
-	getMetaIfExisting(thing: object): any;
+	getMeta(thing: object): Meta;
+	getMetaIfExisting(thing: object): undefined | Meta;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T, R>(
@@ -18859,6 +18870,9 @@ declare namespace exports {
 		LoaderContextDeclarationsIndex as LoaderContext
 	};
 }
+declare const idsSymbolCommonJsExportRequireDependency: unique symbol;
+declare const idsSymbolHarmonyExportImportedSpecifierDependency: unique symbol;
+declare const idsSymbolHarmonyImportSpecifierDependency: unique symbol;
 declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
