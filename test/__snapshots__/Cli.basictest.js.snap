@@ -4751,13 +4751,13 @@ Object {
   "module-rules-extract-source-map": Object {
     "configs": Array [
       Object {
-        "description": "Enable/Disable extracting source map or provide configuration options.",
+        "description": "Enable/Disable extracting source map.",
         "multiple": true,
         "path": "module.rules[].extractSourceMap",
         "type": "boolean",
       },
     ],
-    "description": "Enable/Disable extracting source map or provide configuration options.",
+    "description": "Enable/Disable extracting source map.",
     "multiple": true,
     "simpleType": "boolean",
   },
