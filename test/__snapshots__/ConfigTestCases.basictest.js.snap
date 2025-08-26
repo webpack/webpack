@@ -10445,36 +10445,6 @@ export { __webpack_exports__HomeLayout as HomeLayout, __webpack_exports__a as a 
 "
 `;
 
-exports[`ConfigTestCases source-map extract-source-map exported tests should extract source map - 1 1`] = `
-Array [
-  "webpack:///./external-source-map.txt",
-  "webpack:///external node-commonjs \\"fs\\"",
-  "webpack:///external node-commonjs \\"path\\"",
-  "webpack:///webpack/bootstrap",
-  "webpack:///./extract2.js",
-]
-`;
-
-exports[`ConfigTestCases source-map extract-source-map exported tests should extract source map - 2 1`] = `
-Array [
-  "webpack:///./external-source-map.txt",
-  "webpack:///external node-commonjs \\"fs\\"",
-  "webpack:///external node-commonjs \\"path\\"",
-  "webpack:///webpack/bootstrap",
-  "webpack:///./extract3.js",
-]
-`;
-
-exports[`ConfigTestCases source-map extract-source-map exported tests should extract source map - 3 1`] = `
-Array [
-  "webpack:///./external-source-map.txt",
-  "webpack:///external node-commonjs \\"fs\\"",
-  "webpack:///external node-commonjs \\"path\\"",
-  "webpack:///webpack/bootstrap",
-  "webpack:///./extract3.js",
-]
-`;
-
 exports[`ConfigTestCases source-map extract-source-map-css exported tests should compile 1`] = `
 Array [
   "/*!*********************!*\\\\
