@@ -15,7 +15,7 @@ This plan applies to incidents such as:
 ## Communication Channels
 
 * **Private & Preferred**: [GitHub Security Advisories](https://github.com/webpack/webpack/security/advisories).
-* **Email**: `webpack@opencollective.com`.
+* **Email**: `webpack-security@openjsf.org`.
 * **Public**: GitHub releases, changelog, and advisories (after fix is available).
 
 ## Incident Response Workflow
