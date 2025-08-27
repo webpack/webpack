@@ -113,16 +113,3 @@ body:
     attributes:
       label: Additional Context
       description: Any other context about the problem (error logs, workarounds, etc.)
-
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Validations
-      description: Before submitting, please confirm
-      options:
-        - label: I have searched for existing issues
-          required: true
-        - label: I have tested with the latest version of webpack
-          required: true
-        - label: I have provided a minimal reproduction
-          required: true
