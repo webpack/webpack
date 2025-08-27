@@ -5,6 +5,7 @@ const assert = require("assert")
 /**
  * @this {LoaderContext}
  * @param {string} source The source code to process
+ * @param {import("webpack-sources").RawSourceMap} sourceMap The source map to process
  * @returns {void}
  */
 module.exports = function(source, sourceMap) {
