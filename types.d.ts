@@ -1005,14 +1005,7 @@ declare const CIRCULAR_CONNECTION: unique symbol;
 declare class CacheClass {
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<
-			[
-				string,
-				null | Etag,
-				((result: any, callback: (err?: Error) => void) => void)[]
-			],
-			any
-		>;
+		get: AsyncSeriesBailHook<[string, null | Etag, GotHandler<any>[]], any>;
 		store: AsyncParallelHook<[string, null | Etag, any]>;
 		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
 		beginIdle: SyncHook<[]>;
@@ -1923,6 +1916,7 @@ type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
 	Map<"filename", string> &
 	Map<"assetInfo", AssetInfo> &
 	Map<"fullContentHash", string> &
+	Map<"share-init", [{ shareScope: string; initStage: number; init: string }]> &
 	Map<string, any>;
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
@@ -3413,12 +3407,18 @@ declare interface ContextOptions {
 declare class ContextReplacementPlugin {
 	constructor(
 		resourceRegExp: RegExp,
-		newContentResource?: string | boolean | RegExp | ((context?: any) => void),
+		newContentResource?:
+			| string
+			| boolean
+			| RegExp
+			| ((context: BeforeContextResolveData | AfterContextResolveData) => void),
 		newContentRecursive?: boolean | RegExp | NewContentCreateContextMap,
 		newContentRegExp?: RegExp
 	);
 	resourceRegExp: RegExp;
-	newContentCallback?: (context?: any) => void;
+	newContentCallback?: (
+		context: BeforeContextResolveData | AfterContextResolveData
+	) => void;
 	newContentResource?: string;
 	newContentCreateContextMap?: (
 		fs: InputFileSystem,
@@ -5999,6 +5999,9 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+}
+declare interface GotHandler<T> {
+	(result: T, callback: () => void): void;
 }
 declare interface GroupConfig<T, R> {
 	getKeys: (item: T) => undefined | string[];
@@ -10361,9 +10364,9 @@ declare class ModuleGraph {
 	getMetaIfExisting(thing: object): undefined | Meta;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
-	cached<T, R>(
-		fn: (moduleGraph: ModuleGraph, ...args: T[]) => R,
-		...args: T[]
+	cached<T extends any[], R>(
+		fn: (moduleGraph: ModuleGraph, ...args: T) => R,
+		...args: T
 	): R;
 	setModuleMemCaches(
 		moduleMemCaches: Map<Module, WeakTupleMap<any[], any>>
