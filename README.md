@@ -297,7 +297,7 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
 
 <h2>Current project members</h2>
 
-For information about the governance of the Node.js project, see [GOVERNANCE.md](./GOVERNANCE.md).
+For information about the governance of the webpack project, see [GOVERNANCE.md](./GOVERNANCE.md).
 
 <h3>TSC (Technical Steering Committee)</h3>
 
