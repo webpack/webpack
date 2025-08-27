@@ -8,7 +8,9 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				extractSourceMap: true
+				test: /\.js$/,
+				extractSourceMap: true,
+				loader: require.resolve("./babel-loader")
 			}
 		]
 	}
