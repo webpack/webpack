@@ -364,21 +364,9 @@ function runWebpack(webpack, config) {
 	});
 }
 
-function runWatch(webpack, config) {
+async function runWatch(webpack, config, callback) {
 	const compiler = webpack(config);
-	return new Promise((resolve, reject) => {
-		const watching = compiler.watch({}, (err, stats) => {
-			if (err) {
-				reject(err);
-			}
-
-			if (stats.hasWarnings() || stats.hasErrors()) {
-				reject(new Error(stats.toString()));
-			}
-
-			resolve(watching);
-		});
-	});
+	return compiler.watch({}, callback);
 }
 
 const scenarios = [
@@ -576,16 +564,43 @@ async function registerSuite(bench, test, baselines) {
 						const originalEntryContent = await fs.readFile(entry, "utf8");
 
 						let watching;
-						let watchingResolve;
+						let next;
+
+						const watchCallback = (err, stats) => {
+							if (next) {
+								next(err, stats);
+							}
+						};
 
 						bench.add(
 							benchName,
 							async () => {
 								console.time(`Time: ${benchName}`);
 
-								const watchingPromise = new Promise((res) => {
-									watchingResolve = res;
+								let resolve;
+								let reject;
+
+								const promise = new Promise((res, rej) => {
+									resolve = res;
+									reject = rej;
 								});
+
+								next = (err, stats) => {
+									if (err) {
+										reject(err);
+										return;
+									}
+
+									if (stats.hasWarnings() || stats.hasErrors()) {
+										reject(new Error(stats.toString()));
+										return;
+									}
+
+									// Construct and print stats to be more accurate with real life projects
+									stats.toString();
+									resolve();
+									console.timeEnd(`Time: ${benchName}`);
+								};
 
 								await new Promise((resolve, reject) => {
 									writeFile(
@@ -594,55 +609,79 @@ async function registerSuite(bench, test, baselines) {
 										(err) => {
 											if (err) {
 												reject(err);
+												return;
 											}
 
-											watchingPromise.then((stats) => {
-												watchingResolve = undefined;
-
-												// Construct and print stats to be more accurate with real life projects
-												stats.toString();
-												console.timeEnd(`Time: ${benchName}`);
-												resolve();
-											});
+											resolve();
 										}
 									);
 								});
+
+								await promise;
 							},
 							{
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
+									let resolve;
+									let reject;
+
+									const promise = new Promise((res, rej) => {
+										resolve = res;
+										reject = rej;
+									});
+
+									next = (err, stats) => {
+										if (err) {
+											reject(err);
+											return;
+										}
+
+										if (stats.hasWarnings() || stats.hasErrors()) {
+											reject(new Error(stats.toString()));
+											return;
+										}
+
+										// Construct and print stats to be more accurate with real life projects
+										stats.toString();
+										resolve();
+									};
+
 									if (GENERATE_PROFILE) {
 										await withProfiling(
 											benchName,
-											async () => (watching = await runWatch(webpack, config))
+											async () =>
+												(watching = await runWatch(
+													webpack,
+													config,
+													watchCallback
+												))
 										);
 									} else {
-										watching = await runWatch(webpack, config);
+										watching = await runWatch(webpack, config, watchCallback);
 									}
 
-									watching.compiler.hooks.afterDone.tap(
-										"WatchingBenchmarkPlugin",
-										(stats) => {
-											if (watchingResolve) {
-												watchingResolve(stats);
-											}
-										}
-									);
-								},
-								async afterEach() {
+									// Make an extra fs call to warn up filesystem caches
+									// Also wait a first run callback
 									await new Promise((resolve, reject) => {
-										writeFile(entry, originalEntryContent, (err) => {
-											if (err) {
-												reject(err);
-												return;
-											}
+										writeFile(
+											entry,
+											`${originalEntryContent};console.log('watch test')`,
+											(err) => {
+												if (err) {
+													reject(err);
+													return;
+												}
 
-											resolve();
-										});
+												resolve();
+											}
+										);
 									});
+
+									await promise;
 								},
 								async afterAll() {
+									// Close watching
 									await new Promise((resolve, reject) => {
 										if (watching) {
 											watching.close((closeErr) => {
@@ -654,6 +693,18 @@ async function registerSuite(bench, test, baselines) {
 												resolve();
 											});
 										}
+									});
+
+									// Write original content
+									await new Promise((resolve, reject) => {
+										writeFile(entry, originalEntryContent, (err) => {
+											if (err) {
+												reject(err);
+												return;
+											}
+
+											resolve();
+										});
 									});
 								}
 							}
