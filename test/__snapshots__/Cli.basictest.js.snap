@@ -4748,6 +4748,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-extract-source-map": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable extracting source map.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/Disable extracting source map.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
   "module-rules-include": Object {
     "configs": Array [
       Object {

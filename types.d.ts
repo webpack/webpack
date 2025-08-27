@@ -10714,6 +10714,11 @@ declare interface ModuleSettings {
 	type?: string;
 
 	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+
+	/**
 	 * Options for the resolver.
 	 */
 	resolve?: ResolveOptions;
@@ -11020,6 +11025,7 @@ declare class NormalModule extends Module {
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
 	loaders: LoaderItem[];
+	extractSourceMap?: boolean;
 	error: null | WebpackError;
 
 	/**
@@ -11169,6 +11175,11 @@ declare interface NormalModuleCreateData {
 	 * options used for resolving requests from this module
 	 */
 	resolveOptions?: ResolveOptions;
+
+	/**
+	 * enable/disable extracting source map
+	 */
+	extractSourceMap?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -15079,6 +15090,11 @@ declare interface RuleSetRule {
 		| ((value: string) => boolean)
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
+
+	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
 
 	/**
 	 * The options for the module generator.

@@ -4734,6 +4734,10 @@
             }
           ]
         },
+        "extractSourceMap": {
+          "description": "Enable/Disable extracting source map.",
+          "type": "boolean"
+        },
         "generator": {
           "description": "The options for the module generator.",
           "type": "object"
