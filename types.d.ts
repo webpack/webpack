@@ -1005,14 +1005,7 @@ declare const CIRCULAR_CONNECTION: unique symbol;
 declare class CacheClass {
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<
-			[
-				string,
-				null | Etag,
-				((result: any, callback: (err?: Error) => void) => void)[]
-			],
-			any
-		>;
+		get: AsyncSeriesBailHook<[string, null | Etag, GotHandler<any>[]], any>;
 		store: AsyncParallelHook<[string, null | Etag, any]>;
 		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
 		beginIdle: SyncHook<[]>;
@@ -1276,13 +1269,19 @@ declare class Chunk {
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string | number, Record<string, (string | number)[]>>;
+	): ChunkChildIdsByOrdersMapByData;
 	hasChildByOrder(
 		chunkGraph: ChunkGraph,
 		type: string,
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): boolean;
+}
+declare interface ChunkChildIdsByOrdersMap {
+	[index: string]: (string | number)[];
+}
+declare interface ChunkChildIdsByOrdersMapByData {
+	[index: string]: ChunkChildIdsByOrdersMap;
 }
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
@@ -1341,17 +1340,17 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		includeAllChunks?: boolean
-	): Record<string | number, (string | number)[]>;
+	): ChunkModuleIdMap;
 	getChunkModuleRenderedHashMap(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		hashLength?: number,
 		includeAllChunks?: boolean
-	): Record<string | number, Record<string | number, string>>;
+	): ChunkModuleHashMap;
 	getChunkConditionMap(
 		chunk: Chunk,
 		filterFn: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string | number, boolean>;
+	): Record<ChunkId, boolean>;
 	hasModuleInGraph(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -1411,8 +1410,8 @@ declare class ChunkGraph {
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
 	getModuleId(module: Module): null | string | number;
 	setModuleId(module: Module, id: ModuleId): void;
-	getRuntimeId(runtime: string): string | number;
-	setRuntimeId(runtime: string, id: string | number): void;
+	getRuntimeId(runtime: string): RuntimeId;
+	setRuntimeId(runtime: string, id: RuntimeId): void;
 	hasModuleHashes(module: Module, runtime: RuntimeSpec): boolean;
 	getModuleHash(module: Module, runtime: RuntimeSpec): string;
 	getRenderedModuleHash(module: Module, runtime: RuntimeSpec): string;
@@ -1598,8 +1597,16 @@ declare interface ChunkMaps {
 	contentHash: Record<string | number, Record<string, string>>;
 	name: Record<string | number, string>;
 }
+declare interface ChunkModuleHashMap {
+	[index: number]: IdToHashMap;
+	[index: string]: IdToHashMap;
+}
 declare interface ChunkModuleHashes {
 	[index: string]: string;
+}
+declare interface ChunkModuleIdMap {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
 }
 declare class ChunkModuleIdRangePlugin {
 	constructor(options: ChunkModuleIdRangePluginOptions);
@@ -1923,6 +1930,7 @@ type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
 	Map<"filename", string> &
 	Map<"assetInfo", AssetInfo> &
 	Map<"fullContentHash", string> &
+	Map<"share-init", [{ shareScope: string; initStage: number; init: string }]> &
 	Map<string, any>;
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
@@ -2203,7 +2211,7 @@ declare class Compilation {
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
-	valueCacheVersions: Map<string, string | Set<string>>;
+	valueCacheVersions: Map<string, ValueCacheVersion>;
 	requestShortener: RequestShortener;
 	compilerPath: string;
 	logger: WebpackLogger;
@@ -3352,11 +3360,11 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<
 			[BeforeContextResolveData],
-			BeforeContextResolveData
+			false | void | BeforeContextResolveData
 		>;
 		afterResolve: AsyncSeriesWaterfallHook<
 			[AfterContextResolveData],
-			AfterContextResolveData
+			false | void | AfterContextResolveData
 		>;
 		contextModuleFiles: SyncWaterfallHook<[string[]], string[]>;
 		alternatives: FakeHook<
@@ -3413,12 +3421,18 @@ declare interface ContextOptions {
 declare class ContextReplacementPlugin {
 	constructor(
 		resourceRegExp: RegExp,
-		newContentResource?: string | boolean | RegExp | ((context?: any) => void),
+		newContentResource?:
+			| string
+			| boolean
+			| RegExp
+			| ((context: BeforeContextResolveData | AfterContextResolveData) => void),
 		newContentRecursive?: boolean | RegExp | NewContentCreateContextMap,
 		newContentRegExp?: RegExp
 	);
 	resourceRegExp: RegExp;
-	newContentCallback?: (context?: any) => void;
+	newContentCallback?: (
+		context: BeforeContextResolveData | AfterContextResolveData
+	) => void;
 	newContentResource?: string;
 	newContentCreateContextMap?: (
 		fs: InputFileSystem,
@@ -6000,6 +6014,9 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 }
+declare interface GotHandler<T> {
+	(result: T, callback: () => void): void;
+}
 declare interface GroupConfig<T, R> {
 	getKeys: (item: T) => undefined | string[];
 	createGroup: (key: string, children: (T | R)[], items: T[]) => R;
@@ -6292,6 +6309,10 @@ declare interface IStatsBase<T> {
 	mtime: Date;
 	ctime: Date;
 	birthtime: Date;
+}
+declare interface IdToHashMap {
+	[index: number]: string;
+	[index: string]: string;
 }
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
@@ -8496,7 +8517,7 @@ declare interface KnownBuildInfo {
 	/**
 	 * using in NormalModule
 	 */
-	valueDependencies?: Map<string, string | Set<string>>;
+	valueDependencies?: Map<string, ValueCacheVersion>;
 
 	/**
 	 * using in NormalModule
@@ -8608,6 +8629,10 @@ declare interface KnownHooks {
 	 * result hook
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
+}
+declare interface KnownMeta {
+	importVarMap?: Map<Module, string>;
+	deferredImportVarMap?: Map<Module, string>;
 }
 declare interface KnownNormalizedStatsOptions {
 	context: string;
@@ -9808,6 +9833,14 @@ declare interface MergeDuplicateChunksPluginOptions {
 	 */
 	stage?: number;
 }
+type Meta = KnownMeta &
+	Record<
+		| typeof idsSymbolCommonJsExportRequireDependency
+		| typeof idsSymbolHarmonyImportSpecifierDependency
+		| typeof idsSymbolHarmonyExportImportedSpecifierDependency,
+		string[]
+	> &
+	Record<string, any>;
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
 	options: MinChunkSizePluginOptions;
@@ -10345,13 +10378,13 @@ declare class ModuleGraph {
 	isAsync(module: Module): boolean;
 	isDeferred(module: Module): boolean;
 	setAsync(module: Module): void;
-	getMeta(thing: object): any;
-	getMetaIfExisting(thing: object): any;
+	getMeta(thing: object): Meta;
+	getMetaIfExisting(thing: object): undefined | Meta;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
-	cached<T, R>(
-		fn: (moduleGraph: ModuleGraph, ...args: T[]) => R,
-		...args: T[]
+	cached<T extends any[], R>(
+		fn: (moduleGraph: ModuleGraph, ...args: T) => R,
+		...args: T
 	): R;
 	setModuleMemCaches(
 		moduleMemCaches: Map<Module, WeakTupleMap<any[], any>>
@@ -10926,7 +10959,7 @@ declare class NaturalModuleIdsPlugin {
 declare interface NeedBuildContext {
 	compilation: Compilation;
 	fileSystemInfo: FileSystemInfo;
-	valueCacheVersions: Map<string, string | Set<string>>;
+	valueCacheVersions: Map<string, ValueCacheVersion>;
 }
 declare interface NewContentCreateContextMap {
 	[index: string]: string;
@@ -15404,6 +15437,7 @@ declare class RuntimeChunkPlugin {
 	apply(compiler: Compiler): void;
 }
 type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
+type RuntimeId = string | number;
 declare class RuntimeModule extends Module {
 	constructor(name: string, stage?: number);
 	name: string;
@@ -15896,7 +15930,7 @@ declare abstract class RuntimeValue {
 	get fileDependencies(): true | string[];
 	exec(
 		parser: JavascriptParser,
-		valueCacheVersions: Map<string, string | Set<string>>,
+		valueCacheVersions: Map<string, ValueCacheVersion>,
 		key: string
 	): CodeValuePrimitive;
 	getCacheVersion(): undefined | string;
@@ -17438,6 +17472,7 @@ declare interface UpdateHashContextGenerator {
 	runtime: RuntimeSpec;
 	runtimeTemplate?: RuntimeTemplate;
 }
+type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[];
 type Value = string | number | boolean | RegExp;
@@ -18380,12 +18415,12 @@ declare namespace exports {
 			export let addUsage: (
 				state: ParserState,
 				symbol: null | TopLevelSymbol,
-				usage: string | true | TopLevelSymbol
+				usage: Usage
 			) => void;
 			export let addVariableUsage: (
 				parser: JavascriptParser,
 				name: string,
-				usage: string | true | TopLevelSymbol
+				usage: Usage
 			) => void;
 			export let bailout: (parserState: ParserState) => void;
 			export let enable: (parserState: ParserState) => void;
@@ -18406,7 +18441,7 @@ declare namespace exports {
 			export let inferDependencyUsage: (state: ParserState) => void;
 			export let isDependencyUsedByExports: (
 				dependency: Dependency,
-				usedByExports: boolean | Set<string>,
+				usedByExports: undefined | boolean | Set<string>,
 				moduleGraph: ModuleGraph,
 				runtime: RuntimeSpec
 			) => boolean;
@@ -18889,6 +18924,9 @@ declare namespace exports {
 		LoaderContextDeclarationsIndex as LoaderContext
 	};
 }
+declare const idsSymbolCommonJsExportRequireDependency: unique symbol;
+declare const idsSymbolHarmonyExportImportedSpecifierDependency: unique symbol;
+declare const idsSymbolHarmonyImportSpecifierDependency: unique symbol;
 declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
