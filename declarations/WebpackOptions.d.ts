@@ -4042,6 +4042,7 @@ export interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	[k: string]: any;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).

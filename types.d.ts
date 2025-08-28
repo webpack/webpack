@@ -4903,6 +4903,8 @@ declare interface ExperimentsCommon {
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
 declare interface ExperimentsExtra {
+	[index: string]: any;
+
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
 	 */

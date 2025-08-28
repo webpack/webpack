@@ -965,7 +965,7 @@
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
       "implements": ["#/definitions/ExperimentsCommon"],
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
