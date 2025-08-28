@@ -8588,6 +8588,7 @@ declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
+	treatAsCommonjs?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
 	isCSSModule?: boolean;
