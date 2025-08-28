@@ -4892,11 +4892,6 @@ declare interface ExperimentsCommon {
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
 	 */
 	syncWebAssembly?: boolean;
-
-	/**
-	 * Allow using top-level-await in EcmaScript Modules.
-	 */
-	topLevelAwait?: boolean;
 }
 
 /**

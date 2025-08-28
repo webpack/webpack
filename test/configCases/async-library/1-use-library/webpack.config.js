@@ -14,7 +14,6 @@ module.exports = (env, { testPath }) => ({
 		}
 	},
 	experiments: {
-		topLevelAwait: true,
 		outputModule: true
 	}
 });

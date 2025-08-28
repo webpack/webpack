@@ -67,20 +67,20 @@ describe("Cli", () => {
 
 		test("root boolean", { bail: true }, {}, (e) =>
 			e.toMatchInlineSnapshot(`
-		Object {
-		  "bail": true,
-		}
-	`)
+					Object {
+					  "bail": true,
+					}
+			`)
 		);
 
 		test("root single item of multiple", { entry: "./a.js" }, {}, (e) =>
 			e.toMatchInlineSnapshot(`
-		Object {
-		  "entry": Array [
-		    "./a.js",
-		  ],
-		}
-	`)
+					Object {
+					  "entry": Array [
+					    "./a.js",
+					  ],
+					}
+			`)
 		);
 
 		test(
@@ -116,13 +116,13 @@ describe("Cli", () => {
 
 		test("root multiple items", { entry: ["./a.js", "./b.js"] }, {}, (e) =>
 			e.toMatchInlineSnapshot(`
-		Object {
-		  "entry": Array [
-		    "./a.js",
-		    "./b.js",
-		  ],
-		}
-	`)
+					Object {
+					  "entry": Array [
+					    "./a.js",
+					    "./b.js",
+					  ],
+					}
+			`)
 		);
 
 		test(
@@ -160,12 +160,14 @@ describe("Cli", () => {
 
 		test("nested boolean", { "experiments-top-level-await": true }, {}, (e) =>
 			e.toMatchInlineSnapshot(`
-		Object {
-		  "experiments": Object {
-		    "topLevelAwait": true,
-		  },
-		}
-	`)
+			Array [
+			  Object {
+			    "argument": "experiments-top-level-await",
+			    "path": "",
+			    "type": "unknown-argument",
+			  },
+			]
+		`)
 		);
 
 		test(

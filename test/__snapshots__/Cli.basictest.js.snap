@@ -841,19 +841,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-top-level-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow using top-level-await in EcmaScript Modules.",
-        "multiple": false,
-        "path": "experiments.topLevelAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow using top-level-await in EcmaScript Modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "extends": Object {
     "configs": Array [
       Object {
