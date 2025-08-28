@@ -51,6 +51,30 @@ describe("Validation", () => {
 		});
 	};
 
+	const createTestCaseWithoutError = (name, config, fn) => {
+		it(`should success validation for ${name}`, () => {
+			let errored;
+
+			try {
+				const webpack = require("..");
+
+				webpack(config);
+			} catch (err) {
+				if (err.name === "ValidationError") {
+					throw new Error("Validation didn't success");
+				}
+
+				errored = err;
+
+				return;
+			}
+
+			if (errored) {
+				throw new Error("Validation didn't success");
+			}
+		});
+	};
+
 	createTestCase("undefined configuration", undefined, (msg) =>
 		expect(msg).toMatchInlineSnapshot(`
 		"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
@@ -626,6 +650,10 @@ describe("Validation", () => {
 		`)
 	);
 
+	createTestCaseWithoutError("experiments", {
+		experiments: { unknown: true }
+	});
+
 	describe("did you mean", () => {
 		createTestCase(
 			"module.rules",
@@ -641,6 +669,7 @@ describe("Validation", () => {
 			   Did you mean module.rules?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.splitChunks",
 			{
@@ -655,6 +684,7 @@ describe("Validation", () => {
 			   Did you mean optimization.splitChunks?"
 		`)
 		);
+
 		createTestCase(
 			"module.noParse",
 			{
@@ -669,6 +699,7 @@ describe("Validation", () => {
 			   Did you mean module.noParse?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.moduleIds",
 			{
@@ -685,6 +716,7 @@ describe("Validation", () => {
 			   Did you mean optimization.moduleIds: \\"hashed\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.chunkIds",
 			{
@@ -701,6 +733,7 @@ describe("Validation", () => {
 			   Did you mean optimization.chunkIds: \\"named\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.chunk/moduleIds",
 			{
@@ -717,6 +750,7 @@ describe("Validation", () => {
 			   Did you mean optimization.chunkIds: \\"size\\" and optimization.moduleIds: \\"size\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.idHint",
 			{
