@@ -403,6 +403,7 @@ describe("snapshots", () => {
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
+		    "workerChunkFilename": "[name].js",
 		    "workerChunkLoading": "import-scripts",
 		    "workerPublicPath": "",
 		    "workerWasmLoading": "fetch",
@@ -994,7 +995,9 @@ describe("snapshots", () => {
 		-     "scriptType": false,
 		+     "scriptType": "module",
 		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
 		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkFilename": "[name].mjs",
 		+     "workerChunkLoading": "import",
 	`)
 	);
@@ -1101,6 +1104,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
+		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
+		+     "workerChunkFilename": "[id].bundle.js",
 	`)
 	);
 
@@ -1120,6 +1126,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
+		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
+		+     "workerChunkFilename": "[id].js",
 	`)
 	);
 

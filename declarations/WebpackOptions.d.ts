@@ -633,6 +633,10 @@ export type UniqueName = string;
  */
 export type WebassemblyModuleFilename = string;
 /**
+ * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type WorkerChunkFilename = FilenameTemplate;
+/**
  * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
  */
 export type WorkerPublicPath = string;
@@ -2338,6 +2342,10 @@ export interface Output {
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: WorkerChunkFilename;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
@@ -3868,6 +3876,10 @@ export interface OutputNormalized {
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
+	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: WorkerChunkFilename;
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
