@@ -1,4 +1,4 @@
-name: "Update examples"
+name: Update examples
 
 on:
   schedule:
@@ -12,21 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
+
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: lts/*
-          cache: "yarn"
+          cache: yarn
+
       - run: yarn --frozen-lockfile
+
       - run: yarn link --frozen-lockfile || true
+
       - run: yarn link webpack --frozen-lockfile
+
       - run: yarn build:examples
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ secrets.PAT }}
           delete-branch: true
