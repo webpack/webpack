@@ -2,11 +2,9 @@ name: Github Actions
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,49 +14,61 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: lts/*
-          cache: "yarn"
+          cache: yarn
+
       - run: yarn --frozen-lockfile
+
       - name: Cache prettier result
-        uses: actions/cache@v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: ./node_modules/.cache/prettier/.prettier-cache
           key: lint-prettier-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.prettierrc.js') }}
           restore-keys: lint-prettier-
+
       - name: Cache eslint result
-        uses: actions/cache@v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: .eslintcache
           key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/eslint.config.mjs') }}
           restore-keys: lint-eslint-
+
       - name: Cache cspell result
-        uses: actions/cache@v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: .cspellcache
           key: lint-cspell-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/cspell.json') }}
           restore-keys: lint-cspell-
+
       - run: yarn lint
+
       - name: Validate types using old typescript version
         run: |
           yarn upgrade typescript@5.0 @types/node@20
           yarn --frozen-lockfile
           yarn validate:types
+
   validate-legacy-node:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 10.x
-          cache: "yarn"
+          cache: yarn
+
       # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
       - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
+
       - run: yarn install --production --frozen-lockfile
+
   benchmark:
     strategy:
       fail-fast: false
@@ -69,20 +79,25 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-tags: true
           fetch-depth: 0
+
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: lts/*
-          cache: "yarn"
+          cache: yarn
+
       - run: yarn --frozen-lockfile
+
       - run: yarn link --frozen-lockfile || true
+
       - run: yarn link webpack --frozen-lockfile
+
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@v3
+        uses: CodSpeedHQ/action@76578c2a7ddd928664caa737f0e962e3085d4e7c # v3.8.1
         with:
           run: yarn benchmark --ci
           token: ${{ secrets.CODSPEED_TOKEN }}
@@ -90,42 +105,59 @@ jobs:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
+
   basic:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: lts/*
-          cache: "yarn"
+          cache: yarn
+
       - run: yarn --frozen-lockfile
+
       - run: yarn link --frozen-lockfile || true
+
       - run: yarn link webpack --frozen-lockfile
+
       - run: yarn test:basic --ci
+
   unit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: lts/*
-          cache: "yarn"
+          cache: yarn
+
       - run: yarn --frozen-lockfile
+
       - run: yarn link --frozen-lockfile || true
+
       - run: yarn link webpack --frozen-lockfile
-      - uses: actions/cache@v4
+
+      - name: Cache jest result
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
           restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
-      - uses: codecov/codecov-action@v5
+
+      - name: Codecov
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           flags: unit
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   integration:
     needs: basic
     strategy:
@@ -159,8 +191,9 @@ jobs:
             part: a
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/github-script@v7
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         id: calculate_architecture
         with:
           result-encoding: string
@@ -170,41 +203,53 @@ jobs:
             } else {
               return ''
             }
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node-version }}
           architecture: ${{ steps.calculate_architecture.outputs.result }}
-          cache: "yarn"
+          cache: yarn
+
       # Install old `jest` version and deps for legacy node versions
       - run: |
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
+
       - run: |
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
+
       - run: |
           yarn upgrade cspell@^8.8.4 lint-staged@^15.2.5 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '18.x'
-      # Install main version of our deps
+
       - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
         if: matrix.use_main_branches == '1'
-      # Install dependencies for LTS node versions
+
       - run: yarn --frozen-lockfile
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x'
+
       - run: yarn link --frozen-lockfile || true
+
       - run: yarn link webpack --frozen-lockfile
-      - uses: actions/cache@v4
+
+      - name: Cache jest result
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
           restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
+
       - run: yarn cover:merge
-      - uses: codecov/codecov-action@v5
+
+      - name: Codecov
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           flags: integration
         env:
