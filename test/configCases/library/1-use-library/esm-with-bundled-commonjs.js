@@ -12,6 +12,8 @@ import lib5 from "lib5";
 import lib6, { name as lib6_name, foo as lib6_foo } from "lib6";
 // reexport-define-module-property-cjs
 import lib7, { name as lib7_name, foo as lib7_foo } from "lib7";
+// define-this-exports-cjs
+import lib8, { foo as lib8_foo, name as lib8_name } from "lib8";
 
 it(
 	"should be able to import harmony exports from library (" + NAME + ")",
@@ -41,5 +43,12 @@ it(
 		});
 		expect(lib7_name).toBe("reexport-define-module-property-cjs");
 		expect(lib7_foo).toBe("foo");
+
+		expect(lib8).toMatchObject({
+			foo: "foo",
+			name: "define-this-exports-cjs"
+		});
+		expect(lib8_foo).toBe("foo");
+		expect(lib8_name).toBe("define-this-exports-cjs");
 	}
 );

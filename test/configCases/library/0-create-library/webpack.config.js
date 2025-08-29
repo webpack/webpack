@@ -900,5 +900,19 @@ module.exports = (env, { testPath }) => [
 		experiments: {
 			outputModule: true
 		}
+	},
+	{
+		entry: "./define-this-exports-cjs",
+		output: {
+			uniqueName: "define-this-exports-cjs",
+			filename: "commonjs-bundle-to-esm-8.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
 	}
 ];
