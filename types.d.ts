@@ -11057,6 +11057,7 @@ declare class NormalModule extends Module {
 	loaders: LoaderItem[];
 	extractSourceMap?: boolean;
 	error: null | WebpackError;
+	getResource(): null | string;
 
 	/**
 	 * restore unsafe cache data
