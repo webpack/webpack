@@ -872,5 +872,33 @@ module.exports = (env, { testPath }) => [
 		experiments: {
 			outputModule: true
 		}
+	},
+	{
+		entry: "./define-module-property-cjs",
+		output: {
+			uniqueName: "define-module-property-cjs",
+			filename: "commonjs-bundle-to-esm-6.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./reexport-define-module-property-cjs",
+		output: {
+			uniqueName: "reexport-define-module-property-cjs",
+			filename: "commonjs-bundle-to-esm-7.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
 	}
 ];
