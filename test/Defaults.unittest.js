@@ -99,7 +99,6 @@ describe("snapshots", () => {
 		    "css": undefined,
 		    "deferImport": false,
 		    "futureDefaults": false,
-		    "layers": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "syncWebAssembly": false,

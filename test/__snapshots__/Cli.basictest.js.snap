@@ -675,19 +675,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-layers": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable module layers.",
-        "multiple": false,
-        "path": "experiments.layers",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable module layers.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-lazy-compilation": Object {
     "configs": Array [
       Object {

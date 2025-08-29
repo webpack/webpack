@@ -4879,11 +4879,6 @@ declare interface ExperimentsCommon {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable module layers.
-	 */
-	layers?: boolean;
-
-	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;

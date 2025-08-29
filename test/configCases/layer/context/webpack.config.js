@@ -8,9 +8,6 @@ module.exports = {
 		light: { import: "./light.js", layer: "light" },
 		dark: { import: "./dark.js", layer: "dark" }
 	},
-	experiments: {
-		layers: true
-	},
 	output: {
 		filename: "[name].js"
 	},
