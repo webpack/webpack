@@ -40,8 +40,5 @@ module.exports = {
 				sideEffects: false
 			}
 		]
-	},
-	experiments: {
-		topLevelAwait: true
 	}
 };

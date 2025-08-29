@@ -1024,10 +1024,6 @@
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
-          "type": "boolean"
         }
       }
     },
@@ -1062,10 +1058,6 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -1129,10 +1121,6 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
