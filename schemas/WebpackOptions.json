@@ -1002,10 +1002,6 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
-          "type": "boolean"
-        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1046,10 +1042,6 @@
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
-        },
-        "layers": {
-          "description": "Enable module layers.",
           "type": "boolean"
         },
         "outputModule": {
@@ -1098,10 +1090,6 @@
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
-        },
-        "layers": {
-          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
