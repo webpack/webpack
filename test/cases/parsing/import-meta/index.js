@@ -1,6 +1,6 @@
 const { pathToFileURL } = require("url");
 const url = pathToFileURL(
-	require("path").resolve("./test/cases/esm/import-meta/index.js")
+	require("path").resolve("./test/cases/parsing/import-meta/index.js")
 ).toString();
 const webpackVersion = parseInt(
 	require("../../../../package.json").version,
