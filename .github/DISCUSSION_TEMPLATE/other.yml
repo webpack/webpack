@@ -1,0 +1,23 @@
+labels: ["discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for general discussions that don't fit into Q&A or Ideas categories.
+
+        For bug reports, please use the [issue tracker](https://github.com/webpack/webpack/issues/new/choose).
+        For questions and help, consider using the [Q&A category](https://github.com/webpack/webpack/discussions/categories/q-a).
+
+  - type: textarea
+    attributes:
+      label: Context
+      description: Share your thoughts or any relevant background
+      placeholder: What would you like to discuss?
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: webpack version
+      description: What version of webpack are you using?
+      placeholder: "5.89.0"
