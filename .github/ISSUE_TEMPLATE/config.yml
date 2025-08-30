@@ -6,3 +6,6 @@ contact_links:
   - name: Ask for Help
     url: https://github.com/webpack/webpack/discussions/new?category=q-a
     about: Ask questions and get help from the community
+  - name: Other Discussion
+    url: https://github.com/webpack/webpack/discussions/new?category=general
+    about: General discussions that don't fit other categories
