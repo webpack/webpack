@@ -39,9 +39,9 @@ export default foo;
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!***************************************************!*\
-  !*** ./templates/ lazy ^\.\/.*$ namespace object ***!
-  \***************************************************/
+/*!***********************************************************************!*\
+  !*** ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ***!
+  \***********************************************************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
@@ -358,34 +358,34 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-asset output.js 10.9 KiB [emitted] (name: main)
+asset output.js 11 KiB [emitted] (name: main)
 asset 717.output.js 858 bytes [emitted]
 asset 776.output.js 858 bytes [emitted]
 asset 0.output.js 856 bytes [emitted]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+  > ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() context element ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz.js
 chunk (runtime: main) 717.output.js 38 bytes [rendered]
-  > ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
-  > ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+  > ./foo ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo.js
   ./templates/foo.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
-    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+    import() context element ./foo ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo
+    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo.js
 chunk (runtime: main) 776.output.js 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+  > ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
 chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.48 KiB 8 modules
@@ -404,26 +404,26 @@ asset 717.output.js 130 bytes [emitted] [minimized]
 asset 776.output.js 130 bytes [emitted] [minimized]
 asset 0.output.js 124 bytes [emitted] [minimized]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+  > ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    import() context element ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz.js
 chunk (runtime: main) 717.output.js 38 bytes [rendered]
-  > ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
-  > ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+  > ./foo ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo.js
   ./templates/foo.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    import() context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
-    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+    import() context element ./foo ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo
+    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./foo.js
 chunk (runtime: main) 776.output.js 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+  > ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    import() context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
 chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.48 KiB 8 modules
