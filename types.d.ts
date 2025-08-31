@@ -2891,6 +2891,7 @@ declare class ConcatenationScope {
 	): null | (ModuleReferenceOptions & { index: number });
 	static DEFAULT_EXPORT: string;
 	static NAMESPACE_OBJECT_EXPORT: string;
+	static chunkUsedNames: WeakMap<Chunk, Set<string>>;
 }
 
 /**
