@@ -2314,6 +2314,17 @@ declare class Compilation {
 		callback: (err?: null | WebpackError, result?: null | Module) => void
 	): void;
 	processModuleDependenciesNonRecursive(module: Module): void;
+	factorizeModule(
+		options: FactorizeModuleOptions & { factoryResult?: false },
+		callback: (err?: null | WebpackError, result?: null | Module) => void
+	): void;
+	factorizeModule(
+		options: FactorizeModuleOptions & { factoryResult: true },
+		callback: (
+			err?: null | WebpackError,
+			result?: null | ModuleFactoryResult
+		) => void
+	): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
 		callback: (err?: null | WebpackError, result?: null | Module) => void
@@ -2482,22 +2493,12 @@ declare class Compilation {
 	executeModule(
 		module: Module,
 		options: ExecuteModuleOptions,
-		callback: (err: null | WebpackError, result?: ExecuteModuleResult) => void
+		callback: (
+			err?: null | WebpackError,
+			result?: null | ExecuteModuleResult
+		) => void
 	): void;
 	checkConstraints(): void;
-	factorizeModule: {
-		(
-			options: FactorizeModuleOptions & { factoryResult?: false },
-			callback: (err?: null | WebpackError, result?: null | Module) => void
-		): void;
-		(
-			options: FactorizeModuleOptions & { factoryResult: true },
-			callback: (
-				err?: null | WebpackError,
-				result?: ModuleFactoryResult
-			) => void
-		): void;
-	};
 
 	/**
 	 * Add additional assets to the compilation.
