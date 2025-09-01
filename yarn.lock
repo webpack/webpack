@@ -2116,10 +2116,10 @@ asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
-assemblyscript@^0.28.2:
-  version "0.28.4"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.4.tgz#55d55cb990fe68a712dedfbb6cd296c5e1db2d63"
-  integrity sha512-FHJ1Sm+d1siK6J+sqNUXsl9h9lzSQbnhZxG4X4Vp7LmlwD3DRvW0uk4rB4ekisw0XhrPaIKaFDqkjo1bpHzM6w==
+assemblyscript@^0.28.5:
+  version "0.28.5"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.5.tgz#58ff45a48d9d1264f1650fed4bab1f9c7e048582"
+  integrity sha512-vEbqytGS6Td8zmaW5mpFvVg82iJjQhBHtAx/h8l0bBLyQstlNFvFHly0dHzjtPPcf3cqfh/dtGtfJlgWDj8FQw==
   dependencies:
     binaryen "123.0.0-nightly.20250530"
     long "^5.2.4"
@@ -2278,13 +2278,13 @@ braces@^3.0.3:
   dependencies:
     fill-range "^7.1.1"
 
-browserslist@^4.24.0, browserslist@^4.25.1:
-  version "4.25.3"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.25.3.tgz#9167c9cbb40473f15f75f85189290678b99b16c5"
-  integrity sha512-cDGv1kkDI4/0e5yON9yM5G/0A5u8sf5TnmdX5C9qHzI9PPu++sQ9zjm1k9NiOrf3riY4OkK0zSGqfvJyJsgCBQ==
+browserslist@^4.24.0, browserslist@^4.24.5, browserslist@^4.25.1:
+  version "4.25.4"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.25.4.tgz#ebdd0e1d1cf3911834bab3a6cd7b917d9babf5af"
+  integrity sha512-4jYpcjabC606xJ3kw2QwGEZKX0Aw7sgQdZCvIK9dhVSPh76BKo+C+btT1RRofH7B+8iNpEbgGNVWiLki5q93yg==
   dependencies:
-    caniuse-lite "^1.0.30001735"
-    electron-to-chromium "^1.5.204"
+    caniuse-lite "^1.0.30001737"
+    electron-to-chromium "^1.5.211"
     node-releases "^2.0.19"
     update-browserslist-db "^1.1.3"
 
@@ -2401,10 +2401,10 @@ camelcase@^6.3.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
-caniuse-lite@^1.0.30001735:
-  version "1.0.30001735"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001735.tgz#ba658fd3fd24a4106fd68d5ce472a2c251494dbe"
-  integrity sha512-EV/laoX7Wq2J9TQlyIXRxTJqIw4sxfXS4OYgudGxBYRuTv0q7AM6yMEpU/Vo1I94thg9U6EZ2NfZx9GJq83u7w==
+caniuse-lite@^1.0.30001735, caniuse-lite@^1.0.30001737:
+  version "1.0.30001739"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001739.tgz#b34ce2d56bfc22f4352b2af0144102d623a124f4"
+  integrity sha512-y+j60d6ulelrNSwpPyrHdl+9mJnQzHBr08xm48Qno0nSk4h3Qojh+ziv2qE6rXf4k3tadF4o1J/1tAbVm1NtnA==
 
 ccount@^2.0.0:
   version "2.0.1"
@@ -3042,10 +3042,10 @@ eastasianwidth@^0.2.0:
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
-electron-to-chromium@^1.5.204:
-  version "1.5.205"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.205.tgz#02b538ce3d0e6ef2016458b49309fd1f5be2a2a7"
-  integrity sha512-gBtbT7IgOHu7CwdtIiXwbNRD1l6oG6GAyanmwMCLVqaoGy92Jfe1dSHLiSj8xUEZNxOTIVlXuaAalMMD+S4y0w==
+electron-to-chromium@^1.5.204, electron-to-chromium@^1.5.211:
+  version "1.5.211"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.211.tgz#749317bf9cf894c06f67980940cf8074e5eb08ca"
+  integrity sha512-IGBvimJkotaLzFnwIVgW9/UD/AOJ2tByUmeOrtqBfACSbAw5b1G0XpvdaieKyc7ULmbwXVx+4e4Be8pOPBrYkw==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -3642,7 +3642,7 @@ exit-x@^0.2.2:
   resolved "https://registry.yarnpkg.com/exit-x/-/exit-x-0.2.2.tgz#1f9052de3b8d99a696b10dad5bced9bdd5c3aa64"
   integrity sha512-+I6B/IkJc1o/2tiURyz/ivu/O0nKNEArIUB5O7zBrlDVJr22SCLH3xTeEry428LvFhRzIA1g8izguxJ/gbNcVQ==
 
-expect@30.1.2:
+expect@30.1.2, expect@^30.0.0:
   version "30.1.2"
   resolved "https://registry.yarnpkg.com/expect/-/expect-30.1.2.tgz#094909c2443f76b9e208fafac4a315aaaf924580"
   integrity sha512-xvHszRavo28ejws8FpemjhwswGj4w/BetHIL8cU49u4sGyXDw2+p3YbeDbj6xzlxi6kWTjIRSTJ+9sNXPnF0Zg==
@@ -3651,18 +3651,6 @@ expect@30.1.2:
     "@jest/get-type" "30.1.0"
     jest-matcher-utils "30.1.2"
     jest-message-util "30.1.0"
-    jest-mock "30.0.5"
-    jest-util "30.0.5"
-
-expect@^30.0.0:
-  version "30.0.5"
-  resolved "https://registry.yarnpkg.com/expect/-/expect-30.0.5.tgz#c23bf193c5e422a742bfd2990ad990811de41a5a"
-  integrity sha512-P0te2pt+hHI5qLJkIR+iMvS+lYUZml8rKKsohVHAGY+uClp9XVbdyYNJOIjSRpHVp8s8YqxJCiHUkSYZGr8rtQ==
-  dependencies:
-    "@jest/expect-utils" "30.0.5"
-    "@jest/get-type" "30.0.1"
-    jest-matcher-utils "30.0.5"
-    jest-message-util "30.0.5"
     jest-mock "30.0.5"
     jest-util "30.0.5"
 
