@@ -2262,7 +2262,7 @@ declare class Compilation {
 	warnings: Error[];
 	children: Compilation[];
 	logging: Map<string, LogEntry[]>;
-	dependencyFactories: Map<DepConstructor, ModuleFactory>;
+	dependencyFactories: Map<DependencyConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
 	childrenCounters: Record<string, number>;
 	usedChunkIds: null | Set<string | number>;
@@ -3124,13 +3124,13 @@ declare interface Configuration {
 		| boolean
 		| StatsOptions
 		| "none"
-		| "verbose"
 		| "summary"
 		| "errors-only"
 		| "errors-warnings"
 		| "minimal"
 		| "normal"
-		| "detailed";
+		| "detailed"
+		| "verbose";
 
 	/**
 	 * Environment to build for. An array of environments to build for all of them when possible.
@@ -3781,9 +3781,6 @@ declare class DelegatedPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-}
-declare interface DepConstructor {
-	new (...args: any[]): Dependency;
 }
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
@@ -6444,7 +6441,7 @@ declare interface InfrastructureLogging {
 	/**
 	 * Log level.
 	 */
-	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+	level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
 
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
@@ -6462,7 +6459,7 @@ type InfrastructureLoggingNormalizedWithDefaults = InfrastructureLogging & {
 		rows?: number;
 	};
 	level: NonNullable<
-		undefined | "none" | "error" | "warn" | "info" | "log" | "verbose"
+		undefined | "none" | "verbose" | "error" | "warn" | "info" | "log"
 	>;
 	debug: NonNullable<
 		| undefined
@@ -8668,7 +8665,7 @@ declare interface KnownNormalizedStatsOptions {
 	modulesSpace: number;
 	chunkModulesSpace: number;
 	nestedModulesSpace: number;
-	logging: false | "none" | "error" | "warn" | "info" | "log" | "verbose";
+	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
 }
@@ -8793,8 +8790,8 @@ declare interface KnownStatsError {
 }
 declare interface KnownStatsFactoryContext {
 	type: string;
-	makePathsRelative: (path: string) => string;
 	compilation: Compilation;
+	makePathsRelative: (path: string) => string;
 	rootModules: Set<Module>;
 	compilationFileToChunks: Map<string, Chunk[]>;
 	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
@@ -11437,9 +11434,6 @@ declare interface ObjectEncodingOptions {
 		| "latin1"
 		| "binary"
 		| "hex";
-}
-declare interface ObjectForExtract {
-	[index: string]: any;
 }
 declare interface ObjectSerializer {
 	serialize: (value: any, context: ObjectSerializerContext) => void;
@@ -16788,9 +16782,7 @@ declare abstract class StatsFactory {
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
 declare interface StatsFactoryHooks {
-	extract: HookMap<
-		SyncBailHook<[ObjectForExtract, any, StatsFactoryContext], void>
-	>;
+	extract: HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
 	filter: HookMap<
 		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
 	>;
@@ -16878,7 +16870,18 @@ declare interface StatsOptions {
 	/**
 	 * Add children information.
 	 */
-	children?: boolean;
+	children?:
+		| boolean
+		| StatsOptions
+		| "none"
+		| "summary"
+		| "errors-only"
+		| "errors-warnings"
+		| "minimal"
+		| "normal"
+		| "detailed"
+		| "verbose"
+		| StatsValue[];
 
 	/**
 	 * Display auxiliary assets in chunk groups.
@@ -17132,7 +17135,7 @@ declare interface StatsOptions {
 	/**
 	 * Add logging output.
 	 */
-	logging?: boolean | "none" | "error" | "warn" | "info" | "log" | "verbose";
+	logging?: boolean | "none" | "verbose" | "error" | "warn" | "info" | "log";
 
 	/**
 	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.
@@ -17325,13 +17328,13 @@ type StatsValue =
 	| boolean
 	| StatsOptions
 	| "none"
-	| "verbose"
 	| "summary"
 	| "errors-only"
 	| "errors-warnings"
 	| "minimal"
 	| "normal"
-	| "detailed";
+	| "detailed"
+	| "verbose";
 declare interface StreamChunksOptions {
 	source?: boolean;
 	finalSource?: boolean;

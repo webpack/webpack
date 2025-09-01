@@ -5179,7 +5179,17 @@
         },
         "children": {
           "description": "Add children information.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StatsValue"
+              }
+            },
+            {
+              "$ref": "#/definitions/StatsValue"
+            }
+          ]
         },
         "chunkGroupAuxiliary": {
           "description": "Display auxiliary assets in chunk groups.",
