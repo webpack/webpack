@@ -2228,7 +2228,7 @@ declare class Compilation {
 	moduleMemCaches2?: Map<Module, WeakTupleMap<any[], any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
-	codeGenerationResults: CodeGenerationResults;
+	codeGenerationResults?: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
 	factorizeQueue: AsyncQueue<
