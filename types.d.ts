@@ -13135,7 +13135,7 @@ type ProblemType =
 	| "multiple-values-unexpected"
 	| "invalid-value";
 declare interface ProcessAssetsAdditionalOptions {
-	additionalAssets?: any;
+	additionalAssets?: boolean | ((assets: CompilationAssets) => void);
 }
 declare class Profiler {
 	constructor(inspector: Inspector);
