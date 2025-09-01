@@ -1,0 +1,2 @@
+require('./other-entry.js')
+
