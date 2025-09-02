@@ -2,6 +2,9 @@
 
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @typedef {import("../../../../").Module} Module */
+
+const _SortableSet = require("../../../../lib/util/SortableSet");
 
 class ReorderModulesPlugin {
 	/**
@@ -14,7 +17,9 @@ class ReorderModulesPlugin {
 					/** @type {NormalModule} */
 					(a).request.includes("b.js") ? -1 : 1
 				);
-				compilation.modules = new Set(sortedModules);
+				compilation.modules = /** @type {_SortableSet<Module>} */ (
+					new Set(sortedModules)
+				);
 			});
 		});
 	}
