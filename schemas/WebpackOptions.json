@@ -1017,6 +1017,17 @@
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
+        "strictModeChecks": {
+          "description": "Enable strict mode compatibility checks.",
+          "anyOf": [
+            {
+              "enum": ["warn", "error"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
@@ -1106,6 +1117,17 @@
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
+        },
+        "strictModeChecks": {
+          "description": "Enable strict mode compatibility checks.",
+          "anyOf": [
+            {
+              "enum": ["warn", "error"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",

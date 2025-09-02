@@ -2059,8 +2059,7 @@ declare class Compilation {
 		failedEntry: SyncHook<[Dependency, EntryOptions, Error]>;
 		succeedEntry: SyncHook<[Dependency, EntryOptions, Module]>;
 		dependencyReferencedExports: SyncWaterfallHook<
-			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec],
-			(string[] | ReferencedExport)[]
+			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec]
 		>;
 		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
 		prepareModuleExecution: AsyncParallelHook<
@@ -2176,22 +2175,18 @@ declare class Compilation {
 		needAdditionalSeal: SyncBailHook<[], boolean | void>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
-			[RenderManifestEntry[], RenderManifestOptions],
-			RenderManifestEntry[]
+			[RenderManifestEntry[], RenderManifestOptions]
 		>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<
-			[string, PathData, undefined | AssetInfo],
-			string
-		>;
+		assetPath: SyncWaterfallHook<[string, PathData, undefined | AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean | void>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], boolean | void>;
-		processWarnings: SyncWaterfallHook<[Error[]], Error[]>;
-		processErrors: SyncWaterfallHook<[Error[]], Error[]>;
+		processWarnings: SyncWaterfallHook<[Error[]]>;
+		processErrors: SyncWaterfallHook<[Error[]]>;
 		statsPreset: HookMap<
 			SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>
 		>;
@@ -2585,51 +2580,31 @@ declare interface CompilationAssets {
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, WebAssemblyRenderContext],
-		Source
+		[Source, Module, WebAssemblyRenderContext]
 	>;
 }
 declare interface CompilationHooksCssModulesPlugin {
 	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextCssModulesPlugin],
-		Source
+		[Source, Module, ChunkRenderContextCssModulesPlugin]
 	>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
 	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
+		[Source, Module, ModuleRenderContext]
 	>;
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
-	>;
+	renderModulePackage: SyncWaterfallHook<[Source, Module, ModuleRenderContext]>;
 	renderChunk: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
+		[Source, RenderContextJavascriptModulesPlugin]
 	>;
-	renderMain: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
+	renderMain: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
 	renderContent: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
+		[Source, RenderContextJavascriptModulesPlugin]
 	>;
-	render: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
-	renderStartup: SyncWaterfallHook<
-		[Source, Module, StartupRenderContext],
-		Source
-	>;
-	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext], string>;
+	render: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
+	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
+	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	inlineInRuntimeBailout: SyncBailHook<
 		[Module, Partial<RenderBootstrapContext>],
 		string | void
@@ -3367,19 +3342,15 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			[AfterContextResolveData],
 			false | void | AfterContextResolveData
 		>;
-		contextModuleFiles: SyncWaterfallHook<[string[]], string[]>;
+		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: FakeHook<
 			Pick<
-				AsyncSeriesWaterfallHook<
-					[ContextAlternativeRequest[]],
-					ContextAlternativeRequest[]
-				>,
+				AsyncSeriesWaterfallHook<[ContextAlternativeRequest[]]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
-			[ContextAlternativeRequest[], ContextModuleOptions],
-			ContextAlternativeRequest[]
+			[ContextAlternativeRequest[], ContextModuleOptions]
 		>;
 	}>;
 	resolverFactory: ResolverFactory;
@@ -3635,9 +3606,9 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface CssLoadingRuntimeModulePluginHooks {
-	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
-	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+	createStylesheet: SyncWaterfallHook<[string, Chunk]>;
+	linkPreload: SyncWaterfallHook<[string, Chunk]>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
@@ -4915,6 +4886,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: boolean | "error" | "warn";
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 
@@ -4941,6 +4917,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+
+	/**
+	 * Enable strict mode compatibility checks.
+	 */
+	strictModeChecks?: boolean | "error" | "warn";
 }
 type ExportAllDeclarationJavascriptParser = ExportAllDeclarationImport & {
 	attributes?: ImportAttribute[];
@@ -8382,8 +8363,8 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	static STAGE_TRIGGER: number;
 }
 declare interface JsonpCompilationPluginHooks {
-	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+	linkPreload: SyncWaterfallHook<[string, Chunk]>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class JsonpTemplatePlugin {
 	constructor();
@@ -9296,7 +9277,7 @@ declare interface LimitChunkCountPluginOptions {
 }
 type Literal = SimpleLiteral | RegExpLiteral | BigIntLiteral;
 declare interface LoadScriptCompilationHooks {
-	createScript: SyncWaterfallHook<[string, Chunk], string>;
+	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
@@ -9733,15 +9714,14 @@ declare abstract class MainTemplate {
 		globalHash: { tap: () => void };
 		hotBootstrap: { tap: () => never };
 		bootstrap: SyncWaterfallHook<
-			[string, Chunk, string, ModuleTemplate, DependencyTemplates],
-			string
+			[string, Chunk, string, ModuleTemplate, DependencyTemplates]
 		>;
-		localVars: SyncWaterfallHook<[string, Chunk, string], string>;
-		requireExtensions: SyncWaterfallHook<[string, Chunk, string], string>;
-		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string], string>;
-		get jsonpScript(): SyncWaterfallHook<[string, Chunk], string>;
-		get linkPrefetch(): SyncWaterfallHook<[string, Chunk], string>;
-		get linkPreload(): SyncWaterfallHook<[string, Chunk], string>;
+		localVars: SyncWaterfallHook<[string, Chunk, string]>;
+		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
+		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
+		get jsonpScript(): SyncWaterfallHook<[string, Chunk]>;
+		get linkPrefetch(): SyncWaterfallHook<[string, Chunk]>;
+		get linkPreload(): SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
 	getPublicPath: (options: PathData) => string;
@@ -11119,11 +11099,6 @@ declare interface NormalModuleCompilationHooks {
 				undefined | PreparsedAst
 			],
 			NormalModule
-		],
-		[
-			string | Buffer,
-			undefined | string | RawSourceMap,
-			undefined | PreparsedAst
 		]
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
@@ -11233,8 +11208,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Module,
 				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
 				ResolveData
-			],
-			Module
+			]
 		>;
 		createParser: HookMap<SyncBailHook<[ParserOptions], void | ParserClass>>;
 		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
@@ -14906,10 +14880,7 @@ declare interface ResolverCache {
 declare abstract class ResolverFactory {
 	hooks: Readonly<{
 		resolveOptions: HookMap<
-			SyncWaterfallHook<
-				[ResolveOptionsWithDependencyType],
-				ResolveOptionsWithDependencyType
-			>
+			SyncWaterfallHook<[ResolveOptionsWithDependencyType]>
 		>;
 		resolver: HookMap<
 			SyncHook<
@@ -17305,7 +17276,7 @@ declare interface StatsPrintHooks {
 	print: HookMap<
 		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
 	>;
-	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext], string>>;
+	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 }
 declare abstract class StatsPrinter {
 	hooks: StatsPrintHooks;
