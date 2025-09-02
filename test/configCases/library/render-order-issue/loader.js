@@ -1,3 +1,10 @@
+"use strict";
+
+/** @typedef {import("../../../../types").LoaderDefinition} LoaderDefinition */
+
+/**
+ * @type {LoaderDefinition}
+ */
 module.exports = function loader(code) {
   const request = this.resourcePath;
   const callback = this.async();
