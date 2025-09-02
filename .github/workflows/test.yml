@@ -99,7 +99,7 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@76578c2a7ddd928664caa737f0e962e3085d4e7c # v3.8.1
         with:
-          run: yarn benchmark --ci
+          run: node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping test/BenchmarkTestCases.benchmark.mjs --ci
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
