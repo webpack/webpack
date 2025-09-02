@@ -1,5 +1,6 @@
 "use strict";
 
+/** @typedef {import("webpack").CodeGenerationResults} CodeGenerationResults */
 /** @typedef {import("webpack-sources").Source} Source */
 
 /** @type {import("../../../../").Configuration} */
@@ -28,10 +29,9 @@ module.exports = {
 						() => {
 							for (const module of compilation.modules) {
 								if (module.type === "json") {
-									const { sources } = compilation.codeGenerationResults.get(
-										module,
-										"main"
-									);
+									const { sources } =
+										/** @type {CodeGenerationResults} */
+										(compilation.codeGenerationResults).get(module, "main");
 									const source =
 										/** @type {Source} */
 										(sources.get("javascript"));

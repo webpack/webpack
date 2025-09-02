@@ -2583,7 +2583,7 @@ export interface StatsOptions {
 	/**
 	 * Add children information.
 	 */
-	children?: boolean;
+	children?: StatsValue[] | StatsValue;
 	/**
 	 * Display auxiliary assets in chunk groups.
 	 */

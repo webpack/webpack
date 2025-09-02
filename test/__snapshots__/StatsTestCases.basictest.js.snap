@@ -561,6 +561,35 @@ ERROR in webpack error
 error cause (webpack x.x.x) compiled with 6 errors and 6 warnings in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for child-compiler 1`] = `
+"asset child1.js X bytes [emitted]
+asset child2.js X bytes [emitted]
+asset parent.js X bytes [emitted] (name: parent)
+./parent.js X bytes [built] [code generated]
+  PublicPath: auto
+  asset child1.js X bytes {12} [cached] (name: child1)
+  Entrypoint child1 = child1.js
+  chunk {12} (runtime: child1) child1.js (child1) X bytes [entry] [rendered]
+    > ./child1 child1
+  ./child1.js [84] X bytes {12} [depth 0] [built] [code generated]
+    [no exports used]
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    entry ./child1 child1
+    
+  Child first compiled successfully
+
+  1 asset
+  1 module
+  Child second compiled successfully
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value.
+Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
 "asset child.js X bytes [emitted]
 asset parent.js X bytes [emitted] (name: parent)
