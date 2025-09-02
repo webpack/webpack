@@ -609,7 +609,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: TODO) => string)"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -965,7 +965,7 @@
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
       "implements": ["#/definitions/ExperimentsCommon"],
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
@@ -1002,10 +1002,6 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
-          "type": "boolean"
-        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1035,10 +1031,6 @@
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
-          "type": "boolean"
         }
       }
     },
@@ -1063,20 +1055,12 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
-          "type": "boolean"
-        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -1119,10 +1103,6 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
-          "type": "boolean"
-        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1151,10 +1131,6 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -2161,7 +2137,7 @@
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "((server: import(\"net\").Server) => void)"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
             }
           ]
         },
@@ -2949,9 +2925,6 @@
             "anyOf": [
               {
                 "enum": ["..."]
-              },
-              {
-                "$ref": "#/definitions/Falsy"
               },
               {
                 "$ref": "#/definitions/WebpackPluginInstance"
@@ -4085,6 +4058,21 @@
         ]
       }
     },
+    "PluginsNormalized": {
+      "description": "Add additional plugins to the compiler.",
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/WebpackPluginInstance"
+          },
+          {
+            "$ref": "#/definitions/WebpackPluginFunction"
+          }
+        ]
+      }
+    },
     "Profile": {
       "description": "Capture timing information for each module.",
       "type": "boolean"
@@ -4744,6 +4732,10 @@
             }
           ]
         },
+        "extractSourceMap": {
+          "description": "Enable/Disable extracting source map.",
+          "type": "boolean"
+        },
         "generator": {
           "description": "The options for the module generator.",
           "type": "object"
@@ -5019,6 +5011,21 @@
       "properties": {
         "buildDependencies": {
           "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "contextModule": {
+          "description": "Options for snapshotting the context module to determine if it needs to be built again.",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -5887,7 +5894,7 @@
           "$ref": "#/definitions/Performance"
         },
         "plugins": {
-          "$ref": "#/definitions/Plugins"
+          "$ref": "#/definitions/PluginsNormalized"
         },
         "profile": {
           "$ref": "#/definitions/Profile"

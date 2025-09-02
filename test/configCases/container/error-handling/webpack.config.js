@@ -22,8 +22,5 @@ module.exports = {
 				invalid: "./invalid.js"
 			}
 		})
-	],
-	experiments: {
-		topLevelAwait: true
-	}
+	]
 };

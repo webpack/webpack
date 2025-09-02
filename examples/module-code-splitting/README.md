@@ -246,7 +246,7 @@ var e,t,o={},r={};function n(e){var t=r[e];if(void 0!==t)return t.exports;var i=
 
 ```
 asset output.js 6.71 KiB [emitted] [javascript module] (name: main)
-asset 1.output.js 1.39 KiB [emitted] [javascript module]
+asset 1.output.js 1.34 KiB [emitted] [javascript module]
 chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.11 KiB 7 modules

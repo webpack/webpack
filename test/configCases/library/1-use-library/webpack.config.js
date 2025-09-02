@@ -718,6 +718,14 @@ module.exports = (env, { testPath }) => [
 			lib6: path.resolve(
 				testPath,
 				"../0-create-library/commonjs-bundle-to-esm-6.mjs"
+			),
+			lib7: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-7.mjs"
+			),
+			lib8: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-8.mjs"
 			)
 		},
 		externalsType: "module-import",

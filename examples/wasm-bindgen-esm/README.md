@@ -30,7 +30,8 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pkg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pkg */ 1);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_pkg__WEBPACK_IMPORTED_MODULE_0__]);
-_pkg__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+_pkg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
 
 
 document.write((0,_pkg__WEBPACK_IMPORTED_MODULE_0__.greeting)('Bob'));
@@ -57,7 +58,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _hi_wasm_bg_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hi_wasm_bg.wasm */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_hi_wasm_bg_wasm__WEBPACK_IMPORTED_MODULE_0__]);
-_hi_wasm_bg_wasm__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+_hi_wasm_bg_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
 
 
 let WASM_VECTOR_LEN = 0;
@@ -377,7 +379,7 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 
 ```
 asset ffe21e855d11d22ab54f.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 13.6 KiB [emitted] (name: main)
+asset output.js 13.7 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.72 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.72 KiB 6 modules

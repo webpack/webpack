@@ -675,19 +675,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-layers": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable module layers.",
-        "multiple": false,
-        "path": "experiments.layers",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable module layers.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-lazy-compilation": Object {
     "configs": Array [
       Object {
@@ -861,19 +848,6 @@ Object {
       },
     ],
     "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-top-level-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow using top-level-await in EcmaScript Modules.",
-        "multiple": false,
-        "path": "experiments.topLevelAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow using top-level-await in EcmaScript Modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4770,6 +4744,19 @@ Object {
     "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "module-rules-extract-source-map": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable extracting source map.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/Disable extracting source map.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "module-rules-include": Object {
     "configs": Array [
@@ -8846,6 +8833,32 @@ Object {
         "description": "Use timestamps of the files/directories to determine invalidation.",
         "multiple": false,
         "path": "snapshot.buildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-context-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-context-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.timestamp",
         "type": "boolean",
       },
     ],

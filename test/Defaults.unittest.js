@@ -99,11 +99,9 @@ describe("snapshots", () => {
 		    "css": undefined,
 		    "deferImport": false,
 		    "futureDefaults": false,
-		    "layers": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
-		    "topLevelAwait": true,
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
@@ -651,6 +649,9 @@ describe("snapshots", () => {
 		  "snapshot": Object {
 		    "buildDependencies": Object {
 		      "hash": true,
+		      "timestamp": true,
+		    },
+		    "contextModule": Object {
 		      "timestamp": true,
 		    },
 		    "immutablePaths": Array [],

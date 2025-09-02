@@ -239,7 +239,6 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -513,7 +512,6 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -684,7 +682,7 @@ asset pageA.js 10.7 KiB [emitted] (name: pageA)
 asset pageB.js 10.6 KiB [emitted] (name: pageB)
 asset shared_js.js 515 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
-Entrypoint pageA 11.1 KiB = commons.js 370 bytes pageA.js 10.7 KiB
+Entrypoint pageA 11 KiB = commons.js 370 bytes pageA.js 10.7 KiB
 Entrypoint pageB 11 KiB = commons.js 370 bytes pageB.js 10.6 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
@@ -695,15 +693,15 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.86 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.86 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageB pageB
@@ -723,12 +721,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 2.16 KiB [emitted] [minimized] (name: pageA)
-asset pageB.js 2.13 KiB [emitted] [minimized] (name: pageB)
+asset pageA.js 2.14 KiB [emitted] [minimized] (name: pageA)
+asset pageB.js 2.12 KiB [emitted] [minimized] (name: pageB)
 asset shared_js.js 125 bytes [emitted] [minimized]
 asset commons.js 92 bytes [emitted] [minimized] (name: commons) (id hint: commons)
-Entrypoint pageA 2.25 KiB = commons.js 92 bytes pageA.js 2.16 KiB
-Entrypoint pageB 2.22 KiB = commons.js 92 bytes pageB.js 2.13 KiB
+Entrypoint pageA 2.23 KiB = commons.js 92 bytes pageA.js 2.14 KiB
+Entrypoint pageB 2.21 KiB = commons.js 92 bytes pageB.js 2.12 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -738,15 +736,15 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.86 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [no exports used]
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.86 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [no exports used]
     entry ./pageB pageB

@@ -556,7 +556,6 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -1157,7 +1156,6 @@ __webpack_require__.d(exports, {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -1700,7 +1698,6 @@ __webpack_require__.d(exports, {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -2179,11 +2176,11 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.5 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.64 KiB [emitted] [minimized] (name: app)
+  asset app.js 7.62 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.44 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19 KiB 13 modules
+    runtime modules 18.9 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2207,11 +2204,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.44 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.31 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.3 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 489 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.1 KiB 11 modules
+    runtime modules 16 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2233,7 +2230,7 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 6.85 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 6.84 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 533 bytes [emitted] [minimized]
   asset src-c_Component_js.js 488 bytes [emitted] [minimized]

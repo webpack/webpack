@@ -337,7 +337,6 @@ const AlternativeCreateUserAction = async name => {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -522,7 +521,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_db_connection_js__WEBPACK_IMPORTED_MODULE_0__]);
-_db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+_db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
 
 
 const createUser = async name => {
@@ -579,7 +579,7 @@ __webpack_async_result__();
 ## in production mode:
 
 ```javascript
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{312:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");t()}catch(a){t(a)}},1)},560:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>m});var c=s(312),n=a([c]);c=(n.then?(await n)():n)[0];const m=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}})}}]);
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{312:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");t()}catch(a){t(a)}},1)},560:(a,e,s)=>{s.a(a,async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>i});var c=s(312),n=a([c]),m=n.then?(await n)():n;c=m[0];const i=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}})}}]);
 ```
 
 # Info
@@ -588,7 +588,7 @@ __webpack_async_result__();
 
 ```
 asset output.js 15.1 KiB [emitted] (name: main)
-asset UserApi_js.output.js 2.97 KiB [emitted]
+asset UserApi_js.output.js 3.05 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
@@ -598,9 +598,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.57 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.59 KiB 9 modules
+  runtime modules 7.57 KiB 9 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -612,8 +612,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.89 KiB [emitted] [minimized] (name: main)
-asset UserApi_js.output.js 532 bytes [emitted] [minimized]
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
+asset UserApi_js.output.js 534 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
@@ -622,9 +622,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.57 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.59 KiB 9 modules
+  runtime modules 7.57 KiB 9 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]

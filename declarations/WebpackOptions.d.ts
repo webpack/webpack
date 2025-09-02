@@ -517,7 +517,7 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| ((context: TODO) => string);
+	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
@@ -889,6 +889,13 @@ export type OptimizationRuntimeChunkNormalized =
 			 */
 			name?: import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
 	  };
+/**
+ * Add additional plugins to the compiler.
+ */
+export type PluginsNormalized = (
+	| WebpackPluginInstance
+	| WebpackPluginFunction
+)[];
 
 /**
  * Options object as provided by the user.
@@ -1460,6 +1467,10 @@ export interface RuleSetRule {
 	 * Shortcut for resource.exclude.
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
+	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
 	/**
 	 * The options for the module generator.
 	 */
@@ -2469,6 +2480,19 @@ export interface SnapshotOptions {
 		timestamp?: boolean;
 	};
 	/**
+	 * Options for snapshotting the context module to determine if it needs to be built again.
+	 */
+	contextModule?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
 	immutablePaths?: (RegExp | string)[];
@@ -3193,10 +3217,6 @@ export interface ExperimentsCommon {
 	 */
 	futureDefaults?: boolean;
 	/**
-	 * Enable module layers.
-	 */
-	layers?: boolean;
-	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
@@ -3204,10 +3224,6 @@ export interface ExperimentsCommon {
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
 	 */
 	syncWebAssembly?: boolean;
-	/**
-	 * Allow using top-level-await in EcmaScript Modules.
-	 */
-	topLevelAwait?: boolean;
 }
 /**
  * Data object passed as argument when a function is set for 'externals'.
@@ -3467,7 +3483,7 @@ export interface LazyCompilationDefaultBackendOptions {
 	listen?:
 		| number
 		| import("net").ListenOptions
-		| ((server: import("net").Server) => void);
+		| import("../lib/hmr/lazyCompilationBackend").Listen;
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
 	 */
@@ -3602,7 +3618,7 @@ export interface OptimizationNormalized {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
+	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
@@ -3956,7 +3972,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins: Plugins;
+	plugins: PluginsNormalized;
 	/**
 	 * Capture timing information for each module.
 	 */
@@ -4022,6 +4038,7 @@ export interface ExperimentsExtra {
 	 * Enable strict mode compatibility checks.
 	 */
 	strictModeChecks?: ("warn" | "error") | boolean;
+	[k: string]: any;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).

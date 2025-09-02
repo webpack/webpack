@@ -82,6 +82,16 @@ describe("Persistent Caching", () => {
 			);
 		});
 
+	const getCacheFileTimes = async () => {
+		const cacheFiles = (await readdir(cachePath)).sort();
+		return new Map(
+			cacheFiles.map((f) => [
+				f,
+				fs.statSync(path.join(cachePath, f)).mtime.toString()
+			])
+		);
+	};
+
 	const execute = () => {
 		const cache = {};
 		const require = (name) => {
@@ -230,11 +240,7 @@ sum([1,2,3])
 			`
 		});
 		await compile({ entry: "./src/main.js" });
-		const firstCacheFiles = (await readdir(cachePath)).sort();
-		// cSpell:words Mtimes
-		const firstMtimes = firstCacheFiles.map(
-			(f) => fs.statSync(path.join(cachePath, f)).mtime
-		);
+		const firstCacheFileTimes = await getCacheFileTimes();
 
 		await updateSrc({
 			"main.js": `
@@ -248,11 +254,29 @@ import 'lodash';
 				readonly: true
 			}
 		});
-		const cacheFiles = (await readdir(cachePath)).sort();
-		expect(cacheFiles).toStrictEqual(firstCacheFiles);
-		expect(
-			firstCacheFiles.map((f) => fs.statSync(path.join(cachePath, f)).mtime)
-			// cSpell:words Mtimes
-		).toStrictEqual(firstMtimes);
+		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
+	}, 20000);
+
+	it("should not invalidate cache files if timestamps changed with dynamic import()", async () => {
+		const configAdditions = {
+			entry: "./src/main.js",
+			snapshot: {
+				resolve: { hash: true },
+				module: { hash: true },
+				contextModule: { hash: true }
+			}
+		};
+		await updateSrc({
+			"newer.js": "export default 2;",
+			// eslint-disable-next-line no-template-curly-in-string
+			"main.js": 'const f = "newer.js"; import(`./${f}`);'
+		});
+		await compile(configAdditions);
+		const firstCacheFileTimes = await getCacheFileTimes();
+
+		await utimes(path.resolve(srcPath, "newer.js"), new Date(), new Date());
+
+		await compile(configAdditions);
+		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 });
