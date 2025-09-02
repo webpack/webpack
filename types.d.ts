@@ -6010,8 +6010,8 @@ declare interface GotHandler<T> {
 }
 declare interface GroupConfig<T, R> {
 	getKeys: (item: T) => undefined | string[];
-	createGroup: (key: string, children: (T | R)[], items: T[]) => R;
 	getOptions?: (name: string, items: T[]) => GroupOptions;
+	createGroup: (key: string, children: T[], items: T[]) => R;
 }
 declare interface GroupOptions {
 	groupChildren?: boolean;
