@@ -2253,7 +2253,7 @@ declare class Compilation {
 	chunkGroups: ChunkGroup[];
 	namedChunkGroups: Map<string, ChunkGroup>;
 	namedChunks: Map<string, Chunk>;
-	modules: Set<Module>;
+	modules: SortableSet<Module>;
 	records: null | Records;
 	additionalChunkAssets: string[];
 	assets: CompilationAssets;

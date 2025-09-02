@@ -10445,6 +10445,113 @@ export { __webpack_exports__HomeLayout as HomeLayout, __webpack_exports__a as a 
 "
 `;
 
+exports[`ConfigTestCases library render-order-issue render-order-issue should compile 1`] = `
+"import { v } from \\"externals0\\";
+import { v as v_0 } from \\"externals1\\";
+/******/ var __webpack_modules__ = ({
+
+/***/ \\"./bar.js\\":
+/*!****************************!*\\\\
+  !*** ./bar.js + 1 modules ***!
+  \\\\****************************/
+/***/ (() => {
+
+
+;// external \\"externals0\\"
+
+;// ./bar.js
+
+v;
+
+/***/ }),
+
+/***/ \\"./entry.js\\":
+/*!******************!*\\\\
+  !*** ./entry.js ***!
+  \\\\******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports.entry1 = __webpack_require__(/*! ./entry1.js */ \\"./entry1.js\\")
+module.exports.entry2 = __webpack_require__(/*! ./entry2.js */ \\"./entry2.js\\")
+
+/***/ }),
+
+/***/ \\"./entry1.js\\":
+/*!*******************!*\\\\
+  !*** ./entry1.js ***!
+  \\\\*******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! ./foo */ \\"./foo.js\\")
+module.exports.name = \\"entry1\\"
+
+/***/ }),
+
+/***/ \\"./entry2.js\\":
+/*!*******************!*\\\\
+  !*** ./entry2.js ***!
+  \\\\*******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! ./bar */ \\"./bar.js\\")
+module.exports.name = \\"entry2\\"
+
+/***/ }),
+
+/***/ \\"./foo.js\\":
+/*!****************************!*\\\\
+  !*** ./foo.js + 1 modules ***!
+  \\\\****************************/
+/***/ (() => {
+
+
+;// external \\"externals1\\"
+
+;// ./foo.js
+
+v_0;
+
+/***/ })
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ 
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ // This entry module used 'module' so it can't be inlined
+/******/ var __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
+/******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
+/******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ 
+"
+`;
+
 exports[`ConfigTestCases source-map extract-source-map exported tests should extract source map - 1 1`] = `
 Array [
   "webpack:///./external-source-map.txt",
