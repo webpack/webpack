@@ -13086,7 +13086,7 @@ declare class PrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class PrefixSource extends Source {
-	constructor(prefix: string, source: string | Source | Buffer);
+	constructor(prefix: string, source: string | Buffer | Source);
 	getPrefix(): string;
 	original(): Source;
 	streamChunks(
@@ -18874,11 +18874,12 @@ declare namespace exports {
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
 		ChunkGroup,
+		AssetEmittedInfo,
 		Asset,
 		AssetInfo,
 		EntryOptions,
 		PathData,
-		AssetEmittedInfo,
+		CodeGenerationResults,
 		Entrypoint,
 		MultiCompilerOptions,
 		MultiConfiguration,
