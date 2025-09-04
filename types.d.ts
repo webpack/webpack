@@ -12507,7 +12507,7 @@ declare interface OutputFileSystem {
 			| "binary"
 			| "hex"
 			| ReadStreamOptions
-	) => NodeJS.ReadStream;
+	) => NodeJS.ReadableStream;
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
 	dirname?: (dirname: string) => string;
