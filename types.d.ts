@@ -10094,6 +10094,8 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	getImported(): Imported;
 	setImported(imported: Imported): void;
 	getNamespaceIdentifier(): string;
+	buildIdentifier(ident: string): string;
+	normalizeImported(imported: Imported): Imported;
 	static addToSource<Context>(
 		source: Source,
 		initFragments: MaybeMergeableInitFragment<Context>[],
