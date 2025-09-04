@@ -3468,6 +3468,9 @@ declare interface ContextTimestampAndHash {
 	resolved?: ResolvedContextTimestampAndHash;
 	symlinks?: Set<string>;
 }
+type CreateReadStreamFSImplementation = FSImplementation & {
+	read: (...args: any[]) => any;
+};
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
 type CreateWriteStreamFSImplementation = FSImplementation & {
@@ -12477,10 +12480,10 @@ declare interface Output {
 	workerWasmLoading?: string | false;
 }
 declare interface OutputFileSystem {
-	writeFile: WriteFile;
 	mkdir: Mkdir;
 	readdir?: ReaddirFs;
 	rmdir?: Rmdir;
+	writeFile: WriteFile;
 	unlink?: (
 		pathLike: PathLikeFs,
 		callback: (err: null | NodeJS.ErrnoException) => void
@@ -12488,6 +12491,23 @@ declare interface OutputFileSystem {
 	stat: StatFs;
 	lstat?: LStatFs;
 	readFile: ReadFileFs;
+	createReadStream?: (
+		path: PathLikeFs,
+		options?:
+			| "ascii"
+			| "utf8"
+			| "utf-8"
+			| "utf16le"
+			| "utf-16le"
+			| "ucs2"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "latin1"
+			| "binary"
+			| "hex"
+			| ReadStreamOptions
+	) => NodeJS.ReadStream;
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
 	dirname?: (dirname: string) => string;
@@ -13620,6 +13640,10 @@ declare interface ReadFileTypes {
 		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 }
+type ReadStreamOptions = StreamOptions & {
+	fs?: null | CreateReadStreamFSImplementation;
+	end?: number;
+};
 declare interface ReaddirFs {
 	(
 		path: PathLikeFs,
@@ -17340,6 +17364,28 @@ declare interface StreamChunksOptions {
 	finalSource?: boolean;
 	columns?: boolean;
 }
+declare interface StreamOptions {
+	flags?: string;
+	encoding?:
+		| "ascii"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "ucs2"
+		| "ucs-2"
+		| "base64"
+		| "base64url"
+		| "latin1"
+		| "binary"
+		| "hex";
+	fd?: any;
+	mode?: number;
+	autoClose?: boolean;
+	emitClose?: boolean;
+	start?: number;
+	signal?: null | AbortSignal;
+}
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	constructor(__0: SyncModuleIdsPluginOptions);
@@ -18130,31 +18176,10 @@ type WriteFileOptions =
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
 }
-
-declare interface WriteStreamOptions {
-	flags?: string;
-	encoding?:
-		| "ascii"
-		| "utf8"
-		| "utf-8"
-		| "utf16le"
-		| "utf-16le"
-		| "ucs2"
-		| "ucs-2"
-		| "base64"
-		| "base64url"
-		| "latin1"
-		| "binary"
-		| "hex";
-	fd?: any;
-	mode?: number;
-	autoClose?: boolean;
-	emitClose?: boolean;
-	start?: number;
-	signal?: null | AbortSignal;
+type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
-}
+};
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpackFunction_2<Stats, void>
