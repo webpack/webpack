@@ -5351,6 +5351,9 @@ declare class ExternalModule extends Module {
 		normalModuleFactory: NormalModuleFactory
 	): void;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
+	static getExternalModuleNodeCommonjsInitFragment: (
+		runtimeTemplate: RuntimeTemplate
+	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
