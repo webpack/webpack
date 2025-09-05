@@ -10150,9 +10150,9 @@ exports[`ConfigTestCases css webpack-ignore exported tests should compile 1`] = 
 `;
 
 exports[`ConfigTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should compile 1`] = `
-"import { HomeLayout as lib_HomeLayout_0, a } from \\"externals0\\";
-import { HomeLayout as HomeLayout_0, a as a_0 } from \\"externals1\\";
-import { default as default_0 } from \\"externals2\\";
+"import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals0_a__ } from \\"externals0\\";
+import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals1_a__ } from \\"externals1\\";
+import { default as __WEBPACK_EXTERNAL_MODULE_externals2_default__ } from \\"externals2\\";
 import * as __WEBPACK_EXTERNAL_MODULE_externals3__ from \\"externals3\\";
 import \\"externals4\\";
 /******/ // The require scope
@@ -10195,15 +10195,15 @@ const external_externals3_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals3
 ;// ./lib.js
 
 
-const { HomeLayout: lib_HomeLayout = 123 } = {};
-console.log({ HomeLayout: lib_HomeLayout });
+const { HomeLayout = 123 } = {};
+console.log({ HomeLayout });
 {
-    const { HomeLayout = lib_HomeLayout_0 } = {};
+    const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
     console.log({ HomeLayout });
 }
 (() => {
     {
-        const { HomeLayout = lib_HomeLayout_0 } = {};
+        const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
         console.log({ HomeLayout });
     }
 })()
@@ -10237,12 +10237,12 @@ console.log({ HomeLayout: lib_HomeLayout });
     const HomeLayout_0 = 'HomeLayout_0';
     HomeLayout_0;
 }
-HomeLayout_0;
-a;
-a_0;
-default_0;
+__WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__;
+__WEBPACK_EXTERNAL_MODULE_externals0_a__;
+__WEBPACK_EXTERNAL_MODULE_externals1_a__;
+__WEBPACK_EXTERNAL_MODULE_externals2_default__;
 external_externals3_namespaceObject;
-export { lib_HomeLayout as HomeLayout, a };
+export { HomeLayout, __WEBPACK_EXTERNAL_MODULE_externals0_a__ as a };
 "
 `;
 
@@ -10442,6 +10442,113 @@ externals3__WEBPACK_IMPORTED_MODULE_3__;
 const __webpack_exports__HomeLayout = __webpack_exports__.HomeLayout;
 const __webpack_exports__a = __webpack_exports__.a;
 export { __webpack_exports__HomeLayout as HomeLayout, __webpack_exports__a as a };
+"
+`;
+
+exports[`ConfigTestCases library render-order-issue render-order-issue should compile 1`] = `
+"import { v as __WEBPACK_EXTERNAL_MODULE_externals0_v__ } from \\"externals0\\";
+import { v as __WEBPACK_EXTERNAL_MODULE_externals1_v__ } from \\"externals1\\";
+/******/ var __webpack_modules__ = ({
+
+/***/ \\"./bar.js\\":
+/*!****************************!*\\\\
+  !*** ./bar.js + 1 modules ***!
+  \\\\****************************/
+/***/ (() => {
+
+
+;// external \\"externals0\\"
+
+;// ./bar.js
+
+__WEBPACK_EXTERNAL_MODULE_externals0_v__;
+
+/***/ }),
+
+/***/ \\"./entry.js\\":
+/*!******************!*\\\\
+  !*** ./entry.js ***!
+  \\\\******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports.entry1 = __webpack_require__(/*! ./entry1.js */ \\"./entry1.js\\")
+module.exports.entry2 = __webpack_require__(/*! ./entry2.js */ \\"./entry2.js\\")
+
+/***/ }),
+
+/***/ \\"./entry1.js\\":
+/*!*******************!*\\\\
+  !*** ./entry1.js ***!
+  \\\\*******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! ./foo */ \\"./foo.js\\")
+module.exports.name = \\"entry1\\"
+
+/***/ }),
+
+/***/ \\"./entry2.js\\":
+/*!*******************!*\\\\
+  !*** ./entry2.js ***!
+  \\\\*******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! ./bar */ \\"./bar.js\\")
+module.exports.name = \\"entry2\\"
+
+/***/ }),
+
+/***/ \\"./foo.js\\":
+/*!****************************!*\\\\
+  !*** ./foo.js + 1 modules ***!
+  \\\\****************************/
+/***/ (() => {
+
+
+;// external \\"externals1\\"
+
+;// ./foo.js
+
+__WEBPACK_EXTERNAL_MODULE_externals1_v__;
+
+/***/ })
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ 
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ // This entry module used 'module' so it can't be inlined
+/******/ var __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
+/******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
+/******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ 
 "
 `;
 
