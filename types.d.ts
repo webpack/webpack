@@ -11114,6 +11114,9 @@ declare interface NormalModuleCompilationHooks {
 	readResource: HookMap<
 		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
 	>;
+	readResourceFromURL: HookMap<
+		AsyncSeriesBailHook<[string], null | string | Buffer>
+	>;
 	processResult: SyncWaterfallHook<
 		[
 			[
