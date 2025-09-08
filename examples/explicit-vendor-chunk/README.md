@@ -49,7 +49,7 @@ module.exports = [
 # dist/vendor.js
 
 ```javascript
-var vendor_3fdea2c5a4937b737605;
+var vendor_a0b82f3299842d06524c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -129,7 +129,7 @@ module.exports = "Vendor2";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_3fdea2c5a4937b737605 = __webpack_exports__;
+/******/ 	vendor_a0b82f3299842d06524c = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -155,18 +155,18 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_3fdea2c5a4937b737605 ***!
+  !*** delegated ./vendor.js from dll-reference vendor_a0b82f3299842d06524c ***!
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_3fdea2c5a4937b737605 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_a0b82f3299842d06524c */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_3fdea2c5a4937b737605" ***!
+  !*** external "vendor_a0b82f3299842d06524c" ***!
   \**********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -174,7 +174,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_3fdea2c5a4937b737
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_3fdea2c5a4937b737605;
+module.exports = vendor_a0b82f3299842d06524c;
 
 /***/ })
 /******/ 	]);

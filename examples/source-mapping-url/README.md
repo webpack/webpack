@@ -1,4 +1,4 @@
-This example demonstrates how to configure Webpack to parse `sourceMappingURL` and extract source maps.
+This example demonstrates various types of source-maps.
 
 # example.js
 
