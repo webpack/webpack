@@ -3825,7 +3825,6 @@ declare interface DependenciesBlockLike {
 declare class Dependency {
 	constructor();
 	weak: boolean;
-	defer?: boolean;
 	optional?: boolean;
 	get type(): string;
 	get category(): string;
@@ -6098,6 +6097,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		defer?: boolean
 	);
 	sourceOrder: number;
+	defer?: boolean;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getModuleExports(__0: DependencyTemplateContext): string;
 	getImportStatement(
