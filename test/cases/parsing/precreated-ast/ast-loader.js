@@ -5,10 +5,11 @@ const acornParser = acorn.Parser;
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source) {
-	/** @type {TODO} */
+	/** @type {acorn.Comment[]} */
 	const comments = [];
 
 	const semicolons = new Set();
+	//@ts-ignore
 	const ast = acornParser.parse(source, {
 		ranges: true,
 		locations: true,

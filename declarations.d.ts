@@ -1,4 +1,3 @@
-type TODO = any;
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;

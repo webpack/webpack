@@ -15,7 +15,6 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
-	BaseNode,
 	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
@@ -32,9 +31,9 @@ import {
 	Directive,
 	DoWhileStatement,
 	EmptyStatement,
-	ExportAllDeclaration as ExportAllDeclarationImport,
+	ExportAllDeclaration,
 	ExportDefaultDeclaration,
-	ExportNamedDeclaration as ExportNamedDeclarationImport,
+	ExportNamedDeclaration,
 	ExportSpecifier,
 	ExpressionStatement,
 	ForInStatement,
@@ -44,7 +43,7 @@ import {
 	FunctionExpression,
 	Identifier,
 	IfStatement,
-	ImportDeclaration as ImportDeclarationImport,
+	ImportDeclaration,
 	ImportDefaultSpecifier,
 	ImportExpression as ImportExpressionImport,
 	ImportNamespaceSpecifier,
@@ -196,7 +195,7 @@ declare interface AdditionalData {
 }
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
-		resource: any;
+		resource: string | string[];
 		resourceQuery?: string;
 		resourceFragment?: string;
 		resolveDependencies: (
@@ -205,7 +204,7 @@ type AfterContextResolveData = ContextResolveData &
 			callback: (
 				err: null | Error,
 				dependencies?: ContextElementDependency[]
-			) => any
+			) => void
 		) => void;
 	};
 declare class AggressiveMergingPlugin {
@@ -623,9 +622,9 @@ declare abstract class BasicEvaluatedExpression {
 	getMemberRanges?: () => [number, number][];
 	expression?:
 		| Program
-		| ImportDeclarationImport
-		| ExportNamedDeclarationImport
-		| ExportAllDeclarationImport
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
 		| ImportExpressionImport
 		| UnaryExpression
 		| ArrayExpression
@@ -854,9 +853,9 @@ declare abstract class BasicEvaluatedExpression {
 	setExpression(
 		expression?:
 			| Program
-			| ImportDeclarationImport
-			| ExportNamedDeclarationImport
-			| ExportAllDeclarationImport
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -2037,12 +2036,25 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
+declare interface CommonJsImportSettings {
+	name?: string;
+	context: string;
+}
 declare interface Comparator<T> {
 	(a: T, b: T): 0 | 1 | -1;
 }
 declare class CompatSource extends Source {
 	constructor(sourceLike: SourceLike);
 	static from(sourceLike: SourceLike): Source;
+}
+declare interface CompatibilitySettings {
+	name: string;
+	declaration: CompatibilitySettingsDeclaration;
+}
+declare interface CompatibilitySettingsDeclaration {
+	updated: boolean;
+	loc: DependencyLocation;
+	range: [number, number];
 }
 declare class Compilation {
 	/**
@@ -2748,7 +2760,7 @@ declare class Compiler {
 			err: null | Error,
 			entries?: Chunk[],
 			compilation?: Compilation
-		) => any
+		) => void
 	): void;
 	purgeInputFileSystem(): void;
 	emitAssets(
@@ -3320,12 +3332,11 @@ declare abstract class ContextDependency extends Dependency {
 	userRequest: string;
 	critical?: string | false;
 	hadGlobalOrStickyRegExp: boolean;
-	request: any;
-	range: any;
-	valueRange: any;
+	request?: string;
+	range?: [number, number];
+	valueRange?: [number, number];
 	inShorthand?: string | boolean;
-	replaces: any;
-	prepend: any;
+	replaces?: { value: string; range: [number, number] }[];
 }
 type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
@@ -3390,7 +3401,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		callback: (
 			err: null | Error,
 			dependencies?: ContextElementDependency[]
-		) => any
+		) => void
 	): void;
 }
 type ContextModuleOptions = ContextOptions & ContextModuleOptionsExtras;
@@ -4342,7 +4353,7 @@ declare interface EffectData {
 	assertions?: ImportAttributes;
 	mimetype?: string;
 	dependency: string;
-	descriptionData?: Record<string, any>;
+	descriptionData?: JsonObjectTypes;
 	compiler?: string;
 	issuer: string;
 	issuerLayer: string;
@@ -4943,9 +4954,6 @@ declare interface ExperimentsNormalizedExtra {
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 }
-type ExportAllDeclarationJavascriptParser = ExportAllDeclarationImport & {
-	attributes?: ImportAttribute[];
-};
 declare abstract class ExportInfo {
 	name: string;
 
@@ -5045,9 +5053,6 @@ declare abstract class ExportInfo {
 		| "not provided";
 	getRenameInfo(): string;
 }
-type ExportNamedDeclarationJavascriptParser = ExportNamedDeclarationImport & {
-	attributes?: ImportAttribute[];
-};
 type ExportPresenceMode = false | 0 | 1 | 2 | 3;
 declare interface ExportSpec {
 	/**
@@ -6120,6 +6125,15 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 		referencedModule: Module
 	): undefined | string | boolean | SortableSet<string>;
 }
+declare interface HarmonySettings {
+	ids: string[];
+	source: string;
+	sourceOrder: number;
+	name: string;
+	await: boolean;
+	attributes?: ImportAttributes;
+	defer?: boolean;
+}
 declare class Hash {
 	constructor();
 
@@ -6341,16 +6355,7 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
-type ImportAttribute = BaseNode & {
-	type: "ImportAttribute";
-	key: Identifier | SimpleLiteral | RegExpLiteral | BigIntLiteral;
-	value: Literal;
-};
 type ImportAttributes = Record<string, string> & {};
-type ImportDeclarationJavascriptParser = ImportDeclarationImport & {
-	attributes?: ImportAttribute[];
-	phase?: "defer";
-};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
 	externalType?: "import" | "module";
@@ -6402,6 +6407,10 @@ declare interface ImportModuleOptions {
 	 * target base uri
 	 */
 	baseUri?: string;
+}
+declare interface ImportSettings {
+	references: string[][];
+	expression: ImportExpressionJavascriptParser;
 }
 type ImportSource =
 	| undefined
@@ -6765,9 +6774,9 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		preStatement: SyncBailHook<
 			[
-				| ImportDeclarationJavascriptParser
-				| ExportNamedDeclarationJavascriptParser
-				| ExportAllDeclarationJavascriptParser
+				| ImportDeclaration
+				| ExportNamedDeclaration
+				| ExportAllDeclaration
 				| FunctionDeclaration
 				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
@@ -6798,9 +6807,9 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		blockPreStatement: SyncBailHook<
 			[
-				| ImportDeclarationJavascriptParser
-				| ExportNamedDeclarationJavascriptParser
-				| ExportAllDeclarationJavascriptParser
+				| ImportDeclaration
+				| ExportNamedDeclaration
+				| ExportAllDeclaration
 				| FunctionDeclaration
 				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
@@ -6831,9 +6840,9 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		statement: SyncBailHook<
 			[
-				| ImportDeclarationJavascriptParser
-				| ExportNamedDeclarationJavascriptParser
-				| ExportAllDeclarationJavascriptParser
+				| ImportDeclaration
+				| ExportNamedDeclaration
+				| ExportAllDeclaration
 				| FunctionDeclaration
 				| MaybeNamedFunctionDeclaration
 				| VariableDeclaration
@@ -6886,33 +6895,24 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<
-			[ImportDeclarationJavascriptParser, ImportSource],
-			boolean | void
-		>;
+		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
 		importSpecifier: SyncBailHook<
-			[ImportDeclarationJavascriptParser, ImportSource, null | string, string],
+			[ImportDeclaration, ImportSource, null | string, string],
 			boolean | void
 		>;
 		export: SyncBailHook<
-			[ExportNamedDeclarationJavascriptParser | ExportDefaultDeclaration],
+			[ExportNamedDeclaration | ExportDefaultDeclaration],
 			boolean | void
 		>;
 		exportImport: SyncBailHook<
-			[
-				(
-					| ExportNamedDeclarationJavascriptParser
-					| ExportAllDeclarationJavascriptParser
-				),
-				ImportSource
-			],
+			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
 			boolean | void
 		>;
 		exportDeclaration: SyncBailHook<
 			[
 				(
-					| ExportNamedDeclarationJavascriptParser
-					| ExportAllDeclarationJavascriptParser
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
 					| ExportDefaultDeclaration
 				),
 				Declaration
@@ -6959,8 +6959,8 @@ declare class JavascriptParser extends ParserClass {
 		exportSpecifier: SyncBailHook<
 			[
 				(
-					| ExportNamedDeclarationJavascriptParser
-					| ExportAllDeclarationJavascriptParser
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
 					| ExportDefaultDeclaration
 				),
 				string,
@@ -6971,10 +6971,7 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		exportImportSpecifier: SyncBailHook<
 			[
-				(
-					| ExportNamedDeclarationJavascriptParser
-					| ExportAllDeclarationJavascriptParser
-				),
+				ExportNamedDeclaration | ExportAllDeclaration,
 				ImportSource,
 				null | string,
 				null | string,
@@ -7099,9 +7096,9 @@ declare class JavascriptParser extends ParserClass {
 	semicolons?: Set<number>;
 	statementPath?: StatementPathItem[];
 	prevStatement?:
-		| ImportDeclarationJavascriptParser
-		| ExportNamedDeclarationJavascriptParser
-		| ExportAllDeclarationJavascriptParser
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
 		| ImportExpressionImport
 		| UnaryExpression
 		| ArrayExpression
@@ -7158,7 +7155,12 @@ declare class JavascriptParser extends ParserClass {
 		Expression,
 		Set<DestructuringAssignmentProperty>
 	>;
-	currentTagData?: TagData;
+	currentTagData?:
+		| (TopLevelSymbol & Record<string, any>)
+		| (HarmonySettings & Record<string, any>)
+		| (ImportSettings & Record<string, any>)
+		| (CommonJsImportSettings & Record<string, any>)
+		| (CompatibilitySettings & Record<string, any>);
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -7203,9 +7205,9 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	modulePreWalkStatements(
 		statements: (
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -7237,9 +7239,9 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	preWalkStatements(
 		statements: (
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -7271,9 +7273,9 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	blockPreWalkStatements(
 		statements: (
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -7305,9 +7307,9 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	walkStatements(
 		statements: (
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -7339,9 +7341,9 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	preWalkStatement(
 		statement:
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
@@ -7370,9 +7372,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 	blockPreWalkStatement(
 		statement:
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
@@ -7401,9 +7403,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 	walkStatement(
 		statement:
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| MaybeNamedFunctionDeclaration
 			| VariableDeclaration
@@ -7503,29 +7505,19 @@ declare class JavascriptParser extends ParserClass {
 		| ThisExpression
 		| UpdateExpression
 		| YieldExpression;
-	modulePreWalkImportDeclaration(
-		statement: ImportDeclarationJavascriptParser
-	): void;
+	modulePreWalkImportDeclaration(statement: ImportDeclaration): void;
 	enterDeclaration(
 		declaration: Declaration,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
-	modulePreWalkExportNamedDeclaration(
-		statement: ExportNamedDeclarationJavascriptParser
-	): void;
-	blockPreWalkExportNamedDeclaration(
-		statement: ExportNamedDeclarationJavascriptParser
-	): void;
-	walkExportNamedDeclaration(
-		statement: ExportNamedDeclarationJavascriptParser
-	): void;
+	modulePreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
+	blockPreWalkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
+	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	blockPreWalkExportDefaultDeclaration(
 		statement: ExportDefaultDeclaration
 	): void;
 	walkExportDefaultDeclaration(statement: ExportDefaultDeclaration): void;
-	modulePreWalkExportAllDeclaration(
-		statement: ExportAllDeclarationJavascriptParser
-	): void;
+	modulePreWalkExportAllDeclaration(statement: ExportAllDeclaration): void;
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
 	blockPreWalkVariableDeclaration(statement: VariableDeclaration): void;
 	preWalkVariableDeclarator(declarator: VariableDeclarator): void;
@@ -7735,7 +7727,7 @@ declare class JavascriptParser extends ParserClass {
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
 		fallback: undefined | ((name: string) => undefined | R),
-		defined: undefined | ((result?: string) => any),
+		defined: undefined | ((result?: string) => undefined | R),
 		...args: AsArray<T>
 	): undefined | R;
 	callHooksForNameWithFallback<T, R>(
@@ -7775,9 +7767,9 @@ declare class JavascriptParser extends ParserClass {
 	inBlockScope(fn: () => void, inExecutedPath?: boolean): void;
 	detectMode(
 		statements: (
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -7928,11 +7920,25 @@ declare class JavascriptParser extends ParserClass {
 	setAsiPosition(pos: number): void;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr: Expression): boolean;
-	getTagData(name: string, tag: symbol): undefined | TagData;
+	getTagData(
+		name: string,
+		tag: symbol
+	):
+		| undefined
+		| (TopLevelSymbol & Record<string, any>)
+		| (HarmonySettings & Record<string, any>)
+		| (ImportSettings & Record<string, any>)
+		| (CommonJsImportSettings & Record<string, any>)
+		| (CompatibilitySettings & Record<string, any>);
 	tagVariable(
 		name: string,
 		tag: symbol,
-		data?: TagData,
+		data?:
+			| (TopLevelSymbol & Record<string, any>)
+			| (HarmonySettings & Record<string, any>)
+			| (ImportSettings & Record<string, any>)
+			| (CommonJsImportSettings & Record<string, any>)
+			| (CompatibilitySettings & Record<string, any>),
 		flags?: 0 | 1 | 2 | 4
 	): void;
 	defineVariable(name: string): void;
@@ -8071,9 +8077,9 @@ declare class JavascriptParser extends ParserClass {
 	}>;
 	static getImportAttributes: (
 		node:
-			| ImportDeclarationJavascriptParser
-			| ExportNamedDeclarationJavascriptParser
-			| ExportAllDeclarationJavascriptParser
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
 			| ImportExpressionJavascriptParser
 	) => undefined | ImportAttributes;
 }
@@ -8718,9 +8724,9 @@ declare interface KnownStatsChunk {
 	hash: string;
 	childrenByOrder: Record<string, ChunkId[]>;
 	id?: string | number;
-	siblings?: (string | number)[];
-	parents?: (string | number)[];
-	children?: (string | number)[];
+	siblings?: ChunkId[];
+	parents?: ChunkId[];
+	children?: ChunkId[];
 	modules?: StatsModule[];
 	filteredModules?: number;
 	origins?: StatsChunkOrigin[];
@@ -8734,8 +8740,8 @@ declare interface KnownStatsChunkGroup {
 	auxiliaryAssets?: { name: string; size?: number }[];
 	filteredAuxiliaryAssets?: number;
 	auxiliaryAssetsSize?: number;
-	children?: { [index: string]: StatsChunkGroup[] };
-	childAssets?: { [index: string]: string[] };
+	children?: Record<string, StatsChunkGroup[]>;
+	childAssets?: Record<string, string[]>;
 	isOverSizeLimit?: boolean;
 }
 declare interface KnownStatsChunkOrigin {
@@ -8827,7 +8833,7 @@ declare interface KnownStatsModule {
 	index2?: number;
 	postOrderIndex?: number;
 	size?: number;
-	sizes?: { [index: string]: number };
+	sizes?: Record<string, number>;
 	cacheable?: boolean;
 	built?: boolean;
 	codeGenerated?: boolean;
@@ -9295,7 +9301,6 @@ declare interface LimitChunkCountPluginOptions {
 	 */
 	maxChunks: number;
 }
-type Literal = SimpleLiteral | RegExpLiteral | BigIntLiteral;
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
 }
@@ -9432,7 +9437,7 @@ declare interface LoaderPluginLoaderContext {
 	importModule(
 		request: string,
 		options: undefined | ImportModuleOptions,
-		callback: (err?: null | Error, exports?: any) => any
+		callback: (err?: null | Error, exports?: any) => void
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
 }
@@ -10871,7 +10876,7 @@ declare class MultiCompiler {
 		fn: (
 			compiler: Compiler,
 			callback: CallbackWebpackFunction_2<MultiStats, void>
-		) => any,
+		) => void,
 		callback: CallbackWebpackFunction_2<Stats[], void>
 	): void;
 	watch(
@@ -13162,7 +13167,7 @@ declare class Profiler {
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
 	sendCommand(method: string, params?: object): Promise<any>;
 	destroy(): Promise<void>;
-	stopProfiling(): Promise<{ profile: any }>;
+	stopProfiling(): Promise<{ profile: { startTime: number; endTime: number } }>;
 }
 declare class ProfilingPlugin {
 	constructor(options?: ProfilingPluginOptions);
@@ -16726,9 +16731,9 @@ type Statement =
 	| ForInStatement
 	| ForOfStatement;
 type StatementPathItem =
-	| ImportDeclarationJavascriptParser
-	| ExportNamedDeclarationJavascriptParser
-	| ExportAllDeclarationJavascriptParser
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
 	| ImportExpressionImport
 	| UnaryExpression
 	| ArrayExpression
@@ -17425,12 +17430,14 @@ declare interface SyntheticDependencyLocation {
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
-declare interface TagData {
-	[index: string]: any;
-}
 declare interface TagInfo {
 	tag: symbol;
-	data?: TagData;
+	data?:
+		| (TopLevelSymbol & Record<string, any>)
+		| (HarmonySettings & Record<string, any>)
+		| (ImportSettings & Record<string, any>)
+		| (CommonJsImportSettings & Record<string, any>)
+		| (CompatibilitySettings & Record<string, any>);
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
