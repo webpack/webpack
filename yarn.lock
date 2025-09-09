@@ -2105,9 +2105,9 @@ asap@~2.0.3:
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
 assemblyscript@^0.28.5:
-  version "0.28.6"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.6.tgz#364af6997556ab88987f395b91b614d712741d0d"
-  integrity sha512-//se+Ei4ctGq37PfibHPkMwrVep02q7FBDR5sXDR339cp8Q9fh1Mpsv6PFWRWyebtWCiGDOp1L+S/OTM650iFQ==
+  version "0.28.7"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.7.tgz#b095df264681bf9c44c2f45def00241c96f5cd86"
+  integrity sha512-g8vY1h2c5mPEiqjGnzf4Qzg7cetbFCoJoDYApvOiratiUP6tHrXGJLsLKCxC/AEyRLiLe06Nho8v4gQ41tRQvg==
   dependencies:
     binaryen "123.0.0-nightly.20250530"
     long "^5.2.4"
@@ -3425,9 +3425,9 @@ eslint-plugin-prettier@^5.5.0:
     synckit "^0.11.7"
 
 eslint-plugin-unicorn@^61.0.1:
-  version "61.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-61.0.1.tgz#438d66e2451a00df8eacc1a6e2e3c853482a2a29"
-  integrity sha512-RwXXqS8oTxW7dVs6e4ZBpZkn1wB4qqNZSbCJektP8/Nzp/woJdfN/t7LVNcpGMZ57xWBs33K0ymZ7MV+VeQnbA==
+  version "61.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-61.0.2.tgz#fe410b1203666cef4d6a5b13b05caef814a6a2e4"
+  integrity sha512-zLihukvneYT7f74GNbVJXfWIiNQmkc/a9vYBTE4qPkQZswolWNdu+Wsp9sIXno1JOzdn6OUwLPd19ekXVkahRA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.27.1"
     "@eslint-community/eslint-utils" "^4.7.0"
