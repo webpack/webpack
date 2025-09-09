@@ -5356,6 +5356,9 @@ declare class ExternalModule extends Module {
 		normalModuleFactory: NormalModuleFactory
 	): void;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
+	static getExternalModuleNodeCommonjsInitFragment: (
+		runtimeTemplate: RuntimeTemplate
+	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
@@ -15545,6 +15548,7 @@ declare abstract class RuntimeTemplate {
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 	renderNodePrefixForCoreModule(mod: string): string;
+	renderConst(): "var" | "const";
 	returningFunction(returnValue: string, args?: string): string;
 	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;
