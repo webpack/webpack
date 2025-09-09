@@ -20769,6 +20769,7 @@ type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData<string>);
+	issuerDependencyType?: null | string;
 	request: string;
 	userRequest: string;
 	rawRequest: string;
@@ -20905,6 +20906,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * module type. When deserializing, this is set to an empty string "".
 	 */
 	type: T;
+
+	/**
+	 * dependency category of the issuer chain (e.g. "worker")
+	 */
+	issuerDependencyType?: null | string;
 
 	/**
 	 * request string
@@ -21431,7 +21437,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getResolver(
 		type: string,
-		resolveOptions?: ResolveOptionsWithDependencyType
+		resolveOptions?: ResolveOptionsWithDependencyType,
+		issuerResolveOptions?: ResolveOptionsWithDependencyType
 	): ResolverWithOptions;
 }
 
@@ -26939,7 +26946,8 @@ declare abstract class ResolverFactory {
 	 */
 	get(
 		type: string,
-		resolveOptions?: ResolveOptionsWithDependencyType
+		resolveOptions?: ResolveOptionsWithDependencyType,
+		issuerResolveOptions?: ResolveOptionsWithDependencyType
 	): ResolverWithOptions;
 }
 type ResolverWithOptions = Resolver & WithOptions;
