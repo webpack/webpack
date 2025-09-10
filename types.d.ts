@@ -10016,7 +10016,7 @@ declare class Module extends DependenciesBlock {
 	): Source;
 	size(type?: string): number;
 	libIdent(options: LibIdentOptions): null | string;
-	nameForCondition(): null | string;
+	nameForCondition(): any;
 	getConcatenationBailoutReason(
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
