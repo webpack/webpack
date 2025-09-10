@@ -1277,7 +1277,7 @@ declare class Chunk {
 	): boolean;
 }
 declare interface ChunkChildIdsByOrdersMap {
-	[index: string]: (string | number)[];
+	[index: string]: ChunkId[];
 }
 declare interface ChunkChildIdsByOrdersMapByData {
 	[index: string]: ChunkChildIdsByOrdersMap;
@@ -1339,7 +1339,7 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		includeAllChunks?: boolean
-	): ChunkModuleIdMap;
+	): ChunkModuleIdMapEs5Alias_2;
 	getChunkModuleRenderedHashMap(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -1592,9 +1592,9 @@ declare interface ChunkHashes {
 }
 type ChunkId = string | number;
 declare interface ChunkMaps {
-	hash: Record<string | number, string>;
-	contentHash: Record<string | number, Record<string, string>>;
-	name: Record<string | number, string>;
+	hash: Record<ChunkId, string>;
+	contentHash: Record<ChunkId, Record<string, string>>;
+	name: Record<ChunkId, string>;
 }
 declare interface ChunkModuleHashMap {
 	[index: number]: IdToHashMap;
@@ -1603,7 +1603,11 @@ declare interface ChunkModuleHashMap {
 declare interface ChunkModuleHashes {
 	[index: string]: string;
 }
-declare interface ChunkModuleIdMap {
+declare interface ChunkModuleIdMapEs5Alias_1 {
+	[index: number]: ChunkId[];
+	[index: string]: ChunkId[];
+}
+declare interface ChunkModuleIdMapEs5Alias_2 {
 	[index: number]: ModuleId[];
 	[index: string]: ModuleId[];
 }
@@ -1642,8 +1646,8 @@ declare interface ChunkModuleIds {
 	[index: string]: ModuleId[];
 }
 declare interface ChunkModuleMaps {
-	id: Record<string | number, (string | number)[]>;
-	hash: Record<string | number, string>;
+	id: ChunkModuleIdMapEs5Alias_1;
+	hash: chunkModuleHashMap;
 }
 type ChunkName = null | string;
 declare interface ChunkPathData {
@@ -2277,7 +2281,7 @@ declare class Compilation {
 	dependencyFactories: Map<DependencyConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
 	childrenCounters: Record<string, number>;
-	usedChunkIds: null | Set<string | number>;
+	usedChunkIds: null | Set<number>;
 	usedModuleIds: null | Set<number>;
 	needAdditionalPass: boolean;
 	builtModules: WeakSet<Module>;
@@ -5331,7 +5335,7 @@ declare interface ExternalItemObjectUnknown {
 type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
-		request: string | string[] | RequestRecord,
+		request: ExternalModuleRequest,
 		type: string,
 		userRequest: string,
 		dependencyMeta?:
@@ -5339,7 +5343,7 @@ declare class ExternalModule extends Module {
 			| CssImportDependencyMeta
 			| AssetDependencyMeta
 	);
-	request: string | string[] | Record<string, string | string[]>;
+	request: ExternalModuleRequest;
 	externalType: string;
 	userRequest: string;
 	dependencyMeta?:
@@ -5420,6 +5424,7 @@ declare interface ExternalModuleInfo {
 	 */
 	interopDefaultAccessName?: string;
 }
+type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
 	| string
 	| RegExp
@@ -6585,6 +6590,7 @@ declare interface InterpolatedPathAndAssetInfo {
 	path: string;
 	info: AssetInfo;
 }
+type Issuer = undefined | null | Module;
 type IssuerLayer = null | string;
 declare interface Item<T> {
 	[index: string]: string | string[] | T;
@@ -8736,7 +8742,7 @@ declare interface KnownStatsChunk {
 }
 declare interface KnownStatsChunkGroup {
 	name?: null | string;
-	chunks?: (string | number)[];
+	chunks?: ChunkId[];
 	assets?: { name: string; size?: number }[];
 	filteredAssets?: number;
 	assetsSize?: number;
@@ -8846,8 +8852,8 @@ declare interface KnownStatsModule {
 	orphan?: boolean;
 	id?: string | number;
 	issuerId?: null | string | number;
-	chunks?: (string | number)[];
-	assets?: (string | number)[];
+	chunks?: ChunkId[];
+	assets?: string[];
 	dependent?: boolean;
 	issuer?: null | string;
 	issuerName?: null | string;
@@ -10358,7 +10364,7 @@ declare class ModuleGraph {
 		| ReadonlyMap<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): undefined | ModuleProfile;
 	setProfile(module: Module, profile?: ModuleProfile): void;
-	getIssuer(module: Module): undefined | null | Module;
+	getIssuer(module: Module): Issuer;
 	setIssuer(module: Module, issuer: null | Module): void;
 	setIssuerIfUnset(module: Module, issuer: null | Module): void;
 	getOptimizationBailout(
@@ -16115,10 +16121,11 @@ declare class SideEffectsFlagPlugin {
 	apply(compiler: Compiler): void;
 	static moduleHasSideEffects(
 		moduleName: string,
-		flagValue: undefined | string | boolean | string[],
+		flagValue: SideEffectsFlagValue,
 		cache: Map<string, RegExp>
 	): undefined | boolean;
 }
+type SideEffectsFlagValue = undefined | string | boolean | string[];
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -18198,6 +18205,10 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare interface chunkModuleHashMap {
+	[index: number]: string;
+	[index: string]: string;
+}
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpackFunction_2<Stats, void>
