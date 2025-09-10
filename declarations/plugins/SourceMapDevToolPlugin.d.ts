@@ -20,10 +20,7 @@ export interface SourceMapDevToolPluginOptions {
 	append?:
 		| (false | null)
 		| string
-		| ((
-				pathData: import("../../lib/Compilation").PathData,
-				assetInfo?: import("../../lib/Compilation").AssetInfo
-		  ) => string);
+		| import("../../lib/TemplatedPathPlugin").TemplatePathFn;
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
 	 */

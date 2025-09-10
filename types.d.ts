@@ -1829,7 +1829,7 @@ declare interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: string | RegExp | ((filename: string) => boolean);
+	keep?: string | RegExp | ((path: string) => undefined | boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -1841,7 +1841,7 @@ declare class CleanPlugin {
 		/**
 		 * Keep these assets.
 		 */
-		keep?: string | RegExp | ((filename: string) => boolean);
+		keep?: string | RegExp | ((path: string) => undefined | boolean);
 	};
 
 	/**
@@ -9082,7 +9082,7 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err: null | Error, api?: BackendApi) => void
+				callback: (err: null | Error, backendApi?: BackendApi) => void
 		  ) => void)
 		| ((compiler: Compiler) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
@@ -11890,7 +11890,12 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?:
+		| RegExp
+		| "all"
+		| "initial"
+		| "async"
+		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -12028,7 +12033,12 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?:
+		| RegExp
+		| "all"
+		| "initial"
+		| "async"
+		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
@@ -12051,7 +12061,12 @@ declare interface OptimizationSplitChunksOptions {
 		/**
 		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 		 */
-		chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+		chunks?:
+			| RegExp
+			| "all"
+			| "initial"
+			| "async"
+			| ((chunk: Chunk) => undefined | boolean);
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -17334,7 +17349,7 @@ declare interface StatsOptions {
 		| string
 		| RegExp
 		| WarningFilterItemTypes[]
-		| ((warning: StatsError, value: string) => boolean);
+		| ((warning: StatsError, warningString: string) => boolean);
 
 	/**
 	 * Space to display warnings (value is in number of lines).
@@ -17571,19 +17586,19 @@ declare class VariableInfo {
 type VariableInfoFlagsType = 0 | 1 | 2 | 4;
 declare interface VirtualModuleConfig {
 	/**
-	 * - The module type
+	 * the module type
 	 */
 	type?: string;
 
 	/**
-	 * - The source function
+	 * the source function
 	 */
 	source: (
 		loaderContext: LoaderContextVirtualUrlPlugin<any>
-	) => string | Promise<string>;
+	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
-	 * - Optional version function or value
+	 * optional version function or value
 	 */
 	version?: string | true | (() => string);
 }
@@ -17591,7 +17606,7 @@ type VirtualModuleInput =
 	| string
 	| ((
 			loaderContext: LoaderContextVirtualUrlPlugin<any>
-	  ) => string | Promise<string>)
+	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModuleConfig;
 declare interface VirtualModules {
 	[index: string]: VirtualModuleInput;
@@ -17616,7 +17631,7 @@ declare class VirtualUrlPlugin {
 type WarningFilterItemTypes =
 	| string
 	| RegExp
-	| ((warning: StatsError, value: string) => boolean);
+	| ((warning: StatsError, warningString: string) => boolean);
 declare interface WatchFileSystem {
 	watch: (
 		files: Iterable<string>,

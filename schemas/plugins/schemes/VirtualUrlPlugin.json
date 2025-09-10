@@ -8,7 +8,7 @@
         "source": {
           "description": "The source function that provides the virtual content.",
           "instanceof": "Function",
-          "tsType": "((loaderContext: import('webpack').LoaderContext<EXPECTED_ANY>) => Promise<string> | string)"
+          "tsType": "(import('../../../lib/schemes/VirtualUrlPlugin').SourceFn)"
         },
         "type": {
           "description": "The module type.",
@@ -26,7 +26,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(() => string | undefined)"
+              "tsType": "(import('../../../lib/schemes/VirtualUrlPlugin').VersionFn)"
             }
           ]
         }
@@ -41,7 +41,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((loaderContext: import('webpack').LoaderContext<EXPECTED_ANY>) => Promise<string> | string)"
+          "tsType": "(import('../../../lib/schemes/VirtualUrlPlugin').SourceFn)"
         },
         {
           "$ref": "#/definitions/VirtualModule"

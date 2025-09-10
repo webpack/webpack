@@ -3,7 +3,7 @@
     "HandlerFunction": {
       "description": "Function that executes for every progress step.",
       "instanceof": "Function",
-      "tsType": "((percentage: number, msg: string, ...args: string[]) => void)"
+      "tsType": "(import(\"../../lib/ProgressPlugin\").HandlerFn)"
     },
     "ProgressPluginOptions": {
       "description": "Options object for the ProgressPlugin.",
