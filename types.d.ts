@@ -263,6 +263,10 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+type AnyLoaderContext = NormalModuleLoaderContext<any> &
+	LoaderRunnerLoaderContext<any> &
+	LoaderPluginLoaderContext &
+	HotModuleReplacementPluginLoaderContext;
 declare interface Argument {
 	description?: string;
 	simpleType: SimpleType;
@@ -2216,9 +2220,7 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		get normalModuleLoader(): SyncHook<
-			[LoaderContextObject<any>, NormalModule]
-		>;
+		get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]>;
 	}>;
 	name?: string;
 	startTime?: number;
@@ -7165,11 +7167,12 @@ declare class JavascriptParser extends ParserClass {
 		Set<DestructuringAssignmentProperty>
 	>;
 	currentTagData?:
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -7934,20 +7937,22 @@ declare class JavascriptParser extends ParserClass {
 		tag: symbol
 	):
 		| undefined
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	tagVariable(
 		name: string,
 		tag: symbol,
 		data?:
-			| (TopLevelSymbol & Record<string, any>)
-			| (HarmonySettings & Record<string, any>)
-			| (ImportSettings & Record<string, any>)
-			| (CommonJsImportSettings & Record<string, any>)
-			| (CompatibilitySettings & Record<string, any>),
+			| Record<string, any>
+			| TopLevelSymbol
+			| HarmonySettings
+			| ImportSettings
+			| CommonJsImportSettings
+			| CompatibilitySettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 	defineVariable(name: string): void;
@@ -8814,8 +8819,8 @@ declare interface KnownStatsFactoryContext {
 	compilationFileToChunks: Map<string, Chunk[]>;
 	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
 	runtime: RuntimeSpec;
-	cachedGetErrors: (compilation: Compilation) => WebpackError[];
-	cachedGetWarnings: (compilation: Compilation) => WebpackError[];
+	cachedGetErrors: (compilation: Compilation) => Error[];
+	cachedGetWarnings: (compilation: Compilation) => Error[];
 }
 declare interface KnownStatsLogging {
 	entries: StatsLoggingEntry[];
@@ -9351,7 +9356,7 @@ type LoaderContextDeclarationsIndex<OptionsType> =
 		LoaderRunnerLoaderContext<OptionsType> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextObject<T> = NormalModuleLoaderContext<T> &
+type LoaderContextVirtualUrlPlugin<T> = NormalModuleLoaderContext<T> &
 	LoaderRunnerLoaderContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
@@ -11093,7 +11098,7 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	getCurrentLoader(
-		loaderContext: LoaderContextObject<any>,
+		loaderContext: AnyLoaderContext,
 		index?: number
 	): null | LoaderItem;
 	createSource(
@@ -11119,10 +11124,8 @@ declare class NormalModule extends Module {
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[LoaderContextObject<any>, NormalModule]>;
-	beforeLoaders: SyncHook<
-		[LoaderItem[], NormalModule, LoaderContextObject<any>]
-	>;
+	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
@@ -11131,7 +11134,7 @@ declare interface NormalModuleCompilationHooks {
 		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
+		AsyncSeriesBailHook<[AnyLoaderContext], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
 		[
@@ -17449,11 +17452,12 @@ declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: symbol;
 	data?:
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
@@ -17574,7 +17578,9 @@ declare interface VirtualModuleConfig {
 	/**
 	 * - The source function
 	 */
-	source: (loaderContext: LoaderContextObject<any>) => string | Promise<string>;
+	source: (
+		loaderContext: LoaderContextVirtualUrlPlugin<any>
+	) => string | Promise<string>;
 
 	/**
 	 * - Optional version function or value
@@ -17583,7 +17589,9 @@ declare interface VirtualModuleConfig {
 }
 type VirtualModuleInput =
 	| string
-	| ((loaderContext: LoaderContextObject<any>) => string | Promise<string>)
+	| ((
+			loaderContext: LoaderContextVirtualUrlPlugin<any>
+	  ) => string | Promise<string>)
 	| VirtualModuleConfig;
 declare interface VirtualModules {
 	[index: string]: VirtualModuleInput;
