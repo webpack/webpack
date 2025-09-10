@@ -10347,10 +10347,15 @@ declare class ModuleGraph {
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
 		module: Module
-	): Map<undefined | null | Module, ReadonlyArray<ModuleGraphConnection>>;
+	): ReadonlyMap<
+		undefined | null | Module,
+		ReadonlyArray<ModuleGraphConnection>
+	>;
 	getOutgoingConnectionsByModule(
 		module: Module
-	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
+	):
+		| undefined
+		| ReadonlyMap<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): undefined | ModuleProfile;
 	setProfile(module: Module, profile?: ModuleProfile): void;
 	getIssuer(module: Module): undefined | null | Module;
