@@ -8,11 +8,7 @@ export type ProgressPluginArgument = ProgressPluginOptions | HandlerFunction;
 /**
  * Function that executes for every progress step.
  */
-export type HandlerFunction = (
-	percentage: number,
-	msg: string,
-	...args: string[]
-) => void;
+export type HandlerFunction = import("../../lib/ProgressPlugin").HandlerFn;
 
 /**
  * Options object for the ProgressPlugin.

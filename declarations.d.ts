@@ -370,6 +370,12 @@ declare module "watchpack" {
 }
 
 declare module "eslint-scope/lib/referencer" {
-	class Referencer {}
+	type Property = import("estree").Property;
+	type PropertyDefinition = import("estree").PropertyDefinition;
+
+	class Referencer {
+		Property(node: PropertyDefinition | Property): void;
+		PropertyDefinition(node: PropertyDefinition): void;
+	}
 	export = Referencer;
 }

@@ -263,6 +263,10 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+type AnyLoaderContext = NormalModuleLoaderContext<any> &
+	LoaderRunnerLoaderContext<any> &
+	LoaderPluginLoaderContext &
+	HotModuleReplacementPluginLoaderContext;
 declare interface Argument {
 	description?: string;
 	simpleType: SimpleType;
@@ -1277,7 +1281,7 @@ declare class Chunk {
 	): boolean;
 }
 declare interface ChunkChildIdsByOrdersMap {
-	[index: string]: (string | number)[];
+	[index: string]: ChunkId[];
 }
 declare interface ChunkChildIdsByOrdersMapByData {
 	[index: string]: ChunkChildIdsByOrdersMap;
@@ -1339,7 +1343,7 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		includeAllChunks?: boolean
-	): ChunkModuleIdMap;
+	): ChunkModuleIdMapEs5Alias_2;
 	getChunkModuleRenderedHashMap(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -1592,9 +1596,9 @@ declare interface ChunkHashes {
 }
 type ChunkId = string | number;
 declare interface ChunkMaps {
-	hash: Record<string | number, string>;
-	contentHash: Record<string | number, Record<string, string>>;
-	name: Record<string | number, string>;
+	hash: Record<ChunkId, string>;
+	contentHash: Record<ChunkId, Record<string, string>>;
+	name: Record<ChunkId, string>;
 }
 declare interface ChunkModuleHashMap {
 	[index: number]: IdToHashMap;
@@ -1603,7 +1607,11 @@ declare interface ChunkModuleHashMap {
 declare interface ChunkModuleHashes {
 	[index: string]: string;
 }
-declare interface ChunkModuleIdMap {
+declare interface ChunkModuleIdMapEs5Alias_1 {
+	[index: number]: ChunkId[];
+	[index: string]: ChunkId[];
+}
+declare interface ChunkModuleIdMapEs5Alias_2 {
 	[index: number]: ModuleId[];
 	[index: string]: ModuleId[];
 }
@@ -1642,8 +1650,8 @@ declare interface ChunkModuleIds {
 	[index: string]: ModuleId[];
 }
 declare interface ChunkModuleMaps {
-	id: Record<string | number, (string | number)[]>;
-	hash: Record<string | number, string>;
+	id: ChunkModuleIdMapEs5Alias_1;
+	hash: chunkModuleHashMap;
 }
 type ChunkName = null | string;
 declare interface ChunkPathData {
@@ -1821,7 +1829,7 @@ declare interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: string | RegExp | ((filename: string) => boolean);
+	keep?: string | RegExp | ((path: string) => undefined | boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -1833,7 +1841,7 @@ declare class CleanPlugin {
 		/**
 		 * Keep these assets.
 		 */
-		keep?: string | RegExp | ((filename: string) => boolean);
+		keep?: string | RegExp | ((path: string) => undefined | boolean);
 	};
 
 	/**
@@ -2212,9 +2220,7 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		get normalModuleLoader(): SyncHook<
-			[LoaderContextObject<any>, NormalModule]
-		>;
+		get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]>;
 	}>;
 	name?: string;
 	startTime?: number;
@@ -2277,7 +2283,7 @@ declare class Compilation {
 	dependencyFactories: Map<DependencyConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
 	childrenCounters: Record<string, number>;
-	usedChunkIds: null | Set<string | number>;
+	usedChunkIds: null | Set<number>;
 	usedModuleIds: null | Set<number>;
 	needAdditionalPass: boolean;
 	builtModules: WeakSet<Module>;
@@ -5331,7 +5337,7 @@ declare interface ExternalItemObjectUnknown {
 type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
-		request: string | string[] | RequestRecord,
+		request: ExternalModuleRequest,
 		type: string,
 		userRequest: string,
 		dependencyMeta?:
@@ -5339,7 +5345,7 @@ declare class ExternalModule extends Module {
 			| CssImportDependencyMeta
 			| AssetDependencyMeta
 	);
-	request: string | string[] | Record<string, string | string[]>;
+	request: ExternalModuleRequest;
 	externalType: string;
 	userRequest: string;
 	dependencyMeta?:
@@ -5420,6 +5426,7 @@ declare interface ExternalModuleInfo {
 	 */
 	interopDefaultAccessName?: string;
 }
+type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
 	| string
 	| RegExp
@@ -6585,6 +6592,7 @@ declare interface InterpolatedPathAndAssetInfo {
 	path: string;
 	info: AssetInfo;
 }
+type Issuer = undefined | null | Module;
 type IssuerLayer = null | string;
 declare interface Item<T> {
 	[index: string]: string | string[] | T;
@@ -7159,11 +7167,12 @@ declare class JavascriptParser extends ParserClass {
 		Set<DestructuringAssignmentProperty>
 	>;
 	currentTagData?:
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -7928,20 +7937,22 @@ declare class JavascriptParser extends ParserClass {
 		tag: symbol
 	):
 		| undefined
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	tagVariable(
 		name: string,
 		tag: symbol,
 		data?:
-			| (TopLevelSymbol & Record<string, any>)
-			| (HarmonySettings & Record<string, any>)
-			| (ImportSettings & Record<string, any>)
-			| (CommonJsImportSettings & Record<string, any>)
-			| (CompatibilitySettings & Record<string, any>),
+			| Record<string, any>
+			| TopLevelSymbol
+			| HarmonySettings
+			| ImportSettings
+			| CommonJsImportSettings
+			| CompatibilitySettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 	defineVariable(name: string): void;
@@ -8736,7 +8747,7 @@ declare interface KnownStatsChunk {
 }
 declare interface KnownStatsChunkGroup {
 	name?: null | string;
-	chunks?: (string | number)[];
+	chunks?: ChunkId[];
 	assets?: { name: string; size?: number }[];
 	filteredAssets?: number;
 	assetsSize?: number;
@@ -8808,8 +8819,8 @@ declare interface KnownStatsFactoryContext {
 	compilationFileToChunks: Map<string, Chunk[]>;
 	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
 	runtime: RuntimeSpec;
-	cachedGetErrors: (compilation: Compilation) => WebpackError[];
-	cachedGetWarnings: (compilation: Compilation) => WebpackError[];
+	cachedGetErrors: (compilation: Compilation) => Error[];
+	cachedGetWarnings: (compilation: Compilation) => Error[];
 }
 declare interface KnownStatsLogging {
 	entries: StatsLoggingEntry[];
@@ -8846,8 +8857,8 @@ declare interface KnownStatsModule {
 	orphan?: boolean;
 	id?: string | number;
 	issuerId?: null | string | number;
-	chunks?: (string | number)[];
-	assets?: (string | number)[];
+	chunks?: ChunkId[];
+	assets?: string[];
 	dependent?: boolean;
 	issuer?: null | string;
 	issuerName?: null | string;
@@ -9071,7 +9082,7 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err: null | Error, api?: BackendApi) => void
+				callback: (err: null | Error, backendApi?: BackendApi) => void
 		  ) => void)
 		| ((compiler: Compiler) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
@@ -9345,7 +9356,7 @@ type LoaderContextDeclarationsIndex<OptionsType> =
 		LoaderRunnerLoaderContext<OptionsType> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextObject<T> = NormalModuleLoaderContext<T> &
+type LoaderContextVirtualUrlPlugin<T> = NormalModuleLoaderContext<T> &
 	LoaderRunnerLoaderContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
@@ -10358,7 +10369,7 @@ declare class ModuleGraph {
 		| ReadonlyMap<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): undefined | ModuleProfile;
 	setProfile(module: Module, profile?: ModuleProfile): void;
-	getIssuer(module: Module): undefined | null | Module;
+	getIssuer(module: Module): Issuer;
 	setIssuer(module: Module, issuer: null | Module): void;
 	setIssuerIfUnset(module: Module, issuer: null | Module): void;
 	getOptimizationBailout(
@@ -11087,7 +11098,7 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	getCurrentLoader(
-		loaderContext: LoaderContextObject<any>,
+		loaderContext: AnyLoaderContext,
 		index?: number
 	): null | LoaderItem;
 	createSource(
@@ -11113,10 +11124,8 @@ declare class NormalModule extends Module {
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[LoaderContextObject<any>, NormalModule]>;
-	beforeLoaders: SyncHook<
-		[LoaderItem[], NormalModule, LoaderContextObject<any>]
-	>;
+	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
 	beforeParse: SyncHook<[NormalModule]>;
 	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
@@ -11125,7 +11134,7 @@ declare interface NormalModuleCompilationHooks {
 		>
 	>;
 	readResource: HookMap<
-		AsyncSeriesBailHook<[LoaderContextObject<any>], null | string | Buffer>
+		AsyncSeriesBailHook<[AnyLoaderContext], null | string | Buffer>
 	>;
 	processResult: SyncWaterfallHook<
 		[
@@ -11881,7 +11890,12 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?:
+		| RegExp
+		| "all"
+		| "initial"
+		| "async"
+		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -12019,7 +12033,12 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?:
+		| RegExp
+		| "all"
+		| "initial"
+		| "async"
+		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
@@ -12042,7 +12061,12 @@ declare interface OptimizationSplitChunksOptions {
 		/**
 		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 		 */
-		chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+		chunks?:
+			| RegExp
+			| "all"
+			| "initial"
+			| "async"
+			| ((chunk: Chunk) => undefined | boolean);
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -16115,10 +16139,11 @@ declare class SideEffectsFlagPlugin {
 	apply(compiler: Compiler): void;
 	static moduleHasSideEffects(
 		moduleName: string,
-		flagValue: undefined | string | boolean | string[],
+		flagValue: SideEffectsFlagValue,
 		cache: Map<string, RegExp>
 	): undefined | boolean;
 }
+type SideEffectsFlagValue = undefined | string | boolean | string[];
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -17324,7 +17349,7 @@ declare interface StatsOptions {
 		| string
 		| RegExp
 		| WarningFilterItemTypes[]
-		| ((warning: StatsError, value: string) => boolean);
+		| ((warning: StatsError, warningString: string) => boolean);
 
 	/**
 	 * Space to display warnings (value is in number of lines).
@@ -17442,11 +17467,12 @@ declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: symbol;
 	data?:
-		| (TopLevelSymbol & Record<string, any>)
-		| (HarmonySettings & Record<string, any>)
-		| (ImportSettings & Record<string, any>)
-		| (CommonJsImportSettings & Record<string, any>)
-		| (CompatibilitySettings & Record<string, any>);
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
@@ -17560,23 +17586,27 @@ declare class VariableInfo {
 type VariableInfoFlagsType = 0 | 1 | 2 | 4;
 declare interface VirtualModuleConfig {
 	/**
-	 * - The module type
+	 * the module type
 	 */
 	type?: string;
 
 	/**
-	 * - The source function
+	 * the source function
 	 */
-	source: (loaderContext: LoaderContextObject<any>) => string | Promise<string>;
+	source: (
+		loaderContext: LoaderContextVirtualUrlPlugin<any>
+	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
-	 * - Optional version function or value
+	 * optional version function or value
 	 */
 	version?: string | true | (() => string);
 }
 type VirtualModuleInput =
 	| string
-	| ((loaderContext: LoaderContextObject<any>) => string | Promise<string>)
+	| ((
+			loaderContext: LoaderContextVirtualUrlPlugin<any>
+	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModuleConfig;
 declare interface VirtualModules {
 	[index: string]: VirtualModuleInput;
@@ -17601,7 +17631,7 @@ declare class VirtualUrlPlugin {
 type WarningFilterItemTypes =
 	| string
 	| RegExp
-	| ((warning: StatsError, value: string) => boolean);
+	| ((warning: StatsError, warningString: string) => boolean);
 declare interface WatchFileSystem {
 	watch: (
 		files: Iterable<string>,
@@ -18198,6 +18228,10 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare interface chunkModuleHashMap {
+	[index: number]: string;
+	[index: string]: string;
+}
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpackFunction_2<Stats, void>
