@@ -473,9 +473,9 @@ class TestRunner {
 						)
 				);
 				// node.js 10 needs instantiate
-				if (esm.instantiate) esm.instantiate();
-				await esm.evaluate();
 				if (major === 10 && esm.instantiate) esm.instantiate();
+				await esm.evaluate();
+				if (esmMode === "evaluated") return esm;
 				const ns = esm.namespace;
 				return ns.default && ns.default instanceof Promise ? ns.default : ns;
 			})();
