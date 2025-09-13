@@ -629,6 +629,66 @@
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
       "type": "string"
     },
+    "Dotenv": {
+      "description": "Enable and configure the Dotenv plugin to load environment variables from .env files.",
+      "cli": {
+        "exclude": false
+      },
+      "anyOf": [
+        {
+          "description": "Enable Dotenv plugin with default options.",
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/DotenvPluginOptions"
+        }
+      ]
+    },
+    "DotenvPluginOptions": {
+      "description": "Options for Dotenv plugin.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dir": {
+          "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "prefix": {
+          "description": "Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "description": "A prefix that environment variables must start with to be exposed.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "template": {
+          "description": "Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+          "type": "array",
+          "items": {
+            "description": "A template pattern for .env file names.",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
     "EmptyGeneratorOptions": {
       "description": "No generator options are supported for this module type.",
       "type": "object",
@@ -5813,6 +5873,9 @@
         "devtool": {
           "$ref": "#/definitions/DevTool"
         },
+        "dotenv": {
+          "$ref": "#/definitions/Dotenv"
+        },
         "entry": {
           "$ref": "#/definitions/EntryNormalized"
         },
@@ -5962,6 +6025,9 @@
     },
     "devtool": {
       "$ref": "#/definitions/DevTool"
+    },
+    "dotenv": {
+      "$ref": "#/definitions/Dotenv"
     },
     "entry": {
       "$ref": "#/definitions/Entry"

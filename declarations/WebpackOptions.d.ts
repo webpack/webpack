@@ -48,6 +48,10 @@ export type DevServer =
  */
 export type DevTool = (false | "eval") | string;
 /**
+ * Enable and configure the Dotenv plugin to load environment variables from .env files.
+ */
+export type Dotenv = boolean | DotenvPluginOptions;
+/**
  * The entry point(s) of the compilation.
  */
 export type Entry = EntryDynamic | EntryStatic;
@@ -897,6 +901,10 @@ export interface WebpackOptions {
 	 */
 	devtool?: DevTool;
 	/**
+	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
+	 */
+	dotenv?: Dotenv;
+	/**
 	 * The entry point(s) of the compilation.
 	 */
 	entry?: Entry;
@@ -1119,6 +1127,23 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
+}
+/**
+ * Options for Dotenv plugin.
+ */
+export interface DotenvPluginOptions {
+	/**
+	 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
+	 */
+	dir?: boolean | string;
+	/**
+	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
+	 */
+	prefix?: string[] | string;
+	/**
+	 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
+	 */
+	template?: string[];
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
@@ -3809,6 +3834,10 @@ export interface WebpackOptionsNormalized {
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
 	devtool?: DevTool;
+	/**
+	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
+	 */
+	dotenv?: Dotenv;
 	/**
 	 * The entry point(s) of the compilation.
 	 */
