@@ -1,0 +1,53 @@
+{
+  "title": "DotenvPluginOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "allowEmptyValues": {
+      "description": "Whether to allow empty strings in safe mode. If false, will throw an error if any env variables are empty (but only if safe mode is enabled).",
+      "type": "boolean"
+    },
+    "defaults": {
+      "description": "Adds support for dotenv-defaults. If set to true, uses ./.env.defaults. If a string, uses that location for a defaults file.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "expand": {
+      "description": "Allows your variables to be \"expanded\" for reusability within your .env file.",
+      "type": "boolean"
+    },
+    "path": {
+      "description": "The path to your environment variables. This same path applies to the .env.example and .env.defaults files.",
+      "type": "string",
+      "minLength": 1
+    },
+    "prefix": {
+      "description": "The prefix to use before the name of your env variables.",
+      "type": "string",
+      "minLength": 1
+    },
+    "safe": {
+      "description": "If true, load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "systemvars": {
+      "description": "Set to true if you would rather load all system variables as well (useful for CI purposes).",
+      "type": "boolean"
+    }
+  }
+}
