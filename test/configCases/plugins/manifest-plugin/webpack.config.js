@@ -3,20 +3,25 @@
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
+/** @typedef {import("../../../../lib/Compiler")} Compiler */
+
 class CopyPlugin {
+	/**
+	 * Apply the plugin
+	 * @param {Compiler} compiler the compiler instance
+	 * @returns {void}
+	 */
 	apply(compiler) {
 		const hookOptions = {
 			name: "MockCopyPlugin",
 			stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
 		};
-		const emit = (compilation, callback) => {
-			const output = "// some compilation result\n";
-			compilation.emitAsset("third.party.js", new RawSource(output));
-			callback && callback(); // eslint-disable-line no-unused-expressions
-		};
 
 		compiler.hooks.thisCompilation.tap(hookOptions, (compilation) => {
-			compilation.hooks.processAssets.tap(hookOptions, () => emit(compilation));
+			compilation.hooks.processAssets.tap(hookOptions, () => {
+				const output = "// some compilation result\n";
+				compilation.emitAsset("third.party.js", new RawSource(output));
+			});
 		});
 	}
 }
