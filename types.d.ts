@@ -9758,6 +9758,21 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+declare class ManifestPlugin {
+	constructor(options: ManifestPluginOptions);
+	options: Required<ManifestPluginOptions>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ManifestPluginOptions {
+	/**
+	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
+}
 declare interface MapOptions {
 	/**
 	 * need columns?
@@ -18734,6 +18749,7 @@ declare namespace exports {
 		export namespace ids {
 			export { SyncModuleIdsPlugin };
 		}
+		export { ManifestPlugin };
 	}
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
