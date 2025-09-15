@@ -1,0 +1,20 @@
+on:
+  release:
+    types: [published]
+
+jobs:
+  github-releases-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: GitHub Releases to Discord
+        uses: SethCohen/github-releases-to-discord@v1
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          color: "2105893"
+          username: "webpack Release Changelog"
+          avatar_url: "https://github.com/webpack/media/blob/90b54d02fa1cfc8aa864a8322202f74ac000f5d2/logo/icon.png"
+          content: "||@everyone||"
+          footer_title: "Changelog"
+          reduce_headings: true
