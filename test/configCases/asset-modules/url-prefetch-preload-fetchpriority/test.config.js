@@ -23,6 +23,7 @@ const mockCreateElement = (tagName) => {
 		element.as = "";
 		element.href = "";
 		element.type = undefined;
+		element.media = undefined;
 		element.fetchPriority = undefined;
 	} else if (tagName === "script") {
 		element.src = "";

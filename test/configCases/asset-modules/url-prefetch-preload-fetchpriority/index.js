@@ -8,6 +8,22 @@ function verifyLink(link, expectations) {
 		expect(link.as).toBe(expectations.as);
 	}
 
+	if (expectations.type !== undefined) {
+		if (expectations.type) {
+			expect(link.type).toBe(expectations.type);
+		} else {
+			expect(link.type).toBeUndefined();
+		}
+	}
+
+	if (expectations.media !== undefined) {
+		if (expectations.media) {
+			expect(link.media).toBe(expectations.media);
+		} else {
+			expect(link.media).toBeUndefined();
+		}
+	}
+
 	if (expectations.fetchPriority !== undefined) {
 		if (expectations.fetchPriority) {
 			expect(link._attributes.fetchpriority).toBe(expectations.fetchPriority);
@@ -119,3 +135,44 @@ it("should generate all prefetch and preload links", () => {
 	});
 });
 
+it("should allow overriding as/type/media via magic comments", () => {
+	const override = new URL(
+		/* webpackPreload: true */
+		/* webpackPreloadAs: "font" */
+		/* webpackPreloadType: "font/woff2" */
+		/* webpackPreloadMedia: "(max-width: 600px)" */
+		"./assets/images/override.png",
+		import.meta.url
+	);
+
+	const link = document.head._children.find(
+		l => l.href.includes("override.png") && l.rel === "preload"
+	);
+	expect(link).toBeTruthy();
+	verifyLink(link, {
+		rel: "preload",
+		as: "font",
+		type: "font/woff2",
+		media: "(max-width: 600px)",
+		href: /override\.png$/
+	});
+});
+
+it("should accept additional as tokens from Fetch Standard (e.g., sharedworker)", () => {
+	const u = new URL(
+		/* webpackPreload: true */
+		/* webpackPreloadAs: "sharedworker" */
+		"./priority-auto.js",
+		import.meta.url
+	);
+
+	const link = document.head._children.find(
+		l => l.href.includes("priority-auto.js") && l.rel === "preload"
+	);
+	expect(link).toBeTruthy();
+	verifyLink(link, {
+		rel: "preload",
+		as: "sharedworker",
+		href: /priority-auto\.js$/
+	});
+});
