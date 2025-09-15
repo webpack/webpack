@@ -1,2 +1,3 @@
 import { a } from 'mod'
-globalThis.a = a
+
+Object.keys(a).forEach(() => { })

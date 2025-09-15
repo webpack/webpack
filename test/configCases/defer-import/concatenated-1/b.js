@@ -1,2 +1,3 @@
 import defer * as m from 'mod'
-globalThis.m = m
+
+Object.keys(m).forEach(() => {})
