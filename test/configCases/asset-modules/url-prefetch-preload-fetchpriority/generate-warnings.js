@@ -4,15 +4,13 @@
 
 // Invalid fetchPriority value - should generate warning
 const invalidPriorityUrl = new URL(/* webpackPrefetch: true */ /* webpackFetchPriority: "invalid" */ "./assets/images/priority-invalid.png", import.meta.url);
-
-// Invalid preloadAs - should generate warning
+// Invalid preloadAs (non-string) - should generate warning
 const invalidPreloadAs = new URL(
   /* webpackPreload: true */
-  /* webpackPreloadAs: "invalid-as" */
+  /* webpackPreloadAs: 123 */
   "./assets/images/priority-invalid.png",
   import.meta.url
 );
-
 // Invalid preloadType (non-string) - should generate warning
 const invalidPreloadType = new URL(
   /* webpackPreload: true */

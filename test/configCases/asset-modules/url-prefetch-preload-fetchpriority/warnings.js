@@ -5,8 +5,8 @@ module.exports = [
 	[
 		/`webpackFetchPriority` expected "low", "high" or "auto", but received: invalid\./
 	],
-	// Invalid preloadAs value
-	[/`webpackPreloadAs` expected one of \[.*\], but received: invalid-as\./],
+	// Invalid preloadAs (non-string)
+	[/`webpackPreloadAs` expected a string, but received: 123\./],
 	// Invalid preloadType (non-string)
 	[/`webpackPreloadType` expected a string, but received: 123\./],
 	// Invalid preloadMedia (non-string)
