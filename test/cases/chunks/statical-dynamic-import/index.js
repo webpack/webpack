@@ -51,3 +51,12 @@ it("should tree-shake if its member call and strictThisContextOnImports is false
 	expect(m2.b.usedExports).toEqual(true);
 	expect(m2.usedExports).toEqual(["b", "usedExports"]);
 })
+
+it("should analyze arguments in call member chain", async () => {
+	let m = await import("./dir4/lib?2");
+	m.b.f((async () => {
+		let m2 = await import("./dir4/a?2");
+		expect(m2.a).toBe(1);
+		expect(m2.usedExports).toEqual(["a", "usedExports"]);
+	})());
+})

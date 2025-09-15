@@ -50,4 +50,15 @@ it("should walk with correct order", async () => {
 		expect(a).toBe(1);
 		expect(usedExports).toEqual(["a", "usedExports"]);
 	});
-})
+});
+
+it("should analyze arguments in call member chain", async () => {
+	import("../statical-dynamic-import/dir4/lib?2").then(({ b }) => {
+		b.f((async () => {
+			import("../statical-dynamic-import/dir4/a?2").then(({ a, usedExports }) => {
+				expect(a).toBe(1);
+				expect(usedExports).toEqual(["a", "usedExports"]);
+			});
+		})());
+	});
+});
