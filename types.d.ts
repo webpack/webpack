@@ -3347,6 +3347,7 @@ declare abstract class ContextDependency extends Dependency {
 type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
 	referencedExports?: null | string[][];
+	attributes?: ImportAttributes;
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -4355,7 +4356,7 @@ declare interface EffectData {
 	resourceQuery?: string;
 	resourceFragment?: string;
 	scheme?: string;
-	assertions?: ImportAttributes;
+	attributes?: ImportAttributes;
 	mimetype?: string;
 	dependency: string;
 	descriptionData?: JsonObjectTypes;
@@ -6104,6 +6105,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		defer?: boolean
 	);
 	sourceOrder: number;
+	attributes?: ImportAttributes;
 	defer?: boolean;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getModuleExports(__0: DependencyTemplateContext): string;
@@ -10099,7 +10101,6 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range?: [number, number];
-	assertions?: ImportAttributes;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -14372,7 +14373,7 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptions;
 	context: string;
 	request: string;
-	assertions?: ImportAttributes;
+	attributes?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
 	createData: Partial<NormalModuleCreateData & { settings: ModuleSettings }>;
