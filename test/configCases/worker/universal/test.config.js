@@ -3,10 +3,9 @@
 module.exports = {
 	moduleScope(scope, options) {
 		if (options.name.includes("node")) {
-			delete scope.Worker;
+			delete scope.window;
+			delete scope.document;
+			delete scope.self;
 		}
-	},
-	findBundle() {
-		return ["web-main.mjs"];
 	}
 };

@@ -1,9 +1,9 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		name: "node",
+		name: "web",
 		target: ["web", "node"],
 		module: {
 			rules: [
@@ -23,7 +23,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "web",
+		name: "node",
 		target: ["web", "node"],
 		module: {
 			rules: [
