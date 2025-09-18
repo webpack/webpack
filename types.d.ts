@@ -7015,7 +7015,10 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		importCall: SyncBailHook<
-			[ImportExpressionJavascriptParser],
+			[
+				ImportExpressionJavascriptParser,
+				undefined | SimpleCallExpression | NewExpression
+			],
 			boolean | void
 		>;
 		topLevelAwait: SyncBailHook<
