@@ -215,15 +215,21 @@ describe("snapshots", () => {
 		        ],
 		      },
 		      Object {
+		        "type": "json",
+		        "with": Object {
+		          "type": "json",
+		        },
+		      },
+		      Object {
 		        "assert": Object {
 		          "type": "json",
 		        },
 		        "type": "json",
 		      },
 		      Object {
-		        "type": "json",
+		        "type": "asset/source",
 		        "with": Object {
-		          "type": "json",
+		          "type": "text",
 		        },
 		      },
 		    ],
