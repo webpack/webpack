@@ -1,0 +1,5 @@
+@import "https://test.cases/path/../../../../configCases/css/external-in-web/external.css";
+
+body {
+	padding: 10px;
+}
