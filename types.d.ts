@@ -5274,30 +5274,26 @@ type ExternalItemFunction =
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
-
-/**
- * Data object passed as argument when a function is set for 'externals'.
- */
 declare interface ExternalItemFunctionData {
 	/**
-	 * The directory in which the request is placed.
+	 * the directory in which the request is placed
 	 */
-	context?: string;
+	context: string;
 
 	/**
-	 * Contextual information.
+	 * contextual information
 	 */
-	contextInfo?: ModuleFactoryCreateDataContextInfo;
+	contextInfo: ModuleFactoryCreateDataContextInfo;
 
 	/**
-	 * The category of the referencing dependencies.
+	 * the category of the referencing dependency
 	 */
-	dependencyType?: string;
+	dependencyType: string;
 
 	/**
-	 * Get a resolve function with the current resolver options.
+	 * get a resolve function with the current resolver options
 	 */
-	getResolve?: (
+	getResolve: (
 		options?: ResolveOptions
 	) =>
 		| ((
@@ -5312,9 +5308,9 @@ declare interface ExternalItemFunctionData {
 		| ((context: string, request: string) => Promise<string>);
 
 	/**
-	 * The request as written by the user in the require/import expression/statement.
+	 * the request as written by the user in the require/import expression/statement
 	 */
-	request?: string;
+	request: string;
 }
 
 /**
@@ -18789,42 +18785,6 @@ declare namespace exports {
 			export { SyncModuleIdsPlugin };
 		}
 	}
-	export type ExternalItemFunctionCallback = (
-		data: ExternalItemFunctionData,
-		callback: (
-			err?: null | Error,
-			result?: string | boolean | string[] | { [index: string]: any }
-		) => void
-	) => void;
-	export type ExternalItemFunctionDataGetResolve = (
-		options?: ResolveOptions
-	) =>
-		| ((
-				context: string,
-				request: string,
-				callback: (
-					err?: null | Error,
-					result?: string | false,
-					resolveRequest?: ResolveRequest
-				) => void
-		  ) => void)
-		| ((context: string, request: string) => Promise<string>);
-	export type ExternalItemFunctionDataGetResolveCallbackResult = (
-		context: string,
-		request: string,
-		callback: (
-			err?: null | Error,
-			result?: string | false,
-			resolveRequest?: ResolveRequest
-		) => void
-	) => void;
-	export type ExternalItemFunctionDataGetResolveResult = (
-		context: string,
-		request: string
-	) => Promise<string>;
-	export type ExternalItemFunctionPromise = (
-		data: ExternalItemFunctionData
-	) => Promise<ExternalItemValue>;
 	export type RuleSetUseFunction = (data: EffectData) =>
 		| string
 		| RuleSetUseFunction
@@ -18868,6 +18828,42 @@ declare namespace exports {
 		this: Compiler,
 		compiler: Compiler
 	) => void;
+	export type ExternalItemFunctionCallback = (
+		data: ExternalItemFunctionData,
+		callback: (
+			err?: null | Error,
+			result?: string | boolean | string[] | { [index: string]: any }
+		) => void
+	) => void;
+	export type ExternalItemFunctionDataGetResolve = (
+		options?: ResolveOptions
+	) =>
+		| ((
+				context: string,
+				request: string,
+				callback: (
+					err?: null | Error,
+					result?: string | false,
+					resolveRequest?: ResolveRequest
+				) => void
+		  ) => void)
+		| ((context: string, request: string) => Promise<string>);
+	export type ExternalItemFunctionDataGetResolveCallbackResult = (
+		context: string,
+		request: string,
+		callback: (
+			err?: null | Error,
+			result?: string | false,
+			resolveRequest?: ResolveRequest
+		) => void
+	) => void;
+	export type ExternalItemFunctionDataGetResolveResult = (
+		context: string,
+		request: string
+	) => Promise<string>;
+	export type ExternalItemFunctionPromise = (
+		data: ExternalItemFunctionData
+	) => Promise<ExternalItemValue>;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
@@ -18933,7 +18929,6 @@ declare namespace exports {
 		EntryObject,
 		ExternalItem,
 		ExternalItemFunction,
-		ExternalItemFunctionData,
 		ExternalItemObjectKnown,
 		ExternalItemObjectUnknown,
 		ExternalItemValue,
@@ -18962,6 +18957,7 @@ declare namespace exports {
 		PathData,
 		CodeGenerationResults,
 		Entrypoint,
+		ExternalItemFunctionData,
 		MultiCompilerOptions,
 		MultiConfiguration,
 		MultiStats,

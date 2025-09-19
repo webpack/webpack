@@ -191,16 +191,13 @@ export type ExternalItemFunction =
 /**
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
-export type ExternalItemFunctionCallback = (
-	data: ExternalItemFunctionData,
-	callback: (err?: Error | null, result?: ExternalItemValue) => void
-) => void;
+export type ExternalItemFunctionCallback =
+	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionCallback;
 /**
  * The function is called on each dependency (`function(context, request)`).
  */
-export type ExternalItemFunctionPromise = (
-	data: ExternalItemFunctionData
-) => Promise<ExternalItemValue>;
+export type ExternalItemFunctionPromise =
+	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionPromise;
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -807,33 +804,6 @@ export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
  */
 export type ExperimentsNormalized = ExperimentsCommon &
 	ExperimentsNormalizedExtra;
-/**
- * Get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolve = (
-	options?: ResolveOptions
-) =>
-	| ExternalItemFunctionDataGetResolveCallbackResult
-	| ExternalItemFunctionDataGetResolveResult;
-/**
- * Result of get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolveCallbackResult = (
-	context: string,
-	request: string,
-	callback: (
-		err?: Error | null,
-		result?: string | false,
-		resolveRequest?: import("enhanced-resolve").ResolveRequest
-	) => void
-) => void;
-/**
- * Callback result of get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolveResult = (
-	context: string,
-	request: string
-) => Promise<string>;
 /**
  * The dependency used for the external.
  */
@@ -3185,31 +3155,6 @@ export interface ExperimentsCommon {
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
 	 */
 	syncWebAssembly?: boolean;
-}
-/**
- * Data object passed as argument when a function is set for 'externals'.
- */
-export interface ExternalItemFunctionData {
-	/**
-	 * The directory in which the request is placed.
-	 */
-	context?: string;
-	/**
-	 * Contextual information.
-	 */
-	contextInfo?: import("../lib/ModuleFactory").ModuleFactoryCreateDataContextInfo;
-	/**
-	 * The category of the referencing dependencies.
-	 */
-	dependencyType?: string;
-	/**
-	 * Get a resolve function with the current resolver options.
-	 */
-	getResolve?: ExternalItemFunctionDataGetResolve;
-	/**
-	 * The request as written by the user in the require/import expression/statement.
-	 */
-	request?: string;
 }
 /**
  * Options for building http resources.

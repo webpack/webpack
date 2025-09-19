@@ -1186,54 +1186,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void)"
-    },
-    "ExternalItemFunctionData": {
-      "description": "Data object passed as argument when a function is set for 'externals'.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "context": {
-          "description": "The directory in which the request is placed.",
-          "type": "string"
-        },
-        "contextInfo": {
-          "description": "Contextual information.",
-          "type": "object",
-          "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
-        },
-        "dependencyType": {
-          "description": "The category of the referencing dependencies.",
-          "type": "string"
-        },
-        "getResolve": {
-          "$ref": "#/definitions/ExternalItemFunctionDataGetResolve"
-        },
-        "request": {
-          "description": "The request as written by the user in the require/import expression/statement.",
-          "type": "string"
-        }
-      }
-    },
-    "ExternalItemFunctionDataGetResolve": {
-      "description": "Get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((options?: ResolveOptions) => ExternalItemFunctionDataGetResolveCallbackResult | ExternalItemFunctionDataGetResolveResult)"
-    },
-    "ExternalItemFunctionDataGetResolveCallbackResult": {
-      "description": "Result of get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((context: string, request: string, callback: (err?: Error | null, result?: string | false, resolveRequest?: import('enhanced-resolve').ResolveRequest) => void) => void)"
-    },
-    "ExternalItemFunctionDataGetResolveResult": {
-      "description": "Callback result of get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((context: string, request: string) => Promise<string>)"
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback)"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)"
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise)"
     },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
