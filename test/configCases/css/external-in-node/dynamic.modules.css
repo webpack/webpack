@@ -1,0 +1,6 @@
+@import "style2.modules.css";
+@import "https://test.cases/path/../../../../configCases/css/external-in-web/dynamic-external.css";
+
+.other {
+	color: blue;
+}
