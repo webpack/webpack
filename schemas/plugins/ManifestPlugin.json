@@ -1,0 +1,11 @@
+{
+  "title": "ManifestPluginOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "filename": {
+      "description": "Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.",
+      "type": "string"
+    }
+  }
+}
