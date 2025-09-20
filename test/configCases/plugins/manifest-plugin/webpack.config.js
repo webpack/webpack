@@ -39,7 +39,7 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin(),
-		new webpack.experiments.ManifestPlugin({
+		new webpack.ManifestPlugin({
 			filename: "test.json"
 		})
 	],

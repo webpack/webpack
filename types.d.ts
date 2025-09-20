@@ -9772,6 +9772,14 @@ declare interface ManifestPluginOptions {
 	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
 	 */
 	filename?: string;
+
+	/**
+	 * A custom Function to create the manifest.
+	 */
+	handle?: (
+		manifest: Record<string, string>,
+		stats: StatsCompilation
+	) => string;
 }
 declare interface MapOptions {
 	/**
@@ -18749,7 +18757,6 @@ declare namespace exports {
 		export namespace ids {
 			export { SyncModuleIdsPlugin };
 		}
-		export { ManifestPlugin };
 	}
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
@@ -18883,6 +18890,7 @@ declare namespace exports {
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
+		ManifestPlugin,
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,

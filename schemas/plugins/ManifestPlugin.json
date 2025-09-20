@@ -5,7 +5,14 @@
   "properties": {
     "filename": {
       "description": "Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": false,
+      "minLength": 1
+    },
+    "handle": {
+      "description": "A custom Function to create the manifest.",
+      "instanceof": "Function",
+      "tsType": "((manifest: Record<string, string>, stats: import('../../lib/stats/DefaultStatsFactoryPlugin').StatsCompilation) => string)"
     }
   }
 }
