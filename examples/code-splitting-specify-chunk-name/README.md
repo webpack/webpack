@@ -39,9 +39,9 @@ export default foo;
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!******************************************************************************!*\
-  !*** ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ***!
-  \******************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ***!
+  \**************************************************************************************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
@@ -370,21 +370,21 @@ chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.48 KiB (runtime)
     [used exports unknown]
     entry ./example.js main
 chunk (runtime: main) 792.output.js (chunk-bar-baz2) 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+  > ./baz ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz.js
 chunk (runtime: main) 994.output.js (chunk-bar-baz0) 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+  > ./bar ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar.js
 webpack X.X.X compiled successfully
 ```
 
@@ -410,18 +410,18 @@ chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.48 KiB (runtime)
     [no exports used]
     entry ./example.js main
 chunk (runtime: main) 792.output.js (chunk-bar-baz2) 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+  > ./baz ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./baz.js
 chunk (runtime: main) 994.output.js (chunk-bar-baz0) 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+  > ./bar ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ referencedExports:  chunkName: chunk-bar-baz namespace object ./bar.js
 webpack X.X.X compiled successfully
 ```
