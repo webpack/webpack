@@ -4366,15 +4366,15 @@ declare class DotenvPlugin {
 		 */
 		systemvars?: boolean;
 	};
-
-	/**
-	 * Apply the plugin
-	 */
 	apply(compiler: Compiler): void;
 	gatherVariables(
 		inputFileSystem: InputFileSystem,
 		context: string,
-		callback: (err: null | Error, variables?: Record<string, string>) => void
+		callback: (
+			err: null | Error,
+			variables?: Record<string, string>,
+			fileDependencies?: string[]
+		) => void
 	): void;
 	initializeVars(): Record<string, string>;
 	getEnvs(
@@ -4385,36 +4385,21 @@ declare class DotenvPlugin {
 			result?: {
 				env: Record<string, string>;
 				blueprint: Record<string, string>;
+				fileDependencies: string[];
 			}
 		) => void
-	): void;
-	getDefaults(
-		inputFileSystem: InputFileSystem,
-		context: string,
-		callback: (err: null | Error, content?: string) => void
 	): void;
 
 	/**
 	 * Load a file with proper path resolution
 	 */
-	loadFile(
-		__0: {
-			/**
-			 * the file to load
-			 */
-			file: string;
-			/**
-			 * the input file system
-			 */
-			inputFileSystem: InputFileSystem;
-			/**
-			 * the compiler context for resolving relative paths
-			 */
-			context: string;
-		},
-		callback: (err: null | Error, content?: string) => void
-	): void;
-	formatDefinitions(variables: Record<string, string>): Record<string, string>;
+	loadFile(fs: InputFileSystem, file: string): Promise<string>;
+	resolvePath(
+		file: string,
+		inputFileSystem: InputFileSystem,
+		context: string
+	): string;
+	formatVariables(variables: Record<string, string>): Record<string, string>;
 }
 declare interface DotenvPluginOptions {
 	/**
