@@ -73,9 +73,9 @@ it("should walk with correct order", async () => {
 });
 
 it("should analyze arguments in call member chain", async () => {
-	import("../statical-dynamic-import/dir4/lib?2").then(m => {
+	await import("../statical-dynamic-import/dir4/lib?2").then(m => {
 		m.b.f((async () => {
-			import("../statical-dynamic-import/dir4/a?2").then(m2 => {
+			await import("../statical-dynamic-import/dir4/a?2").then(m2 => {
 				expect(m2.a).toBe(1);
 				expect(m2.usedExports).toEqual(["a", "usedExports"]);
 			});

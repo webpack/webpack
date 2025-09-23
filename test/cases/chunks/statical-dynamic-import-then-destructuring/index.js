@@ -53,12 +53,20 @@ it("should walk with correct order", async () => {
 });
 
 it("should analyze arguments in call member chain", async () => {
-	import("../statical-dynamic-import/dir4/lib?2").then(({ b }) => {
+	await import("../statical-dynamic-import/dir4/lib?2").then(({ b }) => {
 		b.f((async () => {
-			import("../statical-dynamic-import/dir4/a?2").then(({ a, usedExports }) => {
+			await import("../statical-dynamic-import/dir4/a?2").then(({ a, usedExports }) => {
 				expect(a).toBe(1);
 				expect(usedExports).toEqual(["a", "usedExports"]);
 			});
 		})());
+	});
+});
+
+it("should static analyze dynamic import variable destructuring assignment", async () => {
+	await import("../statical-dynamic-import/dir1/a?3").then(m => {
+		const { default: def, usedExports } = m;
+		expect(def).toBe(3);
+		expect(usedExports).toEqual(["default", "usedExports"]);
 	});
 });
