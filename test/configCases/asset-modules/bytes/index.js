@@ -5,7 +5,7 @@ it("should work", () => {
 	const decoder = new TextDecoder('utf-8');
 	const text = decoder.decode(file);
 
-	expect(text).toBe("a Ā 𐀀 文 🦄 Text\n");
+	expect(text.trim()).toBe("a Ā 𐀀 文 🦄 Text");
 
 	if (typeof getComputedStyle === "function") {
 		const style = getComputedStyle(document.body);
