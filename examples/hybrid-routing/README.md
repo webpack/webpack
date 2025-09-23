@@ -137,9 +137,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 /***/ }),
 /* 4 */
-/*!********************************************************************!*\
-  !*** ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ***!
+  \***********************************************************************************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
@@ -530,29 +530,29 @@ module.exports = function() {
 ```
 asset pageB.bundle.js 13 KiB [emitted] (name: pageB)
 asset pageA.bundle.js 13 KiB [emitted] (name: pageA)
-asset router_js.bundle.js 2.45 KiB [emitted]
+asset router_js.bundle.js 2.53 KiB [emitted]
 asset aPage.bundle.js 392 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 392 bytes [emitted] (name: bPage)
-Entrypoint pageA 15.8 KiB = router_js.bundle.js 2.45 KiB aPage.bundle.js 392 bytes pageA.bundle.js 13 KiB
-Entrypoint pageB 15.8 KiB = router_js.bundle.js 2.45 KiB bPage.bundle.js 392 bytes pageB.bundle.js 13 KiB
+Entrypoint pageA 15.9 KiB = router_js.bundle.js 2.53 KiB aPage.bundle.js 392 bytes pageA.bundle.js 13 KiB
+Entrypoint pageB 15.9 KiB = router_js.bundle.js 2.53 KiB bPage.bundle.js 392 bytes pageB.bundle.js 13 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+  > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
   > ./router pageA
   ./aPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./aPage ./aEntry.js 3:7-25
     cjs self exports reference ./aPage.js 1:0-14
-    import() context element ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+    import() context element ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
 chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+  > ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
   > ./bEntry pageB
   > ./router pageB
   ./bPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
-    import() context element ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+    import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
 chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.58 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
@@ -591,23 +591,23 @@ asset bPage.bundle.js 117 bytes [emitted] [minimized] (name: bPage)
 Entrypoint pageA 3.46 KiB = router_js.bundle.js 538 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.82 KiB
 Entrypoint pageB 3.46 KiB = router_js.bundle.js 538 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.82 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+  > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
   > ./router pageA
   ./aPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./aPage ./aEntry.js 3:7-25
     cjs self exports reference ./aPage.js 1:0-14
-    import() context element ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+    import() context element ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
 chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+  > ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
   > ./bEntry pageB
   > ./router pageB
   ./bPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
-    import() context element ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+    import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
 chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.58 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
