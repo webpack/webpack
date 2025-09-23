@@ -21,5 +21,11 @@ trim_trailing_whitespace = false
 [test/cases/parsing/bom/bomfile.{css,js}]
 charset = utf-8-bom
 
+[test/configCases/asset-modules/bytes/file.text]
+insert_final_newline = false
+
+[test/configCases/asset-modules/bytes/file.svg]
+insert_final_newline = false
+
 [test/configCases/css/no-extra-runtime-in-js/source.text]
 insert_final_newline = false
