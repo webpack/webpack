@@ -4,7 +4,7 @@
 
 Please report security issues **privately**:
 
-- Email: [webpack@opencollective.com](mailto:webpack@opencollective.com)
+- Email: [webpack-security@openjsf.org](mailto:webpack-security@openjsf.org)
 
 **Do not** file public GitHub issues for security problems.
 
