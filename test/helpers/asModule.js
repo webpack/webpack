@@ -3,6 +3,7 @@
 const vm = require("vm");
 
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
+const [major] = process.versions.node.split(".").map(Number);
 
 module.exports = async (something, context, unlinked) => {
 	if (
@@ -26,7 +27,8 @@ module.exports = async (something, context, unlinked) => {
 	});
 	if (unlinked) return m;
 	await m.link(() => {});
-	if (m.instantiate) m.instantiate();
+	// node.js 10 needs instantiate
+	if (major === 10 && m.instantiate) m.instantiate();
 	await m.evaluate();
 	return m;
 };

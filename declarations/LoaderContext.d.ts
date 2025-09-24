@@ -10,8 +10,9 @@ import type Hash from "../lib/util/Hash";
 import type { InputFileSystem } from "../lib/util/fs";
 import type { Logger } from "../lib/logging/Logger";
 import type {
+	ImportModuleOptions,
 	ImportModuleCallback,
-	ImportModuleOptions
+	ExecuteModuleExports
 } from "../lib/dependencies/LoaderPlugin";
 import type { Resolver } from "enhanced-resolve";
 import type {
@@ -92,7 +93,10 @@ export interface LoaderPluginLoaderContext {
 		options: ImportModuleOptions | undefined,
 		callback: ImportModuleCallback
 	): void;
-	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
+	importModule(
+		request: string,
+		options?: ImportModuleOptions
+	): Promise<ExecuteModuleExports>;
 }
 
 /** The properties are added by https://github.com/webpack/loader-runner */

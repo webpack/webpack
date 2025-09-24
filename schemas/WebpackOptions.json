@@ -148,7 +148,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -161,7 +161,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -352,7 +352,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((filename: string) => boolean)"
+              "tsType": "(import(\"../lib/CleanPlugin\").KeepFn)"
             }
           ]
         }
@@ -1186,54 +1186,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void)"
-    },
-    "ExternalItemFunctionData": {
-      "description": "Data object passed as argument when a function is set for 'externals'.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "context": {
-          "description": "The directory in which the request is placed.",
-          "type": "string"
-        },
-        "contextInfo": {
-          "description": "Contextual information.",
-          "type": "object",
-          "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
-        },
-        "dependencyType": {
-          "description": "The category of the referencing dependencies.",
-          "type": "string"
-        },
-        "getResolve": {
-          "$ref": "#/definitions/ExternalItemFunctionDataGetResolve"
-        },
-        "request": {
-          "description": "The request as written by the user in the require/import expression/statement.",
-          "type": "string"
-        }
-      }
-    },
-    "ExternalItemFunctionDataGetResolve": {
-      "description": "Get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((options?: ResolveOptions) => ExternalItemFunctionDataGetResolveCallbackResult | ExternalItemFunctionDataGetResolveResult)"
-    },
-    "ExternalItemFunctionDataGetResolveCallbackResult": {
-      "description": "Result of get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((context: string, request: string, callback: (err?: Error | null, result?: string | false, resolveRequest?: import('enhanced-resolve').ResolveRequest) => void) => void)"
-    },
-    "ExternalItemFunctionDataGetResolveResult": {
-      "description": "Callback result of get a resolve function with the current resolver options.",
-      "instanceof": "Function",
-      "tsType": "((context: string, request: string) => Promise<string>)"
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback)"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)"
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise)"
     },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
@@ -1502,7 +1460,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -2064,7 +2022,7 @@
         "parse": {
           "description": "Function to parser content and return JSON.",
           "instanceof": "Function",
-          "tsType": "((input: string) => Buffer | import('../lib/json/JsonParser').JsonValue)"
+          "tsType": "(import('../lib/json/JsonParser').ParseFn)"
         }
       }
     },
@@ -2136,7 +2094,7 @@
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "(() => import(\"../lib/hmr/lazyCompilationBackend\").Server)"
+              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction)"
             }
           ]
         }
@@ -2153,7 +2111,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err: Error | null, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+              "tsType": "(import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd)"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -2180,7 +2138,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module')) => boolean)"
+              "tsType": "(import('../lib/hmr/LazyCompilationPlugin').TestFn)"
             }
           ]
         }
@@ -3063,7 +3021,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
             }
           ]
         },
@@ -3089,7 +3047,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
             }
           ]
         },
@@ -3187,7 +3145,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module'), chunks: import('../lib/Chunk')[], key: string) => string | undefined)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
             }
           ]
         },
@@ -3312,7 +3270,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
             }
           ]
         },
@@ -3355,7 +3313,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                  "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
                 }
               ]
             },
@@ -3411,7 +3369,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
             }
           ]
         },
@@ -3493,7 +3451,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module'), chunks: import('../lib/Chunk')[], key: string) => string | undefined)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
             }
           ]
         },
@@ -4074,7 +4032,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -5693,7 +5651,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((warning: import('../lib/stats/DefaultStatsFactoryPlugin').StatsError, value: string) => boolean)"
+          "tsType": "(import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn)"
         }
       ]
     },

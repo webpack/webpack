@@ -3,14 +3,21 @@ import * as styles from "./style.modules.css";
 
 it("should work", done => {
 	expect(pureStyle).toEqual({});
-	const style = getComputedStyle(document.body);
-	expect(style.getPropertyValue("background")).toBe(" red");
+
+	if (typeof document !== "undefined") {
+		const style = getComputedStyle(document.body);
+		expect(style.getPropertyValue("background")).toBe(" red");
+	}
+
   expect(styles.foo).toBe('_style_modules_css-foo');
 
 	import(/* webpackPrefetch: true */ "./style2.css").then(x => {
 		expect(x).toEqual({});
-		const style = getComputedStyle(document.body);
-		expect(style.getPropertyValue("color")).toBe(" blue");
+
+		if (typeof document !== "undefined") {
+			const style = getComputedStyle(document.body);
+			expect(style.getPropertyValue("color")).toBe(" blue");
+		}
 
 		import(/* webpackPrefetch: true */ "./style2.modules.css").then(x => {
 		  expect(x.bar).toBe("_style2_modules_css-bar");

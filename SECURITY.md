@@ -43,6 +43,14 @@ When investigating and reporting vulnerabilities, please **do not**:
 
 ---
 
+## Threat Model
+
+For an overview of the security assumptions, potential attack vectors, and areas
+of concern relevant to webpack, please refer to the
+[Threat Model](https://github.com/webpack/security-wg/blob/main/docs/threat-model.md).
+
+---
+
 ## Incident Response
 
 In the event of a broader security incident, please refer to our

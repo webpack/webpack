@@ -82,10 +82,7 @@ export type EntryFilename = FilenameTemplate;
  */
 export type FilenameTemplate =
 	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * Specifies the layer in which modules of this entrypoint are placed.
  */
@@ -144,10 +141,7 @@ export type PublicPath = "auto" | RawPublicPath;
  */
 export type RawPublicPath =
 	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -197,16 +191,13 @@ export type ExternalItemFunction =
 /**
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
-export type ExternalItemFunctionCallback = (
-	data: ExternalItemFunctionData,
-	callback: (err?: Error | null, result?: ExternalItemValue) => void
-) => void;
+export type ExternalItemFunctionCallback =
+	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionCallback;
 /**
  * The function is called on each dependency (`function(context, request)`).
  */
-export type ExternalItemFunctionPromise = (
-	data: ExternalItemFunctionData
-) => Promise<ExternalItemValue>;
+export type ExternalItemFunctionPromise =
+	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionPromise;
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -466,10 +457,7 @@ export type OptimizationSplitChunksSizes =
  */
 export type AssetModuleFilename =
 	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * Add charset attribute for script tag.
  */
@@ -729,10 +717,7 @@ export type WarningFilterTypes =
 export type WarningFilterItemTypes =
 	| RegExp
 	| string
-	| ((
-			warning: import("../lib/stats/DefaultStatsFactoryPlugin").StatsError,
-			value: string
-	  ) => boolean);
+	| import("../lib/stats/DefaultStatsPresetPlugin").WarningFilterFn;
 /**
  * Environment to build for. An array of environments to build for all of them when possible.
  */
@@ -764,10 +749,7 @@ export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
  */
 export type AssetModuleOutputPath =
 	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl.
  */
@@ -822,33 +804,6 @@ export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
  */
 export type ExperimentsNormalized = ExperimentsCommon &
 	ExperimentsNormalizedExtra;
-/**
- * Get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolve = (
-	options?: ResolveOptions
-) =>
-	| ExternalItemFunctionDataGetResolveCallbackResult
-	| ExternalItemFunctionDataGetResolveResult;
-/**
- * Result of get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolveCallbackResult = (
-	context: string,
-	request: string,
-	callback: (
-		err?: Error | null,
-		result?: string | false,
-		resolveRequest?: import("enhanced-resolve").ResolveRequest
-	) => void
-) => void;
-/**
- * Callback result of get a resolve function with the current resolver options.
- */
-export type ExternalItemFunctionDataGetResolveResult = (
-	context: string,
-	request: string
-) => Promise<string>;
 /**
  * The dependency used for the external.
  */
@@ -1901,7 +1856,7 @@ export interface OptimizationSplitChunksOptions {
 	chunks?:
 		| ("initial" | "async" | "all")
 		| RegExp
-		| ((chunk: import("../lib/Chunk")) => boolean);
+		| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
@@ -1924,7 +1879,7 @@ export interface OptimizationSplitChunksOptions {
 		chunks?:
 			| ("initial" | "async" | "all")
 			| RegExp
-			| ((chunk: import("../lib/Chunk")) => boolean);
+			| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -1949,12 +1904,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?:
-		| string
-		| ((
-				pathData: import("../lib/Compilation").PathData,
-				assetInfo?: import("../lib/Compilation").AssetInfo
-		  ) => string);
+	filename?: string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize.
 	 */
@@ -1998,14 +1948,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?:
-		| false
-		| string
-		| ((
-				module: import("../lib/Module"),
-				chunks: import("../lib/Chunk")[],
-				key: string
-		  ) => string | undefined);
+	name?: false | string | import("../lib/optimize/SplitChunksPlugin").GetNameFn;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -2025,7 +1968,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	chunks?:
 		| ("initial" | "async" | "all")
 		| RegExp
-		| ((chunk: import("../lib/Chunk")) => boolean);
+		| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
@@ -2037,12 +1980,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?:
-		| string
-		| ((
-				pathData: import("../lib/Compilation").PathData,
-				assetInfo?: import("../lib/Compilation").AssetInfo
-		  ) => string);
+	filename?: string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
 	/**
 	 * Sets the hint for chunk id.
 	 */
@@ -2090,14 +2028,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
-	name?:
-		| false
-		| string
-		| ((
-				module: import("../lib/Module"),
-				chunks: import("../lib/Chunk")[],
-				key: string
-		  ) => string | undefined);
+	name?: false | string | import("../lib/optimize/SplitChunksPlugin").GetNameFn;
 	/**
 	 * Priority of this cache group.
 	 */
@@ -2361,7 +2292,7 @@ export interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: RegExp | string | ((filename: string) => boolean);
+	keep?: RegExp | string | import("../lib/CleanPlugin").KeepFn;
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -3226,31 +3157,6 @@ export interface ExperimentsCommon {
 	syncWebAssembly?: boolean;
 }
 /**
- * Data object passed as argument when a function is set for 'externals'.
- */
-export interface ExternalItemFunctionData {
-	/**
-	 * The directory in which the request is placed.
-	 */
-	context?: string;
-	/**
-	 * Contextual information.
-	 */
-	contextInfo?: import("../lib/ModuleFactory").ModuleFactoryCreateDataContextInfo;
-	/**
-	 * The category of the referencing dependencies.
-	 */
-	dependencyType?: string;
-	/**
-	 * Get a resolve function with the current resolver options.
-	 */
-	getResolve?: ExternalItemFunctionDataGetResolve;
-	/**
-	 * The request as written by the user in the require/import expression/statement.
-	 */
-	request?: string;
-}
-/**
  * Options for building http resources.
  */
 export interface HttpUriOptions {
@@ -3465,9 +3371,7 @@ export interface JsonParserOptions {
 	/**
 	 * Function to parser content and return JSON.
 	 */
-	parse?: (
-		input: string
-	) => Buffer | import("../lib/json/JsonParser").JsonValue;
+	parse?: import("../lib/json/JsonParser").ParseFn;
 }
 /**
  * Options for the default backend.
@@ -3496,7 +3400,7 @@ export interface LazyCompilationDefaultBackendOptions {
 				| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
 				| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
 		  )
-		| (() => import("../lib/hmr/lazyCompilationBackend").Server);
+		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
 }
 /**
  * Options for compiling entrypoints and import()s only when they are accessed.
@@ -3506,18 +3410,7 @@ export interface LazyCompilationOptions {
 	 * Specifies the backend that should be used for handling client keep alive.
 	 */
 	backend?:
-		| (
-				| ((
-						compiler: import("../lib/Compiler"),
-						callback: (
-							err: Error | null,
-							api?: import("../lib/hmr/LazyCompilationPlugin").BackendApi
-						) => void
-				  ) => void)
-				| ((
-						compiler: import("../lib/Compiler")
-				  ) => Promise<import("../lib/hmr/LazyCompilationPlugin").BackendApi>)
-		  )
+		| import("../lib/hmr/LazyCompilationPlugin").BackEnd
 		| LazyCompilationDefaultBackendOptions;
 	/**
 	 * Enable/disable lazy compilation for entries.
@@ -3530,7 +3423,7 @@ export interface LazyCompilationOptions {
 	/**
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
-	test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
+	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin").TestFn;
 }
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).

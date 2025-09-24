@@ -104,7 +104,7 @@
     "schema-utils": "^4.3.2",
     "tapable": "^2.2.3",
     "terser-webpack-plugin": "^5.3.11",
-    "watchpack": "^2.4.1",
+    "watchpack": "^2.4.4",
     "webpack-sources": "^3.3.3"
   },
   "devDependencies": {
@@ -139,7 +139,7 @@
     "eslint-plugin-jsdoc": "^51.2.3",
     "eslint-plugin-n": "^17.21.0",
     "eslint-plugin-prettier": "^5.5.0",
-    "eslint-plugin-unicorn": "^60.0.0",
+    "eslint-plugin-unicorn": "^61.0.1",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "globals": "^16.0.0",

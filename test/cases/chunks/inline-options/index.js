@@ -127,9 +127,9 @@ if (process.env.NODE_ENV === "production") {
 
 	it("should contain only webpackExports from module", function () {
 		return import(
-			/* webpackExports: ["a", "usedExports", "b"] */ "./dir12/a?2"
+			/* webpackExports: ["usedExports"] */ "./dir12/a?2"
 		).then(module => {
-			expect(module.usedExports).toEqual(["a", "b", "usedExports"]);
+			expect(module.usedExports).toEqual(["usedExports"]);
 		});
 	});
 
@@ -137,10 +137,10 @@ if (process.env.NODE_ENV === "production") {
 		return import(
 			/*
 			webpackMode: "eager",
-			webpackExports: ["a", "usedExports", "b"]
+			webpackExports: ["usedExports"]
 		*/ "./dir12/a?3"
 		).then(module => {
-			expect(module.usedExports).toEqual(["a", "b", "usedExports"]);
+			expect(module.usedExports).toEqual(["usedExports"]);
 		});
 	});
 
@@ -149,10 +149,10 @@ if (process.env.NODE_ENV === "production") {
 		return import(
 			/*
 			webpackMode: "weak",
-			webpackExports: ["a", "usedExports", "b"]
+			webpackExports: ["usedExports"]
 		*/ "./dir12/a?4"
 		).then(module => {
-			expect(module.usedExports).toEqual(["a", "b", "usedExports"]);
+			expect(module.usedExports).toEqual(["usedExports"]);
 		});
 	});
 

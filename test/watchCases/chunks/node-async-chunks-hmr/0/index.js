@@ -1,5 +1,7 @@
 import { react } from "./react";
 
+function doNothing() {}
+
 it("should work where an ESM entryChunk depends on the runtimeChunk", async function (done) {
 	const mainChunk = STATS_JSON.chunks.find((chunk) => chunk.id === "main");
 	const runtimeChunk = STATS_JSON.chunks.find((chunk) => chunk.id === "runtime-main");
@@ -9,8 +11,8 @@ it("should work where an ESM entryChunk depends on the runtimeChunk", async func
 	expect(mainChunk).toBeDefined();
 	expect(react).toBe("react");
 
-	await import('./dynamic-1').then(console.log)
-	await import('./dynamic-2').then(console.log)
+	await import('./dynamic-1').then(doNothing)
+	await import('./dynamic-2').then(doNothing)
 
 	if (WATCH_STEP === "0") {
 		STATE.mainChunkHash = mainChunk.hash;

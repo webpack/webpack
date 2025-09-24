@@ -25,7 +25,7 @@
         "checkResource": {
           "description": "A filter function for resource and context.",
           "instanceof": "Function",
-          "tsType": "((resource: string, context: string) => boolean)"
+          "tsType": "(import(\"../../lib/IgnorePlugin\").CheckResourceFn)"
         }
       },
       "required": ["checkResource"]

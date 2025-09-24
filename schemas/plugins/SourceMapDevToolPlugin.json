@@ -50,7 +50,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../../lib/Compilation\").PathData, assetInfo?: import(\"../../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },

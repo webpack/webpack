@@ -6,6 +6,8 @@ const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
 
+const [major] = process.versions.node.split(".").map(Number);
+
 /**
  * @param {string} path path
  * @returns {string} subPath
@@ -471,7 +473,7 @@ class TestRunner {
 						)
 				);
 				// node.js 10 needs instantiate
-				if (esm.instantiate) esm.instantiate();
+				if (major === 10 && esm.instantiate) esm.instantiate();
 				await esm.evaluate();
 				if (esmMode === "evaluated") return esm;
 				const ns = esm.namespace;

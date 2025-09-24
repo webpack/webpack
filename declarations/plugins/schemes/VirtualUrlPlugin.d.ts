@@ -10,9 +10,7 @@ export type VirtualUrlPluginOptions = VirtualUrlOptions;
  */
 export type VirtualModuleContent =
 	| string
-	| ((
-			loaderContext: import("webpack").LoaderContext<EXPECTED_ANY>
-	  ) => Promise<string> | string)
+	| import("../../../lib/schemes/VirtualUrlPlugin").SourceFn
 	| VirtualModule;
 
 /**
@@ -37,9 +35,7 @@ export interface VirtualModule {
 	/**
 	 * The source function that provides the virtual content.
 	 */
-	source: (
-		loaderContext: import("webpack").LoaderContext<EXPECTED_ANY>
-	) => Promise<string> | string;
+	source: import("../../../lib/schemes/VirtualUrlPlugin").SourceFn;
 	/**
 	 * The module type.
 	 */
@@ -47,5 +43,8 @@ export interface VirtualModule {
 	/**
 	 * Optional version function or value for cache invalidation.
 	 */
-	version?: true | string | (() => string | undefined);
+	version?:
+		| true
+		| string
+		| import("../../../lib/schemes/VirtualUrlPlugin").VersionFn;
 }

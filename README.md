@@ -312,16 +312,9 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
 - [thelarkinn](https://github.com/thelarkinn) -
   **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 
-<h3>Core Collaborators</h3>
+<h3>Maintenance</h3>
 
-- [jhnns](https://github.com/jhnns) -
-  **Johannes Ewald** <<mail@johannesewald.de>>
-- [sokra](https://github.com/sokra) -
-  **Tobias Koppers** <<jackworks@protonmail.co>>
-- [spacek33z](https://github.com/spacek33z) -
-  **Kees Kluskens** <<kees@webduck.nl>>
-- [TheLarkInn](https://github.com/TheLarkInn) -
-  **Sean T. Larkin** <<selarkin@microsoft.com>>
+This webpack repository is maintained by the [`Core Working Group`](./WORKING_GROUP.md).
 
 <h2>Sponsoring</h2>
 
