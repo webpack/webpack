@@ -558,7 +558,11 @@ class TestRunner {
 					outputDirectory
 				}),
 				URL,
-				TextDecoder,
+				TextDecoder:
+					typeof TextDecoder !== "undefined"
+						? TextDecoder
+						: // eslint-disable-next-line n/prefer-global/text-decoder
+							require("util").TextDecoder,
 				TextEncoder,
 				EventSource,
 				clearTimeout,
