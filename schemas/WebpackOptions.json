@@ -1980,9 +1980,9 @@
           "enum": ["strict", "non-strict"]
         },
         "parse": {
-          "description": "Function to parser content and return JSON.",
+          "description": "Function to parser source code.",
           "instanceof": "Function",
-          "tsType": "(import('../lib/javascript/JavascriptParser').ParseFn)"
+          "tsType": "(import('../lib/javascript/JavascriptParser').ParseFunction)"
         },
         "reexportExportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",

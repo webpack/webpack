@@ -68,6 +68,7 @@ import {
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
+	SourceLocation,
 	SpreadElement,
 	StaticBlock,
 	Super,
@@ -102,11 +103,9 @@ import {
 } from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions } from "net";
-import {
-	ValidationErrorConfiguration,
-	validate as validateFunction
-} from "schema-utils";
+import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
+import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -119,8 +118,7 @@ import {
 	SyncBailHook,
 	SyncHook,
 	SyncWaterfallHook,
-	TapOptions,
-	TypedHookMap
+	TapOptions
 } from "tapable";
 import { URL } from "url";
 import { Context } from "vm";
@@ -302,14 +300,6 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
-declare abstract class AssetBytesGenerator extends Generator {
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-}
-declare abstract class AssetBytesParser extends ParserClass {}
 declare interface AssetDependencyMeta {
 	sourceType: "css-url";
 }
@@ -324,25 +314,6 @@ type AssetFilterItemTypes =
 	| string
 	| RegExp
 	| ((name: string, asset: StatsAsset) => boolean);
-declare abstract class AssetGenerator extends Generator {
-	dataUrlOptions?:
-		| AssetGeneratorDataUrlOptions
-		| ((
-				source: string | Buffer,
-				context: { filename: string; module: Module }
-		  ) => string);
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	outputPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	emit?: boolean;
-	getMimeType(module: NormalModule): string;
-	generateDataUri(module: NormalModule): string;
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-}
 
 /**
  * Options object for data url generation.
@@ -380,15 +351,6 @@ declare interface AssetInlineGeneratorOptions {
 				source: string | Buffer,
 				context: { filename: string; module: Module }
 		  ) => string);
-}
-declare abstract class AssetParser extends ParserClass {
-	dataUrlCondition?:
-		| boolean
-		| AssetParserDataUrlOptions
-		| ((
-				source: string | Buffer,
-				context: { filename: string; module: Module }
-		  ) => boolean);
 }
 
 /**
@@ -445,14 +407,6 @@ declare interface AssetResourceGeneratorOptions {
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
-declare abstract class AssetSourceGenerator extends Generator {
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-}
-declare abstract class AssetSourceParser extends ParserClass {}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions:
@@ -522,7 +476,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare abstract class AsyncWebAssemblyParser extends ParserClass {}
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -2094,11 +2047,11 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
-declare interface CommentCssParser {
-	value: string;
-	range: [number, number];
-	loc: { start: Position; end: Position };
-}
+type CommentJavascriptParser = CommentImport & {
+	start: number;
+	end: number;
+	loc: SourceLocation;
+};
 declare interface CommonJsImportSettings {
 	name?: string;
 	context: string;
@@ -3618,23 +3571,6 @@ declare interface CssData {
 	 */
 	exports: Map<string, string>;
 }
-declare abstract class CssGenerator extends Generator {
-	convention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-	localIdentName?: string;
-	exportsOnly?: boolean;
-	esModule?: boolean;
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-}
 
 /**
  * Generator options for css modules.
@@ -3829,19 +3765,6 @@ declare class CssModulesPlugin {
 		outputOptions: OutputNormalizedWithDefaults
 	): TemplatePath;
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
-}
-declare abstract class CssParser extends ParserClass {
-	defaultMode: "global" | "auto" | "pure" | "local";
-	import: boolean;
-	url: boolean;
-	namedExports: boolean;
-	comments?: CommentCssParser[];
-	magicCommentContext: Context;
-	getComments(range: [number, number]): CommentCssParser[];
-	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentCssParser })[];
-	};
 }
 
 /**
@@ -6761,33 +6684,6 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
-declare abstract class JavascriptGenerator extends Generator {
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-	sourceModule(
-		module: Module,
-		initFragments: InitFragment<GenerateContext>[],
-		source: ReplaceSource,
-		generateContext: GenerateContext
-	): void;
-	sourceBlock(
-		module: Module,
-		block: DependenciesBlock,
-		initFragments: InitFragment<GenerateContext>[],
-		source: ReplaceSource,
-		generateContext: GenerateContext
-	): void;
-	sourceDependency(
-		module: Module,
-		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
-		source: ReplaceSource,
-		generateContext: GenerateContext
-	): void;
-}
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
@@ -6842,7 +6738,10 @@ declare class JavascriptModulesPlugin {
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends ParserClass {
-	constructor(sourceType?: "module" | "auto" | "script");
+	constructor(
+		sourceType?: "module" | "auto" | "script",
+		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<
@@ -7272,15 +7171,16 @@ declare class JavascriptParser extends ParserClass {
 			[LogicalExpression],
 			boolean | void
 		>;
-		program: SyncBailHook<[Program, CommentImport[]], boolean | void>;
+		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
-		finish: SyncBailHook<[Program, CommentImport[]], boolean | void>;
+		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
+	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
 	scope: ScopeInfo;
 	state: ParserState;
-	comments?: CommentImport[];
+	comments?: CommentJavascriptParser[];
 	semicolons?: Set<number>;
 	statementPath?: StatementPathItem[];
 	prevStatement?:
@@ -8104,7 +8004,7 @@ declare class JavascriptParser extends ParserClass {
 			| MaybeNamedClassDeclaration,
 		commentsStartPos: number
 	): boolean;
-	getComments(range: [number, number]): CommentImport[];
+	getComments(range: [number, number]): CommentJavascriptParser[];
 	isAsiPosition(pos: number): boolean;
 	setAsiPosition(pos: number): void;
 	unsetAsiPosition(pos: number): void;
@@ -8140,7 +8040,7 @@ declare class JavascriptParser extends ParserClass {
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
 	parseCommentOptions(range: [number, number]): {
 		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentImport })[];
+		errors: null | (Error & { comment: CommentJavascriptParser })[];
 	};
 	extractMemberExpressionChain(
 		expression:
@@ -8395,6 +8295,11 @@ declare interface JavascriptParserOptions {
 	overrideStrict?: "strict" | "non-strict";
 
 	/**
+	 * Function to parser source code.
+	 */
+	parse?: (code: string, options: ParseOptions) => ParseResult;
+
+	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
 	reexportExportsPresence?: false | "auto" | "error" | "warn";
@@ -8490,14 +8395,6 @@ declare abstract class JsonData {
 		| JsonValueFs[];
 	updateHash(hash: Hash): void;
 }
-declare abstract class JsonGenerator extends Generator {
-	options: JsonGeneratorOptions;
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-}
 
 /**
  * Generator options for json modules.
@@ -8507,17 +8404,6 @@ declare interface JsonGeneratorOptions {
 	 * Use `JSON.parse` when the JSON string is longer than 20 characters.
 	 */
 	JSONParse?: boolean;
-}
-declare interface JsonModulesPluginParserOptions {
-	/**
-	 * The depth of json dependency flagged as `exportInfo`.
-	 */
-	exportsDepth?: number;
-
-	/**
-	 * Function that executes for a module source string and should return json-compatible data.
-	 */
-	parse?: (input: string) => any;
 }
 declare interface JsonObjectFs {
 	[index: string]:
@@ -8538,9 +8424,6 @@ declare interface JsonObjectTypes {
 		| boolean
 		| JsonObjectTypes
 		| JsonValueTypes[];
-}
-declare abstract class JsonParser extends ParserClass {
-	options: JsonModulesPluginParserOptions;
 }
 
 /**
@@ -11565,225 +11448,6 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			],
 			Module
 		>;
-		createParser: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-				> &
-				Record<"json", SyncBailHook<[JsonParserOptions], JsonParser>> &
-				Record<"asset", SyncBailHook<[AssetParserOptions], AssetParser>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[EmptyParserOptions], AssetParser>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[EmptyParserOptions], AssetParser>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[EmptyParserOptions], AssetSourceParser>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[EmptyParserOptions], AssetBytesParser>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[EmptyParserOptions], AsyncWebAssemblyParser>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[EmptyParserOptions], WebAssemblyParser>
-				> &
-				Record<"css", SyncBailHook<[CssParserOptions], CssParser>> &
-				Record<"css/auto", SyncBailHook<[CssAutoParserOptions], CssParser>> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssModuleParserOptions], CssParser>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssGlobalParserOptions], CssParser>
-				> &
-				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
-		>;
-		parser: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-				> &
-				Record<"json", SyncBailHook<[JsonParser, JsonParserOptions], void>> &
-				Record<"asset", SyncBailHook<[AssetParser, AssetParserOptions], void>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[AssetSourceParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[AssetBytesParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[AsyncWebAssemblyParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[WebAssemblyParser, EmptyParserOptions], void>
-				> &
-				Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssParser, CssAutoParserOptions], void>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssParser, CssModuleParserOptions], void>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssParser, CssGlobalParserOptions], void>
-				> &
-				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
-		>;
-		createGenerator: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-				> &
-				Record<"json", SyncBailHook<[JsonGeneratorOptions], JsonGenerator>> &
-				Record<"asset", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetGeneratorOptions], AssetGenerator>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetGeneratorOptions], AssetGenerator>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[EmptyGeneratorOptions], AssetSourceGenerator>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[EmptyGeneratorOptions], AssetBytesGenerator>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[EmptyParserOptions], Generator>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[EmptyParserOptions], Generator>
-				> &
-				Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssAutoGeneratorOptions], CssGenerator>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssGlobalGeneratorOptions], CssGenerator>
-				> &
-				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
-		>;
-		generator: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"json",
-					SyncBailHook<[JsonGenerator, JsonGeneratorOptions], void>
-				> &
-				Record<
-					"asset",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[AssetSourceGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[AssetBytesGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[Generator, EmptyParserOptions], void>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[Generator, EmptyParserOptions], void>
-				> &
-				Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssGenerator, CssAutoGeneratorOptions], void>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssGenerator, CssGlobalGeneratorOptions], void>
-				> &
-				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
-		>;
 		createModuleClass: HookMap<
 			SyncBailHook<
 				[
@@ -13431,6 +13095,48 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
+declare interface ParseOptions {
+	sourceType: "module" | "auto" | "script";
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+	locations?: boolean;
+	comments?: boolean;
+	ranges?: boolean;
+	semicolons?: boolean;
+	allowHashBang?: boolean;
+	allowReturnOutsideFunction?: boolean;
+}
+declare interface ParseResult {
+	ast: Program;
+	comments: CommentJavascriptParser[];
+	semicolons: Set<number>;
+}
 declare interface ParsedIdentifier {
 	/**
 	 * request
@@ -13693,10 +13399,6 @@ declare interface PnpApi {
 		issuer: string,
 		options: { considerBuiltins: boolean }
 	) => null | string;
-}
-declare interface Position {
-	line: number;
-	column: number;
 }
 declare class PrefetchPlugin {
 	constructor(context: string, request?: string);
@@ -18352,7 +18054,6 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	delete(...args: K): void;
 	clear(): void;
 }
-declare abstract class WebAssemblyParser extends ParserClass {}
 declare interface WebAssemblyRenderContext {
 	/**
 	 * the chunk
