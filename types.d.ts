@@ -5918,6 +5918,11 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	asset?: AssetGeneratorOptions;
 
 	/**
+	 * No generator options are supported for this module type.
+	 */
+	"asset/bytes"?: EmptyGeneratorOptions;
+
+	/**
 	 * Generator options for asset/inline modules.
 	 */
 	"asset/inline"?: AssetInlineGeneratorOptions;
@@ -5926,6 +5931,11 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for asset/resource modules.
 	 */
 	"asset/resource"?: AssetResourceGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"asset/source"?: EmptyGeneratorOptions;
 
 	/**
 	 * Generator options for css modules.
@@ -12937,6 +12947,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 	/**
 	 * No parser options are supported for this module type.
 	 */
+	"asset/bytes"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
 	"asset/inline"?: EmptyParserOptions;
 
 	/**
@@ -18436,6 +18451,7 @@ declare namespace exports {
 		export let system: "__webpack_require__.System";
 		export let systemContext: "__webpack_require__.y";
 		export let thisAsExports: "top-level-this-exports";
+		export let toBinary: "__webpack_require__.tb";
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
 	}

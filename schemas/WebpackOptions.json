@@ -1521,11 +1521,17 @@
         "asset": {
           "$ref": "#/definitions/AssetGeneratorOptions"
         },
+        "asset/bytes": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
         "asset/inline": {
           "$ref": "#/definitions/AssetInlineGeneratorOptions"
         },
         "asset/resource": {
           "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "asset/source": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
         },
         "css": {
           "$ref": "#/definitions/CssGeneratorOptions"
@@ -3886,6 +3892,9 @@
       "properties": {
         "asset": {
           "$ref": "#/definitions/AssetParserOptions"
+        },
+        "asset/bytes": {
+          "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/inline": {
           "$ref": "#/definitions/EmptyParserOptions"

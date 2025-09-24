@@ -130,11 +130,11 @@ class TestRunner {
 		/** @type {EXPECTED_ANY} */
 		this._globalContext = this.createBaseGlobalContext();
 		/** @type {EXPECTED_ANY} */
+		this._esmContext = this.createBaseEsmContext();
+		/** @type {EXPECTED_ANY} */
 		this._moduleScope = this.createBaseModuleScope();
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
-		/** @type {EXPECTED_ANY} */
-		this._esmContext = this.createBaseEsmContext();
 	}
 
 	/**
@@ -153,7 +153,14 @@ class TestRunner {
 	 * @returns {EXPECTED_ANY} globalContext
 	 */
 	createBaseGlobalContext() {
-		const base = { console, expect, setTimeout, clearTimeout };
+		const base = {
+			console,
+			expect,
+			setTimeout,
+			clearTimeout,
+			setInterval,
+			clearInterval
+		};
 		Object.assign(base, this.setupEnv());
 		return base;
 	}
@@ -216,6 +223,7 @@ class TestRunner {
 			global,
 			process,
 			setTimeout,
+			clearTimeout,
 			setImmediate,
 			URL,
 			Buffer
@@ -550,6 +558,16 @@ class TestRunner {
 					outputDirectory
 				}),
 				URL,
+				TextEncoder:
+					typeof TextEncoder !== "undefined"
+						? TextEncoder
+						: // eslint-disable-next-line n/prefer-global/text-encoder
+							require("util").TextEncoder,
+				TextDecoder:
+					typeof TextDecoder !== "undefined"
+						? TextDecoder
+						: // eslint-disable-next-line n/prefer-global/text-decoder
+							require("util").TextDecoder,
 				EventSource,
 				clearTimeout,
 				fetch

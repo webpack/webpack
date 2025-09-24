@@ -3978,6 +3978,10 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 */
 	asset?: AssetGeneratorOptions;
 	/**
+	 * No generator options are supported for this module type.
+	 */
+	"asset/bytes"?: EmptyGeneratorOptions;
+	/**
 	 * Generator options for asset/inline modules.
 	 */
 	"asset/inline"?: AssetInlineGeneratorOptions;
@@ -3985,6 +3989,10 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for asset/resource modules.
 	 */
 	"asset/resource"?: AssetResourceGeneratorOptions;
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"asset/source"?: EmptyGeneratorOptions;
 	/**
 	 * Generator options for css modules.
 	 */
@@ -4041,6 +4049,10 @@ export interface ParserOptionsByModuleTypeKnown {
 	 * Parser options for asset modules.
 	 */
 	asset?: AssetParserOptions;
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/bytes"?: EmptyParserOptions;
 	/**
 	 * No parser options are supported for this module type.
 	 */
