@@ -82,3 +82,12 @@ it("should analyze arguments in call member chain", async () => {
 		})());
 	});
 });
+
+it("should analyze then arguments", async () => {
+	await import("../statical-dynamic-import/dir4/lib?3").then(() => {
+		return import("../statical-dynamic-import/dir4/a?3").then(m2 => {
+			expect(m2.a).toBe(1);
+			expect(m2.usedExports).toEqual(["a", "usedExports"]);
+		});
+	});
+})
