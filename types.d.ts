@@ -9788,6 +9788,29 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+declare class ManifestPlugin {
+	constructor(options: ManifestPluginOptions);
+	options: Required<ManifestPluginOptions>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ManifestPluginOptions {
+	/**
+	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
+
+	/**
+	 * A custom Function to create the manifest.
+	 */
+	handle?: (
+		manifest: Record<string, string>,
+		stats: StatsCompilation
+	) => string;
+}
 declare interface MapOptions {
 	/**
 	 * need columns?
@@ -18933,6 +18956,7 @@ declare namespace exports {
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
+		ManifestPlugin,
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
