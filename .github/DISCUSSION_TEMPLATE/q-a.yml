@@ -1,0 +1,70 @@
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with webpack? You're in the right place! Before asking:
+        - Check the [webpack documentation](https://webpack.js.org)
+        - Search existing [discussions](https://github.com/webpack/webpack/discussions)
+        - Search existing [issues](https://github.com/webpack/webpack/issues)
+
+  - type: textarea
+    attributes:
+      label: What do you need help with?
+      description: Describe your problem or question clearly
+      placeholder: I'm trying to configure webpack to do X, but I'm getting Y instead...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Your webpack configuration
+      description: Share your webpack.config.js or relevant configuration
+      render: js
+      placeholder: |
+        module.exports = {
+          entry: './src/index.js',
+          output: {
+            filename: 'bundle.js'
+          }
+        }
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Error logs
+      description: If you're getting errors, paste them here
+      render: shell
+      placeholder: |
+        ERROR in ./src/index.js
+        Module not found: Error: Can't resolve...
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: Repository
+      description: Link to a minimal reproduction helps us help you faster
+      placeholder: https://github.com/username/webpack-issue
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: What have you tried?
+      description: List any solutions you've already attempted
+      placeholder: |
+        - I tried adding X to my config
+        - I searched for similar issues and found...
+        - I read the documentation about Y
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: webpack version
+      description: What version of webpack are you using?
+      placeholder: "5.89.0"
+    validations:
+      required: true
