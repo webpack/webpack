@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport } from "acorn";
+import { Options as OptionsImport, Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
 import { Scope } from "eslint-scope";
 import {
@@ -3808,8 +3808,8 @@ declare class DefinePlugin {
 	): RuntimeValue;
 }
 declare class DelegatedPlugin {
-	constructor(options: Options);
-	options: Options;
+	constructor(options: OptionsDelegatedModuleFactoryPlugin);
+	options: OptionsDelegatedModuleFactoryPlugin;
 
 	/**
 	 * Apply the plugin
@@ -6740,7 +6740,12 @@ declare class JavascriptModulesPlugin {
 declare class JavascriptParser extends ParserClass {
 	constructor(
 		sourceType?: "module" | "auto" | "script",
-		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+		options?: {
+			parse?: (
+				code: string,
+				options: Pick<OptionsImport, "onComment" | "onInsertedSemicolon">
+			) => Program;
+		}
 	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -7177,7 +7182,12 @@ declare class JavascriptParser extends ParserClass {
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
-	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
+	options: {
+		parse?: (
+			code: string,
+			options: Pick<OptionsImport, "onComment" | "onInsertedSemicolon">
+		) => Program;
+	};
 	scope: ScopeInfo;
 	state: ParserState;
 	comments?: CommentJavascriptParser[];
@@ -8153,9 +8163,11 @@ declare class JavascriptParser extends ParserClass {
 				rootInfo: ExportedVariableInfo;
 				getMembers: () => string[];
 		  };
+	clone(sourceType?: "module" | "auto" | "script"): JavascriptParser;
 	static extend(
 		...plugins: ((BaseParser: typeof ParserImport) => typeof ParserImport)[]
 	): typeof JavascriptParser;
+	static getModuleParser(module: NormalModule): null | JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
@@ -8297,7 +8309,10 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Function to parser source code.
 	 */
-	parse?: (code: string, options: ParseOptions) => ParseResult;
+	parse?: (
+		code: string,
+		options: Pick<OptionsImport, "onComment" | "onInsertedSemicolon">
+	) => Program;
 
 	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
@@ -12338,7 +12353,13 @@ declare interface OptimizationSplitChunksOptions {
 	 */
 	usedExports?: boolean;
 }
-declare interface Options {
+declare abstract class OptionsApply {
+	process(
+		options: WebpackOptionsNormalizedWithDefaults,
+		compiler: Compiler
+	): WebpackOptionsNormalizedWithDefaults;
+}
+declare interface OptionsDelegatedModuleFactoryPlugin {
 	/**
 	 * source
 	 */
@@ -12373,12 +12394,6 @@ declare interface Options {
 	 * object for caching
 	 */
 	associatedObjectForCache?: object;
-}
-declare abstract class OptionsApply {
-	process(
-		options: WebpackOptionsNormalizedWithDefaults,
-		compiler: Compiler
-	): WebpackOptionsNormalizedWithDefaults;
 }
 declare interface OriginRecord {
 	module: null | Module;
@@ -13094,48 +13109,6 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 };
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
-}
-declare interface ParseOptions {
-	sourceType: "module" | "auto" | "script";
-	ecmaVersion?:
-		| 3
-		| 5
-		| 6
-		| 7
-		| 8
-		| 9
-		| 10
-		| 11
-		| 12
-		| 13
-		| 14
-		| 15
-		| 16
-		| 17
-		| 2015
-		| 2016
-		| 2017
-		| 2018
-		| 2019
-		| 2020
-		| 2021
-		| 2022
-		| 2023
-		| 2024
-		| 2025
-		| 2026
-		| "latest";
-	locations?: boolean;
-	comments?: boolean;
-	ranges?: boolean;
-	semicolons?: boolean;
-	allowHashBang?: boolean;
-	allowReturnOutsideFunction?: boolean;
-}
-declare interface ParseResult {
-	ast: Program;
-	comments: CommentJavascriptParser[];
-	semicolons: Set<number>;
 }
 declare interface ParsedIdentifier {
 	/**
