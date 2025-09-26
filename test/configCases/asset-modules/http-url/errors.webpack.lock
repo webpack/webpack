@@ -7,7 +7,7 @@
   "http://localhost:9990/redirect": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/redirect.js": { "resolved": "http://localhost:9990/redirect", "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/resolve.js": { "integrity": "sha512-SHOULD_BE_INVALID", "contentType": "text/javascript" },
-  "https://raw.githubusercontent.com//webpack//webpack//main/CODE_OF_CONDUCT.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
-  "https://raw.githubusercontent.com/webpack/webpack/main/CODE_OF_CONDUCT.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com//webpack//webpack//main/README.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com/webpack/webpack/main/README.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
   "version": 1
 }
