@@ -16514,6 +16514,11 @@ declare interface SourceMapDevToolPluginOptions {
 	filename?: null | string | false;
 
 	/**
+	 * Include source maps for modules based on their extension (defaults to .js and .css).
+	 */
+	ignoreList?: string | RegExp | Rule[] | ((str: string) => boolean);
+
+	/**
 	 * Include source maps for module paths that match the given value.
 	 */
 	include?: string | RegExp | Rule[] | ((str: string) => boolean);
