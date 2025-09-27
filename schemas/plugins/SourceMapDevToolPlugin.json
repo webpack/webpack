@@ -107,7 +107,23 @@
       ]
     },
     "ignoreList": {
-      "$ref": "#/definitions/rules"
+      "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "ignoreList Rule",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/rule"
+              }
+            ]
+          }
+        },
+        {
+          "$ref": "#/definitions/rule"
+        }
+      ]
     },
     "include": {
       "description": "Include source maps for module paths that match the given value.",

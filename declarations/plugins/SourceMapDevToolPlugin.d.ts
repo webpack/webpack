@@ -48,9 +48,9 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	filename?: (false | null) | string;
 	/**
-	 * Include source maps for modules based on their extension (defaults to .js and .css).
+	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: Rules;
+	ignoreList?: Rule[] | Rule;
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
