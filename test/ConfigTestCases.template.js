@@ -3,7 +3,7 @@
 require("./helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
-/** @typedef { testPath: string } TestOptions */
+/** @typedef {{ testPath: string } TestOptions */
 
 const path = require("path");
 const fs = require("graceful-fs");
