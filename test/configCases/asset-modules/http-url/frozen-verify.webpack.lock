@@ -12,7 +12,7 @@
   "http://localhost:9990/redirect.js": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/resolve.js": { "integrity": "sha512-6J9zBO2hXSMTO1EtXJOxSRB2nVPHCoNmNHS8an1QeehzJFc3uoBPRWu6hqHPc54gv2/QME9RBR/BXIan68virg==", "contentType": "text/javascript" },
   "http://localhost:9990/url.js": { "integrity": "sha512-Dlw99Gtp/ZRxWvGlqD2EKnvbo1i6j/slwQO4WV8RIRhYZx9ErI+rndpyDMaKykSnq20HCp5H73TJ+dtO+wDyEg==", "contentType": "text/javascript" },
-  "https://raw.githubusercontent.com//webpack//webpack//main/README.md": { "resolved": "https://raw.githubusercontent.com/webpack/webpack/main/README.md", "integrity": "sha512-1B05P4O2lrOoTzaxcFcb2lT9XAM8HQZSoqH+H9HDw1zLMn0aBDcvGZIBBWWg5KhcQUi6cOPkVTkW9XuEEyzomQ==", "contentType": "text/plain; charset=utf-8" },
-  "https://raw.githubusercontent.com/webpack/webpack/main/README.md": { "integrity": "sha512-1B05P4O2lrOoTzaxcFcb2lT9XAM8HQZSoqH+H9HDw1zLMn0aBDcvGZIBBWWg5KhcQUi6cOPkVTkW9XuEEyzomQ==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com//webpack//webpack//main/README.md": { "resolved": "https://raw.githubusercontent.com/webpack/webpack/main/README.md", "integrity": "sha512-0ZvAGT9BNo7wDRzhVolbFzyjKiO77AZnNMcuIrOFrk5DIlwLa0QTz48mERI9Z5KhoIIUBNIMMTi10ZI8aWeMnQ==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com/webpack/webpack/main/README.md": { "integrity": "sha512-0ZvAGT9BNo7wDRzhVolbFzyjKiO77AZnNMcuIrOFrk5DIlwLa0QTz48mERI9Z5KhoIIUBNIMMTi10ZI8aWeMnQ==", "contentType": "text/plain; charset=utf-8" },
   "version": 1
 }
