@@ -106,6 +106,9 @@
         }
       ]
     },
+    "ignoreList": {
+      "$ref": "#/definitions/rules"
+    },
     "include": {
       "description": "Include source maps for module paths that match the given value.",
       "oneOf": [
