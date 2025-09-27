@@ -11,7 +11,7 @@ export type Rules = Rule[] | Rule;
 /**
  * Include source maps for modules based on their extension (defaults to .js and .css).
  */
-export type Rule = RegExp | string;
+export type Rule = RegExp | string | ((str: string) => boolean);
 
 export interface SourceMapDevToolPluginOptions {
 	/**
