@@ -19,6 +19,7 @@ module.exports = {
 		new webpack.EvalSourceMapDevToolPlugin({
 			test: (str) => {
 				if (str.endsWith(".js")) return true;
+				return false;
 			},
 			exclude: /test2\.js/,
 			module: true,
