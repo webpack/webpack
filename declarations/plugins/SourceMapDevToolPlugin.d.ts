@@ -11,7 +11,7 @@ export type Rules = Rule[] | Rule;
 /**
  * Include source maps for modules based on their extension (defaults to .js and .css).
  */
-export type Rule = RegExp | string;
+export type Rule = RegExp | string | ((str: string) => boolean);
 
 export interface SourceMapDevToolPluginOptions {
 	/**
@@ -47,6 +47,10 @@ export interface SourceMapDevToolPluginOptions {
 	 * Defines the output filename of the SourceMap (will be inlined if no value is provided).
 	 */
 	filename?: (false | null) | string;
+	/**
+	 * Decide whether to ignore source files that match the specified value in the SourceMap.
+	 */
+	ignoreList?: Rule[] | Rule;
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */

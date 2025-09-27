@@ -10,6 +10,10 @@
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((str: string) => boolean)"
         }
       ]
     },
@@ -99,6 +103,25 @@
           "type": "string",
           "absolutePath": false,
           "minLength": 1
+        }
+      ]
+    },
+    "ignoreList": {
+      "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "ignoreList Rule",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/rule"
+              }
+            ]
+          }
+        },
+        {
+          "$ref": "#/definitions/rule"
         }
       ]
     },
