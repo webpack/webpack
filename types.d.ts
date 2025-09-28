@@ -4001,7 +4001,7 @@ declare abstract class DependencyTemplates {
  */
 declare interface DestructuringAssignmentProperty {
 	id: string;
-	range?: [number, number];
+	range: [number, number];
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
