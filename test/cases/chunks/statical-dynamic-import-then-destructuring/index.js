@@ -72,9 +72,17 @@ it("should static analyze dynamic import variable destructuring assignment", asy
 });
 
 it("expect support of \"deep\" tree-shaking for destructuring assignment dynamic import", async () => {
-	const { a: { aaa, usedExports: usedExportsA }, b: { bbb, usedExports: usedExportsB } } = await import("../statical-dynamic-import-destructuring/lib");
-	expect(aaa).toBe(1);
-	expect(bbb).toBe(2);
-	expect(usedExportsA).toEqual(["aaa", "usedExports"]);
-	expect(usedExportsB).toEqual(["bbb", "usedExports"]);
+	await import("../statical-dynamic-import-destructuring/lib").then(({ a: { aaa, usedExports: usedExportsA }, b: { bbb, usedExports: usedExportsB } }) => {
+		expect(aaa).toBe(1);
+		expect(bbb).toBe(2);
+		expect(usedExportsA).toEqual(["aaa", "usedExports"]);
+		expect(usedExportsB).toEqual(["bbb", "usedExports"]);
+	});
+	await import("../statical-dynamic-import-destructuring/lib?2").then(m => {
+		const { a: { aaa, usedExports: usedExportsA }, b: { bbb, usedExports: usedExportsB } } = m;
+		expect(aaa).toBe(1);
+		expect(bbb).toBe(2);
+		expect(usedExportsA).toEqual(["aaa", "usedExports"]);
+		expect(usedExportsB).toEqual(["bbb", "usedExports"]);
+	});
 });
