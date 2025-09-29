@@ -14,9 +14,6 @@ const getSourceMap = () => {
 
 const map = getSourceMap();
 
-console.log(map);
-
-
 it("marks matching modules in ignoreList", () => {
 	const sources = map.sources;
 	const ignoredIndex = sources.findIndex((source) =>

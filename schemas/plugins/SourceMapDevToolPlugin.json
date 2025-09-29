@@ -108,7 +108,7 @@
     },
     "ignoreList": {
       "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "array",
           "items": {
