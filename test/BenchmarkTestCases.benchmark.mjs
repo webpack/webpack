@@ -500,7 +500,7 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			// Custom warmup
 			const samples = [];
 			while (samples.length < bench.opts.iterations - 1) {
-				samples.push(await iterationAsync());
+				samples.push(await iterationAsync(task));
 			}
 
 			await optimizeFunction(async () => {
@@ -558,7 +558,7 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			// Custom warmup
 			const samples = [];
 			while (samples.length < bench.opts.iterations - 1) {
-				samples.push(iteration());
+				samples.push(iteration(task));
 			}
 
 			fnOpts?.beforeEach?.call(task, "run");
