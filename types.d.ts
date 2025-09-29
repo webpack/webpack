@@ -516,7 +516,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | Rule[];
+	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -526,7 +526,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | Rule[];
+	include?: string | RegExp | Rule[] | ((str: string) => boolean);
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -541,7 +541,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | Rule[];
+	test?: string | RegExp | Rule[] | ((str: string) => boolean);
 }
 declare interface BaseResolveRequest {
 	/**
@@ -9801,11 +9801,27 @@ declare interface MapOptions {
 	module?: boolean;
 }
 declare interface MatchObject {
-	test?: string | RegExp | (string | RegExp)[];
-	include?: string | RegExp | (string | RegExp)[];
-	exclude?: string | RegExp | (string | RegExp)[];
+	test?:
+		| string
+		| RegExp
+		| ((str: string) => boolean)
+		| (string | RegExp | ((str: string) => boolean))[];
+	include?:
+		| string
+		| RegExp
+		| ((str: string) => boolean)
+		| (string | RegExp | ((str: string) => boolean))[];
+	exclude?:
+		| string
+		| RegExp
+		| ((str: string) => boolean)
+		| (string | RegExp | ((str: string) => boolean))[];
 }
-type Matcher = string | RegExp | (string | RegExp)[];
+type Matcher =
+	| string
+	| RegExp
+	| ((str: string) => boolean)
+	| (string | RegExp | ((str: string) => boolean))[];
 declare interface MaybeMergeableInitFragment<GenerateContext> {
 	key?: string;
 	stage: number;
@@ -15062,7 +15078,7 @@ declare interface Rmdir {
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
-type Rule = string | RegExp;
+type Rule = string | RegExp | ((str: string) => boolean);
 declare interface RuleSet {
 	/**
 	 * map of references in the rule set (may grow over time)
@@ -16478,7 +16494,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | Rule[];
+	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -16500,7 +16516,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | Rule[];
+	include?: string | RegExp | Rule[] | ((str: string) => boolean);
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -16537,7 +16553,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | Rule[];
+	test?: string | RegExp | Rule[] | ((str: string) => boolean);
 }
 declare class SourceMapSource extends Source {
 	constructor(

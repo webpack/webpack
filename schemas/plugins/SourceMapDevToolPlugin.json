@@ -10,6 +10,10 @@
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((str: string) => boolean)"
         }
       ]
     },
