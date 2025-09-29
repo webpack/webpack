@@ -332,14 +332,14 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@codspeed/core@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-4.0.1.tgz#91049cce17b8c1d1b4b6cbc481f5ddc1145d6e1e"
-  integrity sha512-fJ53arfgtzCDZa8DuGJhpTZ3Ll9A1uW5nQ2jSJnfO4Hl5MRD2cP8P4vPvIUAGbdbjwCxR1jat6cW8OloMJkJXw==
+"@codspeed/core@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.0.0.tgz#52eaf954f86ef298608b7afd5f4dcc2b28f27057"
+  integrity sha512-XlxFwMyYqY/7ndmzWouWLTF/zOlciUcjkjVk4GhJ+m47e1A0wTYsLYU9reY1iHc1gPyJBBTfa41oqCjgcdJs8Q==
   dependencies:
     axios "^1.4.0"
     find-up "^6.3.0"
-    form-data "^4.0.0"
+    form-data "^4.0.4"
     node-gyp-build "^4.6.0"
 
 "@cspell/cspell-bundled-dicts@9.1.3":
@@ -3878,7 +3878,7 @@ fork-ts-checker-webpack-plugin@^9.0.2:
     semver "^7.3.5"
     tapable "^2.2.1"
 
-form-data@^4.0.0, form-data@^4.0.4:
+form-data@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.4.tgz#784cdcce0669a9d68e94d11ac4eea98088edd2c4"
   integrity sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==
