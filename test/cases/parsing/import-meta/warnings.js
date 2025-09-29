@@ -2,6 +2,6 @@
 
 module.exports = [
 	[
-		/Accessing import.meta directly is unsupported \(only property access or destructuring is supported\)/
+		/'import\.meta' cannot be used as a standalone expression\. For static analysis, its properties must be accessed directly \(e\.g\., 'import\.meta\.url'\) or through destructuring\./
 	]
 ];
