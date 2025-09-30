@@ -110,7 +110,7 @@
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
-    "@codspeed/core": "^4.0.1",
+    "@codspeed/core": "^5.0.0",
     "@eslint/js": "^9.29.0",
     "@eslint/markdown": "^7.1.0",
     "@stylistic/eslint-plugin": "^5.2.2",
