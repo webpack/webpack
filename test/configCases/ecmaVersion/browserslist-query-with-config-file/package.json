@@ -1,0 +1,10 @@
+{
+  "browserslist": {
+    "development": [
+      "last 1 version"
+    ],
+    "production": [
+      "ie 9"
+    ]
+  }
+}
