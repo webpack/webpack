@@ -16516,7 +16516,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule[];
+	ignoreList?: string | RegExp | Rule[] | ((str: string) => boolean);
 
 	/**
 	 * Include source maps for module paths that match the given value.

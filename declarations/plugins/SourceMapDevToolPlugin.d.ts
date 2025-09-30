@@ -5,11 +5,11 @@
  */
 
 /**
- * Include source maps for modules based on their extension (defaults to .js and .css).
+ * One or multiple conditions used to match resource.
  */
 export type Rules = Rule[] | Rule;
 /**
- * Include source maps for modules based on their extension (defaults to .js and .css).
+ * Condition used to match resource (string, RegExp or Function).
  */
 export type Rule = RegExp | string | ((str: string) => boolean);
 
@@ -50,7 +50,7 @@ export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: Rule[] | Rule;
+	ignoreList?: Rules;
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
