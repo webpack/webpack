@@ -89,7 +89,7 @@
     "@webassemblyjs/wasm-parser": "^1.14.1",
     "acorn": "^8.15.0",
     "acorn-import-phases": "^1.0.3",
-    "browserslist": "^4.24.5",
+    "browserslist": "^4.26.3",
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.17.3",
     "es-module-lexer": "^1.2.1",
