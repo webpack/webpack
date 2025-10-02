@@ -1,7 +1,6 @@
 function abortable(fn) {
 	return new Promise((resolve) => {
 		const timeoutId = setTimeout(() => {
-			console.log("HERE")
 			fn = undefined;
 			resolve('Promise resolved after delay');
 			clearTimeout(timeoutId);
