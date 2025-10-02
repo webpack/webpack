@@ -9,7 +9,6 @@ import {
 	getGitDir,
 	getV8Flags,
 	mongoMeasurement,
-	optimizeFunction,
 	setupCore,
 	teardownCore
 } from "@codspeed/core";
@@ -489,59 +488,6 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			return result;
 		};
 
-		function printStatus(fn) {
-			const status = eval("%GetOptimizationStatus(fn)");
-			console.log(status.toString(2).padStart(12, "0"));
-
-			if (status & (1 << 0)) {
-				console.log("is function");
-			}
-
-			if (status & (1 << 1)) {
-				console.log("is never optimized");
-			}
-
-			if (status & (1 << 2)) {
-				console.log("is always optimized");
-			}
-
-			if (status & (1 << 3)) {
-				console.log("is maybe deoptimized");
-			}
-
-			if (status & (1 << 4)) {
-				console.log("is optimized");
-			}
-
-			if (status & (1 << 5)) {
-				console.log("is optimized by TurboFan");
-			}
-
-			if (status & (1 << 6)) {
-				console.log("is interpreted");
-			}
-
-			if (status & (1 << 7)) {
-				console.log("is marked for optimization");
-			}
-
-			if (status & (1 << 8)) {
-				console.log("is marked for concurrent optimization");
-			}
-
-			if (status & (1 << 9)) {
-				console.log("is optimizing concurrently");
-			}
-
-			if (status & (1 << 10)) {
-				console.log("is executing");
-			}
-
-			if (status & (1 << 11)) {
-				console.log("topmost frame is turbo fanned");
-			}
-		}
-
 		const runTaskAsync = async (task, uri) => {
 			const { fnOpts, fn } = task;
 
@@ -551,20 +497,12 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			await fnOpts?.beforeAll?.call(task, "run");
 
 			// Custom warmup
+			// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
 			const samples = [];
+
 			while (samples.length < bench.opts.iterations - 1) {
 				samples.push(await iterationAsync(task));
 			}
-
-			const toRun = async () => {
-				await fnOpts?.beforeEach?.call(task, "run");
-				await fn();
-				await fnOpts?.afterEach?.call(task, "run");
-			};
-
-			await optimizeFunction(toRun);
-
-			console.log("optimize", printStatus(toRun));
 
 			await fnOpts?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
@@ -614,6 +552,7 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 
 			// Custom warmup
 			const samples = [];
+
 			while (samples.length < bench.opts.iterations - 1) {
 				samples.push(iteration(task));
 			}
