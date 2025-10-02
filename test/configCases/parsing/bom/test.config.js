@@ -4,6 +4,9 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = {
+	findBundle() {
+		return ["dir_module_js.bundle0.js", "bundle0.js"];
+	},
 	afterExecute(options) {
 		const outputPath = options.output.path;
 		const files = fs.readdirSync(outputPath);
