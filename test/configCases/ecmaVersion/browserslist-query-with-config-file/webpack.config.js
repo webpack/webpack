@@ -15,7 +15,7 @@ module.exports = {
 			  "destructuring": true,
 			  "document": false,
 			  "dynamicImport": true,
-			  "dynamicImportInWorker": false,
+			  "dynamicImportInWorker": true,
 			  "forOf": true,
 			  "globalThis": true,
 			  "module": true,

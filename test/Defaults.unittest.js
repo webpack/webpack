@@ -2910,12 +2910,6 @@ describe("Targets", () => {
 		+ Received
 
 		@@ ... @@
-		-       "dynamicImportInWorker": true,
-		+       "dynamicImportInWorker": false,
-		@@ ... @@
-		-       "dynamicImportInWorker": true,
-		+       "dynamicImportInWorker": false,
-		@@ ... @@
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
 	`);
