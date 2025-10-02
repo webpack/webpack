@@ -101,8 +101,8 @@
     "loader-runner": "^4.2.0",
     "mime-types": "^2.1.27",
     "neo-async": "^2.6.2",
-    "schema-utils": "^4.3.2",
-    "tapable": "^2.2.3",
+    "schema-utils": "^4.3.3",
+    "tapable": "^2.3.0",
     "terser-webpack-plugin": "^5.3.11",
     "watchpack": "^2.4.4",
     "webpack-sources": "^3.3.3"
