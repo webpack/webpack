@@ -3,7 +3,7 @@ import * as style from "./style.css";
 import * as text1 from "./text-with-bom.txt";
 import * as text2 from "./test-without-bom.text";
 
-it("should remove BOM", function() {
+it("should remove BOM", async function() {
 	const url = new URL("./resource-with-bom.ext", import.meta.url);
 
 	expect(mod).toBeDefined();
@@ -13,7 +13,7 @@ it("should remove BOM", function() {
 	expect(url).toBeDefined();
 
 	const module = "module.js"
-	const modules = import("./dir/" + module);
+	const modules = await import("./dir/" + module);
 
 	expect(modules).toBeDefined();
 });

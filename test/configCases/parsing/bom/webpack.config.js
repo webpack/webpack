@@ -6,6 +6,9 @@ module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"
 	},
+	optimization: {
+		chunkIds: "named"
+	},
 	module: {
 		rules: [
 			{
