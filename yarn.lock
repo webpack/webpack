@@ -332,10 +332,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@codspeed/core@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.0.0.tgz#52eaf954f86ef298608b7afd5f4dcc2b28f27057"
-  integrity sha512-XlxFwMyYqY/7ndmzWouWLTF/zOlciUcjkjVk4GhJ+m47e1A0wTYsLYU9reY1iHc1gPyJBBTfa41oqCjgcdJs8Q==
+"@codspeed/core@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.0.1.tgz#6145c898a86a6d56a169611c3e9657a8b97c7642"
+  integrity sha512-4g5ZyFAin8QywK4+0FK1uXG3GLRPu0oc3xbP+7OUhhFxbwpzFuaJtKmnTofMqLy9/pHH6Bl/7H0/DTVH3cpFkA==
   dependencies:
     axios "^1.4.0"
     find-up "^6.3.0"
