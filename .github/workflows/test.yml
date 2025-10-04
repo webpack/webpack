@@ -103,6 +103,7 @@ jobs:
           mode: "instrumentation"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
+          CODSPEED_DEBUG: 1
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
