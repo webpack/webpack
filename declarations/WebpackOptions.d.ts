@@ -3349,7 +3349,6 @@ export interface JavascriptParserOptions {
 	 * Set the inner regular expression for partial dynamic dependencies.
 	 */
 	wrappedContextRegExp?: RegExp;
-	[k: string]: any;
 }
 /**
  * Generator options for json modules.
