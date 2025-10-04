@@ -1786,7 +1786,7 @@
     "JavascriptParserOptions": {
       "description": "Parser options for javascript modules.",
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "amd": {
           "$ref": "#/definitions/Amd"

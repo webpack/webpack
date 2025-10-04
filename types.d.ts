@@ -8195,8 +8195,6 @@ declare class JavascriptParser extends ParserClass {
  * Parser options for javascript modules.
  */
 declare interface JavascriptParserOptions {
-	[index: string]: any;
-
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
