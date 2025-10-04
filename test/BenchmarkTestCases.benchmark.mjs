@@ -465,21 +465,6 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 		const taskCompletionMessage = () =>
 			InstrumentHooks.isInstrumented() ? "Measured" : "Checked";
 
-		const iterationAsync = async (task) => {
-			try {
-				await task.fnOpts.beforeEach?.call(task, "run");
-				const start = bench.opts.now();
-				await task.fn();
-				const end = bench.opts.now() - start || 0;
-				await task.fnOpts.afterEach?.call(this, "run");
-				return [start, end];
-			} catch (err) {
-				if (bench.opts.throws) {
-					throw err;
-				}
-			}
-		};
-
 		const wrapWithInstrumentHooksAsync = async (fn, uri) => {
 			InstrumentHooks.startBenchmark();
 			const result = await fn();
@@ -489,7 +474,29 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 		};
 
 		const runTaskAsync = async (task, uri) => {
-			const { fnOpts, fn } = task;
+			const { name, fn, fnOpts } = task;
+			const originalFn = fn;
+
+			const fnWrapper = async () => {
+				console.time(`Time: ${name}`);
+				await originalFn();
+				console.timeEnd(`Time: ${name}`);
+			};
+
+			const iterationAsync = async (task) => {
+				try {
+					await task.fnOpts.beforeEach?.call(task, "run");
+					const start = bench.opts.now();
+					await fnWrapper();
+					const end = bench.opts.now();
+					await task.fnOpts.afterEach?.call(this, "run");
+					return [start, end, end - start];
+				} catch (err) {
+					if (bench.opts.throws) {
+						throw err;
+					}
+				}
+			};
 
 			// Custom setup
 			await bench.opts.setup?.(task, "run");
@@ -507,7 +514,10 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			await fnOpts?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
 			global.gc?.();
-			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
+			await wrapWithInstrumentHooksAsync(
+				wrapFunctionWithFrame(fnWrapper, true),
+				uri
+			);
 			await mongoMeasurement.stop(uri);
 			await fnOpts?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
@@ -519,21 +529,6 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
 
-		const iteration = (task) => {
-			try {
-				task.fnOpts.beforeEach?.call(task, "run");
-				const start = bench.opts.now();
-				task.fn();
-				const end = bench.opts.now() - start || 0;
-				task.fnOpts.afterEach?.call(this, "run");
-				return [start, end];
-			} catch (err) {
-				if (bench.opts.throws) {
-					throw err;
-				}
-			}
-		};
-
 		const wrapWithInstrumentHooks = (fn, uri) => {
 			InstrumentHooks.startBenchmark();
 			const result = fn();
@@ -543,7 +538,29 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 		};
 
 		const runTaskSync = (task, uri) => {
-			const { fnOpts, fn } = task;
+			const { name, fnOpts, fn } = task;
+			const originalFn = fn;
+
+			const fnWrapper = () => {
+				console.time(`Time: ${name}`);
+				originalFn();
+				console.timeEnd(`Time: ${name}`);
+			};
+
+			const iteration = (task) => {
+				try {
+					task.fnOpts.beforeEach?.call(task, "run");
+					const start = bench.opts.now();
+					task.fn();
+					const end = bench.opts.now() - start || 0;
+					task.fnOpts.afterEach?.call(this, "run");
+					return [start, end];
+				} catch (err) {
+					if (bench.opts.throws) {
+						throw err;
+					}
+				}
+			};
 
 			// Custom setup
 			bench.opts.setup?.(task, "run");
@@ -559,7 +576,7 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 
 			fnOpts?.beforeEach?.call(task, "run");
 
-			wrapWithInstrumentHooks(wrapFunctionWithFrame(fn, false), uri);
+			wrapWithInstrumentHooks(wrapFunctionWithFrame(fnWrapper, false), uri);
 
 			fnOpts?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
@@ -693,8 +710,6 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
-								console.time(`Time: ${benchName}`);
-
 								let resolve;
 								let reject;
 
@@ -717,7 +732,6 @@ async function registerSuite(bench, test, baselines) {
 									// Construct and print stats to be more accurate with real life projects
 									stats.toString();
 									resolve();
-									console.timeEnd(`Time: ${benchName}`);
 								};
 
 								await new Promise((resolve, reject) => {
@@ -836,9 +850,7 @@ async function registerSuite(bench, test, baselines) {
 										runWebpack(webpack, config)
 									);
 								} else {
-									console.time(`Time: ${benchName}`);
 									await runWebpack(webpack, config);
-									console.timeEnd(`Time: ${benchName}`);
 								}
 							},
 							{
