@@ -465,6 +465,90 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "dotenv": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable Dotenv plugin with default options.",
+        "multiple": false,
+        "path": "dotenv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable Dotenv plugin with default options.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "dotenv-dir": Object {
+    "configs": Array [
+      Object {
+        "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+        "multiple": false,
+        "path": "dotenv.dir",
+        "type": "boolean",
+      },
+      Object {
+        "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+        "multiple": false,
+        "path": "dotenv.dir",
+        "type": "string",
+      },
+    ],
+    "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "dotenv-prefix": Object {
+    "configs": Array [
+      Object {
+        "description": "A prefix that environment variables must start with to be exposed.",
+        "multiple": true,
+        "path": "dotenv.prefix[]",
+        "type": "string",
+      },
+    ],
+    "description": "A prefix that environment variables must start with to be exposed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "dotenv-prefix-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'dotenv.prefix' configuration. Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+        "multiple": false,
+        "path": "dotenv.prefix",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'dotenv.prefix' configuration. Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "dotenv-template": Object {
+    "configs": Array [
+      Object {
+        "description": "A template pattern for .env file names.",
+        "multiple": true,
+        "path": "dotenv.template[]",
+        "type": "string",
+      },
+    ],
+    "description": "A template pattern for .env file names.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "dotenv-template-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'dotenv.template' configuration. Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+        "multiple": false,
+        "path": "dotenv.template",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'dotenv.template' configuration. Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "entry": Object {
     "configs": Array [
       Object {

@@ -84,6 +84,7 @@ describe("snapshots", () => {
 		  "dependencies": undefined,
 		  "devServer": undefined,
 		  "devtool": false,
+		  "dotenv": undefined,
 		  "entry": Object {
 		    "main": Object {
 		      "import": Array [
