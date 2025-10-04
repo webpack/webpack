@@ -1,7 +1,7 @@
 {
   "definitions": {
     "rule": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "description": "Condition used to match resource (string, RegExp or Function).",
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -18,7 +18,7 @@
       ]
     },
     "rules": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "description": "One or multiple conditions used to match resource.",
       "anyOf": [
         {
           "type": "array",
@@ -106,6 +106,14 @@
         }
       ]
     },
+    "ignoreList": {
+      "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
+    },
     "include": {
       "description": "Include source maps for module paths that match the given value.",
       "oneOf": [
@@ -149,7 +157,12 @@
       "type": "string"
     },
     "test": {
-      "$ref": "#/definitions/rules"
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
     }
   }
 }
