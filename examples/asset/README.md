@@ -300,7 +300,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
-/******/ 		__webpack_require__.b = (document && document.baseURI) || self.location.href;
+/******/ 		__webpack_require__.b = (typeof document !== 'undefined' && document.baseURI) || self.location.href;
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
@@ -476,10 +476,10 @@ files.forEach(item => {
 asset output.js 19.2 KiB [emitted] (name: main)
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset images/afc10c70ed4ce2b33593.svg 656 bytes [emitted] [immutable] [from: images/url.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.46 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 9.59 KiB (javascript) 15.2 KiB (asset) [dependent] 6 modules
-  runtime modules 1.46 KiB 5 modules
+  runtime modules 1.48 KiB 5 modules
   ./example.js 2.85 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
