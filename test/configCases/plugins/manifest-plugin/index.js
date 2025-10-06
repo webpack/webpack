@@ -4,11 +4,11 @@ import url from "../../asset-modules/_images/file.png";
 
 import(/* webpackChunkName: 'file' */ "./file.txt?foo");
 
-it("should emit manifest with expected entries and paths", () => {
+it("should emit manifest with expected entries and paths with string publicPath", () => {
 	expect(url).toEqual("/app/file-loader.png");
 
 	const manifest = JSON.parse(
-		fs.readFileSync(path.resolve(__dirname, "test.json"), "utf-8")
+		fs.readFileSync(path.resolve(__dirname, "foo.json"), "utf-8")
 	);
 
 	const keys = Object.keys(manifest).sort();

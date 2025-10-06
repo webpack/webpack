@@ -55,11 +55,11 @@ module.exports = {
 		}),
 		new webpack.ManifestPlugin({
 			filename: "manifest.yml",
-			handle(manifest) {
+			handler(manifest) {
 				let _manifest = "";
 				for (const key in manifest) {
 					if (key === "manifest.json") continue;
-					_manifest += `- ${key}: '${manifest[key]}'\n`;
+					_manifest += `- ${key}: '${manifest[key].filePath}'\n`;
 				}
 				return _manifest;
 			}

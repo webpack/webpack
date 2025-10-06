@@ -1,4 +1,35 @@
 {
+  "definitions": {
+    "HandlerFunction": {
+      "description": "A function that receives the manifest object and returns the manifest string.",
+      "instanceof": "Function",
+      "tsType": "(manifest: ManifestObject) => string"
+    },
+    "ManifestItem": {
+      "description": "Describes a manifest entry that links the emitted path to the producing asset.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "description": "The compilation asset that produced this manifest entry.",
+          "tsType": "import('../../lib/Compilation').Asset"
+        },
+        "filePath": {
+          "description": "The public path recorded in the manifest for this asset.",
+          "type": "string"
+        }
+      },
+      "required": ["filePath"]
+    },
+    "ManifestObject": {
+      "description": "Maps asset identifiers to their manifest entries.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ManifestItem"
+      },
+      "tsType": "Record<string, ManifestItem>"
+    }
+  },
   "title": "ManifestPluginOptions",
   "type": "object",
   "additionalProperties": false,
@@ -9,10 +40,12 @@
       "absolutePath": false,
       "minLength": 1
     },
-    "handle": {
-      "description": "A custom Function to create the manifest.",
-      "instanceof": "Function",
-      "tsType": "((manifest: Record<string, string>, stats: import('../../lib/stats/DefaultStatsFactoryPlugin').StatsCompilation) => string)"
+    "handler": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/HandlerFunction"
+        }
+      ]
     }
   }
 }

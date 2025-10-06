@@ -9758,6 +9758,24 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+
+/**
+ * Describes a manifest entry that links the emitted path to the producing asset.
+ */
+declare interface ManifestItem {
+	/**
+	 * The compilation asset that produced this manifest entry.
+	 */
+	asset?: Asset;
+
+	/**
+	 * The public path recorded in the manifest for this asset.
+	 */
+	filePath: string;
+}
+declare interface ManifestObject {
+	[index: string]: ManifestItem;
+}
 declare class ManifestPlugin {
 	constructor(options: ManifestPluginOptions);
 	options: Required<ManifestPluginOptions>;
@@ -9774,12 +9792,9 @@ declare interface ManifestPluginOptions {
 	filename?: string;
 
 	/**
-	 * A custom Function to create the manifest.
+	 * A function that receives the manifest object and returns the manifest string.
 	 */
-	handle?: (
-		manifest: Record<string, string>,
-		stats: StatsCompilation
-	) => string;
+	handler?: (manifest: ManifestObject) => string;
 }
 declare interface MapOptions {
 	/**

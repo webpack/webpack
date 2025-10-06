@@ -26,36 +26,71 @@ class CopyPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
-	node: {
-		__dirname: false,
-		__filename: false
-	},
-	output: {
-		publicPath: "/app/",
-		chunkFilename: "[name].[contenthash].js",
-		assetModuleFilename: "[name].[contenthash][ext][query]"
-	},
-	plugins: [
-		new CopyPlugin(),
-		new webpack.ManifestPlugin({
-			filename: "test.json"
-		})
-	],
-	module: {
-		rules: [
-			{
-				test: /\.txt$/,
-				type: "asset/resource"
-			},
-			{
-				test: /\.png$/,
-				loader: "file-loader",
-				options: {
-					name: "file-loader.[ext]"
+/** @type {import("../../../../").Configuration[]} */
+module.exports = [
+	{
+		node: {
+			__dirname: false,
+			__filename: false
+		},
+		output: {
+			publicPath: "/app/",
+			chunkFilename: "[name].[contenthash].js",
+			assetModuleFilename: "[name].[contenthash][ext][query]"
+		},
+		plugins: [
+			new CopyPlugin(),
+			new webpack.ManifestPlugin({
+				filename: "foo.json"
+			})
+		],
+		module: {
+			rules: [
+				{
+					test: /\.txt$/,
+					type: "asset/resource"
+				},
+				{
+					test: /\.png$/,
+					loader: "file-loader",
+					options: {
+						name: "file-loader.[ext]"
+					}
 				}
-			}
-		]
+			]
+		}
+	},
+	{
+		entry: "./index-2.js",
+		node: {
+			__dirname: false,
+			__filename: false
+		},
+		output: {
+			publicPath: (_data) => "/dist/",
+			chunkFilename: "[name].[contenthash].js",
+			assetModuleFilename: "[name].[contenthash][ext][query]"
+		},
+		plugins: [
+			new CopyPlugin(),
+			new webpack.ManifestPlugin({
+				filename: "bar.json"
+			})
+		],
+		module: {
+			rules: [
+				{
+					test: /\.txt$/,
+					type: "asset/resource"
+				},
+				{
+					test: /\.png$/,
+					loader: "file-loader",
+					options: {
+						name: "file-loader.[ext]"
+					}
+				}
+			]
+		}
 	}
-};
+];
