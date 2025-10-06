@@ -1,9 +1,9 @@
 <div align="center">
-	<a href="https://github.com/webpack/webpack">
-		<img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
-	</a>
-	<br>
-	<br>
+  <a href="https://github.com/webpack/webpack">
+    <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+  </a>
+  <br>
+  <br>
 
 [![npm][npm]][npm-url]
 
@@ -22,10 +22,10 @@
 [![discord](https://img.shields.io/discord/1180618526436888586?label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/5sxFZPdx2k)
 [![LFX Health Score](https://insights.linuxfoundation.org/api/badge/health-score?project=webpack)](https://insights.linuxfoundation.org/project/webpack)
 
-	<h1>webpack</h1>
-	<p>
-		Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
-	</p>
+  <h1>webpack</h1>
+  <p>
+    Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
+  </p>
 </div>
 
 ## Table of Contents
@@ -36,14 +36,14 @@
 - [Contributing](#contributing)
 - [Support](#support)
 - [Current project members](#current-project-members)
-	- [TSC (Technical Steering Committee)](#tsc-technical-steering-committee)
-	- [Core Collaborators](#core-collaborators)
+  - [TSC (Technical Steering Committee)](#tsc-technical-steering-committee)
+  - [Core Collaborators](#core-collaborators)
 - [Sponsoring](#sponsoring)
-	- [Premium Partners](#premium-partners)
-	- [Gold Sponsors](#gold-sponsors)
-	- [Silver Sponsors](#silver-sponsors)
-	- [Bronze Sponsors](#bronze-sponsors)
-	- [Backers](#backers)
+  - [Premium Partners](#premium-partners)
+  - [Gold Sponsors](#gold-sponsors)
+  - [Silver Sponsors](#silver-sponsors)
+  - [Bronze Sponsors](#bronze-sponsors)
+  - [Backers](#backers)
 - [Special Thanks](#special-thanks-to)
 
 ## Install
@@ -303,15 +303,15 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
 ### TSC (Technical Steering Committee)
 
 - [alexander-akait](https://github.com/alexander-akait) -
-	**Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
+  **Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
 - [evenstensberg](https://github.com/evenstensberg) -
-	**Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
+  **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
 - [ovflowd](https://github.com/ovflowd) -
-	**Claudio Wunder** <<cwunder@gnome.org>> (he/they)
+  **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
 - [snitin315](https://github.com/snitin315) -
-	**Nitin Kumar** <<snitin315@gmail.com>> (he/him)
+  **Nitin Kumar** <<snitin315@gmail.com>> (he/him)
 - [thelarkinn](https://github.com/thelarkinn) -
-	**Sean Larkin** <<selarkin@microsoft.com>> (he/him)
+  **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 
 ### Maintenance
 
