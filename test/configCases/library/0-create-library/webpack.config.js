@@ -914,5 +914,25 @@ module.exports = (env, { testPath }) => [
 		experiments: {
 			outputModule: true
 		}
+	},
+	{
+		entry: "./esm.js",
+		output: {
+			uniqueName: "system-esm",
+			filename: "system-esm.js",
+			library: {
+				type: "system"
+			}
+		}
+	},
+	{
+		entry: "./commonjs.js",
+		output: {
+			uniqueName: "system-commonjs",
+			filename: "system-commonjs.js",
+			library: {
+				type: "system"
+			}
+		}
 	}
 ];
