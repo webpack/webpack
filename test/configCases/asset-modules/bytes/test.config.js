@@ -14,5 +14,15 @@ module.exports = {
 		scope.window.document.head.appendChild(link);
 
 		run++;
+	},
+	findBundle(i) {
+		if (i === 2) {
+			return ["bundle2.mjs"];
+		}
+
+		return [
+			`file_text_other.bundle${i}.${i === 2 ? "mjs" : "js"}`,
+			`bundle${i}.${i === 2 ? "mjs" : "js"}`
+		];
 	}
 };
