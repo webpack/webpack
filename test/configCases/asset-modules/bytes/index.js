@@ -1,11 +1,16 @@
 import * as style from "./style.css";
 import file from "./file.text" with { type: "bytes" };
 
-it("should work", () => {
+it("should work", async () => {
 	const decoder = new TextDecoder('utf-8');
 	const text = decoder.decode(file);
 
 	expect(text).toBe("a Ā 𐀀 文 🦄 Text");
+
+	const dyn = (await import("./file.text?other", { with: { type: "bytes" } })).default;
+	const dynText = decoder.decode(dyn);
+
+	expect(dynText).toBe("a Ā 𐀀 文 🦄 Text");
 
 	if (typeof getComputedStyle === "function") {
 		const style = getComputedStyle(document.body);
