@@ -4463,7 +4463,8 @@ declare class DotenvPlugin {
 		callback: (
 			err: null | Error,
 			env?: Record<string, string>,
-			fileDependencies?: string[]
+			fileDependencies?: string[],
+			missingDependencies?: string[]
 		) => void
 	): void;
 
