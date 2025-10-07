@@ -4515,19 +4515,6 @@ declare class EnableWasmLoadingPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
-type Encoding =
-	| "base64"
-	| "base64url"
-	| "hex"
-	| "binary"
-	| "utf8"
-	| "utf-8"
-	| "utf16le"
-	| "utf-16le"
-	| "latin1"
-	| "ascii"
-	| "ucs2"
-	| "ucs-2";
 type EncodingOption =
 	| undefined
 	| null
@@ -6260,7 +6247,7 @@ declare class Hash {
 	/**
 	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
 	 */
-	update(data: string, inputEncoding: Encoding): Hash;
+	update(data: string, inputEncoding: HashDigest): Hash;
 
 	/**
 	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
@@ -6270,8 +6257,21 @@ declare class Hash {
 	/**
 	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
 	 */
-	digest(encoding: Encoding): string;
+	digest(encoding: HashDigest): string;
 }
+type HashDigest =
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
+	| "utf8"
+	| "utf-8"
+	| "utf16le"
+	| "utf-16le"
+	| "latin1"
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 type HashFunction = string | typeof Hash;
 declare interface HashLike {
 	/**
@@ -11729,6 +11729,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	mode: "none" | "development" | "production";
 	webpack?: boolean;
 	hashFunction: HashFunction;
+	hashDigest: HashDigest;
 	hashDigestLength: number;
 	hashSalt?: string;
 	_module?: NormalModule;
@@ -12727,6 +12728,10 @@ declare interface Output {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: string;
+
+	/**
+	 * Digest types used for the hash.
+	 */
 	hashDigest?:
 		| "base64"
 		| "base64url"
@@ -13050,6 +13055,10 @@ declare interface OutputNormalized {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: string;
+
+	/**
+	 * Digest types used for the hash.
+	 */
 	hashDigest?:
 		| "base64"
 		| "base64url"
@@ -14418,6 +14427,11 @@ declare interface RealContentHashPluginOptions {
 	 * the hash function to use
 	 */
 	hashFunction: HashFunction;
+
+	/**
+	 * the hash digest to use
+	 */
+	hashDigest: HashDigest;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;

@@ -537,9 +537,9 @@ export type Filename = FilenameTemplate;
  */
 export type GlobalObject = string;
 /**
- * Encoding and digest types used for the hash.
+ * Digest types used for the hash.
  */
-export type Encoding =
+export type HashDigest =
 	| "base64"
 	| "base64url"
 	| "hex"
@@ -2168,7 +2168,10 @@ export interface Output {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
-	hashDigest?: Encoding;
+	/**
+	 * Digest types used for the hash.
+	 */
+	hashDigest?: HashDigest;
 	/**
 	 * Number of chars which are used for the hash.
 	 */
@@ -3661,7 +3664,10 @@ export interface OutputNormalized {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
-	hashDigest?: Encoding;
+	/**
+	 * Digest types used for the hash.
+	 */
+	hashDigest?: HashDigest;
 	/**
 	 * Number of chars which are used for the hash.
 	 */
