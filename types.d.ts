@@ -989,18 +989,18 @@ declare interface Bootstrap {
 	allowInlineStartup: boolean;
 }
 type BufferEncoding =
-	| "ascii"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
 	| "utf8"
 	| "utf-8"
 	| "utf16le"
 	| "utf-16le"
-	| "ucs2"
-	| "ucs-2"
-	| "base64"
-	| "base64url"
 	| "latin1"
-	| "binary"
-	| "hex";
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 declare interface BufferEntry {
 	map?: null | RawSourceMap;
@@ -4518,18 +4518,18 @@ declare class EnableWasmLoadingPlugin {
 type EncodingOption =
 	| undefined
 	| null
-	| "ascii"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
 	| "utf8"
 	| "utf-8"
 	| "utf16le"
 	| "utf-16le"
+	| "latin1"
+	| "ascii"
 	| "ucs2"
 	| "ucs-2"
-	| "base64"
-	| "base64url"
-	| "latin1"
-	| "binary"
-	| "hex"
 	| ObjectEncodingOptions;
 type Entry =
 	| string
@@ -6242,13 +6242,36 @@ declare class Hash {
 	/**
 	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
 	 */
-	update(data: string | Buffer, inputEncoding?: string): Hash;
+	update(data: string | Buffer): Hash;
+
+	/**
+	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
+	 */
+	update(data: string, inputEncoding: HashDigest): Hash;
 
 	/**
 	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
 	 */
-	digest(encoding?: string): string | Buffer;
+	digest(): Buffer;
+
+	/**
+	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
+	 */
+	digest(encoding: HashDigest): string;
 }
+type HashDigest =
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
+	| "utf8"
+	| "utf-8"
+	| "utf16le"
+	| "utf-16le"
+	| "latin1"
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 type HashFunction = string | typeof Hash;
 declare interface HashLike {
 	/**
@@ -6266,7 +6289,9 @@ declare interface HashableObject {
 }
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
-	options: HashedModuleIdsPluginOptions;
+	options: Required<Omit<HashedModuleIdsPluginOptions, "context">> & {
+		context?: string;
+	};
 
 	/**
 	 * Apply the plugin
@@ -6282,7 +6307,19 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "base64" | "latin1" | "hex";
+	hashDigest?:
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "latin1"
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -6624,18 +6661,18 @@ declare interface IntermediateFileSystemExtras {
 	createWriteStream: (
 		pathLike: PathLikeFs,
 		result?:
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| WriteStreamOptions
 	) => NodeJS.WritableStream;
 	open: Open;
@@ -11704,7 +11741,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	mode: "none" | "development" | "production";
 	webpack?: boolean;
 	hashFunction: HashFunction;
-	hashDigest: string;
+	hashDigest: HashDigest;
 	hashDigestLength: number;
 	hashSalt?: string;
 	_module?: NormalModule;
@@ -11790,18 +11827,18 @@ declare interface ObjectDeserializerContext {
 declare interface ObjectEncodingOptions {
 	encoding?:
 		| null
-		| "ascii"
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
 		| "utf8"
 		| "utf-8"
 		| "utf16le"
 		| "utf-16le"
-		| "ucs2"
-		| "ucs-2"
-		| "base64"
-		| "base64url"
 		| "latin1"
-		| "binary"
-		| "hex";
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 }
 declare interface ObjectSerializer {
 	serialize: (value: any, context: ObjectSerializerContext) => void;
@@ -12705,9 +12742,21 @@ declare interface Output {
 	globalObject?: string;
 
 	/**
-	 * Digest type used for the hash.
+	 * Digest types used for the hash.
 	 */
-	hashDigest?: string;
+	hashDigest?:
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "latin1"
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 
 	/**
 	 * Number of chars which are used for the hash.
@@ -12874,18 +12923,18 @@ declare interface OutputFileSystem {
 	createReadStream?: (
 		path: PathLikeFs,
 		options?:
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| ReadStreamOptions
 	) => NodeJS.ReadableStream;
 	join?: (path1: string, path2: string) => string;
@@ -13020,9 +13069,21 @@ declare interface OutputNormalized {
 	globalObject?: string;
 
 	/**
-	 * Digest type used for the hash.
+	 * Digest types used for the hash.
 	 */
-	hashDigest?: string;
+	hashDigest?:
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "latin1"
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 
 	/**
 	 * Number of chars which are used for the hash.
@@ -13198,7 +13259,21 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	path: string;
 	pathinfo: NonNullable<undefined | boolean | "verbose">;
 	hashFunction: NonNullable<undefined | string | typeof Hash>;
-	hashDigest: string;
+	hashDigest: NonNullable<
+		| undefined
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "latin1"
+		| "ascii"
+		| "ucs2"
+		| "ucs-2"
+	>;
 	hashDigestLength: number;
 	chunkLoadTimeout: number;
 	chunkLoading: NonNullable<undefined | string | false>;
@@ -13890,19 +13965,19 @@ declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex",
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
@@ -13910,18 +13985,18 @@ declare interface ReadFileFs {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
 			err: null | NodeJS.ErrnoException,
@@ -13941,36 +14016,36 @@ declare interface ReadFileSync {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| { encoding: BufferEncoding; flag?: string }
 	): string;
 	(
 		path: PathOrFileDescriptorFs,
 		options?:
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & { flag?: string })
 	): string | Buffer;
 }
@@ -13986,18 +14061,18 @@ declare interface ReadFileTypes {
 	(
 		path: PathOrFileDescriptorTypes,
 		options:
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
@@ -14006,18 +14081,18 @@ declare interface ReadFileTypes {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & { flag?: string } & Abortable),
 		callback: (
 			err: null | NodeJS.ErrnoException,
@@ -14039,33 +14114,33 @@ declare interface ReaddirFs {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| {
 					encoding:
 						| null
-						| "ascii"
+						| "base64"
+						| "base64url"
+						| "hex"
+						| "binary"
 						| "utf8"
 						| "utf-8"
 						| "utf16le"
 						| "utf-16le"
-						| "ucs2"
-						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
-						| "binary"
-						| "hex";
+						| "ascii"
+						| "ucs2"
+						| "ucs-2";
 					withFileTypes?: false;
 					recursive?: boolean;
 			  },
@@ -14083,18 +14158,18 @@ declare interface ReaddirFs {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -14133,33 +14208,33 @@ declare interface ReaddirSync {
 		path: PathLikeFs,
 		options?:
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| {
 					encoding:
 						| null
-						| "ascii"
+						| "base64"
+						| "base64url"
+						| "hex"
+						| "binary"
 						| "utf8"
 						| "utf-8"
 						| "utf16le"
 						| "utf-16le"
-						| "ucs2"
-						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
-						| "binary"
-						| "hex";
+						| "ascii"
+						| "ucs2"
+						| "ucs-2";
 					withFileTypes?: false;
 					recursive?: boolean;
 			  }
@@ -14174,18 +14249,18 @@ declare interface ReaddirSync {
 		path: PathLikeFs,
 		options?:
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & { withFileTypes?: false; recursive?: boolean })
 	): string[] | Buffer[];
 	(
@@ -14206,33 +14281,33 @@ declare interface ReaddirTypes {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| {
 					encoding:
 						| null
-						| "ascii"
+						| "base64"
+						| "base64url"
+						| "hex"
+						| "binary"
 						| "utf8"
 						| "utf-8"
 						| "utf16le"
 						| "utf-16le"
-						| "ucs2"
-						| "ucs-2"
-						| "base64"
-						| "base64url"
 						| "latin1"
-						| "binary"
-						| "hex";
+						| "ascii"
+						| "ucs2"
+						| "ucs-2";
 					withFileTypes?: false;
 					recursive?: boolean;
 			  },
@@ -14250,18 +14325,18 @@ declare interface ReaddirTypes {
 		options:
 			| undefined
 			| null
-			| "ascii"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| "binary"
 			| "utf8"
 			| "utf-8"
 			| "utf16le"
 			| "utf-16le"
+			| "latin1"
+			| "ascii"
 			| "ucs2"
 			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
 			| (ObjectEncodingOptions & {
 					withFileTypes?: false;
 					recursive?: boolean;
@@ -14363,12 +14438,12 @@ declare interface RealContentHashPluginOptions {
 	/**
 	 * the hash function to use
 	 */
-	hashFunction: string | typeof Hash;
+	hashFunction: HashFunction;
 
 	/**
 	 * the hash digest to use
 	 */
-	hashDigest?: string;
+	hashDigest: HashDigest;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;
@@ -17758,18 +17833,18 @@ declare interface StreamChunksOptions {
 declare interface StreamOptions {
 	flags?: string;
 	encoding?:
-		| "ascii"
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
 		| "utf8"
 		| "utf-8"
 		| "utf16le"
 		| "utf-16le"
-		| "ucs2"
-		| "ucs-2"
-		| "base64"
-		| "base64url"
 		| "latin1"
-		| "binary"
-		| "hex";
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 	fd?: any;
 	mode?: number;
 	autoClose?: boolean;
@@ -18558,18 +18633,18 @@ declare interface WriteFile {
 }
 type WriteFileOptions =
 	| null
-	| "ascii"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
 	| "utf8"
 	| "utf-8"
 	| "utf16le"
 	| "utf-16le"
+	| "latin1"
+	| "ascii"
 	| "ucs2"
 	| "ucs-2"
-	| "base64"
-	| "base64url"
-	| "latin1"
-	| "binary"
-	| "hex"
 	| (ObjectEncodingOptions &
 			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
 declare interface WriteOnlySet<T> {

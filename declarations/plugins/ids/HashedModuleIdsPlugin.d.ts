@@ -7,7 +7,7 @@
 /**
  * Algorithm used for generation the hash (see node.js crypto package).
  */
-export type HashFunction = string | typeof import("../../lib/util/Hash");
+export type HashFunction = string | typeof import("../../../lib/util/Hash");
 
 export interface HashedModuleIdsPluginOptions {
 	/**
@@ -17,7 +17,19 @@ export interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "hex" | "latin1" | "base64";
+	hashDigest?:
+		| "base64"
+		| "base64url"
+		| "hex"
+		| "binary"
+		| "utf8"
+		| "utf-8"
+		| "utf16le"
+		| "utf-16le"
+		| "latin1"
+		| "ascii"
+		| "ucs2"
+		| "ucs-2";
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
 	 */

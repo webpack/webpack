@@ -537,9 +537,21 @@ export type Filename = FilenameTemplate;
  */
 export type GlobalObject = string;
 /**
- * Digest type used for the hash.
+ * Digest types used for the hash.
  */
-export type HashDigest = string;
+export type HashDigest =
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
+	| "utf8"
+	| "utf-8"
+	| "utf16le"
+	| "utf-16le"
+	| "latin1"
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 /**
  * Number of chars which are used for the hash.
  */
@@ -2157,7 +2169,7 @@ export interface Output {
 	 */
 	globalObject?: GlobalObject;
 	/**
-	 * Digest type used for the hash.
+	 * Digest types used for the hash.
 	 */
 	hashDigest?: HashDigest;
 	/**
@@ -3653,7 +3665,7 @@ export interface OutputNormalized {
 	 */
 	globalObject?: GlobalObject;
 	/**
-	 * Digest type used for the hash.
+	 * Digest types used for the hash.
 	 */
 	hashDigest?: HashDigest;
 	/**
