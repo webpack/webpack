@@ -6795,7 +6795,7 @@ Object {
   "output-hash-digest": Object {
     "configs": Array [
       Object {
-        "description": "Encoding and digest types used for the hash.",
+        "description": "Digest types used for the hash.",
         "multiple": false,
         "path": "output.hashDigest",
         "type": "enum",
@@ -6815,7 +6815,7 @@ Object {
         ],
       },
     ],
-    "description": "Encoding and digest types used for the hash.",
+    "description": "Digest types used for the hash.",
     "multiple": false,
     "simpleType": "string",
   },
