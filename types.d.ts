@@ -6272,19 +6272,6 @@ declare class Hash {
 	 */
 	digest(encoding: Encoding): string;
 }
-type HashDigest =
-	| "base64"
-	| "base64url"
-	| "hex"
-	| "binary"
-	| "utf8"
-	| "utf-8"
-	| "utf16le"
-	| "utf-16le"
-	| "latin1"
-	| "ascii"
-	| "ucs2"
-	| "ucs-2";
 type HashFunction = string | typeof Hash;
 declare interface HashLike {
 	/**
@@ -11742,7 +11729,6 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	mode: "none" | "development" | "production";
 	webpack?: boolean;
 	hashFunction: HashFunction;
-	hashDigest: HashDigest;
 	hashDigestLength: number;
 	hashSalt?: string;
 	_module?: NormalModule;
@@ -12741,10 +12727,6 @@ declare interface Output {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: string;
-
-	/**
-	 * Digest type used for the hash.
-	 */
 	hashDigest?:
 		| "base64"
 		| "base64url"
@@ -13068,10 +13050,6 @@ declare interface OutputNormalized {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: string;
-
-	/**
-	 * Digest type used for the hash.
-	 */
 	hashDigest?:
 		| "base64"
 		| "base64url"
@@ -14440,11 +14418,6 @@ declare interface RealContentHashPluginOptions {
 	 * the hash function to use
 	 */
 	hashFunction: HashFunction;
-
-	/**
-	 * the hash digest to use
-	 */
-	hashDigest: HashDigest;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;

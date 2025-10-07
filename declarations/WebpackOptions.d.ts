@@ -537,9 +537,9 @@ export type Filename = FilenameTemplate;
  */
 export type GlobalObject = string;
 /**
- * Digest type used for the hash.
+ * Encoding and digest types used for the hash.
  */
-export type HashDigest =
+export type Encoding =
 	| "base64"
 	| "base64url"
 	| "hex"
@@ -803,22 +803,6 @@ export type CssParserUrl = boolean;
  * Options for defer import.
  */
 export type DeferImportExperimentOptions = boolean;
-/**
- * Supported encoding.
- */
-export type Encoding =
-	| "base64"
-	| "base64url"
-	| "hex"
-	| "binary"
-	| "utf8"
-	| "utf-8"
-	| "utf16le"
-	| "utf-16le"
-	| "latin1"
-	| "ascii"
-	| "ucs2"
-	| "ucs-2";
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -2184,10 +2168,7 @@ export interface Output {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
-	/**
-	 * Digest type used for the hash.
-	 */
-	hashDigest?: HashDigest;
+	hashDigest?: Encoding;
 	/**
 	 * Number of chars which are used for the hash.
 	 */
@@ -3680,10 +3661,7 @@ export interface OutputNormalized {
 	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
-	/**
-	 * Digest type used for the hash.
-	 */
-	hashDigest?: HashDigest;
+	hashDigest?: Encoding;
 	/**
 	 * Number of chars which are used for the hash.
 	 */

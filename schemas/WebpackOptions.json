@@ -661,7 +661,7 @@
       }
     },
     "Encoding": {
-      "description": "Supported encoding.",
+      "description": "Encoding and digest types used for the hash.",
       "enum": [
         "base64",
         "base64url",
@@ -1585,8 +1585,7 @@
       "minLength": 1
     },
     "HashDigest": {
-      "$ref": "#/definitions/Encoding",
-      "description": "Digest type used for the hash."
+      "$ref": "#/definitions/Encoding"
     },
     "HashDigestLength": {
       "description": "Number of chars which are used for the hash.",
