@@ -539,12 +539,7 @@ export type GlobalObject = string;
 /**
  * Digest type used for the hash.
  */
-export type HashDigest = Encoding;
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "Encoding".
- */
-export type Encoding =
+export type HashDigest =
 	| "base64"
 	| "base64url"
 	| "hex"
@@ -808,6 +803,22 @@ export type CssParserUrl = boolean;
  * Options for defer import.
  */
 export type DeferImportExperimentOptions = boolean;
+/**
+ * Supported encoding.
+ */
+export type Encoding =
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
+	| "utf8"
+	| "utf-8"
+	| "utf16le"
+	| "utf-16le"
+	| "latin1"
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
