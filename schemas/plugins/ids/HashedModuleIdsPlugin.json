@@ -9,7 +9,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "typeof import('../../lib/util/Hash')"
+          "tsType": "typeof import('../../../lib/util/Hash')"
         }
       ]
     }

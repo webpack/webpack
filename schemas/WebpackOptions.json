@@ -660,6 +660,22 @@
         "$ref": "#/definitions/WasmLoadingType"
       }
     },
+    "Encoding": {
+      "enum": [
+        "base64",
+        "base64url",
+        "hex",
+        "binary",
+        "utf8",
+        "utf-8",
+        "utf16le",
+        "utf-16le",
+        "latin1",
+        "ascii",
+        "ucs2",
+        "ucs-2"
+      ]
+    },
     "Entry": {
       "description": "The entry point(s) of the compilation.",
       "anyOf": [
@@ -1569,7 +1585,11 @@
     },
     "HashDigest": {
       "description": "Digest type used for the hash.",
-      "type": "string"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Encoding"
+        }
+      ]
     },
     "HashDigestLength": {
       "description": "Number of chars which are used for the hash.",

@@ -539,7 +539,24 @@ export type GlobalObject = string;
 /**
  * Digest type used for the hash.
  */
-export type HashDigest = string;
+export type HashDigest = Encoding;
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "Encoding".
+ */
+export type Encoding =
+	| "base64"
+	| "base64url"
+	| "hex"
+	| "binary"
+	| "utf8"
+	| "utf-8"
+	| "utf16le"
+	| "utf-16le"
+	| "latin1"
+	| "ascii"
+	| "ucs2"
+	| "ucs-2";
 /**
  * Number of chars which are used for the hash.
  */
