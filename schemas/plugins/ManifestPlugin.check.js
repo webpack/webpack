@@ -1,0 +1,6 @@
+/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn fix:special` to update
+ */
+const r=/^(?:[A-Za-z]:[\\/]|\\\\|\/)/;function e(t,{instancePath:n="",parentData:a,parentDataProperty:s,rootData:o=t}={}){let i=null,l=0;if(0===l){if(!t||"object"!=typeof t||Array.isArray(t))return e.errors=[{params:{type:"object"}}],!1;{const n=l;for(const r in t)if("filename"!==r&&"handler"!==r)return e.errors=[{params:{additionalProperty:r}}],!1;if(n===l){if(void 0!==t.filename){let n=t.filename;const a=l;if(l===a){if("string"!=typeof n)return e.errors=[{params:{type:"string"}}],!1;if(n.includes("!")||!1!==r.test(n))return e.errors=[{params:{}}],!1;if(n.length<1)return e.errors=[{params:{}}],!1}var f=a===l}else f=!0;if(f)if(void 0!==t.handler){const r=l,n=l;let a=!1,s=null;const o=l;if(!(t.handler instanceof Function)){const r={params:{}};null===i?i=[r]:i.push(r),l++}if(o===l&&(a=!0,s=0),!a){const r={params:{passingSchemas:s}};return null===i?i=[r]:i.push(r),l++,e.errors=i,!1}l=n,null!==i&&(n?i.length=n:i=null),f=r===l}else f=!0}}}return e.errors=i,0===l}module.exports=e,module.exports.default=e;

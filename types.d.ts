@@ -10001,6 +10001,44 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+
+/**
+ * Describes a manifest entry that links the emitted path to the producing asset.
+ */
+declare interface ManifestItem {
+	/**
+	 * The compilation asset that produced this manifest entry.
+	 */
+	asset?: Asset;
+
+	/**
+	 * The public path recorded in the manifest for this asset.
+	 */
+	filePath: string;
+}
+declare interface ManifestObject {
+	[index: string]: ManifestItem;
+}
+declare class ManifestPlugin {
+	constructor(options: ManifestPluginOptions);
+	options: Required<ManifestPluginOptions>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ManifestPluginOptions {
+	/**
+	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
+
+	/**
+	 * A function that receives the manifest object and returns the manifest string.
+	 */
+	handler?: (manifest: ManifestObject) => string;
+}
 declare interface MapOptions {
 	/**
 	 * need columns?
@@ -19435,6 +19473,7 @@ declare namespace exports {
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
+		ManifestPlugin,
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,

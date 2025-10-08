@@ -1,0 +1,51 @@
+{
+  "definitions": {
+    "HandlerFunction": {
+      "description": "A function that receives the manifest object and returns the manifest string.",
+      "instanceof": "Function",
+      "tsType": "(manifest: ManifestObject) => string"
+    },
+    "ManifestItem": {
+      "description": "Describes a manifest entry that links the emitted path to the producing asset.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "description": "The compilation asset that produced this manifest entry.",
+          "tsType": "import('../../lib/Compilation').Asset"
+        },
+        "filePath": {
+          "description": "The public path recorded in the manifest for this asset.",
+          "type": "string"
+        }
+      },
+      "required": ["filePath"]
+    },
+    "ManifestObject": {
+      "description": "Maps asset identifiers to their manifest entries.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ManifestItem"
+      },
+      "tsType": "Record<string, ManifestItem>"
+    }
+  },
+  "title": "ManifestPluginOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "filename": {
+      "description": "Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.",
+      "type": "string",
+      "absolutePath": false,
+      "minLength": 1
+    },
+    "handler": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/HandlerFunction"
+        }
+      ]
+    }
+  }
+}
