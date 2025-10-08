@@ -2300,6 +2300,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMetaEnv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -3068,6 +3081,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMetaEnv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-import-mode": Object {
     "configs": Array [
       Object {
@@ -3809,6 +3835,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMetaEnv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -4308,6 +4347,19 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMetaEnv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
     "multiple": false,
     "simpleType": "boolean",
   },
