@@ -18,19 +18,11 @@ it("should pass query to loader without resource with resource query", function(
 
 it("should pass query to loader without resource", function() {
 	var result = require("./loaders/queryloader?query!");
-	// TODO fix me after merge the new version of loader-runner
-	if (typeof result.resourceQuery !== "undefined") {
-		expect(result).toEqual({
-			resourceQuery: "",
-			query: "?query",
-			prev: null
-		});
-	} else {
-		expect(result).toEqual({
-			query: "?query",
-			prev: null
-		});
-	}
+	expect(result).toEqual({
+		resourceQuery: "",
+		query: "?query",
+		prev: null
+	});
 });
 
 it("should pass query to multiple loaders", function() {
