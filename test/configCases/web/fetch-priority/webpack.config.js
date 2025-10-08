@@ -11,6 +11,7 @@ module.exports = {
 		css: true
 	},
 	optimization: {
+		chunkIds: "named",
 		minimize: false,
 		splitChunks: {
 			minSize: 1

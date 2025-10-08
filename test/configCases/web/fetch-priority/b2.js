@@ -1,3 +1,4 @@
 import * as shared from './shared';
-console.log(shared);
+function doNothing(val) {}
+doNothing(shared);
 export default "b";
