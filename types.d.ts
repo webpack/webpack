@@ -3001,6 +3001,11 @@ declare interface Configuration {
 	devtool?: string | false;
 
 	/**
+	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
+	 */
+	dotenv?: boolean | DotenvPluginOptions;
+
+	/**
 	 * The entry point(s) of the compilation.
 	 */
 	entry?:
@@ -4418,6 +4423,75 @@ declare interface DllReferencePluginOptionsManifest {
 		| "umd2"
 		| "jsonp"
 		| "system";
+}
+declare class DotenvPlugin {
+	constructor(options?: DotenvPluginOptions);
+	config: {
+		/**
+		 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
+		 */
+		dir?: string | boolean;
+		/**
+		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
+		 */
+		prefix?: string | string[];
+		/**
+		 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
+		 */
+		template?: string[];
+	};
+	apply(compiler: Compiler): void;
+
+	/**
+	 * Get list of env files to load based on mode and template
+	 * Similar to Vite's getEnvFilesForMode
+	 */
+	getEnvFilesForMode(
+		inputFileSystem: InputFileSystem,
+		dir: string,
+		mode?: string
+	): string[];
+
+	/**
+	 * Load environment variables from .env files
+	 * Similar to Vite's loadEnv implementation
+	 */
+	loadEnv(
+		fs: InputFileSystem,
+		mode: undefined | string,
+		context: string,
+		callback: (
+			err: null | Error,
+			env?: Record<string, string>,
+			fileDependencies?: string[],
+			missingDependencies?: string[]
+		) => void
+	): void;
+
+	/**
+	 * Load a file with proper path resolution
+	 */
+	loadFile(fs: InputFileSystem, file: string): Promise<string>;
+}
+
+/**
+ * Options for Dotenv plugin.
+ */
+declare interface DotenvPluginOptions {
+	/**
+	 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
+	 */
+	dir?: string | boolean;
+
+	/**
+	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
+	 */
+	prefix?: string | string[];
+
+	/**
+	 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
+	 */
+	template?: string[];
 }
 declare class DynamicEntryPlugin {
 	constructor(context: string, entry: () => Promise<EntryStaticNormalized>);
@@ -18387,6 +18461,11 @@ declare interface WebpackOptionsNormalized {
 	devtool?: string | false;
 
 	/**
+	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
+	 */
+	dotenv?: boolean | DotenvPluginOptions;
+
+	/**
 	 * The entry point(s) of the compilation.
 	 */
 	entry: EntryNormalized;
@@ -18587,7 +18666,13 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 } & { watch: NonNullable<undefined | boolean> } & {
 	performance: NonNullable<undefined | false | PerformanceOptions>;
 } & { recordsInputPath: NonNullable<undefined | string | false> } & {
-	recordsOutputPath: NonNullable<undefined | string | false>;
+	recordsOutputPath:
+		| (string & {
+				dotenv: NonNullable<undefined | boolean | DotenvPluginOptions>;
+		  })
+		| (false & {
+				dotenv: NonNullable<undefined | boolean | DotenvPluginOptions>;
+		  });
 };
 
 /**
@@ -19310,6 +19395,7 @@ declare namespace exports {
 		DllPlugin,
 		DllReferencePlugin,
 		DynamicEntryPlugin,
+		DotenvPlugin,
 		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
