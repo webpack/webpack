@@ -8,6 +8,7 @@ module.exports = {
 		crossOriginLoading: "anonymous"
 	},
 	optimization: {
+		chunkIds: "named",
 		minimize: false,
 		splitChunks: {
 			minSize: 1
