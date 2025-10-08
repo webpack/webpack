@@ -11189,8 +11189,7 @@ declare interface MultiCompilerOptions {
 	 */
 	parallelism?: number;
 }
-type MultiConfiguration = ReadonlyArray<WebpackOptionsNormalized> &
-	MultiCompilerOptions;
+type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
 declare abstract class MultiStats {
 	stats: Stats[];
 	get hash(): string;
