@@ -6555,6 +6555,11 @@ declare interface ImportDependencyMeta {
 type ImportExpressionJavascriptParser = ImportExpressionImport & {
 	phase?: "defer";
 };
+declare class ImportMetaEnvPlugin {
+	constructor(definitions?: Record<string, any>);
+	definitions: Record<string, any>;
+	apply(compiler: Compiler): void;
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -8384,6 +8389,11 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable evaluating import.meta.webpackContext.
 	 */
 	importMetaContext?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.env.
+	 */
+	importMetaEnv?: boolean;
 
 	/**
 	 * Include polyfills or mocks for various node stuff.
@@ -19522,6 +19532,7 @@ declare namespace exports {
 		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
+		ImportMetaEnvPlugin,
 		EvalDevToolModulePlugin,
 		EvalSourceMapDevToolPlugin,
 		ExternalModule,

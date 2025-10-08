@@ -3315,6 +3315,10 @@ export interface JavascriptParserOptions {
 	 */
 	importMetaContext?: boolean;
 	/**
+	 * Enable/disable evaluating import.meta.env.
+	 */
+	importMetaEnv?: boolean;
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: Node;

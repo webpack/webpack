@@ -1972,6 +1972,10 @@
           "description": "Enable/disable evaluating import.meta.webpackContext.",
           "type": "boolean"
         },
+        "importMetaEnv": {
+          "description": "Enable/disable evaluating import.meta.env.",
+          "type": "boolean"
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },
