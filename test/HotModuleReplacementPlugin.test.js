@@ -6,8 +6,6 @@ const fs = require("graceful-fs");
 const webpack = require("..");
 
 describe("HotModuleReplacementPlugin", () => {
-	jest.setTimeout(20000);
-
 	it("should not have circular hashes but equal if unmodified", (done) => {
 		const entryFile = path.join(
 			__dirname,

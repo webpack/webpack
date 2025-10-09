@@ -5,8 +5,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 
 describe("WatchClose", () => {
-	jest.setTimeout(5000);
-
 	describe("multiple calls watcher", () => {
 		const fixturePath = path.join(__dirname, "fixtures");
 		const outputPath = path.join(__dirname, "js/WatchClose");

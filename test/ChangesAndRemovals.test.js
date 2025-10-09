@@ -72,8 +72,6 @@ function createFiles() {
 	);
 }
 
-jest.setTimeout(30000);
-
 describe("ChangesAndRemovals", () => {
 	beforeEach((done) => {
 		cleanup((err) => {

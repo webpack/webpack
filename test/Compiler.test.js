@@ -9,7 +9,6 @@ const captureStdio = require("./helpers/captureStdio");
 const deprecationTracking = require("./helpers/deprecationTracking");
 
 describe("Compiler", () => {
-	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
 
