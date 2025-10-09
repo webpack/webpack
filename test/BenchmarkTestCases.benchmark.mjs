@@ -693,8 +693,6 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
-								console.time(`Time: ${benchName}`);
-
 								let resolve;
 								let reject;
 
@@ -717,7 +715,6 @@ async function registerSuite(bench, test, baselines) {
 									// Construct and print stats to be more accurate with real life projects
 									stats.toString();
 									resolve();
-									console.timeEnd(`Time: ${benchName}`);
 								};
 
 								await new Promise((resolve, reject) => {
@@ -738,6 +735,12 @@ async function registerSuite(bench, test, baselines) {
 								await promise;
 							},
 							{
+								beforeEach() {
+									console.time(`Time: ${benchName}`);
+								},
+								afterEach() {
+									console.timeEnd(`Time: ${benchName}`);
+								},
 								async beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 
@@ -836,12 +839,16 @@ async function registerSuite(bench, test, baselines) {
 										runWebpack(webpack, config)
 									);
 								} else {
-									console.time(`Time: ${benchName}`);
 									await runWebpack(webpack, config);
-									console.timeEnd(`Time: ${benchName}`);
 								}
 							},
 							{
+								beforeEach() {
+									console.time(`Time: ${benchName}`);
+								},
+								afterEach() {
+									console.timeEnd(`Time: ${benchName}`);
+								},
 								beforeAll() {
 									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
 								}
