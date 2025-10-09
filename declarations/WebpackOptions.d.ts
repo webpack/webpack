@@ -1135,7 +1135,7 @@ export interface DotenvPluginOptions {
 	/**
 	 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
 	 */
-	dir?: boolean | string;
+	dir?: string;
 	/**
 	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
 	 */

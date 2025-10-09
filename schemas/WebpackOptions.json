@@ -651,15 +651,9 @@
       "properties": {
         "dir": {
           "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string",
-              "minLength": 1
-            }
-          ]
+          "type": "string",
+          "absolutePath": true,
+          "minLength": 1
         },
         "prefix": {
           "description": "Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",

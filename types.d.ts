@@ -4426,11 +4426,11 @@ declare interface DllReferencePluginOptionsManifest {
 }
 declare class DotenvPlugin {
 	constructor(options?: DotenvPluginOptions);
-	config: {
+	options: {
 		/**
 		 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
 		 */
-		dir?: string | boolean;
+		dir?: string;
 		/**
 		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
 		 */
@@ -4481,7 +4481,7 @@ declare interface DotenvPluginOptions {
 	/**
 	 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
 	 */
-	dir?: string | boolean;
+	dir?: string;
 
 	/**
 	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
