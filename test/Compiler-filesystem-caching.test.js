@@ -9,8 +9,6 @@ const rimraf = require("rimraf");
 let fixtureCount = 0;
 
 describe("Compiler (filesystem caching)", () => {
-	jest.setTimeout(5000);
-
 	const tempFixturePath = path.join(
 		__dirname,
 		"fixtures",

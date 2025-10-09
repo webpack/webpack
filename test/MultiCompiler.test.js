@@ -32,8 +32,6 @@ const createMultiCompiler = (options) => {
 };
 
 describe("MultiCompiler", () => {
-	jest.setTimeout(20000);
-
 	it("should trigger 'run' for each child compiler", (done) => {
 		const compiler = createMultiCompiler();
 		let called = 0;

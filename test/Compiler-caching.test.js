@@ -9,8 +9,6 @@ const rimraf = require("rimraf");
 let fixtureCount = 0;
 
 describe("Compiler (caching)", () => {
-	jest.setTimeout(15000);
-
 	function compile(entry, options, callback) {
 		const webpack = require("..");
 

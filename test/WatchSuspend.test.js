@@ -13,8 +13,6 @@ describe("WatchSuspend", () => {
 		return;
 	}
 
-	jest.setTimeout(5000);
-
 	describe("suspend and resume watcher", () => {
 		const fixturePath = path.join(
 			__dirname,

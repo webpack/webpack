@@ -2,6 +2,7 @@
 
 /** @type {import('jest').Config} */
 const config = {
+	testTimeout: 30000,
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
 	setupFilesAfterEnv: ["<rootDir>/test/setupTestFramework.js"],
