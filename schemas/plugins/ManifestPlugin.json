@@ -2,6 +2,7 @@
   "definitions": {
     "ManifestEntrypoint": {
       "description": "Describes a manifest entrypoint.",
+      "type": "object",
       "additionalProperties": false,
       "properties": {
         "imports": {
@@ -46,14 +47,10 @@
       "additionalProperties": false,
       "properties": {
         "assets": {
-          "$ref": "#/definitions/ManifestItem",
-          "description": "Describes the assets manifest section.",
-          "tsType": "Record<string, ManifestItem>"
+          "$ref": "#/definitions/ManifestItem"
         },
         "entrypoints": {
-          "$ref": "#/definitions/ManifestEntrypoint",
-          "description": "Describes the entrypoints manifest section.",
-          "tsType": "Record<string, ManifestEntrypoint>"
+          "$ref": "#/definitions/ManifestEntrypoint"
         }
       }
     }
