@@ -29,14 +29,14 @@ class CopyPlugin {
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		node: {
-			__dirname: false,
-			__filename: false
-		},
+		entry: "./index-1.js",
 		output: {
-			publicPath: "/app/",
+			publicPath: () => "/app/",
 			chunkFilename: "[name].[contenthash].js",
 			assetModuleFilename: "[name].[contenthash][ext][query]"
+		},
+		optimization: {
+			chunkIds: "named"
 		},
 		plugins: [
 			new CopyPlugin(),
@@ -61,22 +61,28 @@ module.exports = [
 		}
 	},
 	{
-		entry: "./index-2.js",
-		node: {
-			__dirname: false,
-			__filename: false
+		target: "web",
+		entry: {
+			"nested-shared": {
+				import: "./nested-shared.js"
+			},
+			shared: {
+				dependOn: "nested-shared",
+				import: "./shared.js?foo=bar"
+			},
+			foo: {
+				dependOn: "shared",
+				import: "./index-2.js"
+			}
 		},
 		output: {
-			publicPath: (_data) => "/dist/",
+			publicPath: "auto",
+			filename: "[name].js",
 			chunkFilename: "[name].[contenthash].js",
+			cssChunkFilename: "[name].[contenthash].css",
 			assetModuleFilename: "[name].[contenthash][ext][query]"
 		},
-		plugins: [
-			new CopyPlugin(),
-			new webpack.ManifestPlugin({
-				filename: "bar.json"
-			})
-		],
+		devtool: "source-map",
 		module: {
 			rules: [
 				{
@@ -91,6 +97,41 @@ module.exports = [
 					}
 				}
 			]
+		},
+		plugins: [
+			new CopyPlugin(),
+			new webpack.ManifestPlugin({
+				filename: "other.json",
+				filter(item) {
+					if (/file-loader.png/.test(item.file)) {
+						return false;
+					}
+
+					return true;
+				},
+				generate: (manifest) => {
+					manifest.custom = "value";
+					return manifest;
+				},
+				prefix: "/nested[publicpath]",
+				serialize: (manifest) => JSON.stringify(manifest)
+			})
+		],
+		experiments: {
+			css: true
+		},
+		optimization: {
+			chunkIds: "named",
+			splitChunks: {
+				cacheGroups: {
+					commons: {
+						enforce: true,
+						test: /dependency\.js$/,
+						chunks: "initial"
+					}
+				}
+			},
+			runtimeChunk: { name: (entrypoint) => `runtime~${entrypoint.name}` }
 		}
 	}
 ];

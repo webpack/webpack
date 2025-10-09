@@ -1,27 +1,9 @@
-This example demonstrates how to use webpack internal ManifestPlugin.
+This example demonstrates how to use ManifestPlugin.
 
 # example.js
 
 ```js
 _{{example.js}}_
-```
-
-# foo.txt
-
-```js
-_{{foo.txt}}_
-```
-
-# bar.txt
-
-```js
-_{{bar.txt}}_
-```
-
-# baz.js
-
-```js
-_{{baz.js}}_
 ```
 
 # webpack.config.js
@@ -40,6 +22,54 @@ _{{dist/manifest.json}}_
 
 ```yml
 _{{dist/manifest.yml}}_
+```
+
+# Collecting all initial scripts and styles
+
+Here is a function to be able to get all initial scripts and styles:
+
+```js
+const fs = require("fs");
+
+function importEntrypoints(manifest, name) {
+	const seen = new Set();
+
+	function getImported(entrypoint) {
+		const scripts = [];
+		const styles = [];
+
+		for (const item of entrypoint.imports || []) {
+			const importer = manifest.assets[item];
+
+			if (seen.has(item)) {
+				continue;
+			}
+
+			seen.add(item);
+
+			for (const parent of entrypoint.parents) {
+				const [parentStyles, parentScripts] = getImported(manifest.entrypoints[parent])
+				styles.push(...parentStyles);
+				scripts.push(...parentScripts);
+			}
+
+			if (/\.css$/.test(importer.file)) {
+				styles.push(importer.file);
+			} else {
+				scripts.push(importer.file);
+			}
+		}
+
+		return [styles, scripts];
+	}
+
+	return getImported(manifest.entrypoints[name]);
+}
+
+const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
+
+// Get all styles and scripts by entry name
+const [styles, scripts] = importEntrypoints(manifest, "foo")
 ```
 
 # Info

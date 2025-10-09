@@ -1,18 +1,18 @@
 "use strict";
 
+const YAML = require("yamljs");
 const webpack = require("../../");
 
 /** @type {webpack.Configuration} */
 module.exports = {
 	devtool: "source-map",
+	output: {
+		chunkFilename: "[name].[contenthash].js"
+	},
 	module: {
 		rules: [
 			{
 				test: /foo.txt/,
-				type: "asset/resource"
-			},
-			{
-				test: /bar.txt/,
 				use: require.resolve("file-loader")
 			}
 		]
@@ -23,13 +23,21 @@ module.exports = {
 		}),
 		new webpack.ManifestPlugin({
 			filename: "manifest.yml",
-			handler(manifest) {
-				let _manifest = "";
-				for (const key in manifest) {
-					if (key === "manifest.json") continue;
-					_manifest += `- ${key}: '${manifest[key].filePath}'\n`;
+			prefix: "/nested/[publicpath]",
+			filter(item) {
+				if (/.map$/.test(item.file)) {
+					return false;
 				}
-				return _manifest;
+
+				return true;
+			},
+			generate(manifest) {
+				delete manifest.assets["manifest.json"];
+				manifest.custom = "value";
+				return manifest;
+			},
+			serialize(manifest) {
+				return YAML.stringify(manifest, 4);
 			}
 		})
 	]

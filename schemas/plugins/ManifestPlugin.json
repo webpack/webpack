@@ -1,51 +1,95 @@
 {
   "definitions": {
-    "HandlerFunction": {
-      "description": "A function that receives the manifest object and returns the manifest string.",
-      "instanceof": "Function",
-      "tsType": "(manifest: ManifestObject) => string"
+    "ManifestEntrypoint": {
+      "description": "Describes a manifest entrypoint.",
+      "additionalProperties": false,
+      "properties": {
+        "imports": {
+          "description": "Contains the names of the files contained in the assets manifest section.",
+          "type": "array",
+          "items": {
+            "description": "The name of file.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "parents": {
+          "description": "Contains the names of parent entrypoints.",
+          "type": "array",
+          "items": {
+            "description": "The entrypoint name.",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     },
     "ManifestItem": {
-      "description": "Describes a manifest entry that links the emitted path to the producing asset.",
+      "description": "Describes a manifest asset that links the emitted path to the producing asset.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "The compilation asset that produced this manifest entry.",
-          "tsType": "import('../../lib/Compilation').Asset"
+        "file": {
+          "description": "The path absolute URL (this indicates that the path is absolute from the server's root directory) to file.",
+          "type": "string"
         },
-        "filePath": {
-          "description": "The public path recorded in the manifest for this asset.",
+        "src": {
+          "description": "The source path relative to the context.",
           "type": "string"
         }
       },
-      "required": ["filePath"]
+      "required": ["file"]
     },
     "ManifestObject": {
-      "description": "Maps asset identifiers to their manifest entries.",
+      "description": "The manifest object.",
       "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/ManifestItem"
-      },
-      "tsType": "Record<string, ManifestItem>"
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "$ref": "#/definitions/ManifestItem",
+          "description": "Describes the assets manifest section.",
+          "tsType": "Record<string, ManifestItem>"
+        },
+        "entrypoints": {
+          "$ref": "#/definitions/ManifestEntrypoint",
+          "description": "Describes the entrypoints manifest section.",
+          "tsType": "Record<string, ManifestEntrypoint>"
+        }
+      }
     }
   },
   "title": "ManifestPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "entrypoints": {
+      "description": "Enables/disables generation of the entrypoints manifest section.",
+      "type": "boolean"
+    },
     "filename": {
       "description": "Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.",
       "type": "string",
       "absolutePath": false,
       "minLength": 1
     },
-    "handler": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/HandlerFunction"
-        }
-      ]
+    "filter": {
+      "description": "Allows filtering the files which make up the manifest.",
+      "instanceof": "Function",
+      "tsType": "(item: ManifestItem) => boolean"
+    },
+    "generate": {
+      "description": "A function that receives the manifest object, modifies it, and returns the modified manifest.",
+      "instanceof": "Function",
+      "tsType": "(manifest: ManifestObject) => ManifestObject"
+    },
+    "prefix": {
+      "description": "Specifies a path prefix for all keys in the manifest.",
+      "type": "string"
+    },
+    "serialize": {
+      "description": "A function that receives the manifest object and returns the manifest string.",
+      "instanceof": "Function",
+      "tsType": "(manifest: ManifestObject) => string"
     }
   }
 }

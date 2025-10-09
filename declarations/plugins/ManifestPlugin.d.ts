@@ -4,35 +4,68 @@
  * Run `yarn fix:special` to update
  */
 
-/**
- * A function that receives the manifest object and returns the manifest string.
- */
-export type HandlerFunction = (manifest: ManifestObject) => string;
-/**
- * Maps asset identifiers to their manifest entries.
- */
-export type ManifestObject = Record<string, ManifestItem>;
-
 export interface ManifestPluginOptions {
+	/**
+	 * Enables/disables generation of the entrypoints manifest section.
+	 */
+	entrypoints?: boolean;
 	/**
 	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
 	 */
 	filename?: string;
 	/**
+	 * Allows filtering the files which make up the manifest.
+	 */
+	filter?: (item: ManifestItem) => boolean;
+	/**
+	 * A function that receives the manifest object, modifies it, and returns the modified manifest.
+	 */
+	generate?: (manifest: ManifestObject) => ManifestObject;
+	/**
+	 * Specifies a path prefix for all keys in the manifest.
+	 */
+	prefix?: string;
+	/**
 	 * A function that receives the manifest object and returns the manifest string.
 	 */
-	handler?: HandlerFunction;
+	serialize?: (manifest: ManifestObject) => string;
 }
 /**
- * Describes a manifest entry that links the emitted path to the producing asset.
+ * Describes a manifest entrypoint.
+ */
+export interface ManifestEntrypoint {
+	/**
+	 * Contains the names of the files contained in the assets manifest section.
+	 */
+	imports?: string[];
+	/**
+	 * Contains the names of parent entrypoints.
+	 */
+	parents?: string[];
+}
+/**
+ * Describes a manifest asset that links the emitted path to the producing asset.
  */
 export interface ManifestItem {
 	/**
-	 * The compilation asset that produced this manifest entry.
+	 * The path absolute URL (this indicates that the path is absolute from the server's root directory) to file.
 	 */
-	asset?: import("../../lib/Compilation").Asset;
+	file: string;
 	/**
-	 * The public path recorded in the manifest for this asset.
+	 * The source path relative to the context.
 	 */
-	filePath: string;
+	src?: string;
+}
+/**
+ * The manifest object.
+ */
+export interface ManifestObject {
+	/**
+	 * Describes a manifest asset that links the emitted path to the producing asset.
+	 */
+	assets?: Record<string, ManifestItem>;
+	/**
+	 * Describes a manifest entrypoint.
+	 */
+	entrypoints?: Record<string, ManifestEntrypoint>;
 }
