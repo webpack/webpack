@@ -13037,7 +13037,7 @@ declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
 declare interface ParseOptions {
-	sourceType: "module" | "auto" | "script";
+	sourceType: "module" | "script";
 	ecmaVersion?:
 		| 3
 		| 5
