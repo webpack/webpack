@@ -32,8 +32,6 @@ describe("WatcherEvents", () => {
 		return;
 	}
 
-	jest.setTimeout(10000);
-
 	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", (done) => {
 		let called = false;
 
