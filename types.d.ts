@@ -3881,6 +3881,7 @@ declare class DefinePlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	updateOptions(options: Record<string, CodeValue>): void;
 	static runtimeValue(
 		fn: (value: {
 			module: NormalModule;
@@ -4894,7 +4895,7 @@ declare interface Environment {
 	templateLiteral?: boolean;
 }
 declare class EnvironmentPlugin {
-	constructor(...keys: (string | string[] | Record<string, any>)[]);
+	constructor(...options: (string | string[] | Record<string, any>)[]);
 	keys: string[];
 	defaultValues: Record<string, any>;
 
@@ -4902,6 +4903,7 @@ declare class EnvironmentPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	updateOptions(options: (string | string[] | Record<string, any>)[]): void;
 }
 type ErrorWithDetail = Error & { details?: string };
 declare interface Etag {
@@ -6559,6 +6561,7 @@ declare class ImportMetaEnvPlugin {
 	constructor(definitions?: Record<string, any>);
 	definitions: Record<string, any>;
 	apply(compiler: Compiler): void;
+	updateOptions(options: Record<string, any>): void;
 }
 declare interface ImportModuleOptions {
 	/**
