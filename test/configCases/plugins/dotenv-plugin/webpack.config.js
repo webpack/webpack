@@ -49,7 +49,9 @@ module.exports = [
 		name: "disabled-dir",
 		mode: "development",
 		entry: "./disabled-dir.js",
-		dotenv: false
+		dotenv: {
+			dir: false
+		}
 	},
 	// Test 7: Custom template - load files based on custom template patterns
 	{
