@@ -4427,51 +4427,17 @@ declare interface DllReferencePluginOptionsManifest {
 declare class DotenvPlugin {
 	constructor(options?: DotenvPluginOptions);
 	options: {
+		prefix: string[];
 		/**
 		 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
 		 */
 		dir?: string;
-		/**
-		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
-		 */
-		prefix?: string | string[];
 		/**
 		 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
 		 */
 		template?: string[];
 	};
 	apply(compiler: Compiler): void;
-
-	/**
-	 * Get list of env files to load based on mode and template
-	 * Similar to Vite's getEnvFilesForMode
-	 */
-	getEnvFilesForMode(
-		inputFileSystem: InputFileSystem,
-		dir: string,
-		mode?: string
-	): string[];
-
-	/**
-	 * Load environment variables from .env files
-	 * Similar to Vite's loadEnv implementation
-	 */
-	loadEnv(
-		fs: InputFileSystem,
-		mode: undefined | string,
-		context: string,
-		callback: (
-			err: null | Error,
-			env?: Record<string, string>,
-			fileDependencies?: string[],
-			missingDependencies?: string[]
-		) => void
-	): void;
-
-	/**
-	 * Load a file with proper path resolution
-	 */
-	loadFile(fs: InputFileSystem, file: string): Promise<string>;
 }
 
 /**
