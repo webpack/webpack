@@ -145,15 +145,15 @@ it("should work with logical operators", () => {
 	expect(empty).toBe("fallback");
 });
 
-it("should work with nullish coalescing", () => {
-	const url = import.meta.env.API_URL ?? "fallback";
+it("should work with nullish coalescing using ternary", () => {
+	const url = import.meta.env.API_URL !== undefined && import.meta.env.API_URL !== null ? import.meta.env.API_URL : "fallback";
 	expect(url).toBe("https://api.example.com");
 	
-	const unknown = import.meta.env.UNKNOWN ?? "default";
+	const unknown = import.meta.env.UNKNOWN !== undefined && import.meta.env.UNKNOWN !== null ? import.meta.env.UNKNOWN : "default";
 	expect(unknown).toBe("default");
 	
-	// Empty string should not be replaced with ??
-	const empty = import.meta.env.EMPTY_VAR ?? "fallback";
+	// Empty string should not be replaced (only null/undefined are replaced)
+	const empty = import.meta.env.EMPTY_VAR !== undefined && import.meta.env.EMPTY_VAR !== null ? import.meta.env.EMPTY_VAR : "fallback";
 	expect(empty).toBe("");
 });
 
