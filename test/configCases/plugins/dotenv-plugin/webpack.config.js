@@ -1,5 +1,7 @@
 "use strict";
 
+const path = require("path");
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	// Test 1: Basic - default behavior with WEBPACK_ prefix
@@ -22,7 +24,7 @@ module.exports = [
 		mode: "development",
 		entry: "./custom-envdir.js",
 		dotenv: {
-			dir: "./envs"
+			dir: path.resolve(__dirname, "./envs")
 		}
 	},
 	// Test 4: Custom prefixes - multiple prefixes
@@ -31,7 +33,7 @@ module.exports = [
 		mode: "development",
 		entry: "./custom-prefixes.js",
 		dotenv: {
-			dir: "./prefixes-env",
+			dir: path.resolve(__dirname, "./prefixes-env"),
 			prefix: ["APP_", "CONFIG_"]
 		}
 	},

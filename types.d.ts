@@ -4426,11 +4426,11 @@ declare interface DllReferencePluginOptionsManifest {
 }
 declare class DotenvPlugin {
 	constructor(options?: DotenvPluginOptions);
-	config: {
+	options: {
 		/**
-		 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
+		 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
 		 */
-		dir?: string | boolean;
+		dir?: string | false;
 		/**
 		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
 		 */
@@ -4441,37 +4441,6 @@ declare class DotenvPlugin {
 		template?: string[];
 	};
 	apply(compiler: Compiler): void;
-
-	/**
-	 * Get list of env files to load based on mode and template
-	 * Similar to Vite's getEnvFilesForMode
-	 */
-	getEnvFilesForMode(
-		inputFileSystem: InputFileSystem,
-		dir: string,
-		mode?: string
-	): string[];
-
-	/**
-	 * Load environment variables from .env files
-	 * Similar to Vite's loadEnv implementation
-	 */
-	loadEnv(
-		fs: InputFileSystem,
-		mode: undefined | string,
-		context: string,
-		callback: (
-			err: null | Error,
-			env?: Record<string, string>,
-			fileDependencies?: string[],
-			missingDependencies?: string[]
-		) => void
-	): void;
-
-	/**
-	 * Load a file with proper path resolution
-	 */
-	loadFile(fs: InputFileSystem, file: string): Promise<string>;
 }
 
 /**
@@ -4479,9 +4448,9 @@ declare class DotenvPlugin {
  */
 declare interface DotenvPluginOptions {
 	/**
-	 * The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.
+	 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
 	 */
-	dir?: string | boolean;
+	dir?: string | false;
 
 	/**
 	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.

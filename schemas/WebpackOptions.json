@@ -631,9 +631,6 @@
     },
     "Dotenv": {
       "description": "Enable and configure the Dotenv plugin to load environment variables from .env files.",
-      "cli": {
-        "exclude": false
-      },
       "anyOf": [
         {
           "description": "Enable Dotenv plugin with default options.",
@@ -650,13 +647,14 @@
       "additionalProperties": false,
       "properties": {
         "dir": {
-          "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+          "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "type": "string",
+              "absolutePath": true,
               "minLength": 1
             }
           ]

@@ -481,19 +481,22 @@ Object {
   "dotenv-dir": Object {
     "configs": Array [
       Object {
-        "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+        "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
         "multiple": false,
         "path": "dotenv.dir",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
       },
       Object {
-        "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+        "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
         "multiple": false,
         "path": "dotenv.dir",
-        "type": "string",
+        "type": "path",
       },
     ],
-    "description": "The directory from which .env files are loaded. Can be an absolute path, or a path relative to the project root. false will disable the .env file loading.",
+    "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
     "multiple": false,
     "simpleType": "string",
   },

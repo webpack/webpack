@@ -1,33 +1,13 @@
 "use strict";
 
-const DotenvPlugin = require("../../../../").DotenvPlugin;
-
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 
-module.exports = (env, { srcPath, testPath }) => {
-	const dotenvPlugin = new DotenvPlugin({
+module.exports = (env, { srcPath, testPath }) => ({
+	mode: "development",
+	devtool: false,
+	dotenv: {
 		prefix: "WEBPACK_",
-		dir: "",
+		dir: srcPath,
 		template: [".env", ".env.myLocal", ".env.[mode]", ".env.[mode].myLocal"]
-	});
-	return {
-		mode: "development",
-		dotenv: false,
-		plugins: [
-			(compiler) => {
-				// Update dotenvPlugin.config.dir before each compile
-				// Use beforeCompile with stage -1 to run before DotenvPlugin
-				compiler.hooks.beforeCompile.tap(
-					{
-						name: "UpdateDotenvDir",
-						stage: -1
-					},
-					() => {
-						dotenvPlugin.config.dir = srcPath;
-					}
-				);
-			},
-			dotenvPlugin
-		]
-	};
-};
+	}
+});
