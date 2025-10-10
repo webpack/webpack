@@ -60,12 +60,6 @@ export interface ManifestItem {
  * The manifest object.
  */
 export interface ManifestObject {
-	/**
-	 * Describes a manifest asset that links the emitted path to the producing asset.
-	 */
-	assets?: ManifestItem;
-	/**
-	 * Describes a manifest entrypoint.
-	 */
-	entrypoints?: ManifestEntrypoint;
+	assets: Record<string, ManifestItem>;
+	entrypoints: Record<string, ManifestEntrypoint>;
 }

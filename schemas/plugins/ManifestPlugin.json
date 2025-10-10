@@ -47,12 +47,15 @@
       "additionalProperties": false,
       "properties": {
         "assets": {
-          "$ref": "#/definitions/ManifestItem"
+          "type": "object",
+          "tsType": "Record<string, ManifestItem>"
         },
         "entrypoints": {
-          "$ref": "#/definitions/ManifestEntrypoint"
+          "type": "object",
+          "tsType": "Record<string, ManifestEntrypoint>"
         }
-      }
+      },
+      "required": ["assets", "entrypoints"]
     }
   },
   "title": "ManifestPluginOptions",

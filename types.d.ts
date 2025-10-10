@@ -10041,15 +10041,8 @@ declare interface ManifestItem {
  * The manifest object.
  */
 declare interface ManifestObject {
-	/**
-	 * Describes a manifest asset that links the emitted path to the producing asset.
-	 */
-	assets?: ManifestItem;
-
-	/**
-	 * Describes a manifest entrypoint.
-	 */
-	entrypoints?: ManifestEntrypoint;
+	assets: Record<string, ManifestItem>;
+	entrypoints: Record<string, ManifestEntrypoint>;
 }
 declare class ManifestPlugin {
 	constructor(options: ManifestPluginOptions);
