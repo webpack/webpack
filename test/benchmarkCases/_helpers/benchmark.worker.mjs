@@ -191,7 +191,9 @@ function getCallingFile() {
 	if (callingFile.startsWith("file://")) {
 		callingFile = fileURLToPath(callingFile);
 	}
-	return path.relative(gitDir, callingFile);
+	// TODO
+	return "test/BenchmarkTestCases.benchmark.mjs";
+	// return path.relative(gitDir, callingFile);
 }
 
 /** @typedef {Map<string, string>} URIMap */
