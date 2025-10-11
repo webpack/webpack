@@ -3319,6 +3319,10 @@ export interface JavascriptParserOptions {
 	 */
 	overrideStrict?: "strict" | "non-strict";
 	/**
+	 * Function to parser source code.
+	 */
+	parse?: import("../lib/javascript/JavascriptParser").ParseFunction;
+	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
 	reexportExportsPresence?: "error" | "warn" | "auto" | false;

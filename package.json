@@ -160,6 +160,7 @@
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
     "memfs": "^4.49.0",
+    "meriyah": "^6.1.4",
     "mini-css-extract-plugin": "^2.9.0",
     "mini-svg-data-uri": "^1.2.3",
     "node-gyp": "^11.2.0",
