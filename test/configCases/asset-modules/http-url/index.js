@@ -7,8 +7,8 @@ import redirect1 from "http://localhost:9990/redirect";
 import redirect2 from "http://localhost:9990/redirect.js";
 import text from "http://localhost:9990/asset.txt";
 import textUrl from "http://localhost:9990/url.js";
-import readme1 from "https://raw.githubusercontent.com//webpack//webpack//main/README.md";
-import readme2 from "https://raw.githubusercontent.com/webpack/webpack/main/README.md";
+import readme1 from "https://raw.githubusercontent.com//webpack//webpack//main/LICENSE";
+import readme2 from "https://raw.githubusercontent.com/webpack/webpack/main/LICENSE";
 
 it("http url request should be supported", () => {
 	expect(cssContent).toBe("a {}.webpack{}");
@@ -26,6 +26,6 @@ it("http url request should be supported", () => {
 });
 
 it("https url request should be supported", () => {
-	expect(readme1.includes("https://github.com/webpack/webpack")).toBeTruthy();
-	expect(readme2.includes("https://github.com/webpack/webpack")).toBeTruthy();
+	expect(readme1.includes("Copyright JS Foundation and other contributors")).toBeTruthy();
+	expect(readme2.includes("Copyright JS Foundation and other contributors")).toBeTruthy();
 });
