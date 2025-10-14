@@ -8,6 +8,9 @@ it("should access import.meta.env as object", () => {
 	expect(env.MAX_RETRIES).toBe("3");
 	expect(env.EMPTY_VAR).toBe("");
 	expect(env.FEATURE_FLAG).toBe("false");
+	if (env.NO_DEFINE) {
+		expect(false).toBe(true);
+	}
 });
 
 it("should access import.meta.env properties directly", () => {
@@ -18,6 +21,9 @@ it("should access import.meta.env properties directly", () => {
 	expect(import.meta.env.MAX_RETRIES).toBe("3");
 	expect(import.meta.env.EMPTY_VAR).toBe("");
 	expect(import.meta.env.FEATURE_FLAG).toBe("false");
+	if (import.meta.env.NO_DEFINE) {
+		expect(false).toBe(true);
+	}
 });
 
 it("should handle typeof import.meta.env", () => {
