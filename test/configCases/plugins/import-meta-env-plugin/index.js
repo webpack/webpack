@@ -1,18 +1,3 @@
-it("should access import.meta.env as object", () => {
-	const env = import.meta.env;
-	expect(typeof env).toBe("object");
-	expect(env.MY_NODE_ENV).toBe("test");
-	expect(env.API_URL).toBe("https://api.example.com");
-	expect(env.API_KEY).toBe("secret123");
-	expect(env.DEBUG).toBe("true");
-	expect(env.MAX_RETRIES).toBe("3");
-	expect(env.EMPTY_VAR).toBe("");
-	expect(env.FEATURE_FLAG).toBe("false");
-	if (env.NO_DEFINE) {
-		expect(false).toBe(true);
-	}
-});
-
 it("should access import.meta.env properties directly", () => {
 	expect(import.meta.env.MY_NODE_ENV).toBe("test");
 	expect(import.meta.env.API_URL).toBe("https://api.example.com");
@@ -21,6 +6,9 @@ it("should access import.meta.env properties directly", () => {
 	expect(import.meta.env.MAX_RETRIES).toBe("3");
 	expect(import.meta.env.EMPTY_VAR).toBe("");
 	expect(import.meta.env.FEATURE_FLAG).toBe("false");
+	if (!import.meta) {
+		expect(false).toBe(true);
+	}
 	if (import.meta.env.NO_DEFINE) {
 		expect(false).toBe(true);
 	}

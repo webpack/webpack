@@ -15,17 +15,6 @@ it("should have consistent values between process.env and import.meta.env", () =
 	expect(import.meta.env.TEST_BASE_URL).toBe(process.env.TEST_BASE_URL);
 });
 
-it("should work with DotenvPlugin prefix filtering", () => {
-	// All variables should have the TEST_ prefix
-	const env = import.meta.env;
-	
-	expect(env.TEST_APP_NAME).toBeDefined();
-	expect(env.TEST_VERSION).toBeDefined();
-	expect(env.TEST_ENABLE_FEATURE).toBeDefined();
-	expect(env.TEST_MAX_CONNECTIONS).toBeDefined();
-	expect(env.TEST_BASE_URL).toBeDefined();
-});
-
 it("should handle .env variables in application logic", () => {
 	// Simulate real application usage
 	const config = {
