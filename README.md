@@ -649,7 +649,7 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 
 <p>(In chronological order)</p>
 
-- [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+- [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) to webpack.
 - [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because of the desire for code splitting for modules such as Webmake. Interestingly, the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 - [@substack](https://github.com/substack) for [browserify](https://browserify.org/), which is a similar project and source for many ideas.
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
