@@ -315,7 +315,8 @@
     "spacek",
     "thelarkinn",
     "behaviour",
-    "WHATWG"
+    "WHATWG",
+    "publicpath"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

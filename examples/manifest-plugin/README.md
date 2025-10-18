@@ -1,30 +1,19 @@
-This example demonstrates how to use webpack internal ManifestPlugin.
+This example demonstrates how to use ManifestPlugin.
 
 # example.js
 
 ```js
-import("./baz");
-```
+import fooURL from "./foo.txt";
 
-# foo.txt
+const barURL = new URL("./bar.txt", import.meta.url);
 
-```js
-foo
-```
+async function loadAsync() {
+	return import("./async.js");
+}
 
-# bar.txt
+await loadAsync();
 
-```js
-bar
-```
-
-# baz.js
-
-```js
-import foo from "./foo.txt";
-import bar from "./bar.txt";
-
-export default foo + bar;
+export default [fooURL, barURL];
 ```
 
 # webpack.config.js
@@ -32,19 +21,21 @@ export default foo + bar;
 ```javascript
 "use strict";
 
+const YAML = require("yamljs");
 const webpack = require("../../");
+
+let common = {};
 
 /** @type {webpack.Configuration} */
 module.exports = {
 	devtool: "source-map",
+	output: {
+		chunkFilename: "[name].[contenthash].js"
+	},
 	module: {
 		rules: [
 			{
 				test: /foo.txt/,
-				type: "asset/resource"
-			},
-			{
-				test: /bar.txt/,
 				use: require.resolve("file-loader")
 			}
 		]
@@ -55,13 +46,21 @@ module.exports = {
 		}),
 		new webpack.ManifestPlugin({
 			filename: "manifest.yml",
-			handler(manifest) {
-				let _manifest = "";
-				for (const key in manifest) {
-					if (key === "manifest.json") continue;
-					_manifest += `- ${key}: '${manifest[key].filePath}'\n`;
+			prefix: "/nested/[publicpath]",
+			filter(item) {
+				if (/.map$/.test(item.file)) {
+					return false;
 				}
-				return _manifest;
+
+				return true;
+			},
+			generate(manifest) {
+				delete manifest.assets["manifest.json"];
+				manifest.custom = "value";
+				return manifest;
+			},
+			serialize(manifest) {
+				return YAML.stringify(manifest, 4);
 			}
 		})
 	]
@@ -72,24 +71,107 @@ module.exports = {
 
 ```json
 {
-  "output.js.map": "dist/output.js.map",
-  "main.js": "dist/output.js",
-  "bar.txt": "dist/a0145fafc7fab801e574631452de554b.txt",
-  "foo.txt": "dist/3ee037f347c64cc372ad.txt",
-  "1.output.js.map": "dist/1.output.js.map",
-  "1.output.js": "dist/1.output.js"
+  "entrypoints": {
+    "main": {
+      "imports": [
+        "output.js"
+      ],
+      "parents": []
+    }
+  },
+  "assets": {
+    "foo.txt": {
+      "file": "dist/3ee037f347c64cc372ad18857b0db91f.txt",
+      "src": "foo.txt"
+    },
+    "bar.txt": {
+      "file": "dist/a0145fafc7fab801e574.txt",
+      "src": "bar.txt"
+    },
+    "output.js.map": {
+      "file": "dist/output.js.map"
+    },
+    "output.js": {
+      "file": "dist/output.js"
+    },
+    "1.js.map": {
+      "file": "dist/1.ff54fb6be6ad1e50220e.js.map"
+    },
+    "1.js": {
+      "file": "dist/1.ff54fb6be6ad1e50220e.js"
+    }
+  }
 }
 ```
 
 # dist/manifest.yml
 
 ```yml
-- output.js.map: 'dist/output.js.map'
-- main.js: 'dist/output.js'
-- bar.txt: 'dist/a0145fafc7fab801e574631452de554b.txt'
-- foo.txt: 'dist/3ee037f347c64cc372ad.txt'
-- 1.output.js.map: 'dist/1.output.js.map'
-- 1.output.js: 'dist/1.output.js'
+entrypoints:
+    main:
+        imports:
+            - output.js
+        parents: []
+assets:
+    foo.txt:
+        file: /nested/dist/3ee037f347c64cc372ad18857b0db91f.txt
+        src: foo.txt
+    bar.txt:
+        file: /nested/dist/a0145fafc7fab801e574.txt
+        src: bar.txt
+    output.js:
+        file: /nested/dist/output.js
+    1.js:
+        file: /nested/dist/1.ff54fb6be6ad1e50220e.js
+custom: value
+```
+
+# Collecting all initial scripts and styles
+
+Here is a function to be able to get all initial scripts and styles:
+
+```js
+const fs = require("fs");
+
+function importEntrypoints(manifest, name) {
+	const seen = new Set();
+
+	function getImported(entrypoint) {
+		const scripts = [];
+		const styles = [];
+
+		for (const item of entrypoint.imports || []) {
+			const importer = manifest.assets[item];
+
+			if (seen.has(item)) {
+				continue;
+			}
+
+			seen.add(item);
+
+			for (const parent of entrypoint.parents) {
+				const [parentStyles, parentScripts] = getImported(manifest.entrypoints[parent])
+				styles.push(...parentStyles);
+				scripts.push(...parentScripts);
+			}
+
+			if (/\.css$/.test(importer.file)) {
+				styles.push(importer.file);
+			} else {
+				scripts.push(importer.file);
+			}
+		}
+
+		return [styles, scripts];
+	}
+
+	return getImported(manifest.entrypoints[name]);
+}
+
+const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
+
+// Get all styles and scripts by entry name
+const [styles, scripts] = importEntrypoints(manifest, "foo")
 ```
 
 # Info
@@ -97,52 +179,51 @@ module.exports = {
 ## Unoptimized
 
 ```
-assets by path *.js 11.9 KiB
-  asset output.js 9.61 KiB [emitted] (name: main) 1 related asset
-  asset 1.output.js 2.3 KiB [emitted] 1 related asset
-assets by path *.txt 8 bytes
-  asset 3ee037f347c64cc372ad.txt 4 bytes [emitted] [immutable] [from: foo.txt]
-  asset a0145fafc7fab801e574631452de554b.txt 4 bytes [emitted] [immutable] [from: bar.txt]
-asset manifest.json 260 bytes [emitted]
-asset manifest.yml 240 bytes [emitted]
-chunk (runtime: main) output.js (main) 17 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+assets by info 877 bytes [immutable]
+  asset 1.ff54fb6be6ad1e50220e.js 869 bytes [emitted] [immutable] 1 related asset
+  asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
+  asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
+asset output.js 15.2 KiB [emitted] (name: main) 1 related asset
+asset manifest.json 598 bytes [emitted]
+asset manifest.yml 405 bytes [emitted]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.48 KiB 8 modules
-  ./example.js 17 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-chunk (runtime: main) 1.output.js 207 bytes (javascript) 4 bytes (asset) [rendered]
-  > ./baz ./example.js 1:0-15
-  dependent modules 122 bytes (javascript) 4 bytes (asset) [dependent] 2 modules
-  ./baz.js 85 bytes [built] [code generated]
+  runtime modules 7.67 KiB 9 modules
+  dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
+  ./example.js 203 bytes [built] [code generated]
     [exports: default]
     [used exports unknown]
-    import() ./baz ./example.js 1:0-15
+    entry ./example.js main
+chunk (runtime: main) 1.ff54fb6be6ad1e50220e.js 24 bytes [rendered]
+  > ./async.js ./example.js 6:8-28
+  ./async.js 24 bytes [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    import() ./async.js ./example.js 6:8-28
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by path *.js 2.17 KiB
-  asset output.js 1.94 KiB [emitted] [minimized] (name: main) 1 related asset
-  asset 293.output.js 237 bytes [emitted] [minimized] 1 related asset
-assets by path *.txt 8 bytes
-  asset 3ee037f347c64cc372ad.txt 4 bytes [emitted] [immutable] [from: foo.txt]
-  asset a0145fafc7fab801e574631452de554b.txt 4 bytes [emitted] [immutable] [from: bar.txt]
-asset manifest.json 268 bytes [emitted]
-asset manifest.yml 248 bytes [emitted]
-chunk (runtime: main) 293.output.js 4 bytes (asset) 249 bytes (javascript) [rendered]
-  > ./baz ./example.js 1:0-15
-  ./baz.js + 2 modules 207 bytes [built] [code generated]
+assets by info 193 bytes [immutable]
+  asset 541.f1d9b957b8d31ed3e6d8.js 185 bytes [emitted] [immutable] [minimized] 1 related asset
+  asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
+  asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
+asset output.js 3.17 KiB [emitted] [minimized] (name: main) 1 related asset
+asset manifest.json 606 bytes [emitted]
+asset manifest.yml 409 bytes [emitted]
+chunk (runtime: main) 541.f1d9b957b8d31ed3e6d8.js 24 bytes [rendered]
+  > ./async.js ./example.js 6:8-28
+  ./async.js 24 bytes [built] [code generated]
     [exports: default]
-    import() ./baz ./example.js 1:0-15
-  ./foo.txt 4 bytes (asset) 42 bytes (javascript) [built] [code generated]
-    [no exports]
-chunk (runtime: main) output.js (main) 17 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+    import() ./async.js ./example.js 6:8-28
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.48 KiB 8 modules
-  ./example.js 17 bytes [built] [code generated]
+  runtime modules 7.67 KiB 9 modules
+  dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
+  ./example.js 203 bytes [built] [code generated]
+    [exports: default]
     [no exports used]
     entry ./example.js main
 webpack X.X.X compiled successfully
