@@ -9,7 +9,8 @@ it("should compile", async () => {
 		"START async-mod-dep.js",
 		"END async-mod-dep.js",
 		"START async-mod.js",
-		"START deep-async-dep.js"
+		"START deep-async-dep.js",
+		"START reexport-async-dep-inner.js"
 	]);
 	logs.length = 0;
 
@@ -18,6 +19,7 @@ it("should compile", async () => {
 	expect(logs).toEqual([
 		"END async-mod.js",
 		"END deep-async-dep.js",
+		"END reexport-async-dep-inner.js",
 		"START entry.js",
 		"END entry.js"
 	]);
@@ -42,5 +44,21 @@ it("should compile", async () => {
 	expect(logs).toEqual([
 		"START deep-async.js",
 		"END deep-async.js"
+	]);
+	logs.length = 0;
+
+	let reexportAsync = namespaces.reexportAsync.dep;
+	expect(reexportAsync).not.toBeInstanceOf(Promise);
+	expect(logs).toEqual([
+		"START reexport-async.js",
+		"END reexport-async.js",
+	]);
+
+	logs.length = 0;
+	let reexportAsyncX = reexportAsync.x;
+	expect(reexportAsyncX).toBe(4);
+	expect(logs).toEqual([
+		"START reexport-async-dep.js",
+		"END reexport-async-dep.js",
 	]);
 });
