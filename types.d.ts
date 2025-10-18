@@ -13733,7 +13733,7 @@ declare class ProgressPlugin {
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
 	percentBy?: null | "modules" | "entries" | "dependencies";
-	apply(compiler: Compiler | MultiCompiler): void;
+	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
 	): undefined | ((p: number, ...args: string[]) => void);
@@ -18750,29 +18750,34 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare interface _functionWebpack {
+	(
+		options: Configuration,
+		callback: CallbackWebpackFunction_2<Stats, void>
+	): null | Compiler;
+	(options: Configuration): Compiler;
+	(
+		options: MultiConfiguration,
+		callback: CallbackWebpackFunction_2<MultiStats, void>
+	): null | MultiCompiler;
+	(options: MultiConfiguration): MultiCompiler;
+}
 declare interface chunkModuleHashMap {
 	[index: number]: string;
 	[index: string]: string;
 }
 declare function exports(
 	options: Configuration,
-	callback?: CallbackWebpackFunction_2<Stats, void>
+	callback: CallbackWebpackFunction_2<Stats, void>
 ): null | Compiler;
+declare function exports(options: Configuration): Compiler;
 declare function exports(
 	options: MultiConfiguration,
-	callback?: CallbackWebpackFunction_2<MultiStats, void>
+	callback: CallbackWebpackFunction_2<MultiStats, void>
 ): null | MultiCompiler;
+declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
-	export const webpack: {
-		(
-			options: Configuration,
-			callback?: CallbackWebpackFunction_2<Stats, void>
-		): null | Compiler;
-		(
-			options: MultiConfiguration,
-			callback?: CallbackWebpackFunction_2<MultiStats, void>
-		): null | MultiCompiler;
-	};
+	export const webpack: _functionWebpack;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
