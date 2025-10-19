@@ -4018,6 +4018,386 @@ details {
 ]
 `;
 
+exports[`ConfigCacheTestCases css export-type exported tests should export CSS text as default when exportType is text (css/module) 1`] = `
+"/*!*****************************!*\\\\
+  !*** css ./module-text.css ***!
+  \\\\*****************************/
+._module-text_css-class {
+	color: red;
+	background: white;
+}
+
+._module-text_css-another-class {
+	font-size: 16px;
+}
+
+
+"
+`;
+
+exports[`ConfigCacheTestCases css export-type exported tests should export CSS text as default when exportType is text (css/module) 2`] = `
+"/*!*****************************!*\\\\
+  !*** css ./module-text.css ***!
+  \\\\*****************************/
+._module-text_css-class {
+	color: red;
+	background: white;
+}
+
+._module-text_css-another-class {
+	font-size: 16px;
+}
+
+
+"
+`;
+
+exports[`ConfigCacheTestCases css export-type exported tests should export CSS text when exportType is text and esModule is false (css/module) 1`] = `
+Object {
+  "another": "_module-text-no-esm_css-another",
+  "default": Object {
+    "another": "_module-text-no-esm_css-another",
+    "default": "/*!************************************!*\\\\
+  !*** css ./module-text-no-esm.css ***!
+  \\\\************************************/
+._module-text-no-esm_css-no-esm-text {
+	color: orange;
+	background: lightgray;
+}
+
+._module-text-no-esm_css-another {
+	text-align: center;
+}
+
+
+",
+    "no-esm-text": "_module-text-no-esm_css-no-esm-text",
+  },
+  "no-esm-text": "_module-text-no-esm_css-no-esm-text",
+}
+`;
+
+exports[`ConfigCacheTestCases css export-type exported tests should export CSS text when exportType is text and esModule is false (css/module) 2`] = `
+Object {
+  "another": "_module-text-no-esm_css-another",
+  "default": Object {
+    "another": "_module-text-no-esm_css-another",
+    "default": "/*!************************************!*\\\\
+  !*** css ./module-text-no-esm.css ***!
+  \\\\************************************/
+._module-text-no-esm_css-no-esm-text {
+	color: orange;
+	background: lightgray;
+}
+
+._module-text-no-esm_css-another {
+	text-align: center;
+}
+
+
+",
+    "no-esm-text": "_module-text-no-esm_css-no-esm-text",
+  },
+  "no-esm-text": "_module-text-no-esm_css-no-esm-text",
+}
+`;
+
+exports[`ConfigCacheTestCases css export-type exported tests should handle @import with layer, supports, and media queries 1`] = `
+"/*!*********************!*\\\\
+  !*** css ./foo.css ***!
+  \\\\*********************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			.foo {
+			    color: rebeccapurple;
+			}}
+	}
+}
+
+/*!**********************************!*\\\\
+  !*** css ./auto-text-no-esm.css ***!
+  \\\\**********************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			.auto-no-esm-text {
+				color: brown;
+				font-style: italic;
+			}
+			
+			.another-auto {
+				display: block;
+			}
+			
+		}
+	}
+}
+
+/*!***************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: utilities) ***!
+  \\\\***************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@layer utilities {
+				._imported-layer_css_05f6-imported-layer {
+					padding: 10px;
+					margin: 5px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!*********************************************************!*\\\\
+  !*** css ./imported-base.css (supports: display: grid) ***!
+  \\\\*********************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@supports (display: grid) {
+				._imported-base_css_f271-imported-base {
+					color: blue;
+					font-size: 14px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!**********************************************************************!*\\\\
+  !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
+  \\\\**********************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@media screen and (min-width: 768px) {
+				._imported-base_css_7388-imported-base {
+					color: blue;
+					font-size: 14px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!**********************************************************************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
+  \\\\**********************************************************************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@layer components {
+				@supports (display: flex) {
+					@media screen and (max-width: 1024px) {
+						._imported-layer_css_af59-imported-layer {
+							padding: 10px;
+							margin: 5px;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+}
+
+/*!**************************************************************************************************************************!*\\\\
+  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
+  \\\\**************************************************************************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			
+			
+			._module-with-imports_css_f72c-main-class {
+				color: purple;
+				display: flex;
+				background-image: url(09a1a1112c577c279435.png);
+			}
+			
+			@layer base {
+				._module-with-imports_css_f72c-base-class {
+					font-family: sans-serif;
+				}
+			}
+			
+			@supports (display: grid) {
+				._module-with-imports_css_f72c-grid-class {
+					display: grid;
+				}
+			}
+			
+			@media (min-width: 600px) {
+				._module-with-imports_css_f72c-responsive-class {
+					width: 100%;
+				}
+			}
+			
+		}
+	}
+}
+
+/*!********************************************!*\\\\
+  !*** css ./parent-module-with-imports.css ***!
+  \\\\********************************************/
+
+
+"
+`;
+
+exports[`ConfigCacheTestCases css export-type exported tests should handle @import with layer, supports, and media queries 2`] = `
+"/*!*********************!*\\\\
+  !*** css ./foo.css ***!
+  \\\\*********************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			.foo {
+			    color: rebeccapurple;
+			}}
+	}
+}
+
+/*!**********************************!*\\\\
+  !*** css ./auto-text-no-esm.css ***!
+  \\\\**********************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			.auto-no-esm-text {
+				color: brown;
+				font-style: italic;
+			}
+			
+			.another-auto {
+				display: block;
+			}
+			
+		}
+	}
+}
+
+/*!***************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: utilities) ***!
+  \\\\***************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@layer utilities {
+				._imported-layer_css_05f6-imported-layer {
+					padding: 10px;
+					margin: 5px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!*********************************************************!*\\\\
+  !*** css ./imported-base.css (supports: display: grid) ***!
+  \\\\*********************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@supports (display: grid) {
+				._imported-base_css_f271-imported-base {
+					color: blue;
+					font-size: 14px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!**********************************************************************!*\\\\
+  !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
+  \\\\**********************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@media screen and (min-width: 768px) {
+				._imported-base_css_7388-imported-base {
+					color: blue;
+					font-size: 14px;
+				}
+				
+			}
+		}
+	}
+}
+
+/*!**********************************************************************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
+  \\\\**********************************************************************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			@layer components {
+				@supports (display: flex) {
+					@media screen and (max-width: 1024px) {
+						._imported-layer_css_af59-imported-layer {
+							padding: 10px;
+							margin: 5px;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+}
+
+/*!**************************************************************************************************************************!*\\\\
+  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
+  \\\\**************************************************************************************************************************/
+@layer framework {
+	@supports (display: flex) {
+		@media screen and (min-width: 1024px) {
+			
+			
+			._module-with-imports_css_f72c-main-class {
+				color: purple;
+				display: flex;
+				background-image: url(09a1a1112c577c279435.png);
+			}
+			
+			@layer base {
+				._module-with-imports_css_f72c-base-class {
+					font-family: sans-serif;
+				}
+			}
+			
+			@supports (display: grid) {
+				._module-with-imports_css_f72c-grid-class {
+					display: grid;
+				}
+			}
+			
+			@media (min-width: 600px) {
+				._module-with-imports_css_f72c-responsive-class {
+					width: 100%;
+				}
+			}
+			
+		}
+	}
+}
+
+/*!********************************************!*\\\\
+  !*** css ./parent-module-with-imports.css ***!
+  \\\\********************************************/
+
+
+"
+`;
+
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
   "btn--info_is-disabled_1": "_style_module_css_as-is-btn--info_is-disabled_1",

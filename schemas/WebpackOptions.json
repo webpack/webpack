@@ -395,6 +395,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },
@@ -473,6 +476,9 @@
         "esModule": {
           "$ref": "#/definitions/CssGeneratorEsModule"
         },
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },
@@ -489,6 +495,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },
@@ -508,6 +517,9 @@
         "esModule": {
           "$ref": "#/definitions/CssGeneratorEsModule"
         },
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },
@@ -524,6 +536,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },
@@ -534,6 +549,10 @@
           "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserExportType": {
+      "description": "Configure how CSS content is exported as default.",
+      "enum": ["link", "text"]
     },
     "CssParserImport": {
       "description": "Enable/disable `@import` at-rules handling.",
@@ -548,6 +567,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },

@@ -783,6 +783,10 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName = string;
 /**
+ * Configure how CSS content is exported as default.
+ */
+export type CssParserExportType = "link" | "text";
+/**
  * Enable/disable `@import` at-rules handling.
  */
 export type CssParserImport = boolean;
@@ -2975,6 +2979,10 @@ export interface CssAutoGeneratorOptions {
  */
 export interface CssAutoParserOptions {
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
+	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
 	import?: CssParserImport;
@@ -3009,6 +3017,10 @@ export interface CssGlobalGeneratorOptions {
 	 */
 	esModule?: CssGeneratorEsModule;
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?: CssGeneratorExportsConvention;
@@ -3025,6 +3037,10 @@ export interface CssGlobalGeneratorOptions {
  * Parser options for css/global modules.
  */
 export interface CssGlobalParserOptions {
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
@@ -3047,6 +3063,10 @@ export interface CssModuleGeneratorOptions {
 	 */
 	esModule?: CssGeneratorEsModule;
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?: CssGeneratorExportsConvention;
@@ -3064,6 +3084,10 @@ export interface CssModuleGeneratorOptions {
  */
 export interface CssModuleParserOptions {
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
+	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
 	import?: CssParserImport;
@@ -3080,6 +3104,10 @@ export interface CssModuleParserOptions {
  * Parser options for css modules.
  */
 export interface CssParserOptions {
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
