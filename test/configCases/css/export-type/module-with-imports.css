@@ -1,0 +1,38 @@
+@import url("./foo.css");
+
+/* Test @import with layer */
+@import url("./imported-layer.css") layer(utilities);
+
+/* Test @import with supports */
+@import url("./imported-base.css") supports(display: grid);
+
+/* Test @import with media queries */
+@import url("./imported-base.css") screen and (min-width: 768px);
+
+/* Test @import with layer, supports, and media queries combined */
+@import url("./imported-layer.css") layer(components) supports(display: flex) screen and (max-width: 1024px);
+
+.main-class {
+	color: purple;
+	display: flex;
+	background-image: url("./img.png");
+}
+
+@layer base {
+	.base-class {
+		font-family: sans-serif;
+	}
+}
+
+@supports (display: grid) {
+	.grid-class {
+		display: grid;
+	}
+}
+
+@media (min-width: 600px) {
+	.responsive-class {
+		width: 100%;
+	}
+}
+
