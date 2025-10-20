@@ -11014,16 +11014,6 @@ declare interface ModuleSettings {
 	type?: string;
 
 	/**
-	 * Enable/Disable extracting source map.
-	 */
-	extractSourceMap?: boolean;
-
-	/**
-	 * Options for the resolver.
-	 */
-	resolve?: ResolveOptions;
-
-	/**
 	 * Options for parsing.
 	 */
 	parser?: { [index: string]: any };
@@ -11032,6 +11022,16 @@ declare interface ModuleSettings {
 	 * The options for the module generator.
 	 */
 	generator?: { [index: string]: any };
+
+	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+
+	/**
+	 * Options for the resolver.
+	 */
+	resolve?: ResolveOptions;
 
 	/**
 	 * Flags a module as with or without side effects.
@@ -11324,7 +11324,7 @@ declare class NormalModule extends Module {
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
 	loaders: LoaderItem[];
-	extractSourceMap?: boolean;
+	extractSourceMap: boolean;
 	error: null | WebpackError;
 	getResource(): null | string;
 
@@ -11477,7 +11477,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * enable/disable extracting source map
 	 */
-	extractSourceMap?: boolean;
+	extractSourceMap: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
