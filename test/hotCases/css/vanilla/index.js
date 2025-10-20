@@ -1,3 +1,4 @@
+debugger
 import "./style.css";
 
 const getFile = name =>
@@ -35,4 +36,4 @@ it("should work", async function (done) {
 	}));
 });
 
-module.hot.accept();
+module.hot.accept(["./style.css", "./style2.css"]);
