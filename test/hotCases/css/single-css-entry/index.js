@@ -17,4 +17,3 @@ it("should work", done => {
 		})
 	);
 });
-module.hot.accept(["./index.css"]);
