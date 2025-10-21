@@ -58,6 +58,7 @@ describe("browserslist target", () => {
 		["node 10.17.0"],
 		["node 12.19.0"],
 		["node 13.12.0"],
+		["node 24.7.0"],
 
 		// QQ browser
 		["and_qq 10.4"],
