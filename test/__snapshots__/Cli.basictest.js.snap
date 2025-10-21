@@ -6801,6 +6801,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-import-meta-dirname-and-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`import.meta.dirname\` and \`import.meta.filename\`.",
+        "multiple": false,
+        "path": "output.environment.importMetaDirnameAndFilename",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`import.meta.dirname\` and \`import.meta.filename\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-module": Object {
     "configs": Array [
       Object {
