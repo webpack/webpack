@@ -45,7 +45,7 @@
     "ManifestObject": {
       "description": "The manifest object.",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "assets": {
           "description": "Contains the names of assets.",

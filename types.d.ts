@@ -10041,6 +10041,8 @@ declare interface ManifestItem {
  * The manifest object.
  */
 declare interface ManifestObject {
+	[index: string]: any;
+
 	/**
 	 * Contains the names of assets.
 	 */

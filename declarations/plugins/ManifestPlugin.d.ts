@@ -68,4 +68,5 @@ export interface ManifestObject {
 	 * Contains the names of entrypoints.
 	 */
 	entrypoints: Record<string, ManifestEntrypoint>;
+	[k: string]: any;
 }
