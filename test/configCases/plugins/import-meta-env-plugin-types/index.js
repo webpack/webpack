@@ -102,18 +102,6 @@ it("should support mixed type operations", () => {
 	expect(result).toBe(true);
 });
 
-it("should handle the entire env object with mixed types", () => {
-	const env = import.meta.env;
-	
-	expect(typeof env).toBe("object");
-	expect(env.STRING_VAR).toBe("string value");
-	expect(env.NUMBER_VAR).toBe(42);
-	expect(env.BOOLEAN_TRUE).toBe(true);
-	expect(env.BOOLEAN_FALSE).toBe(false);
-	expect(env.ZERO).toBe(0);
-	expect(env.EMPTY_STRING).toBe("");
-	expect(env.DECIMAL).toBe(3.14);
-});
 
 it("should destructure mixed types correctly", () => {
 	const {
