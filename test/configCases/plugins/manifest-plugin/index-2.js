@@ -14,7 +14,7 @@ function importEntrypoints(manifest, name) {
 		const scripts = [];
 		const styles = [];
 
-		for (const item of entrypoint.imports || []) {
+		for (const item of entrypoint.imports) {
 			const importee = manifest.assets[item];
 
 			if (seen.has(item)) {
@@ -23,7 +23,7 @@ function importEntrypoints(manifest, name) {
 
 			seen.add(item);
 
-			for (const parent of entrypoint.parents) {
+			for (const parent of entrypoint.parents || []) {
 				const [parentStyles, parentScripts] = getImportedChunks(manifest.entrypoints[parent])
 				styles.push(...parentStyles);
 				scripts.push(...parentScripts);
@@ -54,8 +54,7 @@ it("should emit manifest with expected entries and paths with function publicPat
 			"imports": [
 				"runtime~nested-shared.js",
 				"nested-shared.js"
-			],
-			"parents": []
+			]
 		},
 		"shared": {
 			"imports": [
@@ -106,7 +105,7 @@ it("should emit manifest with expected entries and paths with function publicPat
 			"foo.css.map",
 			"shared.js",
 			"shared.js.map",
-			"other.txt",
+			"public/other.txt",
 			"third.party.js"
 		].sort()
 	);

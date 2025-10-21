@@ -30,6 +30,9 @@ module.exports = {
 	output: {
 		chunkFilename: "[name].[contenthash].js"
 	},
+	optimization: {
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
+	},
 	module: {
 		rules: [
 			{
@@ -73,8 +76,7 @@ module.exports = {
     "main": {
       "imports": [
         "main.js"
-      ],
-      "parents": []
+      ]
     }
   },
   "assets": {
@@ -92,11 +94,11 @@ module.exports = {
     "main.js": {
       "file": "dist/output.js"
     },
-    "1.js.map": {
-      "file": "dist/1.ff54fb6be6ad1e50220e.js.map"
+    "async_js.js.map": {
+      "file": "dist/async_js.d6fc644e617b14425795.js.map"
     },
-    "1.js": {
-      "file": "dist/1.ff54fb6be6ad1e50220e.js"
+    "async_js.js": {
+      "file": "dist/async_js.d6fc644e617b14425795.js"
     }
   }
 }
@@ -109,7 +111,6 @@ entrypoints:
     main:
         imports:
             - main.js
-        parents: []
 assets:
     foo.txt:
         file: /nested/dist/3ee037f347c64cc372ad18857b0db91f.txt
@@ -119,8 +120,8 @@ assets:
         src: bar.txt
     main.js:
         file: /nested/dist/output.js
-    1.js:
-        file: /nested/dist/1.ff54fb6be6ad1e50220e.js
+    async_js.js:
+        file: /nested/dist/async_js.d6fc644e617b14425795.js
 custom: value
 ```
 
@@ -138,7 +139,7 @@ function importEntrypoints(manifest, name) {
 		const scripts = [];
 		const styles = [];
 
-		for (const item of entrypoint.imports || []) {
+		for (const item of entrypoint.imports) {
 			const importer = manifest.assets[item];
 
 			if (seen.has(item)) {
@@ -147,7 +148,7 @@ function importEntrypoints(manifest, name) {
 
 			seen.add(item);
 
-			for (const parent of entrypoint.parents) {
+			for (const parent of entrypoint.parents || []) {
 				const [parentStyles, parentScripts] = getImported(manifest.entrypoints[parent])
 				styles.push(...parentStyles);
 				scripts.push(...parentScripts);
@@ -169,7 +170,7 @@ function importEntrypoints(manifest, name) {
 const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
 
 // Get all styles and scripts by entry name
-const [styles, scripts] = importEntrypoints(manifest, "main")
+const [styles, scripts] = importEntrypoints(manifest, "main");
 ```
 
 # Info
@@ -177,13 +178,19 @@ const [styles, scripts] = importEntrypoints(manifest, "main")
 ## Unoptimized
 
 ```
-assets by info 877 bytes [immutable]
-  asset 1.ff54fb6be6ad1e50220e.js 869 bytes [emitted] [immutable] 1 related asset
+assets by info 893 bytes [immutable]
+  asset async_js.d6fc644e617b14425795.js 885 bytes [emitted] [immutable] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
 asset output.js 15.2 KiB [emitted] (name: main) 1 related asset
-asset manifest.json 594 bytes [emitted]
-asset manifest.yml 401 bytes [emitted]
+asset manifest.json 601 bytes [emitted]
+asset manifest.yml 395 bytes [emitted]
+chunk (runtime: main) async_js.d6fc644e617b14425795.js 24 bytes [rendered]
+  > ./async.js ./example.js 6:8-28
+  ./async.js 24 bytes [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    import() ./async.js ./example.js 6:8-28
 chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 7.67 KiB 9 modules
@@ -192,26 +199,20 @@ chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.
     [exports: default]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 1.ff54fb6be6ad1e50220e.js 24 bytes [rendered]
-  > ./async.js ./example.js 6:8-28
-  ./async.js 24 bytes [built] [code generated]
-    [exports: default]
-    [used exports unknown]
-    import() ./async.js ./example.js 6:8-28
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by info 193 bytes [immutable]
-  asset 541.f1d9b957b8d31ed3e6d8.js 185 bytes [emitted] [immutable] [minimized] 1 related asset
+assets by info 205 bytes [immutable]
+  asset async_js.e737f493d3cb4089ee2e.js 197 bytes [emitted] [immutable] [minimized] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
-asset output.js 3.17 KiB [emitted] [minimized] (name: main) 1 related asset
-asset manifest.json 602 bytes [emitted]
-asset manifest.yml 405 bytes [emitted]
-chunk (runtime: main) 541.f1d9b957b8d31ed3e6d8.js 24 bytes [rendered]
+asset output.js 3.18 KiB [emitted] [minimized] (name: main) 1 related asset
+asset manifest.json 601 bytes [emitted]
+asset manifest.yml 395 bytes [emitted]
+chunk (runtime: main) async_js.e737f493d3cb4089ee2e.js 24 bytes [rendered]
   > ./async.js ./example.js 6:8-28
   ./async.js 24 bytes [built] [code generated]
     [exports: default]

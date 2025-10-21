@@ -35,9 +35,9 @@ export interface ManifestPluginOptions {
  */
 export interface ManifestEntrypoint {
 	/**
-	 * Contains the names of the files contained in the assets manifest section.
+	 * Contains the names of entrypoints.
 	 */
-	imports?: string[];
+	imports: string[];
 	/**
 	 * Contains the names of parent entrypoints.
 	 */
@@ -60,6 +60,12 @@ export interface ManifestItem {
  * The manifest object.
  */
 export interface ManifestObject {
+	/**
+	 * Contains the names of assets.
+	 */
 	assets: Record<string, ManifestItem>;
+	/**
+	 * Contains the names of entrypoints.
+	 */
 	entrypoints: Record<string, ManifestEntrypoint>;
 }

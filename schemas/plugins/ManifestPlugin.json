@@ -6,7 +6,7 @@
       "additionalProperties": false,
       "properties": {
         "imports": {
-          "description": "Contains the names of the files contained in the assets manifest section.",
+          "description": "Contains the names of entrypoints.",
           "type": "array",
           "items": {
             "description": "The name of file.",
@@ -23,7 +23,8 @@
             "minLength": 1
           }
         }
-      }
+      },
+      "required": ["imports"]
     },
     "ManifestItem": {
       "description": "Describes a manifest asset that links the emitted path to the producing asset.",
@@ -47,10 +48,12 @@
       "additionalProperties": false,
       "properties": {
         "assets": {
+          "description": "Contains the names of assets.",
           "type": "object",
           "tsType": "Record<string, ManifestItem>"
         },
         "entrypoints": {
+          "description": "Contains the names of entrypoints.",
           "type": "object",
           "tsType": "Record<string, ManifestEntrypoint>"
         }

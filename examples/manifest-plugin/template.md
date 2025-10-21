@@ -38,7 +38,7 @@ function importEntrypoints(manifest, name) {
 		const scripts = [];
 		const styles = [];
 
-		for (const item of entrypoint.imports || []) {
+		for (const item of entrypoint.imports) {
 			const importer = manifest.assets[item];
 
 			if (seen.has(item)) {
@@ -47,7 +47,7 @@ function importEntrypoints(manifest, name) {
 
 			seen.add(item);
 
-			for (const parent of entrypoint.parents) {
+			for (const parent of entrypoint.parents || []) {
 				const [parentStyles, parentScripts] = getImported(manifest.entrypoints[parent])
 				styles.push(...parentStyles);
 				scripts.push(...parentScripts);
@@ -69,7 +69,7 @@ function importEntrypoints(manifest, name) {
 const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
 
 // Get all styles and scripts by entry name
-const [styles, scripts] = importEntrypoints(manifest, "main")
+const [styles, scripts] = importEntrypoints(manifest, "main");
 ```
 
 # Info

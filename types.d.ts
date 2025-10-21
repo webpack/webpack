@@ -10012,9 +10012,9 @@ declare interface MakeDirectoryOptions {
  */
 declare interface ManifestEntrypoint {
 	/**
-	 * Contains the names of the files contained in the assets manifest section.
+	 * Contains the names of entrypoints.
 	 */
-	imports?: string[];
+	imports: string[];
 
 	/**
 	 * Contains the names of parent entrypoints.
@@ -10041,7 +10041,14 @@ declare interface ManifestItem {
  * The manifest object.
  */
 declare interface ManifestObject {
+	/**
+	 * Contains the names of assets.
+	 */
 	assets: Record<string, ManifestItem>;
+
+	/**
+	 * Contains the names of entrypoints.
+	 */
 	entrypoints: Record<string, ManifestEntrypoint>;
 }
 declare class ManifestPlugin {
