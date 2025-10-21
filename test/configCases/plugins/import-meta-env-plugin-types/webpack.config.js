@@ -1,6 +1,6 @@
 "use strict";
 
-const { ImportMetaEnvPlugin } = require("../../../../");
+const ImportMetaEnvPlugin = require("../../../../lib/dependencies/ImportMetaEnvPlugin");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

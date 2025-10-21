@@ -6557,12 +6557,6 @@ declare interface ImportDependencyMeta {
 type ImportExpressionJavascriptParser = ImportExpressionImport & {
 	phase?: "defer";
 };
-declare class ImportMetaEnvPlugin {
-	constructor(definitions?: Record<string, any>);
-	definitions: Record<string, any>;
-	apply(compiler: Compiler): void;
-	updateOptions(options: Record<string, any>): void;
-}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -19530,7 +19524,6 @@ declare namespace exports {
 		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
-		ImportMetaEnvPlugin,
 		EvalDevToolModulePlugin,
 		EvalSourceMapDevToolPlugin,
 		ExternalModule,
