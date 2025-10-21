@@ -24,8 +24,6 @@ export default [fooURL, barURL];
 const YAML = require("yamljs");
 const webpack = require("../../");
 
-let common = {};
-
 /** @type {webpack.Configuration} */
 module.exports = {
 	devtool: "source-map",
@@ -74,7 +72,7 @@ module.exports = {
   "entrypoints": {
     "main": {
       "imports": [
-        "output.js"
+        "main.js"
       ],
       "parents": []
     }
@@ -91,7 +89,7 @@ module.exports = {
     "output.js.map": {
       "file": "dist/output.js.map"
     },
-    "output.js": {
+    "main.js": {
       "file": "dist/output.js"
     },
     "1.js.map": {
@@ -110,7 +108,7 @@ module.exports = {
 entrypoints:
     main:
         imports:
-            - output.js
+            - main.js
         parents: []
 assets:
     foo.txt:
@@ -119,7 +117,7 @@ assets:
     bar.txt:
         file: /nested/dist/a0145fafc7fab801e574.txt
         src: bar.txt
-    output.js:
+    main.js:
         file: /nested/dist/output.js
     1.js:
         file: /nested/dist/1.ff54fb6be6ad1e50220e.js
@@ -171,7 +169,7 @@ function importEntrypoints(manifest, name) {
 const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
 
 // Get all styles and scripts by entry name
-const [styles, scripts] = importEntrypoints(manifest, "foo")
+const [styles, scripts] = importEntrypoints(manifest, "main")
 ```
 
 # Info
@@ -184,8 +182,8 @@ assets by info 877 bytes [immutable]
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
 asset output.js 15.2 KiB [emitted] (name: main) 1 related asset
-asset manifest.json 598 bytes [emitted]
-asset manifest.yml 405 bytes [emitted]
+asset manifest.json 594 bytes [emitted]
+asset manifest.yml 401 bytes [emitted]
 chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 7.67 KiB 9 modules
@@ -211,8 +209,8 @@ assets by info 193 bytes [immutable]
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
 asset output.js 3.17 KiB [emitted] [minimized] (name: main) 1 related asset
-asset manifest.json 606 bytes [emitted]
-asset manifest.yml 409 bytes [emitted]
+asset manifest.json 602 bytes [emitted]
+asset manifest.yml 405 bytes [emitted]
 chunk (runtime: main) 541.f1d9b957b8d31ed3e6d8.js 24 bytes [rendered]
   > ./async.js ./example.js 6:8-28
   ./async.js 24 bytes [built] [code generated]

@@ -69,7 +69,7 @@ function importEntrypoints(manifest, name) {
 const manifest = JSON.parser(fs.readFilsSync("./manifest.json", "utf8"));
 
 // Get all styles and scripts by entry name
-const [styles, scripts] = importEntrypoints(manifest, "foo")
+const [styles, scripts] = importEntrypoints(manifest, "main")
 ```
 
 # Info
