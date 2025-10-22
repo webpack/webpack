@@ -51,9 +51,9 @@ jobs:
 
             ### Published Packages:
 
-            ```shell
+            \`\`\`shell
             npm i -D ${packages.map((p) => p.url).join(' ')}
-            ```
+            \`\`\`
 
             [View Commit](${commitUrl})`;
 
