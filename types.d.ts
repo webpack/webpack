@@ -8672,6 +8672,11 @@ declare interface KnownAssetInfo {
 	javascriptModule?: boolean;
 
 	/**
+	 * true, when file is a manifest
+	 */
+	manifest?: boolean;
+
+	/**
 	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
 	 */
 	related?: Record<string, null | string | string[]>;
@@ -9977,25 +9982,55 @@ declare interface MakeDirectoryOptions {
 }
 
 /**
- * Describes a manifest entry that links the emitted path to the producing asset.
+ * Describes a manifest entrypoint.
+ */
+declare interface ManifestEntrypoint {
+	/**
+	 * Contains the names of entrypoints.
+	 */
+	imports: string[];
+
+	/**
+	 * Contains the names of parent entrypoints.
+	 */
+	parents?: string[];
+}
+
+/**
+ * Describes a manifest asset that links the emitted path to the producing asset.
  */
 declare interface ManifestItem {
 	/**
-	 * The compilation asset that produced this manifest entry.
+	 * The path absolute URL (this indicates that the path is absolute from the server's root directory) to file.
 	 */
-	asset?: Asset;
+	file: string;
 
 	/**
-	 * The public path recorded in the manifest for this asset.
+	 * The source path relative to the context.
 	 */
-	filePath: string;
+	src?: string;
 }
+
+/**
+ * The manifest object.
+ */
 declare interface ManifestObject {
-	[index: string]: ManifestItem;
+	[index: string]: any;
+
+	/**
+	 * Contains the names of assets.
+	 */
+	assets: Record<string, ManifestItem>;
+
+	/**
+	 * Contains the names of entrypoints.
+	 */
+	entrypoints: Record<string, ManifestEntrypoint>;
 }
 declare class ManifestPlugin {
 	constructor(options: ManifestPluginOptions);
-	options: Required<ManifestPluginOptions>;
+	options: ManifestPluginOptions &
+		Required<Omit<ManifestPluginOptions, "filter" | "generate">>;
 
 	/**
 	 * Apply the plugin
@@ -10004,14 +10039,34 @@ declare class ManifestPlugin {
 }
 declare interface ManifestPluginOptions {
 	/**
+	 * Enables/disables generation of the entrypoints manifest section.
+	 */
+	entrypoints?: boolean;
+
+	/**
 	 * Specifies the filename of the output file on disk. By default the plugin will emit `manifest.json` inside the 'output.path' directory.
 	 */
 	filename?: string;
 
 	/**
+	 * Allows filtering the files which make up the manifest.
+	 */
+	filter?: (item: ManifestItem) => boolean;
+
+	/**
+	 * A function that receives the manifest object, modifies it, and returns the modified manifest.
+	 */
+	generate?: (manifest: ManifestObject) => ManifestObject;
+
+	/**
+	 * Specifies a path prefix for all keys in the manifest.
+	 */
+	prefix?: string;
+
+	/**
 	 * A function that receives the manifest object and returns the manifest string.
 	 */
-	handler?: (manifest: ManifestObject) => string;
+	serialize?: (manifest: ManifestObject) => string;
 }
 declare interface MapOptions {
 	/**
