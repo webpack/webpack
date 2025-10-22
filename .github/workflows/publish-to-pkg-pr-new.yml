@@ -67,8 +67,6 @@ jobs:
             \`\`\`
             `;
 
-            const botCommentIdentifier = '## Publish Message';
-
             async function findBotComment(issueNumber) {
               if (!issueNumber) return null;
               const comments = await github.rest.issues.listComments({
