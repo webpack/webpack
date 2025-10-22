@@ -11,6 +11,7 @@
 [![builds1][builds1]][builds1-url]
 [![dependency-review][dependency-review]][dependency-review-url]
 [![coverage][cover]][cover-url]
+[![pkg.pr.new](https://pkg.pr.new/badge/webpack/webpack)](https://pkg.pr.new/~/webpack/webpack)
 [![PR's welcome][prs]][prs-url]
 [![compatibility-score](https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0)](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores)
 [![downloads](https://img.shields.io/npm/dm/webpack.svg)](https://npmcharts.com/compare/webpack?minimal=true)
