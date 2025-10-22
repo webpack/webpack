@@ -654,8 +654,7 @@
             },
             {
               "type": "string",
-              "absolutePath": true,
-              "minLength": 1
+              "absolutePath": true
             }
           ]
         },
@@ -1437,8 +1436,7 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -1457,8 +1455,7 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -4467,8 +4464,7 @@
               },
               {
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -5073,8 +5069,7 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -5093,8 +5088,7 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -5158,8 +5152,7 @@
               {
                 "description": "A path to an unmanaged directory.",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
