@@ -42,15 +42,30 @@ jobs:
 
             const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
-            const body = `## Publish Message
+            const botCommentIdentifier = '<!-- posted by pkg.pr.new -->';
+            const body = `${botCommentIdentifier}
+            This PR is packaged and the instant preview is available (${commitUrl}).
 
-            ### Published Packages:
+            Install it locally:
+
+            - npm
 
             \`\`\`shell
             npm i -D ${output.packages.map((p) => p.url).join(' ')}
             \`\`\`
 
-            [View Commit](${commitUrl})`;
+            - yarn
+
+            \`\`\`shell
+            yarn add -D ${output.packages.map((p) => p.url).join(' ')}
+            \`\`\`
+
+            - pnpm
+
+            \`\`\`shell
+            pnpm add -D ${output.packages.map((p) => p.url).join(' ')}
+            \`\`\`
+            `;
 
             const botCommentIdentifier = '## Publish Message';
 
