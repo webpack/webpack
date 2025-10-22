@@ -90,9 +90,12 @@ import {
 import {
 	IncomingMessage,
 	Server as ServerImportHttp,
-	ServerOptions
+	ServerOptions as ServerOptionsImportHttp
 } from "http";
-import { Server as ServerImportHttps } from "https";
+import {
+	Server as ServerImportHttps,
+	ServerOptions as ServerOptionsImportHttps
+} from "https";
 import {
 	Session as SessionImportInspectorClass_1,
 	Session as SessionImportInspectorClass_2
@@ -119,7 +122,6 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { SecureContextOptions, TlsOptions } from "tls";
 import { URL } from "url";
 import { Context } from "vm";
 
@@ -6442,9 +6444,6 @@ declare class HttpUriPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type HttpsServerOptions = SecureContextOptions &
-	TlsOptions &
-	ServerOptions<typeof IncomingMessage>;
 type IBigIntStats = IStatsBase<bigint> & {
 	atimeNs: bigint;
 	mtimeNs: bigint;
@@ -9270,8 +9269,8 @@ declare interface LazyCompilationDefaultBackendOptions {
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
 	server?:
-		| ServerOptions<typeof IncomingMessage>
-		| HttpsServerOptions
+		| ServerOptionsImportHttps<typeof IncomingMessage>
+		| ServerOptionsImportHttp<typeof IncomingMessage>
 		| (() => ServerLazyCompilationBackend);
 }
 
