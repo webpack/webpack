@@ -836,11 +836,11 @@ describe("JavascriptParser", () => {
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const actual = JavascriptParser._parse(expr.code);
-					expect(typeof actual).toBe("object");
-					expect(
-						parser.parseCalculatedString(actual.body[0].expression)
-					).toEqual(expr.result);
+					const { ast } = JavascriptParser._parse(expr.code, { ranges: true });
+					expect(typeof ast).toBe("object");
+					expect(parser.parseCalculatedString(ast.body[0].expression)).toEqual(
+						expr.result
+					);
 				});
 			}
 		});

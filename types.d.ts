@@ -68,6 +68,7 @@ import {
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
+	SourceLocation,
 	SpreadElement,
 	StaticBlock,
 	Super,
@@ -2099,6 +2100,11 @@ declare interface CommentCssParser {
 	range: [number, number];
 	loc: { start: Position; end: Position };
 }
+type CommentJavascriptParser = CommentImport & {
+	start: number;
+	end: number;
+	loc: SourceLocation;
+};
 declare interface CommonJsImportSettings {
 	name?: string;
 	context: string;
@@ -6823,15 +6829,6 @@ declare class JavascriptModulesPlugin {
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): string;
-	getRenamedInlineModule(
-		allModules: Module[],
-		renderContext: MainRenderContext,
-		inlinedModules: Set<Module>,
-		chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin,
-		hooks: CompilationHooksJavascriptModulesPlugin,
-		allStrict: undefined | boolean,
-		hasChunkModules: boolean
-	): false | Map<Module, Source>;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksJavascriptModulesPlugin;
@@ -6842,7 +6839,10 @@ declare class JavascriptModulesPlugin {
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends ParserClass {
-	constructor(sourceType?: "module" | "auto" | "script");
+	constructor(
+		sourceType?: "module" | "auto" | "script",
+		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<
@@ -7272,15 +7272,16 @@ declare class JavascriptParser extends ParserClass {
 			[LogicalExpression],
 			boolean | void
 		>;
-		program: SyncBailHook<[Program, CommentImport[]], boolean | void>;
+		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
-		finish: SyncBailHook<[Program, CommentImport[]], boolean | void>;
+		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
+	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
 	scope: ScopeInfo;
 	state: ParserState;
-	comments?: CommentImport[];
+	comments?: CommentJavascriptParser[];
 	semicolons?: Set<number>;
 	statementPath?: StatementPathItem[];
 	prevStatement?:
@@ -8104,7 +8105,7 @@ declare class JavascriptParser extends ParserClass {
 			| MaybeNamedClassDeclaration,
 		commentsStartPos: number
 	): boolean;
-	getComments(range: [number, number]): CommentImport[];
+	getComments(range: [number, number]): CommentJavascriptParser[];
 	isAsiPosition(pos: number): boolean;
 	setAsiPosition(pos: number): void;
 	unsetAsiPosition(pos: number): void;
@@ -8140,7 +8141,7 @@ declare class JavascriptParser extends ParserClass {
 	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
 	parseCommentOptions(range: [number, number]): {
 		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentImport })[];
+		errors: null | (Error & { comment: CommentJavascriptParser })[];
 	};
 	extractMemberExpressionChain(
 		expression:
@@ -8393,6 +8394,11 @@ declare interface JavascriptParserOptions {
 	 * Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.
 	 */
 	overrideStrict?: "strict" | "non-strict";
+
+	/**
+	 * Function to parser source code.
+	 */
+	parse?: (code: string, options: ParseOptions) => ParseResult;
 
 	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
@@ -13430,6 +13436,48 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 };
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
+}
+declare interface ParseOptions {
+	sourceType: "module" | "script";
+	ecmaVersion?:
+		| 3
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025
+		| 2026
+		| "latest";
+	locations?: boolean;
+	comments?: boolean;
+	ranges?: boolean;
+	semicolons?: boolean;
+	allowHashBang?: boolean;
+	allowReturnOutsideFunction?: boolean;
+}
+declare interface ParseResult {
+	ast: Program;
+	comments: CommentJavascriptParser[];
+	semicolons: Set<number>;
 }
 declare interface ParsedIdentifier {
 	/**
