@@ -7,7 +7,9 @@ on:
     branches: [main]
     tags: ["!**"]
 
-permissions: {}
+permissions:
+  issues: write
+  pull-requests: write
 
 jobs:
   publish:
