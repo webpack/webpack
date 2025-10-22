@@ -241,6 +241,7 @@ it("should get correct values when importing named exports from a default-only m
 	});
 	expect(jsonStar).toEqual(
 		nsObj({
+			data: "ok",
 			default: {
 				__esModule: true,
 				data: "ok",
@@ -250,6 +251,7 @@ it("should get correct values when importing named exports from a default-only m
 	);
 	expect({ jsonStar }).toEqual({
 		jsonStar: nsObj({
+			data: "ok",
 			default: {
 				__esModule: true,
 				data: "ok",
