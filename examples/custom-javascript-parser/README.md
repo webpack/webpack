@@ -357,6 +357,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
+[Function: parse]
+[Function: parse]
+[Function: parse]
+[Function: parse]
+[Function: parse]
+[Function: parse]
 asset output.js 2.01 KiB [emitted] [minimized] (name: main)
 asset 655.output.js 124 bytes [emitted] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]

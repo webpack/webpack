@@ -31,9 +31,7 @@ module.exports = {
 		// Global override
 		parser: {
 			javascript: {
-				parser: {
-					parse
-				}
+				parse
 			},
 		},
 		// Override on the module level, only for modules which match the `test`
