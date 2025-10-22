@@ -33,13 +33,6 @@ jobs:
             const fs = require('fs');
             const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
 
-            const packages = output.packages
-              .map((p) => `- ${p.name}: ${p.url}`)
-              .join('\n');
-            const templates = output.templates
-              .map((t) => `- [${t.name}](${t.url})`)
-              .join('\n');
-
             const sha =
               context.event_name === 'pull_request'
                 ? context.payload.pull_request.head.sha
@@ -52,7 +45,7 @@ jobs:
             ### Published Packages:
 
             \`\`\`shell
-            npm i -D ${packages.map((p) => p.url).join(' ')}
+            npm i -D ${output.packages.map((p) => p.url).join(' ')}
             \`\`\`
 
             [View Commit](${commitUrl})`;
