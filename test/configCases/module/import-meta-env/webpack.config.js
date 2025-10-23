@@ -17,5 +17,8 @@ module.exports = {
 	output: {
 		module: true,
 		chunkFormat: "module"
+	},
+	externals: {
+		fs: "commonjs fs"
 	}
 };

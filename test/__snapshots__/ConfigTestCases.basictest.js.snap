@@ -10553,14 +10553,10 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 `;
 
 exports[`ConfigTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
-"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";import { createRequire as __WEBPACK_EXTERNAL_createRequire } from \\"module\\";
-const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
-/*!******************!*\\\\
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";/*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
 var __filename = __webpack_fileURLToPath__(import.meta.url);
-const fs = __WEBPACK_EXTERNAL_createRequire_require(\\"fs\\");
-
 it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
     expect(\\"aaa\\").toBe(\\"aaa\\");
 });
@@ -10569,7 +10565,7 @@ it(\\"should work import.meta.env with DotenvPlugin\\", () => {
     expect(\\"https://api.example.com\\").toBe(\\"https://api.example.com\\");
 });
 
-it(\\"import.meta.env behaves like process.env\\", () => {
+it(\\"import.meta.env behaves like process.env\\", async (done) => {
     try {
         const importMetaEnv = import.meta.env;
         importMetaEnv;
@@ -10584,7 +10580,9 @@ it(\\"import.meta.env behaves like process.env\\", () => {
     } catch (_e) {
         // ignore
     }
+    const fs = await eval(\\"import('fs')\\");
     expect(fs.readFileSync(__filename, \\"utf-8\\")).toMatchSnapshot();
+    done();
 });
 "
 `;
