@@ -11762,7 +11762,7 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 `;
 
 exports[`ConfigCacheTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
-"import {fileURLToPath as __webpack_fileURLToPath__} from \\"node:url\\";import { createRequire as __WEBPACK_EXTERNAL_createRequire } from \\"node:module\\";
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";import { createRequire as __WEBPACK_EXTERNAL_createRequire } from \\"module\\";
 const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
 /*!******************!*\\\\
   !*** ./index.js ***!
