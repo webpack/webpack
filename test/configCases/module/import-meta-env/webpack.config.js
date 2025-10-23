@@ -4,6 +4,7 @@ const EnvironmentPlugin = require("../../../../").EnvironmentPlugin;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	target: "node-14",
 	dotenv: true,
 	plugins: [
 		new EnvironmentPlugin({
