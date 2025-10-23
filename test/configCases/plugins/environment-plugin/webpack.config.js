@@ -29,6 +29,14 @@ module.exports = [
 		plugins: [new EnvironmentPlugin("BBB", "CCC")]
 	},
 	{
+		name: "ddd",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("DDD")]
+	},
+	{
 		name: "eeefff",
 		module: {
 			unknownContextRegExp: /$^/,

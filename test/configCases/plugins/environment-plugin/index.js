@@ -9,6 +9,10 @@ it("should import multiple process.env vars", () => {
 	if (process.env.CCC !== "ccc") if (never) require("ccc");
 });
 
+it("should error when a process.env variable is undefined", () => {
+	if (process.env.DDD !== "ddd") if (never) require("ddd");
+});
+
 it("should import an array of process.env vars", () => {
 	if (process.env.EEE !== "eee") if (never) require("eee");
 	if (process.env.FFF !== "fff") if (never) require("fff");

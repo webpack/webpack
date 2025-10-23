@@ -1,6 +1,16 @@
 "use strict";
 
-const variables = ["aaa", "bbb", "ccc", "eee", "fff", "ggg", "hhh", "iii"];
+const variables = [
+	"aaa",
+	"bbb",
+	"ccc",
+	"ddd",
+	"eee",
+	"fff",
+	"ggg",
+	"hhh",
+	"iii"
+];
 const modules = [
 	{
 		name: "aaa",
@@ -9,6 +19,13 @@ const modules = [
 	{
 		name: "bbbccc",
 		variables: ["bbb", "ccc"]
+	},
+	{
+		name: "ddd",
+		variables: [],
+		allowedErrors: [
+			[{ compilerPath: /ddd/ }, /DDD environment variable is undefined./]
+		]
 	},
 	{
 		name: "eeefff",
