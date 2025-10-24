@@ -11761,6 +11761,41 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 "
 `;
 
+exports[`ConfigCacheTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+var __filename = __webpack_fileURLToPath__(import.meta.url);
+it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
+    expect(\\"aaa\\").toBe(\\"aaa\\");
+});
+
+it(\\"should work import.meta.env with DotenvPlugin\\", () => {
+    expect(\\"https://api.example.com\\").toBe(\\"https://api.example.com\\");
+});
+
+it(\\"import.meta.env behaves like process.env\\", async (done) => {
+    try {
+        const importMetaEnv = import.meta.env;
+        importMetaEnv;
+        const processEnv = process.env;
+        processEnv;
+        const UNKNOWN_PROPERTY = import.meta.env.UNKNOWN_PROPERTY;
+        UNKNOWN_PROPERTY;
+        const UNKNOWN_PROPERTY_2 = process.env.UNKNOWN_PROPERTY_2;
+        UNKNOWN_PROPERTY_2;
+        typeof import.meta.env;
+        typeof process.env;
+    } catch (_e) {
+        // ignore
+    }
+    const fs = await eval(\\"import('fs')\\");
+    expect(fs.readFileSync(__filename, \\"utf-8\\")).toMatchSnapshot();
+    done();
+});
+"
+`;
+
 exports[`ConfigCacheTestCases source-map extract-source-map-css exported tests should compile 1`] = `
 Array [
   "/*!*********************!*\\\\
