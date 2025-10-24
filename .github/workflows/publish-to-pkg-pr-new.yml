@@ -1,0 +1,142 @@
+name: Publish to pkg.pr.new
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ["!**"]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.publish.outputs.sha }}
+      urls: ${{ steps.publish.outputs.urls }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - run: corepack enable
+      - name: Use Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - run: npx pkg-pr-new publish --compact --json output.json --comment=off
+      - name: Add metadata to output
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
+
+            const sha =
+              context.event_name === 'pull_request'
+                ? context.payload.pull_request.head.sha
+                : context.payload.after;
+
+            const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
+
+            const botCommentIdentifier = '<!-- posted by pkg.pr.new -->';
+            const body = `${botCommentIdentifier}
+            This PR is packaged and the instant preview is available (${commitUrl}).
+
+            Install it locally:
+
+            - npm
+
+            \`\`\`shell
+            npm i -D ${output.packages.map((p) => p.url).join(' ')}
+            \`\`\`
+
+            - yarn
+
+            \`\`\`shell
+            yarn add -D ${output.packages.map((p) => p.url).join(' ')}
+            \`\`\`
+
+            - pnpm
+
+            \`\`\`shell
+            pnpm add -D ${output.packages.map((p) => p.url).join(' ')}
+            \`\`\`
+            `;
+
+            async function findBotComment(issueNumber) {
+              if (!issueNumber) return null;
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+              });
+              return comments.data.find((comment) =>
+                comment.body.includes(botCommentIdentifier)
+              );
+            }
+
+            async function createOrUpdateComment(issueNumber) {
+              if (!issueNumber) {
+                console.log('No issue number provided. Cannot post or update comment.');
+                return;
+              }
+
+              const existingComment = await findBotComment(issueNumber);
+
+              if (existingComment) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existingComment.id,
+                  body: body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: issueNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: body,
+                });
+              }
+            }
+
+            async function logPublishInfo() {
+              console.log('\n' + '='.repeat(50));
+              console.log('Publish Information');
+              console.log('='.repeat(50));
+              console.log('\nPublished Packages:');
+              console.log(packages);
+              console.log('\nTemplates:');
+              console.log(templates);
+              console.log(`\nCommit URL: ${commitUrl}`);
+              console.log('\n' + '='.repeat(50));
+            }
+
+            if (context.eventName === 'pull_request') {
+              if (context.issue.number) {
+                await createOrUpdateComment(context.issue.number);
+              }
+            } else if (context.eventName === 'push') {
+              const pullRequests = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${context.repo.owner}:${context.ref.replace(
+                  'refs/heads/',
+                  ''
+                )}`,
+              });
+
+              if (pullRequests.data.length > 0) {
+                await createOrUpdateComment(pullRequests.data[0].number);
+              } else {
+                console.log(
+                  'No open pull request found for this push. Logging publish information to console:'
+                );
+                await logPublishInfo();
+              }
+            }
