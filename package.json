@@ -97,7 +97,7 @@
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.2.11",
-    "json-parse-even-better-errors": "^2.3.1",
+    "json-parse-even-better-errors": "^5.0.0",
     "loader-runner": "^4.3.1",
     "mime-types": "^2.1.27",
     "neo-async": "^2.6.2",
