@@ -3413,6 +3413,10 @@ export interface JsonParserOptions {
 	 */
 	exportsDepth?: number;
 	/**
+	 * Allow named exports for json of object type.
+	 */
+	namedExports?: boolean;
+	/**
 	 * Function to parser content and return JSON.
 	 */
 	parse?: import("../lib/json/JsonParser").ParseFn;

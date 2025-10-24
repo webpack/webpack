@@ -1398,16 +1398,7 @@ exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
 "asset main.js X bytes [emitted] (name: main)
 orphan modules X bytes [orphan] 9 modules
 ./index.js + 9 modules X bytes [built] [code generated]
-
-WARNING in ./module.js?4 3:12-20
-Should not import the named export 'homepage' (imported as 'homepage') from default-exporting module (only default export is available soon)
- @ ./index.js 4:0-20
-
-WARNING in ./module2.js?1 3:12-16
-Should not import the named export 'name' (imported as 'name') from default-exporting module (only default export is available soon)
- @ ./index.js 6:0-21
-
-webpack x.x.x compiled with 2 warnings in X ms"
+webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `

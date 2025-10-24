@@ -2102,6 +2102,10 @@
           "description": "The depth of json dependency flagged as `exportInfo`.",
           "type": "number"
         },
+        "namedExports": {
+          "description": "Allow named exports for json of object type.",
+          "type": "boolean"
+        },
         "parse": {
           "description": "Function to parser content and return JSON.",
           "instanceof": "Function",
