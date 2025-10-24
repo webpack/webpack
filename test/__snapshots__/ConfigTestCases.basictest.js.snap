@@ -10553,10 +10553,11 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 `;
 
 exports[`ConfigTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
-"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";/*!******************!*\\\\
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";
+/*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-var __filename = __webpack_fileURLToPath__(import.meta.url);
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
     expect(\\"aaa\\").toBe(\\"aaa\\");
 });
@@ -10581,7 +10582,7 @@ it(\\"import.meta.env behaves like process.env\\", async (done) => {
         // ignore
     }
     const fs = await eval(\\"import('fs')\\");
-    expect(fs.readFileSync(__filename, \\"utf-8\\")).toMatchSnapshot();
+    expect(fs.readFileSync(__webpack_filename__, \\"utf-8\\")).toMatchSnapshot();
     done();
 });
 "
