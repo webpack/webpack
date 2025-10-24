@@ -2,13 +2,8 @@
 
 const webpack = require("../../../../");
 
-const values = [
-	true,
-	/* false, */ "warn-mock",
-	"mock",
-	"node-module",
-	"eval-only"
-];
+/** @type {(boolean | "warn-mock" | "mock" | "node-module" | "eval-only")[]} */
+const values = [true, "warn-mock", "mock", "node-module", "eval-only"];
 
 /** @type {import("../../../../").Configuration[]} */
 const config = [];
@@ -22,12 +17,6 @@ config.push(
 			node: {
 				__filename: value,
 				__dirname: value
-			},
-			output: {
-				module: value === "node-module"
-			},
-			experiments: {
-				outputModule: value === "node-module"
 			},
 			plugins: [
 				new webpack.DefinePlugin({
@@ -87,5 +76,29 @@ config.push(
 			]
 		}))
 );
+
+config.push({
+	entry: "./cjs-false.js",
+	target: "node",
+	node: {
+		__filename: false,
+		__dirname: false
+	}
+});
+
+config.push({
+	entry: "./esm-false.js",
+	target: "node",
+	node: {
+		__filename: false,
+		__dirname: false
+	},
+	output: {
+		module: true
+	},
+	experiments: {
+		outputModule: true
+	}
+});
 
 module.exports = config;
