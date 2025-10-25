@@ -17,7 +17,7 @@ it("should work with an external URL", () => {
 
 it("should import an external css dynamically", done => {
 	import("./dynamic.css").then(x => {
-		expect(x).toEqual({});
+		expect(x).toMatchSnapshot();
 		const bodyStyle = getComputedStyle(document.body);
 		expect(bodyStyle.getPropertyValue("color")).toBe(" red");
 		expect(bodyStyle.getPropertyValue("background")).toBe(

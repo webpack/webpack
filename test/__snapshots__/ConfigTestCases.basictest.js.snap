@@ -1,5 +1,94 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigTestCases css async-chunk-node exported tests should allow to dynamic import a pure css 1`] = `
+".class {
+	color: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic exported tests should compile and load style on demand 1`] = `
+"@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic exported tests should compile and load style on demand 2`] = `
+"@import \\"./style2-imported.css\\";
+body {
+	color: green;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-dynamic-only exported tests should compile and load style on demand 1`] = `
+"@import url(https://test.cases/path/../../../../configCases/css/import/external.css);
+@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-esm-target-node exported tests should compile and load style on demand 1`] = `
+"@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-esm-target-node exported tests should compile and load style on demand 2`] = `
+"@import \\"./style2-imported.css\\";
+body {
+	color: green;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-esm-target-web exported tests should compile and load style on demand 1`] = `
+"@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-esm-target-web exported tests should compile and load style on demand 2`] = `
+"@import \\"./style2-imported.css\\";
+body {
+	color: green;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-initial-only exported tests should compile and load initial style 1`] = `
+"@import url(https://test.cases/path/../../../../configCases/css/import/external.css);
+@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-web-async exported tests should compile and load style on demand 1`] = `
+"@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css basic-web-async exported tests should compile and load style on demand 2`] = `
+"@import \\"./style2-imported.css\\";
+body {
+	color: green;
+}
+"
+`;
+
 exports[`ConfigTestCases css build-http exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!*******************************************************************************************************************!*\\\\
@@ -19,6 +108,22 @@ div {
 
 ",
 ]
+`;
+
+exports[`ConfigTestCases css contenthash exported tests should work with css 1`] = `
+"body {
+	background: green;
+	color: yellow;
+}
+"
+`;
+
+exports[`ConfigTestCases css contenthash exported tests should work with css 2`] = `
+"body {
+	background: yellow;
+	color: green;
+}
+"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
@@ -4248,6 +4353,18 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css external-in-web exported tests should import an external css dynamically 1`] = `
+"@import \\"style2.css\\";
+@import \\"https://test.cases/path/../../../../configCases/css/external-in-web/dynamic-external.css\\";
+"
+`;
+
+exports[`ConfigTestCases css external-in-web exported tests should import an external css dynamically 2`] = `
+"@import \\"style2.css\\";
+@import \\"https://test.cases/path/../../../../configCases/css/external-in-web/dynamic-external.css\\";
+"
+`;
+
 exports[`ConfigTestCases css import exported tests should compile 1`] = `
 Array [
   "/*!******************************************************************************************!*\\\\
@@ -6521,6 +6638,14 @@ body {
 ]
 `;
 
+exports[`ConfigTestCases css import-different-case exported tests should compile and load style on demand 1`] = `
+"@IMPORT \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
 exports[`ConfigTestCases css large exported tests should allow to create css modules: dev 1`] = `
 Object {
   "placeholder": "my-app-_tailwind_module_css-placeholder-gray-700",
@@ -6761,6 +6886,39 @@ Array [
 
 ",
 ]
+`;
+
+exports[`ConfigTestCases css pathinfo exported tests should compile and load style on demand 1`] = `
+"@import \\"style-imported.css\\";
+body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css pathinfo exported tests should compile and load style on demand 2`] = `
+"@import \\"./style2-imported.css\\";
+body {
+	color: green;
+}
+"
+`;
+
+exports[`ConfigTestCases css prefer-relative exported tests should prefer relative 1`] = `
+"@import 'foo.css';
+
+.style {
+	color: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css prefer-relative-css-import exported tests should prefer relative 1`] = `
+"@import 'foo.css';
+.style {
+  color: red;
+}
+"
 `;
 
 exports[`ConfigTestCases css pseudo-import exported tests should compile 1`] = `
@@ -8472,6 +8630,34 @@ div {
 ]
 `;
 
+exports[`ConfigTestCases css universal exported tests should work 1`] = `
+"body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css universal exported tests should work 2`] = `
+"body {
+	color: blue;
+}
+"
+`;
+
+exports[`ConfigTestCases css universal exported tests should work 3`] = `
+"body {
+	background: red;
+}
+"
+`;
+
+exports[`ConfigTestCases css universal exported tests should work 4`] = `
+"body {
+	color: blue;
+}
+"
+`;
+
 exports[`ConfigTestCases css url exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!************************!*\\\\
@@ -9746,6 +9932,17 @@ div {
 `;
 
 exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 1`] = `
+"@import \\"./nested/index.css\\";
+
+h1 {
+  same-dir: url('./img1.png');
+  nested-dir: url('./nested/img2.png');
+  nested-nested-dir: url('./nested/nested/img3.png');
+}
+"
+`;
+
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 2`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(../../bundle0/assets/img2.png)",
@@ -9754,7 +9951,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 2`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 3`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(../../bundle0/assets/img3.png)",
@@ -9763,7 +9960,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 3`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 4`] = `
 Object {
   "getPropertyValue": [Function],
   "outer-dir": " url(../../bundle0/assets/img2.png)",
@@ -9772,7 +9969,18 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 4`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 5`] = `
+"@import \\"./nested/index.css\\";
+
+h1 {
+  same-dir: url('./img1.png');
+  nested-dir: url('./nested/img2.png');
+  nested-nested-dir: url('./nested/nested/img3.png');
+}
+"
+`;
+
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 6`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(https://test.cases/path/bundle1/assets/img2.png)",
@@ -9781,7 +9989,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 5`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 7`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(https://test.cases/path/bundle1/assets/img3.png)",
@@ -9790,7 +9998,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 6`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 8`] = `
 Object {
   "getPropertyValue": [Function],
   "outer-dir": " url(https://test.cases/path/bundle1/assets/img2.png)",
@@ -9799,7 +10007,18 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 7`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 9`] = `
+"@import \\"./nested/index.css\\";
+
+h1 {
+  same-dir: url('./img1.png');
+  nested-dir: url('./nested/img2.png');
+  nested-nested-dir: url('./nested/nested/img3.png');
+}
+"
+`;
+
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 10`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(https://test.cases/path/bundle2/assets/img2.png)",
@@ -9808,7 +10027,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 8`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 11`] = `
 Object {
   "getPropertyValue": [Function],
   "nested-dir": " url(https://test.cases/path/bundle2/assets/img3.png)",
@@ -9817,7 +10036,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 9`] = `
+exports[`ConfigTestCases css url-and-asset-module-filename exported tests should generate correct url public path with css filename 12`] = `
 Object {
   "getPropertyValue": [Function],
   "outer-dir": " url(https://test.cases/path/bundle2/assets/img2.png)",

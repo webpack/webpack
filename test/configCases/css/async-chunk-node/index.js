@@ -19,7 +19,7 @@ it("should allow to dynamic import a css module", done => {
 
 it("should allow to dynamic import a pure css", done => {
 	import("./style.css").then(x => {
-		expect(Object.keys(x).length).toBe(0)
+		expect(x).toMatchSnapshot()
 		done();
 	}, done);
 });

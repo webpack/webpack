@@ -37,3 +37,4 @@ it("should work", async function (done) {
 		})
 	);
 });
+module.hot.accept(["./style.css"]);
