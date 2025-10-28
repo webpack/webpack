@@ -19042,6 +19042,7 @@ declare namespace exports {
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
 		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
 		export let makeNamespaceObject: "__webpack_require__.r";
+		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
 		export let module: "module";
 		export let moduleCache: "__webpack_require__.c";
 		export let moduleFactories: "__webpack_require__.m";
