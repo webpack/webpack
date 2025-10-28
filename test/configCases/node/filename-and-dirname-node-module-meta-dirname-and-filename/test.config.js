@@ -12,7 +12,7 @@ module.exports = {
 			`bundle${counter++}.mjs`
 		);
 		scope.custom = {
-			url: pathToFileURL(bundleFilename),
+			url: pathToFileURL(bundleFilename).toString(),
 			dirname: path.dirname(bundleFilename),
 			filename: bundleFilename
 		};
