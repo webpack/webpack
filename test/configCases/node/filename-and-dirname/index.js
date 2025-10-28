@@ -40,7 +40,10 @@ it("should bundle", () => {
 		case false:
 		case "eval-only": {
 			const dirname = __STATS__.children[__STATS_I__].outputPath;
-			const filename = path.join(__STATS__.children[__STATS_I__].outputPath, `./bundle${__STATS_I__}.js`);
+			const filename = path.join(
+				__STATS__.children[__STATS_I__].outputPath,
+				FORMAT === "esm" ? `./bundle${__STATS_I__}.mjs` : `./bundle${__STATS_I__}.js`
+			);
 
 			expect(dirnameCommonJS).toBe(dirname);
 			expect(filenameCommonJS).toBe(filename);
