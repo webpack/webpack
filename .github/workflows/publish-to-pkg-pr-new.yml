@@ -36,7 +36,7 @@ jobs:
             const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
 
             const sha =
-              context.event_name === 'pull_request'
+              context.eventName === 'pull_request'
                 ? context.payload.pull_request.head.sha
                 : context.payload.after;
 
