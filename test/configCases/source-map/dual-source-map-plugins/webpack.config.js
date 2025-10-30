@@ -39,12 +39,43 @@ module.exports = [
 		},
 		plugins: [
 			new webpack.EvalDevToolModulePlugin({
-				filename: "[file].map",
 				test: "bundle1.js"
 			}),
 			new webpack.SourceMapDevToolPlugin({
 				filename: "[file].runtime.map",
 				test: ["runtime~bundle1.js"]
+			})
+		]
+	},
+	{
+		entry: {
+			bundle2: "./entry3.js"
+		},
+		devtool: false,
+		output: {
+			filename: "[name].js",
+			chunkFilename: "[name].js"
+		},
+		plugins: [
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].test.map",
+				test: "bundle2.js",
+				columns: false,
+				append: false,
+				namespace: "test",
+				sourceRoot: "test",
+				ignoreList: /entry3\.js/
+			}),
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].foo.map",
+				test: "chunk-foo.js",
+				columns: true,
+				publicPath: "sourcemaps/",
+				noSources: true,
+				append: () => "\n//# sourceMappingURL=http://localhost:8080/foo/[url]",
+				namespace: "foo",
+				sourceRoot: "foo",
+				debugIds: true
 			})
 		]
 	}
