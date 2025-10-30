@@ -35,7 +35,6 @@ it("should defer the module until first use", async () => {
   expect(dynamic_default.default()).toBe("func");
   assertTouched();
 
-  debugger
   reset();
   dynamic_named.f;
   assertTouched();
