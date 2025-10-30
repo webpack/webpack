@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   publish:
+    if: github.repository == 'webpack/webpack'
+    name: Publish to pkg.pr.new
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.publish.outputs.sha }}
