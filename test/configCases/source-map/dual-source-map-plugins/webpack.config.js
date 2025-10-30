@@ -38,9 +38,7 @@ module.exports = [
 			runtimeChunk: true
 		},
 		plugins: [
-			new webpack.EvalDevToolModulePlugin({
-				test: "bundle1.js"
-			}),
+			new webpack.EvalDevToolModulePlugin(),
 			new webpack.SourceMapDevToolPlugin({
 				filename: "[file].runtime.map",
 				test: ["runtime~bundle1.js"]

@@ -28,7 +28,7 @@ it("should compile successfully and have dual sourcemap", async () => {
 	);
 	// columns: false
 	expect(bundle2Map.mappings).not.toContain(",");
-	// namespace: test
+	// namespace: "test"
 	for (const source of bundle2Map.sources) {
 		expect(source.startsWith("webpack://test")).toBe(true);
 	}
@@ -51,7 +51,7 @@ it("should compile successfully and have dual sourcemap", async () => {
 			chunkFooMap.debugId
 		)
 	).toBe(true);
-	// namespace: foo
+	// namespace: "foo"
 	for (const source of chunkFooMap.sources) {
 		expect(source.startsWith("webpack://foo")).toBe(true);
 	}
