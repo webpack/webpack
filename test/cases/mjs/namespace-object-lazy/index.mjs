@@ -145,7 +145,7 @@ it("should receive a namespace object when importing mixed content via context",
 		promiseTest(contextMixed("null.js"), nsObj({ default: null })),
 		promiseTest(
 			contextMixed("json.json"),
-			nsObj({ default: { named: "named", default: "default" }, named: "named" })
+			nsObj({ default: { named: "named", default: "default" } })
 		)
 	]);
 });
