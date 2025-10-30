@@ -28,7 +28,7 @@ config.push(
 		}))
 );
 
-// ES modules
+// // ES modules
 config.push(
 	...values.map((value) => ({
 		target: "node",
@@ -51,7 +51,7 @@ config.push(
 	}))
 );
 
-// // ES modules with support `import.meta.dirname` and `import.meta.filename`
+// ES modules with support `import.meta.dirname` and `import.meta.filename`
 config.push(
 	...values.map((value) => ({
 		target: "node",
@@ -92,6 +92,54 @@ config.push({
 	node: {
 		__filename: false,
 		__dirname: false
+	},
+	output: {
+		module: true
+	},
+	experiments: {
+		outputModule: true
+	}
+});
+
+config.push({
+	entry: "./esm-false.js",
+	target: "node",
+	output: {
+		module: true
+	},
+	module: {
+		parser: {
+			javascript: {
+				importMeta: false
+			}
+		}
+	},
+	experiments: {
+		outputModule: true
+	}
+});
+
+config.push({
+	entry: "./esm-false.js",
+	target: "node",
+	node: false,
+	output: {
+		module: true
+	},
+	experiments: {
+		outputModule: true
+	}
+});
+
+config.push({
+	entry: "./esm-false.js",
+	target: "node",
+	module: {
+		parser: {
+			javascript: {
+				node: false
+			}
+		}
 	},
 	output: {
 		module: true
