@@ -284,7 +284,6 @@ describe("snapshots", () => {
 		      },
 		      "json": Object {
 		        "exportsDepth": Infinity,
-		        "namedExports": true,
 		      },
 		    },
 		    "rules": Array [],
