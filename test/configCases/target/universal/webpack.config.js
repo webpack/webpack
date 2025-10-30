@@ -15,7 +15,7 @@ module.exports = [
 			outputModule: true
 		},
 		optimization: {
-			minimize: true,
+			minimize: false,
 			runtimeChunk: "single",
 			splitChunks: {
 				cacheGroups: {
@@ -45,7 +45,7 @@ module.exports = [
 			outputModule: true
 		},
 		optimization: {
-			minimize: true,
+			minimize: false,
 			runtimeChunk: "single",
 			splitChunks: {
 				cacheGroups: {
