@@ -16395,6 +16395,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 		/**
+		 * if the dependency is defer
+		 */
+		defer?: boolean;
+		/**
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
@@ -19007,6 +19011,8 @@ declare namespace exports {
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
 		export let currentRemoteGetScope: "__webpack_require__.R";
+		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
+		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let ensureChunk: "__webpack_require__.e";
 		export let ensureChunkHandlers: "__webpack_require__.f";
@@ -19040,7 +19046,6 @@ declare namespace exports {
 		export let interceptModuleExecution: "__webpack_require__.i";
 		export let loadScript: "__webpack_require__.l";
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
-		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
 		export let makeNamespaceObject: "__webpack_require__.r";
 		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
 		export let module: "module";
