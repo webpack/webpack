@@ -23,8 +23,8 @@ it("work with URL", () => {
 	expect(/[a-f0-9]{20}\.png/.test(url)).toBe(true);
 });
 
-it("work with node.js modules", () => {
-	expect(typeof (isBrowser() ? URL : require("url").URL)).toBe("function");
+it("work with node.js modules", async () => {
+	expect(typeof (isBrowser() ? URL : (await import("url")).URL)).toBe("function");
 });
 
 function test() {
