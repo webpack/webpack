@@ -3079,7 +3079,10 @@ declare interface Configuration {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Ignore specific warnings.
@@ -5476,7 +5479,7 @@ type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
 		request: ExternalModuleRequest,
-		type: string,
+		type: ExternalsType,
 		userRequest: string,
 		dependencyMeta?:
 			| ImportDependencyMeta
@@ -5484,7 +5487,7 @@ declare class ExternalModule extends Module {
 			| AssetDependencyMeta
 	);
 	request: ExternalModuleRequest;
-	externalType: string;
+	externalType: ExternalsType;
 	userRequest: string;
 	dependencyMeta?:
 		| ImportDependencyMeta
@@ -5579,8 +5582,8 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: string, externals: Externals);
-	type: string;
+	constructor(type: ExternalsType, externals: Externals);
+	type: ExternalsType;
 	externals: Externals;
 
 	/**
@@ -5664,7 +5667,10 @@ type ExternalsType =
 	| "promise"
 	| "module-import"
 	| "script"
-	| "node-commonjs";
+	| "node-commonjs"
+	| "asset"
+	| "css-import"
+	| "css-url";
 declare interface FSImplementation {
 	open?: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -10546,7 +10552,10 @@ declare interface ModuleFederationPluginOptions {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -18643,7 +18652,10 @@ declare interface WebpackOptionsNormalized {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Ignore specific warnings.
@@ -18795,6 +18807,9 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		| "module-import"
 		| "script"
 		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url"
 	>;
 } & { watch: NonNullable<undefined | boolean> } & {
 	performance: NonNullable<undefined | false | PerformanceOptions>;
