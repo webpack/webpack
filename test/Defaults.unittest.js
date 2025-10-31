@@ -217,6 +217,9 @@ describe("snapshots", () => {
 		        ],
 		      },
 		      Object {
+		        "parser": Object {
+		          "namedExports": false,
+		        },
 		        "type": "json",
 		        "with": Object {
 		          "type": "json",
@@ -225,6 +228,9 @@ describe("snapshots", () => {
 		      Object {
 		        "assert": Object {
 		          "type": "json",
+		        },
+		        "parser": Object {
+		          "namedExports": false,
 		        },
 		        "type": "json",
 		      },
