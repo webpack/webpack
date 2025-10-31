@@ -1,17 +1,20 @@
 import path from "path";
 import { dirname as dirnameCommonJS, filename as filenameCommonJS } from "./commonjs.js"
 import { dirname as dirnameESM, filename as filenameESM } from "./esm.js"
+import { dirname as otherDirnameESM, filename as otherFilenameESM } from "./destructuring.js"
 
 const __dirname = "dirname";
 const __filename = "filename";
 
-it("should bundle", async () => {
+it("should bundle", () => {
 	switch (NODE_VALUE) {
 		case true:
 			expect(dirnameCommonJS).toBe("");
 			expect(filenameCommonJS).toBe("commonjs.js");
 			expect(dirnameESM).toBe("");
 			expect(filenameESM).toBe("esm.js");
+			expect(otherDirnameESM).toBe("");
+			expect(otherFilenameESM).toBe("destructuring.js");
 			break;
 		case "mock":
 		case "warn-mock":
@@ -19,6 +22,8 @@ it("should bundle", async () => {
 			expect(filenameCommonJS).toBe("/index.js");
 			expect(dirnameESM).toBe("/");
 			expect(filenameESM).toBe("/index.js");
+			expect(otherDirnameESM).toBe("/");
+			expect(otherFilenameESM).toBe("/index.js");
 			break;
 		case "node-module": {
 			const dirname = __STATS__.children[__STATS_I__].outputPath;
@@ -28,6 +33,8 @@ it("should bundle", async () => {
 			expect(filenameCommonJS).toBe(filename);
 			expect(dirnameESM).toBe(dirname);
 			expect(filenameESM).toBe(filename);
+			expect(otherDirnameESM).toBe(dirname);
+			expect(otherFilenameESM).toBe(filename);
 			break;
 		}
 		case false:
@@ -42,6 +49,8 @@ it("should bundle", async () => {
 			expect(filenameCommonJS).toBe(filename);
 			expect(dirnameESM).toBe(dirname);
 			expect(filenameESM).toBe(filename);
+			expect(otherDirnameESM).toBe(dirname);
+			expect(otherFilenameESM).toBe(filename);
 			break;
 		}
 	}
