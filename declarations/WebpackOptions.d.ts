@@ -227,7 +227,10 @@ export type ExternalsType =
 	| "import"
 	| "module-import"
 	| "script"
-	| "node-commonjs";
+	| "node-commonjs"
+	| "asset"
+	| "css-import"
+	| "css-url";
 /**
  * Ignore specific warnings.
  */
