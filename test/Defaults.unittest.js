@@ -1841,6 +1841,11 @@ describe("snapshots", () => {
 			-     "target": "web",
 			+     "target": undefined,
 			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
+			@@ ... @@
 			-     "chunkFilename": "[name].js",
 			-     "chunkFormat": "array-push",
 			+     "chunkFilename": "[name].mjs",
@@ -2934,8 +2939,8 @@ describe("snapshots", () => {
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
 			-     "global": true,
-			+     "__dirname": "node-module",
-			+     "__filename": "node-module",
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
 			+     "global": false,
 			@@ ... @@
 			-     "chunkFilename": "[name].js",
