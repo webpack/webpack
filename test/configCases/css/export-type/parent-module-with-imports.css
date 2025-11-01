@@ -1,10 +1,2 @@
-/* Parent CSS file that imports module-with-imports.css with conditions */
-/* This makes module-with-imports.css module have cssLayer, supports, and media properties */
-
-/* When this file is processed, module-with-imports.css will have:
- * - cssLayer: "framework"
- * - supports: "display: flex"
- * - media: "screen and (min-width: 1024px)"
- */
 @import url("./module-with-imports.css") layer(framework) supports(display: flex) screen and (min-width: 1024px);
 
