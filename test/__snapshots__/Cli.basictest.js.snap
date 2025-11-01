@@ -1644,6 +1644,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/global.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1702,6 +1719,23 @@ Object {
     "description": "Configure the generated JS modules that use the ES modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-module-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/module.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-module-exports-convention": Object {
     "configs": Array [
@@ -1807,6 +1841,23 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-auto-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/auto.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-import": Object {
     "configs": Array [
       Object {
@@ -1845,6 +1896,40 @@ Object {
     "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/global.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-global-import": Object {
     "configs": Array [
@@ -1897,6 +1982,23 @@ Object {
     "description": "Enable/disable \`@import\` at-rules handling.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-module-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/module.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-module-import": Object {
     "configs": Array [
