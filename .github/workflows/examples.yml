@@ -5,7 +5,8 @@ on:
     - cron: "0 0 * * 0"
 
 permissions:
-  contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   examples:
@@ -35,7 +36,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           delete-branch: true
           commit-message: |
             docs: update examples

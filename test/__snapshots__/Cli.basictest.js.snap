@@ -1107,6 +1107,9 @@ Object {
           "module-import",
           "script",
           "node-commonjs",
+          "asset",
+          "css-import",
+          "css-url",
         ],
       },
     ],
@@ -4677,6 +4680,19 @@ Object {
     "description": "The depth of json dependency flagged as \`exportInfo\`.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "module-parser-json-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Allow named exports for json of object type.",
+        "multiple": false,
+        "path": "module.parser.json.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allow named exports for json of object type.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-rules-compiler": Object {
     "configs": Array [

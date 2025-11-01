@@ -3079,7 +3079,10 @@ declare interface Configuration {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Ignore specific warnings.
@@ -4098,6 +4101,7 @@ declare abstract class DependencyTemplates {
 declare interface DestructuringAssignmentProperty {
 	id: string;
 	range: [number, number];
+	loc: SourceLocation;
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
@@ -5475,7 +5479,7 @@ type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(
 		request: ExternalModuleRequest,
-		type: string,
+		type: ExternalsType,
 		userRequest: string,
 		dependencyMeta?:
 			| ImportDependencyMeta
@@ -5483,7 +5487,7 @@ declare class ExternalModule extends Module {
 			| AssetDependencyMeta
 	);
 	request: ExternalModuleRequest;
-	externalType: string;
+	externalType: ExternalsType;
 	userRequest: string;
 	dependencyMeta?:
 		| ImportDependencyMeta
@@ -5578,8 +5582,8 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: string, externals: Externals);
-	type: string;
+	constructor(type: ExternalsType, externals: Externals);
+	type: ExternalsType;
 	externals: Externals;
 
 	/**
@@ -5663,7 +5667,10 @@ type ExternalsType =
 	| "promise"
 	| "module-import"
 	| "script"
-	| "node-commonjs";
+	| "node-commonjs"
+	| "asset"
+	| "css-import"
+	| "css-url";
 declare interface FSImplementation {
 	open?: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
@@ -8521,6 +8528,11 @@ declare interface JsonModulesPluginParserOptions {
 	exportsDepth?: number;
 
 	/**
+	 * Allow named exports for json of object type
+	 */
+	namedExports?: boolean;
+
+	/**
 	 * Function that executes for a module source string and should return json-compatible data.
 	 */
 	parse?: (input: string) => any;
@@ -8557,6 +8569,11 @@ declare interface JsonParserOptions {
 	 * The depth of json dependency flagged as `exportInfo`.
 	 */
 	exportsDepth?: number;
+
+	/**
+	 * Allow named exports for json of object type.
+	 */
+	namedExports?: boolean;
 
 	/**
 	 * Function to parser content and return JSON.
@@ -10535,7 +10552,10 @@ declare interface ModuleFederationPluginOptions {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -16395,6 +16415,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 		/**
+		 * if the dependency is defer
+		 */
+		defer?: boolean;
+		/**
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
@@ -18628,7 +18652,10 @@ declare interface WebpackOptionsNormalized {
 		| "promise"
 		| "module-import"
 		| "script"
-		| "node-commonjs";
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url";
 
 	/**
 	 * Ignore specific warnings.
@@ -18780,6 +18807,9 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		| "module-import"
 		| "script"
 		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url"
 	>;
 } & { watch: NonNullable<undefined | boolean> } & {
 	performance: NonNullable<undefined | false | PerformanceOptions>;
@@ -19007,6 +19037,8 @@ declare namespace exports {
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
 		export let currentRemoteGetScope: "__webpack_require__.R";
+		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
+		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let ensureChunk: "__webpack_require__.e";
 		export let ensureChunkHandlers: "__webpack_require__.f";
@@ -19040,8 +19072,8 @@ declare namespace exports {
 		export let interceptModuleExecution: "__webpack_require__.i";
 		export let loadScript: "__webpack_require__.l";
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
-		export let makeDeferredNamespaceObjectSymbol: "__webpack_require__.zS";
 		export let makeNamespaceObject: "__webpack_require__.r";
+		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
 		export let module: "module";
 		export let moduleCache: "__webpack_require__.c";
 		export let moduleFactories: "__webpack_require__.m";

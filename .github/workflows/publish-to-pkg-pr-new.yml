@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   publish:
+    if: github.repository == 'webpack/webpack'
+    name: Publish to pkg.pr.new
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.publish.outputs.sha }}
@@ -36,7 +38,7 @@ jobs:
             const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
 
             const sha =
-              context.event_name === 'pull_request'
+              context.eventName === 'pull_request'
                 ? context.payload.pull_request.head.sha
                 : context.payload.after;
 
@@ -109,9 +111,9 @@ jobs:
               console.log('Publish Information');
               console.log('='.repeat(50));
               console.log('\nPublished Packages:');
-              console.log(packages);
+              console.log(output.packages);
               console.log('\nTemplates:');
-              console.log(templates);
+              console.log(output.templates);
               console.log(`\nCommit URL: ${commitUrl}`);
               console.log('\n' + '='.repeat(50));
             }

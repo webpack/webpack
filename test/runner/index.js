@@ -436,6 +436,11 @@ class TestRunner {
 					context: esmContext,
 					initializeImportMeta: (meta, module) => {
 						meta.url = pathToFileURL(modulePath).href;
+
+						if (this.target === "node") {
+							meta.filename = modulePath;
+							meta.dirname = path.dirname(modulePath);
+						}
 					},
 					importModuleDynamically: async (specifier, module) => {
 						const normalizedSpecifier = specifier.startsWith("file:")

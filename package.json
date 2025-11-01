@@ -139,7 +139,7 @@
     "eslint-plugin-jsdoc": "^51.2.3",
     "eslint-plugin-n": "^17.23.1",
     "eslint-plugin-prettier": "^5.5.0",
-    "eslint-plugin-unicorn": "^61.0.1",
+    "eslint-plugin-unicorn": "^62.0.0",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "globals": "^16.0.0",

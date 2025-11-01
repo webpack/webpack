@@ -227,7 +227,10 @@ export type ExternalsType =
 	| "import"
 	| "module-import"
 	| "script"
-	| "node-commonjs";
+	| "node-commonjs"
+	| "asset"
+	| "css-import"
+	| "css-url";
 /**
  * Ignore specific warnings.
  */
@@ -3412,6 +3415,10 @@ export interface JsonParserOptions {
 	 * The depth of json dependency flagged as `exportInfo`.
 	 */
 	exportsDepth?: number;
+	/**
+	 * Allow named exports for json of object type.
+	 */
+	namedExports?: boolean;
 	/**
 	 * Function to parser content and return JSON.
 	 */
