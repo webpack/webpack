@@ -1631,20 +1631,7 @@
     },
     "HashDigest": {
       "description": "Digest types used for the hash.",
-      "enum": [
-        "base64",
-        "base64url",
-        "hex",
-        "binary",
-        "utf8",
-        "utf-8",
-        "utf16le",
-        "utf-16le",
-        "latin1",
-        "ascii",
-        "ucs2",
-        "ucs-2"
-      ]
+      "type": "string"
     },
     "HashDigestLength": {
       "description": "Number of chars which are used for the hash.",
