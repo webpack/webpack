@@ -5,7 +5,6 @@ const path = require("path");
 module.exports = {
 	// mode: "development" || "production",
 	mode: "production",
-	entry: "./example.js",
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "output.js"
