@@ -437,7 +437,7 @@ class TestRunner {
 					initializeImportMeta: (meta, module) => {
 						meta.url = pathToFileURL(modulePath).href;
 
-						if (this.target === "node") {
+						if (this.target === "node" || this.target.includes("node")) {
 							meta.filename = modulePath;
 							meta.dirname = path.dirname(modulePath);
 						}
