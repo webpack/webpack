@@ -191,9 +191,9 @@ chunk (runtime: main) async_js.d6fc644e617b14425795.js 24 bytes [rendered]
     [exports: default]
     [used exports unknown]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.68 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.67 KiB 9 modules
+  runtime modules 7.68 KiB 9 modules
   dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
   ./example.js 203 bytes [built] [code generated]
     [exports: default]
@@ -217,9 +217,9 @@ chunk (runtime: main) async_js.e737f493d3cb4089ee2e.js 24 bytes [rendered]
   ./async.js 24 bytes [built] [code generated]
     [exports: default]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.68 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.67 KiB 9 modules
+  runtime modules 7.68 KiB 9 modules
   dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
   ./example.js 203 bytes [built] [code generated]
     [exports: default]
