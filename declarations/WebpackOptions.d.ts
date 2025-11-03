@@ -546,19 +546,7 @@ export type GlobalObject = string;
 /**
  * Digest types used for the hash.
  */
-export type HashDigest =
-	| "base64"
-	| "base64url"
-	| "hex"
-	| "binary"
-	| "utf8"
-	| "utf-8"
-	| "utf16le"
-	| "utf-16le"
-	| "latin1"
-	| "ascii"
-	| "ucs2"
-	| "ucs-2";
+export type HashDigest = string;
 /**
  * Number of chars which are used for the hash.
  */
