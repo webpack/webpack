@@ -42,7 +42,8 @@ function createImageElement(title, src) {
 
 const svgToMiniDataURI = require("mini-svg-data-uri");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"
 	},
@@ -56,7 +57,11 @@ module.exports = {
 				test: /\.svg$/,
 				type: "asset",
 				generator: {
-					dataUrl: content => {
+					/**
+					 * @param {string | Buffer} content the content
+					 * @returns {string} data URI
+					 */
+					dataUrl: (content) => {
 						if (typeof content !== "string") {
 							content = content.toString();
 						}
@@ -68,6 +73,8 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;
 ```
 
 # js/output.js

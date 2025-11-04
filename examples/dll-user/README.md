@@ -12,7 +12,8 @@ This is the _user_ bundle, which uses the manifest from [dll-reference example](
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
@@ -26,6 +27,8 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # example.js

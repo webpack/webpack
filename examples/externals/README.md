@@ -29,7 +29,8 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ```javascript
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	output: {
 		libraryTarget: "umd"
@@ -46,6 +47,8 @@ module.exports = {
 		}
 	]
 };
+
+module.exports = config;
 ```
 
 # dist/output.js

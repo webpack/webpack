@@ -1,6 +1,7 @@
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	entry: {
 		app: { import: "./app.js", dependOn: ["react-vendors"] },
 		"react-vendors": ["react", "react-dom", "prop-types"]
@@ -13,3 +14,5 @@ module.exports = {
 		chunkRelations: true
 	}
 };
+
+module.exports = config;

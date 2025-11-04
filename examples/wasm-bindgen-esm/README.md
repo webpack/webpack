@@ -225,7 +225,6 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 /******/ 		var webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
 /******/ 		var webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		
-/******/ 		
 /******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
@@ -380,9 +379,9 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 ```
 asset ffe21e855d11d22ab54f.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
 asset output.js 13.7 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.72 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.72 KiB 6 modules
+  runtime modules 3.71 KiB 6 modules
   dependent modules 2.97 KiB (javascript) 14.8 KiB (webassembly) [dependent] 2 modules
   ./example.js 69 bytes [built] [code generated]
     [no exports]

@@ -17,6 +17,9 @@
     "bin/*.js",
     "lib/**/*.js",
     "tooling/**/*.js",
-    "setup/**/*.js"
+    "setup/**/*.js",
+    "examples/*.js",
+    "examples/**/webpack.config.js",
+    "examples/**/test.filter.js"
   ]
 }

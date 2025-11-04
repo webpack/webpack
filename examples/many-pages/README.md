@@ -27,7 +27,8 @@ Note: decreasing `maxInitial/AsyncRequest` will increase duplication further to 
 ```
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		pageA: "./pages/a",
@@ -48,6 +49,8 @@ module.exports = {
 		}
 	}
 };
+
+module.exports = config;
 ```
 
 ## Production mode

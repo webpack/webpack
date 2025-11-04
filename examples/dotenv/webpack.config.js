@@ -2,7 +2,8 @@
 
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	mode: "production",
 	output: {
@@ -19,3 +20,5 @@ module.exports = {
 	//   template: [".env", ".env.local", ".env.[mode]"]
 	// }
 };
+
+module.exports = config;

@@ -34,7 +34,9 @@ declarations/WebpackOptions.d.ts
 schemas/**/*.check.js
 
 # Ignore example fixtures
-examples/
+examples/**/*
+!examples/*
 !examples/**/webpack.config.js
+!examples/**/test.filter.js
 
 .vscode/**/*.*

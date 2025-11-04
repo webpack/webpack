@@ -3,7 +3,8 @@
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
@@ -23,3 +24,5 @@ module.exports = {
 	],
 	recordsOutputPath: path.join(__dirname, "dist", "records.json")
 };
+
+module.exports = config;

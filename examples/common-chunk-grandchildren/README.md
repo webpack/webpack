@@ -86,7 +86,8 @@ module.exports = function() {
 
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		main: ["./example.js"]
@@ -102,6 +103,8 @@ module.exports = {
 		filename: "output.js"
 	}
 };
+
+module.exports = config;
 ```
 
 # dist/output.js

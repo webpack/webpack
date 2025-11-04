@@ -24,7 +24,8 @@ require.ensure(["./a", "./e"], function(require) {
 ```javascript
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	optimization: {
 		splitChunks: {
@@ -33,6 +34,8 @@ module.exports = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;
 ```
 
 # dist/output.js

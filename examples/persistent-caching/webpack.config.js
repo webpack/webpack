@@ -2,7 +2,8 @@
 
 const path = require("path");
 
-module.exports = (env = "development") => ({
+/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+const config = (env = "development") => ({
 	mode: env,
 	infrastructureLogging: {
 		// Optional: print more verbose logging about caching
@@ -32,3 +33,5 @@ module.exports = (env = "development") => ({
 		]
 	}
 });
+
+module.exports = config;
