@@ -5525,7 +5525,7 @@ declare interface ExternalModuleInfo {
 	/**
 	 * the module is deferred at least once
 	 */
-	deferred: boolean;
+	deferred: boolean | "partial-deferred";
 
 	/**
 	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
