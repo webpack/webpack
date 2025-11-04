@@ -1,5 +1,3 @@
-# Dotenv Plugin Example
-
 This example demonstrates using the DotenvPlugin via the `dotenv` top-level configuration option.
 
 The DotenvPlugin loads environment variables from `.env` files and exposes them in your application through `process.env`.
@@ -20,7 +18,7 @@ By default, the plugin:
 - Supports variable expansion and default values
 - Replaces `process.env.WEBPACK_*` with actual values at build time
 
-## .env
+# .env
 
 Environment variables file (`.env.local` and `.env.*.local` are ignored by git):
 
@@ -49,24 +47,14 @@ DATABASE_URL=postgresql://localhost/my_db
 INTERNAL_TOKEN=internal-use-only
 ```
 
-## .gitignore
-
-```
-# Local environment files (should not be committed)
-.env.local
-.env.*.local
-
-# Build output
-dist/
-```
-
-## example.js
+# example.js
 
 ```javascript
 // Basic environment variables
 console.log("API URL:", process.env.WEBPACK_API_URL);
 console.log("API Version:", process.env.WEBPACK_API_VERSION);
 console.log("API Timeout:", process.env.WEBPACK_API_TIMEOUT);
+console.log("Mode:", process.env.WEBPACK_MODE);
 
 // Application settings
 console.log("App Name:", process.env.WEBPACK_APP_NAME);
@@ -107,7 +95,7 @@ const config = {
 console.log("Config:", JSON.stringify(config, null, 2));
 ```
 
-## webpack.config.js
+# webpack.config.js
 
 ```javascript
 "use strict";
@@ -117,7 +105,6 @@ const path = require("path");
 module.exports = {
 	// mode: "development" || "production",
 	mode: "production",
-	entry: "./example.js",
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "output.js"
@@ -134,55 +121,84 @@ module.exports = {
 };
 ```
 
-## dist/output.js
+# dist/output.js
 
 ```javascript
-console.log("API URL:","https://prod-api.example.com"),console.log("API Version:","v1"),console.log("API Timeout:","5000"),console.log("App Name:","MyApp"),console.log("App Version:","1.0.0"),console.log("Debug Mode:","false"),console.log("Base URL:","https://prod-api.example.com/v1"),console.log("Full URL:","https://prod-api.example.com/v1/users"),console.log("Port:","3000"),console.log("Host:","localhost"),console.log("Secret Key:",typeof process.env.SECRET_KEY),console.log("Database URL:",typeof process.env.DATABASE_URL),console.log("Internal Token:",typeof process.env.INTERNAL_TOKEN),console.log("Debug mode is disabled"),console.log("Posts endpoint:","https://prod-api.example.com/v1/posts"),console.log("Config:",JSON.stringify({apiUrl:"https://prod-api.example.com",appName:"MyApp",version:"1.0.0",debug:!1},null,2));
-```
+/******/ (() => { // webpackBootstrap
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+// Basic environment variables
+console.log("API URL:", "https://api.example.com");
+console.log("API Version:", "v1");
+console.log("API Timeout:", "5000");
+console.log("Mode:", process.env.WEBPACK_MODE);
 
-## Output
+// Application settings
+console.log("App Name:", "MyApp");
+console.log("App Version:", "1.0.0");
+console.log("Debug Mode:", "false");
 
-Running `node dist/output.js`:
+// Variable expansion
+console.log("Base URL:", "https://api.example.com/v1");
+console.log("Full URL:", "https://api.example.com/v1/users");
 
-```
-API URL: https://prod-api.example.com
-API Version: v1
-API Timeout: 5000
-Mode: from-production-local
-App Name: MyApp
-App Version: 1.0.0
-Debug Mode: false
-Base URL: https://prod-api.example.com/v1
-Full URL: https://prod-api.example.com/v1/users
-Port: 3000
-Host: localhost
-Secret Key: undefined
-Database URL: undefined
-Internal Token: undefined
-Debug mode is disabled
-Posts endpoint: https://prod-api.example.com/v1/posts
-Config: {
-  "apiUrl": "https://prod-api.example.com",
-  "appName": "MyApp",
-  "version": "1.0.0",
-  "debug": false
+// Default values
+console.log("Port:", "3000");
+console.log("Host:", "localhost");
+
+// Private variables (should be undefined)
+console.log("Secret Key:", typeof process.env.SECRET_KEY);
+console.log("Database URL:", typeof process.env.DATABASE_URL);
+console.log("Internal Token:", typeof process.env.INTERNAL_TOKEN);
+
+// Conditional logic based on environment
+if (false) // removed by dead control flow
+{} else {
+	console.log("Debug mode is disabled");
 }
+
+// Building API endpoint
+const endpoint = `${"https://api.example.com/v1"}/posts`;
+console.log("Posts endpoint:", endpoint);
+
+// Using in object literals
+const config = {
+	apiUrl: "https://api.example.com",
+	appName: "MyApp",
+	version: "1.0.0",
+	debug: "false" === "true"
+};
+console.log("Config:", JSON.stringify(config, null, 2));
+
+/******/ })()
+;
 ```
 
-Note: `Mode: from-production-local` demonstrates the file loading priority - it comes from `.env.production.local` which has the highest priority.
+# Info
 
-## Key Observations
+## Unoptimized
 
-1. **Variable Replacement**: All `process.env.WEBPACK_*` references are replaced with their actual values at build time
-2. **File Loading Priority**: Files are loaded in order (later files override earlier ones):
-   - `.env` (base)
-   - `.env.local` (local overrides, gitignored)
-   - `.env.[mode]` (mode-specific, e.g., `.env.production`)
-   - `.env.[mode].local` (mode-specific local overrides, gitignored)
-   
-   Example: `WEBPACK_MODE` shows `from-production-local` (the final override)
-3. **Mode-Specific Overrides**: `.env.production` overrides `.env` values (e.g., API_URL changed from `https://api.example.com` to `https://prod-api.example.com`)
-4. **Variable Expansion**: `WEBPACK_BASE_URL` correctly expands to `https://prod-api.example.com/v1`
-5. **Security**: Non-prefixed variables (`SECRET_KEY`, `DATABASE_URL`, `INTERNAL_TOKEN`) remain `undefined` in the bundle
-6. **Optimization**: Dead code elimination removes the `if (WEBPACK_DEBUG === "true")` branch since it's always false
+```
+asset output.js 1.43 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.48 KiB [entry] [rendered]
+  > ./example.js main
+  ./example.js 1.48 KiB [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+```
 
+## Production mode
+
+```
+asset output.js 870 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 1.48 KiB [entry] [rendered]
+  > ./example.js main
+  ./example.js 1.48 KiB [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+```
