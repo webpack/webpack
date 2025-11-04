@@ -128,7 +128,8 @@ files.forEach(item => {
 ```javascript
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"
 	},
@@ -137,10 +138,12 @@ module.exports = {
 			{
 				test: /file\.(png|jpg|svg)$/,
 				type: "asset"
-			},
+			}
 		]
 	}
 };
+
+module.exports = config;
 ```
 
 # js/output.js

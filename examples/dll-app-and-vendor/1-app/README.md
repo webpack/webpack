@@ -5,10 +5,15 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../../");
+"use strict";
 
-module.exports = {
+const path = require("path");
+const webpack = require("../../../");
+
+const manifest = "../0-vendor/dist/vendor-manifest.json";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	context: __dirname,
 	entry: "./example-app",
@@ -18,10 +23,12 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			manifest: require("../0-vendor/dist/vendor-manifest.json") // eslint-disable-line
+			manifest: require(manifest)
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # example-app.js

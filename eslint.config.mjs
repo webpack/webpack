@@ -46,7 +46,9 @@ export default defineConfig([
 
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
-		"!examples/*/webpack.config.js"
+		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
+		"!examples/**/webpack.config.js",
+		"!examples/**/test.filter.js"
 	]),
 	{
 		ignores: ["lib/**/*.runtime.js", "hot/*.js"],
@@ -214,6 +216,8 @@ export default defineConfig([
 	{
 		files: ["examples/**/*.js"],
 		rules: {
+			"no-console": "off",
+
 			// For examples purposes
 			"n/no-unsupported-features/es-builtins": "off",
 			"n/no-unsupported-features/es-syntax": "off",

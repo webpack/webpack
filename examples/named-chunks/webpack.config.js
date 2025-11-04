@@ -1,7 +1,10 @@
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	optimization: {
 		chunkIds: "named"
 	}
 };
+
+module.exports = config;

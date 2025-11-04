@@ -46,7 +46,8 @@ document.body.appendChild(pre);
 
 const { HotModuleReplacementPlugin } = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration & { devServer: Record<string, EXPECTED_ANY> }} */
+const config = {
 	mode: "development",
 	cache: {
 		type: "filesystem",
@@ -63,4 +64,6 @@ module.exports = {
 	},
 	plugins: [new HotModuleReplacementPlugin()]
 };
+
+module.exports = config;
 ```

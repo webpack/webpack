@@ -230,7 +230,6 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		var webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
 /******/ 		var webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		
-/******/ 		
 /******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
@@ -387,9 +386,9 @@ asset output.js 13.3 KiB [emitted] (name: main)
 asset 5a6637e8d63cdf9c72da.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 35a58b7c95860d720a3c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0eaeab8b9fa3cef100d1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.72 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.72 KiB 6 modules
+  runtime modules 3.71 KiB 6 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]

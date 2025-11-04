@@ -8,7 +8,8 @@ const routesPath = path.join(__dirname, "./routes");
 
 const VERSION = "1.0.0";
 
-module.exports = (env = "development") => ({
+/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+const config = (env = "development") => ({
 	mode: env,
 	// Just for examples, you can use any target
 	target: "node",
@@ -59,7 +60,9 @@ export default value;`
 					const files = fs.readdirSync(routesPath);
 
 					return `export const routes = {${files
-						.map(key => `${key.split(".")[0]}: () => import('./routes/${key}')`)
+						.map(
+							(key) => `${key.split(".")[0]}: () => import('./routes/${key}')`
+						)
 						.join(",\n")}}`;
 				}
 			},
@@ -86,3 +89,5 @@ export default msg`
 		)
 	]
 });
+
+module.exports = config;

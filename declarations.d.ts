@@ -140,6 +140,18 @@ declare module "neo-async" {
 		concurrency?: number
 	): QueueObject<T, E>;
 
+	export function series<T, E = Error>(
+		tasks: Array<AsyncFunction<T, E>>,
+		callback?: AsyncResultArrayCallback<T, E>
+	): void;
+	export function series<T, E = Error>(
+		tasks: Dictionary<AsyncFunction<T, E>>,
+		callback?: AsyncResultObjectCallback<T, E>
+	): void;
+	export function series<T, R, E = Error>(
+		tasks: Array<AsyncFunction<T, E>> | Dictionary<AsyncFunction<T, E>>
+	): Promise<R>;
+
 	export const forEach: typeof each;
 	export const forEachLimit: typeof eachLimit;
 }

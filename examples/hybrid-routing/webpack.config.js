@@ -2,7 +2,8 @@
 
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		// The entry points for the pages
@@ -26,3 +27,5 @@ module.exports = {
 		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;

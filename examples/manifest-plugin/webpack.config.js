@@ -1,10 +1,11 @@
 "use strict";
 
+// @ts-expect-error no types for yamljs
 const YAML = require("yamljs");
 const webpack = require("../../");
 
-/** @type {webpack.Configuration} */
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	devtool: "source-map",
 	output: {
 		chunkFilename: "[name].[contenthash].js"
@@ -45,3 +46,5 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;

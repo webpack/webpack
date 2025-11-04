@@ -3,7 +3,8 @@
 const path = require("path");
 const { AggressiveMergingPlugin } = require("../..").optimize;
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
@@ -24,3 +25,5 @@ module.exports = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;

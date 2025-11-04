@@ -12,7 +12,8 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
@@ -33,6 +34,8 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # dist/MyDll.alpha.js

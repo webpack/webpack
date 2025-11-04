@@ -16,7 +16,8 @@ console.log(pMap4);
 ```javascript
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// enable debug logging to see network requests!
 	// stats: {
 	// 	loggingDebug: /HttpUriPlugin/
@@ -30,6 +31,8 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;
 ```
 
 # Info

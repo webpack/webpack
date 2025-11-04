@@ -15,6 +15,8 @@ const rules = [
 		}
 	}
 ];
+
+/** @type {import("webpack").Configuration["optimization"]} */
 const optimization = {
 	chunkIds: "named", // for this example only: readable filenames in production too
 	nodeEnv: "production" // for this example only: always production version of react
@@ -26,7 +28,8 @@ const stats = {
 	chunkOrigins: true
 };
 
-module.exports = (env = "development") => [
+/** @type {(env: "development" | "production") => import("webpack").Configuration[]} */
+const config = (env = "development") => [
 	// For this example we have 3 configs in a single file
 	// In practice you probably would have separate config
 	// maybe even separate repos for each build.
@@ -152,3 +155,5 @@ module.exports = (env = "development") => [
 		stats
 	}
 ];
+
+module.exports = config;

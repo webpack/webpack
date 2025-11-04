@@ -52,7 +52,8 @@ exports.greet = greet;
 ```javascript
 "use strict";
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	mode: "development",
 	devtool: "source-map",
 	module: {
@@ -62,8 +63,10 @@ module.exports = {
 				extractSourceMap: true
 			}
 		]
-	},
+	}
 };
+
+module.exports = config;
 ```
 
 # dist/output.js

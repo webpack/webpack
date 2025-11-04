@@ -9,10 +9,13 @@ A manifest is created which includes mappings from module names to internal ids.
 ### webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../../");
+"use strict";
 
-module.exports = {
+const path = require("path");
+const webpack = require("../../../");
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
@@ -28,6 +31,8 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # example-vendor

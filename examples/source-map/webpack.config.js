@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-module.exports = [
+const devtools = [
 	"eval",
 	"eval-cheap-source-map",
 	"eval-cheap-module-source-map",
@@ -15,7 +15,10 @@ module.exports = [
 	"inline-source-map",
 	"hidden-source-map",
 	"nosources-source-map"
-].map(devtool => ({
+];
+
+/** @type {import("webpack").Configuration[]} */
+const config = devtools.map((devtool) => ({
 	mode: "development",
 	entry: {
 		bundle: "coffee-loader!./example.coffee"
@@ -29,3 +32,5 @@ module.exports = [
 		runtimeChunk: true
 	}
 }));
+
+module.exports = config;

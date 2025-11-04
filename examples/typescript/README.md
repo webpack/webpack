@@ -25,7 +25,8 @@ console.log(getArray(1, 2, 3));
 
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-module.exports = (env = "development") => ({
+/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+const config = (env = "development") => ({
 	mode: env,
 	module: {
 		rules: [
@@ -43,6 +44,8 @@ module.exports = (env = "development") => ({
 	},
 	plugins: [new ForkTsCheckerWebpackPlugin({ async: env === "production" })]
 });
+
+module.exports = config;
 ```
 
 # dist/output.js

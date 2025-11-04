@@ -1,6 +1,7 @@
 "use strict";
 
-module.exports = [
+/** @type {import("webpack").Configuration[]} */
+const config = [
 	{
 		entry: "./example.js",
 		output: {
@@ -26,3 +27,5 @@ module.exports = [
 		}
 	}
 ];
+
+module.exports = config;

@@ -3,7 +3,8 @@
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = [
+/** @type {import("webpack").Configuration[]} */
+const config = [
 	{
 		name: "mobile",
 		// mode: "development" || "production",
@@ -34,3 +35,5 @@ module.exports = [
 		]
 	}
 ];
+
+module.exports = config;

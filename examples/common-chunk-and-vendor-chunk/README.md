@@ -38,7 +38,8 @@ With this bundle configuration, you would load your third party libraries, then 
 
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
@@ -70,6 +71,8 @@ module.exports = {
 		filename: "[name].js"
 	}
 };
+
+module.exports = config;
 ```
 
 # dist/vendor.js

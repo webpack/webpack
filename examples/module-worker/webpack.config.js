@@ -2,7 +2,8 @@
 
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	entry: "./example.js",
 	output: {
 		path: path.join(__dirname, "dist"),
@@ -18,3 +19,5 @@ module.exports = {
 		outputModule: true
 	}
 };
+
+module.exports = config;
