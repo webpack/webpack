@@ -5510,6 +5510,7 @@ declare interface ExternalModuleInfo {
 	type: "external";
 	module: Module;
 	runtimeCondition?: string | boolean | SortableSet<string>;
+	nonDeferAccess: boolean;
 	index: number;
 
 	/**
