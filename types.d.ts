@@ -3873,6 +3873,7 @@ declare interface CssParserOptions {
 	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+type DeferredState = boolean | "partial-deferred";
 declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
@@ -5525,7 +5526,7 @@ declare interface ExternalModuleInfo {
 	/**
 	 * the module is deferred at least once
 	 */
-	deferred: boolean | "partial-deferred";
+	deferred: DeferredState;
 
 	/**
 	 * deferred namespace object that being used in a not-analyzable way so it must be materialized
