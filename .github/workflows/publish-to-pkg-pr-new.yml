@@ -14,7 +14,7 @@ permissions:
 jobs:
   publish:
     if: |
-      github.repository == 'webpack/webpack &&
+      github.repository == 'webpack/webpack' &&
       (github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name == github.repository)
     name: Publish to pkg.pr.new
