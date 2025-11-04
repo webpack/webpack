@@ -1721,17 +1721,17 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	/**
 	 * the chunk
 	 */
-	chunk: Chunk;
+	chunk?: Chunk;
 
 	/**
 	 * the chunk graph
 	 */
-	chunkGraph: ChunkGraph;
+	chunkGraph?: ChunkGraph;
 
 	/**
 	 * results of code generation
 	 */
-	codeGenerationResults: CodeGenerationResults;
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * the runtime template
@@ -1742,6 +1742,16 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 * undo path to css file
 	 */
 	undoPath: string;
+
+	/**
+	 * moduleFactoryCache
+	 */
+	moduleFactoryCache: WeakMap<Source, ModuleFactoryCacheEntry>;
+
+	/**
+	 * content
+	 */
+	moduleSourceContent: Source;
 }
 declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
@@ -3602,6 +3612,11 @@ declare interface CssAutoGeneratorOptions {
  */
 declare interface CssAutoParserOptions {
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
+	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
 	import?: boolean;
@@ -3638,6 +3653,22 @@ declare abstract class CssGenerator extends Generator {
 	localIdentName?: string;
 	exportsOnly?: boolean;
 	esModule?: boolean;
+
+	/**
+	 * Generate JavaScript code that requires and concatenates all CSS imports
+	 */
+	generateImportCode(
+		module: NormalModule,
+		generateContext: GenerateContext
+	): string[];
+
+	/**
+	 * Generate CSS code for the current module
+	 */
+	generateModuleCode(
+		module: NormalModule,
+		generateContext: GenerateContext
+	): string;
 	generateError(
 		error: Error,
 		module: NormalModule,
@@ -3670,6 +3701,11 @@ declare interface CssGlobalGeneratorOptions {
 	esModule?: boolean;
 
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
@@ -3695,6 +3731,11 @@ declare interface CssGlobalGeneratorOptions {
  * Parser options for css/global modules.
  */
 declare interface CssGlobalParserOptions {
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
@@ -3764,6 +3805,11 @@ declare interface CssModuleGeneratorOptions {
 	esModule?: boolean;
 
 	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
+	/**
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
@@ -3789,6 +3835,11 @@ declare interface CssModuleGeneratorOptions {
  * Parser options for css/module modules.
  */
 declare interface CssModuleParserOptions {
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
@@ -3821,11 +3872,6 @@ declare class CssModulesPlugin {
 		chunkGraph: ChunkGraph,
 		compilation: Compilation
 	): Module[];
-	renderModule(
-		module: CssModule,
-		renderContext: ChunkRenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
-	): Source;
 	renderChunk(
 		__0: RenderContextCssModulesPlugin,
 		hooks: CompilationHooksCssModulesPlugin
@@ -3833,6 +3879,11 @@ declare class CssModulesPlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksCssModulesPlugin;
+	static renderModule(
+		module: CssModule,
+		renderContext: ChunkRenderContextCssModulesPlugin,
+		hooks: CompilationHooksCssModulesPlugin
+	): Source;
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
@@ -3844,6 +3895,7 @@ declare abstract class CssParser extends ParserClass {
 	import: boolean;
 	url: boolean;
 	namedExports: boolean;
+	exportType: CssParserExportType;
 	comments?: CommentCssParser[];
 	magicCommentContext: Context;
 	getComments(range: [number, number]): CommentCssParser[];
@@ -3852,11 +3904,17 @@ declare abstract class CssParser extends ParserClass {
 		errors: null | (Error & { comment: CommentCssParser })[];
 	};
 }
+type CssParserExportType = "link" | "text";
 
 /**
  * Parser options for css modules.
  */
 declare interface CssParserOptions {
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text";
+
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
@@ -8813,6 +8871,7 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
+	exportType?: "link" | "text";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -10453,6 +10512,22 @@ declare class ModuleFactory {
 		data: ModuleFactoryCreateData,
 		callback: (err?: null | Error, result?: ModuleFactoryResult) => void
 	): void;
+}
+declare interface ModuleFactoryCacheEntry {
+	/**
+	 * - The undo path to the CSS file
+	 */
+	undoPath: string;
+
+	/**
+	 * - The inheritance chain
+	 */
+	inheritance: [CssLayer, Supports, Media][];
+
+	/**
+	 * - The cached source
+	 */
+	source: CachedSource;
 }
 declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
