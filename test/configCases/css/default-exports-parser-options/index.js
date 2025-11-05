@@ -4,8 +4,11 @@ import { foo } from "./style.module.css?named";
 
 it("should able to import with default and named exports", () => {
 	expect(style1.default).toEqual(nsObj({ foo: '_style_module_css_namespace-foo' }));
+	// Named export, warn
 	expect(style1.foo).toEqual("_style_module_css_namespace-foo");
+	expect(style1.default.foo).toEqual("_style_module_css_namespace-foo");
 	expect(style2).toEqual(nsObj({ foo: '_style_module_css_default-foo' }));
+	// Named export, warn
 	expect(foo).toEqual("_style_module_css_named-foo");
 });
 
