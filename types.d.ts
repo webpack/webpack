@@ -3883,7 +3883,7 @@ declare class CssModulesPlugin {
 		module: CssModule,
 		renderContext: ChunkRenderContextCssModulesPlugin,
 		hooks: CompilationHooksCssModulesPlugin
-	): Source;
+	): null | Source;
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
