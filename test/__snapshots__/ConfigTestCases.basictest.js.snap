@@ -12,7 +12,7 @@ exports.modules = {
 /*!****************************!*\\\\
   !*** ./foo.js + 2 modules ***!
   \\\\****************************/
-/***/ ((module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 
 ;// external \\"fs\\"
@@ -61,7 +61,7 @@ export const __webpack_esm_modules__ = {
 /*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/
-/***/ ((module) => {
+/***/ (() => {
 
 
 
@@ -145,6 +145,12 @@ Object {
   "deepClassInContainer": "_style_module_css-deep-class-in-container",
   "displayFlexInSupportsInMediaUpperCase": "_style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
+  "exportName": "_style_module_css-exportName _classes_modules_css-className beforeName _style_module_css-className _style_module_css-classNameLocal importName secondImport _classes_modules_css-otherClassName _classes_modules_css-otherClassNameToo _style_module_css-classNameLocal _style_module_css-classNameLocal _style_module_css-classNameLocalOther _style_module_css-classNameLocal _style_module_css-classNameLocalOther className className classNameOther className classNameOther _classes_modules_css-className _classes_modules_css-className _classes_modules_css-otherClassName _classes_modules_css-className _classes_modules_css-otherClassName",
+  "exportNameOtherFromKeyword": "_style_module_css-exportNameOtherFromKeyword _style_module_css-from",
+  "exportNameOtherFromKeywordWithFrom1": "_style_module_css-exportNameOtherFromKeywordWithFrom1 from",
+  "exportNameOtherFromKeywordWithFrom2": "_style_module_css-exportNameOtherFromKeywordWithFrom2 _classes_modules_css-from",
+  "exportNameOtherNoSpaces": "_style_module_css-exportNameOtherNoSpaces _classes_modules_css-className beforeName _style_module_css-className",
+  "exportNameWeirdCharacters": "_style_module_css-exportNameWeirdCharacters _classes_modules_css-a _classes_modules_css--b _classes_modules_css-b- _classes_modules_css---c _classes_modules_css-c-- _classes_modules_css-_d _classes_modules_css-d%",
   "futureWmultiParams": "_style_module_css-local14",
   "global": undefined,
   "hasWmultiParams": "_style_module_css-local11",
@@ -590,6 +596,53 @@ div {
 	color: var(--_var-function-export_modules_css-not-override-class)
 }
 
+/*!*********************************!*\\\\
+  !*** css ./classes.modules.css ***!
+  \\\\*********************************/
+._classes_modules_css-className {
+	color: red
+}
+
+._classes_modules_css-otherClassName {
+	color: green;
+}
+
+._classes_modules_css-otherClassNameToo {
+	color: blue;
+}
+
+._classes_modules_css-from {
+	color: yellow;
+}
+
+._classes_modules_css-a {
+	color: red;
+}
+
+._classes_modules_css--b {
+	color: red;
+}
+
+._classes_modules_css-b- {
+	color: red;
+}
+
+._classes_modules_css---c {
+	color: red;
+}
+
+._classes_modules_css-c-- {
+	color: red;
+}
+
+._classes_modules_css-_d {
+	color: red;
+}
+
+._classes_modules_css-d\\\\% {
+	color: tan;
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -714,11 +767,6 @@ div {
 	--_style_module_css-pos2x: 10px;
 	--_style_module_css-pos2y: 20px;
 }
-
-/* .composed {
-	composes: local1;
-	composes: local2;
-} */
 
 ._style_module_css-vars {
 	color: var(--_style_module_css-local-color);
@@ -1726,6 +1774,55 @@ div {
 	--_style_module_css-test: red;
 }
 
+._style_module_css-className {
+	border-radius: 12px;
+}
+
+._style_module_css-classNameLocal {
+	border-radius: 12px;
+}
+
+._style_module_css-classNameLocalOther {
+	border-radius: 12px;
+}
+
+._style_module_css-exportName {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	border: red;
+}
+
+._style_module_css-exportNameOtherNoSpaces {
+	
+}
+
+._style_module_css-from {
+	color: red;
+}
+
+._style_module_css-exportNameOtherFromKeyword {
+	
+}
+
+._style_module_css-exportNameOtherFromKeywordWithFrom1 {
+	
+}
+
+._style_module_css-exportNameOtherFromKeywordWithFrom2 {
+	
+}
+
+._style_module_css-exportNameWeirdCharacters {
+	
+}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -1773,6 +1870,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
+  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
+  "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -2218,6 +2321,53 @@ div {
 	color: var(--my-app-392-not-override-class)
 }
 
+/*!*********************************!*\\\\
+  !*** css ./classes.modules.css ***!
+  \\\\*********************************/
+.my-app-903-s7 {
+	color: red
+}
+
+.my-app-903-Mf {
+	color: green;
+}
+
+.my-app-903-wo {
+	color: blue;
+}
+
+.my-app-903-HT {
+	color: yellow;
+}
+
+.my-app-903-a {
+	color: red;
+}
+
+.my-app-903-aN {
+	color: red;
+}
+
+.my-app-903-uw {
+	color: red;
+}
+
+.my-app-903-ee {
+	color: red;
+}
+
+.my-app-903-mg {
+	color: red;
+}
+
+.my-app-903-_d {
+	color: red;
+}
+
+.my-app-903-eR {
+	color: tan;
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -2342,11 +2492,6 @@ div {
 	--my-app-235-\\\\$6: 10px;
 	--my-app-235-gJ: 20px;
 }
-
-/* .composed {
-	composes: local1;
-	composes: local2;
-} */
 
 .my-app-235-f {
 	color: var(--my-app-235-uz);
@@ -3354,6 +3499,55 @@ div {
 	--my-app-235-t6: red;
 }
 
+.my-app-235-s7 {
+	border-radius: 12px;
+}
+
+.my-app-235-f4 {
+	border-radius: 12px;
+}
+
+.my-app-235-Pi {
+	border-radius: 12px;
+}
+
+.my-app-235-au {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	border: red;
+}
+
+.my-app-235-M2 {
+	
+}
+
+.my-app-235-HT {
+	color: red;
+}
+
+.my-app-235-jL {
+	
+}
+
+.my-app-235-Qf {
+	
+}
+
+.my-app-235-Hl {
+	
+}
+
+.my-app-235-Xp {
+	
+}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -3407,6 +3601,12 @@ Object {
   "deepClassInContainer": "_style_module_css-deep-class-in-container",
   "displayFlexInSupportsInMediaUpperCase": "_style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
+  "exportName": "_style_module_css-exportName _classes_modules_css-className beforeName _style_module_css-className _style_module_css-classNameLocal importName secondImport _classes_modules_css-otherClassName _classes_modules_css-otherClassNameToo _style_module_css-classNameLocal _style_module_css-classNameLocal _style_module_css-classNameLocalOther _style_module_css-classNameLocal _style_module_css-classNameLocalOther className className classNameOther className classNameOther _classes_modules_css-className _classes_modules_css-className _classes_modules_css-otherClassName _classes_modules_css-className _classes_modules_css-otherClassName",
+  "exportNameOtherFromKeyword": "_style_module_css-exportNameOtherFromKeyword _style_module_css-from",
+  "exportNameOtherFromKeywordWithFrom1": "_style_module_css-exportNameOtherFromKeywordWithFrom1 from",
+  "exportNameOtherFromKeywordWithFrom2": "_style_module_css-exportNameOtherFromKeywordWithFrom2 _classes_modules_css-from",
+  "exportNameOtherNoSpaces": "_style_module_css-exportNameOtherNoSpaces _classes_modules_css-className beforeName _style_module_css-className",
+  "exportNameWeirdCharacters": "_style_module_css-exportNameWeirdCharacters _classes_modules_css-a _classes_modules_css--b _classes_modules_css-b- _classes_modules_css---c _classes_modules_css-c-- _classes_modules_css-_d _classes_modules_css-d%",
   "futureWmultiParams": "_style_module_css-local14",
   "global": undefined,
   "hasWmultiParams": "_style_module_css-local11",
@@ -3455,6 +3655,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
+  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
+  "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -3503,6 +3709,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
+  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
+  "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -7904,11 +8116,6 @@ div {
 	--pos2y: 20px;
 }
 
-/* .composed {
-	composes: local1;
-	composes: local2;
-} */
-
 .vars {
 	color: var(--local-color);
 	--local-color: red;
@@ -8915,6 +9122,62 @@ div {
 	--test: red;
 }
 
+.className {
+	border-radius: 12px;
+}
+
+.classNameLocal {
+	border-radius: 12px;
+}
+
+.classNameLocalOther {
+	border-radius: 12px;
+}
+
+.exportName {
+	composes:
+		className    from   \\"./classes.modules.css\\"		,
+		beforeName   from    global   ,
+		className   ,
+		classNameLocal   ,
+		importName   secondImport   from   global   ,
+		otherClassName    otherClassNameToo    from   \\"classes.modules.css\\"
+;
+	composes:   classNameLocal   ;
+	composes:   classNameLocal   classNameLocalOther   ;
+	composes:   classNameLocal ,   classNameLocalOther   ;
+	composes:   className   from    global   ;
+	composes:   className   classNameOther   from    global   ;
+	composes:   className from    global   ,   classNameOther   from    global   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ;
+	composes:   className   otherClassName   from    \\"./classes.modules.css\\"   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ,   otherClassName   from    \\"./classes.modules.css\\"   ;
+	border: red;
+}
+
+.exportNameOtherNoSpaces {
+	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
+}
+
+.from {
+	color: red;
+}
+
+.exportNameOtherFromKeyword {
+	composes: from;
+}
+
+.exportNameOtherFromKeywordWithFrom1 {
+	composes: from from global;
+}
+
+.exportNameOtherFromKeywordWithFrom2 {
+	composes: from from \\"./classes.modules.css\\";
+}
+
+.exportNameWeirdCharacters {
+	composes: a -b b- --c c-- _d d\\\\% from \\"./classes.modules.css\\";
+}
 
 /*!***********************!*\\\\
   !*** css ./style.css ***!

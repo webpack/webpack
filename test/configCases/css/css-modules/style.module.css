@@ -122,11 +122,6 @@
 	--pos2y: 20px;
 }
 
-/* .composed {
-	composes: local1;
-	composes: local2;
-} */
-
 .vars {
 	color: var(--local-color);
 	--local-color: red;
@@ -1133,3 +1128,59 @@ div {
 	--test: red;
 }
 
+.className {
+	border-radius: 12px;
+}
+
+.classNameLocal {
+	border-radius: 12px;
+}
+
+.classNameLocalOther {
+	border-radius: 12px;
+}
+
+.exportName {
+	composes:
+		className    from   "./classes.modules.css"		,
+		beforeName   from    global   ,
+		className   ,
+		classNameLocal   ,
+		importName   secondImport   from   global   ,
+		otherClassName    otherClassNameToo    from   "classes.modules.css"
+;
+	composes:   classNameLocal   ;
+	composes:   classNameLocal   classNameLocalOther   ;
+	composes:   classNameLocal ,   classNameLocalOther   ;
+	composes:   className   from    global   ;
+	composes:   className   classNameOther   from    global   ;
+	composes:   className from    global   ,   classNameOther   from    global   ;
+	composes:   className   from    "./classes.modules.css"   ;
+	composes:   className   otherClassName   from    "./classes.modules.css"   ;
+	composes:   className   from    "./classes.modules.css"   ,   otherClassName   from    "./classes.modules.css"   ;
+	border: red;
+}
+
+.exportNameOtherNoSpaces {
+	composes:className from"./classes.modules.css",beforeName from global,className;
+}
+
+.from {
+	color: red;
+}
+
+.exportNameOtherFromKeyword {
+	composes: from;
+}
+
+.exportNameOtherFromKeywordWithFrom1 {
+	composes: from from global;
+}
+
+.exportNameOtherFromKeywordWithFrom2 {
+	composes: from from "./classes.modules.css";
+}
+
+.exportNameWeirdCharacters {
+	composes: a -b b- --c c-- _d d\% from "./classes.modules.css";
+}
