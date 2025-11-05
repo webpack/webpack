@@ -21,7 +21,9 @@ it("should export CSS text as default when exportType is text (css/auto)", () =>
 
 
 it("should export CSS text when exportType is text and esModule is false (css/module)", () => {
+	// Named export, warn
 	expect(moduleTextNoEsm["no-esm-text"]).toBeTruthy();
+	expect(moduleTextNoEsm.default["no-esm-text"]).toBeTruthy();
 	expect(moduleTextNoEsm).toMatchSnapshot();
 });
 
