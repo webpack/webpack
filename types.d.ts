@@ -3660,7 +3660,7 @@ declare abstract class CssGenerator extends Generator {
 	generateImportCode(
 		module: NormalModule,
 		generateContext: GenerateContext
-	): string[];
+	): { expr: string }[];
 
 	/**
 	 * Generate CSS code for the current module
