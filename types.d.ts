@@ -6313,12 +6313,12 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
 		sourceOrder: number,
-		attributes?: ImportAttributes,
-		defer?: boolean
+		phase: ImportPhaseType,
+		attributes?: ImportAttributes
 	);
 	sourceOrder: number;
+	phase: ImportPhaseType;
 	attributes?: ImportAttributes;
-	defer?: boolean;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getModuleExports(__0: DependencyTemplateContext): string;
 	getImportStatement(
@@ -6356,7 +6356,7 @@ declare interface HarmonySettings {
 	name: string;
 	await: boolean;
 	attributes?: ImportAttributes;
-	defer?: boolean;
+	phase: ImportPhaseType;
 }
 declare class Hash {
 	constructor();
@@ -6624,6 +6624,7 @@ declare interface ImportModuleOptions {
 	 */
 	baseUri?: string;
 }
+type ImportPhaseType = 0 | 1 | 2;
 declare interface ImportSettings {
 	references: string[][];
 	expression: ImportExpressionJavascriptParser;
@@ -16440,9 +16441,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 		/**
-		 * if the dependency is defer
+		 * the import phase of the dependency
 		 */
-		defer?: boolean;
+		phase: ImportPhaseType;
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
@@ -16504,9 +16505,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 		/**
-		 * if set, the module will be deferred
+		 * the import phase of the dependency
 		 */
-		defer?: boolean;
+		phase: ImportPhaseType;
 	}): [string, string];
 	exportFromImport<GenerateContext>(__0: {
 		/**
@@ -16566,9 +16567,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 		/**
-		 * if true, the module will be deferred.
+		 * the import phase of the dependency
 		 */
-		defer?: boolean;
+		phase: ImportPhaseType;
 	}): string;
 	blockPromise(__0: {
 		/**
