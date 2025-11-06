@@ -3,7 +3,7 @@
 }
 
 .exportName {
-	/*composes: className;*/
+	composes: className;
 	composes: className from global;
 	composes: otherClassName from "./classes.modules.css";
 }
