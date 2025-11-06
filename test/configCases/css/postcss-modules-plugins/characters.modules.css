@@ -1,0 +1,31 @@
+.a {
+	color: red;
+}
+
+.a_ {
+	color: red;
+}
+
+.-b {
+	color: red;
+}
+
+.b- {
+	color: red;
+}
+
+.--c {
+	color: red;
+}
+
+.c-- {
+	color: red;
+}
+
+._d {
+	color: red;
+}
+
+.d\% {
+	color: tan;
+}
