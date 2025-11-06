@@ -1,0 +1,150 @@
+/* postcss-modules-values */
+
+/* should export a constant */
+@value exportName blue;
+
+/* Should pass for us, not a warning */
+/* gives a warnings when there is no semicolon between lines */
+@value exportName1 blue @value exportName2 yellow;
+
+/* Should pass for us, not a warning */
+/* gives a warnings on empty value */
+@value v-comment:;
+
+/* Should pass for us, not a warning */
+/* gives a warnings on empty value with comment */
+@value v-comment-other:/* comment */;
+
+/* should export a more complex constant */
+@value exportName2: (max-width: 599px);
+
+/* should replace constants within the file */
+@value exportName3: red;
+.foo-replace { color: exportName3; }
+
+/* should replace constants within the file #1 */
+@value exportName4: red;
+.foo-replace-1 { &.bar { color: exportName4; } }
+
+/* should replace constants within the file #2 */
+@value exportName5: red;
+.foo-replace-2 { @media (min-width: 1024px) { &.bar { color: exportName5; } } }
+
+/* should replace constants within the file #3 */
+@value exportName6: red;
+.foo-replace-3 { @media (min-width: 1024px) { &.bar { @media (min-width: 1024px) { color: exportName6; } } } }
+
+/* should replace constants within the file #4 */
+@value exportName7: 40px;
+@value exportName8: 36px;
+.foo-replace-4 { height: exportName7; height: exportName8; }
+
+/* TODO bug */
+/* should replace selectors within the file */
+@value exportName9: red;
+.exportName9 { color: exportName9; }
+
+/* TODO bug */
+/* should replace selectors within the file #1 */
+@value exportName10: red;
+#exportName10 { color: exportName10; }
+
+/* TODO bug */
+/* should replace selectors within the file #2 */
+@value exportName11: red;
+.exportName11 > .exportName11 { color: exportName11; }
+
+/* TODO bug - should reexport and inherit module type and output warning if not found */
+/* should import and re-export a simple constant */
+@value exportName12 from "./colors.css";
+
+/* should import a simple constant and replace usages */
+@value exportNameRed from "./colors.modules.css";
+.exportName13 { color: exportNameRed; }
+
+/* should import and alias a constant and replace usages */
+@value exportNameBlue as red from "./colors.modules.css";
+.exportName14 { color: red; }
+
+/* should import multiple from a single file */
+@value otherBlue, otherRed from "./colors.modules.css";
+.exportName15 { color: otherRed; }
+.exportName16 { color: otherBlue }
+
+/* should import from a definition */
+@value colors: "./colors.modules.css";
+@value otherBlue from colors;
+.exportName17 { color: otherBlue; }
+
+/* should only allow values for paths if defined in the right order */
+@value wrongOrder from colors;
+@value colors: "./colors.css";
+
+/* should allow transitive values */
+@value exportName18: #FFF;
+@value exportName19: exportName18;
+.exportName20 { color: exportName19; }
+
+/* TODO bug */
+/* should allow transitive values within calc */
+@value exportName22: 10px;
+@value exportName23: calc(exportName22 * 2);
+.exportName24 { margin: exportName23; }
+
+/* should preserve import order */
+@value a from "./a.modules.css";
+@value b from "./b.modules.css";
+
+/* should allow custom-property-style names */
+@value --red from "./colors.modules.css";
+.exportName25 { color: --red; }
+
+/* should allow all colour types */
+@value named: aqua;
+@value char3 #0f0;
+@value char6 #00ff00;
+@value rgba rgba(34, 12, 64, 0.3);
+@value hsla hsla(220, 13.0%, 18.0%, 1);
+.exportName26 {
+	color: named;
+	background-color: char3;
+	border-top-color: char6;
+	border-bottom-color: rgba;
+	outline-color: hsla;
+}
+
+/* TODO bug */
+/* should import multiple from a single file on multiple lines */
+@value (
+	namedBlue,
+	namedRed
+) from "./colors.modules.css";
+.exportName27 { color: namedBlue; }
+.exportName28 { color: namedRed }
+
+/* should allow definitions with commas in them */
+@value coolShadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)   ;
+.exportName29 { box-shadow: coolShadow; }
+
+/* should allow values with nested parentheses */
+@value parentheses: color(red lightness(50%));
+.exportName30 {
+	color: parentheses
+}
+
+/* should work with custom properties */
+@value v-color: my-custom-value;
+:root { --my-own-color: v-color; }
+
+/* should work with empty custom properties */
+@value v-empty-1: ;
+:root { --color:v-empty-1; }
+
+/* should work with empty custom properties #2 */
+@value v-empty-2:   ;
+:root { --color:v-empty-2; }
+
+/* TODO bug no extra space before */
+/* should work with empty custom properties #3 */
+@value v-empty: /* comment */;
+:root { --color:v-empty; }
