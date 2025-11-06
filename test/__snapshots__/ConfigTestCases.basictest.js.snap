@@ -7465,6 +7465,449 @@ Array [
 ]
 `;
 
+exports[`ConfigTestCases css postcss-modules-plugins exported tests should work 1`] = `
+Object {
+  "bar": "_style_modules_css-bar",
+  "baz": "_style_modules_css-baz",
+  "exportName1": "_style_modules_css-exportName1 importName secondImport",
+  "exportName10": "_style_modules_css-exportName10",
+  "exportName11": "_style_modules_css-exportName11 _b_modules_css-b _c_modules_css-c",
+  "exportName12": "_style_modules_css-exportName12 _library_modules_css-importName",
+  "exportName13": "_style_modules_css-exportName13 _library_modules_css-importName",
+  "exportName14": "_style_modules_css-exportName14 _library_modules_css-importName _library_modules_css-importName2 _library_modules_css-importName _library_modules_css-importName2",
+  "exportName15": "_style_modules_css-exportName15 _library_modules_css-importName",
+  "exportName16": "_style_modules_css-exportName16 _library_modules_css-importName beforeName importName secondImport _library_modules_css-firstImport _library_modules_css-secondImport",
+  "exportName17": "_style_modules_css-exportName17 _a_modules_css-a _b_modules_css-b _c_modules_css-c _a_modules_css-a _c_modules_css-c",
+  "exportName18": "_style_modules_css-exportName18 _library_modules_css-importName _library_modules_css-importName2 _library_modules_css-importName3 _library_modules_css-importName4",
+  "exportName19": "_style_modules_css-exportName19",
+  "exportName19-nested": "_style_modules_css-exportName19-nested",
+  "exportName19-nested-nested": "_style_modules_css-exportName19-nested-nested",
+  "exportName2": "_style_modules_css-exportName2 _library_modules_css-importName",
+  "exportName20": "_style_modules_css-exportName20 _c_modules_css-c",
+  "exportName21": "_style_modules_css-exportName21 _b_modules_css-b _c_modules_css-c",
+  "exportName22": "_style_modules_css-exportName22 _a_modules_css-a _b_modules_css-b _c_modules_css-c _a_modules_css-a _c_modules_css-c",
+  "exportName23": "_style_modules_css-exportName23 _a_modules_css-a",
+  "exportName24": "_style_modules_css-exportName24 _b_modules_css-b _a_modules_css-hidden-b",
+  "exportName25": "_style_modules_css-exportName25 _c_modules_css-c _a_modules_css-hidden-c",
+  "exportName26": "_style_modules_css-exportName26 _c_modules_css-hidden-d _b_modules_css-hidden-d _d_modules_css-d",
+  "exportName27": "_style_modules_css-exportName27 _characters_modules_css-a _characters_modules_css--b _characters_modules_css---c _characters_modules_css-_d _characters_modules_css-a_ _characters_modules_css-b- _characters_modules_css-c-- _characters_modules_css-d%",
+  "exportName28": "_style_modules_css-exportName28 _b_modules_css-b-last _c_modules_css-c-last",
+  "exportName29": "_style_modules_css-exportName29 _c_modules_css-c-last _b_modules_css-b-last",
+  "exportName3": "_style_modules_css-exportName3 _library_modules_css-importName _library_modules_css-secondImport",
+  "exportName30": "_style_modules_css-exportName30",
+  "exportName31": "_style_modules_css-exportName31 _style_modules_css-from _style_modules_css-from",
+  "exportName32": "_style_modules_css-exportName32",
+  "exportName33": "_style_modules_css-exportName33",
+  "exportName34": "_style_modules_css-exportName34 _b_modules_css-b",
+  "exportName35": "_style_modules_css-exportName35",
+  "exportName36": "_style_modules_css-exportName36",
+  "exportName4": "_style_modules_css-exportName4 _style_modules_css-localName",
+  "exportName5": "_style_modules_css-exportName5 _library_modules_css-importName _library_modules_css-importName2",
+  "exportName6": "_style_modules_css-exportName6 _library_modules_css-importName",
+  "exportName7": "_style_modules_css-exportName7 _library_modules_css-importName _library_modules_css-secondImport",
+  "exportName8": "_style_modules_css-exportName8 _library_modules_css-importName _library_modules_css-secondImport _library_modules_css-importName _library_modules_css-importName2",
+  "exportName9": "_style_modules_css-exportName9 _library_modules_css-secondImport _library_modules_css-secondImport _library_modules_css-thirdDep",
+  "foo": "_style_modules_css-foo",
+  "from": "_style_modules_css-from",
+  "localName": "_style_modules_css-localName",
+  "otherExport": "_style_modules_css-otherExport _library_modules_css-thirdImport _library_modules_css-otherLibImport",
+}
+`;
+
+exports[`ConfigTestCases css postcss-modules-plugins exported tests should work 2`] = `
+Array [
+  "/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+._library_modules_css-something {}
+
+._library_modules_css-importName {
+	color: red;
+}
+
+._library_modules_css-importName2 {
+	color: red;
+}
+
+._library_modules_css-importName3 {
+	color: azure;
+}
+
+._library_modules_css-importName4 {
+	color: antiquewhite;
+}
+
+._library_modules_css-secondImport {
+	color: green;
+}
+
+._library_modules_css-thirdImport {
+	color: blue;
+}
+
+._library_modules_css-otherLibImport {
+	color: yellow;
+}
+
+._library_modules_css-thirdDep {
+	color: black;
+}
+
+._library_modules_css-firstImport {
+	color: red;
+}
+
+._library_modules_css-secondImport {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./b.modules.css ***!
+  \\\\***************************/
+._b_modules_css-b { color: red; }
+
+._b_modules_css-hidden-d {
+	color: blue;
+}
+
+._b_modules_css-b-last {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./c.modules.css ***!
+  \\\\***************************/
+._c_modules_css-c { color: red }
+
+._c_modules_css-hidden-d {
+	color: blue;
+}
+
+._c_modules_css-c-last {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./a.modules.css ***!
+  \\\\***************************/
+._a_modules_css-a { color: red; }
+
+._a_modules_css-hidden-b {
+	color: blue;
+}
+
+._a_modules_css-hidden-c {
+	color: aliceblue;
+}
+
+/*!***************************!*\\\\
+  !*** css ./d.modules.css ***!
+  \\\\***************************/
+._d_modules_css-d {
+	color: red;
+}
+
+/*!************************************!*\\\\
+  !*** css ./characters.modules.css ***!
+  \\\\************************************/
+._characters_modules_css-a {
+	color: red;
+}
+
+._characters_modules_css-a_ {
+	color: red;
+}
+
+._characters_modules_css--b {
+	color: red;
+}
+
+._characters_modules_css-b- {
+	color: red;
+}
+
+._characters_modules_css---c {
+	color: red;
+}
+
+._characters_modules_css-c-- {
+	color: red;
+}
+
+._characters_modules_css-_d {
+	color: red;
+}
+
+._characters_modules_css-d\\\\% {
+	color: tan;
+}
+
+/*!***********************!*\\\\
+  !*** css ./other.css ***!
+  \\\\***********************/
+.className { color: red }
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+/* postcss-modules-extract-imports */
+
+
+/* composing-globals */
+._style_modules_css-exportName1 {  other: rule; }
+
+/* existing-import */
+
+._style_modules_css-exportName2 {
+	
+}
+
+/* import-comment */
+/*
+:local(.exportName) {
+  composes: importName from \\"path/library.css\\";
+  other: rule;
+}
+*/
+
+/* import-consolidate */
+._style_modules_css-exportName3 {
+	
+	other: rule;
+}
+
+._style_modules_css-otherExport {
+	
+	
+}
+
+/* import-local-extends */
+._style_modules_css-localName { color: red; }
+
+._style_modules_css-exportName4 {
+	
+	other: rule;
+}
+
+/* import-media */
+@media screen {
+	._style_modules_css-exportName5 {
+		
+		
+		other: rule2;
+	}
+}
+
+._style_modules_css-exportName6 {
+	
+	other: rule;
+}
+
+/* import-multiple-classes */
+._style_modules_css-exportName7 {  other: rule; }
+
+/* import-multiple-references */
+._style_modules_css-exportName8 {
+	
+	
+	
+}
+._style_modules_css-exportName9 {
+	
+	
+	
+}
+
+/* import-only-whitelist */
+._style_modules_css-exportName10 { imports: importName from \\"path/library.css\\"; something-else: otherLibImport from \\"path/other-lib.css\\"; }
+
+/* import-preserving-order */
+._style_modules_css-exportName11 {
+	
+	
+	color: #aaa;
+}
+
+/* import-single-quotes */
+._style_modules_css-exportName12 {
+	
+	other: rule;
+}
+
+/* import-double-quotes */
+._style_modules_css-exportName13 {
+	
+	other: rule;
+}
+
+/* import-spacing */
+._style_modules_css-exportName14 {
+	
+	
+	
+	other: rule;
+}
+
+/* import-within */
+._style_modules_css-exportName15 {
+	
+	other: rule;
+}
+
+/* multiple-composes */
+._style_modules_css-exportName16 {
+	
+	other: rule;
+}
+
+._style_modules_css-exportName17 {
+	
+}
+
+._style_modules_css-exportName18 {
+	
+}
+
+._style_modules_css-foo { color: red }
+._style_modules_css-bar { color: blue }
+._style_modules_css-baz { color: green }
+._style_modules_css-exportName19 {
+	
+}
+
+/* nesting */
+._style_modules_css-exportName19 {
+	display: grid;
+
+	@media (orientation: landscape) {
+		&._style_modules_css-exportName19-nested {
+			grid-auto-flow: column;
+
+			@media (min-width: 1024px) {
+				&._style_modules_css-exportName19-nested-nested {
+					composes: importName from \\"library.modules.css\\";
+				}
+			}
+		}
+	}
+}
+
+/* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
+/* resolve-composes-order */
+._style_modules_css-exportName20 {
+	
+	color: #bebebe;
+}
+
+._style_modules_css-exportName21 {
+	/* \`b\` should be after \`c\` */
+	
+	
+	color: #aaa;
+}
+
+/* resolve-duplicates */
+
+._style_modules_css-exportName22 {
+	
+	
+	
+	
+	
+}
+
+/* TODO bug */
+/* resolve-imports-order */
+
+
+._style_modules_css-exportName23 {
+	
+}
+
+._style_modules_css-exportName24 {
+	
+	
+}
+
+._style_modules_css-exportName25 {
+	
+	
+}
+
+._style_modules_css-exportName26 {
+	
+	
+	
+}
+
+/* valid-characters */
+._style_modules_css-exportName27 {
+	
+	
+}
+
+/* We pass this test */
+/* check-import-order */
+._style_modules_css-exportName28  {
+	
+	
+}
+
+._style_modules_css-exportName29 {
+	
+	
+}
+
+/* empty-composes */
+._style_modules_css-exportName30 {
+	
+}
+
+/* weird-composes */
+._style_modules_css-from { color: red; }
+._style_modules_css-exportName31 {
+	
+}
+
+/* broken-composes */
+._style_modules_css-exportName32 {
+	composes: className from 12;
+}
+
+/* broken-composes-2 */
+._style_modules_css-exportName33 {
+	composes: 12;
+}
+
+/* TODO bug */
+/* composes-multiple-declarations */
+._style_modules_css-exportName34 {
+	
+}
+
+._style_modules_css-exportName34 {
+	
+}
+
+/* TODO bug */
+/* inherit-module-type */
+._style_modules_css-exportName35 {
+	
+}
+
+/*// TODO bug */
+/* composes from-import */
+
+._style_modules_css-exportName36 {
+	
+}
+
+
+
+",
+]
+`;
+
 exports[`ConfigTestCases css pseudo-import exported tests should compile 1`] = `
 Array [
   "/*!********************************!*\\\\

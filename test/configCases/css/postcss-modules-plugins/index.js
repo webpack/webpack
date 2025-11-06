@@ -1,6 +1,6 @@
-import "./style.css";
+import * as classes from "./style.modules.css";
 
-it(`should work with URLs in CSS`, () => {
+it("should work", () => {
 	const links = document.getElementsByTagName("link");
 	const css = [];
 
@@ -9,5 +9,6 @@ it(`should work with URLs in CSS`, () => {
 		css.push(link.sheet.css);
 	}
 
+	expect(classes).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

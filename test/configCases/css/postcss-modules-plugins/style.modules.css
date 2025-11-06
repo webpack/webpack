@@ -1,0 +1,266 @@
+/* postcss-modules-extract-imports */
+
+
+/* composing-globals */
+:local(.exportName1) { composes: importName secondImport from global; other: rule; }
+
+/* existing-import */
+:import("library.modules.css") {
+	something: else;
+}
+
+:local(.exportName2) {
+	composes: importName from 'library.modules.css';
+}
+
+/* import-comment */
+/*
+:local(.exportName) {
+  composes: importName from "path/library.css";
+  other: rule;
+}
+*/
+
+/* import-consolidate */
+:local(.exportName3) {
+	composes: importName secondImport from 'library.modules.css';
+	other: rule;
+}
+
+:local(.otherExport) {
+	composes: thirdImport from 'library.modules.css';
+	composes: otherLibImport from 'library.modules.css';
+}
+
+/* import-local-extends */
+.localName { color: red; }
+
+:local(.exportName4) {
+	composes: localName;
+	other: rule;
+}
+
+/* import-media */
+@media screen {
+	:local(.exportName5) {
+		composes: importName from "library.modules.css";
+		composes: importName2 from "library.modules.css";
+		other: rule2;
+	}
+}
+
+:local(.exportName6) {
+	composes: importName from "library.modules.css";
+	other: rule;
+}
+
+/* import-multiple-classes */
+:local(.exportName7) { composes: importName secondImport from 'library.modules.css'; other: rule; }
+
+/* import-multiple-references */
+:local(.exportName8) {
+	composes: importName secondImport from 'library.modules.css';
+	composes: importName from 'library.modules.css';
+	composes: importName2 from 'library.modules.css';
+}
+:local(.exportName9) {
+	composes: secondImport from 'library.modules.css';
+	composes: secondImport from 'library.modules.css';
+	composes: thirdDep from 'library.modules.css';
+}
+
+/* import-only-whitelist */
+:local(.exportName10) { imports: importName from "path/library.css"; something-else: otherLibImport from "path/other-lib.css"; }
+
+/* import-preserving-order */
+:local(.exportName11) {
+	composes: b from "./b.modules.css";
+	composes: c from "./c.modules.css";
+	color: #aaa;
+}
+
+/* import-single-quotes */
+:local(.exportName12) {
+	composes: importName from 'library.modules.css';
+	other: rule;
+}
+
+/* import-double-quotes */
+:local(.exportName13) {
+	composes: importName from "library.modules.css";
+	other: rule;
+}
+
+/* import-spacing */
+:local(.exportName14) {
+	composes: importName  from   	"library.modules.css";
+	composes: importName2 from   	"library.modules.css";
+	composes: importName   importName2   from   "library.modules.css";
+	other: rule;
+}
+
+/* import-within */
+:local(.exportName15) {
+	composes: importName from "library.modules.css";
+	other: rule;
+}
+
+/* multiple-composes */
+:local(.exportName16) {
+	composes: importName from "library.modules.css", beforeName from global, importName secondImport from global, firstImport secondImport from "library.modules.css";
+	other: rule;
+}
+
+:local(.exportName17) {
+	composes: a from "./a.modules.css", b from "./b.modules.css", c from "./c.modules.css", a from "./a.modules.css", c from "./c.modules.css";
+}
+
+:local(.exportName18) {
+	composes: importName importName2 from "library.modules.css", importName3 importName4 from "library.modules.css";
+}
+
+.foo { color: red }
+.bar { color: blue }
+.baz { color: green }
+:local(.exportName19) {
+	composes: foo bar, baz;
+}
+
+/* nesting */
+:local(.exportName19) {
+	display: grid;
+
+	@media (orientation: landscape) {
+		&:local(.exportName19-nested) {
+			grid-auto-flow: column;
+
+			@media (min-width: 1024px) {
+				&:local(.exportName19-nested-nested) {
+					composes: importName from "library.modules.css";
+				}
+			}
+		}
+	}
+}
+
+/* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
+/* resolve-composes-order */
+:local(.exportName20) {
+	composes: c from "./c.modules.css";
+	color: #bebebe;
+}
+
+:local(.exportName21) {
+	/* `b` should be after `c` */
+	composes: b from "./b.modules.css";
+	composes: c from "./c.modules.css";
+	color: #aaa;
+}
+
+/* resolve-duplicates */
+:import("./c.modules.css") {
+	something: c;
+}
+
+:local(.exportName22) {
+	composes: a from './a.modules.css';
+	composes: b from './b.modules.css';
+	composes: c from './c.modules.css';
+	composes: a from './a.modules.css';
+	composes: c from './c.modules.css';
+}
+
+/* TODO bug */
+/* resolve-imports-order */
+:import("custom-path.css") {
+	/* empty to check the order */
+}
+
+:import("./b.modules.css") {
+	somevalue: localvalue;
+}
+
+:local(.exportName23) {
+	composes: a from './a.modules.css';
+}
+
+:local(.exportName24) {
+	composes: b from './b.modules.css';
+	composes: hidden-b from './a.modules.css';
+}
+
+:local(.exportName25) {
+	composes: c from './c.modules.css';
+	composes: hidden-c from './a.modules.css';
+}
+
+:local(.exportName26) {
+	composes: hidden-d from './c.modules.css';
+	composes: hidden-d from './b.modules.css';
+	composes: d from './d.modules.css';
+}
+
+/* valid-characters */
+:local(.exportName27) {
+	composes: a -b --c _d from "characters.modules.css";
+	composes: a_ b- c-- d\% from "characters.modules.css";
+}
+
+/* We pass this test */
+/* check-import-order */
+:local(.exportName28)  {
+	composes: b-last from './b.modules.css';
+	composes: c-last from './c.modules.css';
+}
+
+:local(.exportName29) {
+	composes: c-last from './c.modules.css';
+	composes: b-last from './b.modules.css';
+}
+
+/* empty-composes */
+:local(.exportName30) {
+	composes:;
+}
+
+/* weird-composes */
+.from { color: red; }
+:local(.exportName31) {
+	composes: from from;
+}
+
+/* broken-composes */
+:local(.exportName32) {
+	composes: className from 12;
+}
+
+/* broken-composes-2 */
+:local(.exportName33) {
+	composes: 12;
+}
+
+/* TODO bug */
+/* composes-multiple-declarations */
+:local(.exportName34) {
+	composes: a from './a.modules.css';
+}
+
+:local(.exportName34) {
+	composes: b from './b.modules.css';
+}
+
+/* TODO bug */
+/* inherit-module-type */
+:local(.exportName35) {
+	composes: className from './other.css';
+}
+
+/*// TODO bug */
+/* composes from-import */
+:import("./import.modules.css") {  abc-from-def: abc;}
+
+:local(.exportName36) {
+	composes: abc-from-def;
+}
+
+
