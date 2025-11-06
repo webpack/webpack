@@ -7427,7 +7427,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css no-extra-runtime-in-js exported tests should compile 1`] = `
+exports[`ConfigCacheTestCases css no-extra-runtime-with-asset-modules exported tests should compile 1`] = `
 Array [
   "/*!***********************!*\\\\
   !*** css ./style.css ***!
