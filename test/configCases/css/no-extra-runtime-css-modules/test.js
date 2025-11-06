@@ -10,10 +10,9 @@ it("should work", () => {
 	if (__STATS_I__ === 0) {
 		// ./main.css
 		// ./a.css
-		// and it still output two runtime module:
-		// 	 'webpack/runtime/make namespace object'
+		// and it still output one runtime module:
 		// 	 'webpack/runtime/css loading'
-		expect(stats.modules.length).toBe(4);
+		expect(stats.modules.length).toBe(3);
 	} else if (__STATS_I__ === 1) {
 		stats.modules
 			.filter(module => module.moduleType === "css/auto")
