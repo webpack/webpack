@@ -785,7 +785,7 @@ export type CssGeneratorLocalIdentName = string;
 /**
  * Configure how CSS content is exported as default.
  */
-export type CssParserExportType = "link" | "text";
+export type CssParserExportType = "link" | "text" | "css-style-sheet";
 /**
  * Enable/disable `@import` at-rules handling.
  */

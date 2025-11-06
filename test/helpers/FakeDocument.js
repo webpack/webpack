@@ -279,7 +279,100 @@ class FakeSheet {
 	}
 }
 
+/**
+ * Fake CSSStyleSheet implementation for testing
+ * Supports the Constructable Stylesheets API
+ */
+class CSSStyleSheet {
+	constructor() {
+		this._cssText = "";
+		this._cssRules = [];
+	}
+
+	/**
+	 * Synchronously replace the stylesheet content
+	 * @param {string} cssText CSS text content
+	 */
+	replaceSync(cssText) {
+		this._cssText = cssText;
+		this._parseCssRules(cssText);
+	}
+
+	/**
+	 * Asynchronously replace the stylesheet content
+	 * @param {string} cssText CSS text content
+	 * @returns {Promise<CSSStyleSheet>} Promise that resolves to this stylesheet
+	 */
+	replace(cssText) {
+		return Promise.resolve().then(() => {
+			this.replaceSync(cssText);
+			return this;
+		});
+	}
+
+	/**
+	 * Get the parsed CSS rules
+	 * @returns {Array} Array of CSS rules
+	 */
+	get cssRules() {
+		return this._cssRules;
+	}
+
+	/**
+	 * Parse CSS text into rules
+	 * @param {string} cssText CSS text to parse
+	 */
+	_parseCssRules(cssText) {
+		const walkCssTokens = require("../../lib/css/walkCssTokens");
+
+		const rules = [];
+		let currentRule = { getPropertyValue };
+		let selector;
+		let last = 0;
+
+		const processDeclaration = (str) => {
+			const colon = str.indexOf(":");
+			if (colon > 0) {
+				const property = str.slice(0, colon).trim();
+				const value = str.slice(colon + 1).trim();
+				currentRule[property] = value;
+			}
+		};
+
+		// Remove comments
+		const cleanCss = cssText
+			// @ts-expect-error we use es2018 for such tests
+			.replace(/\/\*.*?\*\//gms, "");
+
+		walkCssTokens(cleanCss, 0, {
+			leftCurlyBracket(source, start, end) {
+				if (selector === undefined) {
+					selector = source.slice(last, start).trim();
+					last = end;
+				}
+				return end;
+			},
+			rightCurlyBracket(source, start, end) {
+				processDeclaration(source.slice(last, start));
+				last = end;
+				rules.push({ selectorText: selector, style: currentRule });
+				selector = undefined;
+				currentRule = { getPropertyValue };
+				return end;
+			},
+			semicolon(source, start, end) {
+				processDeclaration(source.slice(last, start));
+				last = end;
+				return end;
+			}
+		});
+
+		this._cssRules = rules;
+	}
+}
+
 FakeDocument.FakeSheet = FakeSheet;
 FakeDocument.FakeElement = FakeDocument;
+FakeDocument.CSSStyleSheet = CSSStyleSheet;
 
 module.exports = FakeDocument;
