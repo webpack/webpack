@@ -3643,6 +3643,13 @@ declare interface CssData {
 	exports: Map<string, string>;
 }
 declare abstract class CssGenerator extends Generator {
+	convention?:
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
+		| "dashes"
+		| "dashes-only"
+		| ((name: string) => string);
 	sourceDependency(
 		module: NormalModule,
 		dependency: Dependency,
