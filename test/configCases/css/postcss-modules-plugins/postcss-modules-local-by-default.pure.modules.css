@@ -1,0 +1,452 @@
+/* postcss-modules-local-by-default */
+/* TODO not implemented yet */
+
+
+/* localize and not localize animation-name in mixed case #3 */
+.foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
+
+/* localize and not localize a certain animation in mixed case #2 */
+.foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
+
+/* compile in pure mode */
+:global(.foo).bar, [type="radio"] ~ .label, :not(.foo), #bar { a_value: some-value; }
+
+/* throw on not pure selector (global class) */
+:global(.foo) { a_value: some-value; }
+
+/* throw on not pure selector (with multiple 1) */
+.foo, :global(.bar) { a_value: some-value; }
+
+/* throw on not pure selector (with multiple 2) */
+:global(.bar), .foo { a_value: some-value; }
+
+/* throw on not pure selector (element) */
+input { a_value: some-value; }
+
+/* throw on not pure selector (attribute) */
+[type="radio"] { a_value: some-value; }
+
+/* throw on not pure keyframes */
+@keyframes :global(foo) { a_value: some-value; }
+
+/* consider & statements as pure */
+.foo { &:hover { a_value: some-value; } }
+
+/* consider & statements as pure #2 */
+.foo { @media screen and (min-width: 900px) { &:hover { a_value: some-value; } } }
+
+/* consider global inside local as pure */
+.foo button { a_value: some-value; }
+
+/* consider selector & statements as pure */
+.foo { html &:hover { a_value: some-value; } }
+
+/* consider selector & statements as pure */
+.foo { &:global(.bar) { a_value: some-value; } }
+
+/* throw on nested & selectors without a local selector */
+:global(.foo) { &:hover { a_value: some-value; } }
+
+/* should suppress errors for global selectors after ignore comment */
+/* cssmodules-pure-ignore */
+:global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #2 */
+/* cssmodules-pure-ignore */
+/* another comment */
+:global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #3 */
+/* another comment */
+/* cssmodules-pure-ignore */
+:global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #4 */
+/* cssmodules-pure-ignore */ /* another comment */
+:global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #5 */
+/* another comment */ /* cssmodules-pure-ignore */
+:global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #6 */
+.foo { /* cssmodules-pure-ignore */ :global(.bar) { color: blue }; }
+
+/* should suppress errors for global selectors after ignore comment #7 */
+/* cssmodules-pure-ignore */ :global(.foo) { /* cssmodules-pure-ignore */ :global(.bar) { color: blue } }
+
+/* should suppress errors for global selectors after ignore comment #8 */
+/*     cssmodules-pure-ignore     */ :global(.foo) { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #9 */
+/*
+    cssmodules-pure-ignore
+    */ :global(.foo) { color: blue; }
+
+/* should allow additional text in ignore comment */
+/* cssmodules-pure-ignore - needed for third party integration */
+:global(#foo) { color: blue; }
+
+/* should not affect rules after the ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo) { color: blue; }
+:global(.bar) { color: red; }
+
+/* should work with nested global selectors in ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo) {
+	:global(.bar) { color: blue; }
+}
+
+/* should work with ignored nested global selectors in ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo) {
+	/* cssmodules-pure-ignore */
+	:global(.bar) { color: blue; }
+}
+
+/* should work with view transitions in ignored block */
+/* cssmodules-pure-ignore */
+::view-transition-group(modal) {
+	animation-duration: 300ms;
+}
+
+/* should work with keyframes in ignored block */
+/* cssmodules-pure-ignore */
+@keyframes :global(fadeOut) {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+/* should work with scope in ignored block */
+
+/* cssmodules-pure-ignore */
+@scope (:global(.foo)) to (:global(.bar)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+}
+
+
+/* should work with scope in ignored block #2 */
+
+/* cssmodules-pure-ignore */
+@scope (:global(.foo))
+to (:global(.bar)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+}
+
+
+/* should work in media queries */
+@media (min-width: 768px) {
+	/* cssmodules-pure-ignore */
+	:global(.foo) { color: blue; }
+}
+
+/* should handle multiple ignore comments */
+/* cssmodules-pure-ignore */
+:global(.foo) { color: blue; }
+.local { color: green; }
+/* cssmodules-pure-ignore */
+:global(.bar) { color: red; }
+
+/* should work with complex selectors in ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo):hover > :global(.bar) + :global(.baz) {
+	color: blue;
+}
+
+/* should work with multiple selectors in ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo),
+:global(.bar),
+:global(.baz) {
+	color: blue;
+}
+
+/* should work with pseudo-elements in ignored block */
+/* cssmodules-pure-ignore */
+:global(.foo)::before,
+:global(.foo)::after {
+	content: '';
+}
+
+/* should disable pure mode checks for entire file with no-check comment */
+/* cssmodules-pure-no-check */
+:global(.foo) { border: 1px solid #e2e8f0 }
+:global(.bar) { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) }
+:global(.baz) { background: #4299e1 }
+
+/* should disable pure mode checks for nested selectors */
+/* cssmodules-pure-no-check */
+:global(.foo) {
+	&:hover { border-color: #cbd5e0 }
+	& :global(.bar) { color: blue }
+}
+
+/* should ignore no-check comment if not at root level */
+:global(.bar) { color: blue }
+/* cssmodules-pure-no-check */
+
+/* should ignore no-check comment if not at root level #2 */
+/* Some file description */
+.class { color: red; }
+/* cssmodules-pure-no-check */
+:global(.foo) { color: blue }
+
+/* should allow other comments before no-check comment */
+/* Some file description */
+/* cssmodules-pure-no-check */
+:global(.foo) { color: blue }
+
+/* should disable pure mode checks for deep nested selectors */
+/* cssmodules-pure-no-check */
+:global(.foo) { max-width: 600px }
+:global(.bar) { background: #fafafa }
+:global(.baz) {
+	:global(.foobar) {
+		&::-webkit-scrollbar { width: 8px }
+	}
+}
+
+/* should work with keyframes when no-check is enabled */
+/* cssmodules-pure-no-check */
+@keyframes :global(fadeIn) {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+:global(.animate) { animation: global(fadeIn) 0.3s }
+
+/* should allow multiline no-check comment */
+/*
+  cssmodules-pure-no-check
+*/
+:global(.foo) { color: blue }
+
+/* should allow additional text in no-check comment */
+/* cssmodules-pure-no-check - needed for styling third-party components */
+:global(.foo) { color: blue }
+
+/* should work with media queries when no-check is enabled */
+/* cssmodules-pure-no-check */
+@media (max-width: 768px) {
+	:global(.foo) { position: fixed }
+}
+
+/* css nesting #2 */
+
+.foo {
+	&.class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.bar {
+			c_value: some-value;
+		}
+
+		&.baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* css nesting #3 */
+.foo { span { a_value: some-value; } }
+
+/* css nesting (unfolded) #3 */
+.foo span { a_value: some-value }
+
+/* css nesting #4 */
+.foo { span { a { a_value: some-value; } } }
+
+/* css nesting (unfolded) #4 */
+.foo span a { a_value: some-value }
+
+/* css nesting #5 */
+html { .foo { a_value: some-value; } }
+
+/* css nesting (unfolded) #5 */
+html .foo { a_value: some-value }
+
+/* css nesting #6 */
+html { @media screen and (min-width: 900px) { .foo { a_value: some-value; } } }
+
+/* css nesting (unfolded) #6 */
+@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
+
+/* css nesting #7 */
+html { .foo { a_value: some-value; } .bar { a_value: some-value; } }
+
+/* css nesting (unfolded) #7 */
+html .foo, html .bar { a_value: some-value }
+
+/* css nesting #8 */
+.class { @media screen and (min-width: 900px) { & > span { a_value: some-value; } } }
+
+/* css nesting (unfolded) #8 */
+@media screen and (min-width: 900px) { .class > span { a_value: some-value } }
+
+/* css nesting #9 */
+html { @media screen and (min-width: 900px) { & > .class { a_value: some-value; } } }
+
+/* css nesting (unfolded) #9 */
+@media screen and (min-width: 900px) { html > .class { a_value: some-value } }
+
+/* css nesting #10 */
+.class { @media screen and (min-width: 900px) { & { a_value: some-value; } } }
+
+/* css nesting (unfolded) #10 */
+@media screen and (min-width: 900px) { .class { a_value: some-value } }
+
+/* css nesting #11 */
+html { .foo { span { a_value: some-value; } } }
+
+/* css nesting (unfolded) #11 */
+html .foo span { a_value: some-value }
+
+/* css nesting #12 */
+html { button { .foo { div { span { a_value: some-value; } } } } }
+
+/* css nesting #13 */
+.foo { button { div { div { span { a_value: some-value; } } } } }
+
+/* css nesting #14 */
+html { button { div { div { .foo { a_value: some-value; } } } } }
+
+/* css nesting #15 */
+html { button { @media screen and (min-width: 900px) { .foo { div { span { a_value: some-value; } } } } } }
+
+/* css nesting #16 */
+html { .foo { a_value: some-value; } }
+
+/* css nesting #17 */
+.foo { div { a_value: some-value; } }
+
+/* css nesting #18 */
+@media screen and (min-width: 900px) { html { .foo { a_value: some-value; } } }
+
+/* css nesting #19 */
+html { @media screen and (min-width: 900px) { .foo { a_value: some-value; } } }
+
+/* css nesting #20 */
+html { .foo { @media screen and (min-width: 900px) { a_value: some-value; } } }
+
+/* css nesting #21 */
+@media screen and (min-width: 900px) { .foo { div { a_value: some-value; } } }
+
+/* css nesting #22 */
+.foo { @media screen and (min-width: 900px) { div { a_value: some-value; } } }
+
+/* css nesting #23 */
+.foo { div { @media screen and (min-width: 900px) { a_value: some-value; } } }
+
+/* css nesting - throw on mixed parents */
+.foo, html { span { a_value: some-value; } }
+
+/* css nesting - throw on & */
+html { & > span { a_value: some-value; } }
+
+/* css nesting - throw on & #2 */
+html { button { & > span { a_value: some-value; } } }
+
+/* css nesting - throw on & #3 */
+html { @media screen and (min-width: 900px) { & > span { a_value: some-value; } } }
+
+/* css nesting - throw on & #4 */
+html { button { div { div { & { a_value: some-value; } } } } }
+
+/* css nesting - throw */
+html { button { div { div { div { a_value: some-value; } } } } }
+
+/* css nesting - throw #2 */
+html { button { div { div { div { } } } } }
+
+/* css nesting - throw #3 */
+html { button { @media screen and (min-width: 900px) { div { div { div { } } } } } }
+
+/* css nesting - throw #4 */
+@media screen and (min-width: 900px) { html { button { div { div { div { } } } } } }
+
+/* css nesting - throw #5 */
+html { div { @media screen and (min-width: 900px) { color: red } } }
+
+/* css nesting - throw #6 */
+html { div { @media screen and (min-width: 900px) { @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #7 */
+html { div { @media screen and (min-width: 900px) { .a { } @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #7 */
+html { div { @media screen and (min-width: 900px) { .a { a_value: some-value; } @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #8 */
+
+@media screen and (min-width: 900px) {
+	.a { a_value: some-value; }
+	@media screen and (min-width: 900px) {
+		div {
+			color: red
+		}
+	}
+}
+
+/* css nesting - throw on global styles with a local selector */
+html { a_value: some-value; .foo { a_value: some-value; } }
+
+/* css nesting - throw on global styles with a local selector #2 */
+html { .foo { a_value: some-value; } a_value: some-value; }
+
+/* css nesting - throw on global styles with a local selector #3 */
+
+html {
+	.foo { a_value: some-value; }
+	button {
+		color: red;
+		.bar { a_value: some-value; }
+	}
+}
+
+/* css nesting - throw on global styles with a local selector #4 */
+
+html {
+	@media screen and (min-width: 900px) {
+		button {
+			color: red;
+			.bar { a_value: some-value; }
+		}
+	}
+}
+
+/* consider :import statements pure */
+:import("./import.modules.css") { foo: __foo; }
+
+/* consider :export statements pure */
+:export { foo: __foo; }
+
+/* @scope at-rule #4 */
+
+@scope (.article-header) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+
+/* @scope at-rule #7 */
+
+@scope (:global(.article-header).foo) to (:global(.class).bar) {
+	.bar {
+		color: red;
+	}
+}

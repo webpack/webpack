@@ -1,0 +1,59 @@
+/* postcss-modules-local-by-default */
+
+
+/* localize and not localize animation-name in mixed case #2 */
+.foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
+
+/* localize and not localize a certain animation in mixed case #2 */
+.foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
+
+/* default to global when mode provided */
+.foo { a_value: some-value; }
+
+/* TODO bug */
+/* use correct spacing */
+.a :local .b {}
+.a:local.b {}
+.a:local(.b) {}
+.a:local( .b ) {}
+.a :local(.b) {}
+.a :local( .b ) {}
+:local(.a).b {}
+:local( .a ).b {}
+:local(.a) .b {}
+:local( .a ) .b {}
+
+/* localize keyframes in global default mode */
+@keyframes foo { a_value: some-value; }
+
+/* css nesting #1 */
+:local(.foo) {
+	&:local(.class) {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		:local(.bar) {
+			c_value: some-value;
+		}
+
+		&:local(.baz) {
+			c_value: some-value;
+		}
+	}
+}
+
+/* @scope at-rule #3 */
+@scope (:local(.article-header)) to (:global(.class)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	:local(.class-1) {
+		color: red;
+	}
+	:global(.class-2) {
+		color: blue;
+	}
+}

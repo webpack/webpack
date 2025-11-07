@@ -1,0 +1,9 @@
+@value exportNameRed: blue;
+@value exportNameBlue: yellow;
+@value otherBlue: red;
+@value otherRed: blue;
+@value wrongOrder: blue;
+@value --red: blue;
+
+@value namedBlue: red;
+@value namedRed: blue;
