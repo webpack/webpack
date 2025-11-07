@@ -10,19 +10,17 @@ work is not in vain.
 Most of the time, if webpack is not working correctly for you, it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
-a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions
+a question to [Discussions](https://github.com/webpack/webpack/discussions), [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack) or ask this in our [Discord](https://discord.gg/5sxFZPdx2k). Questions
 that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
-Do you want to fix an issue? Look at the issues with a tag of [X5: work required (PR / Help Wanted)](https://github.com/webpack/webpack/labels/X5%3A%20work%20required%20%28PR%20%2F%20Help%20Wanted%29). Here are some of the key labels you may encounter:
+Do you want to fix an issue? Look at the issues with a tag of [Send a PR)](https://github.com/webpack/webpack/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Send%20a%20PR%22). Here are some of the key labels you may encounter:
 
 - **bug**: An unexpected problem or unintended behavior.
 - **enhancement**: A suggestion for a new feature or improvement.
 - **question**: Requests for clarification or more information.
 - **documentation**: Issues related to improving or adding documentation.
-
-> **Note:** Previous references to labels such as `D0: My First Commit`, `D1: Easy`, `D2: Medium`, and `D3: Hard` have been removed as these are not currently in use. If you would like to see difficulty labels added, please open a suggestion or discuss with maintainers.
 
 ## Contributing to the webpack ecosystem
 
@@ -72,7 +70,7 @@ Then, automatically generate the type declarations by running `yarn fix` locally
 
 ## Discussions
 
-Gitter is only for small questions. To discuss a subject in detail, please send a link to your forum or blog in the Gitter chat.
+For discussions please use our [Discussions](https://github.com/webpack/webpack/discussions).
 
 ## Join the development
 
