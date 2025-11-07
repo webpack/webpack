@@ -170,7 +170,6 @@
 	composes: c from './c.modules.css';
 }
 
-/* TODO bug */
 /* resolve-imports-order */
 :import("custom-path.css") {
 	/* empty to check the order */
@@ -239,7 +238,6 @@
 	composes: 12;
 }
 
-/* TODO bug */
 /* composes-multiple-declarations */
 :local(.exportName34) {
 	composes: a from './a.modules.css';
@@ -249,7 +247,6 @@
 	composes: b from './b.modules.css';
 }
 
-/* TODO bug */
 /* inherit-module-type */
 :local(.exportName35) {
 	composes: className from './other.css';
@@ -262,5 +259,3 @@
 :local(.exportName36) {
 	composes: abc-from-def;
 }
-
-

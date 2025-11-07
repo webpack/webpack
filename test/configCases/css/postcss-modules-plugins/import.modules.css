@@ -1,3 +1,7 @@
+:import("./c.modules.css") {
+	value: deep-nested-c;
+}
+
 .abc {
 	color: red;
 }
@@ -13,3 +17,5 @@
 .otherClass {
 	color: red;
 }
+
+:export { abc: value  }
