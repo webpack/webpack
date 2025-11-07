@@ -1870,12 +1870,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportName": "my-app-235-au my-app-70-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-70-Mf my-app-70-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-70-s7 my-app-70-s7 my-app-70-Mf my-app-70-s7 my-app-70-Mf",
   "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
   "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
-  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
-  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
-  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-70-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-70-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-70-a my-app-70-aN my-app-70-uw my-app-70-ee my-app-70-mg my-app-70-_d my-app-70-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -2324,47 +2324,47 @@ div {
 /*!*********************************!*\\\\
   !*** css ./classes.modules.css ***!
   \\\\*********************************/
-.my-app-903-s7 {
+.my-app-70-s7 {
 	color: red
 }
 
-.my-app-903-Mf {
+.my-app-70-Mf {
 	color: green;
 }
 
-.my-app-903-wo {
+.my-app-70-wo {
 	color: blue;
 }
 
-.my-app-903-HT {
+.my-app-70-HT {
 	color: yellow;
 }
 
-.my-app-903-a {
+.my-app-70-a {
 	color: red;
 }
 
-.my-app-903-aN {
+.my-app-70-aN {
 	color: red;
 }
 
-.my-app-903-uw {
+.my-app-70-uw {
 	color: red;
 }
 
-.my-app-903-ee {
+.my-app-70-ee {
 	color: red;
 }
 
-.my-app-903-mg {
+.my-app-70-mg {
 	color: red;
 }
 
-.my-app-903-_d {
+.my-app-70-_d {
 	color: red;
 }
 
-.my-app-903-eR {
+.my-app-70-eR {
 	color: tan;
 }
 
@@ -3655,12 +3655,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportName": "my-app-235-au my-app-70-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-70-Mf my-app-70-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-70-s7 my-app-70-s7 my-app-70-Mf my-app-70-s7 my-app-70-Mf",
   "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
   "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
-  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
-  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
-  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-70-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-70-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-70-a my-app-70-aN my-app-70-uw my-app-70-ee my-app-70-mg my-app-70-_d my-app-70-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -3709,12 +3709,12 @@ Object {
   "deepClassInContainer": "my-app-235-Y1",
   "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "my-app-235-au my-app-903-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-903-Mf my-app-903-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-903-s7 my-app-903-s7 my-app-903-Mf my-app-903-s7 my-app-903-Mf",
+  "exportName": "my-app-235-au my-app-70-s7 beforeName my-app-235-s7 my-app-235-f4 importName secondImport my-app-70-Mf my-app-70-wo my-app-235-f4 my-app-235-f4 my-app-235-Pi my-app-235-f4 my-app-235-Pi className className classNameOther className classNameOther my-app-70-s7 my-app-70-s7 my-app-70-Mf my-app-70-s7 my-app-70-Mf",
   "exportNameOtherFromKeyword": "my-app-235-jL my-app-235-HT",
   "exportNameOtherFromKeywordWithFrom1": "my-app-235-Qf from",
-  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-903-HT",
-  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-903-s7 beforeName my-app-235-s7",
-  "exportNameWeirdCharacters": "my-app-235-Xp my-app-903-a my-app-903-aN my-app-903-uw my-app-903-ee my-app-903-mg my-app-903-_d my-app-903-eR",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-235-Hl my-app-70-HT",
+  "exportNameOtherNoSpaces": "my-app-235-M2 my-app-70-s7 beforeName my-app-235-s7",
+  "exportNameWeirdCharacters": "my-app-235-Xp my-app-70-a my-app-70-aN my-app-70-uw my-app-70-ee my-app-70-mg my-app-70-_d my-app-70-eR",
   "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
   "hasWmultiParams": "my-app-235-AO",
@@ -7479,7 +7479,7 @@ Object {
   "exportName16": "_postcss-modules-extract-imports_modules_css-exportName16 _library_modules_css-importName beforeName importName secondImport _library_modules_css-firstImport _library_modules_css-secondImport",
   "exportName17": "_postcss-modules-extract-imports_modules_css-exportName17 _a_modules_css-a _b_modules_css-b _c_modules_css-c _a_modules_css-a _c_modules_css-c",
   "exportName18": "_postcss-modules-extract-imports_modules_css-exportName18 _library_modules_css-importName _library_modules_css-importName2 _library_modules_css-importName3 _library_modules_css-importName4",
-  "exportName19": "_postcss-modules-extract-imports_modules_css-exportName19",
+  "exportName19": "_postcss-modules-extract-imports_modules_css-exportName19 _postcss-modules-extract-imports_modules_css-foo _postcss-modules-extract-imports_modules_css-bar _postcss-modules-extract-imports_modules_css-baz",
   "exportName19-nested": "_postcss-modules-extract-imports_modules_css-exportName19-nested",
   "exportName19-nested-nested": "_postcss-modules-extract-imports_modules_css-exportName19-nested-nested",
   "exportName2": "_postcss-modules-extract-imports_modules_css-exportName2 _library_modules_css-importName",
@@ -7498,8 +7498,8 @@ Object {
   "exportName31": "_postcss-modules-extract-imports_modules_css-exportName31 _postcss-modules-extract-imports_modules_css-from _postcss-modules-extract-imports_modules_css-from",
   "exportName32": "_postcss-modules-extract-imports_modules_css-exportName32",
   "exportName33": "_postcss-modules-extract-imports_modules_css-exportName33",
-  "exportName34": "_postcss-modules-extract-imports_modules_css-exportName34 _b_modules_css-b",
-  "exportName35": "_postcss-modules-extract-imports_modules_css-exportName35",
+  "exportName34": "_postcss-modules-extract-imports_modules_css-exportName34 _a_modules_css-a _b_modules_css-b",
+  "exportName35": "_postcss-modules-extract-imports_modules_css-exportName35 _other_css-className",
   "exportName36": "_postcss-modules-extract-imports_modules_css-exportName36",
   "exportName4": "_postcss-modules-extract-imports_modules_css-exportName4 _postcss-modules-extract-imports_modules_css-localName",
   "exportName5": "_postcss-modules-extract-imports_modules_css-exportName5 _library_modules_css-importName _library_modules_css-importName2",
@@ -7553,7 +7553,7 @@ Object {
   "ease-out": "_postcss-modules-local-by-default_local_modules_css-ease-out",
   "f@oo": "_postcss-modules-local-by-default_local_modules_css-f@oo",
   "fadeInOut": "_postcss-modules-local-by-default_local_modules_css-fadeInOut",
-  "foo": "_postcss-modules-local-by-default_local_modules_css-foo",
+  "foo": "__foo",
   "foobar": "_postcss-modules-local-by-default_local_modules_css-foobar",
   "forwards": "_postcss-modules-local-by-default_local_modules_css-forwards",
   "infinite": "_postcss-modules-local-by-default_local_modules_css-infinite",
@@ -7612,7 +7612,7 @@ Object {
   "exportName1": "_postcss-modules-scope_modules_css-exportName1",
   "exportName10": "_postcss-modules-scope_modules_css-exportName10",
   "exportName11": "_postcss-modules-scope_modules_css-exportName11",
-  "exportName12": "_postcss-modules-scope_modules_css-exportName12",
+  "exportName12": "_postcss-modules-scope_modules_css-exportName12 _postcss-modules-scope_modules_css-exportName11",
   "exportName13": "_postcss-modules-scope_modules_css-exportName13",
   "exportName14": "_postcss-modules-scope_modules_css-exportName14",
   "exportName15": "_postcss-modules-scope_modules_css-exportName15",
@@ -7642,7 +7642,7 @@ Object {
   "exportName39": "_postcss-modules-scope_modules_css-exportName39",
   "exportName4": "_postcss-modules-scope_modules_css-exportName4",
   "exportName41": "_postcss-modules-scope_modules_css-exportName41",
-  "exportName42": "_postcss-modules-scope_modules_css-exportName42",
+  "exportName42": "_postcss-modules-scope_modules_css-exportName42 _postcss-modules-scope_modules_css-exportName41",
   "exportName43": "_postcss-modules-scope_modules_css-exportName43",
   "exportName44": "_postcss-modules-scope_modules_css-exportName44",
   "exportName45": "_postcss-modules-scope_modules_css-exportName45",
@@ -7820,6 +7820,10 @@ Array [
 	color: red;
 }
 
+._c_modules_css-deep-nested-c {
+	color: red;
+}
+
 /*!***************************!*\\\\
   !*** css ./a.modules.css ***!
   \\\\***************************/
@@ -7878,7 +7882,7 @@ Array [
 /*!***********************!*\\\\
   !*** css ./other.css ***!
   \\\\***********************/
-.className { color: red }
+._other_css-className { color: red }
 
 /*!*********************************************************!*\\\\
   !*** css ./postcss-modules-extract-imports.modules.css ***!
@@ -8049,7 +8053,6 @@ Array [
 	
 }
 
-/* TODO bug */
 /* resolve-imports-order */
 
 
@@ -8112,7 +8115,6 @@ Array [
 	composes: 12;
 }
 
-/* TODO bug */
 /* composes-multiple-declarations */
 ._postcss-modules-extract-imports_modules_css-exportName34 {
 	
@@ -8122,7 +8124,6 @@ Array [
 	
 }
 
-/* TODO bug */
 /* inherit-module-type */
 ._postcss-modules-extract-imports_modules_css-exportName35 {
 	
@@ -8135,11 +8136,10 @@ Array [
 	
 }
 
-
-
 /*!********************************!*\\\\
   !*** css ./import.modules.css ***!
   \\\\********************************/
+
 ._import_modules_css-abc {
 	color: red;
 }
@@ -8155,6 +8155,7 @@ Array [
 ._import_modules_css-otherClass {
 	color: red;
 }
+
 
 /*!****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.local.modules.css ***!
