@@ -3650,6 +3650,7 @@ declare abstract class CssGenerator extends Generator {
 		| "dashes"
 		| "dashes-only"
 		| ((name: string) => string);
+	localIdentName?: string;
 	sourceDependency(
 		module: NormalModule,
 		dependency: Dependency,
