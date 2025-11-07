@@ -2275,6 +2275,22 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-local-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-global-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/global",
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2703,16 +2719,15 @@ describe("snapshots", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			@@ ... @@
+			+             },
 			+           },
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2746,6 +2761,22 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-local-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-global-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/global",
 			+       },
 			+       Object {
 			@@ ... @@
