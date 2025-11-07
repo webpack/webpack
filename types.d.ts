@@ -3643,32 +3643,19 @@ declare interface CssData {
 	exports: Map<string, string>;
 }
 declare abstract class CssGenerator extends Generator {
-	convention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-	localIdentName?: string;
-	exportsOnly?: boolean;
-	esModule?: boolean;
-
-	/**
-	 * Generate JavaScript code that requires and concatenates all CSS imports
-	 */
-	generateImportCode(
+	sourceDependency(
 		module: NormalModule,
-		generateContext: GenerateContext
-	): { expr: string }[];
-
-	/**
-	 * Generate CSS code for the current module
-	 */
-	generateModuleCode(
+		dependency: Dependency,
+		initFragments: InitFragment<GenerateContext>[],
+		source: ReplaceSource,
+		generateContext: GenerateContext & { cssData: CssData }
+	): void;
+	sourceModule(
 		module: NormalModule,
-		generateContext: GenerateContext
-	): string;
+		initFragments: InitFragment<GenerateContext>[],
+		source: ReplaceSource,
+		generateContext: GenerateContext & { cssData: CssData }
+	): void;
 	generateError(
 		error: Error,
 		module: NormalModule,
@@ -6821,13 +6808,9 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.dispose](): void;
 }
 declare abstract class JavascriptGenerator extends Generator {
-	generateError(
-		error: Error,
-		module: NormalModule,
-		generateContext: GenerateContext
-	): null | Source;
-	sourceModule(
+	sourceDependency(
 		module: Module,
+		dependency: Dependency,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext
@@ -6839,13 +6822,17 @@ declare abstract class JavascriptGenerator extends Generator {
 		source: ReplaceSource,
 		generateContext: GenerateContext
 	): void;
-	sourceDependency(
+	sourceModule(
 		module: Module,
-		dependency: Dependency,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext
 	): void;
+	generateError(
+		error: Error,
+		module: NormalModule,
+		generateContext: GenerateContext
+	): null | Source;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
