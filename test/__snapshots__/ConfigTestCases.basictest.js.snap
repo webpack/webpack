@@ -4297,7 +4297,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!**********************************!*\\\\
   !*** css ./auto-text-no-esm.css ***!
   \\\\**********************************/
@@ -4317,7 +4316,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!***************************************************!*\\\\
   !*** css ./imported-layer.css (layer: utilities) ***!
   \\\\***************************************************/
@@ -4334,7 +4332,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!*********************************************************!*\\\\
   !*** css ./imported-base.css (supports: display: grid) ***!
@@ -4353,7 +4350,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!**********************************************************************!*\\\\
   !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
   \\\\**********************************************************************/
@@ -4370,7 +4366,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!**********************************************************************************************************************!*\\\\
   !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
@@ -4392,7 +4387,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!**************************************************************************************************************************!*\\\\
   !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
@@ -4429,7 +4423,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!********************************************!*\\\\
   !*** css ./parent-module-with-imports.css ***!
@@ -4452,7 +4445,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!**********************************!*\\\\
   !*** css ./auto-text-no-esm.css ***!
   \\\\**********************************/
@@ -4472,7 +4464,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!***************************************************!*\\\\
   !*** css ./imported-layer.css (layer: utilities) ***!
   \\\\***************************************************/
@@ -4489,7 +4480,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!*********************************************************!*\\\\
   !*** css ./imported-base.css (supports: display: grid) ***!
@@ -4508,7 +4498,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-
 /*!**********************************************************************!*\\\\
   !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
   \\\\**********************************************************************/
@@ -4525,7 +4514,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!**********************************************************************************************************************!*\\\\
   !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
@@ -4547,7 +4535,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!**************************************************************************************************************************!*\\\\
   !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
@@ -4584,7 +4571,6 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 		}
 	}
 }
-
 
 /*!********************************************!*\\\\
   !*** css ./parent-module-with-imports.css ***!
