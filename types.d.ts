@@ -16505,9 +16505,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 		/**
-		 * the import phase of the dependency
+		 * module dependency
 		 */
-		phase: ImportPhaseType;
+		dependency: ModuleDependency;
 	}): [string, string];
 	exportFromImport<GenerateContext>(__0: {
 		/**
@@ -16567,9 +16567,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 		/**
-		 * the import phase of the dependency
+		 * module dependency
 		 */
-		phase: ImportPhaseType;
+		dependency: ModuleDependency;
 	}): string;
 	blockPromise(__0: {
 		/**
