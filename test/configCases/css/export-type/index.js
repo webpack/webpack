@@ -6,6 +6,8 @@ import moduleWithImports from "./module-with-imports.css";
 import parentModuleWithImports from "./parent-module-with-imports.css";
 import stylesheet from "./stylesheet.css";
 import moduleStylesheet, { secondary as moduleStylesheetSecondary } from "./module-stylesheet.css";
+import icssText, { button as icssTextButton } from "./icss-text.modules.css";
+import icssStylesheet, { "sheet-button" as icssStylesheetButton } from "./icss-stylesheet.modules.css";
 
 it("should export CSS text as default when exportType is text (css/module)", () => {
 	expect(typeof moduleText).toBe("string");
@@ -42,6 +44,31 @@ it("should handle @import with layer, supports, and media queries", () => {
 	expect(parentModuleWithImports).toMatchSnapshot();
 });
 
+it("should handle ICSS :import with exportType text", () => {
+	expect(typeof icssText).toBe("string");
+	expect(typeof icssTextButton).toBe("string");
+	expect(icssText).toContain("background-color: #007bff");
+	expect(icssText).toContain("border-color: #6c757d");
+	expect(icssText).toContain("padding: 16px");
+});
+
+it("should handle ICSS :import with exportType css-style-sheet", () => {
+	expect(typeof icssStylesheetButton).toBe("string");
+	expect(icssStylesheet).toBeInstanceOf(CSSStyleSheet);
+	expect(icssStylesheet.cssRules.length).toBeGreaterThan(0);
+	
+	const rules = Array.from(icssStylesheet.cssRules);
+	const buttonRule = rules.find(rule => rule.selectorText && rule.selectorText.includes("sheet-button"));
+	expect(buttonRule).toBeDefined();
+	expect(buttonRule.style["background-color"]).toBe("#007bff");
+	expect(buttonRule.style.color).toBe("white");
+	
+	const badgeRule = rules.find(rule => rule.selectorText && rule.selectorText.includes("sheet-badge"));
+	expect(badgeRule).toBeDefined();
+	expect(badgeRule.style["background-color"]).toBe("#6c757d");
+	expect(badgeRule.style["border-radius"]).toBe("4px");
+});
+
 it("should export CSSStyleSheet when exportType is css-style-sheet (css/auto)", () => {
 	expect(stylesheet).toBeInstanceOf(CSSStyleSheet);
 	expect(stylesheet.cssRules.length).toBeGreaterThan(0);
@@ -64,3 +91,4 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 	expect(moduleRule.style.color).toBe("orange");
 	expect(moduleRule.style.padding).toBe("20px");
 });
+

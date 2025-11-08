@@ -3785,6 +3785,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
+	exportType: CssParserExportType;
 }
 
 /**
@@ -3887,7 +3888,7 @@ declare abstract class CssParser extends ParserClass {
 	import: boolean;
 	url: boolean;
 	namedExports: boolean;
-	exportType: CssParserExportType;
+	exportType?: "link" | "text" | "css-style-sheet";
 	comments?: CommentCssParser[];
 	magicCommentContext: Context;
 	getComments(range: [number, number]): CommentCssParser[];

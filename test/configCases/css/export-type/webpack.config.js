@@ -72,6 +72,24 @@ const getConfig = ({ concatenateModules } = { concatenateModules: false }) => ({
 				parser: {
 					exportType: "css-style-sheet"
 				}
+			},
+			{
+				test: /icss-export\.modules\.css$/,
+				type: "css/module"
+			},
+			{
+				test: /icss-text\.modules\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "text"
+				}
+			},
+			{
+				test: /icss-stylesheet\.modules\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "css-style-sheet"
+				}
 			}
 		],
 		parser: {
