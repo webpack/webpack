@@ -3661,9 +3661,8 @@ declare abstract class CssGenerator extends Generator {
 	sourceModule(
 		module: NormalModule,
 		initFragments: InitFragment<GenerateContext>[],
-		source: ReplaceSource,
 		generateContext: GenerateContext & { cssData: CssData }
-	): void;
+	): ReplaceSource;
 	generateError(
 		error: Error,
 		module: NormalModule,
