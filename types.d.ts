@@ -3785,7 +3785,6 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
-	exportType: CssParserExportType;
 }
 
 /**
@@ -3897,7 +3896,6 @@ declare abstract class CssParser extends ParserClass {
 		errors: null | (Error & { comment: CommentCssParser })[];
 	};
 }
-type CssParserExportType = "link" | "text" | "css-style-sheet";
 
 /**
  * Parser options for css modules.
