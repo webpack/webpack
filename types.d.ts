@@ -2970,7 +2970,6 @@ declare class ConcatenationScope {
 	getRawExport(exportName: string): undefined | string;
 	setRawExportMap(exportName: string, expression: string): void;
 	registerNamespaceExport(symbol: string): void;
-	registerUsedName(symbol: string): boolean;
 	createModuleReference(
 		module: Module,
 		__1: Partial<ModuleReferenceOptions>
@@ -2981,7 +2980,6 @@ declare class ConcatenationScope {
 	): null | (ModuleReferenceOptions & { index: number });
 	static DEFAULT_EXPORT: string;
 	static NAMESPACE_OBJECT_EXPORT: string;
-	static chunkUsedNames: WeakMap<Chunk, Set<string>>;
 }
 
 /**
