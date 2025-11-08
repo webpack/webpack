@@ -16441,9 +16441,9 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 		/**
-		 * the import phase of the dependency
+		 * dependency
 		 */
-		phase: ImportPhaseType;
+		dependency: Dependency;
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
