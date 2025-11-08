@@ -344,10 +344,13 @@ class CSSStyleSheet {
 			// @ts-expect-error we use es2018 for such tests
 			.replace(/\/\*.*?\*\//gms, "");
 
+		let ruleStart = 0;
+
 		walkCssTokens(cleanCss, 0, {
 			leftCurlyBracket(source, start, end) {
 				if (selector === undefined) {
 					selector = source.slice(last, start).trim();
+					ruleStart = last;
 					last = end;
 				}
 				return end;
@@ -355,7 +358,16 @@ class CSSStyleSheet {
 			rightCurlyBracket(source, start, end) {
 				processDeclaration(source.slice(last, start));
 				last = end;
-				rules.push({ selectorText: selector, style: currentRule });
+
+				// Generate cssText for the entire rule
+				const ruleText = cleanCss.slice(ruleStart, end).trim();
+				const cssText = `${selector} ${ruleText.slice(ruleText.indexOf("{"))}`;
+
+				rules.push({
+					selectorText: selector,
+					style: currentRule,
+					cssText
+				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
 				return end;
