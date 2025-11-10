@@ -8002,9 +8002,9 @@ thingies@^2.5.0:
   integrity sha512-s+2Bwztg6PhWUD7XMfeYm5qliDdSiZm7M7n8KjTkIsm3l/2lgVRc2/Gx/v+ZX8lT4FMA+i8aQvhcWylldc+ZNw==
 
 three@^0.181.0:
-  version "0.181.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.181.0.tgz#3cdd7784803649ce9a564215591f19364fe08473"
-  integrity sha512-KGf6EOCOQGshXeleKxpxhbowQwAXR2dLlD93egHtZ9Qmk07Saf8sXDR+7wJb53Z1ORZiatZ4WGST9UsVxhHEbg==
+  version "0.181.1"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.181.1.tgz#7c33995f097b8d42eda209b8dd49e2fb648cc53f"
+  integrity sha512-bz9xZUQMw3pJbjKy7roiwXWgAp+oVUa+4k5o0oBAQ+IFJuru1xzvtk63h6k72XZanXS/SgoEhV6927Vgazyq2w==
 
 timers-ext@^0.1.7:
   version "0.1.8"
