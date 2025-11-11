@@ -39,7 +39,6 @@ it("should compile and run", () => {
 	{
 		const content = fs.readFileSync(path.resolve(__dirname, './bundle2.js'), 'utf-8');
 		const NESTED_RE = /__nested_webpack_require_([^_]+)__/g;
-		console.log(content.match(NESTED_RE))
 		expect(content.match(NESTED_RE).length).toBe(11);
 	}
 
