@@ -3629,13 +3629,13 @@ eslint-plugin-unicorn@^62.0.0:
     semver "^7.7.3"
     strip-indent "^4.1.1"
 
-eslint-scope@5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.1.1.tgz#e786e59a66cb92b3f6c1fb0d508aab174848f48c"
-  integrity sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==
+eslint-scope@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-9.0.0.tgz#b4eeba2278f9cfc440c7a126da58795b666909c6"
+  integrity sha512-+Yh0LeQKq+mW/tQArNj67tljR3L1HajDTQPuZOEwC00oBdoIDQrr89yBgjAlzAwRrY/5zDkM3v99iGHwz9y0dw==
   dependencies:
     esrecurse "^4.3.0"
-    estraverse "^4.1.1"
+    estraverse "^5.2.0"
 
 eslint-scope@^8.4.0:
   version "8.4.0"
@@ -3751,11 +3751,6 @@ estraverse@^1.9.1:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-1.9.3.tgz#af67f2dc922582415950926091a4005d29c9bb44"
   integrity sha512-25w1fMXQrGdoquWnScXZGckOv+Wes+JDnuN/+7ex3SauFRS72r2lFDec0EKPt2YD1wUJ/IrfEex+9yp4hfSOJA==
-
-estraverse@^4.1.1:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
-  integrity sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
 
 estraverse@^5.1.0, estraverse@^5.2.0, estraverse@^5.3.0:
   version "5.3.0"
