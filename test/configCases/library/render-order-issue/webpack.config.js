@@ -2,7 +2,7 @@
 
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
-	mode: "development",
+	mode: "production",
 	devtool: false,
 	optimization: {
 		minimize: false,
