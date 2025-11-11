@@ -5578,8 +5578,8 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: string, externals: Externals);
-	type: string;
+	constructor(type: ExternalsType, externals: Externals);
+	type: ExternalsType;
 	externals: Externals;
 
 	/**
@@ -11353,7 +11353,8 @@ declare class NodeSourcePlugin {
 	apply(compiler: Compiler): void;
 }
 declare class NodeTargetPlugin {
-	constructor();
+	constructor(type?: ExternalsType);
+	type: ExternalsType;
 
 	/**
 	 * Apply the plugin
