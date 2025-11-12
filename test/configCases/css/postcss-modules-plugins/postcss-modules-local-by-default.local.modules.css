@@ -106,6 +106,9 @@
 /* passed because `--bar` not found */
 /* not localize animation-name in a var function #2 */
 .foo { animation-name: vAr(--bar); }
+/* Work, because found */
+:root { --my-custom-var: name; }
+.foo { animation-name: vAr(--my-custom-var); }
 
 /* not localize animation-name in an env function */
 .foo { animation-name: env(bar); }
@@ -181,11 +184,9 @@
 /* localize animation using special characters */
 .foo { animation: --; }
 
-/* TODO test me in real browser */
 /* localize animation using special characters */
 .foo { animation: 😃bounce😃; }
 
-/* TODO test me in real browser */
 /* not localize custom property */
 .foo { animation: --foo; }
 
@@ -283,7 +284,6 @@
 /* handle not localize an animation shorthand value of "inherit" */
 .foo { animation: inherit; }
 
-/* TODO test me in browser */
 /* handle "constructor" as animation name */
 .foo { animation: constructor constructor; }
 
