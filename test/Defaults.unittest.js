@@ -1820,10 +1820,7 @@ describe("snapshots", () => {
 			+     "outputModule": true,
 			@@ ... @@
 			-     "node": false,
-			+     "node": null,
-			@@ ... @@
-			-     "web": true,
-			+     "web": null,
+			+     "node": true,
 			@@ ... @@
 			-   "externalsType": "var",
 			+   "externalsType": "module-import",
