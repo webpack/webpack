@@ -8094,7 +8094,6 @@ Array [
 /* broad global should be limited to selector */
 .foo, ._postcss-modules-local-by-default_local_modules_css-bar , ._postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
-/* TODO bug */
 /* broad global should be limited to nested selector */
 ._postcss-modules-local-by-default_local_modules_css-foo:not(.bar).foobar { a_value: some-value; }
 
@@ -8250,7 +8249,7 @@ Array [
 
 /* TODO bug */
 /* handle nested global #6 */
-.a:not(.b, ._postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
+.a:not(.b, .c) { a_value: some-value; }
 
 /* handle nested global #7 */
 ._postcss-modules-local-by-default_local_modules_css-a:not(._postcss-modules-local-by-default_local_modules_css-b, ._postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
@@ -8318,7 +8317,7 @@ Array [
 
 /* TODO bug */
 /* incorrectly handle nested selectors */
-._postcss-modules-local-by-default_local_modules_css-bar:not(._import_modules_css-__foo, ._postcss-modules-local-by-default_local_modules_css-baz) { a_value: some-value; }
+._postcss-modules-local-by-default_local_modules_css-bar:not(._import_modules_css-__foo, .baz) { a_value: some-value; }
 
 /* compile explict global element */
 input { a_value: some-value; }

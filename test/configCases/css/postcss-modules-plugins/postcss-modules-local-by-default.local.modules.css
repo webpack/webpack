@@ -239,7 +239,6 @@
 /* handle nested global #5 */
 :global .a:not(:local .b, :global .c) { a_value: some-value; }
 
-/* TODO bug */
 /* handle nested global #6 */
 :global .a:not(.b, .c) { a_value: some-value; }
 
