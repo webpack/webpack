@@ -252,10 +252,17 @@
 	composes: className from './other.css';
 }
 
-/*// TODO bug */
+/* TODO bug */
 /* composes from-import */
 :import("./import.modules.css") {  abc-from-def: abc;}
 
 :local(.exportName36) {
 	composes: abc-from-def;
 }
+
+/* TODO bug */
+:import("foo") {
+	foo: other;
+}
+
+.exportName37 { color: unknown; }

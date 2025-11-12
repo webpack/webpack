@@ -2309,8 +2309,7 @@ describe("snapshots", () => {
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			@@ ... @@
-			+         },
-			@@ ... @@
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -2338,7 +2337,41 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			@@ ... @@
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			@@ ... @@
+			+       "css-import-global-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
 			+           "production",
@@ -2822,9 +2855,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2836,9 +2866,43 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
+			+       "css-import-global-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-local-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

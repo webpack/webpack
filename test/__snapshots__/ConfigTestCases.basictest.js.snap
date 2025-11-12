@@ -1933,7 +1933,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   \\\\**************************************/
 
 
-.my-app-744-value-in-class {
+.my-app-579-value-in-class {
 	color: blue;
 }
 
@@ -1951,27 +1951,27 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-foo { color: red; }
+.my-app-579-foo { color: red; }
 
 
 
-.my-app-744-foo {
-	&.my-app-744-bar { color: red; }
+.my-app-579-foo {
+	&.my-app-579-bar { color: red; }
 }
 
 
 
-.my-app-744-foo {
+.my-app-579-foo {
 	@media (min-width: 1024px) {
-		&.my-app-744-bar { color: red; }
+		&.my-app-579-bar { color: red; }
 	}
 }
 
 
 
-.my-app-744-foo {
+.my-app-579-foo {
 	@media (min-width: 1024px) {
-		&.my-app-744-bar {
+		&.my-app-579-bar {
 			@media (min-width: 1024px) {
 				color: red;
 			}
@@ -1982,23 +1982,23 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-foo { height: 40px; height: 36px; }
+.my-app-579-foo { height: 40px; height: 36px; }
 
 
 
-.my-app-744-colorValue {
+.my-app-579-colorValue {
 	color: red;
 }
 
 
 
-#my-app-744-colorValue-v1 {
+#my-app-579-colorValue-v1 {
 	color: red;
 }
 
 
 
-.my-app-744-colorValue-v2 > .my-app-744-colorValue-v2 {
+.my-app-579-colorValue-v2 > .my-app-579-colorValue-v2 {
 	color: red;
 }
 
@@ -2010,55 +2010,55 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-export {
+.my-app-579-export {
 	color: blue;
 }
 
 
 
-.my-app-744-foo { color: red; }
+.my-app-579-foo { color: red; }
 
 
 
-.my-app-744-foo { color: red; }
-.my-app-744-bar { color: yellow }
-
-
-
-
-.my-app-744-foo { color: blue; }
+.my-app-579-foo { color: red; }
+.my-app-579-bar { color: yellow }
 
 
 
 
-.my-app-744-foo { color: blue; }
+.my-app-579-foo { color: blue; }
 
 
 
 
-.my-app-744-class-a { color: red; }
+.my-app-579-foo { color: blue; }
 
 
 
 
-.my-app-744-class-a { margin: calc(base * 2); }
+.my-app-579-class-a { color: red; }
 
 
 
 
-.my-app-744-class-a { content: \\"test-a\\" \\"test-b\\"; }
-
-
-
-.my-app-744-foo { color: var(--color); }
+.my-app-579-class-a { margin: calc(base * 2); }
 
 
 
 
+.my-app-579-class-a { content: \\"test-a\\" \\"test-b\\"; }
 
 
 
-.my-app-744-foo {
+.my-app-579-foo { color: var(--color); }
+
+
+
+
+
+
+
+.my-app-579-foo {
 	color: red;
 	background-color: #0f0;
 	border-top-color: #00ff00;
@@ -2068,44 +2068,44 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-foo { color: blue; }
-.my-app-744-bar { color: red }
+.my-app-579-foo { color: blue; }
+.my-app-579-bar { color: red }
 
 
 
-.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { color: color(red lightness(50%)); }
+.my-app-579-foo { color: color(red lightness(50%)); }
 
 
 
-:root { --my-app-744-color: red; }
+:root { --my-app-579-color: red; }
 
 
 
-:root { --my-app-744-color: ; }
+:root { --my-app-579-color: ; }
 
 
 
-:root { --my-app-744-color:   ; }
+:root { --my-app-579-color:   ; }
 
 
 
-:root { --my-app-744-color:/* comment */; }
+:root { --my-app-579-color:/* comment */; }
 
 
 
 
-.my-app-744-override {
+.my-app-579-override {
 	color: red;
 }
 
 
 
 
-.my-app-744-class {
+.my-app-579-class {
 	color: red;
 	color: red;
 	color: blue;
@@ -2113,51 +2113,51 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.my-app-744-color {
+.my-app-579-color {
 	color: /* test */red/* test */;
 }
 
 
 
-.my-app-744-color {
+.my-app-579-color {
 	color: /* test *//* test */red/* test */;
 }
 
 
 
-.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.my-app-579-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.my-app-744-foo { color: blue; }
+.my-app-579-foo { color: blue; }
 
 
 
-.my-app-744-foo { color: blue; }
+.my-app-579-foo { color: blue; }
 
 
 
-.my-app-744-foo { color: my-name-q; }
+.my-app-579-foo { color: my-name-q; }
 
 
 
@@ -2166,15 +2166,15 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   !*** css ./var-function-export.modules.css ***!
   \\\\*********************************************/
 :root {
-	--my-app-392-my-var-u1: red;
-	--my-app-392-my-var-u2: blue;
-	--my-app-392-not-override-class: black;
-	--my-app-392-1: red;
-	--my-app-392---a: red;
-	--my-app-392-main-bg-color: red;
+	--my-app-713-my-var-u1: red;
+	--my-app-713-my-var-u2: blue;
+	--my-app-713-not-override-class: black;
+	--my-app-713-1: red;
+	--my-app-713---a: red;
+	--my-app-713-main-bg-color: red;
 }
 
-.my-app-392-my-var-u1 {
+.my-app-713-my-var-u1 {
 	color: red;
 }
 
@@ -2182,19 +2182,19 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   !*** css ./var-function.module.css ***!
   \\\\*************************************/
 :root {
-	--my-app-768-main-bg-color: brown;
-	--my-app-768-my-var: red;
-	--my-app-768-my-background: blue;
-	--my-app-768-my-global: yellow;
+	--my-app-537-main-bg-color: brown;
+	--my-app-537-my-var: red;
+	--my-app-537-my-background: blue;
+	--my-app-537-my-global: yellow;
 	--: \\"reserved\\";
-	--my-app-768-a: green;
+	--my-app-537-a: green;
 }
 
-.my-app-768-class {
-	color: var(--my-app-768-main-bg-color);
+.my-app-537-class {
+	color: var(--my-app-537-main-bg-color);
 }
 
-@property --my-app-768-logo-color {
+@property --my-app-537-logo-color {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
@@ -2206,119 +2206,119 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	initial-value: #c0ffee;
 }
 
-.my-app-768-class {
-	color: var(--my-app-768-logo-color);
+.my-app-537-class {
+	color: var(--my-app-537-logo-color);
 }
 
 div {
-	background-color: var(--my-app-768-box-color);
+	background-color: var(--my-app-537-box-color);
 }
 
-.my-app-768-two {
-	--my-app-768-box-color: cornflowerblue;
+.my-app-537-two {
+	--my-app-537-box-color: cornflowerblue;
 }
 
-.my-app-768-three {
-	--my-app-768-box-color: aquamarine;
+.my-app-537-three {
+	--my-app-537-box-color: aquamarine;
 }
 
 
-.my-app-768-one {
+.my-app-537-one {
 	/* Red if --my-var is not defined */
-	color: var(--my-app-768-my-var, red);
+	color: var(--my-app-537-my-var, red);
 }
 
-.my-app-768-two {
+.my-app-537-two {
 	/* pink if --my-var and --my-background are not defined */
-	color: var(--my-app-768-my-var, var(--my-app-768-my-background, pink));
+	color: var(--my-app-537-my-var, var(--my-app-537-my-background, pink));
 }
 
-.my-app-768-reserved {
+.my-app-537-reserved {
 	color: var(--);
 }
 
-.my-app-768-green {
-	color: var(--my-app-768-a);
+.my-app-537-green {
+	color: var(--my-app-537-a);
 }
 
-.my-app-768-global {
+.my-app-537-global {
 	color: var(--my-global);
 }
 
-.my-app-768-global-and-default {
+.my-app-537-global-and-default {
 	color: var(--my-global, pink);
 }
 
-.my-app-768-global-and-default-1 {
+.my-app-537-global-and-default-1 {
 	color: var(--my-global, var(--my-global-background));
 }
 
-.my-app-768-global-and-default-2 {
+.my-app-537-global-and-default-2 {
 	color: var(--my-global, var(--my-global-background, pink));
 }
 
-.my-app-768-global-and-default-3 {
-	color: var(--my-global, var(--my-app-768-my-background, pink));
+.my-app-537-global-and-default-3 {
+	color: var(--my-global, var(--my-app-537-my-background, pink));
 }
 
-.my-app-768-global-and-default-5 {
-	color: var(   --my-global,var(--my-app-768-my-background,pink));
+.my-app-537-global-and-default-5 {
+	color: var(   --my-global,var(--my-app-537-my-background,pink));
 }
 
-.my-app-768-global-and-default-6 {
-	background: var(   --my-app-768-main-bg-color   ,   var(   --my-app-768-my-background   ,   pink   )   )   , var(--my-global);
+.my-app-537-global-and-default-6 {
+	background: var(   --my-app-537-main-bg-color   ,   var(   --my-app-537-my-background   ,   pink   )   )   , var(--my-global);
 }
 
-.my-app-768-global-and-default-7 {
-	background: var(--my-app-768-main-bg-color,var(--my-app-768-my-background,pink)),var(--my-global);
+.my-app-537-global-and-default-7 {
+	background: var(--my-app-537-main-bg-color,var(--my-app-537-my-background,pink)),var(--my-global);
 }
 
-.my-app-768-from {
-	color: var(--my-app-392-my-var-u1);
+.my-app-537-from {
+	color: var(--my-app-713-my-var-u1);
 }
 
-.my-app-768-from-1 {
-	color: var(--my-app-768-main-bg-color, var(--my-app-392-my-var-u1));
+.my-app-537-from-1 {
+	color: var(--my-app-537-main-bg-color, var(--my-app-713-my-var-u1));
 }
 
-.my-app-768-from-2 {
-	color: var(--my-app-392-my-var-u1,  var(--my-app-768-main-bg-color));
+.my-app-537-from-2 {
+	color: var(--my-app-713-my-var-u1,  var(--my-app-537-main-bg-color));
 }
 
-.my-app-768-from-3 {
-	color: var(--my-app-392-my-var-u1,  var(--my-app-392-my-var-u2));
+.my-app-537-from-3 {
+	color: var(--my-app-713-my-var-u1,  var(--my-app-713-my-var-u2));
 }
 
-.my-app-768-from-4 {
-	color: var(--my-app-392-1);
+.my-app-537-from-4 {
+	color: var(--my-app-713-1);
 }
 
-.my-app-768-from-5 {
-	color: var(--my-app-392---a);
+.my-app-537-from-5 {
+	color: var(--my-app-713---a);
 }
 
-.my-app-768-from-6 {
-	color: var(--my-app-392-main-bg-color);
+.my-app-537-from-6 {
+	color: var(--my-app-713-main-bg-color);
 }
 
-.my-app-768-mixed {
-	color: var(--my-app-392-my-var-u1, var(--my-global, var(--my-app-768-main-bg-color, red)));
+.my-app-537-mixed {
+	color: var(--my-app-713-my-var-u1, var(--my-global, var(--my-app-537-main-bg-color, red)));
 }
 
-.my-app-768-broken {
+.my-app-537-broken {
 	color: var(--my-global from);
 }
 
-.my-app-768-broken-1 {
+.my-app-537-broken-1 {
 	color: var(--my-global from 1);
 }
 
 :root {
-	--my-app-768-not-override-class: red;
+	--my-app-537-not-override-class: red;
 }
 
-.my-app-768-not-override-class {
-	color: var(--my-app-392-not-override-class)
+.my-app-537-not-override-class {
+	color: var(--my-app-713-not-override-class)
 }
 
 /*!*********************************!*\\\\
@@ -4321,7 +4321,7 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo {
+			._foo_css_3466-foo {
 			    color: rebeccapurple;
 			}}
 	}
@@ -4469,7 +4469,7 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo {
+			._foo_css_3466-foo {
 			    color: rebeccapurple;
 			}}
 	}
@@ -7501,6 +7501,7 @@ Object {
   "exportName34": "_postcss-modules-extract-imports_modules_css-exportName34 _a_modules_css-a _b_modules_css-b",
   "exportName35": "_postcss-modules-extract-imports_modules_css-exportName35 _other_css-className",
   "exportName36": "_postcss-modules-extract-imports_modules_css-exportName36",
+  "exportName37": "_postcss-modules-extract-imports_modules_css-exportName37",
   "exportName4": "_postcss-modules-extract-imports_modules_css-exportName4 _postcss-modules-extract-imports_modules_css-localName",
   "exportName5": "_postcss-modules-extract-imports_modules_css-exportName5 _library_modules_css-importName _library_modules_css-importName2",
   "exportName6": "_postcss-modules-extract-imports_modules_css-exportName6 _library_modules_css-importName",
@@ -8129,12 +8130,16 @@ Array [
 	
 }
 
-/*// TODO bug */
+/* TODO bug */
 /* composes from-import */
 
 ._postcss-modules-extract-imports_modules_css-exportName36 {
 	
 }
+
+/* TODO bug */
+
+._postcss-modules-extract-imports_modules_css-exportName37 { color: unknown; }
 
 /*!********************************!*\\\\
   !*** css ./import.modules.css ***!
