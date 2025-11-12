@@ -1171,7 +1171,7 @@ div {
 
 ._style_module_css-class {
 	animation:
-		foo var(--_style_module_css-animation-name) 3s,
+		_style_module_css-foo var(--_style_module_css-animation-name) 3s,
 		var(--_style_module_css-animation-name) 3s,
 		3s linear 1s infinite running _style_module_css-slidein,
 		3s linear env(foo, var(--_style_module_css-baz)) infinite running _style_module_css-slidein;
@@ -1787,42 +1787,27 @@ div {
 }
 
 ._style_module_css-exportName {
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	border: red;
 }
 
 ._style_module_css-exportNameOtherNoSpaces {
-	
-}
+	}
 
 ._style_module_css-from {
 	color: red;
 }
 
 ._style_module_css-exportNameOtherFromKeyword {
-	
-}
+	}
 
 ._style_module_css-exportNameOtherFromKeywordWithFrom1 {
-	
-}
+	}
 
 ._style_module_css-exportNameOtherFromKeywordWithFrom2 {
-	
-}
+	}
 
 ._style_module_css-exportNameWeirdCharacters {
-	
-}
+	}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -2896,7 +2881,7 @@ div {
 
 .my-app-235-zg {
 	animation:
-		foo var(--my-app-235-ZP) 3s,
+		my-app-235-pr var(--my-app-235-ZP) 3s,
 		var(--my-app-235-ZP) 3s,
 		3s linear 1s infinite running my-app-235-Fk,
 		3s linear env(foo, var(--my-app-235-KR)) infinite running my-app-235-Fk;
@@ -3512,42 +3497,27 @@ div {
 }
 
 .my-app-235-au {
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	border: red;
 }
 
 .my-app-235-M2 {
-	
-}
+	}
 
 .my-app-235-HT {
 	color: red;
 }
 
 .my-app-235-jL {
-	
-}
+	}
 
 .my-app-235-Qf {
-	
-}
+	}
 
 .my-app-235-Hl {
-	
-}
+	}
 
 .my-app-235-Xp {
-	
-}
+	}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -7501,8 +7471,15 @@ Object {
   "exportName34": "_postcss-modules-extract-imports_modules_css-exportName34 _a_modules_css-a _b_modules_css-b",
   "exportName35": "_postcss-modules-extract-imports_modules_css-exportName35 _other_css-className",
   "exportName36": "_postcss-modules-extract-imports_modules_css-exportName36",
-  "exportName37": "_postcss-modules-extract-imports_modules_css-exportName37",
+  "exportName37": "_postcss-modules-extract-imports_modules_css-exportName37 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName38": "_postcss-modules-extract-imports_modules_css-exportName38 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName39": "_postcss-modules-extract-imports_modules_css-exportName39 _postcss-modules-extract-imports_modules_css-localName",
   "exportName4": "_postcss-modules-extract-imports_modules_css-exportName4 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName40": "_postcss-modules-extract-imports_modules_css-exportName40 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName41": "_postcss-modules-extract-imports_modules_css-exportName41 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName42": "_postcss-modules-extract-imports_modules_css-exportName42 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName43": "_postcss-modules-extract-imports_modules_css-exportName43 _postcss-modules-extract-imports_modules_css-localName",
+  "exportName44": "_postcss-modules-extract-imports_modules_css-exportName44",
   "exportName5": "_postcss-modules-extract-imports_modules_css-exportName5 _library_modules_css-importName _library_modules_css-importName2",
   "exportName6": "_postcss-modules-extract-imports_modules_css-exportName6 _library_modules_css-importName",
   "exportName7": "_postcss-modules-extract-imports_modules_css-exportName7 _library_modules_css-importName _library_modules_css-secondImport",
@@ -7534,9 +7511,9 @@ Object {
   ":)": "_postcss-modules-local-by-default_local_modules_css-:)",
   "@bounce": "_postcss-modules-local-by-default_local_modules_css-@bounce",
   "@foo": "_postcss-modules-local-by-default_local_modules_css-@foo",
+  "BAR": "_postcss-modules-local-by-default_local_modules_css-BAR",
   "a": "_postcss-modules-local-by-default_local_modules_css-a",
   "a_value": "_postcss-modules-local-by-default_local_modules_css-a_value",
-  "alternate": "_postcss-modules-local-by-default_local_modules_css-alternate",
   "article-body": "_postcss-modules-local-by-default_local_modules_css-article-body",
   "article-footer": "_postcss-modules-local-by-default_local_modules_css-article-footer",
   "article-header": "_postcss-modules-local-by-default_local_modules_css-article-header",
@@ -7551,22 +7528,23 @@ Object {
   "constructor": "_postcss-modules-local-by-default_local_modules_css-constructor",
   "duplicate-name": "_postcss-modules-local-by-default_local_modules_css-duplicate-name",
   "ease": "_postcss-modules-local-by-default_local_modules_css-ease",
+  "ease-in": "_postcss-modules-local-by-default_local_modules_css-ease-in",
   "ease-out": "_postcss-modules-local-by-default_local_modules_css-ease-out",
   "f@oo": "_postcss-modules-local-by-default_local_modules_css-f@oo",
+  "fade": "_postcss-modules-local-by-default_local_modules_css-fade",
+  "fade-in": "_postcss-modules-local-by-default_local_modules_css-fade-in",
   "fadeInOut": "_postcss-modules-local-by-default_local_modules_css-fadeInOut",
   "foo": "__foo",
   "foobar": "_postcss-modules-local-by-default_local_modules_css-foobar",
-  "forwards": "_postcss-modules-local-by-default_local_modules_css-forwards",
   "infinite": "_postcss-modules-local-by-default_local_modules_css-infinite",
-  "inherit": "_postcss-modules-local-by-default_local_modules_css-inherit",
+  "my-custom-var": "--_postcss-modules-local-by-default_local_modules_css-my-custom-var",
   "name": "_postcss-modules-local-by-default_local_modules_css-name",
-  "none": "_postcss-modules-local-by-default_local_modules_css-none",
-  "revert": "_postcss-modules-local-by-default_local_modules_css-revert",
-  "revert-layer": "_postcss-modules-local-by-default_local_modules_css-revert-layer",
   "rotate": "_postcss-modules-local-by-default_local_modules_css-rotate",
-  "running": "_postcss-modules-local-by-default_local_modules_css-running",
+  "slide-right": "_postcss-modules-local-by-default_local_modules_css-slide-right",
+  "spin": "_postcss-modules-local-by-default_local_modules_css-spin",
   "sr-only": "--_postcss-modules-local-by-default_local_modules_css-sr-only",
   "t t": "_postcss-modules-local-by-default_local_modules_css-t t",
+  "test": "_postcss-modules-local-by-default_local_modules_css-test",
   "title-align": "--_postcss-modules-local-by-default_local_modules_css-title-align",
   "u-m+ ": "_postcss-modules-local-by-default_local_modules_css-u-m+ ",
   "😃bounce😃": "_postcss-modules-local-by-default_local_modules_css-😃bounce😃",
@@ -7597,7 +7575,6 @@ Object {
   "class-1": "_postcss-modules-local-by-default_pure_modules_css-class-1",
   "class-2": "_postcss-modules-local-by-default_pure_modules_css-class-2",
   "fadeInOut": "_postcss-modules-local-by-default_pure_modules_css-fadeInOut",
-  "fixed": "_postcss-modules-local-by-default_pure_modules_css-fixed",
   "foo": "__foo",
   "label": "_postcss-modules-local-by-default_pure_modules_css-label",
   "local": "_postcss-modules-local-by-default_pure_modules_css-local",
@@ -7892,13 +7869,12 @@ Array [
 
 
 /* composing-globals */
-._postcss-modules-extract-imports_modules_css-exportName1 {  other: rule; }
+._postcss-modules-extract-imports_modules_css-exportName1 { other: rule; }
 
 /* existing-import */
 
 ._postcss-modules-extract-imports_modules_css-exportName2 {
-	
-}
+	}
 
 /* import-comment */
 /*
@@ -7910,108 +7886,83 @@ Array [
 
 /* import-consolidate */
 ._postcss-modules-extract-imports_modules_css-exportName3 {
-	
 	other: rule;
 }
 
 ._postcss-modules-extract-imports_modules_css-otherExport {
-	
-	
-}
+	}
 
 /* import-local-extends */
 ._postcss-modules-extract-imports_modules_css-localName { color: red; }
 
 ._postcss-modules-extract-imports_modules_css-exportName4 {
-	
 	other: rule;
 }
 
 /* import-media */
 @media screen {
 	._postcss-modules-extract-imports_modules_css-exportName5 {
-		
-		
 		other: rule2;
 	}
 }
 
 ._postcss-modules-extract-imports_modules_css-exportName6 {
-	
 	other: rule;
 }
 
 /* import-multiple-classes */
-._postcss-modules-extract-imports_modules_css-exportName7 {  other: rule; }
+._postcss-modules-extract-imports_modules_css-exportName7 { other: rule; }
 
 /* import-multiple-references */
 ._postcss-modules-extract-imports_modules_css-exportName8 {
-	
-	
-	
-}
+	}
 ._postcss-modules-extract-imports_modules_css-exportName9 {
-	
-	
-	
-}
+	}
 
 /* import-only-whitelist */
 ._postcss-modules-extract-imports_modules_css-exportName10 { imports: importName from \\"path/library.css\\"; something-else: otherLibImport from \\"path/other-lib.css\\"; }
 
 /* import-preserving-order */
 ._postcss-modules-extract-imports_modules_css-exportName11 {
-	
-	
 	color: #aaa;
 }
 
 /* import-single-quotes */
 ._postcss-modules-extract-imports_modules_css-exportName12 {
-	
 	other: rule;
 }
 
 /* import-double-quotes */
 ._postcss-modules-extract-imports_modules_css-exportName13 {
-	
 	other: rule;
 }
 
 /* import-spacing */
 ._postcss-modules-extract-imports_modules_css-exportName14 {
-	
-	
-	
 	other: rule;
 }
 
 /* import-within */
 ._postcss-modules-extract-imports_modules_css-exportName15 {
-	
 	other: rule;
 }
 
 /* multiple-composes */
 ._postcss-modules-extract-imports_modules_css-exportName16 {
-	
 	other: rule;
 }
 
 ._postcss-modules-extract-imports_modules_css-exportName17 {
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName18 {
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-foo { color: red }
 ._postcss-modules-extract-imports_modules_css-bar { color: blue }
 ._postcss-modules-extract-imports_modules_css-baz { color: green }
 ._postcss-modules-extract-imports_modules_css-exportName19 {
-	
-}
+	}
 
 /* nesting */
 ._postcss-modules-extract-imports_modules_css-exportName19 {
@@ -8033,78 +7984,54 @@ Array [
 /* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
 /* resolve-composes-order */
 ._postcss-modules-extract-imports_modules_css-exportName20 {
-	
 	color: #bebebe;
 }
 
 ._postcss-modules-extract-imports_modules_css-exportName21 {
 	/* \`b\` should be after \`c\` */
-	
-	
 	color: #aaa;
 }
 
 /* resolve-duplicates */
 
 ._postcss-modules-extract-imports_modules_css-exportName22 {
-	
-	
-	
-	
-	
-}
+	}
 
 /* resolve-imports-order */
 
 
 ._postcss-modules-extract-imports_modules_css-exportName23 {
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName24 {
-	
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName25 {
-	
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName26 {
-	
-	
-	
-}
+	}
 
 /* valid-characters */
 ._postcss-modules-extract-imports_modules_css-exportName27 {
-	
-	
-}
+	}
 
 /* We pass this test */
 /* check-import-order */
 ._postcss-modules-extract-imports_modules_css-exportName28  {
-	
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName29 {
-	
-	
-}
+	}
 
 /* empty-composes */
 ._postcss-modules-extract-imports_modules_css-exportName30 {
-	
-}
+	}
 
 /* weird-composes */
 ._postcss-modules-extract-imports_modules_css-from { color: red; }
 ._postcss-modules-extract-imports_modules_css-exportName31 {
-	
-}
+	}
 
 /* broken-composes */
 ._postcss-modules-extract-imports_modules_css-exportName32 {
@@ -8118,28 +8045,43 @@ Array [
 
 /* composes-multiple-declarations */
 ._postcss-modules-extract-imports_modules_css-exportName34 {
-	
-}
+	}
 
 ._postcss-modules-extract-imports_modules_css-exportName34 {
-	
-}
+	}
 
 /* inherit-module-type */
 ._postcss-modules-extract-imports_modules_css-exportName35 {
-	
-}
+	}
 
 /* TODO bug */
 /* composes from-import */
 
 ._postcss-modules-extract-imports_modules_css-exportName36 {
-	
+	}
+
+._postcss-modules-extract-imports_modules_css-exportName37 {}
+
+._postcss-modules-extract-imports_modules_css-exportName38 {
+	}
+
+._postcss-modules-extract-imports_modules_css-exportName39 {
+	}
+
+._postcss-modules-extract-imports_modules_css-exportName40 {color:red;}
+
+._postcss-modules-extract-imports_modules_css-exportName41 {color:red;}
+
+._postcss-modules-extract-imports_modules_css-exportName42 {color:red}
+
+._postcss-modules-extract-imports_modules_css-exportName43 {
+
+	color:red;
 }
 
 /* TODO bug */
 
-._postcss-modules-extract-imports_modules_css-exportName37 { color: unknown; }
+._postcss-modules-extract-imports_modules_css-exportName44 { color: unknown; }
 
 /*!********************************!*\\\\
   !*** css ./import.modules.css ***!
@@ -8273,6 +8215,9 @@ Array [
 /* passed because \`--bar\` not found */
 /* not localize animation-name in a var function #2 */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--bar); }
+/* Work, because found */
+:root { --_postcss-modules-local-by-default_local_modules_css-my-custom-var: name; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--_postcss-modules-local-by-default_local_modules_css-my-custom-var); }
 
 /* not localize animation-name in an env function */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation-name: env(bar); }
@@ -8306,25 +8251,20 @@ Array [
 /* localize multiple animation-names */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation-name: _postcss-modules-local-by-default_local_modules_css-bar, _postcss-modules-local-by-default_local_modules_css-foobar; }
 
-/* TODO bug */
 /* not localize revert */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-revert; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: revert; }
 
-/* TODO bug */
 /* not localize revert #2 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation-name: _postcss-modules-local-by-default_local_modules_css-revert; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert; }
 
-/* TODO bug */
 /* not localize revert #3 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation-name: _postcss-modules-local-by-default_local_modules_css-revert, _postcss-modules-local-by-default_local_modules_css-foo, _postcss-modules-local-by-default_local_modules_css-none; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert, _postcss-modules-local-by-default_local_modules_css-foo, none; }
 
-/* TODO bug */
 /* not localize revert-layer */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-revert-layer; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: revert-layer; }
 
-/* TODO bug */
 /* not localize revert */
-._postcss-modules-local-by-default_local_modules_css-foo { animation-name: _postcss-modules-local-by-default_local_modules_css-revert-layer; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert-layer; }
 
 /* localize animation using special characters */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-\\\\@bounce; }
@@ -8353,26 +8293,23 @@ Array [
 /* localize animation using special characters */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css---; }
 
-/* TODO test me in real browser */
 /* localize animation using special characters */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-😃bounce😃; }
 
-/* TODO test me in real browser */
 /* not localize custom property */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css---foo; }
 
 /* not localize name in nested function */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: fade .2s var(--easeOutQuart) .1s forwards }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-fade .2s var(--easeOutQuart) .1s forwards }
 
-/* TODO bug */
 /* not localize name in nested function #2 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: fade .2s env(FOO_BAR) .1s _postcss-modules-local-by-default_local_modules_css-forwards, name }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-fade .2s env(FOO_BAR) .1s forwards, _postcss-modules-local-by-default_local_modules_css-name }
 
 /* not localize name in nested function #3 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s _postcss-modules-local-by-default_local_modules_css-forwards, name }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s forwards, _postcss-modules-local-by-default_local_modules_css-name }
 
 /* not localize name in nested function #4 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s forwards _postcss-modules-local-by-default_local_modules_css-name, name }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s forwards _postcss-modules-local-by-default_local_modules_css-name, _postcss-modules-local-by-default_local_modules_css-name }
 
 /* localize animation */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-a; }
@@ -8382,10 +8319,11 @@ Array [
 
 /* localize animation #3 */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: ease _postcss-modules-local-by-default_local_modules_css-ease; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: ease _postcss-modules-local-by-default_local_modules_css-ease; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: ease _postcss-modules-local-by-default_local_modules_css-ease, ease-in _postcss-modules-local-by-default_local_modules_css-ease-in, ease-out _postcss-modules-local-by-default_local_modules_css-ease-out; }
 
-/* TODO bug */
 /* localize animation #4 */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: 0s ease 0s 1 normal none test _postcss-modules-local-by-default_local_modules_css-running; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: 0s ease 0s 1 normal none _postcss-modules-local-by-default_local_modules_css-test running; }
 
 /* localize animation with vendor prefix */
 ._postcss-modules-local-by-default_local_modules_css-foo { -webkit-animation: _postcss-modules-local-by-default_local_modules_css-bar; animation: _postcss-modules-local-by-default_local_modules_css-bar; }
@@ -8424,9 +8362,9 @@ Array [
 /* handle nested global #8 */
 .a:not(._postcss-modules-local-by-default_local_modules_css-b, ._postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
 
-/* TODO bug */
 /* handle a complex animation rule */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-foo, bar 5s linear 2s infinite _postcss-modules-local-by-default_local_modules_css-alternate, _postcss-modules-local-by-default_local_modules_css-barfoo 1s; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-foo, _postcss-modules-local-by-default_local_modules_css-bar 5s linear 2s infinite alternate, _postcss-modules-local-by-default_local_modules_css-barfoo 1s; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-foo, _postcss-modules-local-by-default_local_modules_css-BAR 5s LINEAR 2s INFINITE ALTERNATE, _postcss-modules-local-by-default_local_modules_css-barfoo 1s; }
 
 /* handle animations where the first value is not the animation name */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: 1s _postcss-modules-local-by-default_local_modules_css-foo; }
@@ -8434,16 +8372,17 @@ Array [
 /* handle animations where the first value is not the animation name whilst also using keywords */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: 1s normal ease-out infinite _postcss-modules-local-by-default_local_modules_css-foo; }
 
-/* TODO bug */
 /* not treat animation curve as identifier of animation name even if it separated by comma */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: slide-right 300ms forwards _postcss-modules-local-by-default_local_modules_css-ease-out, fade-in 300ms forwards _postcss-modules-local-by-default_local_modules_css-ease-out; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out, _postcss-modules-local-by-default_local_modules_css-fade-in 300ms forwards ease-out; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; @media screen { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; } }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; ._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; } }
 
-/* TODO bug */
 /* not treat \\"start\\" and \\"end\\" keywords in steps() function as identifiers */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: spin 1s steps(12, end) _postcss-modules-local-by-default_local_modules_css-infinite; }
-._postcss-modules-local-by-default_local_modules_css-foo { animation: spin 1s STEPS(12, start) _postcss-modules-local-by-default_local_modules_css-infinite; }
-._postcss-modules-local-by-default_local_modules_css-foo { animation: spin 1s steps(12, END) _postcss-modules-local-by-default_local_modules_css-infinite; }
-._postcss-modules-local-by-default_local_modules_css-foo { animation: spin 1s steps(12, START) _postcss-modules-local-by-default_local_modules_css-infinite; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, end) infinite; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-spin 1s STEPS(12, start) infinite; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, END) infinite; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, START) infinite; }
 
 /* handle animations with custom timing functions */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: 1s normal cubic-bezier(0.25, 0.5, 0.5. 0.75) _postcss-modules-local-by-default_local_modules_css-foo; }
@@ -8451,13 +8390,11 @@ Array [
 /* handle animations whose names are keywords */
 ._postcss-modules-local-by-default_local_modules_css-foo { animation: 1s infinite _postcss-modules-local-by-default_local_modules_css-infinite; }
 
-/* TODO bug */
 /* handle not localize an animation shorthand value of \\"inherit\\" */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-inherit; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: inherit; }
 
-/* TODO test me in browser */
 /* handle \\"constructor\\" as animation name */
-._postcss-modules-local-by-default_local_modules_css-foo { animation: constructor _postcss-modules-local-by-default_local_modules_css-constructor; }
+._postcss-modules-local-by-default_local_modules_css-foo { animation: _postcss-modules-local-by-default_local_modules_css-constructor _postcss-modules-local-by-default_local_modules_css-constructor; }
 
 /* default to local when mode provided */
 ._postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
@@ -8757,13 +8694,20 @@ input { a_value: some-value; }
 .a ._postcss-modules-local-by-default_global_modules_css-b {}
 .a._postcss-modules-local-by-default_global_modules_css-b {}
 .a._postcss-modules-local-by-default_global_modules_css-b {}
-.a ._postcss-modules-local-by-default_global_modules_css-b  {}
+.a._postcss-modules-local-by-default_global_modules_css-b  {}
 .a ._postcss-modules-local-by-default_global_modules_css-b {}
-.a  ._postcss-modules-local-by-default_global_modules_css-b  {}
+.a ._postcss-modules-local-by-default_global_modules_css-b  {}
 ._postcss-modules-local-by-default_global_modules_css-a.b {}
- ._postcss-modules-local-by-default_global_modules_css-a .b {}
 ._postcss-modules-local-by-default_global_modules_css-a .b {}
- ._postcss-modules-local-by-default_global_modules_css-a  .b {}
+._postcss-modules-local-by-default_global_modules_css-a .b {}
+._postcss-modules-local-by-default_global_modules_css-a  .b {}
+.a /* test */ /* test*/ ._postcss-modules-local-by-default_global_modules_css-b {}
+/*.a !* test *!:local!* test*! .b {}*/
+.a/* test */ /* test*/._postcss-modules-local-by-default_global_modules_css-b {}
+.a/* test */ ._postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a/* test */._postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a/* test */ ._postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a/* test */._postcss-modules-local-by-default_global_modules_css-b /* test */ {}
 
 /* localize keyframes in global default mode */
 @keyframes foo { a_value: some-value; }
@@ -9037,7 +8981,7 @@ to (.bar) {
 /* should work with media queries when no-check is enabled */
 /* cssmodules-pure-no-check */
 @media (max-width: 768px) {
-	.foo { position: _postcss-modules-local-by-default_pure_modules_css-fixed }
+	.foo { position: fixed }
 }
 
 /* css nesting #2 */
@@ -9327,8 +9271,6 @@ html {
 
 ._postcss-modules-scope_modules_css-exportName12 {
 	display: grid;
-	
-
 	@media (orientation: landscape) {
 		grid-auto-flow: column;
 	}
@@ -9417,8 +9359,7 @@ html {
 	}
 
 	to {
-		
-	}
+		}
 }
 
 /* TODO bug no report */
@@ -9426,8 +9367,7 @@ html {
 ._postcss-modules-scope_modules_css-exportName31 {}
 
 #_postcss-modules-scope_modules_css-idName {
-	
-}
+	}
 
 /* error-composes-not-allowed-in-multiple */
 ._postcss-modules-scope_modules_css-exportName32 {}
@@ -9439,8 +9379,7 @@ html {
 /* error-composes-not-allowed-in-simple */
 ._postcss-modules-scope_modules_css-exportName35 {}
 body {
-	
-}
+	}
 
 /* error-composes-not-allowed-in-wrong-local */
 ._postcss-modules-scope_modules_css-exportName36 {}
@@ -9450,8 +9389,7 @@ body {
 
 /* error-composes-not-defined-class */
 ._postcss-modules-scope_modules_css-exportName39 {
-	
-}
+	}
 
 /* TODO bug no report */
 /* error-multiple-nested-media */
@@ -9466,8 +9404,7 @@ body {
 		grid-auto-flow: column;
 
 		@media (min-width: 1024px) {
-			
-		}
+			}
 	}
 }
 
@@ -9709,8 +9646,8 @@ body {
 /* TODO bug */
 /* export-with-composes */
 ._postcss-modules-scope_modules_css-exportName57 { background: red; }
-._postcss-modules-scope_modules_css-exportName58 {  color: green; }
-._postcss-modules-scope_modules_css-exportName59 {  color: green; }
+._postcss-modules-scope_modules_css-exportName58 { color: green; }
+._postcss-modules-scope_modules_css-exportName59 { color: green; }
 
 /* TODO bug */
 /* export-with-global-composes */
@@ -9723,7 +9660,7 @@ body {
 ._postcss-modules-scope_modules_css-exportName63 { background: red; }
 ._postcss-modules-scope_modules_css-exportName64 { font-size: 2em; }
 ._postcss-modules-scope_modules_css-exportName65 { color: red; }
-._postcss-modules-scope_modules_css-exportName66 {   color: green; }
+._postcss-modules-scope_modules_css-exportName66 { color: green; }
 
 /* TODO bug */
 /* export-with-transitive-composes */
@@ -9731,11 +9668,9 @@ body {
 	font-size: 2em;
 }
 ._postcss-modules-scope_modules_css-exportName68 {
-	
 	background: red;
 }
 ._postcss-modules-scope_modules_css-exportName69 {
-	
 	color: green;
 }
 

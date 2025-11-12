@@ -106,6 +106,9 @@
 /* passed because `--bar` not found */
 /* not localize animation-name in a var function #2 */
 .foo { animation-name: vAr(--bar); }
+/* Work, because found */
+:root { --my-custom-var: name; }
+.foo { animation-name: vAr(--my-custom-var); }
 
 /* not localize animation-name in an env function */
 .foo { animation-name: env(bar); }
@@ -139,23 +142,18 @@
 /* localize multiple animation-names */
 .foo { animation-name: bar, foobar; }
 
-/* TODO bug */
 /* not localize revert */
 .foo { animation: revert; }
 
-/* TODO bug */
 /* not localize revert #2 */
 .foo { animation-name: revert; }
 
-/* TODO bug */
 /* not localize revert #3 */
 .foo { animation-name: revert, foo, none; }
 
-/* TODO bug */
 /* not localize revert-layer */
 .foo { animation: revert-layer; }
 
-/* TODO bug */
 /* not localize revert */
 .foo { animation-name: revert-layer; }
 
@@ -186,18 +184,15 @@
 /* localize animation using special characters */
 .foo { animation: --; }
 
-/* TODO test me in real browser */
 /* localize animation using special characters */
 .foo { animation: 😃bounce😃; }
 
-/* TODO test me in real browser */
 /* not localize custom property */
 .foo { animation: --foo; }
 
 /* not localize name in nested function */
 .foo { animation: fade .2s var(--easeOutQuart) .1s forwards }
 
-/* TODO bug */
 /* not localize name in nested function #2 */
 .foo { animation: fade .2s env(FOO_BAR) .1s forwards, name }
 
@@ -215,8 +210,9 @@
 
 /* localize animation #3 */
 .foo { animation: ease ease; }
+.foo { animation: ease ease; }
+.foo { animation: ease ease, ease-in ease-in, ease-out ease-out; }
 
-/* TODO bug */
 /* localize animation #4 */
 .foo { animation: 0s ease 0s 1 normal none test running; }
 
@@ -257,9 +253,9 @@
 /* handle nested global #8 */
 :global .a:not(:local .b, .c) { a_value: some-value; }
 
-/* TODO bug */
 /* handle a complex animation rule */
 .foo { animation: foo, bar 5s linear 2s infinite alternate, barfoo 1s; }
+.foo { animation: foo, BAR 5s LINEAR 2s INFINITE ALTERNATE, barfoo 1s; }
 
 /* handle animations where the first value is not the animation name */
 .foo { animation: 1s foo; }
@@ -267,11 +263,12 @@
 /* handle animations where the first value is not the animation name whilst also using keywords */
 .foo { animation: 1s normal ease-out infinite foo; }
 
-/* TODO bug */
 /* not treat animation curve as identifier of animation name even if it separated by comma */
 .foo { animation: slide-right 300ms forwards ease-out, fade-in 300ms forwards ease-out; }
+.foo { animation: slide-right 300ms forwards ease-out }
+.foo { animation: slide-right 300ms forwards ease-out; @media screen { animation: slide-right 300ms forwards ease-out; } }
+.foo { animation: slide-right 300ms forwards ease-out; .foo { animation: slide-right 300ms forwards ease-out; } }
 
-/* TODO bug */
 /* not treat "start" and "end" keywords in steps() function as identifiers */
 .foo { animation: spin 1s steps(12, end) infinite; }
 .foo { animation: spin 1s STEPS(12, start) infinite; }
@@ -284,11 +281,9 @@
 /* handle animations whose names are keywords */
 .foo { animation: 1s infinite infinite; }
 
-/* TODO bug */
 /* handle not localize an animation shorthand value of "inherit" */
 .foo { animation: inherit; }
 
-/* TODO test me in browser */
 /* handle "constructor" as animation name */
 .foo { animation: constructor constructor; }
 

@@ -260,9 +260,32 @@
 	composes: abc-from-def;
 }
 
+:local(.exportName37) {composes: localName}
+
+:local(.exportName38) {
+	composes: localName
+}
+
+:local(.exportName39) {
+	composes: localName;
+}
+
+:local(.exportName40) {color:red;composes:localName}
+
+:local(.exportName41) {composes:localName;color:red;}
+
+:local(.exportName42) {composes:localName;color:red}
+
+:local(.exportName43) {
+
+	composes:localName;
+
+	color:red;
+}
+
 /* TODO bug */
 :import("foo") {
 	foo: other;
 }
 
-.exportName37 { color: unknown; }
+.exportName44 { color: unknown; }
