@@ -7533,20 +7533,21 @@ Object {
   "exportName55": "_postcss-modules-scope_modules_css-exportName55",
   "exportName56": "_postcss-modules-scope_modules_css-exportName56",
   "exportName57": "_postcss-modules-scope_modules_css-exportName57",
-  "exportName58": "_postcss-modules-scope_modules_css-exportName58 _postcss-modules-scope_modules_css-exportName57",
-  "exportName59": "_postcss-modules-scope_modules_css-exportName59 _postcss-modules-scope_modules_css-exportName58",
+  "exportName58": "_postcss-modules-scope_modules_css-exportName58 _postcss-modules-scope_modules_css-exportName57 _classes_css-bar",
+  "exportName59": "_postcss-modules-scope_modules_css-exportName59 _postcss-modules-scope_modules_css-exportName58 _postcss-modules-scope_modules_css-exportName57 _postcss-modules-scope_modules_css-exportName3",
   "exportName6": "_postcss-modules-scope_modules_css-exportName6",
-  "exportName60": "_postcss-modules-scope_modules_css-exportName60",
-  "exportName61": "_postcss-modules-scope_modules_css-exportName61",
-  "exportName62": "_postcss-modules-scope_modules_css-exportName62",
+  "exportName60": "_postcss-modules-scope_modules_css-exportName60 otherClass andAgain aThirdClass",
   "exportName63": "_postcss-modules-scope_modules_css-exportName63",
   "exportName64": "_postcss-modules-scope_modules_css-exportName64",
   "exportName65": "_postcss-modules-scope_modules_css-exportName65",
   "exportName66": "_postcss-modules-scope_modules_css-exportName66 _postcss-modules-scope_modules_css-exportName63 _postcss-modules-scope_modules_css-exportName64 _postcss-modules-scope_modules_css-exportName65",
   "exportName67": "_postcss-modules-scope_modules_css-exportName67",
   "exportName68": "_postcss-modules-scope_modules_css-exportName68 _postcss-modules-scope_modules_css-exportName67",
-  "exportName69": "_postcss-modules-scope_modules_css-exportName69 _postcss-modules-scope_modules_css-exportName68",
+  "exportName69": "_postcss-modules-scope_modules_css-exportName69 _postcss-modules-scope_modules_css-exportName68 _postcss-modules-scope_modules_css-exportName67",
   "exportName7": "_postcss-modules-scope_modules_css-exportName7",
+  "exportName70": "_postcss-modules-scope_modules_css-exportName70",
+  "exportName71": "_postcss-modules-scope_modules_css-exportName71",
+  "exportName72": "_postcss-modules-scope_modules_css-exportName72",
   "exportName8": "_postcss-modules-scope_modules_css-exportName8",
   "exportName9": "_postcss-modules-scope_modules_css-exportName9",
   "fade-export": "_postcss-modules-scope_modules_css-fade-export",
@@ -7563,7 +7564,6 @@ Object {
   "test": "--_postcss-modules-scope_modules_css-test",
   "title-align": "--_postcss-modules-scope_modules_css-title-align",
   "toString": "_postcss-modules-scope_modules_css-toString",
-  "undefined": "_postcss-modules-scope_modules_css-exportName30 _postcss-modules-scope_modules_css-exportName31 _postcss-modules-scope_modules_css-exportName35",
   "wrong": "_postcss-modules-scope_modules_css-wrong",
   "😀": "_postcss-modules-scope_modules_css-😀",
 }
@@ -8094,6 +8094,7 @@ Array [
 /* broad global should be limited to selector */
 .foo, ._postcss-modules-local-by-default_local_modules_css-bar , ._postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
+/* TODO bug */
 /* broad global should be limited to nested selector */
 ._postcss-modules-local-by-default_local_modules_css-foo:not(.bar).foobar { a_value: some-value; }
 
@@ -8247,7 +8248,6 @@ Array [
 /* handle nested global #5 */
 .a:not(._postcss-modules-local-by-default_local_modules_css-b, .c) { a_value: some-value; }
 
-/* TODO bug */
 /* handle nested global #6 */
 .a:not(.b, .c) { a_value: some-value; }
 
@@ -8315,9 +8315,8 @@ Array [
 
 /* ignore :import statements */
 
-/* TODO bug */
 /* incorrectly handle nested selectors */
-._postcss-modules-local-by-default_local_modules_css-bar:not(._import_modules_css-__foo, .baz) { a_value: some-value; }
+._postcss-modules-local-by-default_local_modules_css-bar:not(.foo-name, .baz-name) { a_value: some-value; }
 
 /* compile explict global element */
 input { a_value: some-value; }
@@ -9097,6 +9096,16 @@ html {
 	}
 }
 
+/*!*************************!*\\\\
+  !*** css ./classes.css ***!
+  \\\\*************************/
+._classes_css-localName {
+	background: red;
+}
+
+._classes_css-bar {
+	}
+
 /*!***********************************************!*\\\\
   !*** css ./postcss-modules-scope.modules.css ***!
   \\\\***********************************************/
@@ -9258,7 +9267,8 @@ html {
 	}
 
 	to {
-		}
+		composes: exportName30;
+	}
 }
 
 /* TODO bug no report */
@@ -9266,7 +9276,8 @@ html {
 ._postcss-modules-scope_modules_css-exportName31 {}
 
 #_postcss-modules-scope_modules_css-idName {
-	}
+	composes: exportName31;
+}
 
 /* error-composes-not-allowed-in-multiple */
 ._postcss-modules-scope_modules_css-exportName32 {}
@@ -9278,7 +9289,8 @@ html {
 /* error-composes-not-allowed-in-simple */
 ._postcss-modules-scope_modules_css-exportName35 {}
 body {
-	}
+	composes: exportName35;
+}
 
 /* error-composes-not-allowed-in-wrong-local */
 ._postcss-modules-scope_modules_css-exportName36 {}
@@ -9541,18 +9553,18 @@ body {
 /*	color: green;*/
 /*}*/
 
-/* TODO bug */
 /* export-with-composes */
 ._postcss-modules-scope_modules_css-exportName57 { background: red; }
 ._postcss-modules-scope_modules_css-exportName58 { color: green; }
 ._postcss-modules-scope_modules_css-exportName59 { color: green; }
 
+ /* export-with-global-composes */
+.otherClass { background: red; }
+.andAgain { font-size: 2em; }
+.aThirdClass { color: red; }
 /* TODO bug */
-/* export-with-global-composes */
-._postcss-modules-scope_modules_css-exportName60 { background: red; }
-._postcss-modules-scope_modules_css-exportName61 { font-size: 2em; }
-._postcss-modules-scope_modules_css-exportName62 { color: red; }
-/*:local(.exportName63) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+/*:local(.exportName60) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+._postcss-modules-scope_modules_css-exportName60 { color: green; }
 
 /* export-with-multiple-composes */
 ._postcss-modules-scope_modules_css-exportName63 { background: red; }
@@ -9603,6 +9615,15 @@ body {
 	}
 }
 
+/* export-with-composes-broken-order */
+._postcss-modules-scope_modules_css-exportName70 { color: green; }
+._postcss-modules-scope_modules_css-exportName71 { color: green; }
+._postcss-modules-scope_modules_css-exportName72 { background: red; }
+
+/* TODO bug */
+/* transitive composes */
+._postcss-modules-scope_modules_css-exportName58 { color: green; }
+._postcss-modules-scope_modules_css-exportName59 { color: green; }
 
 /*!********************************!*\\\\
   !*** css ./colors.modules.css ***!

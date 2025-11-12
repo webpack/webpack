@@ -446,18 +446,18 @@ body {
 /*	color: green;*/
 /*}*/
 
-/* TODO bug */
 /* export-with-composes */
 :local(.exportName57) { background: red; }
 :local(.exportName58) { compose-with: exportName57; color: green; }
 :local(.exportName59) { compose-with: exportName58; color: green; }
 
+ /* export-with-global-composes */
+:global(.otherClass) { background: red; }
+:global(.andAgain) { font-size: 2em; }
+:global(.aThirdClass) { color: red; }
 /* TODO bug */
-/* export-with-global-composes */
-.exportName60 { background: red; }
-.exportName61 { font-size: 2em; }
-.exportName62 { color: red; }
-/*:local(.exportName63) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+/*:local(.exportName60) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+:local(.exportName60) { compose-with: otherClass andAgain from global; compose-with: aThirdClass from global; color: green; }
 
 /* export-with-multiple-composes */
 :local(.exportName63) { background: red; }
@@ -510,3 +510,12 @@ body {
 	}
 }
 
+/* export-with-composes-broken-order */
+:local(.exportName70) { compose-with: exportName71; color: green; }
+:local(.exportName71) { compose-with: exportName72; color: green; }
+:local(.exportName72) { background: red; }
+
+/* TODO bug */
+/* transitive composes */
+.exportName58 { composes: bar from "./classes.css"; color: green; }
+.exportName59 { composes: exportName3; color: green; }
