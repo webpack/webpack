@@ -1654,6 +1654,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],
@@ -1730,6 +1731,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],
@@ -1851,6 +1853,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],
@@ -1907,6 +1910,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],
@@ -1924,6 +1928,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],
@@ -1993,6 +1998,7 @@ Object {
         "values": Array [
           "link",
           "text",
+          "css-style-sheet",
         ],
       },
     ],

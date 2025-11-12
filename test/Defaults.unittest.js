@@ -2288,6 +2288,32 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
+			+       },
+			+       Object {
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "with": Object {
+			+           "type": "css",
+			@@ ... @@
+			+       },
+			@@ ... @@
+			+         "assert": Object {
+			+           "type": "css",
+			+         },
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2306,11 +2332,11 @@ describe("snapshots", () => {
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			+       },
 			@@ ... @@
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2754,7 +2780,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2775,8 +2802,7 @@ describe("snapshots", () => {
 			+         },
 			+         "test": /\\.css$/i,
 			+         "type": "css/auto",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2807,6 +2833,30 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
+			+       },
+			+       Object {
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "with": Object {
+			+           "type": "css",
+			+         },
+			+       },
+			+       Object {
+			+         "assert": Object {
+			+           "type": "css",
+			+         },
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
 			+       },
 			+       Object {
 			@@ ... @@

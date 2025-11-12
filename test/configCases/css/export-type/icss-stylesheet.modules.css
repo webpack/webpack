@@ -1,0 +1,15 @@
+:import("./icss-export.modules.css") {
+	imported-primary: primaryColor;
+	imported-secondary: secondaryColor;
+}
+
+.sheet-button {
+	background-color: imported-primary;
+	color: white;
+}
+
+.sheet-badge {
+	background-color: imported-secondary;
+	border-radius: 4px;
+}
+

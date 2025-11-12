@@ -3612,7 +3612,7 @@ declare interface CssAutoParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -3695,7 +3695,7 @@ declare interface CssGlobalGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3726,7 +3726,7 @@ declare interface CssGlobalParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -3799,7 +3799,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3830,7 +3830,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -3887,7 +3887,7 @@ declare abstract class CssParser extends ParserClass {
 	import: boolean;
 	url: boolean;
 	namedExports: boolean;
-	exportType: CssParserExportType;
+	exportType?: "link" | "text" | "css-style-sheet";
 	comments?: CommentCssParser[];
 	magicCommentContext: Context;
 	getComments(range: [number, number]): CommentCssParser[];
@@ -3896,7 +3896,6 @@ declare abstract class CssParser extends ParserClass {
 		errors: null | (Error & { comment: CommentCssParser })[];
 	};
 }
-type CssParserExportType = "link" | "text";
 
 /**
  * Parser options for css modules.
@@ -3905,7 +3904,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -8864,7 +8863,7 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text";
+	exportType?: "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -19055,6 +19054,7 @@ declare namespace exports {
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
+		export let cssMergeStyleSheets: "__webpack_require__.mcs";
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";

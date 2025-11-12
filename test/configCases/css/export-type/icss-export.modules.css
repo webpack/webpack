@@ -1,0 +1,14 @@
+.primary {
+	color: #007bff;
+}
+
+.secondary {
+	color: #6c757d;
+}
+
+:export {
+	primaryColor: #007bff;
+	secondaryColor: #6c757d;
+	spacing: 16px;
+}
+

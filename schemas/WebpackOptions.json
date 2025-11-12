@@ -552,7 +552,7 @@
     },
     "CssParserExportType": {
       "description": "Configure how CSS content is exported as default.",
-      "enum": ["link", "text"]
+      "enum": ["link", "text", "css-style-sheet"]
     },
     "CssParserImport": {
       "description": "Enable/disable `@import` at-rules handling.",

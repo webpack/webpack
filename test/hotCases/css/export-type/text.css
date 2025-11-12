@@ -1,0 +1,6 @@
+@import "./imported.css";
+.text-class {
+	color: red;
+	font-size: 14px;
+}
+

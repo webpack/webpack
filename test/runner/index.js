@@ -551,6 +551,7 @@ class TestRunner {
 			const env = {
 				setTimeout,
 				document,
+				CSSStyleSheet: FakeDocument.CSSStyleSheet,
 				location: {
 					href: "https://test.cases/path/index.html",
 					origin: "https://test.cases",
