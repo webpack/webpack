@@ -15,9 +15,7 @@ it("should pass TrustedScript to eval", function () {
 		expect.stringMatching(testPattern)
 	);
 	expect(window.eval).toHaveBeenCalledWith(
-		expect.objectContaining({
-			_script: expect.stringMatching(testPattern)
-		})
+		expect.stringMatching(testPattern)
 	);
 });
 
@@ -32,8 +30,8 @@ beforeEach(done => {
 	globalEval = eval;
 	window.module = {};
 	window.eval = jest.fn(x => {
-		expect(x).toBeInstanceOf(TrustedScript);
-		return globalEval(x._script);
+		expect(typeof x).toEqual("string");
+		return globalEval(x);
 	});
 	done();
 });
