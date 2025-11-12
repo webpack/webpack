@@ -8,6 +8,8 @@ const NodeEnvironment =
 
 class CustomEnvironment extends NodeEnvironment {
 	constructor(config, context) {
+		// TODO - regression in jest/Node@25.2.0, temporary fix
+		global.localStorage = undefined;
 		super(config, context);
 	}
 
