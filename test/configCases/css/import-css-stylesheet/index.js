@@ -48,3 +48,11 @@ it("should handle url() for images in CSSStyleSheet", () => {
 	expect(imageRule.style.width).toBe("100px");
 	expect(imageRule.style.height).toBe("100px");
 });
+
+it("should handle CSS nesting in CSSStyleSheet", () => {
+	const rules = Array.from(sheet.cssRules);
+	// CSS nesting syntax (& .child) should be preserved in cssText
+	const nestedRule = rules.find(rule => rule.cssText.includes("& .child"));
+	expect(nestedRule).toBeDefined();
+	expect(nestedRule.cssText).toContain("color: green");
+});

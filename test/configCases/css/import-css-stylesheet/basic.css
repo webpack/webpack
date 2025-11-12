@@ -3,6 +3,10 @@
 .test {
 	color: red;
 	background: blue;
+
+	& .child {
+		color: green;
+	}
 }
 
 .another {
