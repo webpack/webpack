@@ -10462,7 +10462,7 @@ declare class ModuleConcatenationPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class ModuleDependency extends Dependency {
-	constructor(request: string, sourceOrder: number);
+	constructor(request: string, sourceOrder?: number);
 	request: string;
 	userRequest: string;
 	sourceOrder: number;
