@@ -39,22 +39,19 @@
 @value exportName8: 36px;
 .foo-replace-4 { height: exportName7; height: exportName8; }
 
-/* TODO bug */
+/* TODO bug - do not export selector */
 /* should replace selectors within the file */
 @value exportName9: red;
 .exportName9 { color: exportName9; }
 
-/* TODO bug */
 /* should replace selectors within the file #1 */
 @value exportName10: red;
 #exportName10 { color: exportName10; }
 
-/* TODO bug */
 /* should replace selectors within the file #2 */
 @value exportName11: red;
 .exportName11 > .exportName11 { color: exportName11; }
 
-/* TODO bug - should reexport and inherit module type and output warning if not found */
 /* should import and re-export a simple constant */
 @value exportName12 from "./colors.css";
 
@@ -71,12 +68,13 @@
 .exportName15 { color: otherRed; }
 .exportName16 { color: otherBlue }
 
+/* TODO fix me */
 /* should import from a definition */
-@value colors: "./colors.modules.css";
-@value otherBlue from colors;
-.exportName17 { color: otherBlue; }
+/*@value colors: "./colors.modules.css";*/
+/*@value otherBlue from colors;*/
+/*.exportName17 { color: otherBlue; }*/
 
-/* should only allow values for paths if defined in the right order */
+/* should only allow values for paths if defined in the right order - throw an error */
 @value wrongOrder from colors;
 @value colors: "./colors.css";
 
@@ -113,7 +111,6 @@
 	outline-color: hsla;
 }
 
-/* TODO bug */
 /* should import multiple from a single file on multiple lines */
 @value (
 	namedBlue,

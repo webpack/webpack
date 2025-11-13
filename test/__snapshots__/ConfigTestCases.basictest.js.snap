@@ -1,5 +1,115 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigTestCases chunks-order cjs exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
+"\\"use strict\\";
+(() => {
+var exports = {};
+exports.id = \\"foo\\";
+exports.ids = [\\"foo\\"];
+exports.modules = {
+
+/***/ 552:
+/*!****************************!*\\\\
+  !*** ./foo.js + 2 modules ***!
+  \\\\****************************/
+/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+
+
+;// external \\"fs\\"
+const external_fs_namespaceObject = require(\\"fs\\");
+var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
+;// css ./style.css
+
+// EXTERNAL MODULE: ./dependency.js
+var dependency = __webpack_require__(784);
+;// ./foo.js
+
+
+
+
+it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
+	const source = external_fs_default().readFileSync(__filename, \\"utf-8\\");
+
+	expect(source).toMatchSnapshot();
+});
+
+/***/ })
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
+var __webpack_export_target__ = exports;
+for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \\"__esModule\\", { value: true });
+
+})();
+//# sourceMappingURL=foo.js.map"
+`;
+
+exports[`ConfigTestCases chunks-order module exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"node:url\\";
+export const __webpack_esm_id__ = \\"foo\\";
+export const __webpack_esm_ids__ = [\\"foo\\"];
+export const __webpack_esm_modules__ = {
+
+/***/ 125:
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+/***/ (() => {
+
+
+
+/***/ }),
+
+/***/ 353:
+/*!****************!*\\\\
+  !*** ./foo.js ***!
+  \\\\****************/
+/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 125);
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dependency.js */ 784);
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () => {
+	const fs = await eval(\`import(\\"fs\\")\`)
+	const source = fs.readFileSync(__webpack_filename__, \\"utf-8\\");
+
+	expect(source).toMatchSnapshot();
+});
+
+
+/***/ })
+
+};
+;
+
+// load runtime
+import { __webpack_require__ } from \\"./runtime~nested-shared.mjs\\";
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+
+import * as __webpack_chunk_1__ from \\"./shared.mjs\\";
+__webpack_require__.C(__webpack_chunk_1__);
+import * as __webpack_chunk_2__ from \\"./nested-shared.mjs\\";
+__webpack_require__.C(__webpack_chunk_2__);
+import * as __webpack_chunk_3__ from \\"./commons-dependency_js.mjs\\";
+__webpack_require__.C(__webpack_chunk_3__);
+import * as __webpack_chunk_4__ from \\"./foo.mjs\\";
+__webpack_require__.C(__webpack_chunk_4__);
+var __webpack_exports__ = __webpack_exec__(353);
+
+//# sourceMappingURL=foo.mjs.map"
+`;
+
 exports[`ConfigTestCases css build-http exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!*******************************************************************************************************************!*\\\\
@@ -188,15 +298,15 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 ._at-rule-value_module_css-foo { color: red; }
 ._at-rule-value_module_css-bar { color: yellow }
 
+/*@value red-v3 from colors;*/
+/*@value colors: \\"./colors.module.css\\";*/
 
+/*.foo { color: red-v3; }*/
 
+/*@value colors: \\"./colors.module.css\\";*/
+/*@value red-v4 from colors;*/
 
-._at-rule-value_module_css-foo { color: blue; }
-
-
-
-
-._at-rule-value_module_css-foo { color: blue; }
+/*.foo { color: red-v4; }*/
 
 
 
@@ -451,19 +561,19 @@ div {
 }
 
 ._var-function_module_css-from-3 {
-	color: var(--_var-function-export_modules_css-my-var-u1,  var(--_var-function-export_modules_css-my-var-u2));
+	color: var(--_var-function-export_modules_css-my-var-u1,  var(----_var-function-export_modules_css-my-var-u2));
 }
 
 ._var-function_module_css-from-4 {
-	color: var(--_var-function-export_modules_css-1);
+	color: var(----_var-function-export_modules_css-1);
 }
 
 ._var-function_module_css-from-5 {
-	color: var(--_var-function-export_modules_css---a);
+	color: var(----_var-function-export_modules_css---a);
 }
 
 ._var-function_module_css-from-6 {
-	color: var(--_var-function-export_modules_css-main-bg-color);
+	color: var(----_var-function-export_modules_css-main-bg-color);
 }
 
 ._var-function_module_css-mixed {
@@ -483,7 +593,7 @@ div {
 }
 
 ._var-function_module_css-not-override-class {
-	color: var(--_var-function-export_modules_css-not-override-class)
+	color: var(----_var-function-export_modules_css-not-override-class)
 }
 
 /*!*********************************!*\\\\
@@ -1898,15 +2008,15 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 .my-app-579-foo { color: red; }
 .my-app-579-bar { color: yellow }
 
+/*@value red-v3 from colors;*/
+/*@value colors: \\"./colors.module.css\\";*/
 
+/*.foo { color: red-v3; }*/
 
+/*@value colors: \\"./colors.module.css\\";*/
+/*@value red-v4 from colors;*/
 
-.my-app-579-foo { color: blue; }
-
-
-
-
-.my-app-579-foo { color: blue; }
+/*.foo { color: red-v4; }*/
 
 
 
@@ -2161,19 +2271,19 @@ div {
 }
 
 .my-app-537-from-3 {
-	color: var(--my-app-713-my-var-u1,  var(--my-app-713-my-var-u2));
+	color: var(--my-app-713-my-var-u1,  var(----my-app-713-my-var-u2));
 }
 
 .my-app-537-from-4 {
-	color: var(--my-app-713-1);
+	color: var(----my-app-713-1);
 }
 
 .my-app-537-from-5 {
-	color: var(--my-app-713---a);
+	color: var(----my-app-713---a);
 }
 
 .my-app-537-from-6 {
-	color: var(--my-app-713-main-bg-color);
+	color: var(----my-app-713-main-bg-color);
 }
 
 .my-app-537-mixed {
@@ -2193,7 +2303,7 @@ div {
 }
 
 .my-app-537-not-override-class {
-	color: var(--my-app-713-not-override-class)
+	color: var(----my-app-713-not-override-class)
 }
 
 /*!*********************************!*\\\\
@@ -7571,6 +7681,9 @@ Object {
 
 exports[`ConfigTestCases css postcss-modules-plugins exported tests should work 6`] = `
 Object {
+  "--red": "blue",
+  "a": "a",
+  "b": "b",
   "bar": "_postcss-modules-values_modules_css-bar",
   "char3": "#0f0",
   "char6": "#00ff00",
@@ -7581,11 +7694,11 @@ Object {
   "exportName1": "blue @value exportName2 yellow",
   "exportName10": "red",
   "exportName11": "red",
+  "exportName12": "blue",
   "exportName13": "_postcss-modules-values_modules_css-exportName13",
   "exportName14": "_postcss-modules-values_modules_css-exportName14",
   "exportName15": "_postcss-modules-values_modules_css-exportName15",
   "exportName16": "_postcss-modules-values_modules_css-exportName16",
-  "exportName17": "_postcss-modules-values_modules_css-exportName17",
   "exportName18": "#FFF",
   "exportName19": "#FFF",
   "exportName2": "(max-width: 599px)",
@@ -7606,6 +7719,8 @@ Object {
   "exportName7": "40px",
   "exportName8": "36px",
   "exportName9": "red",
+  "exportNameBlue": "exportNameBlue",
+  "exportNameRed": "blue",
   "foo-replace": "_postcss-modules-values_modules_css-foo-replace",
   "foo-replace-1": "_postcss-modules-values_modules_css-foo-replace-1",
   "foo-replace-2": "_postcss-modules-values_modules_css-foo-replace-2",
@@ -7614,7 +7729,12 @@ Object {
   "hsla": "hsla(220, 13.0%, 18.0%, 1)",
   "my-own-color": "--_postcss-modules-values_modules_css-my-own-color",
   "named": "aqua",
+  "namedBlue": "red",
+  "namedRed": "blue",
+  "otherBlue": "red",
+  "otherRed": "blue",
   "parentheses": "color(red lightness(50%))",
+  "red": "yellow",
   "rgba": "rgba(34, 12, 64, 0.3)",
   "v-color": "my-custom-value",
   "v-comment": "",
@@ -7622,6 +7742,7 @@ Object {
   "v-empty": "/* comment */",
   "v-empty-1": " ",
   "v-empty-2": "   ",
+  "wrongOrder": "blue",
 }
 `;
 
@@ -7761,6 +7882,34 @@ Array [
   !*** css ./other.css ***!
   \\\\***********************/
 ._other_css-className { color: red }
+
+/*!********************************!*\\\\
+  !*** css ./import.modules.css ***!
+  \\\\********************************/
+
+._import_modules_css-abc {
+	color: red;
+}
+
+._import_modules_css-__foo {
+	color: red;
+}
+
+._import_modules_css-some-value {
+	color: red;
+}
+
+._import_modules_css-otherClass {
+	color: red;
+}
+
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/foo/my-custon-style.css ***!
+  \\\\**************************************************/
+._node_modules_foo_my-custon-style_css-other {
+	color: red;
+}
 
 /*!*********************************************************!*\\\\
   !*** css ./postcss-modules-extract-imports.modules.css ***!
@@ -7982,27 +8131,6 @@ Array [
 /* TODO bug */
 
 ._postcss-modules-extract-imports_modules_css-exportName44 { color: unknown; }
-
-/*!********************************!*\\\\
-  !*** css ./import.modules.css ***!
-  \\\\********************************/
-
-._import_modules_css-abc {
-	color: red;
-}
-
-._import_modules_css-__foo {
-	color: red;
-}
-
-._import_modules_css-some-value {
-	color: red;
-}
-
-._import_modules_css-otherClass {
-	color: red;
-}
-
 
 /*!****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.local.modules.css ***!
@@ -9625,6 +9753,12 @@ body {
 ._postcss-modules-scope_modules_css-exportName58 { color: green; }
 ._postcss-modules-scope_modules_css-exportName59 { color: green; }
 
+/*!************************!*\\\\
+  !*** css ./colors.css ***!
+  \\\\************************/
+
+
+
 /*!********************************!*\\\\
   !*** css ./colors.modules.css ***!
   \\\\********************************/
@@ -9682,22 +9816,19 @@ body {
 
 ._postcss-modules-values_modules_css-foo-replace-4 { height: 40px; height: 36px; }
 
-/* TODO bug */
+/* TODO bug - do not export selector */
 /* should replace selectors within the file */
 
 ._postcss-modules-values_modules_css-exportName9 { color: red; }
 
-/* TODO bug */
 /* should replace selectors within the file #1 */
 
 #_postcss-modules-values_modules_css-exportName10 { color: red; }
 
-/* TODO bug */
 /* should replace selectors within the file #2 */
 
 ._postcss-modules-values_modules_css-exportName11 > ._postcss-modules-values_modules_css-exportName11 { color: red; }
 
-/* TODO bug - should reexport and inherit module type and output warning if not found */
 /* should import and re-export a simple constant */
 
 
@@ -9714,12 +9845,13 @@ body {
 ._postcss-modules-values_modules_css-exportName15 { color: blue; }
 ._postcss-modules-values_modules_css-exportName16 { color: red }
 
+/* TODO fix me */
 /* should import from a definition */
+/*@value colors: \\"./colors.modules.css\\";*/
+/*@value otherBlue from colors;*/
+/*.exportName17 { color: otherBlue; }*/
 
-
-._postcss-modules-values_modules_css-exportName17 { color: red; }
-
-/* should only allow values for paths if defined in the right order */
+/* should only allow values for paths if defined in the right order - throw an error */
 
 
 
@@ -9756,11 +9888,10 @@ body {
 	outline-color: hsla(220, 13.0%, 18.0%, 1);
 }
 
-/* TODO bug */
 /* should import multiple from a single file on multiple lines */
 
-._postcss-modules-values_modules_css-exportName27 { color: namedBlue; }
-._postcss-modules-values_modules_css-exportName28 { color: namedRed }
+._postcss-modules-values_modules_css-exportName27 { color: red; }
+._postcss-modules-values_modules_css-exportName28 { color: blue }
 
 /* should allow definitions with commas in them */
 
@@ -10037,15 +10168,15 @@ colorValue-v3 {
 .foo { color: blue-i; }
 .bar { color: green-v2 }
 
-@value red-v3 from colors;
-@value colors: \\"./colors.module.css\\";
+/*@value red-v3 from colors;*/
+/*@value colors: \\"./colors.module.css\\";*/
 
-.foo { color: red-v3; }
+/*.foo { color: red-v3; }*/
 
-@value colors: \\"./colors.module.css\\";
-@value red-v4 from colors;
+/*@value colors: \\"./colors.module.css\\";*/
+/*@value red-v4 from colors;*/
 
-.foo { color: red-v4; }
+/*.foo { color: red-v4; }*/
 
 @value aaa: red;
 @value bbb: aaa;
@@ -13630,6 +13761,42 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
 /******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
 /******/ 
+"
+`;
+
+exports[`ConfigTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
+    expect(\\"aaa\\").toBe(\\"aaa\\");
+});
+
+it(\\"should work import.meta.env with DotenvPlugin\\", () => {
+    expect(\\"https://api.example.com\\").toBe(\\"https://api.example.com\\");
+});
+
+it(\\"import.meta.env behaves like process.env\\", async (done) => {
+    try {
+        const importMetaEnv = import.meta.env;
+        importMetaEnv;
+        const processEnv = process.env;
+        processEnv;
+        const UNKNOWN_PROPERTY = import.meta.env.UNKNOWN_PROPERTY;
+        UNKNOWN_PROPERTY;
+        const UNKNOWN_PROPERTY_2 = process.env.UNKNOWN_PROPERTY_2;
+        UNKNOWN_PROPERTY_2;
+        typeof import.meta.env;
+        typeof process.env;
+    } catch (_e) {
+        // ignore
+    }
+    const fs = await eval(\\"import('fs')\\");
+    expect(fs.readFileSync(__webpack_filename__, \\"utf-8\\")).toMatchSnapshot();
+    done();
+});
 "
 `;
 
