@@ -465,7 +465,6 @@ body {
 :local(.exportName65) { color: red; }
 :local(.exportName66) { compose-with: exportName63 exportName64; compose-with: exportName65; color: green; }
 
-/* TODO bug */
 /* export-with-transitive-composes */
 :local(.exportName67) {
 	font-size: 2em;
@@ -515,7 +514,9 @@ body {
 :local(.exportName71) { compose-with: exportName72; color: green; }
 :local(.exportName72) { background: red; }
 
-/* TODO bug */
 /* transitive composes */
-.exportName58 { composes: bar from "./classes.css"; color: green; }
-.exportName59 { composes: exportName3; color: green; }
+.exportName73 { composes: bar from "./classes.css"; color: green; }
+.exportName74 { composes: exportName73; color: green; }
+.exportName75 { color: red }
+.exportName74 { composes: exportName75; color: green; }
+.exportName74 { composes: my-global from global; color: green; }

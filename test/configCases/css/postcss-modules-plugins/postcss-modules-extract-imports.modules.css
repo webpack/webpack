@@ -6,7 +6,7 @@
 
 /* existing-import */
 :import("library.modules.css") {
-	something: else;
+	something: something;
 }
 
 :local(.exportName2) {
@@ -283,7 +283,6 @@
 	color:red;
 }
 
-/* TODO bug */
 :import("foo") {
 	foo: other;
 }
