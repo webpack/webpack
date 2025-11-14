@@ -3258,6 +3258,7 @@ declare class ConstDependency extends NullDependency {
 	static Template: typeof ConstDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static isLowPriorityDependency(dependency: Dependency): boolean;
 	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
@@ -4050,6 +4051,7 @@ declare class Dependency {
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static isLowPriorityDependency(dependency: Dependency): boolean;
 	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare interface DependencyConstructor {
@@ -6307,7 +6309,6 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		phase: ImportPhaseType,
 		attributes?: ImportAttributes
 	);
-	sourceOrder: number;
 	phase: ImportPhaseType;
 	attributes?: ImportAttributes;
 	getImportVar(moduleGraph: ModuleGraph): string;
@@ -6331,6 +6332,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	};
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static isLowPriorityDependency(dependency: Dependency): boolean;
 	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
@@ -10463,13 +10465,15 @@ declare class ModuleConcatenationPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class ModuleDependency extends Dependency {
-	constructor(request: string);
+	constructor(request: string, sourceOrder?: number);
 	request: string;
 	userRequest: string;
+	sourceOrder?: number;
 	range?: [number, number];
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static isLowPriorityDependency(dependency: Dependency): boolean;
 	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
@@ -12033,6 +12037,7 @@ declare class NullDependency extends Dependency {
 	static Template: typeof NullDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static isLowPriorityDependency(dependency: Dependency): boolean;
 	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
