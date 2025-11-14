@@ -284,7 +284,7 @@
 }
 
 :import("foo") {
-	foo: other;
+	my-own-name-here: custom-other-name;
 }
 
 .exportName44 { color: unknown; }
