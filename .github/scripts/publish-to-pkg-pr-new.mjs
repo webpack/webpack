@@ -25,19 +25,19 @@ export async function run({ github, context }) {
             - npm
 
             \`\`\`shell
-            npm i -D ${output.packages.map((p) => p.url).join(" ")}
+            npm i -D webpack@${output.packages.map((p) => p.url).join(" ")}
             \`\`\`
 
             - yarn
 
             \`\`\`shell
-            yarn add -D ${output.packages.map((p) => p.url).join(" ")}
+            yarn add -D webpack@${output.packages.map((p) => p.url).join(" ")}
             \`\`\`
 
             - pnpm
 
             \`\`\`shell
-            pnpm add -D ${output.packages.map((p) => p.url).join(" ")}
+            pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
             \`\`\`
             `;
 
