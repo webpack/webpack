@@ -52,8 +52,12 @@ export async function run({ github, context }) {
 			repo: context.repo.repo,
 			issue_number: issueNumber
 		});
-		return comments.data.find((comment) =>
-			comment.body.includes(botCommentIdentifier)
+		return comments.data.find(
+			(comment) =>
+				// Prevent unintentional overwriting
+				comment.user &&
+				comment.user.login === "github-actions[bot]" &&
+				comment.body.includes(botCommentIdentifier)
 		);
 	}
 
