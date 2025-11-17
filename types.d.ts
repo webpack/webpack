@@ -3694,7 +3694,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3760,7 +3760,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -3844,7 +3844,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet";
+		exportType?: "url" | "link" | "text" | "css-style-sheet";
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
@@ -3886,7 +3886,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -8915,7 +8915,7 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
