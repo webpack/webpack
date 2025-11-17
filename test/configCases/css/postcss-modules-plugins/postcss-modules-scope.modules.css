@@ -50,11 +50,14 @@
 	}
 }
 
-/* TODO bug */
 /* composes-only-allowed */
+.local-a { color: red; }
+.local-b { color: green; }
 :local(.exportName10) {
-	/*composes: global(a);*/
-	/*compose-with: global(b);*/
+	composes: global(a);
+	compose-with: global(b);
+	composes: local(local-a);
+	compose-with: local(local-b);
 	a-composes: global(c);
 	composes-b: global(d);
 	a-composes-b: global(e);
