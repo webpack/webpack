@@ -141,7 +141,6 @@
 @value v-empty-2:   ;
 :root { --color:v-empty-2; }
 
-/* TODO bug no extra space before */
 /* should work with empty custom properties #3 */
 @value v-empty: /* comment */;
 :root { --color:v-empty; }
