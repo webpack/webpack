@@ -18,28 +18,28 @@ export async function run({ github, context }) {
 
 	const botCommentIdentifier = "<!-- posted by pkg.pr.new -->";
 	const body = `${botCommentIdentifier}
-            This PR is packaged and the instant preview is available (${commitUrl}).
+This PR is packaged and the instant preview is available (${commitUrl}).
 
-            Install it locally:
+Install it locally:
 
-            - npm
+- npm
 
-            \`\`\`shell
-            npm i -D webpack@${output.packages.map((p) => p.url).join(" ")}
-            \`\`\`
+\`\`\`shell
+npm i -D webpack@${output.packages.map((p) => p.url).join(" ")}
+\`\`\`
 
-            - yarn
+- yarn
 
-            \`\`\`shell
-            yarn add -D webpack@${output.packages.map((p) => p.url).join(" ")}
-            \`\`\`
+\`\`\`shell
+yarn add -D webpack@${output.packages.map((p) => p.url).join(" ")}
+\`\`\`
 
-            - pnpm
+- pnpm
 
-            \`\`\`shell
-            pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
-            \`\`\`
-            `;
+\`\`\`shell
+pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
+\`\`\`
+`;
 
 	/**
 	 * @param {number=} issueNumber PR number
