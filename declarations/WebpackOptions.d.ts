@@ -800,7 +800,7 @@ export type CssGeneratorLocalIdentName = string;
 /**
  * Configure how CSS content is exported as default.
  */
-export type CssParserExportType = "link" | "text" | "css-style-sheet";
+export type CssParserExportType = "link" | "text" | "css-style-sheet" | "url";
 /**
  * Enable/disable renaming of `@keyframes`.
  */

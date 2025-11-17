@@ -127,6 +127,9 @@ import { URL } from "url";
 import { Context } from "vm";
 
 declare interface Abortable {
+	/**
+	 * When provided the corresponding `AbortController` can be used to cancel an asynchronous action.
+	 */
 	signal?: AbortSignal;
 }
 declare class AbstractLibraryPlugin<T> {
@@ -2810,22 +2813,8 @@ declare class Compiler {
 	immutablePaths: Set<string | RegExp>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
-	fileTimestamps?: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
-	contextTimestamps?: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	fileTimestamps?: Map<string, any>;
+	contextTimestamps?: Map<string, any>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (
@@ -3692,6 +3681,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 }
 
 /**
@@ -3706,7 +3696,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3772,7 +3762,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -3856,7 +3846,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet";
+		exportType?: "url" | "link" | "text" | "css-style-sheet";
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
@@ -3898,7 +3888,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -4637,6 +4627,11 @@ type EncodingOption =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptions;
+type Entry =
+	| string
+	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
+	| EntryObject
+	| string[];
 declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint that should be evaluated at startup
@@ -4775,11 +4770,6 @@ declare interface EntryDescriptionNormalized {
 	wasmLoading?: string | false;
 }
 type EntryItem = string | string[];
-type EntryLibIndex =
-	| string
-	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
-	| EntryObject
-	| string[];
 type EntryNormalized =
 	| (() => Promise<EntryStaticNormalized>)
 	| EntryStaticNormalized;
@@ -4833,11 +4823,6 @@ type EntryStatic = string | EntryObject | string[];
  */
 declare interface EntryStaticNormalized {
 	[index: string]: EntryDescriptionNormalized;
-}
-declare interface EntryTypesIndex {
-	safeTime: number;
-	timestamp: number;
-	accuracy: number;
 }
 declare abstract class Entrypoint extends ChunkGroup {
 	/**
@@ -5076,8 +5061,7 @@ declare interface ExecuteOptions {
 	 */
 	require: WebpackRequire;
 }
-declare interface ExistenceOnlyTimeEntryFileSystemInfo {}
-declare interface ExistenceOnlyTimeEntryTypesIndex {}
+declare interface ExistenceOnlyTimeEntry {}
 type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
@@ -5978,20 +5962,14 @@ declare abstract class FileSystemInfo {
 	addFileTimestamps(
 		map: ReadonlyMap<
 			string,
-			| null
-			| FileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
+			null | FileSystemInfoEntry | "ignore" | ExistenceOnlyTimeEntry
 		>,
 		immutable?: boolean
 	): void;
 	addContextTimestamps(
 		map: ReadonlyMap<
 			string,
-			| null
-			| ContextFileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
+			null | ContextFileSystemInfoEntry | "ignore" | ExistenceOnlyTimeEntry
 		>,
 		immutable?: boolean
 	): void;
@@ -8945,7 +8923,6 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -12243,9 +12220,6 @@ declare interface OccurrenceModuleIdsPluginOptions {
 	 * Prioritise initial size over total size.
 	 */
 	prioritiseInitial?: boolean;
-}
-declare interface OnlySafeTimeEntry {
-	safeTime: number;
 }
 declare interface Open {
 	(
@@ -18424,22 +18398,8 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			err: null | Error,
-			timeInfoEntries1?: Map<
-				string,
-				| null
-				| EntryTypesIndex
-				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
-			>,
-			timeInfoEntries2?: Map<
-				string,
-				| null
-				| EntryTypesIndex
-				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
-			>,
+			timeInfoEntries1?: Map<string, any>,
+			timeInfoEntries2?: Map<string, any>,
 			changes?: Set<string>,
 			removals?: Set<string>
 		) => void,
@@ -18515,26 +18475,12 @@ declare interface Watcher {
 	/**
 	 * get info about files
 	 */
-	getFileTimeInfoEntries: () => Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	getFileTimeInfoEntries: () => Map<string, any>;
 
 	/**
 	 * get info about directories
 	 */
-	getContextTimeInfoEntries: () => Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	getContextTimeInfoEntries: () => Map<string, any>;
 
 	/**
 	 * get info about timestamps and changes
@@ -18555,26 +18501,12 @@ declare interface WatcherInfo {
 	/**
 	 * get info about files
 	 */
-	fileTimeInfoEntries: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	fileTimeInfoEntries: Map<string, any>;
 
 	/**
 	 * get info about directories
 	 */
-	contextTimeInfoEntries: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	contextTimeInfoEntries: Map<string, any>;
 }
 declare abstract class Watching {
 	startTime: null | number;
@@ -19279,6 +19211,7 @@ declare namespace exports {
 		export let global: "__webpack_require__.g";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
+		export let hasCssModulesInUrl: "has css modules in url";
 		export let hasFetchPriority: "has fetch priority";
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
@@ -19817,7 +19750,7 @@ declare namespace exports {
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
-		EntryLibIndex as Entry,
+		Entry,
 		EntryNormalized,
 		EntryObject,
 		ExternalItem,
