@@ -5,6 +5,7 @@ module.exports = [
 	/Incorrect composition, expected global keyword or string value/,
 	/Incorrect composition, expected class named/,
 	/Self-referencing name "abc-from-def" not found/,
+	/Composition is only allowed when selector is single local class name not in "exportName19", "exportName20"/,
 	/Composition is only allowed when selector is single local class name not in "exportName22", "exportName23"/,
 	/Composition is only allowed when selector is single local class name not in "exportName25", "exportName26"/,
 	/Composition is only allowed when selector is single local class name not in "exportName28", "exportName29"/,

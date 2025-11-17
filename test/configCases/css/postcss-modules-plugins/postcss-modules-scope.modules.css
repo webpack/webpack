@@ -109,12 +109,11 @@
 	}
 }
 
-/* TODO bug */
 /* error-comma-in-local */
-/*.className { color: red; }*/
-/*:local(.exportName19, .exportName20) {*/
-/*	composes: className;*/
-/*}*/
+.className { color: red; }
+:local(.exportName19, .exportName20) {
+	composes: className;
+}
 
 /* error-composes-css-nesting-at-rule */
 :local(.exportName21) {

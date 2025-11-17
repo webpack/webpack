@@ -157,9 +157,10 @@ exports[`ConfigTestCases css postcss-modules-plugins exported tests should work 
 Object {
   "a": "_postcss-modules-scope_modules_css-a",
   "bar": "--_postcss-modules-scope_modules_css-bar",
+  "className": "_postcss-modules-scope_modules_css-className",
   "constructor": "_postcss-modules-scope_modules_css-constructor",
   "exportName1": "_postcss-modules-scope_modules_css-exportName1",
-  "exportName10": "_postcss-modules-scope_modules_css-exportName10",
+  "exportName10": "_postcss-modules-scope_modules_css-exportName10 a b _postcss-modules-scope_modules_css-local-a _postcss-modules-scope_modules_css-local-b",
   "exportName11": "_postcss-modules-scope_modules_css-exportName11",
   "exportName12": "_postcss-modules-scope_modules_css-exportName12 _postcss-modules-scope_modules_css-exportName11",
   "exportName13": "_postcss-modules-scope_modules_css-exportName13",
@@ -168,7 +169,9 @@ Object {
   "exportName16": "_postcss-modules-scope_modules_css-exportName16",
   "exportName17": "_postcss-modules-scope_modules_css-exportName17",
   "exportName18": "_postcss-modules-scope_modules_css-exportName18",
+  "exportName19": "_postcss-modules-scope_modules_css-exportName19",
   "exportName2": "_postcss-modules-scope_modules_css-exportName2",
+  "exportName20": "_postcss-modules-scope_modules_css-exportName20",
   "exportName21": "_postcss-modules-scope_modules_css-exportName21",
   "exportName22": "_postcss-modules-scope_modules_css-exportName22",
   "exportName23": "_postcss-modules-scope_modules_css-exportName23",
@@ -235,6 +238,8 @@ Object {
   "fadeIn": "_postcss-modules-scope_modules_css-fadeIn",
   "fadeIn-export": "_postcss-modules-scope_modules_css-fadeIn-export",
   "idName": "_postcss-modules-scope_modules_css-idName",
+  "local-a": "_postcss-modules-scope_modules_css-local-a",
+  "local-b": "_postcss-modules-scope_modules_css-local-b",
   "slidein": "_postcss-modules-scope_modules_css-slidein",
   "smile": "_postcss-modules-scope_modules_css-smile",
   "smile_with_A": "_postcss-modules-scope_modules_css-smile_with_A",
@@ -307,7 +312,7 @@ Object {
   "v-color": "my-custom-value",
   "v-comment": "",
   "v-comment-other": "/* comment */",
-  "v-empty": "/* comment */",
+  "v-empty": " /* comment */",
   "v-empty-1": " ",
   "v-empty-2": "   ",
   "wrongOrder": "blue",
@@ -1857,11 +1862,10 @@ html {
 	}
 }
 
-/* TODO bug */
 /* composes-only-allowed */
+._postcss-modules-scope_modules_css-local-a { color: red; }
+._postcss-modules-scope_modules_css-local-b { color: green; }
 ._postcss-modules-scope_modules_css-exportName10 {
-	/*composes: global(a);*/
-	/*compose-with: global(b);*/
 	a-composes: global(c);
 	composes-b: global(d);
 	a-composes-b: global(e);
@@ -1911,12 +1915,11 @@ html {
 	}
 }
 
-/* TODO bug */
 /* error-comma-in-local */
-/*.className { color: red; }*/
-/*:local(.exportName19, .exportName20) {*/
-/*	composes: className;*/
-/*}*/
+._postcss-modules-scope_modules_css-className { color: red; }
+._postcss-modules-scope_modules_css-exportName19, ._postcss-modules-scope_modules_css-exportName20) {
+	composes: className;
+}
 
 /* error-composes-css-nesting-at-rule */
 ._postcss-modules-scope_modules_css-exportName21 {
@@ -2484,10 +2487,9 @@ body {
 
 :root { --_postcss-modules-values_modules_css-color:   ; }
 
-/* TODO bug no extra space before */
 /* should work with empty custom properties #3 */
 
-:root { --_postcss-modules-values_modules_css-color:/* comment */; }
+:root { --_postcss-modules-values_modules_css-color: /* comment */; }
 
 ",
 ]
