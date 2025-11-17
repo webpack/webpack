@@ -91,4 +91,3 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 	expect(moduleRule.style.color).toBe("orange");
 	expect(moduleRule.style.padding).toBe("20px");
 });
-

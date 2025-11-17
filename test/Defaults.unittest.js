@@ -242,6 +242,18 @@ describe("snapshots", () => {
 		        ],
 		      },
 		      Object {
+		        "dependency": "css-url",
+		        "oneOf": Array [
+		          Object {
+		            "scheme": /\\^data\\$/,
+		            "type": "asset/inline",
+		          },
+		          Object {
+		            "type": "asset/resource",
+		          },
+		        ],
+		      },
+		      Object {
 		        "parser": Object {
 		          "namedExports": false,
 		        },
@@ -2278,7 +2290,7 @@ describe("snapshots", () => {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			+           },
+			@@ ... @@
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
@@ -2334,7 +2346,7 @@ describe("snapshots", () => {
 			+           "type": "css",
 			+         },
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "assert": Object {
 			+           "type": "css",
 			+         },
@@ -2347,6 +2359,17 @@ describe("snapshots", () => {
 			+         },
 			+       },
 			+       Object {
+			@@ ... @@
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "test": /\\.css$/i,
+			+           },
+			+           Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2836,10 +2859,9 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2928,6 +2950,19 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
+			+       },
+			+       Object {
+			@@ ... @@
+			+           },
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "test": /\\.css$/i,
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2955,12 +2990,16 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
+<<<<<<< HEAD
 			+         },
+=======
+>>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
 			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
+<<<<<<< HEAD
 			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
@@ -2985,6 +3024,8 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
+=======
+>>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
