@@ -4570,6 +4570,28 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 "
 `;
 
+exports[`ConfigCacheTestCases css export-type-url exported tests should export URL string when exportType is url 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./url-imported.css ***!
+  \\\\******************************/
+.url-imported {
+	background: lightblue;
+}
+
+
+/*!*********************!*\\\\
+  !*** css ./url.css ***!
+  \\\\*********************/
+
+.url-class {
+	color: teal;
+	margin: 10px;
+}
+
+
+"
+`;
+
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
   "btn--info_is-disabled_1": "style_module_css_as-is-btn--info_is-disabled_1",
