@@ -1,7 +1,5 @@
 "use strict";
 
-// const webpack = require("../../../../");
-
 const common = {
 	output: {
 		module: true,
