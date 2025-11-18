@@ -16,9 +16,9 @@ it("should re-export", (done) => {
 	import("./reexport.modules.css").then((module) => {
 		try {
 			expect(module).toEqual(nsObj({
-				"className": "_reexport_modules_css-className",
-				"primary-color": "constructor",
-				"secondary-color": "toString",
+				"className": "_reexport_modules_css_d342-className",
+				"primary-color": "red",
+				"secondary-color": "block",
 			}));
 		} catch(e) {
 			done(e);

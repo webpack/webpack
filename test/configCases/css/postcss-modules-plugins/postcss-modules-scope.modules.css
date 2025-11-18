@@ -50,11 +50,14 @@
 	}
 }
 
-/* TODO bug */
 /* composes-only-allowed */
+.local-a { color: red; }
+.local-b { color: green; }
 :local(.exportName10) {
-	/*composes: global(a);*/
-	/*compose-with: global(b);*/
+	composes: global(a);
+	compose-with: global(b);
+	composes: local(local-a);
+	compose-with: local(local-b);
 	a-composes: global(c);
 	composes-b: global(d);
 	a-composes-b: global(e);
@@ -106,12 +109,11 @@
 	}
 }
 
-/* TODO bug */
 /* error-comma-in-local */
-/*.className { color: red; }*/
-/*:local(.exportName19, .exportName20) {*/
-/*	composes: className;*/
-/*}*/
+.className { color: red; }
+:local(.exportName19, .exportName20) {
+	composes: className;
+}
 
 /* error-composes-css-nesting-at-rule */
 :local(.exportName21) {
@@ -342,7 +344,6 @@ body {
 	color: blue;
 }
 
-/* TODO bug */
 /* export-difficult */
 @keyframes :local(fade-in) {
 	from {
@@ -447,18 +448,18 @@ body {
 /*	color: green;*/
 /*}*/
 
-/* TODO bug */
 /* export-with-composes */
 :local(.exportName57) { background: red; }
 :local(.exportName58) { compose-with: exportName57; color: green; }
 :local(.exportName59) { compose-with: exportName58; color: green; }
 
+ /* export-with-global-composes */
+:global(.otherClass) { background: red; }
+:global(.andAgain) { font-size: 2em; }
+:global(.aThirdClass) { color: red; }
 /* TODO bug */
-/* export-with-global-composes */
-.exportName60 { background: red; }
-.exportName61 { font-size: 2em; }
-.exportName62 { color: red; }
-/*:local(.exportName63) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+/*:local(.exportName60) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+:local(.exportName60) { compose-with: otherClass andAgain from global; compose-with: aThirdClass from global; color: green; }
 
 /* export-with-multiple-composes */
 :local(.exportName63) { background: red; }
@@ -466,7 +467,6 @@ body {
 :local(.exportName65) { color: red; }
 :local(.exportName66) { compose-with: exportName63 exportName64; compose-with: exportName65; color: green; }
 
-/* TODO bug */
 /* export-with-transitive-composes */
 :local(.exportName67) {
 	font-size: 2em;
@@ -489,18 +489,17 @@ body {
 	}
 }
 
-/* TODO bug */
 /* multiple-composes */
-/*:import("abcd.modules.css") {*/
-/*	i__i_a_0: a;*/
-/*	i__i_b_0: b;*/
-/*	i__i_c_0: c;*/
-/*	i__i_d_0: d;*/
-/*}*/
-/*:local(.class) {*/
-/*	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;*/
-/*	color: red;*/
-/*}*/
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+:local(.class) {
+	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
+}
 
 /* TODO bug */
 /* nested-rule */
@@ -511,3 +510,14 @@ body {
 	}
 }
 
+/* export-with-composes-broken-order */
+:local(.exportName70) { compose-with: exportName71; color: green; }
+:local(.exportName71) { compose-with: exportName72; color: green; }
+:local(.exportName72) { background: red; }
+
+/* transitive composes */
+.exportName73 { composes: bar from "./classes.css"; color: green; }
+.exportName74 { composes: exportName73; color: green; }
+.exportName75 { color: red }
+.exportName74 { composes: exportName75; color: green; }
+.exportName74 { composes: my-global from global; color: green; }

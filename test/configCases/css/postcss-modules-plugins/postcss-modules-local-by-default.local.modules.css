@@ -95,17 +95,17 @@
 /* localize a single animation-name */
 .foo { animation-name: bar; }
 
-/* TODO bug */
 /* localize a single animation-name #2 */
 .foo { animation-name: local(bar); }
+.foo { animation-name: :local(bar); }
 
 /* passed because `--bar` not found */
 /* not localize animation-name in a var function */
-.foo { animation-name: var(--bar); }
+.foo { animation-name: var(--bar-unique); }
 
 /* passed because `--bar` not found */
 /* not localize animation-name in a var function #2 */
-.foo { animation-name: vAr(--bar); }
+.foo { animation-name: vAr(--bar-unique); }
 /* Work, because found */
 :root { --my-custom-var: name; }
 .foo { animation-name: vAr(--my-custom-var); }
@@ -113,23 +113,19 @@
 /* not localize animation-name in an env function */
 .foo { animation-name: env(bar); }
 
-/* TODO bug */
 /* not localize animation-name in an global function */
 .foo { animation-name: global(bar); }
+.foo { animation-name: :global(bar); }
 
-/* TODO bug */
 /* localize and not localize animation-name in mixed case */
 .foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
 
-/* TODO bug */
 /* not localize animation in an global function */
 .foo { animation: global(bar); }
 
-/* TODO bug */
 /* not localize a certain animation in an global function */
 .foo { animation: global(bar), foo; }
 
-/* TODO bug */
 /* localize and not localize a certain animation in mixed case */
 .foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
 
@@ -243,7 +239,6 @@
 /* handle nested global #5 */
 :global .a:not(:local .b, :global .c) { a_value: some-value; }
 
-/* TODO bug */
 /* handle nested global #6 */
 :global .a:not(.b, .c) { a_value: some-value; }
 
@@ -299,9 +294,13 @@
 /* localize keyframes containing special characters */
 @keyframes f\@oo { from { color: red; } to { color: blue; } }
 
-/* TODO bug */
 /* localize explicit keyframes */
-@keyframes :local(foo) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } } @-webkit-keyframes :global(bar) { from { color: red; } to { color: blue; } }
+@keyframes :local(foo) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@-webkit-keyframes :global(bar) { from { color: red; } to { color: blue; } }
+@keyframes local(local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes :local(colon-local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes global(global-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes :global(colon-global-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 
 /* ignore :export statements */
 :export { foo: __foo; }
@@ -309,9 +308,8 @@
 /* ignore :import statements */
 :import("./import.modules.css") { foo: __foo; }
 
-/* TODO bug */
 /* incorrectly handle nested selectors */
-.bar:not(:global .foo, .baz) { a_value: some-value; }
+.bar:not(:global .foo-name, .baz-name) { a_value: some-value; }
 
 /* compile explict global element */
 :global(input) { a_value: some-value; }
@@ -319,31 +317,31 @@
 /* compile explict global attribute */
 :global([type="radio"]), :not(:global [type="radio"]) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on inconsistent selector result */
 :global .foo, .bar { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested :locals */
 :local(:local(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested :globals */
 :global(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested mixed */
 :local(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested broad :local */
 :global(:local .foo) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .foo :global.bar { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on incorrect spacing with broad :local */
 .foo:local .bar { a_value: some-value; }
 
@@ -442,23 +440,23 @@ input { a_value: some-value; }
 /* throw on invalid syntax class usage */
 # { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid syntax local class usage */
 :local(.) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid syntax local id usage */
 :local(#) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(.) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(#) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(.a:not(:global .b, :global .c)) { a_value: some-value; }
 

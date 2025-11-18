@@ -6,7 +6,7 @@
 
 /* existing-import */
 :import("library.modules.css") {
-	something: else;
+	something: something;
 }
 
 :local(.exportName2) {
@@ -254,7 +254,7 @@
 
 /* TODO bug */
 /* composes from-import */
-:import("./import.modules.css") {  abc-from-def: abc;}
+:import("./import.modules.css") {  abc-from-def: abcd;}
 
 :local(.exportName36) {
 	composes: abc-from-def;
@@ -283,9 +283,8 @@
 	color:red;
 }
 
-/* TODO bug */
 :import("foo") {
-	foo: other;
+	my-own-name-here: custom-other-name;
 }
 
 .exportName44 { color: unknown; }

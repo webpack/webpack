@@ -7,3 +7,5 @@
 .b-last {
 	color: red;
 }
+
+:export { localvalue: red }

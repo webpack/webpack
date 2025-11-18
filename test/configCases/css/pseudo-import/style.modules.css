@@ -40,12 +40,11 @@
 	color: again;
 }
 
-/* TODO fix me */
-/*:import("reexport.modules.css") {
-	primary-color: _my_color;
+:import("reexport.modules.css") {
+	primary-color: primary-color;
 }
 
-.class {color: primary-color}*/
+.class {color: primary-color}
 
 :import("vars-1.modules.css") {
 	_i_multile_values: multile-values;
