@@ -317,31 +317,31 @@
 /* compile explict global attribute */
 :global([type="radio"]), :not(:global [type="radio"]) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on inconsistent selector result */
 :global .foo, .bar { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested :locals */
 :local(:local(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested :globals */
 :global(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested mixed */
 :local(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on nested broad :local */
 :global(:local .foo) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .foo :global.bar { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on incorrect spacing with broad :local */
 .foo:local .bar { a_value: some-value; }
 
@@ -440,23 +440,23 @@ input { a_value: some-value; }
 /* throw on invalid syntax class usage */
 # { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid syntax local class usage */
 :local(.) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid syntax local id usage */
 :local(#) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(.) { a_value: some-value; }
 
-/* TODO bug */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(#) { a_value: some-value; }
 
-/* TODO bug? */
+/* TODO bug no report */
 /* throw on invalid global class usage */
 :global(.a:not(:global .b, :global .c)) { a_value: some-value; }
 

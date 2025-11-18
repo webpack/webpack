@@ -254,7 +254,7 @@
 
 /* TODO bug */
 /* composes from-import */
-:import("./import.modules.css") {  abc-from-def: abc;}
+:import("./import.modules.css") {  abc-from-def: abcd;}
 
 :local(.exportName36) {
 	composes: abc-from-def;

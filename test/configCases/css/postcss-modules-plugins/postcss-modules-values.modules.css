@@ -68,11 +68,10 @@
 .exportName15 { color: otherRed; }
 .exportName16 { color: otherBlue }
 
-/* TODO fix me */
 /* should import from a definition */
-/*@value colors: "./colors.modules.css";*/
-/*@value otherBlue from colors;*/
-/*.exportName17 { color: otherBlue; }*/
+@value colors: "./colors.modules.css";
+@value otherBlue from colors;
+.exportName17 { color: otherBlue; }
 
 /* should only allow values for paths if defined in the right order - throw an error */
 @value wrongOrder from colors;

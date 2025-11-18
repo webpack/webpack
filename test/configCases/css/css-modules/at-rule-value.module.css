@@ -90,15 +90,10 @@ colorValue-v3 {
 .foo { color: blue-i; }
 .bar { color: green-v2 }
 
-/*@value red-v3 from colors;*/
-/*@value colors: "./colors.module.css";*/
+@value colors: "./colors.module.css";
+@value red-v4 from colors;
 
-/*.foo { color: red-v3; }*/
-
-/*@value colors: "./colors.module.css";*/
-/*@value red-v4 from colors;*/
-
-/*.foo { color: red-v4; }*/
+.foo { color: red-v4; }
 
 @value aaa: red;
 @value bbb: aaa;
@@ -222,7 +217,7 @@ colorValue-v3 {
 
 .foo { color: test-v2; }
 
-@value/* test */(/* test */blue/* test */as/* test */my-name-q/* test */)/* test */from/* test */"./colors.module.css"/* test */;
+@value/* test */(/* test */blue-v1/* test */as/* test */my-name-q/* test */)/* test */from/* test */"./colors.module.css"/* test */;
 
 .foo { color: my-name-q; }
 

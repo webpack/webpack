@@ -489,18 +489,17 @@ body {
 	}
 }
 
-/* TODO bug */
 /* multiple-composes */
-/*:import("abcd.modules.css") {*/
-/*	i__i_a_0: a;*/
-/*	i__i_b_0: b;*/
-/*	i__i_c_0: c;*/
-/*	i__i_d_0: d;*/
-/*}*/
-/*:local(.class) {*/
-/*	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;*/
-/*	color: red;*/
-/*}*/
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+:local(.class) {
+	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
+}
 
 /* TODO bug */
 /* nested-rule */
