@@ -8,7 +8,7 @@ it("should work", () => {
 		// because they may not exist when code is running
 		expect(import.meta.dirname).toBe(__STATS__.children[__STATS_I__].outputPath);
 		expect(typeof import.meta.dirname).toBe("string");
-		expect(import.meta.filename.endsWith("bundle1.mjs")).toBe(true);
+		expect(/bundle[13].mjs/.test(import.meta.filename)).toBe(true);
 		expect(typeof import.meta.filename).toBe("string");
 	}
 });
