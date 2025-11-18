@@ -11602,12 +11602,15 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[EmptyParserOptions], WebAssemblyParser>
 				> &
 				Record<"css", SyncBailHook<[CssParserOptions], CssParser>> &
-				Record<"css/auto", SyncBailHook<any, CssParser>> &
+				Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> &
 				Record<
 					"css/module",
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
-				Record<"css/global", SyncBailHook<any, CssParser>> &
+				Record<
+					"css/global",
+					SyncBailHook<[CssModuleParserOptions], CssParser>
+				> &
 				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
 		>;
 		parser: TypedHookMap<
@@ -11650,12 +11653,18 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[WebAssemblyParser, EmptyParserOptions], void>
 				> &
 				Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> &
-				Record<"css/auto", SyncBailHook<any, void>> &
+				Record<
+					"css/auto",
+					SyncBailHook<[CssParser, CssModuleParserOptions], void>
+				> &
 				Record<
 					"css/module",
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
-				Record<"css/global", SyncBailHook<any, void>> &
+				Record<
+					"css/global",
+					SyncBailHook<[CssParser, CssModuleParserOptions], void>
+				> &
 				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
 		>;
 		createGenerator: TypedHookMap<
@@ -11698,12 +11707,18 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[EmptyParserOptions], Generator>
 				> &
 				Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> &
-				Record<"css/auto", SyncBailHook<any, CssGenerator>> &
+				Record<
+					"css/auto",
+					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
+				> &
 				Record<
 					"css/module",
 					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
-				Record<"css/global", SyncBailHook<any, CssGenerator>> &
+				Record<
+					"css/global",
+					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
+				> &
 				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
 		>;
 		generator: TypedHookMap<
@@ -11752,12 +11767,18 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[Generator, EmptyParserOptions], void>
 				> &
 				Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> &
-				Record<"css/auto", SyncBailHook<any, void>> &
+				Record<
+					"css/auto",
+					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
+				> &
 				Record<
 					"css/module",
 					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
 				> &
-				Record<"css/global", SyncBailHook<any, void>> &
+				Record<
+					"css/global",
+					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
+				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
 		createModuleClass: HookMap<
