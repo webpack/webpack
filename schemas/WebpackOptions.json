@@ -3378,7 +3378,8 @@
           "type": "array",
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
-            "type": "string"
+            "type": "string",
+            "tsType": "(import(\"../lib/Module\").SourceType)"
           },
           "minItems": 1
         },

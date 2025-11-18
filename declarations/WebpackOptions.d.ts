@@ -1892,7 +1892,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
-	defaultSizeTypes?: string[];
+	defaultSizeTypes?: import("../lib/Module").SourceType[];
 	/**
 	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
 	 */

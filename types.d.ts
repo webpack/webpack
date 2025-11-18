@@ -1048,7 +1048,7 @@ declare interface BufferedMap {
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
-	map: Record<string, Generator>;
+	map: { [index: string]: undefined | Generator };
 	generateError?: (
 		error: Error,
 		module: NormalModule,
@@ -1372,7 +1372,7 @@ declare class ChunkGraph {
 	setChunkModuleSourceTypes(
 		chunk: Chunk,
 		module: Module,
-		sourceTypes: Set<string>
+		sourceTypes: ReadonlySet<string>
 	): void;
 	getChunkModuleSourceTypes(chunk: Chunk, module: Module): ReadonlySet<string>;
 	getModuleSourceTypes(module: Module): ReadonlySet<string>;
@@ -6100,7 +6100,9 @@ declare class Generator {
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
-	static byType(map: Record<string, Generator>): ByTypeGenerator;
+	static byType(map: {
+		[index: string]: undefined | Generator;
+	}): ByTypeGenerator;
 }
 declare interface GeneratorOptions {
 	[index: string]: any;
