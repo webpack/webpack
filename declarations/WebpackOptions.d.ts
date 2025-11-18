@@ -2958,48 +2958,6 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
- * Generator options for css/auto modules.
- */
-export interface CssAutoGeneratorOptions {
-	/**
-	 * Configure the generated JS modules that use the ES modules syntax.
-	 */
-	esModule?: CssGeneratorEsModule;
-	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?: CssGeneratorExportsConvention;
-	/**
-	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
-	 */
-	exportsOnly?: CssGeneratorExportsOnly;
-	/**
-	 * Configure the generated local ident name.
-	 */
-	localIdentName?: CssGeneratorLocalIdentName;
-}
-/**
- * Parser options for css/auto modules.
- */
-export interface CssAutoParserOptions {
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: CssParserExportType;
-	/**
-	 * Enable/disable `@import` at-rules handling.
-	 */
-	import?: CssParserImport;
-	/**
-	 * Use ES modules named export for css exports.
-	 */
-	namedExports?: CssParserNamedExports;
-	/**
-	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
-	 */
-	url?: CssParserUrl;
-}
-/**
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {
@@ -3011,52 +2969,6 @@ export interface CssGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
-}
-/**
- * Generator options for css/global modules.
- */
-export interface CssGlobalGeneratorOptions {
-	/**
-	 * Configure the generated JS modules that use the ES modules syntax.
-	 */
-	esModule?: CssGeneratorEsModule;
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: CssParserExportType;
-	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?: CssGeneratorExportsConvention;
-	/**
-	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
-	 */
-	exportsOnly?: CssGeneratorExportsOnly;
-	/**
-	 * Configure the generated local ident name.
-	 */
-	localIdentName?: CssGeneratorLocalIdentName;
-}
-/**
- * Parser options for css/global modules.
- */
-export interface CssGlobalParserOptions {
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: CssParserExportType;
-	/**
-	 * Enable/disable `@import` at-rules handling.
-	 */
-	import?: CssParserImport;
-	/**
-	 * Use ES modules named export for css exports.
-	 */
-	namedExports?: CssParserNamedExports;
-	/**
-	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
-	 */
-	url?: CssParserUrl;
 }
 /**
  * Generator options for css/module modules.
@@ -3078,6 +2990,18 @@ export interface CssModuleGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Digest types used for the hash.
+	 */
+	localIdentHashDigest?: HashDigest;
+	/**
+	 * Number of chars which are used for the hash.
+	 */
+	localIdentHashDigestLength?: HashDigestLength;
+	/**
+	 * Any string which is added to the hash to salt it.
+	 */
+	localIdentHashSalt?: HashSalt;
 	/**
 	 * Configure the generated local ident name.
 	 */
@@ -4073,13 +3997,13 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 */
 	css?: CssGeneratorOptions;
 	/**
-	 * Generator options for css/auto modules.
+	 * Generator options for css/module modules.
 	 */
-	"css/auto"?: CssAutoGeneratorOptions;
+	"css/auto"?: CssModuleGeneratorOptions;
 	/**
-	 * Generator options for css/global modules.
+	 * Generator options for css/module modules.
 	 */
-	"css/global"?: CssGlobalGeneratorOptions;
+	"css/global"?: CssModuleGeneratorOptions;
 	/**
 	 * Generator options for css/module modules.
 	 */
@@ -4145,13 +4069,13 @@ export interface ParserOptionsByModuleTypeKnown {
 	 */
 	css?: CssParserOptions;
 	/**
-	 * Parser options for css/auto modules.
+	 * Parser options for css/module modules.
 	 */
-	"css/auto"?: CssAutoParserOptions;
+	"css/auto"?: CssModuleParserOptions;
 	/**
-	 * Parser options for css/global modules.
+	 * Parser options for css/module modules.
 	 */
-	"css/global"?: CssGlobalParserOptions;
+	"css/global"?: CssModuleParserOptions;
 	/**
 	 * Parser options for css/module modules.
 	 */
