@@ -53,6 +53,7 @@ if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target
 
 exports[`ConfigCacheTestCases chunks-order module exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
 "import {fileURLToPath as __webpack_fileURLToPath__} from \\"node:url\\";
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 export const __webpack_esm_id__ = \\"foo\\";
 export const __webpack_esm_ids__ = [\\"foo\\"];
 export const __webpack_esm_modules__ = {
@@ -73,7 +74,6 @@ export const __webpack_esm_modules__ = {
   \\\\****************/
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
-var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 125);
 /* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dependency.js */ 784);
 /* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_1__);
@@ -14998,10 +14998,10 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 
 exports[`ConfigCacheTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
 "import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
     expect(\\"aaa\\").toBe(\\"aaa\\");
 });
