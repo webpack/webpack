@@ -5,7 +5,6 @@ it("source should include only debugId comment", function() {
 	const debugIdCommentRegex = new RegExp(`\n\/\/# debugId\s*=\s*${debugIdRegex.source}$`);
 
 	const source = fs.readFileSync(__filename, "utf-8");
-	console.log('SOURCE matches', source.match(debugIdCommentRegex));
 	expect(debugIdCommentRegex.test(source)).toBe(true);
 
 	const sourceMap = fs.readFileSync(__filename + ".map", "utf-8");
