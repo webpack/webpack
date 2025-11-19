@@ -62,13 +62,20 @@ if (module.hot) {
 			});
 	};
 	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function (currentHash) {
-		lastHash = currentHash;
+	var handler = function (event) {
+		lastHash = typeof event === "string" ? event : event.detail.currentHash;
 		if (!upToDate() && module.hot.status() === "idle") {
 			log("info", "[HMR] Checking for updates on the server...");
 			check();
 		}
-	});
+	};
+
+	hotEmitter[
+		typeof hotEmitter.on === "function"
+			? "on"
+			: "addEventListener"
+	]("webpackHotUpdate", handler);
+
 	log("info", "[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled.");
