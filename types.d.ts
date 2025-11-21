@@ -8768,6 +8768,11 @@ declare interface KnownBuildInfo {
 	 * top level declaration names
 	 */
 	topLevelDeclarations?: Set<string>;
+
+	/**
+	 * need add __webpack_global__ as 4th parameter
+	 */
+	needRequireGlobal?: boolean;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
@@ -19025,6 +19030,7 @@ declare namespace exports {
 		export let publicPath: "__webpack_require__.p";
 		export let relativeUrl: "__webpack_require__.U";
 		export let require: "__webpack_require__";
+		export let requireGlobal: "__webpack_global__";
 		export let requireScope: "__webpack_require__.*";
 		export let returnExportsFromRuntime: "return-exports-from-runtime";
 		export let runtimeId: "__webpack_require__.j";
