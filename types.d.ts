@@ -3935,6 +3935,7 @@ declare class DefinePlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	static getCompilationHooks(compilation: Compilation): DefinePluginHooks;
 	static runtimeValue(
 		fn: (value: {
 			module: NormalModule;
@@ -3943,6 +3944,12 @@ declare class DefinePlugin {
 		}) => CodeValuePrimitive,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
+}
+declare interface DefinePluginHooks {
+	definitions: SyncWaterfallHook<
+		[Record<string, CodeValue>],
+		Record<string, CodeValue>
+	>;
 }
 declare class DelegatedPlugin {
 	constructor(options: Options);
