@@ -109,7 +109,7 @@ jobs:
         with:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
-          restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          restore-keys: jest-unit-${{ runner.os }}-${{ matrix.node-version }}
 
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
 
@@ -206,7 +206,7 @@ jobs:
         with:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
-          restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          restore-keys: jest-integration-${{ runner.os }}-${{ matrix.node-version }}-${{ matrix.part }}
 
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
 
