@@ -161,11 +161,28 @@ class FakeElement {
 	set href(value) {
 		if (this._type === "link") {
 			this._href = this._toRealUrl(value);
+			try {
+				this.sheet._css = this.sheet.css;
+				this.sheet._cssRules = this.sheet.cssRules;
+			} catch (_error) {
+				// Ignore error
+			}
 		}
 	}
 
 	get href() {
 		return this._href;
+	}
+
+	get rel() {
+		if (this._type === "link") {
+			return this._attributes.rel || "stylesheet";
+		}
+		return this._attributes.rel;
+	}
+
+	set rel(value) {
+		this._attributes.rel = value;
 	}
 }
 
@@ -173,15 +190,23 @@ class FakeSheet {
 	constructor(element, basePath) {
 		this._element = element;
 		this._basePath = basePath;
+
+		// We cannot lazily load file content in getter because in HMR scenarios,
+		// the file path will have ?hmr=timestamp appended. If we load lazily,
+		// we can only get the latest file content, and the previous content will be lost.
+		this._css = undefined;
+		this._cssRules = undefined;
 	}
 
 	get css() {
+		if (this._css) return this._css;
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
 				this._element.href
 					.replace(/^https:\/\/test\.cases\/path\//, "")
 					.replace(/^https:\/\/example\.com\//, "")
+					.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
 			),
 			"utf8"
 		);
@@ -208,12 +233,15 @@ class FakeSheet {
 	}
 
 	get cssRules() {
+		if (this._cssRules) return this._cssRules;
+
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
 		let currentRule = { getPropertyValue };
 		let selector;
 		let last = 0;
+		let ruleStart = 0; // Track the start of the current rule
 		const processDeclaration = (str) => {
 			const colon = str.indexOf(":");
 			if (colon > 0) {
@@ -222,11 +250,12 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		const filepath = /file:\/\//.test(this._element.href)
-			? new URL(this._element.href)
+		const href = this._element.href.split("?")[0]; // Remove query parameters (e.g., ?hmr=timestamp)
+		const filepath = /file:\/\//.test(href)
+			? new URL(href)
 			: path.resolve(
 					this._basePath,
-					this._element.href
+					href
 						.replace(/^https:\/\/test\.cases\/path\//, "")
 						.replace(/^https:\/\/example\.com\/public\/path\//, "")
 						.replace(/^https:\/\/example\.com\//, "")
@@ -256,6 +285,7 @@ class FakeSheet {
 		walkCssTokens(css, 0, {
 			leftCurlyBracket(source, start, end) {
 				if (selector === undefined) {
+					ruleStart = last; // Record the start of the rule (before the selector)
 					selector = source.slice(last, start).trim();
 					last = end;
 				}
@@ -263,10 +293,14 @@ class FakeSheet {
 			},
 			rightCurlyBracket(source, start, end) {
 				processDeclaration(source.slice(last, start));
-				last = end;
-				rules.push({ selectorText: selector, style: currentRule });
+				rules.push({
+					selectorText: selector,
+					style: currentRule,
+					cssText: source.slice(ruleStart, end).trim()
+				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
+				last = end;
 				return end;
 			},
 			semicolon(source, start, end) {
