@@ -6938,6 +6938,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-method-shorthand": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports object method shorthand ('{ module() {} }').",
+        "multiple": false,
+        "path": "output.environment.methodShorthand",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports object method shorthand ('{ module() {} }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-module": Object {
     "configs": Array [
       Object {

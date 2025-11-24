@@ -1417,9 +1417,9 @@ asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]"
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
 "asset entry.js X KiB [emitted] (name: entry)
+asset 0.js X bytes [emitted]
 asset 717.js X bytes [emitted]
 asset 776.js X bytes [emitted]
-asset 0.js X bytes [emitted]
 runtime modules X KiB 9 modules
 built modules X bytes [built]
   modules by path ./templates/*.js X bytes
