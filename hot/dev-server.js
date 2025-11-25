@@ -61,14 +61,29 @@ if (module.hot) {
 				}
 			});
 	};
+	/** @type {EventTarget | NodeJS.EventEmitter} */
 	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function (currentHash) {
-		lastHash = currentHash;
+	/**
+	 * @param {CustomEvent<{ currentHash: string }>} event event or hash
+	 */
+	var handler = function (event) {
+		lastHash = typeof event === "string" ? event : event.detail.currentHash;
 		if (!upToDate() && module.hot.status() === "idle") {
 			log("info", "[HMR] Checking for updates on the server...");
 			check();
 		}
-	});
+	};
+
+	if (typeof EventTarget !== "undefined" && hotEmitter instanceof EventTarget) {
+		hotEmitter.addEventListener(
+			"webpackHotUpdate",
+			/** @type {EventListener} */
+			(handler)
+		);
+	} else {
+		hotEmitter.on("webpackHotUpdate", handler);
+	}
+
 	log("info", "[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled.");
