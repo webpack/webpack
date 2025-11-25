@@ -85,6 +85,9 @@ exports.keepAlive = function (options) {
 	};
 };
 
+/**
+ * @param {string} value new url value
+ */
 exports.setUrl = function (value) {
 	urlBase = value;
 };

@@ -20,13 +20,15 @@ exports.keepAlive = function (options) {
 		options.onError(err);
 	}
 
-	/** @type {import("http").IncomingMessage} */
-	var mod = urlBase.startsWith("https") ? import("https") : import("http");
+	/** @type {Promise<import("http") | import("https")>} */
+	var mod = require("./load-http")(urlBase.startsWith("https"));
 
+	/** @type {import("http").ClientRequest} */
 	var request;
+	/** @type {import("http").IncomingMessage} */
 	var response;
 
-	mod.then((client) => {
+	mod.then(function (client) {
 		request = client.request(
 			urlBase + data,
 			{
@@ -37,7 +39,7 @@ exports.keepAlive = function (options) {
 				response = res;
 				response.on("error", errorHandler);
 
-				if (!options.activ && !options.module.hot) {
+				if (!options.active && !options.module.hot) {
 					console.log(
 						"Hot Module Replacement is not enabled. Waiting for process restart..."
 					);
@@ -56,6 +58,9 @@ exports.keepAlive = function (options) {
 	};
 };
 
+/**
+ * @param {string} value new url value
+ */
 exports.setUrl = function (value) {
 	urlBase = value;
 };

@@ -113,6 +113,7 @@ export default defineConfig([
 	},
 	{
 		files: ["lib/**/*.runtime.js", "hot/*.js"],
+		ignores: ["hot/load-http.js"],
 		extends: [configs["javascript/es5"]],
 		languageOptions: {
 			sourceType: "commonjs",

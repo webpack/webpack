@@ -4,7 +4,7 @@
 */
 /* globals __webpack_hash__ */
 if (module.hot) {
-	/** @type {undefined|string} */
+	/** @type {undefined | string} */
 	var lastHash;
 	var upToDate = function upToDate() {
 		return /** @type {string} */ (lastHash).indexOf(__webpack_hash__) >= 0;
@@ -79,7 +79,11 @@ if (module.hot) {
 				}
 			});
 	};
+	/** @type {EventTarget | NodeJS.EventEmitter} */
 	var hotEmitter = require("./emitter");
+	/**
+	 * @param {CustomEvent<{ currentHash: string }>} event event or hash
+	 */
 	var handler = function (event) {
 		lastHash = typeof event === "string" ? event : event.detail.currentHash;
 		if (!upToDate()) {
@@ -98,11 +102,15 @@ if (module.hot) {
 		}
 	};
 
-	hotEmitter[
-		typeof hotEmitter.on === "function"
-			? "on"
-			: "addEventListener"
-		]("webpackHotUpdate", handler);
+	if (typeof EventTarget !== "undefined" && hotEmitter instanceof EventTarget) {
+		hotEmitter.addEventListener(
+			"webpackHotUpdate",
+			/** @type {EventListener} */
+			(handler)
+		);
+	} else {
+		hotEmitter.on("webpackHotUpdate", handler);
+	}
 
 	log("info", "[HMR] Waiting for update signal from WDS...");
 } else {
