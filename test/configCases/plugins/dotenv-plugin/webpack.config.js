@@ -34,7 +34,7 @@ module.exports = [
 		entry: "./custom-prefixes.js",
 		dotenv: {
 			dir: path.resolve(__dirname, "./prefixes-env"),
-			prefix: ["APP_", "CONFIG_"]
+			prefix: ["APP_", "CONFIG_", "__proto__", "constructor"]
 		}
 	},
 	// Test 5: Mode-specific - .env.[mode] overrides
