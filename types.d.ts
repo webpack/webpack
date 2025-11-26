@@ -3574,62 +3574,6 @@ type CreateWriteStreamFSImplementation = FSImplementation & {
 	close?: (...args: any[]) => any;
 };
 declare interface CreatedObject<T, F> {}
-
-/**
- * Generator options for css/auto modules.
- */
-declare interface CssAutoGeneratorOptions {
-	/**
-	 * Configure the generated JS modules that use the ES modules syntax.
-	 */
-	esModule?: boolean;
-
-	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-
-	/**
-	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
-	 */
-	exportsOnly?: boolean;
-
-	/**
-	 * Configure the generated local ident name.
-	 */
-	localIdentName?: string;
-}
-
-/**
- * Parser options for css/auto modules.
- */
-declare interface CssAutoParserOptions {
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: "link" | "text" | "css-style-sheet";
-
-	/**
-	 * Enable/disable `@import` at-rules handling.
-	 */
-	import?: boolean;
-
-	/**
-	 * Use ES modules named export for css exports.
-	 */
-	namedExports?: boolean;
-
-	/**
-	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
-	 */
-	url?: boolean;
-}
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -3642,14 +3586,7 @@ declare interface CssData {
 	exports: Map<string, string>;
 }
 declare abstract class CssGenerator extends Generator {
-	convention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-	localIdentName?: string;
+	options: CssModuleGeneratorOptions;
 	sourceDependency(
 		module: NormalModule,
 		dependency: Dependency,
@@ -3683,67 +3620,6 @@ declare interface CssGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
-}
-
-/**
- * Generator options for css/global modules.
- */
-declare interface CssGlobalGeneratorOptions {
-	/**
-	 * Configure the generated JS modules that use the ES modules syntax.
-	 */
-	esModule?: boolean;
-
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: "link" | "text" | "css-style-sheet";
-
-	/**
-	 * Specifies the convention of exported names.
-	 */
-	exportsConvention?:
-		| "as-is"
-		| "camel-case"
-		| "camel-case-only"
-		| "dashes"
-		| "dashes-only"
-		| ((name: string) => string);
-
-	/**
-	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
-	 */
-	exportsOnly?: boolean;
-
-	/**
-	 * Configure the generated local ident name.
-	 */
-	localIdentName?: string;
-}
-
-/**
- * Parser options for css/global modules.
- */
-declare interface CssGlobalParserOptions {
-	/**
-	 * Configure how CSS content is exported as default.
-	 */
-	exportType?: "link" | "text" | "css-style-sheet";
-
-	/**
-	 * Enable/disable `@import` at-rules handling.
-	 */
-	import?: boolean;
-
-	/**
-	 * Use ES modules named export for css exports.
-	 */
-	namedExports?: boolean;
-
-	/**
-	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
-	 */
-	url?: boolean;
 }
 declare interface CssImportDependencyMeta {
 	layer?: string;
@@ -3818,6 +3694,21 @@ declare interface CssModuleGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
+
+	/**
+	 * Digest types used for the hash.
+	 */
+	localIdentHashDigest?: string;
+
+	/**
+	 * Number of chars which are used for the hash.
+	 */
+	localIdentHashDigestLength?: number;
+
+	/**
+	 * Any string which is added to the hash to salt it.
+	 */
+	localIdentHashSalt?: string;
 
 	/**
 	 * Configure the generated local ident name.
@@ -6157,14 +6048,14 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	css?: CssGeneratorOptions;
 
 	/**
-	 * Generator options for css/auto modules.
+	 * Generator options for css/module modules.
 	 */
-	"css/auto"?: CssAutoGeneratorOptions;
+	"css/auto"?: CssModuleGeneratorOptions;
 
 	/**
-	 * Generator options for css/global modules.
+	 * Generator options for css/module modules.
 	 */
-	"css/global"?: CssGlobalGeneratorOptions;
+	"css/global"?: CssModuleGeneratorOptions;
 
 	/**
 	 * Generator options for css/module modules.
@@ -11711,14 +11602,14 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[EmptyParserOptions], WebAssemblyParser>
 				> &
 				Record<"css", SyncBailHook<[CssParserOptions], CssParser>> &
-				Record<"css/auto", SyncBailHook<[CssAutoParserOptions], CssParser>> &
+				Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> &
 				Record<
 					"css/module",
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<
 					"css/global",
-					SyncBailHook<[CssGlobalParserOptions], CssParser>
+					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
 		>;
@@ -11764,7 +11655,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> &
 				Record<
 					"css/auto",
-					SyncBailHook<[CssParser, CssAutoParserOptions], void>
+					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<
 					"css/module",
@@ -11772,7 +11663,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"css/global",
-					SyncBailHook<[CssParser, CssGlobalParserOptions], void>
+					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
 		>;
@@ -11818,7 +11709,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> &
 				Record<
 					"css/auto",
-					SyncBailHook<[CssAutoGeneratorOptions], CssGenerator>
+					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
 				Record<
 					"css/module",
@@ -11826,7 +11717,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"css/global",
-					SyncBailHook<[CssGlobalGeneratorOptions], CssGenerator>
+					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
 				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
 		>;
@@ -11878,7 +11769,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> &
 				Record<
 					"css/auto",
-					SyncBailHook<[CssGenerator, CssAutoGeneratorOptions], void>
+					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
 				> &
 				Record<
 					"css/module",
@@ -11886,7 +11777,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"css/global",
-					SyncBailHook<[CssGenerator, CssGlobalGeneratorOptions], void>
+					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
 				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
@@ -13626,14 +13517,14 @@ declare interface ParserOptionsByModuleTypeKnown {
 	css?: CssParserOptions;
 
 	/**
-	 * Parser options for css/auto modules.
+	 * Parser options for css/module modules.
 	 */
-	"css/auto"?: CssAutoParserOptions;
+	"css/auto"?: CssModuleParserOptions;
 
 	/**
-	 * Parser options for css/global modules.
+	 * Parser options for css/module modules.
 	 */
-	"css/global"?: CssGlobalParserOptions;
+	"css/global"?: CssModuleParserOptions;
 
 	/**
 	 * Parser options for css/module modules.

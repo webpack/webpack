@@ -1559,6 +1559,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-auto-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/auto.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-auto-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1591,6 +1609,45 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-auto-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-auto-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-auto-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-auto-local-ident-name": Object {
     "configs": Array [
@@ -1695,6 +1752,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-global-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-global-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-local-ident-name": Object {
     "configs": Array [
       Object {
@@ -1771,6 +1867,45 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-module-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-module-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-module-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-module-local-ident-name": Object {
     "configs": Array [

@@ -371,44 +371,6 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
-    "CssAutoGeneratorOptions": {
-      "description": "Generator options for css/auto modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "esModule": {
-          "$ref": "#/definitions/CssGeneratorEsModule"
-        },
-        "exportsConvention": {
-          "$ref": "#/definitions/CssGeneratorExportsConvention"
-        },
-        "exportsOnly": {
-          "$ref": "#/definitions/CssGeneratorExportsOnly"
-        },
-        "localIdentName": {
-          "$ref": "#/definitions/CssGeneratorLocalIdentName"
-        }
-      }
-    },
-    "CssAutoParserOptions": {
-      "description": "Parser options for css/auto modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "exportType": {
-          "$ref": "#/definitions/CssParserExportType"
-        },
-        "import": {
-          "$ref": "#/definitions/CssParserImport"
-        },
-        "namedExports": {
-          "$ref": "#/definitions/CssParserNamedExports"
-        },
-        "url": {
-          "$ref": "#/definitions/CssParserUrl"
-        }
-      }
-    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -468,47 +430,6 @@
         }
       }
     },
-    "CssGlobalGeneratorOptions": {
-      "description": "Generator options for css/global modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "esModule": {
-          "$ref": "#/definitions/CssGeneratorEsModule"
-        },
-        "exportType": {
-          "$ref": "#/definitions/CssParserExportType"
-        },
-        "exportsConvention": {
-          "$ref": "#/definitions/CssGeneratorExportsConvention"
-        },
-        "exportsOnly": {
-          "$ref": "#/definitions/CssGeneratorExportsOnly"
-        },
-        "localIdentName": {
-          "$ref": "#/definitions/CssGeneratorLocalIdentName"
-        }
-      }
-    },
-    "CssGlobalParserOptions": {
-      "description": "Parser options for css/global modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "exportType": {
-          "$ref": "#/definitions/CssParserExportType"
-        },
-        "import": {
-          "$ref": "#/definitions/CssParserImport"
-        },
-        "namedExports": {
-          "$ref": "#/definitions/CssParserNamedExports"
-        },
-        "url": {
-          "$ref": "#/definitions/CssParserUrl"
-        }
-      }
-    },
     "CssModuleGeneratorOptions": {
       "description": "Generator options for css/module modules.",
       "type": "object",
@@ -525,6 +446,15 @@
         },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentHashDigest": {
+          "$ref": "#/definitions/HashDigest"
+        },
+        "localIdentHashDigestLength": {
+          "$ref": "#/definitions/HashDigestLength"
+        },
+        "localIdentHashSalt": {
+          "$ref": "#/definitions/HashSalt"
         },
         "localIdentName": {
           "$ref": "#/definitions/CssGeneratorLocalIdentName"
@@ -1625,10 +1555,10 @@
           "$ref": "#/definitions/CssGeneratorOptions"
         },
         "css/auto": {
-          "$ref": "#/definitions/CssAutoGeneratorOptions"
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "css/global": {
-          "$ref": "#/definitions/CssGlobalGeneratorOptions"
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "css/module": {
           "$ref": "#/definitions/CssModuleGeneratorOptions"
@@ -4007,10 +3937,10 @@
           "$ref": "#/definitions/CssParserOptions"
         },
         "css/auto": {
-          "$ref": "#/definitions/CssAutoParserOptions"
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "css/global": {
-          "$ref": "#/definitions/CssGlobalParserOptions"
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "css/module": {
           "$ref": "#/definitions/CssModuleParserOptions"

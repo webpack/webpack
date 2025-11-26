@@ -4,7 +4,7 @@ import * as styles2 from "./style.modules.less";
 it("should prefer relative", () => {
 	expect(styles1).toEqual({});
 	expect(styles2).toEqual(nsObj({
-		"style-module": "_style_modules_less-style-module",
+		"style-module": "style_modules_less-style-module",
 	}));
 
 	const style = getComputedStyle(document.body);
