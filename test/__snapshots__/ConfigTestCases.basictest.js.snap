@@ -1838,55 +1838,55 @@ div {
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "cad2169b561fc80fbdd2",
-  "VARS": "--c191ac5d51793f420926 c6c2464a86e35c83423e undefined cb023650ab1374618d97",
-  "animation": "f7b94264effe46aa7a8e",
-  "animationName": "fadafa8ed9f5994a36a6",
-  "class": "e5af26f116e2e3d60717",
-  "classInContainer": "bfebe9e1ea7574d5910c",
-  "classLocalScope": "b48b7b93c9de1029984b",
-  "cssModuleWithCustomFileExtension": "f49a8d556342a17b89ce",
-  "currentWmultiParams": "c424ccafd74c2bcab717",
-  "deepClassInContainer": "de0609a1cee52edce610",
-  "displayFlexInSupportsInMediaUpperCase": "f72d4de40257c3bc7a8a",
+  "UsedClassName": "jNb1RA",
+  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
+  "animation": "xVppDs",
+  "animationName": "Lo5rLV",
+  "class": "Th9Hcz",
+  "classInContainer": "zzDKiI",
+  "classLocalScope": "Ss63Ju",
+  "cssModuleWithCustomFileExtension": "fBHrus",
+  "currentWmultiParams": "g4zTJs",
+  "deepClassInContainer": "_0Kw8ER",
+  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "ab832767f5385d5dff7b beforeName c32cb9263c28392a0d5d a91475aeba0a7169aa49 importName secondImport a91475aeba0a7169aa49 a91475aeba0a7169aa49 b795d3f4984147d814f7 a91475aeba0a7169aa49 b795d3f4984147d814f7 className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "b278a4efcbeb4ec5aab2 a05f3a8dc9351ad6314c",
-  "exportNameOtherFromKeywordWithFrom1": "e9ef3367aac39b4ab8dc from",
-  "exportNameOtherFromKeywordWithFrom2": "b328cf6bf68f578c21a7",
-  "exportNameOtherNoSpaces": "a64bdaa90b9d57daa97a beforeName c32cb9263c28392a0d5d",
-  "exportNameWeirdCharacters": "c1960f82cdd3f768462b",
-  "futureWmultiParams": "dae80586483c85694155",
+  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
+  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
+  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
+  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
+  "exportNameWeirdCharacters": "pfrK-J",
+  "futureWmultiParams": "FIC9OM",
   "global": undefined,
-  "hasWmultiParams": "cf2c523509fcfd340c1e",
-  "ident": "d02bfdecf4c4e53747d7",
-  "inLocalGlobalScope": "a1ba1d4aa1297548ffd5",
-  "inSupportScope": "ce0fcc1e519ffa239ba6",
-  "isWmultiParams": "dbb3765db648754ac2a1",
-  "keyframes": "ac52dce5209f6d7936d8",
-  "keyframesUPPERCASE": "f1ce8e0c9f7082a6fe67",
-  "local": "c93ded0f96c4ebdc6633 ef5c79300754fb6d3921 b174cbd20e12a5a6dd80 a301780b73ad49087de5",
-  "local2": "fb30c262c5bf9239b170 ec104827e4cedb506a47",
-  "localkeyframes2UPPPERCASE": "cbd03a9df4b599e10cbe",
-  "matchesWmultiParams": "b85c18fc015f2995a25c",
-  "media": "bac27d3f505ae3ed4f96",
-  "mediaInSupports": "a43c67fccb5214472af2",
-  "mediaWithOperator": "eb582d6a9fc23778bc49",
-  "mozAnimationName": "c0b1f5446b2cd37e1096",
-  "mozAnyWmultiParams": "a9c178e1f1034bf1d6e3",
-  "myColor": "--dc35498b1b2a4f5b2a03",
-  "nested": "fdabae4f6212c001a428 undefined a155701637c2c920166c",
+  "hasWmultiParams": "JaRvb9",
+  "ident": "ORDfKs",
+  "inLocalGlobalScope": "xawqPK",
+  "inSupportScope": "StK0G8",
+  "isWmultiParams": "yrfUF-",
+  "keyframes": "UlwS-p",
+  "keyframesUPPERCASE": "kwAQ_z",
+  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
+  "local2": "SMSyWQ Z22WXA",
+  "localkeyframes2UPPPERCASE": "axWscZ",
+  "matchesWmultiParams": "BZtKdC",
+  "media": "A4ihWh",
+  "mediaInSupports": "ylxOyA",
+  "mediaWithOperator": "gvvWG0",
+  "mozAnimationName": "jJAZvq",
+  "mozAnyWmultiParams": "Qcmkef",
+  "myColor": "--E8316H",
+  "nested": "RtgWj_ undefined kFvcKy",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "ce54499c44eeb65d6b10",
-  "paddingLg": "f0c6711e0de803fab01a",
-  "paddingSm": "c101cf9944c44feb1f13",
-  "pastWmultiParams": "a5e0785842162888f678",
-  "supports": "c24ae76cf08db35fb923",
-  "supportsInMedia": "b0819a3669e76705b919",
-  "supportsWithOperator": "ca30a31e789b627ddac1",
-  "vars": "--a58011290fbc1e85b567 dcae30ff1bd3b9d75b60 undefined d0faf3a7733902594dbd",
-  "webkitAnyWmultiParams": "a96e3a6d2480c2a02f8b",
-  "whereWmultiParams": "dc1ac3c2c25d5a34a7dc",
+  "notWmultiParams": "cVavHg",
+  "paddingLg": "xqzVWd",
+  "paddingSm": "Qm3jxJ",
+  "pastWmultiParams": "NOGA2-",
+  "supports": "qyhlLo",
+  "supportsInMedia": "KHcaFg",
+  "supportsWithOperator": "NQmDdm",
+  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
+  "webkitAnyWmultiParams": "piVgU0",
+  "whereWmultiParams": "n4-IgX",
 }
 `;
 
@@ -1913,7 +1913,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   \\\\**************************************/
 
 
-.a0cebafe345fcd1596a6 {
+.PfAPbP {
 	color: blue;
 }
 
@@ -1931,27 +1931,27 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.e3056d8fb43ad5395578 { color: red; }
+.BCixt8 { color: red; }
 
 
 
-.e3056d8fb43ad5395578 {
-	&.c0460c22bfc9f2aa6f98 { color: red; }
+.BCixt8 {
+	&.DVs3Z5 { color: red; }
 }
 
 
 
-.e3056d8fb43ad5395578 {
+.BCixt8 {
 	@media (min-width: 1024px) {
-		&.c0460c22bfc9f2aa6f98 { color: red; }
+		&.DVs3Z5 { color: red; }
 	}
 }
 
 
 
-.e3056d8fb43ad5395578 {
+.BCixt8 {
 	@media (min-width: 1024px) {
-		&.c0460c22bfc9f2aa6f98 {
+		&.DVs3Z5 {
 			@media (min-width: 1024px) {
 				color: red;
 			}
@@ -1962,23 +1962,23 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.e3056d8fb43ad5395578 { height: 40px; height: 36px; }
+.BCixt8 { height: 40px; height: 36px; }
 
 
 
-.d4a614f0e18cf877312b {
+._0G-LPo {
 	color: red;
 }
 
 
 
-#b9c6294e5466d5df19fb {
+#ijGvN7 {
 	color: red;
 }
 
 
 
-.fe37276187f823d2a98b > .fe37276187f823d2a98b {
+.aXwO75 > .aXwO75 {
 	color: red;
 }
 
@@ -1990,50 +1990,50 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.cadfe4a10007e875b133 {
+.QW6jUq {
 	color: blue;
 }
 
 
 
-.e3056d8fb43ad5395578 { color: red; }
+.BCixt8 { color: red; }
 
 
 
-.e3056d8fb43ad5395578 { color: red; }
-.c0460c22bfc9f2aa6f98 { color: yellow }
-
-
-
-
-.e3056d8fb43ad5395578 { color: blue; }
+.BCixt8 { color: red; }
+.DVs3Z5 { color: yellow }
 
 
 
 
-.b33e796db96b8e342e21 { color: red; }
+.BCixt8 { color: blue; }
 
 
 
 
-.b33e796db96b8e342e21 { margin: calc(base * 2); }
+.bP5vQs { color: red; }
 
 
 
 
-.b33e796db96b8e342e21 { content: \\"test-a\\" \\"test-b\\"; }
-
-
-
-.e3056d8fb43ad5395578 { color: var(--color); }
+.bP5vQs { margin: calc(base * 2); }
 
 
 
 
+.bP5vQs { content: \\"test-a\\" \\"test-b\\"; }
 
 
 
-.e3056d8fb43ad5395578 {
+.BCixt8 { color: var(--color); }
+
+
+
+
+
+
+
+.BCixt8 {
 	color: red;
 	background-color: #0f0;
 	border-top-color: #00ff00;
@@ -2043,44 +2043,44 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.e3056d8fb43ad5395578 { color: blue; }
-.c0460c22bfc9f2aa6f98 { color: red }
+.BCixt8 { color: blue; }
+.DVs3Z5 { color: red }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { color: color(red lightness(50%)); }
+.BCixt8 { color: color(red lightness(50%)); }
 
 
 
-:root { --a18c71e9757274515687: red; }
+:root { --nSXNVB: red; }
 
 
 
-:root { --a18c71e9757274515687: ; }
+:root { --nSXNVB: ; }
 
 
 
-:root { --a18c71e9757274515687:   ; }
+:root { --nSXNVB:   ; }
 
 
 
-:root { --a18c71e9757274515687: /* comment */; }
+:root { --nSXNVB: /* comment */; }
 
 
 
 
-.d3ad7e2f29d6a8fcb0a2 {
+.G6gio0 {
 	color: red;
 }
 
 
 
 
-.c732589aad2f1df89566 {
+.r4AQwd {
 	color: red;
 	color: red;
 	color: blue;
@@ -2088,51 +2088,51 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.a18c71e9757274515687 {
+.nSXNVB {
 	color: /* test */red/* test */;
 }
 
 
 
-.a18c71e9757274515687 {
+.nSXNVB {
 	color: /* test *//* test */red/* test */;
 }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+.BCixt8 { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
 
 
 
-.e3056d8fb43ad5395578 { color: blue; }
+.BCixt8 { color: blue; }
 
 
 
-.e3056d8fb43ad5395578 { color: blue; }
+.BCixt8 { color: blue; }
 
 
 
-.e3056d8fb43ad5395578 { color: red; }
+.BCixt8 { color: red; }
 
 
 
@@ -2141,15 +2141,15 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   !*** css ./var-function-export.modules.css ***!
   \\\\*********************************************/
 :root {
-	--d39135ea174a15b62b22: red;
-	--e64d189a11e0fc010708: blue;
-	--b2ca55bdf11467f78853: black;
-	--ffbd2ebd97979324d2f8: red;
-	--e9639833417c9ab1d359: red;
-	--ae718dcaa156a01244a1: red;
+	--IUIj4X: red;
+	--_89DIRX: blue;
+	--TSNC0A: black;
+	--_5g4K-I: red;
+	--_31C3Gv: red;
+	--msAO3F: red;
 }
 
-.d39135ea174a15b62b22 {
+.IUIj4X {
 	color: red;
 }
 
@@ -2157,19 +2157,19 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
   !*** css ./var-function.module.css ***!
   \\\\*************************************/
 :root {
-	--b0ba29bdbce3865665f0: brown;
-	--e74ec7d19e77df937b98: red;
-	--ff538fc86a8c98a1acd2: blue;
-	--b0be8542041343cdc03b: yellow;
+	--ir5X1L: brown;
+	--_95dv-7: red;
+	--Hin0Tw: blue;
+	--fSHHi8: yellow;
 	--: \\"reserved\\";
-	--b4f15317b73266872c2b: green;
+	--_7jGqfY: green;
 }
 
-.a9dda9230c056fba4b5e {
-	color: var(--b0ba29bdbce3865665f0);
+.G2wF_f {
+	color: var(--ir5X1L);
 }
 
-@property --a88857c00c50c4aa0b34 {
+@property --_3ZgcT1 {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
@@ -2181,165 +2181,165 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	initial-value: #c0ffee;
 }
 
-.a9dda9230c056fba4b5e {
-	color: var(--a88857c00c50c4aa0b34);
+.G2wF_f {
+	color: var(--_3ZgcT1);
 }
 
 div {
-	background-color: var(--feb8a30a96699a98d5ad);
+	background-color: var(--OGFY0R);
 }
 
-.a2da917c71bcdf2d6400 {
-	--feb8a30a96699a98d5ad: cornflowerblue;
+.VV6sCc {
+	--OGFY0R: cornflowerblue;
 }
 
-.ba18f91c8f33f72d5c2b {
-	--feb8a30a96699a98d5ad: aquamarine;
+.NkXqny {
+	--OGFY0R: aquamarine;
 }
 
 
-.a2df78fb29b51e680198 {
+._0O8snK {
 	/* Red if --my-var is not defined */
-	color: var(--e74ec7d19e77df937b98, red);
+	color: var(--_95dv-7, red);
 }
 
-.a2da917c71bcdf2d6400 {
+.VV6sCc {
 	/* pink if --my-var and --my-background are not defined */
-	color: var(--e74ec7d19e77df937b98, var(--ff538fc86a8c98a1acd2, pink));
+	color: var(--_95dv-7, var(--Hin0Tw, pink));
 }
 
-.d0c10da6bfba66dcb0d8 {
+.RR2Xo {
 	color: var(--);
 }
 
-.f2ab6c0bfc5b144d3016 {
-	color: var(--b4f15317b73266872c2b);
+.FfCQtG {
+	color: var(--_7jGqfY);
 }
 
-.f30d6733bb7f1b10eb50 {
+.p_8K4 {
 	color: var(--my-global);
 }
 
-.e3a5b523ffae20022d74 {
+.sbN5bF {
 	color: var(--my-global, pink);
 }
 
-.ac68a42f305fc7a8354d {
+._0dNSYL {
 	color: var(--my-global, var(--my-global-background));
 }
 
-.f68d5fa0152a0061b470 {
+.MRYc-E {
 	color: var(--my-global, var(--my-global-background, pink));
 }
 
-.c51e980b164f51b9d436 {
-	color: var(--my-global, var(--ff538fc86a8c98a1acd2, pink));
+._3CcAHX {
+	color: var(--my-global, var(--Hin0Tw, pink));
 }
 
-.c4a14658008160767f3c {
-	color: var(   --my-global,var(--ff538fc86a8c98a1acd2,pink));
+._98fBm- {
+	color: var(   --my-global,var(--Hin0Tw,pink));
 }
 
-.e70ce2da98de02d30959 {
-	background: var(   --b0ba29bdbce3865665f0   ,   var(   --ff538fc86a8c98a1acd2   ,   pink   )   )   , var(--my-global);
+.Ll9hBj {
+	background: var(   --ir5X1L   ,   var(   --Hin0Tw   ,   pink   )   )   , var(--my-global);
 }
 
-.bb7d07455e62e6ad984c {
-	background: var(--b0ba29bdbce3865665f0,var(--ff538fc86a8c98a1acd2,pink)),var(--my-global);
+.TrYqtI {
+	background: var(--ir5X1L,var(--Hin0Tw,pink)),var(--my-global);
 }
 
-.c2d1d712320927e66bed {
+.n7N3Yd {
 	color: var(--my-var-u1 );
 }
 
-.ad7f9750031e4c51f883 {
-	color: var(--b0ba29bdbce3865665f0, var(--my-var-u1 ));
+.Cavu2H {
+	color: var(--ir5X1L, var(--my-var-u1 ));
 }
 
-.d02972143e961dc54c55 {
-	color: var(--my-var-u1 ,  var(--b0ba29bdbce3865665f0));
+._6emYNM {
+	color: var(--my-var-u1 ,  var(--ir5X1L));
 }
 
-.dd0f7f831dd1bceeeb0a {
+.XNaXe3 {
 	color: var(--my-var-u1 ,  var(--my-var-u2 ));
 }
 
-.aedfa86ee0eb1fcad494 {
+.mGmB4l {
 	color: var(--1 );
 }
 
-.b506410315d7fcc26d3d {
+.znpqdH {
 	color: var(----a );
 }
 
-.e6d0ae6e0697a4ea7a58 {
+.uSxmmJ {
 	color: var(--main-bg-color );
 }
 
-.dda4dcda63b782327e8b {
-	color: var(--my-var-u1 , var(--my-global, var(--b0ba29bdbce3865665f0, red)));
+.AfNRVE {
+	color: var(--my-var-u1 , var(--my-global, var(--ir5X1L, red)));
 }
 
-.d7c46b080c3936fd2ad0 {
+.Y8L6uE {
 	color: var(--my-global from);
 }
 
-.e1f64dd891f76cbcca4e {
+.YIpVZ6 {
 	color: var(--my-global from 1);
 }
 
 :root {
-	--b4944a5d9565b2c279e5: red;
+	--_96YRqM: red;
 }
 
-.b4944a5d9565b2c279e5 {
+._96YRqM {
 	color: var(--not-override-class )
 }
 
 /*!*********************************!*\\\\
   !*** css ./classes.modules.css ***!
   \\\\*********************************/
-.fe9d7253906178e5c073 {
+.Bm5sMz {
 	color: red
 }
 
-.f61d7abd1bed36dd1aed {
+.g3NfS6 {
 	color: green;
 }
 
-.ab8397ab54818ee1a426 {
+.av_7pg {
 	color: blue;
 }
 
-.de6c8e58e214e66b05d2 {
+.BOVbCE {
 	color: yellow;
 }
 
-.f794e04ac88ac19fc30a {
+.Ohvj7e {
 	color: red;
 }
 
-.b320ff6043b112f8f791 {
+.TSCnGA {
 	color: red;
 }
 
-.d046b23d8f68b39bdd2d {
+.XQaZgH {
 	color: red;
 }
 
-.df63fca86afe2b49fbe5 {
+.owncNJ {
 	color: red;
 }
 
-.c260e213ceffd1eca6d4 {
+._9i1Lg8 {
 	color: red;
 }
 
-.dc00d8c30f2df501de0a {
+.q8W_qY {
 	color: red;
 }
 
-.b70eb23c08ebd948ee3d {
+.g2GKt4 {
 	color: tan;
 }
 
@@ -2347,110 +2347,110 @@ div {
   !*** css ./style.module.css ***!
   \\\\******************************/
 
-.e5af26f116e2e3d60717 {
+.Th9Hcz {
 	color: red;
 }
 
-.c93ded0f96c4ebdc6633,
-.ef5c79300754fb6d3921 .global,
-.b174cbd20e12a5a6dd80 {
+.pKESR4,
+.INAAta .global,
+.dhVQ31 {
 	color: green;
 }
 
-.global .a301780b73ad49087de5 {
+.global .VPL1IN {
 	color: yellow;
 }
 
-.fb30c262c5bf9239b170.global.ec104827e4cedb506a47 {
+.SMSyWQ.global.Z22WXA {
 	color: blue;
 }
 
-.ce54499c44eeb65d6b10 div:not(.dc30f49ac78f0e7e0e04, .f6f36b1915cee358a3a8, .a7076b49eb81f3fe3db0) {
+.cVavHg div:not(.eBN_LH, .UMWLJb, ._7dxdKQ) {
     pointer-events: initial !important;
 }
 
-.dbb3765db648754ac2a1 :is(div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.f185c40c7dddfc08dc17,
-    div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.a4e01084b20442dd4170,
-    div.e6b331c9fea208effa5e.dc991ca614200d2f7de6,
-    div.e6b331c9fea208effa5e.cc10025aa7f80748c79d div.ef6c6a288e7f207b141d) {
+.yrfUF- :is(div.QUNuET.AOBmmd.v62rx-,
+    div.QUNuET.AOBmmd.FGoXEZ,
+    div._72jHy0._4vejX-,
+    div._72jHy0._7KRQ_ div.GryLwC) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.b85c18fc015f2995a25c :matches(div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.f185c40c7dddfc08dc17,
-    div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.a4e01084b20442dd4170,
-    div.e6b331c9fea208effa5e.dc991ca614200d2f7de6,
-    div.e6b331c9fea208effa5e.cc10025aa7f80748c79d div.ef6c6a288e7f207b141d) {
+.BZtKdC :matches(div.QUNuET.AOBmmd.v62rx-,
+    div.QUNuET.AOBmmd.FGoXEZ,
+    div._72jHy0._4vejX-,
+    div._72jHy0._7KRQ_ div.GryLwC) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.dc1ac3c2c25d5a34a7dc :where(div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.f185c40c7dddfc08dc17,
-    div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.a4e01084b20442dd4170,
-    div.e6b331c9fea208effa5e.dc991ca614200d2f7de6,
-    div.e6b331c9fea208effa5e.cc10025aa7f80748c79d div.ef6c6a288e7f207b141d) {
+.n4-IgX :where(div.QUNuET.AOBmmd.v62rx-,
+    div.QUNuET.AOBmmd.FGoXEZ,
+    div._72jHy0._4vejX-,
+    div._72jHy0._7KRQ_ div.GryLwC) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.cf2c523509fcfd340c1e div:has(.dc30f49ac78f0e7e0e04, .f6f36b1915cee358a3a8, .a7076b49eb81f3fe3db0) {
+.JaRvb9 div:has(.eBN_LH, .UMWLJb, ._7dxdKQ) {
     pointer-events: initial !important;
 }
 
-.c424ccafd74c2bcab717 div:current(p, span) {
+.g4zTJs div:current(p, span) {
 	background-color: yellow;
 }
 
-.a5e0785842162888f678 div:past(p, span) {
+.NOGA2- div:past(p, span) {
 	display: none;
 }
 
-.dae80586483c85694155 div:future(p, span) {
+.FIC9OM div:future(p, span) {
 	background-color: yellow;
 }
 
-.a9c178e1f1034bf1d6e3 div:-moz-any(ol, ul, menu, dir) {
+.Qcmkef div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.a96e3a6d2480c2a02f8b li:-webkit-any(:first-child, :last-child) {
+.piVgU0 li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.b85c18fc015f2995a25c :matches(div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.f185c40c7dddfc08dc17,
-    div.a6e88a24aa1ff0365398.b5b18a7da30ee3efd39a.a4e01084b20442dd4170,
-    div.e6b331c9fea208effa5e.dc991ca614200d2f7de6,
-    div.e6b331c9fea208effa5e.cc10025aa7f80748c79d div.ef6c6a288e7f207b141d) {
+.BZtKdC :matches(div.QUNuET.AOBmmd.v62rx-,
+    div.QUNuET.AOBmmd.FGoXEZ,
+    div._72jHy0._4vejX-,
+    div._72jHy0._7KRQ_ div.GryLwC) {
 	max-height: 0;
 	margin: 0;
 	overflow: hidden;
 }
 
-.fdabae4f6212c001a428.nested2.a155701637c2c920166c {
+.RtgWj_.nested2.kFvcKy {
 	color: pink;
 }
 
-#d02bfdecf4c4e53747d7 {
+#ORDfKs {
 	color: purple;
 }
 
-@keyframes ac52dce5209f6d7936d8 {
+@keyframes UlwS-p {
 	0% {
-		left: var(--c551982a71906751d3bd);
-		top: var(--f46769dda7e863727767);
+		left: var(--LpMl7Z);
+		top: var(--_8u7z2l);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--c4d911584551ebc78701);
-		top: var(--acb1009eaeaeb7da0e7e);
+		left: var(--tyl1k);
+		top: var(--Anl1Ek);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes fec48087298752e0cb1f {
+@keyframes -vGTrA {
 	0% {
 		left: 0;
 	}
@@ -2459,54 +2459,54 @@ div {
 	}
 }
 
-.f7b94264effe46aa7a8e {
-	animation-name: ac52dce5209f6d7936d8;
-	animation: 3s ease-in 1s 2 reverse both paused ac52dce5209f6d7936d8, fec48087298752e0cb1f;
-	--c551982a71906751d3bd: 0px;
-	--f46769dda7e863727767: 0px;
-	--c4d911584551ebc78701: 10px;
-	--acb1009eaeaeb7da0e7e: 20px;
+.xVppDs {
+	animation-name: UlwS-p;
+	animation: 3s ease-in 1s 2 reverse both paused UlwS-p, -vGTrA;
+	--LpMl7Z: 0px;
+	--_8u7z2l: 0px;
+	--tyl1k: 10px;
+	--Anl1Ek: 20px;
 }
 
-.dcae30ff1bd3b9d75b60 {
-	color: var(--a58011290fbc1e85b567);
-	--a58011290fbc1e85b567: red;
+.I8Lkai {
+	color: var(--ZfGW2N);
+	--ZfGW2N: red;
 }
 
-.d0faf3a7733902594dbd {
+.Uw64p0 {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.bac27d3f505ae3ed4f96 {
-		color: var(--a58011290fbc1e85b567);
-		--a58011290fbc1e85b567: green;
+	.A4ihWh {
+		color: var(--ZfGW2N);
+		--ZfGW2N: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.eb582d6a9fc23778bc49 {
-		color: var(--a58011290fbc1e85b567);
-		--a58011290fbc1e85b567: purple;
+	.gvvWG0 {
+		color: var(--ZfGW2N);
+		--ZfGW2N: purple;
 	}
 }
 
 @supports (display: grid) {
-	.c24ae76cf08db35fb923 {
+	.qyhlLo {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .ca30a31e789b627ddac1 {
+  .NQmDdm {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .a43c67fccb5214472af2 {
+    .ylxOyA {
       display: flex;
     }
   }
@@ -2514,7 +2514,7 @@ div {
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .b0819a3669e76705b919 {
+    .KHcaFg {
       display: flex;
     }
   }
@@ -2522,35 +2522,35 @@ div {
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.f72d4de40257c3bc7a8a {
+		.HJdMbb {
 			display: flex;
 		}
 	}
 }
 
-.dec27c00496f1fd84577 {
-	ANIMATION-NAME: f1ce8e0c9f7082a6fe67;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused f1ce8e0c9f7082a6fe67, cbd03a9df4b599e10cbe;
-	--c551982a71906751d3bd: 0px;
-	--f46769dda7e863727767: 0px;
-	--c4d911584551ebc78701: 10px;
-	--acb1009eaeaeb7da0e7e: 20px;
+.EMl_Zd {
+	ANIMATION-NAME: kwAQ_z;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused kwAQ_z, axWscZ;
+	--LpMl7Z: 0px;
+	--_8u7z2l: 0px;
+	--tyl1k: 10px;
+	--Anl1Ek: 20px;
 }
 
-@KEYFRAMES f1ce8e0c9f7082a6fe67 {
+@KEYFRAMES kwAQ_z {
 	0% {
-		left: VAR(--c551982a71906751d3bd);
-		top: VAR(--f46769dda7e863727767);
+		left: VAR(--LpMl7Z);
+		top: VAR(--_8u7z2l);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--c4d911584551ebc78701);
-		top: VAR(--acb1009eaeaeb7da0e7e);
+		left: VAR(--tyl1k);
+		top: VAR(--Anl1Ek);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes cbd03a9df4b599e10cbe {
+@KEYframes axWscZ {
 	0% {
 		left: 0;
 	}
@@ -2559,46 +2559,46 @@ div {
 	}
 }
 
-.globalUpperCase .ff49e743be90c9e04e8a {
+.globalUpperCase .AgZzby {
 	color: yellow;
 }
 
-.c6c2464a86e35c83423e {
-	color: VAR(--c191ac5d51793f420926);
-	--c191ac5d51793f420926: red;
+.iPQQcF {
+	color: VAR(--vtTPn3);
+	--vtTPn3: red;
 }
 
-.cb023650ab1374618d97 {
+.LcZDzy {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.ce0fcc1e519ffa239ba6 {
+	.StK0G8 {
 		color: red;
 	}
 }
 
-.dae4fd303a7dc9d1b9bf {
-	animation: 3s fadafa8ed9f5994a36a6;
-	-webkit-animation: 3s fadafa8ed9f5994a36a6;
+.rWk7j_ {
+	animation: 3s Lo5rLV;
+	-webkit-animation: 3s Lo5rLV;
 }
 
-.b5a11b91ab8ad4d25b94 {
-	animation: fadafa8ed9f5994a36a6 3s;
-	-webkit-animation: fadafa8ed9f5994a36a6 3s;
+.Sa2viG {
+	animation: Lo5rLV 3s;
+	-webkit-animation: Lo5rLV 3s;
 }
 
-.f2855ba80a89d6687e5a {
-	animation-name: fadafa8ed9f5994a36a6;
-	-webkit-animation-name: fadafa8ed9f5994a36a6;
+.lkeYnD {
+	animation-name: Lo5rLV;
+	-webkit-animation-name: Lo5rLV;
 }
 
-.dcf84a23cfbc868c37c0 {
-	--ad06539c463d17b31758: animationName;
+.ot4wJ0 {
+	--LcnNiW: animationName;
 }
 
-@keyframes fadafa8ed9f5994a36a6 {
+@keyframes Lo5rLV {
 	0% {
 		background: white;
 	}
@@ -2607,7 +2607,7 @@ div {
 	}
 }
 
-@-webkit-keyframes fadafa8ed9f5994a36a6 {
+@-webkit-keyframes Lo5rLV {
 	0% {
 		background: white;
 	}
@@ -2616,7 +2616,7 @@ div {
 	}
 }
 
-@-moz-keyframes c0b1f5446b2cd37e1096 {
+@-moz-keyframes jJAZvq {
 	0% {
 		background: white;
 	}
@@ -2644,49 +2644,49 @@ div {
 	}
 }
 
-@property --dc35498b1b2a4f5b2a03 {
+@property --E8316H {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-@property --e9cd2fe064f49648fa88 {
+@property --U0twDG {
 	initial-value: #c0ffee;
 	syntax: \\"<color>\\";
 	inherits: false;
 }
 
-@property --eaf5b24f1900bc173ea7 {
+@property --IvCWGE {
 	syntax: \\"<color>\\";
 	initial-value: #c0ffee;
 	inherits: false;
 }
 
-.e5af26f116e2e3d60717 {
-	color: var(--dc35498b1b2a4f5b2a03);
+.Th9Hcz {
+	color: var(--E8316H);
 }
 
 @layer utilities {
-	.c101cf9944c44feb1f13 {
+	.Qm3jxJ {
 		padding: 0.5rem;
 	}
 
-	.f0c6711e0de803fab01a {
+	.xqzVWd {
 		padding: 0.8rem;
 	}
 }
 
-.e5af26f116e2e3d60717 {
+.Th9Hcz {
 	color: red;
 
-	.f63cf0cd715a630925cc {
+	.COckJ5 {
 		color: red;
 	}
 
 	@media screen and (min-width: 200px) {
 		color: blue;
 
-		.eac9a3a1c801e1558d36 {
+		.QwrGJR {
 			color: blue;
 		}
 	}
@@ -2694,7 +2694,7 @@ div {
 	@supports (display: flex) {
 		display: flex;
 
-		.ce0b45811abea945846b {
+		.rKLROg {
 			display: flex;
 		}
 	}
@@ -2702,7 +2702,7 @@ div {
 	@layer foo {
 		background: red;
 
-		.c880beab8416a74d1780 {
+		.Sin_15 {
 			background: red;
 		}
 	}
@@ -2710,13 +2710,13 @@ div {
 	@container foo {
 		background: red;
 
-		.c880beab8416a74d1780 {
+		.Sin_15 {
 			background: red;
 		}
 	}
 }
 
-.b4cc9f7ff386d5ef9dbf {
+.om4V6V {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
@@ -2735,16 +2735,16 @@ div {
 	color: red;
 }
 
-.dbad5a7cad2a34f977cd {
-	.c32f2e029d8381acbab1 {
-		color: var(--a58011290fbc1e85b567);
+.k-FqZw {
+	.hVrW41 {
+		color: var(--ZfGW2N);
 	}
 }
 
-.dac0ca3b65c4cbd2d2d1 {
+.x1V4EV {
 	color: red;
 
-	.d983d30e0cb3eba7ee2e {
+	.VxblVB {
 		color: red;
 	}
 
@@ -2752,7 +2752,7 @@ div {
 		color: red;
 	}
 
-	.d983d30e0cb3eba7ee2e {
+	.VxblVB {
 		color: red;
 	}
 
@@ -2760,29 +2760,29 @@ div {
 		color: red;
 	}
 
-	.d983d30e0cb3eba7ee2e, .global-nested-next {
+	.VxblVB, .global-nested-next {
 		color: red;
 	}
 
-	.d983d30e0cb3eba7ee2e, .global-nested-next {
+	.VxblVB, .global-nested-next {
 		color: red;
 	}
 
-	.foo, .e799011abc67ff37fd6e {
+	.foo, .b5xu71 {
 		color: red;
 	}
 }
 
-#fafbe0bfa12feb7d2353 {
+#HS0ws2 {
 	color: red;
 
-	#bf50ee7b70dd57b715e2 {
+	#KdpZk7 {
 		color: red;
 	}
 }
 
-.d46d958510116add50de {
-	.b85c18fc015f2995a25c div:has(.f185c40c7dddfc08dc17, .a4e01084b20442dd4170) {
+.oNOznk {
+	.BZtKdC div:has(.v62rx-, .FGoXEZ) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -2794,7 +2794,7 @@ div {
 		color: red;
 	}
 
-	.de399d28526626f655fe {
+	.NSL9R7 {
 		color: blue;
 	}
 }
@@ -2802,26 +2802,26 @@ div {
 @unknown .class {
 	color: red;
 
-	.e5af26f116e2e3d60717 {
+	.Th9Hcz {
 		color: red;
 	}
 }
 
-.class .a1ba1d4aa1297548ffd5,
-.class .a1ba1d4aa1297548ffd5,
-.b48b7b93c9de1029984b .in-local-global-scope {
+.class .xawqPK,
+.class .xawqPK,
+.Ss63Ju .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.bfebe9e1ea7574d5910c {
+	.zzDKiI {
 		font-size: 1.5em;
 	}
 }
 
 @container summary (min-width: 400px) {
 	@container (width > 400px) {
-		.de0609a1cee52edce610 {
+		._0Kw8ER {
 			font-size: 1.5em;
 		}
 	}
@@ -2831,33 +2831,33 @@ div {
 	color: red;
 }
 
-.f46992fddb53b650a924:-ms-input-placeholder {
-	--dc0a0a335e860d9ec562: 1;
+.e7Ysmu:-ms-input-placeholder {
+	--o51zIk: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--dc0a0a335e860d9ec562));
+	color: rgba(74, 85, 104, var(--o51zIk));
 }
-.f46992fddb53b650a924::-ms-input-placeholder {
-	--dc0a0a335e860d9ec562: 1;
+.e7Ysmu::-ms-input-placeholder {
+	--o51zIk: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--dc0a0a335e860d9ec562));
+	color: rgba(74, 85, 104, var(--o51zIk));
 }
-.f46992fddb53b650a924::placeholder {
-	--dc0a0a335e860d9ec562: 1;
+.e7Ysmu::placeholder {
+	--o51zIk: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--dc0a0a335e860d9ec562));
+	color: rgba(74, 85, 104, var(--o51zIk));
 }
 
 :root {
-	--c8966237309f516f6966: dark;
+	--w_hBjy: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--c8966237309f516f6966)) {
-	.a47f4aee276627f6c34e {
+@media screen and (prefers-color-scheme: var(--w_hBjy)) {
+	.eqJohl {
 		color: white;
 	}
 }
 
-@keyframes e437cbc8a68984b14499 {
+@keyframes bwJZCW {
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -2869,44 +2869,44 @@ div {
 	}
 }
 
-.e5af26f116e2e3d60717 {
+.Th9Hcz {
 	animation:
-		c7c37bc30c7f23b4544a var(--ad06539c463d17b31758) 3s,
-		var(--ad06539c463d17b31758) 3s,
-		3s linear 1s infinite running e437cbc8a68984b14499,
-		3s linear env(foo, var(--a47f4aee276627f6c34e)) infinite running e437cbc8a68984b14499;
+		Pns_CJ var(--LcnNiW) 3s,
+		var(--LcnNiW) 3s,
+		3s linear 1s infinite running bwJZCW,
+		3s linear env(foo, var(--eqJohl)) infinite running bwJZCW;
 }
 
 :root {
-	--a47f4aee276627f6c34e: 10px;
+	--eqJohl: 10px;
 }
 
-.e5af26f116e2e3d60717 {
-	bar: env(foo, var(--a47f4aee276627f6c34e));
+.Th9Hcz {
+	bar: env(foo, var(--eqJohl));
 }
 
-.global-foo, .e799011abc67ff37fd6e {
-	.de399d28526626f655fe       {
+.global-foo, .b5xu71 {
+	.NSL9R7       {
 		color: blue;
 	}
 
 	@media screen {
 		.my-global-class-again,
-		.bf43208022fabae1a4f6 {
+		.W4wdXr {
 			color: red;
 		}
 	}
 }
 
-.b4a5693f2905d0d0b2c4 {
-	.c125e2dfa007c06e28fe {
+.qR8xqZ {
+	.qNYg6K {
 		color: red;
 	}
 }
 
-.f5b2e9f628944d7185ec {
+.uPdoJV {
 	@media screen {
-		.ffe49841af9cbc12f607 {
+		.BBVz54 {
 			color: red;
 		}
 	}
@@ -2923,7 +2923,7 @@ div {
 }
 
 :root {
-	--c7c37bc30c7f23b4544a: red;
+	--Pns_CJ: red;
 }
 
 .again-again-global {
@@ -2937,69 +2937,69 @@ div {
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .e5af26f116e2e3d60717, .fdabae4f6212c001a428.nested2.a155701637c2c920166c {
-		animation: e437cbc8a68984b14499 3s;
+	.again-again-global, .Th9Hcz, .RtgWj_.nested2.kFvcKy {
+		animation: bwJZCW 3s;
 	}
 
-  .ef5c79300754fb6d3921 .global,
-	.b174cbd20e12a5a6dd80 {
+  .INAAta .global,
+	.dhVQ31 {
 		color: red;
 	}
 }
 
-@unknown var(--c7c37bc30c7f23b4544a) {
+@unknown var(--Pns_CJ) {
 	color: red;
 }
 
-.e5af26f116e2e3d60717 {
-	.e5af26f116e2e3d60717 {
-		.e5af26f116e2e3d60717 {
-			.e5af26f116e2e3d60717 {}
+.Th9Hcz {
+	.Th9Hcz {
+		.Th9Hcz {
+			.Th9Hcz {}
 		}
 	}
 }
 
-.e5af26f116e2e3d60717 {
-	.e5af26f116e2e3d60717 {
-		.e5af26f116e2e3d60717 {
-			.e5af26f116e2e3d60717 {
-				animation: e437cbc8a68984b14499 3s;
+.Th9Hcz {
+	.Th9Hcz {
+		.Th9Hcz {
+			.Th9Hcz {
+				animation: bwJZCW 3s;
 			}
 		}
 	}
 }
 
-.e5af26f116e2e3d60717 {
-	animation: e437cbc8a68984b14499 3s;
-	.e5af26f116e2e3d60717 {
-		animation: e437cbc8a68984b14499 3s;
-		.e5af26f116e2e3d60717 {
-			animation: e437cbc8a68984b14499 3s;
-			.e5af26f116e2e3d60717 {
-				animation: e437cbc8a68984b14499 3s;
+.Th9Hcz {
+	animation: bwJZCW 3s;
+	.Th9Hcz {
+		animation: bwJZCW 3s;
+		.Th9Hcz {
+			animation: bwJZCW 3s;
+			.Th9Hcz {
+				animation: bwJZCW 3s;
 			}
 		}
 	}
 }
 
-.b5d5ed20eefeb2269049 {
-	. global(.e5af26f116e2e3d60717) {
+.PmzqEY {
+	. global(.Th9Hcz) {
 		color: red;
 	}
 
-	: global(.e5af26f116e2e3d60717) {
+	: global(.Th9Hcz) {
 		color: red;
 	}
 
-	: global .e5af26f116e2e3d60717 {
+	: global .Th9Hcz {
 		color: red;
 	}
 
-	: local(.e5af26f116e2e3d60717) {
+	: local(.Th9Hcz) {
 		color: red;
 	}
 
-	: local .e5af26f116e2e3d60717 {
+	: local .Th9Hcz {
 		color: red;
 	}
 
@@ -3008,7 +3008,7 @@ div {
 	}
 }
 
-.a0307f15b0f696dc084e {
+.DCHDbS {
 	.class {
 		color: red;
 	}
@@ -3017,75 +3017,75 @@ div {
 		color: red;
 	}
 
-	.e5af26f116e2e3d60717 {
+	.Th9Hcz {
 		color: red;
 	}
 
-	.e5af26f116e2e3d60717 {
+	.Th9Hcz {
 		color: red;
 	}
 
-	./** test **/e5af26f116e2e3d60717 {
+	./** test **/Th9Hcz {
 		color: red;
 	}
 
-	./** test **/e5af26f116e2e3d60717 {
+	./** test **/Th9Hcz {
 		color: red;
 	}
 
-	./** test **/e5af26f116e2e3d60717 {
+	./** test **/Th9Hcz {
 		color: red;
 	}
 }
 
-.c7c37bc30c7f23b4544a {
+.Pns_CJ {
 	color: red;
-	+ .e799011abc67ff37fd6e + & { color: blue; }
+	+ .b5xu71 + & { color: blue; }
 }
 
-.d8c0181b34b7268c7b99, #b23f084448edb581b299 {
-	&:hover > .a47f4aee276627f6c34e { color: red; }
+.QZPLpm, #ItnhTD {
+	&:hover > .eqJohl { color: red; }
 }
 
-.c7c37bc30c7f23b4544a {
-	& :is(.e799011abc67ff37fd6e, &.a47f4aee276627f6c34e) { color: red; }
+.Pns_CJ {
+	& :is(.b5xu71, &.eqJohl) { color: red; }
 }
 
-.b7019ae724af5eae69c7 {
+.vm-iHv {
 	color: green;
-	& .dae4fd303a7dc9d1b9bf { color: blue; }
+	& .rWk7j_ { color: blue; }
 	color: red;
 }
 
-.b898aa492994cd5c7b51 {
+.xV0P-R {
 	color: blue;
 
-	@scope (& > .d481a7c98a6c884171c6) to (& > .c98aa132f4e1ad62031b) {
-		& .d2096c4dd5aa1a1fb943 {
+	@scope (& > ._2n4Jtg) to (& > .XGwd1x) {
+		& .evvjkJ {
 			color: red;
 		}
 	}
 }
 
-.b898aa492994cd5c7b51 {
+.xV0P-R {
 	color: blue;
 
-	@scope (& > .d481a7c98a6c884171c6) to (& > .c98aa132f4e1ad62031b) {
-		.d2096c4dd5aa1a1fb943 {
+	@scope (& > ._2n4Jtg) to (& > .XGwd1x) {
+		.evvjkJ {
 			color: red;
 		}
 	}
 
-	.dae4fd303a7dc9d1b9bf {
+	.rWk7j_ {
 		color: red;
 	}
 }
 
-@scope (.f501900bd0329e5d048d) {
+@scope (.r3yzH0) {
 	:scope { border-block-end: 1px solid white; }
 }
 
-.f501900bd0329e5d048d {
+.r3yzH0 {
 	inline-size: 40ch;
 	aspect-ratio: 3/4;
 
@@ -3096,21 +3096,21 @@ div {
 	}
 }
 
-.c7c37bc30c7f23b4544a {
+.Pns_CJ {
 	display: grid;
 
 	@media (orientation: landscape) {
-		.e799011abc67ff37fd6e {
+		.b5xu71 {
 			grid-auto-flow: column;
 
 			@media (min-width > 1024px) {
-				.b89ff8b392a4b974662e {
+				._746DcL {
 					display: grid;
 				}
 
 				max-inline-size: 1024px;
 
-				.b695d8e9d4aef2fbbb5c {
+				.MFBiYY {
 					display: grid;
 				}
 			}
@@ -3129,7 +3129,7 @@ ul {
 }
 
 @container (width > 400px) and style(--responsive: true) {
-	.e5af26f116e2e3d60717 {
+	.Th9Hcz {
 		font-size: 1.5em;
 	}
 }
@@ -3144,12 +3144,12 @@ ul {
 	font-family: Bixa;
 }
 
-.b463d7671521a7ac0ddb {
+.Fr8iIT {
 	font-palette: --identifier;
 }
 
-@keyframes c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes c7c37bc30c7f23b4544a { /* ... */ }
+@keyframes Pns_CJ { /* ... */ }
+@keyframes Pns_CJ { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -3162,13 +3162,13 @@ ul {
 }
 
 @starting-style {
-	.e5af26f116e2e3d60717 {
+	.Th9Hcz {
 		opacity: 0;
 		transform: scaleX(0);
 	}
 }
 
-.e5af26f116e2e3d60717 {
+.Th9Hcz {
 	opacity: 1;
 	transform: scaleX(1);
 
@@ -3178,12 +3178,12 @@ ul {
 	}
 }
 
-@scope (.add3097255e4b5f39346) {
-	.e5af26f116e2e3d60717 { opacity: 0; }
+@scope (._21vUr) {
+	.Th9Hcz { opacity: 0; }
 
-	:scope .d510b5d2f76fd714236a { opacity: 0; }
+	:scope .wCljLW { opacity: 0; }
 
-	& .e5af26f116e2e3d60717 { opacity: 0; }
+	& .Th9Hcz { opacity: 0; }
 }
 
 @position-try --custom-left {
@@ -3211,7 +3211,7 @@ ul {
 	margin: 10px 0 0 10px;
 }
 
-.e4945d1beab8e7468e10 {
+.Qtv_4z {
 	position: fixed;
 	position-anchor: --myAnchor;
 	position-area: top;
@@ -3231,128 +3231,128 @@ ul {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-.e73c842dc6e1cb833ed3 {
+.Zq4Bgu {
 	background-color: color(--swop5c 0% 70% 20% 0%);
 }
 
-.c8966237309f516f6966 {
+.w_hBjy {
 	test: (1, 2) [3, 4], { 1: 2};
-	.dae4fd303a7dc9d1b9bf {
+	.rWk7j_ {
 		width: 200px;
 	}
 }
 
-.c8966237309f516f6966 {
-	.c8966237309f516f6966 {
+.w_hBjy {
+	.w_hBjy {
 		width: 200px;
 	}
 }
 
-.c8966237309f516f6966 {
+.w_hBjy {
 	width: 200px;
 
-	.c8966237309f516f6966 {
+	.w_hBjy {
 		width: 200px;
 	}
 }
 
-.c8966237309f516f6966 {
+.w_hBjy {
 	width: 200px;
 
-	.c8966237309f516f6966 {
-		.c8966237309f516f6966 {
+	.w_hBjy {
+		.w_hBjy {
 			width: 200px;
 		}
 	}
 }
 
-.c8966237309f516f6966 {
+.w_hBjy {
 	width: 200px;
 
-	.c8966237309f516f6966 {
+	.w_hBjy {
 		width: 200px;
 
-		.c8966237309f516f6966 {
+		.w_hBjy {
 			width: 200px;
 		}
 	}
 }
 
-.c8966237309f516f6966 {
-	.c8966237309f516f6966 {
+.w_hBjy {
+	.w_hBjy {
 		width: 200px;
 
-		.c8966237309f516f6966 {
+		.w_hBjy {
 			width: 200px;
 		}
 	}
 }
 
-.c8966237309f516f6966 {
-	.c8966237309f516f6966 {
+.w_hBjy {
+	.w_hBjy {
 		width: 200px;
 	}
 	width: 200px;
 }
 
-.c8966237309f516f6966 {
-	.c8966237309f516f6966 {
+.w_hBjy {
+	.w_hBjy {
 		width: 200px;
 	}
-	.c8966237309f516f6966 {
+	.w_hBjy {
 		width: 200px;
 	}
 }
 
-.c8966237309f516f6966 {
-	.c8966237309f516f6966 {
+.w_hBjy {
+	.w_hBjy {
 		width: 200px;
 	}
 	width: 200px;
-	.c8966237309f516f6966 {
+	.w_hBjy {
 		width: 200px;
 	}
 }
 
-#c8966237309f516f6966 {
+#w_hBjy {
 	c: 1;
 
-	#c8966237309f516f6966 {
+	#w_hBjy {
 		c: 2;
 	}
 }
 
-@property --fc930eee137c58be39dc {
+@property --YgsWVo {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
 
-.bc74294704fc33acf0a6 {
+.lAqA-R {
 	display: flex;
 	height: 200px;
 	border: 1px dashed black;
 
 	/* set custom property values on parent */
-	--fc930eee137c58be39dc: 20%;
-	--d329ab2696ef761aee04: orange;
+	--YgsWVo: 20%;
+	--_-4w1WC: orange;
 }
 
-.b6f53f9679cea8bb7fc6 {
-	width: var(--fc930eee137c58be39dc);
-	height: var(--fc930eee137c58be39dc);
-	background-color: var(--d329ab2696ef761aee04);
+.RKcB4N {
+	width: var(--YgsWVo);
+	height: var(--YgsWVo);
+	background-color: var(--_-4w1WC);
 }
 
-.fcad384830e2b41daefe {
-	--fc930eee137c58be39dc: initial;
-	--d329ab2696ef761aee04: inherit;
+.iX76ke {
+	--YgsWVo: initial;
+	--_-4w1WC: inherit;
 }
 
-.a057ff73aaba1e9874cc {
+._4Um4fO {
 	/* invalid values */
-	--fc930eee137c58be39dc: 1000px;
-	--d329ab2696ef761aee04: xyz;
+	--YgsWVo: 1000px;
+	--_-4w1WC: xyz;
 }
 
 @property invalid {
@@ -3371,72 +3371,72 @@ ul {
 	initial-value: 40%;
 }
 
-@keyframes f5d2c7b6e56a320ca565 { /* ... */ }
-@keyframes/**test**/f5d2c7b6e56a320ca565 { /* ... */ }
-@keyframes/**test**/f5d2c7b6e56a320ca565/**test**/{ /* ... */ }
-@keyframes/**test**//**test**/f5d2c7b6e56a320ca565/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ f5d2c7b6e56a320ca565 /**test**/ /**test**/ { /* ... */ }
-@keyframes d07d26e0884213acac64 { /* ... */ }
-@property/**test**/--fc930eee137c58be39dc {
+@keyframes _3XWMcj { /* ... */ }
+@keyframes/**test**/_3XWMcj { /* ... */ }
+@keyframes/**test**/_3XWMcj/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/_3XWMcj/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ _3XWMcj /**test**/ /**test**/ { /* ... */ }
+@keyframes CaYExG { /* ... */ }
+@property/**test**/--YgsWVo {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/--fc930eee137c58be39dc/**test**/{
+@property/**test**/--YgsWVo/**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/--fc930eee137c58be39dc/**test**/ {
+@property /**test**/--YgsWVo/**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --fc930eee137c58be39dc /**test**/ {
+@property /**test**/ --YgsWVo /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/ --fc930eee137c58be39dc /**test**/{
+@property/**test**/ --YgsWVo /**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --fc930eee137c58be39dc /**test**/ {
+@property /**test**/ --YgsWVo /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
 div {
-	animation: 3s ease-in 1s 2 reverse both paused f5d2c7b6e56a320ca565, fec48087298752e0cb1f;
-	animation-name: f5d2c7b6e56a320ca565;
+	animation: 3s ease-in 1s 2 reverse both paused _3XWMcj, -vGTrA;
+	animation-name: _3XWMcj;
 	animation-duration: 2s;
 }
 
-.bcabed3703754051d100 {
-	width: var(   --fc930eee137c58be39dc   );
-	height: var(/**comment**/--fc930eee137c58be39dc);
-	background-color: var( /**comment**/--d329ab2696ef761aee04);
-	background-color-1: var(/**comment**/ --d329ab2696ef761aee04);
-	background-color-2: var( /**comment**/ --d329ab2696ef761aee04);
-	background-color-3: var( /**comment**/ --d329ab2696ef761aee04 /**comment**/ );
-	background-color-3: var( /**comment**/--d329ab2696ef761aee04/**comment**/ );
-	background-color-3: var(/**comment**/--d329ab2696ef761aee04/**comment**/);
+.h9fN34 {
+	width: var(   --YgsWVo   );
+	height: var(/**comment**/--YgsWVo);
+	background-color: var( /**comment**/--_-4w1WC);
+	background-color-1: var(/**comment**/ --_-4w1WC);
+	background-color-2: var( /**comment**/ --_-4w1WC);
+	background-color-3: var( /**comment**/ --_-4w1WC /**comment**/ );
+	background-color-3: var( /**comment**/--_-4w1WC/**comment**/ );
+	background-color-3: var(/**comment**/--_-4w1WC/**comment**/);
 }
 
-@keyframes/**test**/c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**/c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes/**test**/ c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**/ c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**//**test**/ c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**/ /**test**/ c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**/ /**test**/c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes /**test**//**test**/c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes/**test**//**test**/c7c37bc30c7f23b4544a { /* ... */ }
-@keyframes/**test**//**test**/c7c37bc30c7f23b4544a/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ c7c37bc30c7f23b4544a /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/Pns_CJ { /* ... */ }
+@keyframes /**test**/Pns_CJ { /* ... */ }
+@keyframes/**test**/ Pns_CJ { /* ... */ }
+@keyframes /**test**/ Pns_CJ { /* ... */ }
+@keyframes /**test**//**test**/ Pns_CJ { /* ... */ }
+@keyframes /**test**/ /**test**/ Pns_CJ { /* ... */ }
+@keyframes /**test**/ /**test**/Pns_CJ { /* ... */ }
+@keyframes /**test**//**test**/Pns_CJ { /* ... */ }
+@keyframes/**test**//**test**/Pns_CJ { /* ... */ }
+@keyframes/**test**//**test**/Pns_CJ/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ Pns_CJ /**test**/ /**test**/ { /* ... */ }
 
-./**test**//**test**/e5af26f116e2e3d60717 {
+./**test**//**test**/Th9Hcz {
 	background: red;
 }
 
@@ -3444,75 +3444,75 @@ div {
 	background: red;
 }
 
-.af472b7ca57633c58eb5 {
-	--a39f3fd25c58a938cd85: black;
-	--b3662149b1d89ed1c3cd: 10px;
-	--c7c37bc30c7f23b4544a: 10px;
-	--e799011abc67ff37fd6e: calc(var(--c7c37bc30c7f23b4544a) + 10px);
-	--b558612a7afb44453532: linear-gradient(to top, var(--a39f3fd25c58a938cd85), white);
-	--a33a4f258904bc47bdb9: \\"test\\";
-	--a29061275c467dddb4df: yellow;
-	--ffccc4299b4b7660a48b: red;
-	--b00ff4195c28fcc92d5b: red;
-	--e2b95c61e1c21a5b964f: black;
-	-foo: calc(var(--e799011abc67ff37fd6e) + 10px);
-	var: var(--a39f3fd25c58a938cd85);
-	var1: var(--c7c37bc30c7f23b4544a);
-	var2: var(--b3662149b1d89ed1c3cd);
-	content: \\" (\\" var(--a33a4f258904bc47bdb9) \\")\\";
-	var3: var(--a39f3fd25c58a938cd85, blue);
-	var4: var(--a29061275c467dddb4df,);
-	var5: var(--a29061275c467dddb4df, initial);
-	var6: var(--a29061275c467dddb4df, var(--ffccc4299b4b7660a48b));
-	var7: var(--a29061275c467dddb4df, var(--ffccc4299b4b7660a48b, red));
+.vUySPm {
+	--cuyscJ: black;
+	--pilraw: 10px;
+	--Pns_CJ: 10px;
+	--b5xu71: calc(var(--Pns_CJ) + 10px);
+	--_8NggIH: linear-gradient(to top, var(--cuyscJ), white);
+	--Xz8Zyw: \\"test\\";
+	--FWUVf6: yellow;
+	--h5_X_2: red;
+	--mvKcZM: red;
+	--_3hrY2A: black;
+	-foo: calc(var(--b5xu71) + 10px);
+	var: var(--cuyscJ);
+	var1: var(--Pns_CJ);
+	var2: var(--pilraw);
+	content: \\" (\\" var(--Xz8Zyw) \\")\\";
+	var3: var(--cuyscJ, blue);
+	var4: var(--FWUVf6,);
+	var5: var(--FWUVf6, initial);
+	var6: var(--FWUVf6, var(--h5_X_2));
+	var7: var(--FWUVf6, var(--h5_X_2, red));
 	var8: var(--unknown);
-	background-color: var(--b00ff4195c28fcc92d5b, var(--e2b95c61e1c21a5b964f, white));
+	background-color: var(--mvKcZM, var(--_3hrY2A, white));
 }
 
-.e4e0cf106ccc89d1c6d2 {
-	background-color: var(--c8966237309f516f6966);
-	--c8966237309f516f6966: red;
+.OUbvwN {
+	background-color: var(--w_hBjy);
+	--w_hBjy: red;
 }
 
-.c32cb9263c28392a0d5d {
+.wNuM96 {
 	border-radius: 12px;
 }
 
-.a91475aeba0a7169aa49 {
+.zd4gSv {
 	border-radius: 12px;
 }
 
-.b795d3f4984147d814f7 {
+.KG2wJz {
 	border-radius: 12px;
 }
 
-.ab832767f5385d5dff7b {
+.N01fLP {
 	border: red;
 }
 
-.a64bdaa90b9d57daa97a {
+._5LkOeF {
 	}
 
-.a05f3a8dc9351ad6314c {
+.cq-5gi {
 	color: red;
 }
 
-.b278a4efcbeb4ec5aab2 {
+.AJkyxM {
 	}
 
-.e9ef3367aac39b4ab8dc {
+.u3R4Pw {
 	}
 
-.b328cf6bf68f578c21a7 {
+.PZJZh3 {
 	}
 
-.c1960f82cdd3f768462b {
+.pfrK-J {
 	}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
-.f49a8d556342a17b89ce {
+.fBHrus {
     color: red;
 }
 
@@ -3526,16 +3526,16 @@ div {
 /*!************************************!*\\\\
   !*** css ./identifiers.module.css ***!
   \\\\************************************/
-.e56247cae2ba5d75c3db{
+.jSScCg{
     color: red;
-    padding: var(--cf31180fed6a1c2e3955);
-    --cf31180fed6a1c2e3955: 10px;
+    padding: var(--Eut0hT);
+    --Eut0hT: 10px;
 }
 
-.cad2169b561fc80fbdd2 {
+.jNb1RA {
     color: green;
-    padding: var(--c49a78dd4fbfcc293f91);
-    --c49a78dd4fbfcc293f91: 10px;
+    padding: var(--H04DzL);
+    --H04DzL: 10px;
 }
 
 "
@@ -3543,7 +3543,7 @@ div {
 
 exports[`ConfigTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "class": "e5af26f116e2e3d60717",
+  "class": "Th9Hcz",
 }
 `;
 
@@ -3603,141 +3603,141 @@ Object {
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "cad2169b561fc80fbdd2",
-  "VARS": "--c191ac5d51793f420926 c6c2464a86e35c83423e undefined cb023650ab1374618d97",
-  "animation": "f7b94264effe46aa7a8e",
-  "animationName": "fadafa8ed9f5994a36a6",
-  "class": "e5af26f116e2e3d60717",
-  "classInContainer": "bfebe9e1ea7574d5910c",
-  "classLocalScope": "b48b7b93c9de1029984b",
-  "cssModuleWithCustomFileExtension": "f49a8d556342a17b89ce",
-  "currentWmultiParams": "c424ccafd74c2bcab717",
-  "deepClassInContainer": "de0609a1cee52edce610",
-  "displayFlexInSupportsInMediaUpperCase": "f72d4de40257c3bc7a8a",
+  "UsedClassName": "jNb1RA",
+  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
+  "animation": "xVppDs",
+  "animationName": "Lo5rLV",
+  "class": "Th9Hcz",
+  "classInContainer": "zzDKiI",
+  "classLocalScope": "Ss63Ju",
+  "cssModuleWithCustomFileExtension": "fBHrus",
+  "currentWmultiParams": "g4zTJs",
+  "deepClassInContainer": "_0Kw8ER",
+  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "ab832767f5385d5dff7b beforeName c32cb9263c28392a0d5d a91475aeba0a7169aa49 importName secondImport a91475aeba0a7169aa49 a91475aeba0a7169aa49 b795d3f4984147d814f7 a91475aeba0a7169aa49 b795d3f4984147d814f7 className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "b278a4efcbeb4ec5aab2 a05f3a8dc9351ad6314c",
-  "exportNameOtherFromKeywordWithFrom1": "e9ef3367aac39b4ab8dc from",
-  "exportNameOtherFromKeywordWithFrom2": "b328cf6bf68f578c21a7",
-  "exportNameOtherNoSpaces": "a64bdaa90b9d57daa97a beforeName c32cb9263c28392a0d5d",
-  "exportNameWeirdCharacters": "c1960f82cdd3f768462b",
-  "futureWmultiParams": "dae80586483c85694155",
+  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
+  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
+  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
+  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
+  "exportNameWeirdCharacters": "pfrK-J",
+  "futureWmultiParams": "FIC9OM",
   "global": undefined,
-  "hasWmultiParams": "cf2c523509fcfd340c1e",
-  "ident": "d02bfdecf4c4e53747d7",
-  "inLocalGlobalScope": "a1ba1d4aa1297548ffd5",
-  "inSupportScope": "ce0fcc1e519ffa239ba6",
-  "isWmultiParams": "dbb3765db648754ac2a1",
-  "keyframes": "ac52dce5209f6d7936d8",
-  "keyframesUPPERCASE": "f1ce8e0c9f7082a6fe67",
-  "local": "c93ded0f96c4ebdc6633 ef5c79300754fb6d3921 b174cbd20e12a5a6dd80 a301780b73ad49087de5",
-  "local2": "fb30c262c5bf9239b170 ec104827e4cedb506a47",
-  "localkeyframes2UPPPERCASE": "cbd03a9df4b599e10cbe",
-  "matchesWmultiParams": "b85c18fc015f2995a25c",
-  "media": "bac27d3f505ae3ed4f96",
-  "mediaInSupports": "a43c67fccb5214472af2",
-  "mediaWithOperator": "eb582d6a9fc23778bc49",
-  "mozAnimationName": "c0b1f5446b2cd37e1096",
-  "mozAnyWmultiParams": "a9c178e1f1034bf1d6e3",
-  "myColor": "--dc35498b1b2a4f5b2a03",
-  "nested": "fdabae4f6212c001a428 undefined a155701637c2c920166c",
+  "hasWmultiParams": "JaRvb9",
+  "ident": "ORDfKs",
+  "inLocalGlobalScope": "xawqPK",
+  "inSupportScope": "StK0G8",
+  "isWmultiParams": "yrfUF-",
+  "keyframes": "UlwS-p",
+  "keyframesUPPERCASE": "kwAQ_z",
+  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
+  "local2": "SMSyWQ Z22WXA",
+  "localkeyframes2UPPPERCASE": "axWscZ",
+  "matchesWmultiParams": "BZtKdC",
+  "media": "A4ihWh",
+  "mediaInSupports": "ylxOyA",
+  "mediaWithOperator": "gvvWG0",
+  "mozAnimationName": "jJAZvq",
+  "mozAnyWmultiParams": "Qcmkef",
+  "myColor": "--E8316H",
+  "nested": "RtgWj_ undefined kFvcKy",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "ce54499c44eeb65d6b10",
-  "paddingLg": "f0c6711e0de803fab01a",
-  "paddingSm": "c101cf9944c44feb1f13",
-  "pastWmultiParams": "a5e0785842162888f678",
-  "supports": "c24ae76cf08db35fb923",
-  "supportsInMedia": "b0819a3669e76705b919",
-  "supportsWithOperator": "ca30a31e789b627ddac1",
-  "vars": "--a58011290fbc1e85b567 dcae30ff1bd3b9d75b60 undefined d0faf3a7733902594dbd",
-  "webkitAnyWmultiParams": "a96e3a6d2480c2a02f8b",
-  "whereWmultiParams": "dc1ac3c2c25d5a34a7dc",
+  "notWmultiParams": "cVavHg",
+  "paddingLg": "xqzVWd",
+  "paddingSm": "Qm3jxJ",
+  "pastWmultiParams": "NOGA2-",
+  "supports": "qyhlLo",
+  "supportsInMedia": "KHcaFg",
+  "supportsWithOperator": "NQmDdm",
+  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
+  "webkitAnyWmultiParams": "piVgU0",
+  "whereWmultiParams": "n4-IgX",
 }
 `;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to create css modules: prod 2`] = `
 Object {
-  "UsedClassName": "cad2169b561fc80fbdd2",
-  "VARS": "--c191ac5d51793f420926 c6c2464a86e35c83423e undefined cb023650ab1374618d97",
-  "animation": "f7b94264effe46aa7a8e",
-  "animationName": "fadafa8ed9f5994a36a6",
-  "class": "e5af26f116e2e3d60717",
-  "classInContainer": "bfebe9e1ea7574d5910c",
-  "classLocalScope": "b48b7b93c9de1029984b",
-  "cssModuleWithCustomFileExtension": "f49a8d556342a17b89ce",
-  "currentWmultiParams": "c424ccafd74c2bcab717",
-  "deepClassInContainer": "de0609a1cee52edce610",
-  "displayFlexInSupportsInMediaUpperCase": "f72d4de40257c3bc7a8a",
+  "UsedClassName": "jNb1RA",
+  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
+  "animation": "xVppDs",
+  "animationName": "Lo5rLV",
+  "class": "Th9Hcz",
+  "classInContainer": "zzDKiI",
+  "classLocalScope": "Ss63Ju",
+  "cssModuleWithCustomFileExtension": "fBHrus",
+  "currentWmultiParams": "g4zTJs",
+  "deepClassInContainer": "_0Kw8ER",
+  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "ab832767f5385d5dff7b beforeName c32cb9263c28392a0d5d a91475aeba0a7169aa49 importName secondImport a91475aeba0a7169aa49 a91475aeba0a7169aa49 b795d3f4984147d814f7 a91475aeba0a7169aa49 b795d3f4984147d814f7 className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "b278a4efcbeb4ec5aab2 a05f3a8dc9351ad6314c",
-  "exportNameOtherFromKeywordWithFrom1": "e9ef3367aac39b4ab8dc from",
-  "exportNameOtherFromKeywordWithFrom2": "b328cf6bf68f578c21a7",
-  "exportNameOtherNoSpaces": "a64bdaa90b9d57daa97a beforeName c32cb9263c28392a0d5d",
-  "exportNameWeirdCharacters": "c1960f82cdd3f768462b",
-  "futureWmultiParams": "dae80586483c85694155",
+  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
+  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
+  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
+  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
+  "exportNameWeirdCharacters": "pfrK-J",
+  "futureWmultiParams": "FIC9OM",
   "global": undefined,
-  "hasWmultiParams": "cf2c523509fcfd340c1e",
-  "ident": "d02bfdecf4c4e53747d7",
-  "inLocalGlobalScope": "a1ba1d4aa1297548ffd5",
-  "inSupportScope": "ce0fcc1e519ffa239ba6",
-  "isWmultiParams": "dbb3765db648754ac2a1",
-  "keyframes": "ac52dce5209f6d7936d8",
-  "keyframesUPPERCASE": "f1ce8e0c9f7082a6fe67",
-  "local": "c93ded0f96c4ebdc6633 ef5c79300754fb6d3921 b174cbd20e12a5a6dd80 a301780b73ad49087de5",
-  "local2": "fb30c262c5bf9239b170 ec104827e4cedb506a47",
-  "localkeyframes2UPPPERCASE": "cbd03a9df4b599e10cbe",
-  "matchesWmultiParams": "b85c18fc015f2995a25c",
-  "media": "bac27d3f505ae3ed4f96",
-  "mediaInSupports": "a43c67fccb5214472af2",
-  "mediaWithOperator": "eb582d6a9fc23778bc49",
-  "mozAnimationName": "c0b1f5446b2cd37e1096",
-  "mozAnyWmultiParams": "a9c178e1f1034bf1d6e3",
-  "myColor": "--dc35498b1b2a4f5b2a03",
-  "nested": "fdabae4f6212c001a428 undefined a155701637c2c920166c",
+  "hasWmultiParams": "JaRvb9",
+  "ident": "ORDfKs",
+  "inLocalGlobalScope": "xawqPK",
+  "inSupportScope": "StK0G8",
+  "isWmultiParams": "yrfUF-",
+  "keyframes": "UlwS-p",
+  "keyframesUPPERCASE": "kwAQ_z",
+  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
+  "local2": "SMSyWQ Z22WXA",
+  "localkeyframes2UPPPERCASE": "axWscZ",
+  "matchesWmultiParams": "BZtKdC",
+  "media": "A4ihWh",
+  "mediaInSupports": "ylxOyA",
+  "mediaWithOperator": "gvvWG0",
+  "mozAnimationName": "jJAZvq",
+  "mozAnyWmultiParams": "Qcmkef",
+  "myColor": "--E8316H",
+  "nested": "RtgWj_ undefined kFvcKy",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "ce54499c44eeb65d6b10",
-  "paddingLg": "f0c6711e0de803fab01a",
-  "paddingSm": "c101cf9944c44feb1f13",
-  "pastWmultiParams": "a5e0785842162888f678",
-  "supports": "c24ae76cf08db35fb923",
-  "supportsInMedia": "b0819a3669e76705b919",
-  "supportsWithOperator": "ca30a31e789b627ddac1",
-  "vars": "--a58011290fbc1e85b567 dcae30ff1bd3b9d75b60 undefined d0faf3a7733902594dbd",
-  "webkitAnyWmultiParams": "a96e3a6d2480c2a02f8b",
-  "whereWmultiParams": "dc1ac3c2c25d5a34a7dc",
+  "notWmultiParams": "cVavHg",
+  "paddingLg": "xqzVWd",
+  "paddingSm": "Qm3jxJ",
+  "pastWmultiParams": "NOGA2-",
+  "supports": "qyhlLo",
+  "supportsInMedia": "KHcaFg",
+  "supportsWithOperator": "NQmDdm",
+  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
+  "webkitAnyWmultiParams": "piVgU0",
+  "whereWmultiParams": "n4-IgX",
 }
 `;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"style_module_css-class"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"e5af26f116e2e3d60717"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"Th9Hcz"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"e5af26f116e2e3d60717"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"Th9Hcz"`;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"style_module_css-local1"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"c93ded0f96c4ebdc6633"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"pKESR4"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"c93ded0f96c4ebdc6633"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"pKESR4"`;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"style_module_css-local2"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"ef5c79300754fb6d3921"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"INAAta"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"ef5c79300754fb6d3921"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"INAAta"`;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"style_module_css-local3"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"b174cbd20e12a5a6dd80"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"dhVQ31"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"b174cbd20e12a5a6dd80"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"dhVQ31"`;
 
 exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"style_module_css-local4"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"a301780b73ad49087de5"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"VPL1IN"`;
 
-exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"a301780b73ad49087de5"`;
+exports[`ConfigTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"VPL1IN"`;
 
 exports[`ConfigTestCases css css-modules-no-space exported tests should allow to create css modules 1`] = `
 Object {
@@ -3792,23 +3792,23 @@ exports[`ConfigTestCases css escape-unescape exported tests should work with URL
 Object {
   "#": "style_modules_css-#",
   "##": "style_modules_css-##",
-  "#.#.#": "style_modules_css-#-#-#",
+  "#.#.#": "style_modules_css-#.#.#",
   "#fake-id": "style_modules_css-#fake-id",
-  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[-+++++++-++++++++++-+++-+-----]-++--+-+++++++--+++--++---+++++++++++++++---+++------------------+---",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "style_modules_css--a-b-c-",
   "-a0-34a___f": "style_modules_css--a0-34a___f",
-  ".": "style_modules_css--",
+  ".": "style_modules_css-.",
   "123": "style_modules_css-123",
   "1a2b3c": "style_modules_css-1a2b3c",
-  ":)": "style_modules_css--)",
-  ":\`(": "style_modules_css--\`(",
-  ":hover": "style_modules_css--hover",
-  ":hover:focus:active": "style_modules_css--hover-focus-active",
-  "<><<<>><>": "style_modules_css----------",
-  "<p>": "style_modules_css--p-",
-  "?": "style_modules_css--",
+  ":)": "style_modules_css-:)",
+  ":\`(": "style_modules_css-:\`(",
+  ":hover": "style_modules_css-:hover",
+  ":hover:focus:active": "style_modules_css-:hover:focus:active",
+  "<><<<>><>": "style_modules_css-<><<<>><>",
+  "<p>": "style_modules_css-<p>",
+  "?": "style_modules_css-?",
   "@": "style_modules_css-@",
-  "B&W?": "style_modules_css-B&W-",
+  "B&W?": "style_modules_css-B&W?",
   "[attr=value]": "style_modules_css-[attr=value]",
   "_": "style_modules_css-_",
   "_test": "style_modules_css-_test",
@@ -3816,16 +3816,16 @@ Object {
   "className": "style_modules_css-className",
   "f!o!o": "style_modules_css-f!o!o",
   "f'o'o": "style_modules_css-f'o'o",
-  "f*o*o": "style_modules_css-f-o-o",
+  "f*o*o": "style_modules_css-f*o*o",
   "f+o+o": "style_modules_css-f+o+o",
-  "f/o/o": "style_modules_css-f-o-o",
+  "f/o/o": "style_modules_css-f/o/o",
   "f@oo": "style_modules_css-f@oo",
-  "f\\\\o\\\\o": "style_modules_css-f-o-o",
-  "foo.bar": "style_modules_css-foo-bar",
-  "foo/bar": "style_modules_css-foo-bar",
-  "foo/bar/baz": "style_modules_css-foo-bar-baz",
-  "foo\\\\bar": "style_modules_css-foo-bar",
-  "foo\\\\bar\\\\baz": "style_modules_css-foo-bar-baz",
+  "f\\\\o\\\\o": "style_modules_css-f\\\\o\\\\o",
+  "foo.bar": "style_modules_css-foo.bar",
+  "foo/bar": "style_modules_css-foo/bar",
+  "foo/bar/baz": "style_modules_css-foo/bar/baz",
+  "foo\\\\bar": "style_modules_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "style_modules_css-foo\\\\bar\\\\baz",
   "f~o~o": "style_modules_css-f~o~o",
   "m_x_@": "style_modules_css-m_x_@",
   "main-bg-color": "--style_modules_css-main-bg-color",
@@ -3849,23 +3849,23 @@ exports[`ConfigTestCases css escape-unescape exported tests should work with URL
 Object {
   "#": "style_modules_css-#",
   "##": "style_modules_css-##",
-  "#.#.#": "style_modules_css-#-#-#",
+  "#.#.#": "style_modules_css-#.#.#",
   "#fake-id": "style_modules_css-#fake-id",
-  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[-+++++++-++++++++++-+++-+-----]-++--+-+++++++--+++--++---+++++++++++++++---+++------------------+---",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "style_modules_css--a-b-c-",
   "-a0-34a___f": "style_modules_css--a0-34a___f",
-  ".": "style_modules_css--",
+  ".": "style_modules_css-.",
   "123": "style_modules_css-123",
   "1a2b3c": "style_modules_css-1a2b3c",
-  ":)": "style_modules_css--)",
-  ":\`(": "style_modules_css--\`(",
-  ":hover": "style_modules_css--hover",
-  ":hover:focus:active": "style_modules_css--hover-focus-active",
-  "<><<<>><>": "style_modules_css----------",
-  "<p>": "style_modules_css--p-",
-  "?": "style_modules_css--",
+  ":)": "style_modules_css-:)",
+  ":\`(": "style_modules_css-:\`(",
+  ":hover": "style_modules_css-:hover",
+  ":hover:focus:active": "style_modules_css-:hover:focus:active",
+  "<><<<>><>": "style_modules_css-<><<<>><>",
+  "<p>": "style_modules_css-<p>",
+  "?": "style_modules_css-?",
   "@": "style_modules_css-@",
-  "B&W?": "style_modules_css-B&W-",
+  "B&W?": "style_modules_css-B&W?",
   "[attr=value]": "style_modules_css-[attr=value]",
   "_": "style_modules_css-_",
   "_test": "style_modules_css-_test",
@@ -3873,16 +3873,16 @@ Object {
   "className": "style_modules_css-className",
   "f!o!o": "style_modules_css-f!o!o",
   "f'o'o": "style_modules_css-f'o'o",
-  "f*o*o": "style_modules_css-f-o-o",
+  "f*o*o": "style_modules_css-f*o*o",
   "f+o+o": "style_modules_css-f+o+o",
-  "f/o/o": "style_modules_css-f-o-o",
+  "f/o/o": "style_modules_css-f/o/o",
   "f@oo": "style_modules_css-f@oo",
-  "f\\\\o\\\\o": "style_modules_css-f-o-o",
-  "foo.bar": "style_modules_css-foo-bar",
-  "foo/bar": "style_modules_css-foo-bar",
-  "foo/bar/baz": "style_modules_css-foo-bar-baz",
-  "foo\\\\bar": "style_modules_css-foo-bar",
-  "foo\\\\bar\\\\baz": "style_modules_css-foo-bar-baz",
+  "f\\\\o\\\\o": "style_modules_css-f\\\\o\\\\o",
+  "foo.bar": "style_modules_css-foo.bar",
+  "foo/bar": "style_modules_css-foo/bar",
+  "foo/bar/baz": "style_modules_css-foo/bar/baz",
+  "foo\\\\bar": "style_modules_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "style_modules_css-foo\\\\bar\\\\baz",
   "f~o~o": "style_modules_css-f~o~o",
   "m_x_@": "style_modules_css-m_x_@",
   "main-bg-color": "--style_modules_css-main-bg-color",
@@ -3948,13 +3948,13 @@ Array [
 	margin-right: auto !important;
 }
 
-.style_modules_css-B\\\\&W- {
+.style_modules_css-B\\\\&W\\\\? {
 	margin-left: auto !important;
 	margin-right: auto !important;
 }
 
 /* matches elements with class=\\":\`(\\" */
-.style_modules_css--\\\\\`\\\\( {
+.style_modules_css-\\\\:\\\\\`\\\\( {
 	color: aqua;
 }
 
@@ -3986,47 +3986,47 @@ Array [
 .style_modules_css-⌘⌥ { background: lime; }
 .style_modules_css-𝄞♪♩♫♬ { background: lime; }
 .style_modules_css-💩 { background: lime; }
-.style_modules_css-- { background: lime; }
+.style_modules_css-\\\\? { background: lime; }
 .style_modules_css-\\\\@ { background: lime; }
-.style_modules_css-- { background: lime; }
-.style_modules_css--\\\\) { background: lime; }
-.style_modules_css--\\\\\`\\\\( { background: lime; }
+.style_modules_css-\\\\. { background: lime; }
+.style_modules_css-\\\\:\\\\) { background: lime; }
+.style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
 .style_modules_css-123 { background: lime; }
 .style_modules_css-1a2b3c { background: lime; }
-.style_modules_css--p- { background: lime; }
-.style_modules_css---------- { background: lime; }
-.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+-\\\\+\\\\+\\\\+-\\\\+-----\\\\]-\\\\+\\\\+--\\\\+-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+--\\\\+\\\\+\\\\+--\\\\+\\\\+---\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+---\\\\+\\\\+\\\\+------------------\\\\+--- { background: lime; }
+.style_modules_css-\\\\<p\\\\> { background: lime; }
+.style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
 .style_modules_css-\\\\# { background: lime; }
 .style_modules_css-\\\\#\\\\# { background: lime; }
-.style_modules_css-\\\\#-\\\\#-\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
 .style_modules_css-_ { background: lime; }
 .style_modules_css-\\\\{\\\\} { background: lime; }
 .style_modules_css-\\\\#fake-id { background: lime; }
-.style_modules_css-foo-bar { background: lime; }
-.style_modules_css--hover { background: lime; }
-.style_modules_css--hover-focus-active { background: lime; }
+.style_modules_css-foo\\\\.bar { background: lime; }
+.style_modules_css-\\\\:hover { background: lime; }
+.style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
 .style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
+.style_modules_css-f\\\\/o\\\\/o { background: lime; }
+.style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+.style_modules_css-f\\\\*o\\\\*o { background: lime; }
 .style_modules_css-f\\\\!o\\\\!o { background: lime; }
 .style_modules_css-f\\\\'o\\\\'o { background: lime; }
 .style_modules_css-f\\\\~o\\\\~o { background: lime; }
 .style_modules_css-f\\\\+o\\\\+o { background: lime; }
 
-.style_modules_css-foo-bar {
+.style_modules_css-foo\\\\/bar {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar {
+.style_modules_css-foo\\\\\\\\bar {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar-baz {
+.style_modules_css-foo\\\\/bar\\\\/baz {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar-baz {
+.style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
 	background: hotpink;
 }
 
@@ -4092,13 +4092,13 @@ Array [
 	margin-right: auto !important;
 }
 
-.style_modules_css-B\\\\&W- {
+.style_modules_css-B\\\\&W\\\\? {
 	margin-left: auto !important;
 	margin-right: auto !important;
 }
 
 /* matches elements with class=\\":\`(\\" */
-.style_modules_css--\\\\\`\\\\( {
+.style_modules_css-\\\\:\\\\\`\\\\( {
 	color: aqua;
 }
 
@@ -4130,47 +4130,47 @@ Array [
 .style_modules_css-⌘⌥ { background: lime; }
 .style_modules_css-𝄞♪♩♫♬ { background: lime; }
 .style_modules_css-💩 { background: lime; }
-.style_modules_css-- { background: lime; }
+.style_modules_css-\\\\? { background: lime; }
 .style_modules_css-\\\\@ { background: lime; }
-.style_modules_css-- { background: lime; }
-.style_modules_css--\\\\) { background: lime; }
-.style_modules_css--\\\\\`\\\\( { background: lime; }
+.style_modules_css-\\\\. { background: lime; }
+.style_modules_css-\\\\:\\\\) { background: lime; }
+.style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
 .style_modules_css-123 { background: lime; }
 .style_modules_css-1a2b3c { background: lime; }
-.style_modules_css--p- { background: lime; }
-.style_modules_css---------- { background: lime; }
-.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+-\\\\+\\\\+\\\\+-\\\\+-----\\\\]-\\\\+\\\\+--\\\\+-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+--\\\\+\\\\+\\\\+--\\\\+\\\\+---\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+---\\\\+\\\\+\\\\+------------------\\\\+--- { background: lime; }
+.style_modules_css-\\\\<p\\\\> { background: lime; }
+.style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
 .style_modules_css-\\\\# { background: lime; }
 .style_modules_css-\\\\#\\\\# { background: lime; }
-.style_modules_css-\\\\#-\\\\#-\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
 .style_modules_css-_ { background: lime; }
 .style_modules_css-\\\\{\\\\} { background: lime; }
 .style_modules_css-\\\\#fake-id { background: lime; }
-.style_modules_css-foo-bar { background: lime; }
-.style_modules_css--hover { background: lime; }
-.style_modules_css--hover-focus-active { background: lime; }
+.style_modules_css-foo\\\\.bar { background: lime; }
+.style_modules_css-\\\\:hover { background: lime; }
+.style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
 .style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
-.style_modules_css-f-o-o { background: lime; }
+.style_modules_css-f\\\\/o\\\\/o { background: lime; }
+.style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+.style_modules_css-f\\\\*o\\\\*o { background: lime; }
 .style_modules_css-f\\\\!o\\\\!o { background: lime; }
 .style_modules_css-f\\\\'o\\\\'o { background: lime; }
 .style_modules_css-f\\\\~o\\\\~o { background: lime; }
 .style_modules_css-f\\\\+o\\\\+o { background: lime; }
 
-.style_modules_css-foo-bar {
+.style_modules_css-foo\\\\/bar {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar {
+.style_modules_css-foo\\\\\\\\bar {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar-baz {
+.style_modules_css-foo\\\\/bar\\\\/baz {
 	background: hotpink;
 }
 
-.style_modules_css-foo-bar-baz {
+.style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
 	background: hotpink;
 }
 
@@ -4585,14 +4585,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
 Object {
-  "btn--info_is-disabled_1": "fea7312463af110aaf13",
-  "btn-info_is-disabled": "cf09b6e4e9e240a862c4",
-  "class": "fd302a4f5de6fe9b852f",
-  "default": "f89f9784ac551cfe83a4",
+  "btn--info_is-disabled_1": "h0uRfl",
+  "btn-info_is-disabled": "VKLzea",
+  "class": "_9X1uz4",
+  "default": "IIfZUH",
   "foo": "bar",
-  "foo_bar": "be371efa424182f5311d",
+  "foo_bar": "DW60ly",
   "my-btn-info_is-disabled": "value",
-  "simple": "bb5b721b1838c9c1ce85",
+  "simple": "nQadhD",
 }
 `;
 
@@ -4611,14 +4611,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
 Object {
-  "btn--info_is-disabled_1": "fea7312463af110aaf13",
-  "btn-info_is-disabled": "cf09b6e4e9e240a862c4",
-  "class": "fd302a4f5de6fe9b852f",
-  "default": "f89f9784ac551cfe83a4",
+  "btn--info_is-disabled_1": "h0uRfl",
+  "btn-info_is-disabled": "VKLzea",
+  "class": "_9X1uz4",
+  "default": "IIfZUH",
   "foo": "bar",
-  "foo_bar": "be371efa424182f5311d",
+  "foo_bar": "DW60ly",
   "my-btn-info_is-disabled": "value",
-  "simple": "bb5b721b1838c9c1ce85",
+  "simple": "nQadhD",
 }
 `;
 
@@ -4641,18 +4641,18 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
 Object {
-  "btn--info_is-disabled_1": "e24cf9a4b1749e482fcb",
-  "btn-info_is-disabled": "b2a6b49977ca503abd7f",
-  "btnInfoIsDisabled": "b2a6b49977ca503abd7f",
-  "btnInfoIsDisabled1": "e24cf9a4b1749e482fcb",
-  "class": "d99703fff7e796ad1be8",
-  "default": "a49d646dce23610134d1",
+  "btn--info_is-disabled_1": "_9rzO2d",
+  "btn-info_is-disabled": "qbZx0Y",
+  "btnInfoIsDisabled": "qbZx0Y",
+  "btnInfoIsDisabled1": "_9rzO2d",
+  "class": "uLj_ZJ",
+  "default": "HBbwDb",
   "foo": "bar",
-  "fooBar": "a905469ac99212d8fe1f",
-  "foo_bar": "a905469ac99212d8fe1f",
+  "fooBar": "Kz9Lkr",
+  "foo_bar": "Kz9Lkr",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "b193a958983050845ada",
+  "simple": "bhkrbv",
 }
 `;
 
@@ -4675,18 +4675,18 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
 Object {
-  "btn--info_is-disabled_1": "e24cf9a4b1749e482fcb",
-  "btn-info_is-disabled": "b2a6b49977ca503abd7f",
-  "btnInfoIsDisabled": "b2a6b49977ca503abd7f",
-  "btnInfoIsDisabled1": "e24cf9a4b1749e482fcb",
-  "class": "d99703fff7e796ad1be8",
-  "default": "a49d646dce23610134d1",
+  "btn--info_is-disabled_1": "_9rzO2d",
+  "btn-info_is-disabled": "qbZx0Y",
+  "btnInfoIsDisabled": "qbZx0Y",
+  "btnInfoIsDisabled1": "_9rzO2d",
+  "class": "uLj_ZJ",
+  "default": "HBbwDb",
   "foo": "bar",
-  "fooBar": "a905469ac99212d8fe1f",
-  "foo_bar": "a905469ac99212d8fe1f",
+  "fooBar": "Kz9Lkr",
+  "foo_bar": "Kz9Lkr",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "b193a958983050845ada",
+  "simple": "bhkrbv",
 }
 `;
 
@@ -4705,14 +4705,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
 Object {
-  "btnInfoIsDisabled": "c2e5f157faeff9e2081a",
-  "btnInfoIsDisabled1": "ceec14642011777145de",
-  "class": "a40026021259d2a1ec7c",
-  "default": "aae7329dcdbc340a7955",
+  "btnInfoIsDisabled": "tWVDJB",
+  "btnInfoIsDisabled1": "XcwArA",
+  "class": "NKUbIN",
+  "default": "uj_jzV",
   "foo": "bar",
-  "fooBar": "ef705e36241b074e529e",
+  "fooBar": "_1q-K0I",
   "myBtnInfoIsDisabled": "value",
-  "simple": "ed95b4d7805672776d93",
+  "simple": "BbWfGD",
 }
 `;
 
@@ -4731,14 +4731,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
 Object {
-  "btnInfoIsDisabled": "c2e5f157faeff9e2081a",
-  "btnInfoIsDisabled1": "ceec14642011777145de",
-  "class": "a40026021259d2a1ec7c",
-  "default": "aae7329dcdbc340a7955",
+  "btnInfoIsDisabled": "tWVDJB",
+  "btnInfoIsDisabled1": "XcwArA",
+  "class": "NKUbIN",
+  "default": "uj_jzV",
   "foo": "bar",
-  "fooBar": "ef705e36241b074e529e",
+  "fooBar": "_1q-K0I",
   "myBtnInfoIsDisabled": "value",
-  "simple": "ed95b4d7805672776d93",
+  "simple": "BbWfGD",
 }
 `;
 
@@ -4760,17 +4760,17 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
 Object {
-  "btn--info_is-disabled_1": "f28490e075992f6465b9",
-  "btn-info_is-disabled": "eb82348feeae2ab54bf2",
-  "btnInfo_isDisabled": "eb82348feeae2ab54bf2",
-  "btnInfo_isDisabled_1": "f28490e075992f6465b9",
-  "class": "df715492a56e8015fe87",
-  "default": "cf8b6bcdf13015be30be",
+  "btn--info_is-disabled_1": "aM7U7f",
+  "btn-info_is-disabled": "c5a9L4",
+  "btnInfo_isDisabled": "c5a9L4",
+  "btnInfo_isDisabled_1": "aM7U7f",
+  "class": "aIIX50",
+  "default": "bCs1Ll",
   "foo": "bar",
-  "foo_bar": "a87760c3ee7266aec9fb",
+  "foo_bar": "HLzPse",
   "my-btn-info_is-disabled": "value",
   "myBtnInfo_isDisabled": "value",
-  "simple": "cdd0696d132b7cd87742",
+  "simple": "G-zpOE",
 }
 `;
 
@@ -4792,17 +4792,17 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
 Object {
-  "btn--info_is-disabled_1": "f28490e075992f6465b9",
-  "btn-info_is-disabled": "eb82348feeae2ab54bf2",
-  "btnInfo_isDisabled": "eb82348feeae2ab54bf2",
-  "btnInfo_isDisabled_1": "f28490e075992f6465b9",
-  "class": "df715492a56e8015fe87",
-  "default": "cf8b6bcdf13015be30be",
+  "btn--info_is-disabled_1": "aM7U7f",
+  "btn-info_is-disabled": "c5a9L4",
+  "btnInfo_isDisabled": "c5a9L4",
+  "btnInfo_isDisabled_1": "aM7U7f",
+  "class": "aIIX50",
+  "default": "bCs1Ll",
   "foo": "bar",
-  "foo_bar": "a87760c3ee7266aec9fb",
+  "foo_bar": "HLzPse",
   "my-btn-info_is-disabled": "value",
   "myBtnInfo_isDisabled": "value",
-  "simple": "cdd0696d132b7cd87742",
+  "simple": "G-zpOE",
 }
 `;
 
@@ -4821,14 +4821,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
 Object {
-  "btnInfo_isDisabled": "dc3f84fcbbbc531084ac",
-  "btnInfo_isDisabled_1": "e3c6cd0bc2beea43b16c",
-  "class": "b508fad629c2d72bc8a6",
-  "default": "f2929ecb0c2697e2c177",
+  "btnInfo_isDisabled": "fG7JbK",
+  "btnInfo_isDisabled_1": "tPWB1n",
+  "class": "tKttCk",
+  "default": "ovH3w9",
   "foo": "bar",
-  "foo_bar": "af7a80a99108ed4106b7",
+  "foo_bar": "NfxY76",
   "myBtnInfo_isDisabled": "value",
-  "simple": "bce0e77fb75a7d48a1dc",
+  "simple": "edJxRs",
 }
 `;
 
@@ -4847,14 +4847,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
 Object {
-  "btnInfo_isDisabled": "dc3f84fcbbbc531084ac",
-  "btnInfo_isDisabled_1": "e3c6cd0bc2beea43b16c",
-  "class": "b508fad629c2d72bc8a6",
-  "default": "f2929ecb0c2697e2c177",
+  "btnInfo_isDisabled": "fG7JbK",
+  "btnInfo_isDisabled_1": "tPWB1n",
+  "class": "tKttCk",
+  "default": "ovH3w9",
   "foo": "bar",
-  "foo_bar": "af7a80a99108ed4106b7",
+  "foo_bar": "NfxY76",
   "myBtnInfo_isDisabled": "value",
-  "simple": "bce0e77fb75a7d48a1dc",
+  "simple": "edJxRs",
 }
 `;
 
@@ -4873,14 +4873,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "fca8e88cdc23d44e5d85",
-  "BTN-INFO_IS-DISABLED": "d117ec3baa25e004f34f",
-  "CLASS": "f06d8695446298939280",
-  "DEFAULT": "aef3faedac2f6e56ff21",
+  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
+  "BTN-INFO_IS-DISABLED": "mtkl8q",
+  "CLASS": "ZOe2qu",
+  "DEFAULT": "w1lug9",
   "FOO": "bar",
-  "FOO_BAR": "c821c71560076699eab3",
+  "FOO_BAR": "_5cbScz",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "f0ef253109e2bdf8f51d",
+  "SIMPLE": "lZQwR-",
 }
 `;
 
@@ -4899,14 +4899,14 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "fca8e88cdc23d44e5d85",
-  "BTN-INFO_IS-DISABLED": "d117ec3baa25e004f34f",
-  "CLASS": "f06d8695446298939280",
-  "DEFAULT": "aef3faedac2f6e56ff21",
+  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
+  "BTN-INFO_IS-DISABLED": "mtkl8q",
+  "CLASS": "ZOe2qu",
+  "DEFAULT": "w1lug9",
   "FOO": "bar",
-  "FOO_BAR": "c821c71560076699eab3",
+  "FOO_BAR": "_5cbScz",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "f0ef253109e2bdf8f51d",
+  "SIMPLE": "lZQwR-",
 }
 `;
 
@@ -7191,7 +7191,7 @@ Object {
 
 exports[`ConfigTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "placeholder": "c5dddd43adb8edc7f01a",
+  "placeholder": "u9zzP_",
 }
 `;
 
@@ -7209,85 +7209,85 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "df7513c9df52e98754dc",
-  "btn-info_is-disabled": "deb5dd70a5d875aabdbb",
-  "color-red": "--ca9de9efe93133403b0b",
+  "btn--info_is-disabled_1": "_42b82f5c52a6cd49e828",
+  "btn-info_is-disabled": "_42b82f5c52a6cd49e828",
+  "color-red": "--_42b82f5c52a6cd49e828",
   "foo": "bar",
-  "foo_bar": "ff615faecad97183a0b2",
+  "foo_bar": "_42b82f5c52a6cd49e828",
   "my-btn-info_is-disabled": "value",
-  "simple": "b2eadff966c397280111",
+  "simple": "_42b82f5c52a6cd49e828",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "a3dbace7b1a60340fc86-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "ebc2265bfde5d9a2b3bf-btn-info_is-disabled",
-  "color-red": "--fbc5c14cca5baa8b2d15-color-red",
+  "btn--info_is-disabled_1": "e3e1a708f4157dbd1c96-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "e3e1a708f4157dbd1c96-btn-info_is-disabled",
+  "color-red": "--e3e1a708f4157dbd1c96-color-red",
   "foo": "bar",
-  "foo_bar": "e00933c0507688a61feb-foo_bar",
+  "foo_bar": "e3e1a708f4157dbd1c96-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "f6a101c899d607c0d14c-simple",
+  "simple": "e3e1a708f4157dbd1c96-simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 4`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module__btn-info_is-disabled",
-  "color-red": "----style-module__color-red",
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module__foo_bar",
+  "foo_bar": "./style.module__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module__simple",
+  "simple": "./style.module__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 5`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-css__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-css__btn-info_is-disabled",
-  "color-red": "----style-module-css__color-red",
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-css__foo_bar",
+  "foo_bar": "./style.module.css__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-css__simple",
+  "simple": "./style.module.css__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-css-q#f__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-css-q#f__btn-info_is-disabled",
-  "color-red": "----style-module-css-q#f__color-red",
+  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
+  "color-red": "--./style.module.css?q#f__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-css-q#f__foo_bar",
+  "foo_bar": "./style.module.css?q#f__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-css-q#f__simple",
+  "simple": "./style.module.css?q#f__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
 Object {
-  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-bf8257f1df8b815f84cd",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-bd1a0575f87e8410a1cd",
-  "color-red": "---_style_module_css_uniqueName-id-contenthash-aedae92574d5fe81fc7b",
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-a58419a90254aa0b7111",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "my-btn-info_is-disabled": "value",
-  "simple": "-_style_module_css_uniqueName-id-contenthash-eb681be4fa396deee476",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-less__btn-info_is-disabled",
-  "color-red": "----style-module-less__color-red",
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-less__foo_bar",
+  "foo_bar": "./style.module.less__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-less__simple",
+  "simple": "./style.module.less__simple",
 }
 `;
 
@@ -7305,85 +7305,85 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "df7513c9df52e98754dc",
-  "btn-info_is-disabled": "deb5dd70a5d875aabdbb",
-  "color-red": "--ca9de9efe93133403b0b",
+  "btn--info_is-disabled_1": "_42b82f5c52a6cd49e828",
+  "btn-info_is-disabled": "_42b82f5c52a6cd49e828",
+  "color-red": "--_42b82f5c52a6cd49e828",
   "foo": "bar",
-  "foo_bar": "ff615faecad97183a0b2",
+  "foo_bar": "_42b82f5c52a6cd49e828",
   "my-btn-info_is-disabled": "value",
-  "simple": "b2eadff966c397280111",
+  "simple": "_42b82f5c52a6cd49e828",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "a3dbace7b1a60340fc86-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "ebc2265bfde5d9a2b3bf-btn-info_is-disabled",
-  "color-red": "--fbc5c14cca5baa8b2d15-color-red",
+  "btn--info_is-disabled_1": "e3e1a708f4157dbd1c96-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "e3e1a708f4157dbd1c96-btn-info_is-disabled",
+  "color-red": "--e3e1a708f4157dbd1c96-color-red",
   "foo": "bar",
-  "foo_bar": "e00933c0507688a61feb-foo_bar",
+  "foo_bar": "e3e1a708f4157dbd1c96-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "f6a101c899d607c0d14c-simple",
+  "simple": "e3e1a708f4157dbd1c96-simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module__btn-info_is-disabled",
-  "color-red": "----style-module__color-red",
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module__foo_bar",
+  "foo_bar": "./style.module__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module__simple",
+  "simple": "./style.module__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-css__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-css__btn-info_is-disabled",
-  "color-red": "----style-module-css__color-red",
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-css__foo_bar",
+  "foo_bar": "./style.module.css__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-css__simple",
+  "simple": "./style.module.css__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-css-q#f__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-css-q#f__btn-info_is-disabled",
-  "color-red": "----style-module-css-q#f__color-red",
+  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
+  "color-red": "--./style.module.css?q#f__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-css-q#f__foo_bar",
+  "foo_bar": "./style.module.css?q#f__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-css-q#f__simple",
+  "simple": "./style.module.css?q#f__simple",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
 Object {
-  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-bf8257f1df8b815f84cd",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-bd1a0575f87e8410a1cd",
-  "color-red": "---_style_module_css_uniqueName-id-contenthash-aedae92574d5fe81fc7b",
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-a58419a90254aa0b7111",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "my-btn-info_is-disabled": "value",
-  "simple": "-_style_module_css_uniqueName-id-contenthash-eb681be4fa396deee476",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "--style-module-less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "--style-module-less__btn-info_is-disabled",
-  "color-red": "----style-module-less__color-red",
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
   "foo": "bar",
-  "foo_bar": "--style-module-less__foo_bar",
+  "foo_bar": "./style.module.less__foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "--style-module-less__simple",
+  "simple": "./style.module.less__simple",
 }
 `;
 
@@ -7485,17 +7485,20 @@ Object {
 exports[`ConfigTestCases css postcss-modules-plugins exported tests should work 2`] = `
 Object {
   "
-": "postcss-modules-local-by-default_local_modules_css--",
+": "postcss-modules-local-by-default_local_modules_css-
+",
   " as": "postcss-modules-local-by-default_local_modules_css- as",
   "#test": "postcss-modules-local-by-default_local_modules_css-#test",
   "-
-": "postcss-modules-local-by-default_local_modules_css---",
+": "postcss-modules-local-by-default_local_modules_css--
+",
   "--": "postcss-modules-local-by-default_local_modules_css---",
   "--
-": "postcss-modules-local-by-default_local_modules_css----",
+": "postcss-modules-local-by-default_local_modules_css---
+",
   "--foo": "postcss-modules-local-by-default_local_modules_css---foo",
   "-a_value": "postcss-modules-local-by-default_local_modules_css--a_value",
-  ":)": "postcss-modules-local-by-default_local_modules_css--)",
+  ":)": "postcss-modules-local-by-default_local_modules_css-:)",
   "@bounce": "postcss-modules-local-by-default_local_modules_css-@bounce",
   "@foo": "postcss-modules-local-by-default_local_modules_css-@foo",
   "BAR": "postcss-modules-local-by-default_local_modules_css-BAR",
@@ -8139,7 +8142,7 @@ Array [
 .postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
 /* scope escaped selectors */
-.postcss-modules-local-by-default_local_modules_css--\\\\) {}
+.postcss-modules-local-by-default_local_modules_css-\\\\:\\\\) {}
 
 /* scope ids */
 #postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
@@ -8300,16 +8303,16 @@ Array [
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-t\\\\ t; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css----; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---\\\\A; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\A; }
 
 /* localize animation using special characters */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
 
 /* localize animation using special characters */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---; }
