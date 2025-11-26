@@ -100,3 +100,12 @@ jest cases/userLogic.test.js
 - Add new test cases in the appropriate folder.
 - Use Jest assertions and mocks for consistency.
 - Run `yarn test` before pushing changes to validate functionality.
+
+## Debugging Tests
+
+When tests fail, here are some helpful debugging tips:
+
+- **Verbose Output**: Run tests with `--verbose` flag for detailed output.
+- **Watch Mode**: Use `yarn test --watch` to automatically rerun tests on file changes.
+- **Single Test**: Focus on a single test file using `jest path/to/test.js`.
+- **Debug Node**: Use `node --inspect-brk node_modules/.bin/jest --runInBand` for debugging with Chrome DevTools.
