@@ -2222,8 +2222,6 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
-			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2301,9 +2299,9 @@ describe("snapshots", () => {
 			+         },
 			+         "with": Object {
 			+           "type": "css",
-			@@ ... @@
+			+         },
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "assert": Object {
 			+           "type": "css",
 			+         },
@@ -2323,15 +2321,24 @@ describe("snapshots", () => {
 			+       },
 			+       "css/auto": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/global": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/module": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
 			+       "css": Object {
@@ -2376,10 +2383,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2391,11 +2399,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2808,7 +2815,8 @@ describe("snapshots", () => {
 			+         },
 			+         "test": /\\.css$/i,
 			+         "type": "css/auto",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2863,8 +2871,6 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
-			+       },
-			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2872,15 +2878,24 @@ describe("snapshots", () => {
 			+       },
 			+       "css/auto": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/global": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/module": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
 			+       "css": Object {
