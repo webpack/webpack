@@ -150,10 +150,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -167,10 +167,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -207,10 +207,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "chunkB.js",
-			          "size": 107,
+			          "size": 106,
 			        },
 			      ],
-			      "assetsSize": 107,
+			      "assetsSize": 106,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -224,10 +224,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -241,10 +241,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 3079,
+			          "size": 3076,
 			        },
 			      ],
-			      "assetsSize": 3079,
+			      "assetsSize": 3076,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -290,10 +290,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 3079,
+			        "size": 3076,
 			      },
 			      "name": "entryB.js",
-			      "size": 3079,
+			      "size": 3076,
 			      "type": "asset",
 			    },
 			    Object {
@@ -310,10 +310,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 196,
+			        "size": 195,
 			      },
 			      "name": "entryA.js",
-			      "size": 196,
+			      "size": 195,
 			      "type": "asset",
 			    },
 			    Object {
@@ -330,10 +330,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 107,
+			        "size": 106,
 			      },
 			      "name": "chunkB.js",
-			      "size": 107,
+			      "size": 106,
 			      "type": "asset",
 			    },
 			  ],

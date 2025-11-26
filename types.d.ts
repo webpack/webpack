@@ -4937,6 +4937,11 @@ declare interface Environment {
 	importMetaDirnameAndFilename?: boolean;
 
 	/**
+	 * The environment supports object method shorthand ('{ module() {} }').
+	 */
+	methodShorthand?: boolean;
+
+	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
@@ -11150,6 +11155,11 @@ declare interface ModuleRenderContext {
 	 * the inlined entry module is wrapped in an IIFE, existing only when `factory` is set to false
 	 */
 	inlinedInIIFE?: boolean;
+
+	/**
+	 * render module in object container
+	 */
+	renderInObject?: boolean;
 }
 declare interface ModuleResult {
 	client: string;
@@ -16231,6 +16241,7 @@ declare abstract class RuntimeTemplate {
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
 	supportsConst(): boolean;
+	supportsMethodShorthand(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
@@ -18175,7 +18186,7 @@ declare class Template {
 	static renderChunkModules(
 		renderContext: ChunkRenderContextJavascriptModulesPlugin,
 		modules: Module[],
-		renderModule: (module: Module) => null | Source,
+		renderModule: (module: Module, renderInArray?: boolean) => null | Source,
 		prefix?: string
 	): null | Source;
 	static renderRuntimeModules(

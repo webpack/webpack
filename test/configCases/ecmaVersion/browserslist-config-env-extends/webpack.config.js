@@ -21,6 +21,7 @@ module.exports = {
 			  "forOf": false,
 			  "globalThis": false,
 			  "importMetaDirnameAndFilename": false,
+			  "methodShorthand": false,
 			  "module": false,
 			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,

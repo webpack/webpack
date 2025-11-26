@@ -8,11 +8,11 @@ exports.id = \\"foo\\";
 exports.ids = [\\"foo\\"];
 exports.modules = {
 
-/***/ 552:
+/***/ 552
 /*!****************************!*\\\\
   !*** ./foo.js + 2 modules ***!
   \\\\****************************/
-/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 
 ;// external \\"fs\\"
@@ -33,7 +33,7 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
 	expect(source).toMatchSnapshot();
 });
 
-/***/ })
+/***/ }
 
 };
 ;
@@ -58,21 +58,21 @@ export const __webpack_esm_id__ = \\"foo\\";
 export const __webpack_esm_ids__ = [\\"foo\\"];
 export const __webpack_esm_modules__ = {
 
-/***/ 125:
+/***/ 125
 /*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/
-/***/ (() => {
+() {
 
 
 
-/***/ }),
+/***/ },
 
-/***/ 353:
+/***/ 353
 /*!****************!*\\\\
   !*** ./foo.js ***!
   \\\\****************/
-/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 125);
 /* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dependency.js */ 784);
@@ -88,7 +88,7 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () =>
 });
 
 
-/***/ })
+/***/ }
 
 };
 ;
@@ -13685,11 +13685,11 @@ exports[`ConfigTestCases library render-order-issue render-order-issue should co
 import { v as __WEBPACK_EXTERNAL_MODULE_externals1_v__ } from \\"externals1\\";
 /******/ var __webpack_modules__ = ({
 
-/***/ \\"./bar.js\\":
+/***/ \\"./bar.js\\"
 /*!****************************!*\\\\
   !*** ./bar.js + 1 modules ***!
   \\\\****************************/
-/***/ (() => {
+() {
 
 
 ;// external \\"externals0\\"
@@ -13698,46 +13698,46 @@ import { v as __WEBPACK_EXTERNAL_MODULE_externals1_v__ } from \\"externals1\\";
 
 __WEBPACK_EXTERNAL_MODULE_externals0_v__;
 
-/***/ }),
+/***/ },
 
-/***/ \\"./entry.js\\":
+/***/ \\"./entry.js\\"
 /*!******************!*\\\\
   !*** ./entry.js ***!
   \\\\******************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports.entry1 = __webpack_require__(/*! ./entry1.js */ \\"./entry1.js\\")
 module.exports.entry2 = __webpack_require__(/*! ./entry2.js */ \\"./entry2.js\\")
 
-/***/ }),
+/***/ },
 
-/***/ \\"./entry1.js\\":
+/***/ \\"./entry1.js\\"
 /*!*******************!*\\\\
   !*** ./entry1.js ***!
   \\\\*******************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./foo */ \\"./foo.js\\")
 module.exports.name = \\"entry1\\"
 
-/***/ }),
+/***/ },
 
-/***/ \\"./entry2.js\\":
+/***/ \\"./entry2.js\\"
 /*!*******************!*\\\\
   !*** ./entry2.js ***!
   \\\\*******************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./bar */ \\"./bar.js\\")
 module.exports.name = \\"entry2\\"
 
-/***/ }),
+/***/ },
 
-/***/ \\"./foo.js\\":
+/***/ \\"./foo.js\\"
 /*!****************************!*\\\\
   !*** ./foo.js + 1 modules ***!
   \\\\****************************/
-/***/ (() => {
+() {
 
 
 ;// external \\"externals1\\"
@@ -13746,7 +13746,7 @@ module.exports.name = \\"entry2\\"
 
 __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 
-/***/ })
+/***/ }
 
 /******/ });
 /************************************************************************/
