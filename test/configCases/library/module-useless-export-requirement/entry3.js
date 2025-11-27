@@ -10,7 +10,7 @@ const RuntimeGlobals_Exports = "__webpack_exports__";
 const reg = new RegExp("var\\s" + RuntimeGlobals_Exports + "\\s=");
 
 it("should compile and run", () => {
-	const content = getFile("bundle1.mjs");
+	const content = getFile("bundle2.mjs");
 	expect(concat).toBe("concat");
 
 	// `__webpack_exports__` must be rendered when the entry module is inlined and wrapped in an IIFE,
