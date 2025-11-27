@@ -619,3 +619,21 @@ div {
 	a210: url(ignore.png);
 	a211: url("schema:test");
 }
+
+.filtered-element {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url("./filters.svg#myFilter"); /* Applying the SVG filter */
+}
+
+.filtered-element-old-url {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url(./filters.svg#myFilter); /* Applying the SVG filter */
+}
+
+
