@@ -591,6 +591,162 @@ div {
 	color: var(--not-override-class )
 }
 
+.var-function_module_css-theme-dark {
+	--var-function_module_css-text-color: #fff;
+	--var-function_module_css-bg-color: #333;
+
+	.var-function_module_css-button {
+		--var-function_module_css-button-color: var(--var-function_module_css-text-color);
+		--var-function_module_css-button-bg: var(--var-function_module_css-bg-color);
+		color: var(--var-function_module_css-button-color);
+		background-color: var(--var-function_module_css-button-bg);
+	}
+}
+
+.var-function_module_css-parent {
+	--var-function_module_css-parent-padding: 20px;
+	padding: var(--var-function_module_css-parent-padding);
+
+	.var-function_module_css-child {
+		--var-function_module_css-child-margin: 10px;
+		margin-top: var(--var-function_module_css-child-margin);
+		padding-left: var(--var-function_module_css-parent-padding); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--var-function_module_css-base-padding: 1.5rem;
+		--var-function_module_css-font-scale: 1.2;
+	}
+}
+
+.var-function_module_css-container {
+	padding: var(--var-function_module_css-base-padding); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.var-function_module_css-item-title {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--var-function_module_css-font-scale));
+	margin-bottom: calc(var(--var-function_module_css-base-padding) / 2);
+}
+
+.var-function_module_css-item-details {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--var-function_module_css-base-padding) * 2));
+}
+
+.var-function_module_css-banner {
+	/* Locally scoped variables (pseudo-private) */
+	--var-function_module_css-banner-bg: #e0f7fa; /* Default info color */
+	--var-function_module_css-banner-text: #00796b;
+	--var-function_module_css-banner-icon: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--var-function_module_css-banner-bg);
+	color: var(--var-function_module_css-banner-text);
+	border-left: 5px solid var(--var-function_module_css-banner-text);
+}
+
+:root {
+	--var-function_module_css-accordion-bg: #fff;
+	--var-function_module_css-accordion-border: #ddd;
+	--var-function_module_css-accordion-text: #333;
+	--var-function_module_css-accordion-accent: royalblue;
+}
+
+.var-function_module_css-accordion-container {
+	border: 1px solid var(--var-function_module_css-accordion-border);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& .var-function_module_css-accordion-item {
+		background: var(--var-function_module_css-accordion-bg);
+		color: var(--var-function_module_css-accordion-text);
+		border-bottom: 1px solid var(--var-function_module_css-accordion-border);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .var-function_module_css-accordion-header {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--var-function_module_css-accordion-bg) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.var-function_module_css-is-active {
+			--var-function_module_css-accordion-bg: var(--var-function_module_css-accordion-accent); /* Nested override */
+			--var-function_module_css-accordion-text: #fff; /* Nested override */
+
+			& .var-function_module_css-accordion-header {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.var-function_module_css-is-dark-theme {
+		/* These variables are scoped only to elements within this specific container */
+		--var-function_module_css-accordion-bg: #333;
+		--var-function_module_css-accordion-border: #555;
+		--var-function_module_css-accordion-text: #eee;
+		--var-function_module_css-accordion-accent: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.var-function_module_css-media-object {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--var-function_module_css-avatar-size: 48px;
+	--var-function_module_css-text-size: 1rem;
+
+	& .var-function_module_css-avatar {
+		width: var(--var-function_module_css-avatar-size);
+		height: var(--var-function_module_css-avatar-size);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .var-function_module_css-content {
+		font-size: var(--var-function_module_css-text-size);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--var-function_module_css-avatar-size: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--var-function_module_css-text-size: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--var-function_module_css-primary-color: #007bff;
+	--var-function_module_css-text-color: var(--var-function_module_css-primary-color); /* --text-color now uses the value of --primary-color */
+	--var-function_module_css-highlight-background: linear-gradient(to right, var(--var-function_module_css-primary-color), #6c757d);
+}
+
+.var-function_module_css-element {
+	color: var(--var-function_module_css-text-color);
+	background: var(--var-function_module_css-highlight-background);
+}
+
 /*!*********************************!*\\\\
   !*** css ./classes.modules.css ***!
   \\\\*********************************/
@@ -2294,6 +2450,162 @@ div {
 
 ._96YRqM {
 	color: var(--not-override-class )
+}
+
+.fYc0TB {
+	--s_RSVB: #fff;
+	--_3Y1tZt: #333;
+
+	._3bkgtY {
+		--RznKHJ: var(--s_RSVB);
+		--_5xRK2z: var(--_3Y1tZt);
+		color: var(--RznKHJ);
+		background-color: var(--_5xRK2z);
+	}
+}
+
+.z98eNg {
+	--bWghMM: 20px;
+	padding: var(--bWghMM);
+
+	.DZkWGn {
+		--Po6YnP: 10px;
+		margin-top: var(--Po6YnP);
+		padding-left: var(--bWghMM); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--Tkx8II: 1.5rem;
+		--_6tKwcP: 1.2;
+	}
+}
+
+.WXHecD {
+	padding: var(--Tkx8II); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.KBwkKG {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--_6tKwcP));
+	margin-bottom: calc(var(--Tkx8II) / 2);
+}
+
+.NFM5fM {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--Tkx8II) * 2));
+}
+
+.lRw1w0 {
+	/* Locally scoped variables (pseudo-private) */
+	--KYEFyd: #e0f7fa; /* Default info color */
+	--hy01jq: #00796b;
+	--IMYWQZ: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--KYEFyd);
+	color: var(--hy01jq);
+	border-left: 5px solid var(--hy01jq);
+}
+
+:root {
+	--sU715o: #fff;
+	--ucCiqb: #ddd;
+	--VCrKKa: #333;
+	--_5qs3s7: royalblue;
+}
+
+._9EHv3u {
+	border: 1px solid var(--ucCiqb);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& ._4eXs94 {
+		background: var(--sU715o);
+		color: var(--VCrKKa);
+		border-bottom: 1px solid var(--ucCiqb);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .GTk_m7 {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--sU715o) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.reg3Bz {
+			--sU715o: var(--_5qs3s7); /* Nested override */
+			--VCrKKa: #fff; /* Nested override */
+
+			& .GTk_m7 {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.z9tVpZ {
+		/* These variables are scoped only to elements within this specific container */
+		--sU715o: #333;
+		--ucCiqb: #555;
+		--VCrKKa: #eee;
+		--_5qs3s7: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.md0xJj {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--QDMG1D: 48px;
+	--Yg5yRR: 1rem;
+
+	& ._0mjaHZ {
+		width: var(--QDMG1D);
+		height: var(--QDMG1D);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .nXoMcQ {
+		font-size: var(--Yg5yRR);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--QDMG1D: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--Yg5yRR: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--_8Q6SqL: #007bff;
+	--s_RSVB: var(--_8Q6SqL); /* --text-color now uses the value of --primary-color */
+	--_4yWuy5: linear-gradient(to right, var(--_8Q6SqL), #6c757d);
+}
+
+._B_Ni {
+	color: var(--s_RSVB);
+	background: var(--_4yWuy5);
 }
 
 /*!*********************************!*\\\\
@@ -10471,6 +10783,162 @@ div {
 
 .not-override-class {
 	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
+}
+
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+.parent {
+	--parent-padding: 20px;
+	padding: var(--parent-padding);
+
+	.child {
+		--child-margin: 10px;
+		margin-top: var(--child-margin);
+		padding-left: var(--parent-padding); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--base-padding: 1.5rem;
+		--font-scale: 1.2;
+	}
+}
+
+.container {
+	padding: var(--base-padding); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.item-title {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--font-scale));
+	margin-bottom: calc(var(--base-padding) / 2);
+}
+
+.item-details {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--base-padding) * 2));
+}
+
+.banner {
+	/* Locally scoped variables (pseudo-private) */
+	--banner-bg: #e0f7fa; /* Default info color */
+	--banner-text: #00796b;
+	--banner-icon: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--banner-bg);
+	color: var(--banner-text);
+	border-left: 5px solid var(--banner-text);
+}
+
+:root {
+	--accordion-bg: #fff;
+	--accordion-border: #ddd;
+	--accordion-text: #333;
+	--accordion-accent: royalblue;
+}
+
+.accordion-container {
+	border: 1px solid var(--accordion-border);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& .accordion-item {
+		background: var(--accordion-bg);
+		color: var(--accordion-text);
+		border-bottom: 1px solid var(--accordion-border);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .accordion-header {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--accordion-bg) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.is-active {
+			--accordion-bg: var(--accordion-accent); /* Nested override */
+			--accordion-text: #fff; /* Nested override */
+
+			& .accordion-header {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.is-dark-theme {
+		/* These variables are scoped only to elements within this specific container */
+		--accordion-bg: #333;
+		--accordion-border: #555;
+		--accordion-text: #eee;
+		--accordion-accent: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.media-object {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--avatar-size: 48px;
+	--text-size: 1rem;
+
+	& .avatar {
+		width: var(--avatar-size);
+		height: var(--avatar-size);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .content {
+		font-size: var(--text-size);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--avatar-size: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--text-size: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--primary-color: #007bff;
+	--text-color: var(--primary-color); /* --text-color now uses the value of --primary-color */
+	--highlight-background: linear-gradient(to right, var(--primary-color), #6c757d);
+}
+
+.element {
+	color: var(--text-color);
+	background: var(--highlight-background);
 }
 
 /*!*******************************************!*\\\\
