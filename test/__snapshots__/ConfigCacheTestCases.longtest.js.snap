@@ -12334,6 +12334,24 @@ div {
 	a211: url(\\\\'img.png\\\\');
 }
 
+.filtered-element {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url(filters.ea56db6eeb4418f4a090.svg#myFilter); /* Applying the SVG filter */
+}
+
+.filtered-element-old-url {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url(filters.ea56db6eeb4418f4a090.svg#myFilter); /* Applying the SVG filter */
+}
+
+
+
 ",
 ]
 `;
@@ -12976,6 +12994,24 @@ div {
 	a211: url(\\"schema:test\\");
 }
 
+.filtered-element {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url(\\"./filters.svg#myFilter\\"); /* Applying the SVG filter */
+}
+
+.filtered-element-old-url {
+	width: 200px;
+	height: 100px;
+	background-color: lightblue;
+	margin: 50px;
+	filter: url(./filters.svg#myFilter); /* Applying the SVG filter */
+}
+
+
+
 ",
 ]
 `;
@@ -13169,7 +13205,7 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
 		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
 		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
-		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+		url(5a6b5cdda16adcae27d1.svg#Roboto-Regular) format(\\"svg\\");
 	font-weight: 400;
 	font-style: normal;
 }
@@ -13178,13 +13214,13 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 	font-family: \\"Roboto\\";
 	src: /* webpackIgnore: true */ url(\\"./fonts/Roboto-Regular.eot\\");
 	src:
-		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
+		url(19ce07bdb1cb5ba16ea8.eot#iefix) format(\\"embedded-opentype\\"),
 		url(5edda27bb1aea976c9b5.woff2) format(\\"woff\\"),
 		/* webpackIgnore: true */
 		url(\\"./fonts/Roboto-Regular.woff\\")
 		format(\\"woff\\"),
 		url(0e1fae5a09bac1b8f8da.ttf) format(\\"truetype\\"),
-		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+		url(5a6b5cdda16adcae27d1.svg#Roboto-Regular) format(\\"svg\\");
 	font-weight: 400;
 	font-style: normal;
 }
@@ -13193,13 +13229,13 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 	font-family: \\"Roboto\\";
 	src: url(19ce07bdb1cb5ba16ea8.eot);
 	src:
-		url(19ce07bdb1cb5ba16ea8.eot) format(\\"embedded-opentype\\"),
+		url(19ce07bdb1cb5ba16ea8.eot#iefix) format(\\"embedded-opentype\\"),
 		/* webpackIgnore: true */
 		url(\\"./fonts/Roboto-Regular.woff2\\") format(\\"woff\\"),
 		url(6af79dbd35e55450b9a6.woff) format(\\"woff\\"),
 		/* webpackIgnore: true */
 		url(\\"./fonts/Roboto-Regular.ttf\\") format(\\"truetype\\"),
-		url(5a6b5cdda16adcae27d1.svg) format(\\"svg\\");
+		url(5a6b5cdda16adcae27d1.svg#Roboto-Regular) format(\\"svg\\");
 	font-weight: 400;
 	font-style: normal;
 }

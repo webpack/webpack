@@ -355,7 +355,7 @@ describe("snapshots", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext][query]",
+		    "assetModuleFilename": "[hash][ext][query][fragment]",
 		    "asyncChunks": true,
 		    "charset": true,
 		    "chunkFilename": "[name].js",
