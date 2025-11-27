@@ -104,10 +104,6 @@ const getConfig = ({ concatenateModules } = { concatenateModules: false }) => ({
 	},
 	experiments: {
 		css: true
-	},
-	node: {
-		__dirname: false,
-		__filename: false
 	}
 });
 
