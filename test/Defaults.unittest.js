@@ -242,18 +242,6 @@ describe("snapshots", () => {
 		        ],
 		      },
 		      Object {
-		        "dependency": "css-url",
-		        "oneOf": Array [
-		          Object {
-		            "scheme": /\\^data\\$/,
-		            "type": "asset/inline",
-		          },
-		          Object {
-		            "type": "asset/resource",
-		          },
-		        ],
-		      },
-		      Object {
 		        "parser": Object {
 		          "namedExports": false,
 		        },
@@ -2290,7 +2278,7 @@ describe("snapshots", () => {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			@@ ... @@
+			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
@@ -2317,8 +2305,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "dependency": /css-import-local-module/,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2346,7 +2333,7 @@ describe("snapshots", () => {
 			+           "type": "css",
 			+         },
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "assert": Object {
 			+           "type": "css",
 			+         },
@@ -2360,16 +2347,43 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
+			+           Object {
 			+             "generator": Object {
 			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
 			+             },
 			+             "parser": Object {
 			+               "exportType": "url",
 			+               "namedExports": false,
 			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
 			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
 			+           },
 			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "scheme": /^data$/,
+			+             "type": "css/auto",
+			+           },
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2464,11 +2478,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2496,9 +2509,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -2859,9 +2874,10 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2926,8 +2942,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
 			+         },
@@ -2953,16 +2968,43 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
-			+           },
-			+           Object {
 			+             "generator": Object {
 			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
 			+             },
 			+             "parser": Object {
 			+               "exportType": "url",
 			+               "namedExports": false,
 			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
 			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "scheme": /^data$/,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2991,14 +3033,18 @@ describe("snapshots", () => {
 			+       },
 			@@ ... @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 			+         },
 =======
 >>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
 			+       },
+=======
+>>>>>>> fb4b886a2 (test: fix)
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
+<<<<<<< HEAD
 <<<<<<< HEAD
 			+       },
 			+       "css/auto": Object {
@@ -3026,6 +3072,9 @@ describe("snapshots", () => {
 			+         "grid": true,
 =======
 >>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
+=======
+			+       },
+>>>>>>> fb4b886a2 (test: fix)
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3060,11 +3109,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
