@@ -18996,6 +18996,7 @@ declare namespace exports {
 		export let global: "__webpack_require__.g";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
+		export let hasCssModulesInUrl: "has css modules in url";
 		export let hasFetchPriority: "has fetch priority";
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
