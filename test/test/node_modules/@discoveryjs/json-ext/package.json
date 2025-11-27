@@ -1,0 +1,68 @@
+{
+    "name": "@discoveryjs/json-ext",
+    "version": "0.6.3",
+    "description": "A set of utilities that extend the use of JSON",
+    "keywords": [
+        "json",
+        "utils",
+        "stream",
+        "async",
+        "promise",
+        "stringify",
+        "info"
+    ],
+    "author": "Roman Dvornov <rdvornov@gmail.com> (https://github.com/lahmatiy)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/discoveryjs/json-ext.git"
+    },
+    "engines": {
+        "node": ">=14.17.0"
+    },
+    "type": "module",
+    "main": "./cjs/index.cjs",
+    "module": "./src/index.js",
+    "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "require": "./cjs/index.cjs",
+            "import": "./src/index.js"
+        },
+        "./dist/*": "./dist/*",
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "test": "npm run test:src",
+        "lint": "eslint src",
+        "lint-and-test": "npm run lint && npm test",
+        "bundle": "node scripts/bundle.js",
+        "transpile": "node scripts/transpile.cjs",
+        "test:all": "npm run test:src && npm run test:cjs && npm run test:dist && npm run test:e2e",
+        "test:src": "mocha --reporter progress src/*.test.js",
+        "test:cjs": "mocha --reporter progress cjs/*.test.cjs",
+        "test:e2e": "mocha --reporter progress test-e2e",
+        "test:dist": "mocha --reporter progress dist/test",
+        "test:deno": "node scripts/deno-adapt-test.js && mocha --reporter progress deno-tests/*.test.js",
+        "bundle-and-test": "npm run bundle && npm run test:dist",
+        "coverage": "c8 --reporter=lcovonly npm test",
+        "prepublishOnly": "npm run lint && npm run bundle && npm run transpile && npm run test:all"
+    },
+    "devDependencies": {
+        "c8": "^7.10.0",
+        "chalk": "^4.1.0",
+        "esbuild": "^0.24.0",
+        "eslint": "^8.57.0",
+        "mocha": "^9.2.2",
+        "rollup": "^2.79.2"
+    },
+    "files": [
+        "cjs",
+        "!cjs/*{.test,-cases}.cjs",
+        "dist",
+        "src",
+        "!src/*{.test,-cases}.js",
+        "index.d.ts"
+    ]
+}

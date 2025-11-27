@@ -1,0 +1,70 @@
+{
+  "name": "webpack-sources",
+  "version": "3.3.3",
+  "description": "Source code handling classes for webpack",
+  "main": "lib/index.js",
+  "types": "types.d.ts",
+  "scripts": {
+    "lint": "yarn lint:code && yarn lint:types && yarn lint:types-test && yarn lint:special",
+    "lint:code": "eslint --cache .",
+    "lint:special": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-file-header && node node_modules/tooling/generate-types",
+    "lint:types": "tsc",
+    "lint:types-test": "tsc -p tsconfig.types.test.json",
+    "fmt": "yarn fmt:base --loglevel warn --write",
+    "fmt:check": "yarn fmt:base --check",
+    "fmt:base": "prettier --cache --ignore-unknown .",
+    "fix": "yarn fix:code && yarn fix:special",
+    "fix:code": "yarn lint:code --fix",
+    "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/generate-types --write",
+    "pretest": "yarn lint",
+    "test": "jest",
+    "cover": "jest --coverage"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@eslint/markdown": "^6.5.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@types/jest": "^27.5.2",
+    "coveralls": "^3.0.2",
+    "globals": "^16.2.0",
+    "eslint": "^9.28.0",
+    "eslint-config-webpack": "^4.0.8",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.12.0",
+    "eslint-plugin-jsdoc": "^50.7.1",
+    "eslint-plugin-n": "^17.19.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-unicorn": "^59.0.1",
+    "istanbul": "^0.4.1",
+    "jest": "^27.5.1",
+    "prettier": "^3.5.3",
+    "prettier-2": "npm:prettier@^2",
+    "source-map": "^0.7.3",
+    "sourcemap-validator": "^2.1.0",
+    "tooling": "webpack/tooling#v1.23.10",
+    "typescript": "^5.3.3",
+    "webpack": "^5.99.9"
+  },
+  "files": [
+    "lib/",
+    "types.d.ts"
+  ],
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webpack/webpack-sources.git"
+  },
+  "keywords": [
+    "webpack",
+    "source-map"
+  ],
+  "author": "Tobias Koppers @sokra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webpack/webpack-sources/issues"
+  },
+  "homepage": "https://github.com/webpack/webpack-sources#readme"
+}

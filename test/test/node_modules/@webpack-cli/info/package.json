@@ -1,0 +1,27 @@
+{
+  "name": "@webpack-cli/info",
+  "version": "3.0.1",
+  "description": "Outputs info about system and webpack config",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.12.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webpack/webpack-cli.git"
+  },
+  "homepage": "https://github.com/webpack/webpack-cli/tree/master/packages/info",
+  "files": [
+    "lib"
+  ],
+  "gitHead": "480b33d23b277b3a55310bfc6dec8bcd3d4ed404",
+  "peerDependencies": {
+    "webpack": "^5.82.0",
+    "webpack-cli": "6.x.x"
+  }
+}

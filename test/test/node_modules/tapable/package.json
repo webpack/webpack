@@ -1,0 +1,60 @@
+{
+  "name": "tapable",
+  "version": "2.3.0",
+  "description": "Just a little module for plugins.",
+  "homepage": "https://github.com/webpack/tapable",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/webpack/tapable.git"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/webpack"
+  },
+  "license": "MIT",
+  "author": "Tobias Koppers @sokra",
+  "main": "lib/index.js",
+  "browser": {
+    "util": "./lib/util-browser.js"
+  },
+  "types": "./tapable.d.ts",
+  "files": ["lib", "!lib/__tests__", "tapable.d.ts"],
+  "scripts": {
+    "lint": "yarn lint:code && yarn fmt:check",
+    "lint:code": "eslint --cache .",
+    "fmt": "yarn fmt:base --log-level warn --write",
+    "fmt:check": "yarn fmt:base --check",
+    "fmt:base": "node ./node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
+    "fix": "yarn fix:code && yarn fmt",
+    "fix:code": "yarn lint:code --fix",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "__tests__[\\\\/].+\\.js$": "babel-jest"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@eslint/js": "^9.28.0",
+    "@eslint/markdown": "^7.1.0",
+    "@stylistic/eslint-plugin": "^5.2.3",
+    "babel-jest": "^24.8.0",
+    "globals": "^16.2.0",
+    "eslint": "^9.28.0",
+    "eslint-config-webpack": "^4.6.3",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "eslint-plugin-n": "^17.19.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-unicorn": "^60.0.0",
+    "jest": "^24.8.0",
+    "prettier": "^3.5.3",
+    "prettier-1": "npm:prettier@^1"
+  },
+  "engines": {
+    "node": ">=6"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "name": "enhanced-resolve",
+  "version": "5.18.3",
+  "description": "Offers a async require.resolve function. It's highly configurable.",
+  "homepage": "http://github.com/webpack/enhanced-resolve",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webpack/enhanced-resolve.git"
+  },
+  "license": "MIT",
+  "author": "Tobias Koppers @sokra",
+  "main": "lib/index.js",
+  "browser": {
+    "process": "./lib/util/process-browser.js",
+    "module": "./lib/util/module-browser.js"
+  },
+  "types": "types.d.ts",
+  "files": [
+    "lib",
+    "types.d.ts",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "yarn lint:code && yarn lint:types && yarn lint:types-test && yarn lint:special && yarn fmt:check && yarn lint:spellcheck",
+    "lint:code": "eslint --cache .",
+    "lint:special": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/generate-types",
+    "lint:types": "tsc",
+    "lint:types-test": "tsc -p tsconfig.types.test.json",
+    "lint:spellcheck": "cspell --no-must-find-files \"**/*.*\"",
+    "fmt": "yarn fmt:base --loglevel warn --write",
+    "fmt:check": "yarn fmt:base --check",
+    "fmt:base": "node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
+    "fix": "yarn fix:code && yarn fix:special",
+    "fix:code": "yarn lint:code --fix",
+    "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/generate-types --write",
+    "type-report": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
+    "pretest": "yarn lint",
+    "test": "yarn test:coverage",
+    "test:only": "jest",
+    "test:watch": "yarn test:only --watch",
+    "test:coverage": "yarn test:only --collectCoverageFrom=\"lib/**/*.js\" --coverage"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs}": [
+      "eslint --cache --fix"
+    ],
+    "*": [
+      "prettier --cache --write --ignore-unknown",
+      "cspell --cache --no-must-find-files"
+    ]
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.4",
+    "tapable": "^2.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@eslint/markdown": "^7.1.0",
+    "@types/graceful-fs": "^4.1.6",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^24.0.3",
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "cspell": "4.2.8",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-webpack": "^4.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "eslint-plugin-jsdoc": "^52.0.2",
+    "eslint-plugin-n": "^17.19.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-unicorn": "^60.0.0",
+    "globals": "^16.2.0",
+    "husky": "^6.0.0",
+    "jest": "^27.5.1",
+    "lint-staged": "^10.4.0",
+    "memfs": "^3.2.0",
+    "prettier": "^3.5.3",
+    "prettier-2": "npm:prettier@^2",
+    "tooling": "webpack/tooling#v1.24.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "interpret",
+  "version": "3.1.1",
+  "description": "A dictionary of file extensions and associated module loaders.",
+  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
+  "contributors": [
+    "Blaine Bublitz <blaine.bublitz@gmail.com>",
+    "Tyler Kellen <tyler@sleekcode.net> (http://goingslowly.com/)"
+  ],
+  "repository": "gulpjs/interpret",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "index.js",
+    "cjs-stub.js",
+    "mjs-stub.js"
+  ],
+  "scripts": {
+    "readme": "remark README.md --use ./scripts/plugin.mjs --output",
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "nyc mocha --async-only"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-gulp": "^5.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "expect": "^27.0.0",
+    "js-yaml": "^4.1.0",
+    "mocha": "^8.0.0",
+    "nyc": "^15.0.0",
+    "parse-node-version": "^2.0.0",
+    "rechoir": "^0.8.0",
+    "remark-cli": "^10.0.1",
+    "remark-code-import": "^1.1.0",
+    "shelljs": "0.8.5"
+  },
+  "nyc": {
+    "extension": [
+      ".js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "keywords": [
+    "coffee",
+    "coffee.md",
+    "coffeescript",
+    "es",
+    "es6",
+    "js",
+    "json",
+    "json5",
+    "jsx",
+    "react",
+    "litcoffee",
+    "toml",
+    "ts",
+    "typescript",
+    "xml",
+    "yaml",
+    "yml"
+  ]
+}
