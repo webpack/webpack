@@ -1,0 +1,1 @@
+export default "concat2";

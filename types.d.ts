@@ -1946,6 +1946,11 @@ declare interface CodeGenerationContext {
 	runtime: RuntimeSpec;
 
 	/**
+	 * all runtimes code should be generated for
+	 */
+	runtimes: RuntimeSpec[];
+
+	/**
 	 * when in concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
@@ -8779,8 +8784,8 @@ declare interface KnownBuildMeta {
 	sideEffectFree?: boolean;
 	isCSSModule?: boolean;
 	jsIncompatibleExports?: Record<string, string>;
-	exportsFinalName?: Record<string, string>;
-	factoryExportsBinding?: string;
+	exportsFinalNameByRuntime?: Map<RuntimeSpec, Record<string, string>>;
+	exportsSourceByRuntime?: Map<RuntimeSpec, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
