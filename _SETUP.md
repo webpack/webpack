@@ -8,6 +8,22 @@ If not, do: `npm run setup`, the setup will also install `yarn` for you.
 
 That's all.
 
+## Prerequisites
+
+Before setting up webpack for development, ensure you have the following installed:
+
+- **Node.js**: Version 18 or higher (LTS recommended)
+- **Git**: For cloning the repository
+- **npm** or **yarn**: Package manager for installing dependencies
+
+You can verify your installations by running:
+
+```bash
+node --version
+git --version
+npm --version  # or yarn --version
+```
+
 ## Setup manually
 
 ### Setup your local webpack repository
