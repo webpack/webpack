@@ -1,0 +1,5 @@
+---
+"webpack": patch
+---
+
+Serialize `HookWebpackError`.
