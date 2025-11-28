@@ -2364,7 +2364,7 @@ div {
 	color: var(--_95dv-7, var(--Hin0Tw, pink));
 }
 
-.RR2Xo {
+._RR2Xo {
 	color: var(--);
 }
 
@@ -2372,7 +2372,7 @@ div {
 	color: var(--_7jGqfY);
 }
 
-.p_8K4 {
+._p_8K4 {
 	color: var(--my-global);
 }
 
@@ -2603,7 +2603,7 @@ div {
 	--_4yWuy5: linear-gradient(to right, var(--_8Q6SqL), #6c757d);
 }
 
-._B_Ni {
+.__B_Ni {
 	color: var(--s_RSVB);
 	background: var(--_4yWuy5);
 }
@@ -2756,7 +2756,7 @@ div {
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--tyl1k);
+		left: var(--_tyl1k);
 		top: var(--Anl1Ek);
 		color: var(--theme-color2);
 	}
@@ -2776,7 +2776,7 @@ div {
 	animation: 3s ease-in 1s 2 reverse both paused UlwS-p, -vGTrA;
 	--LpMl7Z: 0px;
 	--_8u7z2l: 0px;
-	--tyl1k: 10px;
+	--_tyl1k: 10px;
 	--Anl1Ek: 20px;
 }
 
@@ -2845,7 +2845,7 @@ div {
 	ANIMATION: 3s ease-in 1s 2 reverse both paused kwAQ_z, axWscZ;
 	--LpMl7Z: 0px;
 	--_8u7z2l: 0px;
-	--tyl1k: 10px;
+	--_tyl1k: 10px;
 	--Anl1Ek: 20px;
 }
 
@@ -2856,7 +2856,7 @@ div {
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--tyl1k);
+		left: VAR(--_tyl1k);
 		top: VAR(--Anl1Ek);
 		color: VAR(--theme-color2);
 	}
@@ -7497,7 +7497,7 @@ body {
 
 exports[`ConfigTestCases css large exported tests should allow to create css modules: dev 1`] = `
 Object {
-  "placeholder": "my-app-_tailwind_module_css-placeholder-gray-700",
+  "placeholder": "my-app-tailwind_module_css-placeholder-gray-700",
 }
 `;
 
@@ -7581,25 +7581,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
 Object {
-  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "color-red": "---_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "foo_bar": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "my-btn-info_is-disabled": "value",
-  "simple": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "simple": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
-  "color-red": "--./style.module.less__color-red",
+  "btn--info_is-disabled_1": "_8ae21de36663891ae42b-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_8ae21de36663891ae42b-btn-info_is-disabled",
+  "color-red": "--_8ae21de36663891ae42b-color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.less__foo_bar",
+  "foo_bar": "_8ae21de36663891ae42b-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.less__simple",
+  "simple": "_8ae21de36663891ae42b-simple",
 }
 `;
 
@@ -7677,25 +7677,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
 Object {
-  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "color-red": "---_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "foo": "bar",
-  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "foo_bar": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "my-btn-info_is-disabled": "value",
-  "simple": "-_style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "simple": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
-  "color-red": "--./style.module.less__color-red",
+  "btn--info_is-disabled_1": "_8ae21de36663891ae42b-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_8ae21de36663891ae42b-btn-info_is-disabled",
+  "color-red": "--_8ae21de36663891ae42b-color-red",
   "foo": "bar",
-  "foo_bar": "./style.module.less__foo_bar",
+  "foo_bar": "_8ae21de36663891ae42b-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.less__simple",
+  "simple": "_8ae21de36663891ae42b-simple",
 }
 `;
 
