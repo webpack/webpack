@@ -13591,6 +13591,7 @@ declare interface PathData {
 	contentHashWithLength?: (length: number) => string;
 	noChunkHash?: boolean;
 	url?: string;
+	prepareId?: (id: string | number) => string | number;
 }
 type PathLikeFs = string | Buffer | URL;
 type PathLikeTypes = string | URL_url | Buffer;
