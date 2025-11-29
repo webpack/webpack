@@ -3682,7 +3682,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3728,7 +3728,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -3785,7 +3785,7 @@ declare abstract class CssParser extends ParserClass {
 	import: boolean;
 	url: boolean;
 	namedExports: boolean;
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 	comments?: CommentCssParser[];
 	magicCommentContext: Context;
 	getComments(range: [number, number]): CommentCssParser[];
@@ -3802,7 +3802,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -8776,7 +8776,7 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "url" | "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -19002,6 +19002,7 @@ declare namespace exports {
 		export let global: "__webpack_require__.g";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
+		export let hasCssModulesInUrl: "has css modules in url";
 		export let hasFetchPriority: "has fetch priority";
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
