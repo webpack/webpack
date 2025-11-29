@@ -1,7 +1,11 @@
 __webpack_global__.myCustomProperty = "myCustomProperty";
 
 "use strict";
-var __webpack_require__ = {};
+var __webpack_require__ = {
+  test(__webpack_global__) {
+    __webpack_global__.test = 1;
+  }
+};
 (() => {
   __webpack_require__.d = (exports1, definition) => {
     for (var key in definition)
