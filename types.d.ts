@@ -3019,7 +3019,19 @@ declare interface Configuration {
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | false;
+	devtool?:
+		| string
+		| false
+		| {
+				/**
+				 * Which asset type should receive this devtool value.
+				 */
+				type: "all" | "javascript" | "css";
+				/**
+				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+				 */
+				use: RawDevTool;
+		  }[];
 
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
@@ -12866,7 +12878,8 @@ declare interface Options {
 declare abstract class OptionsApply {
 	process(
 		options: WebpackOptionsNormalizedWithDefaults,
-		compiler: Compiler
+		compiler: Compiler,
+		interception?: WebpackOptionsInterception
 	): WebpackOptionsNormalizedWithDefaults;
 }
 declare interface OriginRecord {
@@ -14087,6 +14100,7 @@ declare interface RawChunkGroupOptions {
 	prefetchOrder?: number;
 	fetchPriority?: "auto" | "low" | "high";
 }
+type RawDevTool = string | false;
 type RawLoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -18652,6 +18666,21 @@ declare class WebpackOptionsDefaulter {
 	constructor();
 	process(options: Configuration): WebpackOptionsNormalized;
 }
+declare interface WebpackOptionsInterception {
+	devtool?:
+		| string
+		| false
+		| {
+				/**
+				 * Which asset type should receive this devtool value.
+				 */
+				type: "all" | "javascript" | "css";
+				/**
+				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+				 */
+				use: RawDevTool;
+		  }[];
+}
 
 /**
  * Normalized webpack options object.
@@ -18690,7 +18719,19 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | false;
+	devtool?:
+		| string
+		| false
+		| {
+				/**
+				 * Which asset type should receive this devtool value.
+				 */
+				type: "all" | "javascript" | "css";
+				/**
+				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+				 */
+				use: RawDevTool;
+		  }[];
 
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
@@ -18866,9 +18907,23 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	target: NonNullable<undefined | string | false | string[]>;
 } & { output: OutputNormalizedWithDefaults } & {
 	optimization: OptimizationNormalizedWithDefaults;
-} & { devtool: NonNullable<undefined | string | false> } & {
-	stats: NonNullable<StatsValue>;
-} & { node: NonNullable<Node> } & {
+} & {
+	devtool: NonNullable<
+		| undefined
+		| string
+		| false
+		| {
+				/**
+				 * Which asset type should receive this devtool value.
+				 */
+				type: "all" | "javascript" | "css";
+				/**
+				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+				 */
+				use: RawDevTool;
+		  }[]
+	>;
+} & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
 	profile: NonNullable<undefined | boolean>;
 } & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
 	externalsPresets: ExternalsPresetsNormalizedWithDefaults;

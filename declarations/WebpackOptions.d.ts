@@ -46,7 +46,22 @@ export type DevServer =
 /**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
-export type DevTool = (false | "eval") | string;
+export type DevTool =
+	| {
+			/**
+			 * Which asset type should receive this devtool value.
+			 */
+			type: "all" | "javascript" | "css";
+			/**
+			 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+			 */
+			use: RawDevTool;
+	  }[]
+	| RawDevTool;
+/**
+ * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+ */
+export type RawDevTool = (false | "eval") | string;
 /**
  * Enable and configure the Dotenv plugin to load environment variables from .env files.
  */

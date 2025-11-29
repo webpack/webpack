@@ -587,11 +587,25 @@
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
       "anyOf": [
         {
-          "enum": [false, "eval"]
+          "type": "array",
+          "items": {
+            "description": "Allow to assign devtool values per asset type (all, javascript, or css).",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "description": "Which asset type should receive this devtool value.",
+                "enum": ["all", "javascript", "css"]
+              },
+              "use": {
+                "$ref": "#/definitions/RawDevTool"
+              }
+            },
+            "required": ["type", "use"]
+          }
         },
         {
-          "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+          "$ref": "#/definitions/RawDevTool"
         }
       ]
     },
@@ -4100,6 +4114,18 @@
         },
         {
           "$ref": "#/definitions/RawPublicPath"
+        }
+      ]
+    },
+    "RawDevTool": {
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "anyOf": [
+        {
+          "enum": [false, "eval"]
+        },
+        {
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
         }
       ]
     },
