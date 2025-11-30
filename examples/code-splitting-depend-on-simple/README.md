@@ -39,14 +39,14 @@ console.log(react, reactDOM, propTypes);
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
 
-/***/ 3:
+/***/ 3
 /*!****************!*\
   !*** ./app.js ***!
   \****************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ 0);
@@ -62,7 +62,7 @@ __webpack_require__.r(__webpack_exports__);
 console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_IMPORTED_MODULE_1___default()), (prop_types__WEBPACK_IMPORTED_MODULE_2___default()));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -301,7 +301,7 @@ module.exports = 'prop-types';
 
 ```
 asset react-vendors.js 7.62 KiB [emitted] (name: react-vendors)
-asset app.js 1.63 KiB [emitted] (name: app)
+asset app.js 1.62 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
@@ -342,7 +342,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset react-vendors.js 1.15 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 187 bytes [emitted] [minimized] (name: app)
+asset app.js 184 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]

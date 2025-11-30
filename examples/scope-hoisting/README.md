@@ -499,7 +499,7 @@ exports.c = "e";
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([["lazy_js"],{207:(a,e,r)=>{"use strict";r.d(e,{c:()=>C,d:()=>c,x:()=>s.x,y:()=>h.y});var c={};r.r(c),r.d(c,{a:()=>k});var d=r(330),s=r(331),h=r(453),C=String.fromCharCode(d.c.charCodeAt(0)-2),k="d"},330:(a,e)=>{e.c="e"}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([["lazy_js"],{207(a,e,r){"use strict";r.d(e,{c:()=>C,d:()=>c,x:()=>s.x,y:()=>h.y});var c={};r.r(c),r.d(c,{a:()=>k});var d=r(330),s=r(331),h=r(453),C=String.fromCharCode(d.c.charCodeAt(0)-2),k="d"},330(a,e){e.c="e"}}]);
 ```
 
 # Info
@@ -530,8 +530,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.09 KiB [emitted] [minimized] (name: main)
-asset lazy_js.output.js 271 bytes [emitted] [minimized]
+asset output.js 2.08 KiB [emitted] [minimized] (name: main)
+asset lazy_js.output.js 265 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
   dependent modules 42 bytes [dependent] 1 module

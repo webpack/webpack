@@ -336,7 +336,7 @@ __webpack_require__.e(/*! import() */ 655).then(__webpack_require__.bind(__webpa
 
 ```
 asset output.js 11.7 KiB [emitted] (name: main)
-asset 655.output.js 773 bytes [emitted]
+asset 655.output.js 761 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
@@ -358,7 +358,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.01 KiB [emitted] [minimized] (name: main)
-asset 655.output.js 124 bytes [emitted] [minimized]
+asset 655.output.js 121 bytes [emitted] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]

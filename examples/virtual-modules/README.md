@@ -580,8 +580,8 @@ const msg = "from virtual module with custom scheme";
 
 ```
 asset output.js 16.4 KiB [emitted] (name: main)
-asset 2.output.js 815 bytes [emitted]
-asset 1.output.js 814 bytes [emitted]
+asset 2.output.js 803 bytes [emitted]
+asset 1.output.js 802 bytes [emitted]
 chunk (runtime: main) output.js (main) 1.46 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 514 bytes [dependent] 8 modules
@@ -608,9 +608,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.52 KiB [emitted] [minimized] (name: main)
-asset 263.output.js 121 bytes [emitted] [minimized]
-asset 722.output.js 121 bytes [emitted] [minimized]
+asset output.js 2.49 KiB [emitted] [minimized] (name: main)
+asset 263.output.js 118 bytes [emitted] [minimized]
+asset 722.output.js 118 bytes [emitted] [minimized]
 chunk (runtime: main) 263.output.js 20 bytes [rendered]
   > ./routes/a.js virtual:routes 1:32-55
   ./routes/a.js 20 bytes [built] [code generated]

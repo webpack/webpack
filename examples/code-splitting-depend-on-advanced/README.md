@@ -358,14 +358,14 @@ console.log(lodash, isomorphicFetch);
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
 
-/***/ 6:
+/***/ 6
 /*!****************!*\
   !*** ./app.js ***!
   \****************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ 5);
@@ -378,7 +378,7 @@ __webpack_require__.r(__webpack_exports__);
 console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__WEBPACK_IMPORTED_MODULE_1___default()));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -395,14 +395,14 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["page1"],{
 
-/***/ 7:
+/***/ 7
 /*!******************!*\
   !*** ./page1.js ***!
   \******************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ 5);
@@ -420,7 +420,7 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (react__W
 __webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(__webpack_require__, /*! ./lazy */ 8));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -553,12 +553,12 @@ module.exports = 'prop-types';
 ```
 asset runtime.js 11.1 KiB [emitted] (name: runtime)
 asset other-vendors.js 2.13 KiB [emitted] (name: other-vendors)
-asset page1.js 1.91 KiB [emitted] (name: page1)
-asset app.js 1.44 KiB [emitted] (name: app)
+asset page1.js 1.9 KiB [emitted] (name: page1)
+asset app.js 1.43 KiB [emitted] (name: app)
 asset react-vendors.js 1.33 KiB [emitted] (name: react-vendors)
-asset lazy_js.js 1.11 KiB [emitted]
-Entrypoint app 1.44 KiB = app.js
-Entrypoint page1 1.91 KiB = page1.js
+asset lazy_js.js 1.1 KiB [emitted]
+Entrypoint app 1.43 KiB = app.js
+Entrypoint page1 1.9 KiB = page1.js
 Entrypoint react-vendors 12.4 KiB = runtime.js 11.1 KiB react-vendors.js 1.33 KiB
 Entrypoint other-vendors 13.2 KiB = runtime.js 11.1 KiB other-vendors.js 2.13 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
@@ -624,15 +624,15 @@ webpack X.X.X compiled successfully
 
 ```
 asset runtime.js 2.34 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 281 bytes [emitted] [minimized] (name: page1)
-asset other-vendors.js 241 bytes [emitted] [minimized] (name: other-vendors)
-asset react-vendors.js 204 bytes [emitted] [minimized] (name: react-vendors)
-asset app.js 200 bytes [emitted] [minimized] (name: app)
-asset lazy_js.js 160 bytes [emitted] [minimized]
-Entrypoint app 200 bytes = app.js
-Entrypoint page1 281 bytes = page1.js
-Entrypoint react-vendors 2.54 KiB = runtime.js 2.34 KiB react-vendors.js 204 bytes
-Entrypoint other-vendors 2.58 KiB = runtime.js 2.34 KiB other-vendors.js 241 bytes
+asset page1.js 278 bytes [emitted] [minimized] (name: page1)
+asset other-vendors.js 236 bytes [emitted] [minimized] (name: other-vendors)
+asset react-vendors.js 201 bytes [emitted] [minimized] (name: react-vendors)
+asset app.js 197 bytes [emitted] [minimized] (name: app)
+asset lazy_js.js 157 bytes [emitted] [minimized]
+Entrypoint app 197 bytes = app.js
+Entrypoint page1 278 bytes = page1.js
+Entrypoint react-vendors 2.54 KiB = runtime.js 2.34 KiB react-vendors.js 201 bytes
+Entrypoint other-vendors 2.57 KiB = runtime.js 2.34 KiB other-vendors.js 236 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]

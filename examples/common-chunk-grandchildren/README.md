@@ -373,14 +373,14 @@ module.exports = function() {
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["pageB_js"],{
 
-/***/ 3:
+/***/ 3
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = function() {
 	console.log("Page B");
@@ -391,7 +391,7 @@ module.exports = function() {
 };
 
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -401,14 +401,14 @@ module.exports = function() {
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["pageC_js"],{
 
-/***/ 4:
+/***/ 4
 /*!******************!*\
   !*** ./pageC.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 3:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
 
@@ -418,7 +418,7 @@ module.exports = function() {
 };
 
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -428,21 +428,21 @@ module.exports = function() {
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["reusableComponent_js"],{
 
-/***/ 2:
+/***/ 2
 /*!******************************!*\
   !*** ./reusableComponent.js ***!
   \******************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = function() {
 	console.log("reusable Component");
 };
 
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -453,10 +453,10 @@ module.exports = function() {
 
 ```
 asset output.js 9.04 KiB [emitted] (name: main)
-asset pageB_js.output.js 772 bytes [emitted]
+asset pageB_js.output.js 760 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
-asset pageC_js.output.js 559 bytes [emitted]
-asset reusableComponent_js.output.js 453 bytes [emitted]
+asset pageC_js.output.js 547 bytes [emitted]
+asset reusableComponent_js.output.js 441 bytes [emitted]
 chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.92 KiB 6 modules
@@ -496,10 +496,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.8 KiB [emitted] [minimized] (name: main)
-asset pageB_js.output.js 231 bytes [emitted] [minimized]
-asset reusableComponent_js.output.js 142 bytes [emitted] [minimized]
-asset pageC_js.output.js 141 bytes [emitted] [minimized]
-asset pageA_js.output.js 140 bytes [emitted] [minimized]
+asset pageB_js.output.js 228 bytes [emitted] [minimized]
+asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
+asset pageC_js.output.js 138 bytes [emitted] [minimized]
+asset pageA_js.output.js 137 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.92 KiB 6 modules

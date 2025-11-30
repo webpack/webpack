@@ -156,7 +156,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 553 bytes [emitted] [minimized] (name: main)
+asset output.js 544 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 663 bytes [dependent] 1 module

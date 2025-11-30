@@ -344,13 +344,13 @@ export default Component;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 0:
+/***/ 0
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__.e, __webpack_require__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 // Sharing modules requires that all remotes are initialized
 // and can provide shared modules to the common scope
@@ -366,16 +366,16 @@ __webpack_require__.e(/*! import() */ "src_bootstrap_js").then(__webpack_require
 // It's possible to place more code here to do stuff on page init
 // but it can't use any of the shared modules or remote modules.
 
-/***/ }),
+/***/ },
 
-/***/ 8:
+/***/ 8
 /*!*********************************************!*\
   !*** external "mfeBBB@/dist/bbb/mfeBBB.js" ***!
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__.l, module, __webpack_require__.* */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 var __webpack_error__ = new Error();
@@ -393,16 +393,16 @@ module.exports = new Promise((resolve, reject) => {
 	}, "mfeBBB");
 }).then(() => (mfeBBB));
 
-/***/ }),
+/***/ },
 
-/***/ 10:
+/***/ 10
 /*!*********************************************!*\
   !*** external "mfeCCC@/dist/ccc/mfeCCC.js" ***!
   \*********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__.l, module, __webpack_require__.* */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 var __webpack_error__ = new Error();
@@ -420,7 +420,7 @@ module.exports = new Promise((resolve, reject) => {
 	}, "mfeCCC");
 }).then(() => (mfeCCC));
 
-/***/ })
+/***/ }
 
 /******/ 	});
 ```
@@ -2081,7 +2081,7 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 43.8 KiB [emitted]
-  asset app.js 29.9 KiB [emitted] (name: app)
+  asset app.js 29.8 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.8 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
@@ -2110,7 +2110,7 @@ mfe-b:
     asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   asset mfeBBB.js 24.6 KiB [emitted] (name: mfeBBB)
-  asset src-b_Component_js.js 2.25 KiB [emitted]
+  asset src-b_Component_js.js 2.23 KiB [emitted]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 16.2 KiB 11 modules
@@ -2137,10 +2137,10 @@ mfe-b:
 mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
-    asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
+    asset vendors-node_modules_lodash_random_js.js 24.5 KiB [emitted] (id hint: vendors)
   asset mfeCCC.js 25.6 KiB [emitted] (name: mfeCCC)
-  asset src-c_LazyComponent_js.js 2.05 KiB [emitted]
-  asset src-c_Component_js.js 1.97 KiB [emitted]
+  asset src-c_LazyComponent_js.js 2.04 KiB [emitted]
+  asset src-c_Component_js.js 1.96 KiB [emitted]
   chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
     > mfeCCC
     runtime modules 16.6 KiB 12 modules
@@ -2178,8 +2178,8 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.5 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.52 KiB [emitted] [minimized] (name: app)
-  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
+  asset app.js 7.51 KiB [emitted] [minimized] (name: app)
+  asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.7 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
     runtime modules 18.7 KiB 13 modules
@@ -2203,10 +2203,10 @@ app:
   app (webpack X.X.X) compiled successfully
 
 mfe-b:
-  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
-  asset node_modules_react_index_js.js 7.46 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.3 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 489 bytes [emitted] [minimized]
+  asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
+  asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
+  asset mfeBBB.js 6.29 KiB [emitted] [minimized] (name: mfeBBB)
+  asset src-b_Component_js.js 486 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 16 KiB 11 modules
@@ -2230,11 +2230,11 @@ mfe-b:
   mfe-b (webpack X.X.X) compiled successfully
 
 mfe-c:
-  asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
+  asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset mfeCCC.js 6.83 KiB [emitted] [minimized] (name: mfeCCC)
-  asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
-  asset src-c_LazyComponent_js.js 532 bytes [emitted] [minimized]
-  asset src-c_Component_js.js 487 bytes [emitted] [minimized]
+  asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
+  asset src-c_LazyComponent_js.js 529 bytes [emitted] [minimized]
+  asset src-c_Component_js.js 484 bytes [emitted] [minimized]
   chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
     > mfeCCC
     runtime modules 16.5 KiB 12 modules

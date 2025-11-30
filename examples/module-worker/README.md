@@ -812,7 +812,7 @@ export const __webpack_esm_id__ = 129;
 export const __webpack_esm_ids__ = [129];
 export const __webpack_esm_modules__ = {
 
-/***/ 3:
+/***/ 3
 /*!**********************!*\
   !*** ./fibonacci.js ***!
   \**********************/
@@ -820,7 +820,7 @@ export const __webpack_esm_modules__ = {
 /*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -831,7 +831,7 @@ function fibonacci(n) {
 }
 
 
-/***/ })
+/***/ }
 
 };
 ```
@@ -844,8 +844,8 @@ function fibonacci(n) {
 asset main.js 8.83 KiB [emitted] [javascript module] (name: main)
 asset chat.js 6.75 KiB [emitted] [javascript module] (name: chat)
 asset workers/fibonacci.js 6.39 KiB [emitted] [javascript module] (name: fibonacci)
-asset 936.js 1.05 KiB [emitted] [javascript module]
-asset 129.js 893 bytes [emitted] [javascript module]
+asset 936.js 1.04 KiB [emitted] [javascript module]
+asset 129.js 881 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -889,8 +889,8 @@ webpack X.X.X compiled successfully
 asset main.js 2.36 KiB [emitted] [javascript module] [minimized] (name: main)
 asset chat.js 1.08 KiB [emitted] [javascript module] [minimized] (name: chat)
 asset workers/fibonacci.js 951 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
-asset 936.js 228 bytes [emitted] [javascript module] [minimized]
-asset 129.js 202 bytes [emitted] [javascript module] [minimized]
+asset 936.js 225 bytes [emitted] [javascript module] [minimized]
+asset 129.js 199 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./fib-worker.js 2:29-50
   > ./fibonacci ./example.js 70:30-51

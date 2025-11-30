@@ -405,8 +405,8 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.92 KiB [emitted] [minimized] (name: main)
-asset my own chunk.output.js 140 bytes [emitted] [minimized] (name: my own chunk)
-asset node_modules_b_js-node_modules_d_js.output.js 114 bytes [emitted] [minimized]
+asset my own chunk.output.js 131 bytes [emitted] [minimized] (name: my own chunk)
+asset node_modules_b_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.92 KiB 6 modules

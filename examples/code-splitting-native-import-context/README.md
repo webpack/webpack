@@ -359,9 +359,9 @@ getTemplate("baz");
 
 ```
 asset output.js 11 KiB [emitted] (name: main)
-asset 717.output.js 858 bytes [emitted]
-asset 776.output.js 858 bytes [emitted]
-asset 0.output.js 856 bytes [emitted]
+asset 717.output.js 846 bytes [emitted]
+asset 776.output.js 846 bytes [emitted]
+asset 0.output.js 844 bytes [emitted]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz.js
@@ -399,9 +399,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.39 KiB [emitted] [minimized] (name: main)
-asset 717.output.js 130 bytes [emitted] [minimized]
-asset 776.output.js 130 bytes [emitted] [minimized]
+asset output.js 2.38 KiB [emitted] [minimized] (name: main)
+asset 717.output.js 127 bytes [emitted] [minimized]
+asset 776.output.js 127 bytes [emitted] [minimized]
 asset 0.output.js 124 bytes [emitted] [minimized]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./baz

@@ -400,7 +400,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.8 KiB [emitted] [minimized] (name: main)
+asset output.js 2.79 KiB [emitted] [minimized] (name: main)
 asset 93de874acf2fa7def7d9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 5055869d769f484de216.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset db91ebd6538fd6985888.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)

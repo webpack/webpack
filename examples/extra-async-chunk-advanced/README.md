@@ -283,12 +283,12 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ```
 asset output.js 9.85 KiB [emitted] (name: main)
 asset 670.output.js 344 bytes [emitted]
-asset 210.output.js 338 bytes [emitted]
-asset 425.output.js 338 bytes [emitted]
-asset 888.output.js 338 bytes [emitted]
-asset 899.output.js 338 bytes [emitted]
-asset 935.output.js 338 bytes [emitted]
-asset 964.output.js 338 bytes [emitted]
+asset 210.output.js 326 bytes [emitted]
+asset 425.output.js 326 bytes [emitted]
+asset 888.output.js 326 bytes [emitted]
+asset 899.output.js 326 bytes [emitted]
+asset 935.output.js 326 bytes [emitted]
+asset 964.output.js 326 bytes [emitted]
 chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]
@@ -355,13 +355,13 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.09 KiB [emitted] [minimized] (name: main)
-asset 210.output.js 81 bytes [emitted] [minimized]
-asset 425.output.js 81 bytes [emitted] [minimized]
-asset 670.output.js 81 bytes [emitted] [minimized]
-asset 888.output.js 81 bytes [emitted] [minimized]
-asset 899.output.js 81 bytes [emitted] [minimized]
-asset 935.output.js 81 bytes [emitted] [minimized]
-asset 964.output.js 81 bytes [emitted] [minimized]
+asset 210.output.js 80 bytes [emitted] [minimized]
+asset 425.output.js 80 bytes [emitted] [minimized]
+asset 670.output.js 80 bytes [emitted] [minimized]
+asset 888.output.js 80 bytes [emitted] [minimized]
+asset 899.output.js 80 bytes [emitted] [minimized]
+asset 935.output.js 80 bytes [emitted] [minimized]
+asset 964.output.js 80 bytes [emitted] [minimized]
 chunk (runtime: main) 210.output.js 21 bytes [rendered]
   > ./example.js 8:0-16:2
   ./e.js 21 bytes [built] [code generated]

@@ -173,8 +173,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyDll.alpha.js 313 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 307 bytes [emitted] [minimized] (name: beta)
+asset MyDll.alpha.js 307 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 301 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
   > beta
   dependent modules 69 bytes [dependent] 3 modules

@@ -324,7 +324,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_c_js-node_modules_d_js
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([["node_modules_c_js-node_modules_d_js"],{576:()=>{},605:()=>{}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([["node_modules_c_js-node_modules_d_js"],{576(){},605(){}}]);
 ```
 
 # Info
@@ -356,7 +356,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.75 KiB [emitted] [minimized] (name: main)
-asset node_modules_c_js-node_modules_d_js.output.js 114 bytes [emitted] [minimized]
+asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.92 KiB 6 modules

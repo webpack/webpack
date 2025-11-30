@@ -283,8 +283,8 @@ __webpack_require__(/*! ./vendor2 */ 1);
 asset pageA.js 2.43 KiB [emitted] (name: pageA)
 asset vendor2.js 2 KiB [emitted] (name: vendor2)
 asset vendor1.js 1.61 KiB [emitted] (name: vendor1)
-asset pageB.js 1.61 KiB [emitted] (name: pageB)
-asset pageC.js 1.61 KiB [emitted] (name: pageC)
+asset pageB.js 1.6 KiB [emitted] (name: pageB)
+asset pageC.js 1.6 KiB [emitted] (name: pageC)
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
   > ./pageA pageA
   dependent modules 77 bytes [dependent] 2 modules
@@ -326,11 +326,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 263 bytes [emitted] [minimized] (name: pageA)
-asset vendor2.js 218 bytes [emitted] [minimized] (name: vendor2)
-asset vendor1.js 176 bytes [emitted] [minimized] (name: vendor1)
-asset pageB.js 174 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
+asset pageA.js 256 bytes [emitted] [minimized] (name: pageA)
+asset vendor2.js 214 bytes [emitted] [minimized] (name: vendor2)
+asset vendor1.js 175 bytes [emitted] [minimized] (name: vendor1)
+asset pageB.js 173 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
 chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
   > ./vendor2 vendor2
   dependent modules 27 bytes [dependent] 1 module

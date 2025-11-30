@@ -217,8 +217,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 421 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 419 bytes [emitted] [minimized] (name: beta)
+asset MyLibrary.alpha.js 420 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 418 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]

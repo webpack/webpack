@@ -245,7 +245,7 @@ vendor:
 app:
   asset pageB.js 2.63 KiB [emitted] (name: pageB)
   asset pageA.js 2.61 KiB [emitted] (name: pageA)
-  asset pageC.js 1.61 KiB [emitted] (name: pageC)
+  asset pageC.js 1.6 KiB [emitted] (name: pageC)
   chunk (runtime: pageA) pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
     dependent modules 84 bytes [dependent] 2 modules
@@ -273,7 +273,7 @@ app:
 
 ```
 vendor:
-  asset vendor.js 294 bytes [emitted] [minimized] (name: main)
+  asset vendor.js 289 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -283,9 +283,9 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
-  asset pageA.js 295 bytes [emitted] [minimized] (name: pageA)
-  asset pageB.js 295 bytes [emitted] [minimized] (name: pageB)
-  asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
+  asset pageA.js 288 bytes [emitted] [minimized] (name: pageA)
+  asset pageB.js 288 bytes [emitted] [minimized] (name: pageB)
+  asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
     dependent modules 84 bytes [dependent] 2 modules

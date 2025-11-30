@@ -184,7 +184,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset vendor.js 653 bytes [emitted] [minimized] (name: main)
+asset vendor.js 647 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 670 bytes 3 modules

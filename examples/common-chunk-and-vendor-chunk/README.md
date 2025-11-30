@@ -80,31 +80,31 @@ module.exports = config;
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["vendor"],{
 
-/***/ 1:
+/***/ 1
 /*!*********************************!*\
   !*** ./node_modules/vendor1.js ***!
   \*********************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "vendor1";
 
-/***/ }),
+/***/ },
 
-/***/ 5:
+/***/ 5
 /*!*********************************!*\
   !*** ./node_modules/vendor2.js ***!
   \*********************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "vendor2";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -114,18 +114,18 @@ module.exports = "vendor2";
 ``` javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["commons-utility2_js"],{
 
-/***/ 3:
+/***/ 3
 /*!*********************!*\
   !*** ./utility2.js ***!
   \*********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "utility2";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -135,18 +135,18 @@ module.exports = "utility2";
 ``` javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["commons-utility3_js"],{
 
-/***/ 6:
+/***/ 6
 /*!*********************!*\
   !*** ./utility3.js ***!
   \*********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "utility3";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -334,14 +334,14 @@ module.exports = "utility1";
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 4:
+/***/ 4
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 5:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 var vendor2 = __webpack_require__(/*! vendor2 */ 5);
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
@@ -350,7 +350,7 @@ var utility3 = __webpack_require__(/*! ./utility3 */ 6);
 module.exports = "pageB";
 
 
-/***/ })
+/***/ }
 
 /******/ 	});
 ```
@@ -500,21 +500,21 @@ module.exports = "pageB";
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 7:
+/***/ 7
 /*!******************!*\
   !*** ./pageC.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 4:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
 var utility3 = __webpack_require__(/*! ./utility3 */ 6);
 
 module.exports = "pageC";
 
-/***/ })
+/***/ }
 
 /******/ 	});
 ```
@@ -663,16 +663,16 @@ module.exports = "pageC";
 ## Unoptimized
 
 ```
-assets by chunk 768 bytes (id hint: commons)
-  asset commons-utility2_js.js 384 bytes [emitted] (id hint: commons)
-  asset commons-utility3_js.js 384 bytes [emitted] (id hint: commons)
+assets by chunk 744 bytes (id hint: commons)
+  asset commons-utility2_js.js 372 bytes [emitted] (id hint: commons)
+  asset commons-utility3_js.js 372 bytes [emitted] (id hint: commons)
 asset pageA.js 6.07 KiB [emitted] (name: pageA)
-asset pageB.js 5.8 KiB [emitted] (name: pageB)
-asset pageC.js 5.74 KiB [emitted] (name: pageC)
-asset vendor.js 737 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.17 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 6.07 KiB
-Entrypoint pageB 7.27 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageB.js 5.8 KiB
-Entrypoint pageC 6.49 KiB = commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageC.js 5.74 KiB
+asset pageB.js 5.79 KiB [emitted] (name: pageB)
+asset pageC.js 5.73 KiB [emitted] (name: pageC)
+asset vendor.js 713 bytes [emitted] (name: vendor) (id hint: vendor)
+Entrypoint pageA 7.13 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.07 KiB
+Entrypoint pageB 7.21 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 5.79 KiB
+Entrypoint pageC 6.45 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.73 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -730,16 +730,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by chunk 212 bytes (id hint: commons)
-  asset commons-utility2_js.js 106 bytes [emitted] [minimized] (id hint: commons)
-  asset commons-utility3_js.js 106 bytes [emitted] [minimized] (id hint: commons)
+assets by chunk 210 bytes (id hint: commons)
+  asset commons-utility2_js.js 105 bytes [emitted] [minimized] (id hint: commons)
+  asset commons-utility3_js.js 105 bytes [emitted] [minimized] (id hint: commons)
 asset pageA.js 1020 bytes [emitted] [minimized] (name: pageA)
-asset pageB.js 1020 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 999 bytes [emitted] [minimized] (name: pageC)
-asset vendor.js 121 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.22 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 1020 bytes
-Entrypoint pageB 1.32 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageB.js 1020 bytes
-Entrypoint pageC 1.18 KiB = commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageC.js 999 bytes
+asset pageB.js 1010 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 996 bytes [emitted] [minimized] (name: pageC)
+asset vendor.js 119 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
+Entrypoint pageA 1.21 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes pageA.js 1020 bytes
+Entrypoint pageB 1.31 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageB.js 1010 bytes
+Entrypoint pageC 1.18 KiB = commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageC.js 996 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB

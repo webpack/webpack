@@ -394,7 +394,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset 78eeb14b9b5e2c77fb0a.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 3.33 KiB [emitted] [minimized] (name: main)
+asset output.js 3.32 KiB [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.45 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.45 KiB 5 modules

@@ -181,8 +181,8 @@ const [styles, scripts] = importEntrypoints(manifest, "main");
 ## Unoptimized
 
 ```
-assets by info 893 bytes [immutable]
-  asset async_js.d6fc644e617b14425795.js 885 bytes [emitted] [immutable] 1 related asset
+assets by info 881 bytes [immutable]
+  asset async_js.d6fc644e617b14425795.js 873 bytes [emitted] [immutable] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
 asset output.js 15.2 KiB [emitted] (name: main) 1 related asset
@@ -208,14 +208,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by info 205 bytes [immutable]
-  asset async_js.e737f493d3cb4089ee2e.js 197 bytes [emitted] [immutable] [minimized] 1 related asset
+assets by info 202 bytes [immutable]
+  asset async_js.f5b4307c4a15ad5435bd.js 194 bytes [emitted] [immutable] [minimized] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
-asset output.js 3.18 KiB [emitted] [minimized] (name: main) 1 related asset
+asset output.js 3.17 KiB [emitted] [minimized] (name: main) 1 related asset
 asset manifest.json 601 bytes [emitted]
 asset manifest.yml 395 bytes [emitted]
-chunk (runtime: main) async_js.e737f493d3cb4089ee2e.js 24 bytes [rendered]
+chunk (runtime: main) async_js.f5b4307c4a15ad5435bd.js 24 bytes [rendered]
   > ./async.js ./example.js 6:8-28
   ./async.js 24 bytes [built] [code generated]
     [exports: default]

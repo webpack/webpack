@@ -67,8 +67,8 @@ body {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 __webpack_require__.r(module.exports = {
-	"large": "--app-6-large",
-	"main": "app-6-main"
+	"large": "--QRIlVD",
+	"main": "zI6JBT"
 });
 
 /***/ })
@@ -465,22 +465,22 @@ body {
   !*** css ./style.module.css ***!
   \******************************/
 :root {
-	--app-6-large: 72px;
+	--QRIlVD: 72px;
 }
 
-.app-6-main {
-	font-size: var(--app-6-large);
+.zI6JBT {
+	font-size: var(--QRIlVD);
 	color: darkblue;
 }
 
 @media (min-width: 1024px) {
-	.app-6-main {
+	.zI6JBT {
 		color: green;
 	}
 }
 
 @supports (display: grid) {
-	.app-6-main {
+	.zI6JBT {
 		display: grid
 	}
 }
@@ -507,22 +507,22 @@ body {
 }
 
 :root {
-	--app-235-a: 72px;
+	--HadZIV: 72px;
 }
 
-.app-235-i {
-	font-size: var(--app-235-a);
+.BC4-j0 {
+	font-size: var(--HadZIV);
 	color: darkblue;
 }
 
 @media (min-width: 1024px) {
-	.app-235-i {
+	.BC4-j0 {
 		color: green;
 	}
 }
 
 @supports (display: grid) {
-	.app-235-i {
+	.BC4-j0 {
 		display: grid
 	}
 }
@@ -546,16 +546,16 @@ body {
 ```
 assets by path *.js 16.2 KiB
   asset output.js 15.9 KiB [emitted] (name: main)
-  asset 1.output.js 343 bytes [emitted]
-assets by path *.css 1.19 KiB
-  asset output.css 1.06 KiB [emitted] (name: main)
+  asset 1.output.js 331 bytes [emitted]
+assets by path *.css 1.16 KiB
+  asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 16.9 KiB (14.6 KiB) = output.js 15.9 KiB output.css 1.06 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 265 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
+Entrypoint main 16.9 KiB (14.6 KiB) = output.js 15.9 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 256 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.8 KiB 9 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 89 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 80 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -572,18 +572,18 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.23 KiB
-  asset output.js 3.14 KiB [emitted] [minimized] (name: main)
-  asset 822.output.js 88 bytes [emitted] [minimized]
-assets by path *.css 490 bytes
-  asset output.css 466 bytes [emitted] (name: main)
+assets by path *.js 3.21 KiB
+  asset output.js 3.13 KiB [emitted] [minimized] (name: main)
+  asset 822.output.js 85 bytes [emitted] [minimized]
+assets by path *.css 475 bytes
+  asset output.css 451 bytes [emitted] (name: main)
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.6 KiB (14.6 KiB) = output.js 3.14 KiB output.css 466 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 299 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.57 KiB (14.6 KiB) = output.js 3.13 KiB output.css 451 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 287 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.53 KiB 8 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 119 bytes (javascript) 279 bytes (css) 42 bytes (css-import) [dependent] 4 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 107 bytes (javascript) 279 bytes (css) 42 bytes (css-import) [dependent] 4 modules
   cacheable modules 180 bytes (javascript) 175 bytes (css)
     ./example.js + 2 modules 178 bytes [built] [code generated]
       [no exports]
