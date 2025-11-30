@@ -385,13 +385,13 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 2:
+/***/ 2
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require) {
@@ -399,7 +399,7 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 	shared("This is page B");
 }).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 
-/***/ })
+/***/ }
 
 /******/ 	});
 ```
@@ -657,21 +657,21 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["shared_js"],{
 
-/***/ 3:
+/***/ 3
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 2:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
 module.exports = function(msg) {
 	console.log(msg);
 };
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -683,7 +683,7 @@ module.exports = function(msg) {
 ```
 asset pageA.js 10.7 KiB [emitted] (name: pageA)
 asset pageB.js 10.6 KiB [emitted] (name: pageB)
-asset shared_js.js 515 bytes [emitted]
+asset shared_js.js 503 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
 Entrypoint pageA 11 KiB = commons.js 370 bytes pageA.js 10.7 KiB
 Entrypoint pageB 11 KiB = commons.js 370 bytes pageB.js 10.6 KiB
@@ -726,10 +726,10 @@ webpack X.X.X compiled successfully
 ```
 asset pageA.js 2.14 KiB [emitted] [minimized] (name: pageA)
 asset pageB.js 2.12 KiB [emitted] [minimized] (name: pageB)
-asset shared_js.js 125 bytes [emitted] [minimized]
-asset commons.js 92 bytes [emitted] [minimized] (name: commons) (id hint: commons)
-Entrypoint pageA 2.23 KiB = commons.js 92 bytes pageA.js 2.14 KiB
-Entrypoint pageB 2.21 KiB = commons.js 92 bytes pageB.js 2.12 KiB
+asset shared_js.js 122 bytes [emitted] [minimized]
+asset commons.js 91 bytes [emitted] [minimized] (name: commons) (id hint: commons)
+Entrypoint pageA 2.23 KiB = commons.js 91 bytes pageA.js 2.14 KiB
+Entrypoint pageB 2.21 KiB = commons.js 91 bytes pageB.js 2.12 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB

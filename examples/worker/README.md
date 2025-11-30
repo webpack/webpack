@@ -695,14 +695,14 @@ onmessage = async event => {
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([[129],{
 
-/***/ 3:
+/***/ 3
 /*!**********************!*\
   !*** ./fibonacci.js ***!
   \**********************/
 /*! namespace exports */
 /*! export fibonacci [provided] [used in main, 9a81d90cfd0dfd13d748] [usage prevents renaming] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fibonacci: () => (/* binding */ fibonacci)
@@ -712,7 +712,7 @@ function fibonacci(n) {
 }
 
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -725,7 +725,7 @@ function fibonacci(n) {
 asset main.js 11.9 KiB [emitted] (name: main)
 asset workers/fibonacci.js 4.99 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
-asset 129.js 741 bytes [emitted]
+asset 129.js 729 bytes [emitted]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -761,7 +761,7 @@ webpack X.X.X compiled successfully
 asset main.js 3.29 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 776 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
-asset 129.js 159 bytes [emitted] [minimized]
+asset 129.js 156 bytes [emitted] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./fib-worker.js 2:29-50
   > ./fibonacci ./example.js 70:30-51
