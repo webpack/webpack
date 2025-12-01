@@ -5163,6 +5163,27 @@ declare abstract class ExportInfo {
 		| "not provided";
 	getRenameInfo(): string;
 }
+declare abstract class ExportMode {
+	type: ExportModeType;
+	items: null | NormalReexportItem[];
+	name: null | string;
+	partialNamespaceExportInfo: null | ExportInfo;
+	ignored: null | Set<string>;
+	hidden?: null | Set<string>;
+	userRequest: null | string;
+	fakeType: number;
+}
+type ExportModeType =
+	| "unused"
+	| "missing"
+	| "empty-star"
+	| "reexport-dynamic-default"
+	| "reexport-named-default"
+	| "reexport-namespace-object"
+	| "reexport-fake-namespace-object"
+	| "reexport-undefined"
+	| "normal-reexport"
+	| "dynamic-reexport";
 type ExportPresenceMode = false | 0 | 1 | 2 | 3;
 declare interface ExportSpec {
 	/**
@@ -6213,6 +6234,31 @@ declare interface HandleModuleCreationOptions {
 	 */
 	checkCycle?: boolean;
 }
+declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyImportDependency {
+	ids: string[];
+	name: null | string;
+	activeExports: Set<string>;
+	otherStarExports: null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>;
+	exportPresenceMode: ExportPresenceMode;
+	allStarExports: null | HarmonyStarExportsList;
+	get id(): void;
+	getId(): void;
+	setId(): void;
+	getIds(moduleGraph: ModuleGraph): string[];
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
+	getStarReexports(
+		moduleGraph: ModuleGraph,
+		runtime: RuntimeSpec,
+		exportsInfo?: ExportsInfo,
+		importedModule?: Module
+	): {
+		exports?: Set<string>;
+		checked?: Set<string>;
+		ignoredExports: Set<string>;
+		hidden?: Set<string>;
+	};
+}
 declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
@@ -6261,6 +6307,13 @@ declare interface HarmonySettings {
 	await: boolean;
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
+}
+declare abstract class HarmonyStarExportsList {
+	dependencies: HarmonyExportImportedSpecifierDependency[];
+	push(dep: HarmonyExportImportedSpecifierDependency): void;
+	slice(): HarmonyExportImportedSpecifierDependency[];
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 }
 declare class Hash {
 	constructor();
@@ -7238,7 +7291,7 @@ declare class JavascriptParser extends ParserClass {
 	sourceType: "module" | "auto" | "script";
 	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
 	scope: ScopeInfo;
-	state: ParserState;
+	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
 	semicolons?: Set<number>;
 	statementPath?: StatementPathItem[];
@@ -8443,6 +8496,9 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
+type JavascriptParserState = ParserStateBase &
+	Record<string, any> &
+	KnownJavascriptParserState;
 declare abstract class JsonData {
 	get():
 		| undefined
@@ -8821,6 +8877,12 @@ declare interface KnownHooks {
 	 * result hook
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
+}
+declare interface KnownJavascriptParserState {
+	harmonyNamedExports?: Set<string>;
+	harmonyStarExports?: HarmonyStarExportsList;
+	lastHarmonyImportOrder?: number;
+	localModules?: LocalModule[];
 }
 declare interface KnownMeta {
 	importVarMap?: Map<Module, string>;
@@ -9785,6 +9847,15 @@ declare class LoaderTargetPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare abstract class LocalModule {
+	name: string;
+	idx: number;
+	used: boolean;
+	flagUsed(): void;
+	variableName(): string;
+	serialize(context: ObjectSerializerContext): void;
+	deserialize(context: ObjectDeserializerContext): void;
 }
 declare interface LogEntry {
 	type: string;
@@ -11905,6 +11976,13 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare abstract class NormalReexportItem {
+	name: string;
+	ids: string[];
+	exportInfo: ExportInfo;
+	checked: boolean;
+	hidden: boolean;
+}
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -13568,7 +13646,7 @@ declare interface ParserOptionsByModuleTypeKnown {
 declare interface ParserOptionsByModuleTypeUnknown {
 	[index: string]: { [index: string]: any };
 }
-type ParserState = Record<string, any> & ParserStateBase;
+type ParserState = ParserStateBase & Record<string, any>;
 declare interface ParserStateBase {
 	source: string | Buffer;
 	current: NormalModule;

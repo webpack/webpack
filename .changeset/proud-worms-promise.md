@@ -1,0 +1,5 @@
+---
+"webpack": patch
+---
+
+Improve types
