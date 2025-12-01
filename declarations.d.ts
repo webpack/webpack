@@ -21,13 +21,15 @@ declare module "typescript-iterable" {
 	}
 
 	export interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-		extends Iterator<T, TReturn, TNext>,
-			Disposable {
+		extends Iterator<T, TReturn, TNext>, Disposable {
 		[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	}
 
-	export interface SetIterator<T>
-		extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
+	export interface SetIterator<T> extends IteratorObject<
+		T,
+		BuiltinIteratorReturn,
+		unknown
+	> {
 		[Symbol.iterator](): SetIterator<T>;
 	}
 }
