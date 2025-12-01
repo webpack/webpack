@@ -245,7 +245,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset dll.js 694 bytes [emitted] [minimized] (name: dll)
+asset dll.js 685 bytes [emitted] [minimized] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 670 bytes 3 modules

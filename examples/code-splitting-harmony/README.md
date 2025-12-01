@@ -399,9 +399,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 ```
 asset output.js 13.6 KiB [emitted] (name: main)
-asset 140.output.js 296 bytes [emitted]
-asset 197.output.js 296 bytes [emitted]
-asset 414.output.js 288 bytes [emitted]
+asset 140.output.js 284 bytes [emitted]
+asset 197.output.js 284 bytes [emitted]
+asset 414.output.js 276 bytes [emitted]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
@@ -435,10 +435,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.88 KiB [emitted] [minimized] (name: main)
-asset 140.output.js 69 bytes [emitted] [minimized]
-asset 197.output.js 69 bytes [emitted] [minimized]
-asset 414.output.js 69 bytes [emitted] [minimized]
+asset output.js 2.87 KiB [emitted] [minimized] (name: main)
+asset 140.output.js 66 bytes [emitted] [minimized]
+asset 197.output.js 66 bytes [emitted] [minimized]
+asset 414.output.js 66 bytes [emitted] [minimized]
 chunk (runtime: main) 140.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js

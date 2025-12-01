@@ -351,9 +351,9 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 
 ```
 asset output.js 11.3 KiB [emitted] (name: main)
-asset 792.output.js 858 bytes [emitted] (name: chunk-bar-baz2)
-asset 994.output.js 858 bytes [emitted] (name: chunk-bar-baz0)
-asset 45.output.js 857 bytes [emitted] (name: chunk-foo)
+asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
+asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
+asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
@@ -392,8 +392,8 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.41 KiB [emitted] [minimized] (name: main)
-asset 994.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
-asset 45.output.js 129 bytes [emitted] [minimized] (name: chunk-foo)
+asset 994.output.js 127 bytes [emitted] [minimized] (name: chunk-bar-baz0)
+asset 45.output.js 126 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 126 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62

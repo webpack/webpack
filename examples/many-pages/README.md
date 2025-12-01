@@ -56,21 +56,21 @@ module.exports = config;
 ## Production mode
 
 ```
-assets by chunk 772 bytes (id hint: vendors)
-  asset 454.js 164 bytes [emitted] [minimized] (id hint: vendors)
-  asset 778.js 164 bytes [emitted] [minimized] (id hint: vendors)
-  asset 122.js 111 bytes [emitted] [minimized] (id hint: vendors)
-  asset 301.js 111 bytes [emitted] [minimized] (id hint: vendors)
-  asset 811.js 111 bytes [emitted] [minimized] (id hint: vendors)
-  asset 876.js 111 bytes [emitted] [minimized] (id hint: vendors)
-asset pageB.js 1.25 KiB [emitted] [minimized] (name: pageB)
-asset pageC.js 1.25 KiB [emitted] [minimized] (name: pageC)
+assets by chunk 748 bytes (id hint: vendors)
+  asset 454.js 158 bytes [emitted] [minimized] (id hint: vendors)
+  asset 778.js 158 bytes [emitted] [minimized] (id hint: vendors)
+  asset 122.js 108 bytes [emitted] [minimized] (id hint: vendors)
+  asset 301.js 108 bytes [emitted] [minimized] (id hint: vendors)
+  asset 811.js 108 bytes [emitted] [minimized] (id hint: vendors)
+  asset 876.js 108 bytes [emitted] [minimized] (id hint: vendors)
+asset pageB.js 1.24 KiB [emitted] [minimized] (name: pageB)
+asset pageC.js 1.24 KiB [emitted] [minimized] (name: pageC)
 asset pageA.js 1.17 KiB [emitted] [minimized] (name: pageA)
 asset pageD.js 1.17 KiB [emitted] [minimized] (name: pageD)
 asset pageF.js 1.17 KiB [emitted] [minimized] (name: pageF)
-asset pageE.js 1.16 KiB [emitted] [minimized] (name: pageE)
-asset pageG.js 1.14 KiB [emitted] [minimized] (name: pageG)
-asset 554.js 139 bytes [emitted] [minimized]
+asset pageE.js 1.15 KiB [emitted] [minimized] (name: pageE)
+asset pageG.js 1.13 KiB [emitted] [minimized] (name: pageG)
+asset 554.js 133 bytes [emitted] [minimized]
 chunk (runtime: pageA) 122.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
   > ./pages/a pageA
   ./node_modules/m3.js 43 bytes [built] [code generated]

@@ -311,18 +311,18 @@ module.exports = "b";
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["c_js"],{
 
-/***/ 3:
+/***/ 3
 /*!**************!*\
   !*** ./c.js ***!
   \**************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "c";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -332,18 +332,18 @@ module.exports = "c";
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["d_js"],{
 
-/***/ 4:
+/***/ 4
 /*!**************!*\
   !*** ./d.js ***!
   \**************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "d";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -355,8 +355,8 @@ module.exports = "d";
 ```
 asset output.js 9.11 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
-asset c_js.output.js 341 bytes [emitted]
-asset d_js.output.js 341 bytes [emitted]
+asset c_js.output.js 329 bytes [emitted]
+asset d_js.output.js 329 bytes [emitted]
 chunk (runtime: main) a_js-b_js.output.js 42 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 2:0-30
   > ./example.js 5:0-8:2
@@ -395,9 +395,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.8 KiB [emitted] [minimized] (name: main)
-asset a_js-b_js.output.js 112 bytes [emitted] [minimized]
-asset c_js.output.js 84 bytes [emitted] [minimized]
-asset d_js.output.js 84 bytes [emitted] [minimized]
+asset a_js-b_js.output.js 110 bytes [emitted] [minimized]
+asset c_js.output.js 83 bytes [emitted] [minimized]
+asset d_js.output.js 83 bytes [emitted] [minimized]
 chunk (runtime: main) a_js-b_js.output.js 42 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 2:0-30
   > ./example.js 5:0-8:2

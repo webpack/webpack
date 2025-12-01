@@ -269,7 +269,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.2 KiB [emitted] [javascript module] [minimized] (name: main)
-asset 481.output.js 261 bytes [emitted] [javascript module] [minimized]
+asset 481.output.js 258 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: main) 481.output.js 146 bytes [rendered]
   > ./counter ./methods.js 2:8-27
   > ./counter ./example.js 4:23-42

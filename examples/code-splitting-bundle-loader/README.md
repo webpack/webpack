@@ -277,18 +277,18 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 ```javascript
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["file_js"],{
 
-/***/ 2:
+/***/ 2
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+(module) {
 
 module.exports = "It works";
 
-/***/ })
+/***/ }
 
 }]);
 ```
@@ -299,7 +299,7 @@ module.exports = "It works";
 
 ```
 asset output.js 9.61 KiB [emitted] (name: main)
-asset file_js.output.js 360 bytes [emitted]
+asset file_js.output.js 348 bytes [emitted]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
@@ -320,7 +320,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.83 KiB [emitted] [minimized] (name: main)
-asset file_js.output.js 94 bytes [emitted] [minimized]
+asset file_js.output.js 93 bytes [emitted] [minimized]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
