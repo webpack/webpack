@@ -74,6 +74,7 @@ module.exports = [
 	},
 	{
 		...common,
+		devtool: false,
 		mode: "production",
 		target: "web",
 		plugins: [
