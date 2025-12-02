@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Improve types
+Improve types.
