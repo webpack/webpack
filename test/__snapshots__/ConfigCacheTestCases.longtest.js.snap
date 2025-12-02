@@ -2278,56 +2278,56 @@ div {
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "jNb1RA",
-  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
-  "animation": "xVppDs",
-  "animationName": "Lo5rLV",
-  "class": "Th9Hcz",
-  "classInContainer": "zzDKiI",
-  "classLocalScope": "Ss63Ju",
-  "cssModuleWithCustomFileExtension": "fBHrus",
-  "currentWmultiParams": "g4zTJs",
-  "deepClassInContainer": "_0Kw8ER",
-  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
+  "UsedClassName": "_7t7sag",
+  "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
+  "animation": "I7H8FK",
+  "animationName": "bvLAsC",
+  "class": "Vx2ADA",
+  "classInContainer": "_73-7in",
+  "classLocalScope": "XlQsKD",
+  "cssModuleWithCustomFileExtension": "Kp-Qk2",
+  "currentWmultiParams": "RwyLnw",
+  "deepClassInContainer": "cVCisO",
+  "displayFlexInSupportsInMediaUpperCase": "xtny9t",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
-  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
-  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
-  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
-  "exportNameWeirdCharacters": "pfrK-J",
-  "futureWmultiParams": "FIC9OM",
+  "exportName": "_276lNI beforeName A8YDR8 _0xrNKu importName secondImport _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "SVt4hC xjD3LP",
+  "exportNameOtherFromKeywordWithFrom1": "y7Ml6Q from",
+  "exportNameOtherFromKeywordWithFrom2": "Ns9ysL",
+  "exportNameOtherNoSpaces": "atrg9z beforeName A8YDR8",
+  "exportNameWeirdCharacters": "i-n39D",
+  "futureWmultiParams": "dUydqb",
   "global": undefined,
-  "hasWmultiParams": "JaRvb9",
-  "ident": "ORDfKs",
-  "inLocalGlobalScope": "xawqPK",
-  "inSupportScope": "StK0G8",
-  "isWmultiParams": "yrfUF-",
-  "keyframes": "UlwS-p",
-  "keyframesUPPERCASE": "kwAQ_z",
-  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
-  "local2": "SMSyWQ Z22WXA",
-  "localkeyframes2UPPPERCASE": "axWscZ",
-  "matchesWmultiParams": "BZtKdC",
-  "media": "A4ihWh",
-  "mediaInSupports": "ylxOyA",
-  "mediaWithOperator": "gvvWG0",
-  "mozAnimationName": "jJAZvq",
-  "mozAnyWmultiParams": "Qcmkef",
-  "myColor": "--E8316H",
-  "nested": "RtgWj_ undefined kFvcKy",
+  "hasWmultiParams": "ZU5UXg",
+  "ident": "_9V9u7I",
+  "inLocalGlobalScope": "MoUXzC",
+  "inSupportScope": "cFKjtQ",
+  "isWmultiParams": "n_QmMs",
+  "keyframes": "_5UlNeX",
+  "keyframesUPPERCASE": "i6YAqp",
+  "local": "ejgZjv oNuIA5 Zi-p0y HEwyXh",
+  "local2": "P7cOan qIVXrl",
+  "localkeyframes2UPPPERCASE": "qQhAdK",
+  "matchesWmultiParams": "lQoz4m",
+  "media": "n5pxIL",
+  "mediaInSupports": "xwpz-g",
+  "mediaWithOperator": "geZgE8",
+  "mozAnimationName": "PrCJhD",
+  "mozAnyWmultiParams": "r8_i3a",
+  "myColor": "--_14zVD_",
+  "nested": "kbu2T9 undefined znU9p0",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "cVavHg",
-  "paddingLg": "xqzVWd",
-  "paddingSm": "Qm3jxJ",
-  "pastWmultiParams": "NOGA2-",
-  "supports": "qyhlLo",
-  "supportsInMedia": "KHcaFg",
-  "supportsWithOperator": "NQmDdm",
-  "textColor": "--PJiFhP",
-  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
-  "webkitAnyWmultiParams": "piVgU0",
-  "whereWmultiParams": "n4-IgX",
+  "notWmultiParams": "_2oRg10",
+  "paddingLg": "_4VO-a4",
+  "paddingSm": "_9lyW8s",
+  "pastWmultiParams": "yO1Vkb",
+  "supports": "WqxrhC",
+  "supportsInMedia": "vLQT6D",
+  "supportsWithOperator": "x_zgIp",
+  "textColor": "--pQy7h-",
+  "vars": "--QrLdlL g-7LxA undefined OnsqKz",
+  "webkitAnyWmultiParams": "QlaHVq",
+  "whereWmultiParams": "YmjIRz",
 }
 `;
 
@@ -2582,15 +2582,15 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   !*** css ./var-function-export.modules.css ***!
   \\\\*********************************************/
 :root {
-	--IUIj4X: red;
-	--_89DIRX: blue;
-	--TSNC0A: black;
+	--_3Ux-sI: red;
+	--yZhdOv: blue;
+	--tPUA0N: black;
 	--_5g4K-I: red;
-	--_31C3Gv: red;
-	--msAO3F: red;
+	--xgN30d: red;
+	--dYeZZq: red;
 }
 
-.IUIj4X {
+._3Ux-sI {
 	color: red;
 }
 
@@ -2690,19 +2690,19 @@ div {
 }
 
 .n7N3Yd {
-	color: var(--IUIj4X);
+	color: var(--_3Ux-sI);
 }
 
 .Cavu2H {
-	color: var(--ir5X1L, var(--IUIj4X));
+	color: var(--ir5X1L, var(--_3Ux-sI));
 }
 
 ._6emYNM {
-	color: var(--IUIj4X,  var(--ir5X1L));
+	color: var(--_3Ux-sI,  var(--ir5X1L));
 }
 
 .XNaXe3 {
-	color: var(--IUIj4X,  var(--_89DIRX));
+	color: var(--_3Ux-sI,  var(--yZhdOv));
 }
 
 .mGmB4l {
@@ -2710,15 +2710,15 @@ div {
 }
 
 .znpqdH {
-	color: var(--_31C3Gv);
+	color: var(--xgN30d);
 }
 
 .uSxmmJ {
-	color: var(--msAO3F);
+	color: var(--dYeZZq);
 }
 
 .AfNRVE {
-	color: var(--IUIj4X, var(--my-global, var(--ir5X1L, red)));
+	color: var(--_3Ux-sI, var(--my-global, var(--ir5X1L, red)));
 }
 
 .Y8L6uE {
@@ -2734,7 +2734,7 @@ div {
 }
 
 ._96YRqM {
-	color: var(--TSNC0A)
+	color: var(--tPUA0N)
 }
 
 .fYc0TB {
@@ -2896,19 +2896,19 @@ div {
 /*!*********************************!*\\\\
   !*** css ./classes.modules.css ***!
   \\\\*********************************/
-.Bm5sMz {
+.qoIJa_ {
 	color: red
 }
 
-.g3NfS6 {
+.u-Iyhp {
 	color: green;
 }
 
-.av_7pg {
+.eHk-1R {
 	color: blue;
 }
 
-.BOVbCE {
+.FVDuEC {
 	color: yellow;
 }
 
@@ -2916,19 +2916,19 @@ div {
 	color: red;
 }
 
-.TSCnGA {
+.XEiQF- {
 	color: red;
 }
 
-.XQaZgH {
+.dsEYX4 {
 	color: red;
 }
 
-.owncNJ {
+._2sUimK {
 	color: red;
 }
 
-._9i1Lg8 {
+.Jsveeg {
 	color: red;
 }
 
@@ -2936,7 +2936,7 @@ div {
 	color: red;
 }
 
-.g2GKt4 {
+.Vfq5Q9 {
 	color: tan;
 }
 
@@ -2944,10 +2944,10 @@ div {
   !*** css ./shared.css ***!
   \\\\************************/
 :root {
-	--lKXG0f: --vyaIR5;
+	--_2qSR8B: --_6RMPbG;
 }
 
-@color-profile --vyaIR5 {
+@color-profile --_6RMPbG {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -2955,29 +2955,29 @@ div {
   !*** css ./style.module.css ***!
   \\\\******************************/
 
-.Th9Hcz {
+.Vx2ADA {
 	color: red;
 }
 
-.pKESR4,
-.INAAta .global,
-.dhVQ31 {
+.ejgZjv,
+.oNuIA5 .global,
+.Zi-p0y {
 	color: green;
 }
 
-.global .VPL1IN {
+.global .HEwyXh {
 	color: yellow;
 }
 
-.SMSyWQ.global.Z22WXA {
+.P7cOan.global.qIVXrl {
 	color: blue;
 }
 
-.cVavHg div:not(.eBN_LH, .UMWLJb, ._7dxdKQ) {
+._2oRg10 div:not(.eBN_LH, .UMWLJb, ._7dxdKQ) {
     pointer-events: initial !important;
 }
 
-.yrfUF- :is(div.QUNuET.AOBmmd.v62rx-,
+.n_QmMs :is(div.QUNuET.AOBmmd.v62rx-,
     div.QUNuET.AOBmmd.FGoXEZ,
     div._72jHy0._4vejX-,
     div._72jHy0._7KRQ_ div.GryLwC) {
@@ -2986,7 +2986,7 @@ div {
   overflow: hidden;
 }
 
-.BZtKdC :matches(div.QUNuET.AOBmmd.v62rx-,
+.lQoz4m :matches(div.QUNuET.AOBmmd.v62rx-,
     div.QUNuET.AOBmmd.FGoXEZ,
     div._72jHy0._4vejX-,
     div._72jHy0._7KRQ_ div.GryLwC) {
@@ -2995,7 +2995,7 @@ div {
   overflow: hidden;
 }
 
-.n4-IgX :where(div.QUNuET.AOBmmd.v62rx-,
+.YmjIRz :where(div.QUNuET.AOBmmd.v62rx-,
     div.QUNuET.AOBmmd.FGoXEZ,
     div._72jHy0._4vejX-,
     div._72jHy0._7KRQ_ div.GryLwC) {
@@ -3004,31 +3004,31 @@ div {
   overflow: hidden;
 }
 
-.JaRvb9 div:has(.eBN_LH, .UMWLJb, ._7dxdKQ) {
+.ZU5UXg div:has(.eBN_LH, .UMWLJb, ._7dxdKQ) {
     pointer-events: initial !important;
 }
 
-.g4zTJs div:current(p, span) {
+.RwyLnw div:current(p, span) {
 	background-color: yellow;
 }
 
-.NOGA2- div:past(p, span) {
+.yO1Vkb div:past(p, span) {
 	display: none;
 }
 
-.FIC9OM div:future(p, span) {
+.dUydqb div:future(p, span) {
 	background-color: yellow;
 }
 
-.Qcmkef div:-moz-any(ol, ul, menu, dir) {
+.r8_i3a div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.piVgU0 li:-webkit-any(:first-child, :last-child) {
+.QlaHVq li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.BZtKdC :matches(div.QUNuET.AOBmmd.v62rx-,
+.lQoz4m :matches(div.QUNuET.AOBmmd.v62rx-,
     div.QUNuET.AOBmmd.FGoXEZ,
     div._72jHy0._4vejX-,
     div._72jHy0._7KRQ_ div.GryLwC) {
@@ -3037,28 +3037,28 @@ div {
 	overflow: hidden;
 }
 
-.RtgWj_.nested2.kFvcKy {
+.kbu2T9.nested2.znU9p0 {
 	color: pink;
 }
 
-#ORDfKs {
+#_9V9u7I {
 	color: purple;
 }
 
-@keyframes UlwS-p {
+@keyframes _5UlNeX {
 	0% {
-		left: var(--LpMl7Z);
-		top: var(--_8u7z2l);
+		left: var(--rl5mza);
+		top: var(--GZM3UO);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--_tyl1k);
-		top: var(--Anl1Ek);
+		left: var(--n4CyrU);
+		top: var(--coGU7L);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes -vGTrA {
+@keyframes Tks0ew {
 	0% {
 		left: 0;
 	}
@@ -3067,54 +3067,54 @@ div {
 	}
 }
 
-.xVppDs {
-	animation-name: UlwS-p;
-	animation: 3s ease-in 1s 2 reverse both paused UlwS-p, -vGTrA;
-	--LpMl7Z: 0px;
-	--_8u7z2l: 0px;
-	--_tyl1k: 10px;
-	--Anl1Ek: 20px;
+.I7H8FK {
+	animation-name: _5UlNeX;
+	animation: 3s ease-in 1s 2 reverse both paused _5UlNeX, Tks0ew;
+	--rl5mza: 0px;
+	--GZM3UO: 0px;
+	--n4CyrU: 10px;
+	--coGU7L: 20px;
 }
 
-.I8Lkai {
-	color: var(--ZfGW2N);
-	--ZfGW2N: red;
+.g-7LxA {
+	color: var(--QrLdlL);
+	--QrLdlL: red;
 }
 
-.Uw64p0 {
+.OnsqKz {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.A4ihWh {
-		color: var(--ZfGW2N);
-		--ZfGW2N: green;
+	.n5pxIL {
+		color: var(--QrLdlL);
+		--QrLdlL: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.gvvWG0 {
-		color: var(--ZfGW2N);
-		--ZfGW2N: purple;
+	.geZgE8 {
+		color: var(--QrLdlL);
+		--QrLdlL: purple;
 	}
 }
 
 @supports (display: grid) {
-	.qyhlLo {
+	.WqxrhC {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .NQmDdm {
+  .x_zgIp {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .ylxOyA {
+    .xwpz-g {
       display: flex;
     }
   }
@@ -3122,7 +3122,7 @@ div {
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .KHcaFg {
+    .vLQT6D {
       display: flex;
     }
   }
@@ -3130,35 +3130,35 @@ div {
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.HJdMbb {
+		.xtny9t {
 			display: flex;
 		}
 	}
 }
 
 .EMl_Zd {
-	ANIMATION-NAME: kwAQ_z;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused kwAQ_z, axWscZ;
-	--LpMl7Z: 0px;
-	--_8u7z2l: 0px;
-	--_tyl1k: 10px;
-	--Anl1Ek: 20px;
+	ANIMATION-NAME: i6YAqp;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused i6YAqp, qQhAdK;
+	--rl5mza: 0px;
+	--GZM3UO: 0px;
+	--n4CyrU: 10px;
+	--coGU7L: 20px;
 }
 
-@KEYFRAMES kwAQ_z {
+@KEYFRAMES i6YAqp {
 	0% {
-		left: VAR(--LpMl7Z);
-		top: VAR(--_8u7z2l);
+		left: VAR(--rl5mza);
+		top: VAR(--GZM3UO);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--_tyl1k);
-		top: VAR(--Anl1Ek);
+		left: VAR(--n4CyrU);
+		top: VAR(--coGU7L);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes axWscZ {
+@KEYframes qQhAdK {
 	0% {
 		left: 0;
 	}
@@ -3171,42 +3171,42 @@ div {
 	color: yellow;
 }
 
-.iPQQcF {
-	color: VAR(--vtTPn3);
-	--vtTPn3: red;
+.ZREh1J {
+	color: VAR(--vZ1yis);
+	--vZ1yis: red;
 }
 
-.LcZDzy {
+.BOGpjq {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.StK0G8 {
+	.cFKjtQ {
 		color: red;
 	}
 }
 
 .rWk7j_ {
-	animation: 3s Lo5rLV;
-	-webkit-animation: 3s Lo5rLV;
+	animation: 3s bvLAsC;
+	-webkit-animation: 3s bvLAsC;
 }
 
 .Sa2viG {
-	animation: Lo5rLV 3s;
-	-webkit-animation: Lo5rLV 3s;
+	animation: bvLAsC 3s;
+	-webkit-animation: bvLAsC 3s;
 }
 
 .lkeYnD {
-	animation-name: Lo5rLV;
-	-webkit-animation-name: Lo5rLV;
+	animation-name: bvLAsC;
+	-webkit-animation-name: bvLAsC;
 }
 
 .ot4wJ0 {
-	--LcnNiW: animationName;
+	--q2l5qf: animationName;
 }
 
-@keyframes Lo5rLV {
+@keyframes bvLAsC {
 	0% {
 		background: white;
 	}
@@ -3215,7 +3215,7 @@ div {
 	}
 }
 
-@-webkit-keyframes Lo5rLV {
+@-webkit-keyframes bvLAsC {
 	0% {
 		background: white;
 	}
@@ -3224,7 +3224,7 @@ div {
 	}
 }
 
-@-moz-keyframes jJAZvq {
+@-moz-keyframes PrCJhD {
 	0% {
 		background: white;
 	}
@@ -3233,7 +3233,7 @@ div {
 	}
 }
 
-@counter-style uwNNmq {
+@counter-style _0L28GV {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
@@ -3252,7 +3252,7 @@ div {
 	}
 }
 
-@property --E8316H {
+@property --_14zVD_ {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
@@ -3270,21 +3270,21 @@ div {
 	inherits: false;
 }
 
-.Th9Hcz {
-	color: var(--E8316H);
+.Vx2ADA {
+	color: var(--_14zVD_);
 }
 
 @layer utilities {
-	.Qm3jxJ {
+	._9lyW8s {
 		padding: 0.5rem;
 	}
 
-	.xqzVWd {
+	._4VO-a4 {
 		padding: 0.8rem;
 	}
 }
 
-.Th9Hcz {
+.Vx2ADA {
 	color: red;
 
 	.COckJ5 {
@@ -3315,7 +3315,7 @@ div {
 		}
 	}
 
-	@container Pns_CJ {
+	@container LXyTj4 {
 		background: red;
 
 		.Sin_15 {
@@ -3345,7 +3345,7 @@ div {
 
 .k-FqZw {
 	.hVrW41 {
-		color: var(--ZfGW2N);
+		color: var(--QrLdlL);
 	}
 }
 
@@ -3376,7 +3376,7 @@ div {
 		color: red;
 	}
 
-	.foo, .b5xu71 {
+	.foo, .ueKKku {
 		color: red;
 	}
 }
@@ -3390,7 +3390,7 @@ div {
 }
 
 .oNOznk {
-	.BZtKdC div:has(.v62rx-, .FGoXEZ) {
+	.lQoz4m div:has(.v62rx-, .FGoXEZ) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -3410,26 +3410,26 @@ div {
 @unknown .class {
 	color: red;
 
-	.Th9Hcz {
+	.Vx2ADA {
 		color: red;
 	}
 }
 
-.class .xawqPK,
-.class .xawqPK,
-.Ss63Ju .in-local-global-scope {
+.class .MoUXzC,
+.class .MoUXzC,
+.XlQsKD .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.zzDKiI {
+	._73-7in {
 		font-size: 1.5em;
 	}
 }
 
 @container qYFiUT (min-width: 400px) {
 	@container (width > 400px) {
-		._0Kw8ER {
+		.cVCisO {
 			font-size: 1.5em;
 		}
 	}
@@ -3440,32 +3440,32 @@ div {
 }
 
 .e7Ysmu:-ms-input-placeholder {
-	--o51zIk: 1;
+	--cAPpAb: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--o51zIk));
+	color: rgba(74, 85, 104, var(--cAPpAb));
 }
 .e7Ysmu::-ms-input-placeholder {
-	--o51zIk: 1;
+	--cAPpAb: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--o51zIk));
+	color: rgba(74, 85, 104, var(--cAPpAb));
 }
 .e7Ysmu::placeholder {
-	--o51zIk: 1;
+	--cAPpAb: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--o51zIk));
+	color: rgba(74, 85, 104, var(--cAPpAb));
 }
 
 :root {
-	--w_hBjy: dark;
+	--OyMPmk: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--w_hBjy)) {
-	.eqJohl {
+@media screen and (prefers-color-scheme: var(--OyMPmk)) {
+	.v4rNLS {
 		color: white;
 	}
 }
 
-@keyframes bwJZCW {
+@keyframes AMud0z {
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -3477,23 +3477,23 @@ div {
 	}
 }
 
-.Th9Hcz {
+.Vx2ADA {
 	animation:
-		Pns_CJ var(--LcnNiW) 3s,
-		var(--LcnNiW) 3s,
-		3s linear 1s infinite running bwJZCW,
-		3s linear env(foo, var(--eqJohl)) infinite running bwJZCW;
+		LXyTj4 var(--q2l5qf) 3s,
+		var(--q2l5qf) 3s,
+		3s linear 1s infinite running AMud0z,
+		3s linear env(foo, var(--v4rNLS)) infinite running AMud0z;
 }
 
 :root {
-	--eqJohl: 10px;
+	--v4rNLS: 10px;
 }
 
-.Th9Hcz {
-	bar: env(foo, var(--eqJohl));
+.Vx2ADA {
+	bar: env(foo, var(--v4rNLS));
 }
 
-.global-foo, .b5xu71 {
+.global-foo, .ueKKku {
 	.NSL9R7       {
 		color: blue;
 	}
@@ -3531,7 +3531,7 @@ div {
 }
 
 :root {
-	--Pns_CJ: red;
+	--LXyTj4: red;
 }
 
 .again-again-global {
@@ -3545,69 +3545,69 @@ div {
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .Th9Hcz, .RtgWj_.nested2.kFvcKy {
-		animation: bwJZCW 3s;
+	.again-again-global, .Vx2ADA, .kbu2T9.nested2.znU9p0 {
+		animation: AMud0z 3s;
 	}
 
-  .INAAta .global,
-	.dhVQ31 {
+  .oNuIA5 .global,
+	.Zi-p0y {
 		color: red;
 	}
 }
 
-@unknown var(--Pns_CJ) {
+@unknown var(--LXyTj4) {
 	color: red;
 }
 
-.Th9Hcz {
-	.Th9Hcz {
-		.Th9Hcz {
-			.Th9Hcz {}
+.Vx2ADA {
+	.Vx2ADA {
+		.Vx2ADA {
+			.Vx2ADA {}
 		}
 	}
 }
 
-.Th9Hcz {
-	.Th9Hcz {
-		.Th9Hcz {
-			.Th9Hcz {
-				animation: bwJZCW 3s;
+.Vx2ADA {
+	.Vx2ADA {
+		.Vx2ADA {
+			.Vx2ADA {
+				animation: AMud0z 3s;
 			}
 		}
 	}
 }
 
-.Th9Hcz {
-	animation: bwJZCW 3s;
-	.Th9Hcz {
-		animation: bwJZCW 3s;
-		.Th9Hcz {
-			animation: bwJZCW 3s;
-			.Th9Hcz {
-				animation: bwJZCW 3s;
+.Vx2ADA {
+	animation: AMud0z 3s;
+	.Vx2ADA {
+		animation: AMud0z 3s;
+		.Vx2ADA {
+			animation: AMud0z 3s;
+			.Vx2ADA {
+				animation: AMud0z 3s;
 			}
 		}
 	}
 }
 
 .PmzqEY {
-	. global(.Th9Hcz) {
+	. global(.Vx2ADA) {
 		color: red;
 	}
 
-	: global(.Th9Hcz) {
+	: global(.Vx2ADA) {
 		color: red;
 	}
 
-	: global .Th9Hcz {
+	: global .Vx2ADA {
 		color: red;
 	}
 
-	: local(.Th9Hcz) {
+	: local(.Vx2ADA) {
 		color: red;
 	}
 
-	: local .Th9Hcz {
+	: local .Vx2ADA {
 		color: red;
 	}
 
@@ -3625,38 +3625,38 @@ div {
 		color: red;
 	}
 
-	.Th9Hcz {
+	.Vx2ADA {
 		color: red;
 	}
 
-	.Th9Hcz {
+	.Vx2ADA {
 		color: red;
 	}
 
-	./** test **/Th9Hcz {
+	./** test **/Vx2ADA {
 		color: red;
 	}
 
-	./** test **/Th9Hcz {
+	./** test **/Vx2ADA {
 		color: red;
 	}
 
-	./** test **/Th9Hcz {
+	./** test **/Vx2ADA {
 		color: red;
 	}
 }
 
-.Pns_CJ {
+.LXyTj4 {
 	color: red;
-	+ .b5xu71 + & { color: blue; }
+	+ .ueKKku + & { color: blue; }
 }
 
 .QZPLpm, #ItnhTD {
-	&:hover > .eqJohl { color: red; }
+	&:hover > .v4rNLS { color: red; }
 }
 
-.Pns_CJ {
-	& :is(.b5xu71, &.eqJohl) { color: red; }
+.LXyTj4 {
+	& :is(.ueKKku, &.v4rNLS) { color: red; }
 }
 
 .vm-iHv {
@@ -3704,11 +3704,11 @@ div {
 	}
 }
 
-.Pns_CJ {
+.LXyTj4 {
 	display: grid;
 
 	@media (orientation: landscape) {
-		.b5xu71 {
+		.ueKKku {
 			grid-auto-flow: column;
 
 			@media (min-width > 1024px) {
@@ -3726,20 +3726,20 @@ div {
 	}
 }
 
-@counter-style uwNNmq {
+@counter-style _0L28GV {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
 }
 
 ul {
-	list-style: uwNNmq;
+	list-style: _0L28GV;
 }
 
-@counter-style _8HrqS4 {
-	fallback: uwNNmq;
-	system: extends uwNNmq;
-	speak-as: uwNNmq;
+@counter-style YZsmDI {
+	fallback: _0L28GV;
+	system: extends _0L28GV;
+	speak-as: _0L28GV;
 }
 
 div {
@@ -3785,23 +3785,23 @@ div {
 
 	list-style-type: \\"★\\";
 
-	list-style-type: _8HrqS4;
-	list-style: _8HrqS4;
+	list-style-type: YZsmDI;
+	list-style: YZsmDI;
 }
 
 @container (width > 400px) and style(--responsive: true) {
-	.Th9Hcz {
+	.Vx2ADA {
 		font-size: 1.5em;
 	}
 }
 
-@container M6rjPY (height > 30rem) {
+@container _16PWt_ (height > 30rem) {
 	p {
 		line-height: 1.6;
 	}
 }
 
-@container Jsj6BT scroll-state(stuck: top) {
+@container _5unArO scroll-state(stuck: top) {
 	h2 {
 		background: purple;
 		color: white;
@@ -3837,23 +3837,23 @@ div {
 }
 
 .rPnlZa {
-	container-name: M6rjPY;
+	container-name: _16PWt_;
 	container-type: inline-size;
 
 	container: none;
 	container: inherit;
-	container: Jsj6BT / inline-size;
-	container: Jsj6BT / size;
-	container: Jsj6BT / scroll-state;
-	--d1bVSO: local(sticky-heading);
+	container: _5unArO / inline-size;
+	container: _5unArO / size;
+	container: _5unArO / scroll-state;
+	--ylD2It: local(sticky-heading);
 
-	container: var(--d1bVSO);
-	--K6CLJ5: small;
+	container: var(--ylD2It);
+	--_5bOQpQ: small;
 	container-type: inline-size;
 }
 
 
-@container qYFiUT style(--K6CLJ5: small) {
+@container qYFiUT style(--_5bOQpQ: small) {
 	.r3yzH0 {
 		border: thin solid silver;
 		border-radius: 0.5em;
@@ -3868,16 +3868,16 @@ div {
 	}
 }
 
-@font-palette-values --wdoIWt {
+@font-palette-values --HKIucg {
 	font-family: Bixa;
 }
 
 .Fr8iIT {
-	font-palette: --wdoIWt;
+	font-palette: --HKIucg;
 }
 
-@keyframes Pns_CJ { /* ... */ }
-@keyframes Pns_CJ { /* ... */ }
+@keyframes LXyTj4 { /* ... */ }
+@keyframes LXyTj4 { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -3890,13 +3890,13 @@ div {
 }
 
 @starting-style {
-	.Th9Hcz {
+	.Vx2ADA {
 		opacity: 0;
 		transform: scaleX(0);
 	}
 }
 
-.Th9Hcz {
+.Vx2ADA {
 	opacity: 1;
 	transform: scaleX(1);
 
@@ -3907,34 +3907,34 @@ div {
 }
 
 @scope (._21vUr) {
-	.Th9Hcz { opacity: 0; }
+	.Vx2ADA { opacity: 0; }
 
 	:scope .wCljLW { opacity: 0; }
 
-	& .Th9Hcz { opacity: 0; }
+	& .Vx2ADA { opacity: 0; }
 }
 
-@position-try --PgMDE7 {
+@position-try --_5N2X2u {
 	position-area: left;
 	width: 100px;
 	margin: 0 10px 0 0;
 }
 
-@position-try --hhKfVV {
+@position-try --_2qktad {
 	top: anchor(bottom);
 	justify-self: anchor-center;
 	margin: 10px 0 0 0;
 	position-area: none;
 }
 
-@position-try --KWLHtz {
+@position-try --_9YwAF4 {
 	left: calc(anchor(right) + 10px);
 	align-self: anchor-center;
 	width: 100px;
 	position-area: none;
 }
 
-@position-try --mwT4O_ {
+@position-try --QRQnOT {
 	position-area: bottom right;
 	margin: 10px 0 0 10px;
 }
@@ -3946,8 +3946,8 @@ div {
 	width: 200px;
 	margin: 0 0 10px 0;
 	position-try-fallbacks:
-		--PgMDE7, --hhKfVV,
-		--KWLHtz, --mwT4O_;
+		--_5N2X2u, --_2qktad,
+		--_9YwAF4, --QRQnOT;
 }
 
 @page {
@@ -3955,102 +3955,102 @@ div {
 	margin-top: 4in;
 }
 
-@color-profile --ROcANu {
+@color-profile --XQsKZa {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 .Zq4Bgu {
-	background-color: color(--ROcANu 0% 70% 20% 0%);
+	background-color: color(--XQsKZa 0% 70% 20% 0%);
 }
 
-.w_hBjy {
+.OyMPmk {
 	test: (1, 2) [3, 4], { 1: 2};
 	.rWk7j_ {
 		width: 200px;
 	}
 }
 
-.w_hBjy {
-	.w_hBjy {
+.OyMPmk {
+	.OyMPmk {
 		width: 200px;
 	}
 }
 
-.w_hBjy {
+.OyMPmk {
 	width: 200px;
 
-	.w_hBjy {
+	.OyMPmk {
 		width: 200px;
 	}
 }
 
-.w_hBjy {
+.OyMPmk {
 	width: 200px;
 
-	.w_hBjy {
-		.w_hBjy {
+	.OyMPmk {
+		.OyMPmk {
 			width: 200px;
 		}
 	}
 }
 
-.w_hBjy {
+.OyMPmk {
 	width: 200px;
 
-	.w_hBjy {
+	.OyMPmk {
 		width: 200px;
 
-		.w_hBjy {
+		.OyMPmk {
 			width: 200px;
 		}
 	}
 }
 
-.w_hBjy {
-	.w_hBjy {
+.OyMPmk {
+	.OyMPmk {
 		width: 200px;
 
-		.w_hBjy {
+		.OyMPmk {
 			width: 200px;
 		}
 	}
 }
 
-.w_hBjy {
-	.w_hBjy {
+.OyMPmk {
+	.OyMPmk {
 		width: 200px;
 	}
 	width: 200px;
 }
 
-.w_hBjy {
-	.w_hBjy {
+.OyMPmk {
+	.OyMPmk {
 		width: 200px;
 	}
-	.w_hBjy {
+	.OyMPmk {
 		width: 200px;
 	}
 }
 
-.w_hBjy {
-	.w_hBjy {
+.OyMPmk {
+	.OyMPmk {
 		width: 200px;
 	}
 	width: 200px;
-	.w_hBjy {
+	.OyMPmk {
 		width: 200px;
 	}
 }
 
-#w_hBjy {
+#OyMPmk {
 	c: 1;
 
-	#w_hBjy {
+	#OyMPmk {
 		c: 2;
 	}
 }
 
-@property --YgsWVo {
+@property --TR3h24 {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
@@ -4062,25 +4062,25 @@ div {
 	border: 1px dashed black;
 
 	/* set custom property values on parent */
-	--YgsWVo: 20%;
-	--_-4w1WC: orange;
+	--TR3h24: 20%;
+	--E7I-GK: orange;
 }
 
 .RKcB4N {
-	width: var(--YgsWVo);
-	height: var(--YgsWVo);
-	background-color: var(--_-4w1WC);
+	width: var(--TR3h24);
+	height: var(--TR3h24);
+	background-color: var(--E7I-GK);
 }
 
 .iX76ke {
-	--YgsWVo: initial;
-	--_-4w1WC: inherit;
+	--TR3h24: initial;
+	--E7I-GK: inherit;
 }
 
 ._4Um4fO {
 	/* invalid values */
-	--YgsWVo: 1000px;
-	--_-4w1WC: xyz;
+	--TR3h24: 1000px;
+	--E7I-GK: xyz;
 }
 
 @property invalid {
@@ -4099,97 +4099,97 @@ div {
 	initial-value: 40%;
 }
 
-@property --_7d1iGg {
+@property --z8dXmV {
 	syntax: \\"<percentage>\\";
 	inherits: false;
 	initial-value: 25%;
 }
 
-.b5xu71 {
+.ueKKku {
 	display: inline-block;
-	--_7d1iGg: 25%;
+	--z8dXmV: 25%;
 	width: 100%;
 	height: 5px;
 	background: linear-gradient(
 		to right,
-		#00d230 var(--_7d1iGg),
-		black var(--_7d1iGg)
+		#00d230 var(--z8dXmV),
+		black var(--z8dXmV)
 	);
-	animation: _4FiJQA 2.5s ease infinite;
+	animation: btQQRC 2.5s ease infinite;
 }
 
-@keyframes _4FiJQA {
+@keyframes btQQRC {
 	to {
-		--_7d1iGg: 100%;
+		--z8dXmV: 100%;
 	}
 }
 
-@keyframes _3XWMcj { /* ... */ }
-@keyframes/**test**/_3XWMcj { /* ... */ }
-@keyframes/**test**/_3XWMcj/**test**/{ /* ... */ }
-@keyframes/**test**//**test**/_3XWMcj/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ _3XWMcj /**test**/ /**test**/ { /* ... */ }
+@keyframes pTHntp { /* ... */ }
+@keyframes/**test**/pTHntp { /* ... */ }
+@keyframes/**test**/pTHntp/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/pTHntp/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ pTHntp /**test**/ /**test**/ { /* ... */ }
 @keyframes CaYExG { /* ... */ }
-@property/**test**/--YgsWVo {
+@property/**test**/--TR3h24 {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/--YgsWVo/**test**/{
+@property/**test**/--TR3h24/**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/--YgsWVo/**test**/ {
+@property /**test**/--TR3h24/**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --YgsWVo /**test**/ {
+@property /**test**/ --TR3h24 /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/ --YgsWVo /**test**/{
+@property/**test**/ --TR3h24 /**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --YgsWVo /**test**/ {
+@property /**test**/ --TR3h24 /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
 div {
-	animation: 3s ease-in 1s 2 reverse both paused _3XWMcj, -vGTrA;
-	animation-name: _3XWMcj;
+	animation: 3s ease-in 1s 2 reverse both paused pTHntp, Tks0ew;
+	animation-name: pTHntp;
 	animation-duration: 2s;
 }
 
 .h9fN34 {
-	width: var(   --YgsWVo   );
-	height: var(/**comment**/--YgsWVo);
-	background-color: var( /**comment**/--_-4w1WC);
-	background-color-1: var(/**comment**/ --_-4w1WC);
-	background-color-2: var( /**comment**/ --_-4w1WC);
-	background-color-3: var( /**comment**/ --_-4w1WC /**comment**/ );
-	background-color-3: var( /**comment**/--_-4w1WC/**comment**/ );
-	background-color-3: var(/**comment**/--_-4w1WC/**comment**/);
+	width: var(   --TR3h24   );
+	height: var(/**comment**/--TR3h24);
+	background-color: var( /**comment**/--E7I-GK);
+	background-color-1: var(/**comment**/ --E7I-GK);
+	background-color-2: var( /**comment**/ --E7I-GK);
+	background-color-3: var( /**comment**/ --E7I-GK /**comment**/ );
+	background-color-3: var( /**comment**/--E7I-GK/**comment**/ );
+	background-color-3: var(/**comment**/--E7I-GK/**comment**/);
 }
 
-@keyframes/**test**/Pns_CJ { /* ... */ }
-@keyframes /**test**/Pns_CJ { /* ... */ }
-@keyframes/**test**/ Pns_CJ { /* ... */ }
-@keyframes /**test**/ Pns_CJ { /* ... */ }
-@keyframes /**test**//**test**/ Pns_CJ { /* ... */ }
-@keyframes /**test**/ /**test**/ Pns_CJ { /* ... */ }
-@keyframes /**test**/ /**test**/Pns_CJ { /* ... */ }
-@keyframes /**test**//**test**/Pns_CJ { /* ... */ }
-@keyframes/**test**//**test**/Pns_CJ { /* ... */ }
-@keyframes/**test**//**test**/Pns_CJ/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ Pns_CJ /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/LXyTj4 { /* ... */ }
+@keyframes /**test**/LXyTj4 { /* ... */ }
+@keyframes/**test**/ LXyTj4 { /* ... */ }
+@keyframes /**test**/ LXyTj4 { /* ... */ }
+@keyframes /**test**//**test**/ LXyTj4 { /* ... */ }
+@keyframes /**test**/ /**test**/ LXyTj4 { /* ... */ }
+@keyframes /**test**/ /**test**/LXyTj4 { /* ... */ }
+@keyframes /**test**//**test**/LXyTj4 { /* ... */ }
+@keyframes/**test**//**test**/LXyTj4 { /* ... */ }
+@keyframes/**test**//**test**/LXyTj4/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ LXyTj4 /**test**/ /**test**/ { /* ... */ }
 
-./**test**//**test**/Th9Hcz {
+./**test**//**test**/Vx2ADA {
 	background: red;
 }
 
@@ -4198,68 +4198,68 @@ div {
 }
 
 .vUySPm {
-	--cuyscJ: black;
-	--pilraw: 10px;
-	--Pns_CJ: 10px;
-	--b5xu71: calc(var(--Pns_CJ) + 10px);
-	--zMOaz9: linear-gradient(to top, var(--cuyscJ), white);
-	--Xz8Zyw: \\"test\\";
-	--FWUVf6: yellow;
-	--h5_X_2: red;
-	--mvKcZM: red;
-	--_3hrY2A: black;
-	-foo: calc(var(--b5xu71) + 10px);
-	var: var(--cuyscJ);
-	var1: var(--Pns_CJ);
-	var2: var(--pilraw);
-	content: \\" (\\" var(--Xz8Zyw) \\")\\";
-	var3: var(--cuyscJ, blue);
-	var4: var(--FWUVf6,);
-	var5: var(--FWUVf6, initial);
-	var6: var(--FWUVf6, var(--h5_X_2));
-	var7: var(--FWUVf6, var(--h5_X_2, red));
+	--Tn4rb2: black;
+	--xHd8kt: 10px;
+	--LXyTj4: 10px;
+	--ueKKku: calc(var(--LXyTj4) + 10px);
+	--_8NggIH: linear-gradient(to top, var(--Tn4rb2), white);
+	--BAAHwR: \\"test\\";
+	--DU0JmL: yellow;
+	--dgphMa: red;
+	--KSHBQc: red;
+	--NfhiW3: black;
+	-foo: calc(var(--ueKKku) + 10px);
+	var: var(--Tn4rb2);
+	var1: var(--LXyTj4);
+	var2: var(--xHd8kt);
+	content: \\" (\\" var(--BAAHwR) \\")\\";
+	var3: var(--Tn4rb2, blue);
+	var4: var(--DU0JmL,);
+	var5: var(--DU0JmL, initial);
+	var6: var(--DU0JmL, var(--dgphMa));
+	var7: var(--DU0JmL, var(--dgphMa, red));
 	var8: var(--unknown);
-	background-color: var(--mvKcZM, var(--_3hrY2A, white));
+	background-color: var(--KSHBQc, var(--NfhiW3, white));
 }
 
 .OUbvwN {
-	background-color: var(--w_hBjy);
-	--w_hBjy: red;
+	background-color: var(--OyMPmk);
+	--OyMPmk: red;
 }
 
-.wNuM96 {
+.A8YDR8 {
 	border-radius: 12px;
 }
 
-.zd4gSv {
+._0xrNKu {
 	border-radius: 12px;
 }
 
-.KG2wJz {
+.RYh5jd {
 	border-radius: 12px;
 }
 
-.N01fLP {
+._276lNI {
 	border: red;
 }
 
-._5LkOeF {
+.atrg9z {
 	}
 
-.cq-5gi {
+.xjD3LP {
 	color: red;
 }
 
-.AJkyxM {
+.SVt4hC {
 	}
 
-.u3R4Pw {
+.y7Ml6Q {
 	}
 
-.PZJZh3 {
+.Ns9ysL {
 	}
 
-.pfrK-J {
+.i-n39D {
 	}
 
 @function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
@@ -4267,8 +4267,8 @@ div {
 }
 
 section {
-	--_5hZGZD: #faa6ff;
-	background-color: --transparent(var(--_5hZGZD), 0.8);
+	--qImv4k: #faa6ff;
+	background-color: --transparent(var(--qImv4k), 0.8);
 }
 
 @function --max-plus-x(--list <length>#, --x <length>) {
@@ -4280,22 +4280,22 @@ div {
 }
 
 @function --anim-1s(--animation, --count) {
-	--uRmi-O: 1s;
-	--_2c0Pw3: linear;
-	result: var(--animation) var(--uRmi-O) var(--count) var(--_2c0Pw3);
+	---dC2HS: 1s;
+	--owuGkY: linear;
+	result: var(--animation) var(---dC2HS) var(--count) var(--owuGkY);
 }
 
 div {
-	animation: --anim-1s(M0uhU5, 2);
+	animation: --anim-1s(XEyeRq, 2);
 }
 
 @function --outer(--outer-arg) {
-	--sVY4tR: 2;
+	--Tzqh_b: 2;
 	result: --inner();
 }
 
 @function --inner() returns <number> {
-	result: calc(var(--outer-arg) + var(--sVY4tR));
+	result: calc(var(--outer-arg) + var(--Tzqh_b));
 }
 
 div {
@@ -4314,26 +4314,22 @@ div {
 }
 
 :root {
-	--_93Jj1p: sharp;
+	--oTVsLr: sharp;
 }
 
 .Y4Gwu3 {
-	border-radius: if(style(--_93Jj1p: sharp): 0px; else: revert-rule);
+	border-radius: if(style(--oTVsLr: sharp): 0px; else: revert-rule);
 }
 
-@color-profile --ROcANu {
+@color-profile --XQsKZa {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --ROcANu {
+@color-profile --XQsKZa {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --ROcANu {
-	src: url(https://example.org/SWOP2006_Coated5v2.icc);
-}
-
-@color-profile --swop5c {
+@color-profile --XQsKZa {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -4341,47 +4337,51 @@ div {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-.Th9Hcz {
-	background-color: color(--ROcANu 0% 70% 20% 0%);
-	background-color: color(local(--ROcANu) 0% 70% 20% 0%);
-	background-color: color(:local(--ROcANu) 0% 70% 20% 0%);
-	background-color: color(global(--ROcANu) 0% 70% 20% 0%);
-	background-color: color(:global(--ROcANu) 0% 70% 20% 0%);
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.Vx2ADA {
+	background-color: color(--XQsKZa 0% 70% 20% 0%);
+	background-color: color(local(--XQsKZa) 0% 70% 20% 0%);
+	background-color: color(:local(--XQsKZa) 0% 70% 20% 0%);
+	background-color: color(global(--XQsKZa) 0% 70% 20% 0%);
+	background-color: color(:global(--XQsKZa) 0% 70% 20% 0%);
 	background-color: color(--swop5c 0% 70% 20% 0%);
-	background-color: color(--lKXG0f 0% 70% 20% 0%);
-	background-color: color(local(--ROcANu, \\"./shared.css\\") 0% 70% 20% 0%);
-	background-color: color(:local(--ROcANu, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(--_2qSR8B 0% 70% 20% 0%);
+	background-color: color(local(--XQsKZa, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(:local(--XQsKZa, \\"./shared.css\\") 0% 70% 20% 0%);
 }
 
 :root {
-	--PJiFhP: #eee;
+	--pQy7h-: #eee;
 }
 
 .RRkM-G {
-	color: var(--PJiFhP);
+	color: var(--pQy7h-);
 }
 
 /* Just nesting */
 .yIfcPh {
-	--PJiFhP: #fff;
-	--YI1Kj3: #333;
+	--pQy7h-: #fff;
+	--_5Uuad3: #333;
 
 	.mYBaWo {
-		--VLWr0L: var(--PJiFhP);
-		--I-Ywj4: var(--YI1Kj3);
-		color: var(--VLWr0L);
-		background-color: var(--I-Ywj4);
+		--i565Yw: var(--pQy7h-);
+		--hZWz_N: var(--_5Uuad3);
+		color: var(--i565Yw);
+		background-color: var(--hZWz_N);
 	}
 }
 
 /* A container context based on inline size */
 .rPnlZa {
-	--CSr0Ji: blue;
+	--vw3Mfv: blue;
 	container-type: inline-size;
 }
 
 /* Apply styles if the container is narrower than 650px */
-@container (width < 650px) and style(--CSr0Ji: blue) {
+@container (width < 650px) and style(--vw3Mfv: blue) {
 	.r3yzH0 {
 		width: 50%;
 		background-color: lightgray;
@@ -4392,7 +4392,7 @@ div {
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
-.fBHrus {
+.Kp-Qk2 {
     color: red;
 }
 
@@ -4408,14 +4408,14 @@ div {
   \\\\************************************/
 .jSScCg{
     color: red;
-    padding: var(--Eut0hT);
-    --Eut0hT: 10px;
+    padding: var(--uwANgn);
+    --uwANgn: 10px;
 }
 
-.jNb1RA {
+._7t7sag {
     color: green;
-    padding: var(--H04DzL);
-    --H04DzL: 10px;
+    padding: var(--k-sang);
+    --k-sang: 10px;
 }
 
 "
@@ -4423,7 +4423,7 @@ div {
 
 exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "class": "Th9Hcz",
+  "class": "Vx2ADA",
 }
 `;
 
@@ -4484,143 +4484,143 @@ Object {
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "jNb1RA",
-  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
-  "animation": "xVppDs",
-  "animationName": "Lo5rLV",
-  "class": "Th9Hcz",
-  "classInContainer": "zzDKiI",
-  "classLocalScope": "Ss63Ju",
-  "cssModuleWithCustomFileExtension": "fBHrus",
-  "currentWmultiParams": "g4zTJs",
-  "deepClassInContainer": "_0Kw8ER",
-  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
+  "UsedClassName": "_7t7sag",
+  "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
+  "animation": "I7H8FK",
+  "animationName": "bvLAsC",
+  "class": "Vx2ADA",
+  "classInContainer": "_73-7in",
+  "classLocalScope": "XlQsKD",
+  "cssModuleWithCustomFileExtension": "Kp-Qk2",
+  "currentWmultiParams": "RwyLnw",
+  "deepClassInContainer": "cVCisO",
+  "displayFlexInSupportsInMediaUpperCase": "xtny9t",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
-  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
-  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
-  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
-  "exportNameWeirdCharacters": "pfrK-J",
-  "futureWmultiParams": "FIC9OM",
+  "exportName": "_276lNI beforeName A8YDR8 _0xrNKu importName secondImport _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "SVt4hC xjD3LP",
+  "exportNameOtherFromKeywordWithFrom1": "y7Ml6Q from",
+  "exportNameOtherFromKeywordWithFrom2": "Ns9ysL",
+  "exportNameOtherNoSpaces": "atrg9z beforeName A8YDR8",
+  "exportNameWeirdCharacters": "i-n39D",
+  "futureWmultiParams": "dUydqb",
   "global": undefined,
-  "hasWmultiParams": "JaRvb9",
-  "ident": "ORDfKs",
-  "inLocalGlobalScope": "xawqPK",
-  "inSupportScope": "StK0G8",
-  "isWmultiParams": "yrfUF-",
-  "keyframes": "UlwS-p",
-  "keyframesUPPERCASE": "kwAQ_z",
-  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
-  "local2": "SMSyWQ Z22WXA",
-  "localkeyframes2UPPPERCASE": "axWscZ",
-  "matchesWmultiParams": "BZtKdC",
-  "media": "A4ihWh",
-  "mediaInSupports": "ylxOyA",
-  "mediaWithOperator": "gvvWG0",
-  "mozAnimationName": "jJAZvq",
-  "mozAnyWmultiParams": "Qcmkef",
-  "myColor": "--E8316H",
-  "nested": "RtgWj_ undefined kFvcKy",
+  "hasWmultiParams": "ZU5UXg",
+  "ident": "_9V9u7I",
+  "inLocalGlobalScope": "MoUXzC",
+  "inSupportScope": "cFKjtQ",
+  "isWmultiParams": "n_QmMs",
+  "keyframes": "_5UlNeX",
+  "keyframesUPPERCASE": "i6YAqp",
+  "local": "ejgZjv oNuIA5 Zi-p0y HEwyXh",
+  "local2": "P7cOan qIVXrl",
+  "localkeyframes2UPPPERCASE": "qQhAdK",
+  "matchesWmultiParams": "lQoz4m",
+  "media": "n5pxIL",
+  "mediaInSupports": "xwpz-g",
+  "mediaWithOperator": "geZgE8",
+  "mozAnimationName": "PrCJhD",
+  "mozAnyWmultiParams": "r8_i3a",
+  "myColor": "--_14zVD_",
+  "nested": "kbu2T9 undefined znU9p0",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "cVavHg",
-  "paddingLg": "xqzVWd",
-  "paddingSm": "Qm3jxJ",
-  "pastWmultiParams": "NOGA2-",
-  "supports": "qyhlLo",
-  "supportsInMedia": "KHcaFg",
-  "supportsWithOperator": "NQmDdm",
-  "textColor": "--PJiFhP",
-  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
-  "webkitAnyWmultiParams": "piVgU0",
-  "whereWmultiParams": "n4-IgX",
+  "notWmultiParams": "_2oRg10",
+  "paddingLg": "_4VO-a4",
+  "paddingSm": "_9lyW8s",
+  "pastWmultiParams": "yO1Vkb",
+  "supports": "WqxrhC",
+  "supportsInMedia": "vLQT6D",
+  "supportsWithOperator": "x_zgIp",
+  "textColor": "--pQy7h-",
+  "vars": "--QrLdlL g-7LxA undefined OnsqKz",
+  "webkitAnyWmultiParams": "QlaHVq",
+  "whereWmultiParams": "YmjIRz",
 }
 `;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 2`] = `
 Object {
-  "UsedClassName": "jNb1RA",
-  "VARS": "--vtTPn3 iPQQcF undefined LcZDzy",
-  "animation": "xVppDs",
-  "animationName": "Lo5rLV",
-  "class": "Th9Hcz",
-  "classInContainer": "zzDKiI",
-  "classLocalScope": "Ss63Ju",
-  "cssModuleWithCustomFileExtension": "fBHrus",
-  "currentWmultiParams": "g4zTJs",
-  "deepClassInContainer": "_0Kw8ER",
-  "displayFlexInSupportsInMediaUpperCase": "HJdMbb",
+  "UsedClassName": "_7t7sag",
+  "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
+  "animation": "I7H8FK",
+  "animationName": "bvLAsC",
+  "class": "Vx2ADA",
+  "classInContainer": "_73-7in",
+  "classLocalScope": "XlQsKD",
+  "cssModuleWithCustomFileExtension": "Kp-Qk2",
+  "currentWmultiParams": "RwyLnw",
+  "deepClassInContainer": "cVCisO",
+  "displayFlexInSupportsInMediaUpperCase": "xtny9t",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "N01fLP beforeName wNuM96 zd4gSv importName secondImport zd4gSv zd4gSv KG2wJz zd4gSv KG2wJz className className classNameOther className classNameOther",
-  "exportNameOtherFromKeyword": "AJkyxM cq-5gi",
-  "exportNameOtherFromKeywordWithFrom1": "u3R4Pw from",
-  "exportNameOtherFromKeywordWithFrom2": "PZJZh3",
-  "exportNameOtherNoSpaces": "_5LkOeF beforeName wNuM96",
-  "exportNameWeirdCharacters": "pfrK-J",
-  "futureWmultiParams": "FIC9OM",
+  "exportName": "_276lNI beforeName A8YDR8 _0xrNKu importName secondImport _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther",
+  "exportNameOtherFromKeyword": "SVt4hC xjD3LP",
+  "exportNameOtherFromKeywordWithFrom1": "y7Ml6Q from",
+  "exportNameOtherFromKeywordWithFrom2": "Ns9ysL",
+  "exportNameOtherNoSpaces": "atrg9z beforeName A8YDR8",
+  "exportNameWeirdCharacters": "i-n39D",
+  "futureWmultiParams": "dUydqb",
   "global": undefined,
-  "hasWmultiParams": "JaRvb9",
-  "ident": "ORDfKs",
-  "inLocalGlobalScope": "xawqPK",
-  "inSupportScope": "StK0G8",
-  "isWmultiParams": "yrfUF-",
-  "keyframes": "UlwS-p",
-  "keyframesUPPERCASE": "kwAQ_z",
-  "local": "pKESR4 INAAta dhVQ31 VPL1IN",
-  "local2": "SMSyWQ Z22WXA",
-  "localkeyframes2UPPPERCASE": "axWscZ",
-  "matchesWmultiParams": "BZtKdC",
-  "media": "A4ihWh",
-  "mediaInSupports": "ylxOyA",
-  "mediaWithOperator": "gvvWG0",
-  "mozAnimationName": "jJAZvq",
-  "mozAnyWmultiParams": "Qcmkef",
-  "myColor": "--E8316H",
-  "nested": "RtgWj_ undefined kFvcKy",
+  "hasWmultiParams": "ZU5UXg",
+  "ident": "_9V9u7I",
+  "inLocalGlobalScope": "MoUXzC",
+  "inSupportScope": "cFKjtQ",
+  "isWmultiParams": "n_QmMs",
+  "keyframes": "_5UlNeX",
+  "keyframesUPPERCASE": "i6YAqp",
+  "local": "ejgZjv oNuIA5 Zi-p0y HEwyXh",
+  "local2": "P7cOan qIVXrl",
+  "localkeyframes2UPPPERCASE": "qQhAdK",
+  "matchesWmultiParams": "lQoz4m",
+  "media": "n5pxIL",
+  "mediaInSupports": "xwpz-g",
+  "mediaWithOperator": "geZgE8",
+  "mozAnimationName": "PrCJhD",
+  "mozAnyWmultiParams": "r8_i3a",
+  "myColor": "--_14zVD_",
+  "nested": "kbu2T9 undefined znU9p0",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "cVavHg",
-  "paddingLg": "xqzVWd",
-  "paddingSm": "Qm3jxJ",
-  "pastWmultiParams": "NOGA2-",
-  "supports": "qyhlLo",
-  "supportsInMedia": "KHcaFg",
-  "supportsWithOperator": "NQmDdm",
-  "textColor": "--PJiFhP",
-  "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
-  "webkitAnyWmultiParams": "piVgU0",
-  "whereWmultiParams": "n4-IgX",
+  "notWmultiParams": "_2oRg10",
+  "paddingLg": "_4VO-a4",
+  "paddingSm": "_9lyW8s",
+  "pastWmultiParams": "yO1Vkb",
+  "supports": "WqxrhC",
+  "supportsInMedia": "vLQT6D",
+  "supportsWithOperator": "x_zgIp",
+  "textColor": "--pQy7h-",
+  "vars": "--QrLdlL g-7LxA undefined OnsqKz",
+  "webkitAnyWmultiParams": "QlaHVq",
+  "whereWmultiParams": "YmjIRz",
 }
 `;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"style_module_css-class"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"Th9Hcz"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"Vx2ADA"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"Th9Hcz"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"Vx2ADA"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"style_module_css-local1"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"pKESR4"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"ejgZjv"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"pKESR4"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"ejgZjv"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"style_module_css-local2"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"INAAta"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"oNuIA5"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"INAAta"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"oNuIA5"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"style_module_css-local3"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"dhVQ31"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"Zi-p0y"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"dhVQ31"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"Zi-p0y"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"style_module_css-local4"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"VPL1IN"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"HEwyXh"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"VPL1IN"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"HEwyXh"`;
 
 exports[`ConfigCacheTestCases css css-modules-no-space exported tests should allow to create css modules 1`] = `
 Object {
@@ -5455,45 +5455,6 @@ exports[`ConfigCacheTestCases css export-type exported tests should handle @impo
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
-  "btn--info_is-disabled_1": "style_module_css_as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_as-is-btn-info_is-disabled",
-  "class": "style_module_css_as-is-class",
-  "default": "style_module_css_as-is-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_as-is-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "style_module_css_as-is-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
-Object {
-  "btn--info_is-disabled_1": "h0uRfl",
-  "btn-info_is-disabled": "VKLzea",
-  "class": "_9X1uz4",
-  "default": "IIfZUH",
-  "foo": "bar",
-  "foo_bar": "DW60ly",
-  "my-btn-info_is-disabled": "value",
-  "simple": "nQadhD",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 3`] = `
-Object {
-  "btn--info_is-disabled_1": "style_module_css_as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_as-is-btn-info_is-disabled",
-  "class": "style_module_css_as-is-class",
-  "default": "style_module_css_as-is-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_as-is-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "style_module_css_as-is-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
-Object {
   "btn--info_is-disabled_1": "h0uRfl",
   "btn-info_is-disabled": "VKLzea",
   "class": "_9X1uz4",
@@ -5506,57 +5467,6 @@ Object {
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 1`] = `
-Object {
-  "btn--info_is-disabled_1": "style_module_css_camel-case-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled": "style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-btn--info_is-disabled_1",
-  "class": "style_module_css_camel-case-class",
-  "default": "style_module_css_camel-case-default",
-  "foo": "bar",
-  "fooBar": "style_module_css_camel-case-foo_bar",
-  "foo_bar": "style_module_css_camel-case-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "style_module_css_camel-case-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
-Object {
-  "btn--info_is-disabled_1": "_9rzO2d",
-  "btn-info_is-disabled": "qbZx0Y",
-  "btnInfoIsDisabled": "qbZx0Y",
-  "btnInfoIsDisabled1": "_9rzO2d",
-  "class": "uLj_ZJ",
-  "default": "HBbwDb",
-  "foo": "bar",
-  "fooBar": "Kz9Lkr",
-  "foo_bar": "Kz9Lkr",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "bhkrbv",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 3`] = `
-Object {
-  "btn--info_is-disabled_1": "style_module_css_camel-case-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled": "style_module_css_camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-btn--info_is-disabled_1",
-  "class": "style_module_css_camel-case-class",
-  "default": "style_module_css_camel-case-default",
-  "foo": "bar",
-  "fooBar": "style_module_css_camel-case-foo_bar",
-  "foo_bar": "style_module_css_camel-case-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "style_module_css_camel-case-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
 Object {
   "btn--info_is-disabled_1": "_9rzO2d",
   "btn-info_is-disabled": "qbZx0Y",
@@ -5575,45 +5485,6 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 1`] = `
 Object {
-  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
-  "class": "style_module_css_camel-case-only-class",
-  "default": "style_module_css_camel-case-only-default",
-  "foo": "bar",
-  "fooBar": "style_module_css_camel-case-only-fooBar",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "style_module_css_camel-case-only-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
-Object {
-  "btnInfoIsDisabled": "tWVDJB",
-  "btnInfoIsDisabled1": "XcwArA",
-  "class": "NKUbIN",
-  "default": "uj_jzV",
-  "foo": "bar",
-  "fooBar": "_1q-K0I",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "BbWfGD",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 3`] = `
-Object {
-  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
-  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
-  "class": "style_module_css_camel-case-only-class",
-  "default": "style_module_css_camel-case-only-default",
-  "foo": "bar",
-  "fooBar": "style_module_css_camel-case-only-fooBar",
-  "myBtnInfoIsDisabled": "value",
-  "simple": "style_module_css_camel-case-only-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
-Object {
   "btnInfoIsDisabled": "tWVDJB",
   "btnInfoIsDisabled1": "XcwArA",
   "class": "NKUbIN",
@@ -5626,54 +5497,6 @@ Object {
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 1`] = `
-Object {
-  "btn--info_is-disabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
-  "class": "style_module_css_dashes-class",
-  "default": "style_module_css_dashes-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_dashes-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "style_module_css_dashes-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
-Object {
-  "btn--info_is-disabled_1": "aM7U7f",
-  "btn-info_is-disabled": "c5a9L4",
-  "btnInfo_isDisabled": "c5a9L4",
-  "btnInfo_isDisabled_1": "aM7U7f",
-  "class": "aIIX50",
-  "default": "bCs1Ll",
-  "foo": "bar",
-  "foo_bar": "HLzPse",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "G-zpOE",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 3`] = `
-Object {
-  "btn--info_is-disabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "style_module_css_dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
-  "class": "style_module_css_dashes-class",
-  "default": "style_module_css_dashes-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_dashes-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "style_module_css_dashes-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
 Object {
   "btn--info_is-disabled_1": "aM7U7f",
   "btn-info_is-disabled": "c5a9L4",
@@ -5691,45 +5514,6 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 1`] = `
 Object {
-  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
-  "class": "style_module_css_dashes-only-class",
-  "default": "style_module_css_dashes-only-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_dashes-only-foo_bar",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "style_module_css_dashes-only-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
-Object {
-  "btnInfo_isDisabled": "fG7JbK",
-  "btnInfo_isDisabled_1": "tPWB1n",
-  "class": "tKttCk",
-  "default": "ovH3w9",
-  "foo": "bar",
-  "foo_bar": "NfxY76",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "edJxRs",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 3`] = `
-Object {
-  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
-  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
-  "class": "style_module_css_dashes-only-class",
-  "default": "style_module_css_dashes-only-default",
-  "foo": "bar",
-  "foo_bar": "style_module_css_dashes-only-foo_bar",
-  "myBtnInfo_isDisabled": "value",
-  "simple": "style_module_css_dashes-only-simple",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
-Object {
   "btnInfo_isDisabled": "fG7JbK",
   "btnInfo_isDisabled_1": "tPWB1n",
   "class": "tKttCk",
@@ -5742,45 +5526,6 @@ Object {
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 1`] = `
-Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-CLASS",
-  "DEFAULT": "style_module_css_upper-DEFAULT",
-  "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-FOO_BAR",
-  "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-SIMPLE",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
-Object {
-  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
-  "BTN-INFO_IS-DISABLED": "mtkl8q",
-  "CLASS": "ZOe2qu",
-  "DEFAULT": "w1lug9",
-  "FOO": "bar",
-  "FOO_BAR": "_5cbScz",
-  "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "lZQwR-",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 3`] = `
-Object {
-  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
-  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
-  "CLASS": "style_module_css_upper-CLASS",
-  "DEFAULT": "style_module_css_upper-DEFAULT",
-  "FOO": "bar",
-  "FOO_BAR": "style_module_css_upper-FOO_BAR",
-  "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "style_module_css_upper-SIMPLE",
-}
-`;
-
-exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
 Object {
   "BTN--INFO_IS-DISABLED_1": "x7XUsO",
   "BTN-INFO_IS-DISABLED": "mtkl8q",
@@ -8074,7 +7819,7 @@ Object {
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "placeholder": "u9zzP_",
+  "placeholder": "Xk90he",
 }
 `;
 

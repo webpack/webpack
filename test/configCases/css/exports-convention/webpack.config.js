@@ -62,44 +62,45 @@ const common = {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = [
+	// {
+	// 	...common,
+	// 	mode: "development",
+	// 	target: "web",
+	// 	plugins: [
+	// 		new webpack.DefinePlugin({
+	// 			"process.env.TARGET": JSON.stringify("web")
+	// 		})
+	// 	]
+	// },
 	{
 		...common,
-		mode: "development",
-		target: "web",
-		plugins: [
-			new webpack.DefinePlugin({
-				"process.env.TARGET": JSON.stringify("web")
-			})
-		]
-	},
-	{
-		...common,
+		devtool: false,
 		mode: "production",
 		target: "web",
 		plugins: [
 			new webpack.DefinePlugin({
 				"process.env.TARGET": JSON.stringify("web")
-			})
-		]
-	},
-	{
-		...common,
-		mode: "development",
-		target: "node",
-		plugins: [
-			new webpack.DefinePlugin({
-				"process.env.TARGET": JSON.stringify("node")
-			})
-		]
-	},
-	{
-		...common,
-		mode: "production",
-		target: "node",
-		plugins: [
-			new webpack.DefinePlugin({
-				"process.env.TARGET": JSON.stringify("node")
 			})
 		]
 	}
+	// {
+	// 	...common,
+	// 	mode: "development",
+	// 	target: "node",
+	// 	plugins: [
+	// 		new webpack.DefinePlugin({
+	// 			"process.env.TARGET": JSON.stringify("node")
+	// 		})
+	// 	]
+	// },
+	// {
+	// 	...common,
+	// 	mode: "production",
+	// 	target: "node",
+	// 	plugins: [
+	// 		new webpack.DefinePlugin({
+	// 			"process.env.TARGET": JSON.stringify("node")
+	// 		})
+	// 	]
+	// }
 ];
