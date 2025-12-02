@@ -782,11 +782,131 @@ ul {
 	list-style: thumbs;
 }
 
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(img/shape.png);
+	list-style: none;
+	list-style: none disc url(img/shape.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url("./img/shape.png");
+	list-style: georgian inside url("./img/shape.png");
+	list-style: georgian outside url("./img/shape.png");
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url("./img/shape.png");
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url("img/shape.png") inside;
+
+	/* three values */
+	list-style: lower-roman url("img/shape.png") outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: "★";
+
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
+}
+
 @container (width > 400px) and style(--responsive: true) {
 	.class {
 		font-size: 1.5em;
 	}
 }
+
+@container tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.post {
+	container-name: tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: local(sticky-heading);
+
+	container: var(--my-var);
+	--cards: small;
+	container-type: inline-size;
+}
+
+
+@container summary style(--cards: small) {
+	.card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
 /* At-rule for "nice-style" in Font One */
 @font-feature-values Font One {
 	@styleset {
@@ -1025,6 +1145,31 @@ ul {
 	initial-value: 40%;
 }
 
+@property --progress {
+	syntax: "<percentage>";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--progress),
+		black var(--progress)
+	);
+	animation: progressAnimation 2.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+	to {
+		--progress: 100%;
+	}
+}
+
 @keyframes "initial" { /* ... */ }
 @keyframes/**test**/"initial" { /* ... */ }
 @keyframes/**test**/"initial"/**test**/{ /* ... */ }
@@ -1183,4 +1328,131 @@ div {
 
 .exportNameWeirdCharacters {
 	composes: a -b b- --c c-- _d d\% from "./classes.modules.css";
+}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
+}
+
+div {
+	animation: --anim-1s(local(bounce), 2);
+}
+
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--mode: sharp;
+}
+
+.apply-sharp {
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --swop5c {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+@color-profile local(--swop5c) {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+@color-profile :local(--swop5c) {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+@color-profile global(--swop5c) {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+@color-profile :global(--swop5c) {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+.class {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(global(--swop5c) 0% 70% 20% 0%);
+	background-color: color(:global(--swop5c) 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from "./shared.css" 0% 70% 20% 0%);
+	background-color: color(local(--swop5c, "./shared.css") 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c, "./shared.css") 0% 70% 20% 0%);
+}
+
+:root {
+	--text-color: #eee;
+}
+
+.simple {
+	color: var(--text-color);
+}
+
+/* Just nesting */
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.post {
+	--themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--themeColor: blue) {
+	.card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
 }

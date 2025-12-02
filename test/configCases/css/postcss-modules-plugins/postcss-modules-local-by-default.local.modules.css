@@ -183,7 +183,7 @@
 /* localize animation using special characters */
 .foo { animation: 😃bounce😃; }
 
-/* not localize custom property */
+/* localize custom property */
 .foo { animation: --foo; }
 
 /* not localize name in nested function */

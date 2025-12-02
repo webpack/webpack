@@ -1,0 +1,7 @@
+:root {
+	--from-shared: --custom-shared;
+}
+
+@color-profile --custom-shared {
+	src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
