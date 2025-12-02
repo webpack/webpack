@@ -6263,7 +6263,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
 		sourceOrder: number,
-		phase: ImportPhaseType,
+		phase?: 0 | 1 | 2,
 		attributes?: ImportAttributes
 	);
 	phase: ImportPhaseType;
