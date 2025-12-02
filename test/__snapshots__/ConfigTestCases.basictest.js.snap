@@ -5455,6 +5455,45 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 1`] = `
 Object {
+  "btn--info_is-disabled_1": "style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_as-is-btn-info_is-disabled",
+  "class": "style_module_css_as-is-class",
+  "default": "style_module_css_as-is-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 2`] = `
+Object {
+  "btn--info_is-disabled_1": "h0uRfl",
+  "btn-info_is-disabled": "VKLzea",
+  "class": "_9X1uz4",
+  "default": "IIfZUH",
+  "foo": "bar",
+  "foo_bar": "DW60ly",
+  "my-btn-info_is-disabled": "value",
+  "simple": "nQadhD",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 3`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_as-is-btn-info_is-disabled",
+  "class": "style_module_css_as-is-class",
+  "default": "style_module_css_as-is-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "style_module_css_as-is-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: as-is 4`] = `
+Object {
   "btn--info_is-disabled_1": "h0uRfl",
   "btn-info_is-disabled": "VKLzea",
   "class": "_9X1uz4",
@@ -5467,6 +5506,57 @@ Object {
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 1`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "style_module_css_camel-case-class",
+  "default": "style_module_css_camel-case-default",
+  "foo": "bar",
+  "fooBar": "style_module_css_camel-case-foo_bar",
+  "foo_bar": "style_module_css_camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "style_module_css_camel-case-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 2`] = `
+Object {
+  "btn--info_is-disabled_1": "_9rzO2d",
+  "btn-info_is-disabled": "qbZx0Y",
+  "btnInfoIsDisabled": "qbZx0Y",
+  "btnInfoIsDisabled1": "_9rzO2d",
+  "class": "uLj_ZJ",
+  "default": "HBbwDb",
+  "foo": "bar",
+  "fooBar": "Kz9Lkr",
+  "foo_bar": "Kz9Lkr",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "bhkrbv",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 3`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-btn--info_is-disabled_1",
+  "class": "style_module_css_camel-case-class",
+  "default": "style_module_css_camel-case-default",
+  "foo": "bar",
+  "fooBar": "style_module_css_camel-case-foo_bar",
+  "foo_bar": "style_module_css_camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "style_module_css_camel-case-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case 4`] = `
 Object {
   "btn--info_is-disabled_1": "_9rzO2d",
   "btn-info_is-disabled": "qbZx0Y",
@@ -5485,6 +5575,45 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 1`] = `
 Object {
+  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "style_module_css_camel-case-only-class",
+  "default": "style_module_css_camel-case-only-default",
+  "foo": "bar",
+  "fooBar": "style_module_css_camel-case-only-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 2`] = `
+Object {
+  "btnInfoIsDisabled": "tWVDJB",
+  "btnInfoIsDisabled1": "XcwArA",
+  "class": "NKUbIN",
+  "default": "uj_jzV",
+  "foo": "bar",
+  "fooBar": "_1q-K0I",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "BbWfGD",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 3`] = `
+Object {
+  "btnInfoIsDisabled": "style_module_css_camel-case-only-btnInfoIsDisabled",
+  "btnInfoIsDisabled1": "style_module_css_camel-case-only-btnInfoIsDisabled1",
+  "class": "style_module_css_camel-case-only-class",
+  "default": "style_module_css_camel-case-only-default",
+  "foo": "bar",
+  "fooBar": "style_module_css_camel-case-only-fooBar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "style_module_css_camel-case-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: camel-case-only 4`] = `
+Object {
   "btnInfoIsDisabled": "tWVDJB",
   "btnInfoIsDisabled1": "XcwArA",
   "class": "NKUbIN",
@@ -5497,6 +5626,54 @@ Object {
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 1`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "style_module_css_dashes-class",
+  "default": "style_module_css_dashes-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 2`] = `
+Object {
+  "btn--info_is-disabled_1": "aM7U7f",
+  "btn-info_is-disabled": "c5a9L4",
+  "btnInfo_isDisabled": "c5a9L4",
+  "btnInfo_isDisabled_1": "aM7U7f",
+  "class": "aIIX50",
+  "default": "bCs1Ll",
+  "foo": "bar",
+  "foo_bar": "HLzPse",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "G-zpOE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 3`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-btn--info_is-disabled_1",
+  "class": "style_module_css_dashes-class",
+  "default": "style_module_css_dashes-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "style_module_css_dashes-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes 4`] = `
 Object {
   "btn--info_is-disabled_1": "aM7U7f",
   "btn-info_is-disabled": "c5a9L4",
@@ -5514,6 +5691,45 @@ Object {
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 1`] = `
 Object {
+  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "style_module_css_dashes-only-class",
+  "default": "style_module_css_dashes-only-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 2`] = `
+Object {
+  "btnInfo_isDisabled": "fG7JbK",
+  "btnInfo_isDisabled_1": "tPWB1n",
+  "class": "tKttCk",
+  "default": "ovH3w9",
+  "foo": "bar",
+  "foo_bar": "NfxY76",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "edJxRs",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 3`] = `
+Object {
+  "btnInfo_isDisabled": "style_module_css_dashes-only-btnInfo_isDisabled",
+  "btnInfo_isDisabled_1": "style_module_css_dashes-only-btnInfo_isDisabled_1",
+  "class": "style_module_css_dashes-only-class",
+  "default": "style_module_css_dashes-only-default",
+  "foo": "bar",
+  "foo_bar": "style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "style_module_css_dashes-only-simple",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: dashes-only 4`] = `
+Object {
   "btnInfo_isDisabled": "fG7JbK",
   "btnInfo_isDisabled_1": "tPWB1n",
   "class": "tKttCk",
@@ -5526,6 +5742,45 @@ Object {
 `;
 
 exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 1`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "style_module_css_upper-CLASS",
+  "DEFAULT": "style_module_css_upper-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "style_module_css_upper-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 2`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "x7XUsO",
+  "BTN-INFO_IS-DISABLED": "mtkl8q",
+  "CLASS": "ZOe2qu",
+  "DEFAULT": "w1lug9",
+  "FOO": "bar",
+  "FOO_BAR": "_5cbScz",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "lZQwR-",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 3`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-BTN-INFO_IS-DISABLED",
+  "CLASS": "style_module_css_upper-CLASS",
+  "DEFAULT": "style_module_css_upper-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "style_module_css_upper-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "style_module_css_upper-SIMPLE",
+}
+`;
+
+exports[`ConfigTestCases css exports-convention exported tests should have correct convention for css exports name: upper 4`] = `
 Object {
   "BTN--INFO_IS-DISABLED_1": "x7XUsO",
   "BTN-INFO_IS-DISABLED": "mtkl8q",
