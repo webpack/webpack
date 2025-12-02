@@ -179,6 +179,7 @@ Object {
   "supports": "style_module_css-displayGridInSupports",
   "supportsInMedia": "style_module_css-displayFlexInSupportsInMedia",
   "supportsWithOperator": "style_module_css-floatRightInNegativeSupports",
+  "textColor": "--style_module_css-text-color",
   "vars": "--style_module_css-local-color style_module_css-vars undefined style_module_css-globalVars",
   "webkitAnyWmultiParams": "style_module_css-local16",
   "whereWmultiParams": "style_module_css-local10",
@@ -544,35 +545,35 @@ div {
 }
 
 .var-function_module_css-from {
-	color: var(--my-var-u1 );
+	color: var(--var-function-export_modules_css-my-var-u1);
 }
 
 .var-function_module_css-from-1 {
-	color: var(--var-function_module_css-main-bg-color, var(--my-var-u1 ));
+	color: var(--var-function_module_css-main-bg-color, var(--var-function-export_modules_css-my-var-u1));
 }
 
 .var-function_module_css-from-2 {
-	color: var(--my-var-u1 ,  var(--var-function_module_css-main-bg-color));
+	color: var(--var-function-export_modules_css-my-var-u1,  var(--var-function_module_css-main-bg-color));
 }
 
 .var-function_module_css-from-3 {
-	color: var(--my-var-u1 ,  var(--my-var-u2 ));
+	color: var(--var-function-export_modules_css-my-var-u1,  var(--var-function-export_modules_css-my-var-u2));
 }
 
 .var-function_module_css-from-4 {
-	color: var(--1 );
+	color: var(--var-function-export_modules_css-1);
 }
 
 .var-function_module_css-from-5 {
-	color: var(----a );
+	color: var(--var-function-export_modules_css---a);
 }
 
 .var-function_module_css-from-6 {
-	color: var(--main-bg-color );
+	color: var(--var-function-export_modules_css-main-bg-color);
 }
 
 .var-function_module_css-mixed {
-	color: var(--my-var-u1 , var(--my-global, var(--var-function_module_css-main-bg-color, red)));
+	color: var(--var-function-export_modules_css-my-var-u1, var(--my-global, var(--var-function_module_css-main-bg-color, red)));
 }
 
 .var-function_module_css-broken {
@@ -588,7 +589,7 @@ div {
 }
 
 .var-function_module_css-not-override-class {
-	color: var(--not-override-class )
+	color: var(--var-function-export_modules_css-not-override-class)
 }
 
 .var-function_module_css-theme-dark {
@@ -792,6 +793,17 @@ div {
 
 .classes_modules_css-d\\\\% {
 	color: tan;
+}
+
+/*!************************!*\\\\
+  !*** css ./shared.css ***!
+  \\\\************************/
+:root {
+	--shared_css-from-shared: --shared_css-custom-shared;
+}
+
+@color-profile --shared_css-custom-shared {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 /*!******************************!*\\\\
@@ -1076,7 +1088,7 @@ div {
 	}
 }
 
-@counter-style thumbs {
+@counter-style style_module_css-thumbs {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
@@ -1158,7 +1170,7 @@ div {
 		}
 	}
 
-	@container foo {
+	@container style_module_css-foo {
 		background: red;
 
 		.style_module_css-nested-layer {
@@ -1270,7 +1282,7 @@ div {
 	}
 }
 
-@container summary (min-width: 400px) {
+@container style_module_css-summary (min-width: 400px) {
 	@container (width > 400px) {
 		.style_module_css-deep-class-in-container {
 			font-size: 1.5em;
@@ -1569,14 +1581,67 @@ div {
 	}
 }
 
-@counter-style thumbs {
+@counter-style style_module_css-thumbs {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
 }
 
 ul {
-	list-style: thumbs;
+	list-style: style_module_css-thumbs;
+}
+
+@counter-style style_module_css-extend-thumbs {
+	fallback: style_module_css-thumbs;
+	system: extends style_module_css-thumbs;
+	speak-as: style_module_css-thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(img/shape.png);
+	list-style: none;
+	list-style: none disc url(img/shape.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(\\"./img/shape.png\\");
+	list-style: georgian inside url(\\"./img/shape.png\\");
+	list-style: georgian outside url(\\"./img/shape.png\\");
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(\\"./img/shape.png\\");
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(\\"img/shape.png\\") inside;
+
+	/* three values */
+	list-style: lower-roman url(\\"img/shape.png\\") outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: style_module_css-extend-thumbs;
+	list-style: style_module_css-extend-thumbs;
 }
 
 @container (width > 400px) and style(--responsive: true) {
@@ -1584,6 +1649,73 @@ ul {
 		font-size: 1.5em;
 	}
 }
+
+@container style_module_css-tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container style_module_css-sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container style_module_css-card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.style_module_css-post {
+	container-name: style_module_css-tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: style_module_css-sticky-heading / inline-size;
+	container: style_module_css-sticky-heading / size;
+	container: style_module_css-sticky-heading / scroll-state;
+	--style_module_css-my-var: local(sticky-heading);
+
+	container: var(--style_module_css-my-var);
+	--style_module_css-cards: small;
+	container-type: inline-size;
+}
+
+
+@container style_module_css-summary style(--style_module_css-cards: small) {
+	.style_module_css-card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
 /* At-rule for \\"nice-style\\" in Font One */
 @font-feature-values Font One {
 	@styleset {
@@ -1591,12 +1723,12 @@ ul {
 	}
 }
 
-@font-palette-values --identifier {
+@font-palette-values --style_module_css-identifier {
 	font-family: Bixa;
 }
 
 .style_module_css-my-class {
-	font-palette: --identifier;
+	font-palette: --style_module_css-identifier;
 }
 
 @keyframes style_module_css-foo { /* ... */ }
@@ -1637,27 +1769,27 @@ ul {
 	& .style_module_css-class { opacity: 0; }
 }
 
-@position-try --custom-left {
+@position-try --style_module_css-custom-left {
 	position-area: left;
 	width: 100px;
 	margin: 0 10px 0 0;
 }
 
-@position-try --custom-bottom {
+@position-try --style_module_css-custom-bottom {
 	top: anchor(bottom);
 	justify-self: anchor-center;
 	margin: 10px 0 0 0;
 	position-area: none;
 }
 
-@position-try --custom-right {
+@position-try --style_module_css-custom-right {
 	left: calc(anchor(right) + 10px);
 	align-self: anchor-center;
 	width: 100px;
 	position-area: none;
 }
 
-@position-try --custom-bottom-right {
+@position-try --style_module_css-custom-bottom-right {
 	position-area: bottom right;
 	margin: 10px 0 0 10px;
 }
@@ -1669,8 +1801,8 @@ ul {
 	width: 200px;
 	margin: 0 0 10px 0;
 	position-try-fallbacks:
-		--custom-left, --custom-bottom,
-		--custom-right, --custom-bottom-right;
+		--style_module_css-custom-left, --style_module_css-custom-bottom,
+		--style_module_css-custom-right, --style_module_css-custom-bottom-right;
 }
 
 @page {
@@ -1678,12 +1810,12 @@ ul {
 	margin-top: 4in;
 }
 
-@color-profile --swop5c {
+@color-profile --style_module_css-swop5c {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 .style_module_css-header {
-	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--style_module_css-swop5c 0% 70% 20% 0%);
 }
 
 .style_module_css-test {
@@ -1820,6 +1952,31 @@ ul {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
+}
+
+@property --style_module_css-progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.style_module_css-bar {
+	display: inline-block;
+	--style_module_css-progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--style_module_css-progress),
+		black var(--style_module_css-progress)
+	);
+	animation: style_module_css-progressAnimation 2.5s ease infinite;
+}
+
+@keyframes style_module_css-progressAnimation {
+	to {
+		--style_module_css-progress: 100%;
+	}
 }
 
 @keyframes style_module_css-initial { /* ... */ }
@@ -1960,6 +2117,133 @@ div {
 .style_module_css-exportNameWeirdCharacters {
 	}
 
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--style_module_css-base-color: #faa6ff;
+	background-color: --transparent(var(--style_module_css-base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--style_module_css-duration: 1s;
+	--style_module_css-easing: linear;
+	result: var(--animation) var(--style_module_css-duration) var(--count) var(--style_module_css-easing);
+}
+
+div {
+	animation: --anim-1s(style_module_css-bounce, 2);
+}
+
+@function --outer(--outer-arg) {
+	--style_module_css-outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--style_module_css-outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--style_module_css-mode: sharp;
+}
+
+.style_module_css-apply-sharp {
+	border-radius: if(style(--style_module_css-mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --style_module_css-swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --style_module_css-swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --style_module_css-swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.style_module_css-class {
+	background-color: color(--style_module_css-swop5c 0% 70% 20% 0%);
+	background-color: color(local(--style_module_css-swop5c) 0% 70% 20% 0%);
+	background-color: color(:local(--style_module_css-swop5c) 0% 70% 20% 0%);
+	background-color: color(global(--style_module_css-swop5c) 0% 70% 20% 0%);
+	background-color: color(:global(--style_module_css-swop5c) 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--shared_css-from-shared 0% 70% 20% 0%);
+	background-color: color(local(--style_module_css-swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(:local(--style_module_css-swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+}
+
+:root {
+	--style_module_css-text-color: #eee;
+}
+
+.style_module_css-simple {
+	color: var(--style_module_css-text-color);
+}
+
+/* Just nesting */
+.style_module_css-theme-dark {
+	--style_module_css-text-color: #fff;
+	--style_module_css-bg-color: #333;
+
+	.style_module_css-button {
+		--style_module_css-button-color: var(--style_module_css-text-color);
+		--style_module_css-button-bg: var(--style_module_css-bg-color);
+		color: var(--style_module_css-button-color);
+		background-color: var(--style_module_css-button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.style_module_css-post {
+	--style_module_css-themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--style_module_css-themeColor: blue) {
+	.style_module_css-card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -2040,6 +2324,7 @@ Object {
   "supports": "qyhlLo",
   "supportsInMedia": "KHcaFg",
   "supportsWithOperator": "NQmDdm",
+  "textColor": "--PJiFhP",
   "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
   "webkitAnyWmultiParams": "piVgU0",
   "whereWmultiParams": "n4-IgX",
@@ -2405,35 +2690,35 @@ div {
 }
 
 .n7N3Yd {
-	color: var(--my-var-u1 );
+	color: var(--IUIj4X);
 }
 
 .Cavu2H {
-	color: var(--ir5X1L, var(--my-var-u1 ));
+	color: var(--ir5X1L, var(--IUIj4X));
 }
 
 ._6emYNM {
-	color: var(--my-var-u1 ,  var(--ir5X1L));
+	color: var(--IUIj4X,  var(--ir5X1L));
 }
 
 .XNaXe3 {
-	color: var(--my-var-u1 ,  var(--my-var-u2 ));
+	color: var(--IUIj4X,  var(--_89DIRX));
 }
 
 .mGmB4l {
-	color: var(--1 );
+	color: var(--_5g4K-I);
 }
 
 .znpqdH {
-	color: var(----a );
+	color: var(--_31C3Gv);
 }
 
 .uSxmmJ {
-	color: var(--main-bg-color );
+	color: var(--msAO3F);
 }
 
 .AfNRVE {
-	color: var(--my-var-u1 , var(--my-global, var(--ir5X1L, red)));
+	color: var(--IUIj4X, var(--my-global, var(--ir5X1L, red)));
 }
 
 .Y8L6uE {
@@ -2449,7 +2734,7 @@ div {
 }
 
 ._96YRqM {
-	color: var(--not-override-class )
+	color: var(--TSNC0A)
 }
 
 .fYc0TB {
@@ -2653,6 +2938,17 @@ div {
 
 .g2GKt4 {
 	color: tan;
+}
+
+/*!************************!*\\\\
+  !*** css ./shared.css ***!
+  \\\\************************/
+:root {
+	--lKXG0f: --vyaIR5;
+}
+
+@color-profile --vyaIR5 {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 /*!******************************!*\\\\
@@ -2937,7 +3233,7 @@ div {
 	}
 }
 
-@counter-style thumbs {
+@counter-style uwNNmq {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
@@ -3019,7 +3315,7 @@ div {
 		}
 	}
 
-	@container foo {
+	@container Pns_CJ {
 		background: red;
 
 		.Sin_15 {
@@ -3131,7 +3427,7 @@ div {
 	}
 }
 
-@container summary (min-width: 400px) {
+@container qYFiUT (min-width: 400px) {
 	@container (width > 400px) {
 		._0Kw8ER {
 			font-size: 1.5em;
@@ -3430,14 +3726,67 @@ div {
 	}
 }
 
-@counter-style thumbs {
+@counter-style uwNNmq {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
 }
 
 ul {
-	list-style: thumbs;
+	list-style: uwNNmq;
+}
+
+@counter-style _8HrqS4 {
+	fallback: uwNNmq;
+	system: extends uwNNmq;
+	speak-as: uwNNmq;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(img/shape.png);
+	list-style: none;
+	list-style: none disc url(img/shape.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(\\"./img/shape.png\\");
+	list-style: georgian inside url(\\"./img/shape.png\\");
+	list-style: georgian outside url(\\"./img/shape.png\\");
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(\\"./img/shape.png\\");
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(\\"img/shape.png\\") inside;
+
+	/* three values */
+	list-style: lower-roman url(\\"img/shape.png\\") outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: _8HrqS4;
+	list-style: _8HrqS4;
 }
 
 @container (width > 400px) and style(--responsive: true) {
@@ -3445,6 +3794,73 @@ ul {
 		font-size: 1.5em;
 	}
 }
+
+@container M6rjPY (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container Jsj6BT scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container r3yzH0 (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.rPnlZa {
+	container-name: M6rjPY;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: Jsj6BT / inline-size;
+	container: Jsj6BT / size;
+	container: Jsj6BT / scroll-state;
+	--d1bVSO: local(sticky-heading);
+
+	container: var(--d1bVSO);
+	--K6CLJ5: small;
+	container-type: inline-size;
+}
+
+
+@container qYFiUT style(--K6CLJ5: small) {
+	.r3yzH0 {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
 /* At-rule for \\"nice-style\\" in Font One */
 @font-feature-values Font One {
 	@styleset {
@@ -3452,12 +3868,12 @@ ul {
 	}
 }
 
-@font-palette-values --identifier {
+@font-palette-values --wdoIWt {
 	font-family: Bixa;
 }
 
 .Fr8iIT {
-	font-palette: --identifier;
+	font-palette: --wdoIWt;
 }
 
 @keyframes Pns_CJ { /* ... */ }
@@ -3498,27 +3914,27 @@ ul {
 	& .Th9Hcz { opacity: 0; }
 }
 
-@position-try --custom-left {
+@position-try --PgMDE7 {
 	position-area: left;
 	width: 100px;
 	margin: 0 10px 0 0;
 }
 
-@position-try --custom-bottom {
+@position-try --hhKfVV {
 	top: anchor(bottom);
 	justify-self: anchor-center;
 	margin: 10px 0 0 0;
 	position-area: none;
 }
 
-@position-try --custom-right {
+@position-try --KWLHtz {
 	left: calc(anchor(right) + 10px);
 	align-self: anchor-center;
 	width: 100px;
 	position-area: none;
 }
 
-@position-try --custom-bottom-right {
+@position-try --mwT4O_ {
 	position-area: bottom right;
 	margin: 10px 0 0 10px;
 }
@@ -3530,8 +3946,8 @@ ul {
 	width: 200px;
 	margin: 0 0 10px 0;
 	position-try-fallbacks:
-		--custom-left, --custom-bottom,
-		--custom-right, --custom-bottom-right;
+		--PgMDE7, --hhKfVV,
+		--KWLHtz, --mwT4O_;
 }
 
 @page {
@@ -3539,12 +3955,12 @@ ul {
 	margin-top: 4in;
 }
 
-@color-profile --swop5c {
+@color-profile --ROcANu {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 .Zq4Bgu {
-	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--ROcANu 0% 70% 20% 0%);
 }
 
 .w_hBjy {
@@ -3683,6 +4099,31 @@ ul {
 	initial-value: 40%;
 }
 
+@property --_7d1iGg {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.b5xu71 {
+	display: inline-block;
+	--_7d1iGg: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--_7d1iGg),
+		black var(--_7d1iGg)
+	);
+	animation: _4FiJQA 2.5s ease infinite;
+}
+
+@keyframes _4FiJQA {
+	to {
+		--_7d1iGg: 100%;
+	}
+}
+
 @keyframes _3XWMcj { /* ... */ }
 @keyframes/**test**/_3XWMcj { /* ... */ }
 @keyframes/**test**/_3XWMcj/**test**/{ /* ... */ }
@@ -3761,7 +4202,7 @@ div {
 	--pilraw: 10px;
 	--Pns_CJ: 10px;
 	--b5xu71: calc(var(--Pns_CJ) + 10px);
-	--_8NggIH: linear-gradient(to top, var(--cuyscJ), white);
+	--zMOaz9: linear-gradient(to top, var(--cuyscJ), white);
 	--Xz8Zyw: \\"test\\";
 	--FWUVf6: yellow;
 	--h5_X_2: red;
@@ -3820,6 +4261,133 @@ div {
 
 .pfrK-J {
 	}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--_5hZGZD: #faa6ff;
+	background-color: --transparent(var(--_5hZGZD), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--uRmi-O: 1s;
+	--_2c0Pw3: linear;
+	result: var(--animation) var(--uRmi-O) var(--count) var(--_2c0Pw3);
+}
+
+div {
+	animation: --anim-1s(M0uhU5, 2);
+}
+
+@function --outer(--outer-arg) {
+	--sVY4tR: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--sVY4tR));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--_93Jj1p: sharp;
+}
+
+.Y4Gwu3 {
+	border-radius: if(style(--_93Jj1p: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --ROcANu {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --ROcANu {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --ROcANu {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.Th9Hcz {
+	background-color: color(--ROcANu 0% 70% 20% 0%);
+	background-color: color(local(--ROcANu) 0% 70% 20% 0%);
+	background-color: color(:local(--ROcANu) 0% 70% 20% 0%);
+	background-color: color(global(--ROcANu) 0% 70% 20% 0%);
+	background-color: color(:global(--ROcANu) 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--lKXG0f 0% 70% 20% 0%);
+	background-color: color(local(--ROcANu, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(:local(--ROcANu, \\"./shared.css\\") 0% 70% 20% 0%);
+}
+
+:root {
+	--PJiFhP: #eee;
+}
+
+.RRkM-G {
+	color: var(--PJiFhP);
+}
+
+/* Just nesting */
+.yIfcPh {
+	--PJiFhP: #fff;
+	--YI1Kj3: #333;
+
+	.mYBaWo {
+		--VLWr0L: var(--PJiFhP);
+		--I-Ywj4: var(--YI1Kj3);
+		color: var(--VLWr0L);
+		background-color: var(--I-Ywj4);
+	}
+}
+
+/* A container context based on inline size */
+.rPnlZa {
+	--CSr0Ji: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--CSr0Ji: blue) {
+	.r3yzH0 {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
+}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -3907,6 +4475,7 @@ Object {
   "supports": "style_module_css-displayGridInSupports",
   "supportsInMedia": "style_module_css-displayFlexInSupportsInMedia",
   "supportsWithOperator": "style_module_css-floatRightInNegativeSupports",
+  "textColor": "--style_module_css-text-color",
   "vars": "--style_module_css-local-color style_module_css-vars undefined style_module_css-globalVars",
   "webkitAnyWmultiParams": "style_module_css-local16",
   "whereWmultiParams": "style_module_css-local10",
@@ -3961,6 +4530,7 @@ Object {
   "supports": "qyhlLo",
   "supportsInMedia": "KHcaFg",
   "supportsWithOperator": "NQmDdm",
+  "textColor": "--PJiFhP",
   "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
   "webkitAnyWmultiParams": "piVgU0",
   "whereWmultiParams": "n4-IgX",
@@ -4015,6 +4585,7 @@ Object {
   "supports": "qyhlLo",
   "supportsInMedia": "KHcaFg",
   "supportsWithOperator": "NQmDdm",
+  "textColor": "--PJiFhP",
   "vars": "--ZfGW2N I8Lkai undefined Uw64p0",
   "webkitAnyWmultiParams": "piVgU0",
   "whereWmultiParams": "n4-IgX",
@@ -8632,7 +9203,7 @@ Array [
 /* localize animation using special characters */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-😃bounce😃; }
 
-/* not localize custom property */
+/* localize custom property */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---foo; }
 
 /* not localize name in nested function */
@@ -9088,6 +9659,8 @@ input { a_value: some-value; }
 /* postcss-modules-local-by-default */
 /* TODO not implemented yet */
 
+@keyframes postcss-modules-local-by-default_pure_modules_css-bounce {}
+@keyframes postcss-modules-local-by-default_pure_modules_css-fly {}
 
 /* localize and not localize animation-name in mixed case #3 */
 .postcss-modules-local-by-default_pure_modules_css-foo { animation-name: postcss-modules-local-by-default_pure_modules_css-fadeInOut, moveLeft300px, postcss-modules-local-by-default_pure_modules_css-bounce; }
@@ -11726,11 +12299,131 @@ ul {
 	list-style: thumbs;
 }
 
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(09a1a1112c577c279435.png);
+	list-style: none;
+	list-style: none disc url(09a1a1112c577c279435.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(09a1a1112c577c279435.png);
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(09a1a1112c577c279435.png) inside;
+
+	/* three values */
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
+}
+
 @container (width > 400px) and style(--responsive: true) {
 	.class {
 		font-size: 1.5em;
 	}
 }
+
+@container tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.post {
+	container-name: tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: local(sticky-heading);
+
+	container: var(--my-var);
+	--cards: small;
+	container-type: inline-size;
+}
+
+
+@container summary style(--cards: small) {
+	.card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
 /* At-rule for \\"nice-style\\" in Font One */
 @font-feature-values Font One {
 	@styleset {
@@ -11969,6 +12662,31 @@ ul {
 	initial-value: 40%;
 }
 
+@property --progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--progress),
+		black var(--progress)
+	);
+	animation: progressAnimation 2.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+	to {
+		--progress: 100%;
+	}
+}
+
 @keyframes \\"initial\\" { /* ... */ }
 @keyframes/**test**/\\"initial\\" { /* ... */ }
 @keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
@@ -12127,6 +12845,133 @@ div {
 
 .exportNameWeirdCharacters {
 	composes: a -b b- --c c-- _d d\\\\% from \\"./classes.modules.css\\";
+}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
+}
+
+div {
+	animation: --anim-1s(local(bounce), 2);
+}
+
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--mode: sharp;
+}
+
+.apply-sharp {
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile local(--swop5c) {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile :local(--swop5c) {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile global(--swop5c) {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile :global(--swop5c) {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.class {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(global(--swop5c) 0% 70% 20% 0%);
+	background-color: color(:global(--swop5c) 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(local(--swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+}
+
+:root {
+	--text-color: #eee;
+}
+
+.simple {
+	color: var(--text-color);
+}
+
+/* Just nesting */
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.post {
+	--themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--themeColor: blue) {
+	.card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
 }
 
 /*!***********************!*\\\\

@@ -1,6 +1,8 @@
 /* postcss-modules-local-by-default */
 /* TODO not implemented yet */
 
+@keyframes bounce {}
+@keyframes fly {}
 
 /* localize and not localize animation-name in mixed case #3 */
 .foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
