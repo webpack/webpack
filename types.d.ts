@@ -6773,8 +6773,7 @@ declare abstract class ItemCacheFacade {
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-	extends Iterator<T, TReturn, TNext>,
-		Disposable {
+	extends Iterator<T, TReturn, TNext>, Disposable {
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }

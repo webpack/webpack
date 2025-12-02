@@ -169,7 +169,7 @@
     "nyc": "^17.1.0",
     "open-cli": "^8.0.0",
     "pkg-pr-new": "^0.0.60",
-    "prettier": "^3.6.0",
+    "prettier": "^3.7.3",
     "prettier-2": "npm:prettier@^2",
     "pretty-format": "^30.0.5",
     "pug": "^3.0.3",
