@@ -1456,3 +1456,36 @@ div {
 		font-size: 1em;
 	}
 }
+
+@keyframes broken;
+
+.class-name-after-broken-keyframes {
+	color: red;
+}
+
+.no-space {
+	:global.class-no-space {
+		color: red;
+	}
+
+	:global/** test **/.class {
+		color: red;
+	}
+
+	:local.class {
+		color: red;
+	}
+
+	:local/** test **/.class {
+		color: red;
+	}
+
+	:local/** test **/#hash {
+		color: red;
+	}
+
+	:local/** test **/{
+		color: red;
+	}
+}
+
