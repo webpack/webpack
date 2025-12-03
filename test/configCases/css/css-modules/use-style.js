@@ -58,5 +58,6 @@ export default {
 	exportNameOtherFromKeywordWithFrom1: style.exportNameOtherFromKeywordWithFrom1,
 	exportNameOtherFromKeywordWithFrom2: style.exportNameOtherFromKeywordWithFrom2,
 	exportNameWeirdCharacters: style.exportNameWeirdCharacters,
-	textColor: style['text-color']
+	textColor: style['text-color'],
+	classNameAfterBrokenKeyframes: style['class-name-after-broken-keyframes']
 };
