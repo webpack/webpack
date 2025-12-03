@@ -6234,9 +6234,9 @@ memfs@^3.4.1:
     fs-monkey "^1.0.4"
 
 memfs@^4.51.0:
-  version "4.51.0"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.51.0.tgz#f33b5eff5e2faa01bfacc02aacf23ec7d8c84c94"
-  integrity sha512-4zngfkVM/GpIhC8YazOsM6E8hoB33NP0BCESPOA6z7qaL6umPJNqkO8CNYaLV2FB2MV6H1O3x2luHHOSqppv+A==
+  version "4.51.1"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.51.1.tgz#25945de4a90d1573945105e187daa9385e1bca73"
+  integrity sha512-Eyt3XrufitN2ZL9c/uIRMyDwXanLI88h/L3MoWqNY747ha3dMR9dWqp8cRT5ntjZ0U1TNuq4U91ZXK0sMBjYOQ==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.11.0"
     "@jsonjoy.com/util" "^1.9.0"
@@ -7243,10 +7243,10 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-pr-new@^0.0.60:
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/pkg-pr-new/-/pkg-pr-new-0.0.60.tgz#bd415b0d267a3bead68b4aace568107107db96a1"
-  integrity sha512-eblxPNSgv0AO18OrfpHq+YrNHfEqeePWWvlKkPvcHByddGsGDOK25z41C1RDjZ+K8zUHDk5IGN+6n0WZa4T2Pg==
+pkg-pr-new@^0.0.62:
+  version "0.0.62"
+  resolved "https://registry.yarnpkg.com/pkg-pr-new/-/pkg-pr-new-0.0.62.tgz#67a193e9721fef63adc8c7357a8a9b7e9d91d7ca"
+  integrity sha512-K2jtf1PLCJJFDimQIpasPXDdnRTZSYPy36Ldz+QhMpLz2YN1Wi0ZQkomVt5Wi3NdBZcYuYGXekyFWfJ6fAHYjg==
   dependencies:
     "@actions/core" "^1.11.1"
     "@jsdevtools/ez-spawn" "^3.0.4"
@@ -8464,10 +8464,10 @@ timers-ext@^0.1.7:
     es5-ext "^0.10.64"
     next-tick "^1.1.0"
 
-tinybench@^5.0.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.1.0.tgz#796a599a58114ef61279d8550bc2f34e1ad3cbf0"
-  integrity sha512-LXKNtFualiKOm6gADe1UXPtf8+Nfn1CtPMEHAT33Fd2YjQatrujkDcK0+4wRC1X6t7fxUDXUs6BsvuIgfkDgDg==
+tinybench@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-6.0.0.tgz#890309d74e0c3f60b20def20295bfd937c1d7521"
+  integrity sha512-BWlWpVbbZXaYjRV0twGLNQO00Zj4HA/sjLOQP2IvzQqGwRGp+2kh7UU3ijyJ3ywFRogYDRbiHDMrUOfaMnN56g==
 
 tinyglobby@^0.2.12, tinyglobby@^0.2.14, tinyglobby@^0.2.9:
   version "0.2.15"
