@@ -95,5 +95,70 @@ module.exports = (env, { testPath }) => [
 				mode: "read"
 			})
 		]
+	},
+	// CSS modules `css/global`
+	{
+		entry: "./index-global.js",
+		name: "web-development-global",
+		target: "web",
+		mode: "development",
+		experiments: {
+			css: true
+		},
+		module: {
+			rules: [
+				{
+					test: /\.css$/i,
+					type: "css/global"
+				},
+				{
+					test: /\.my-css$/i,
+					type: "css/global"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/global"
+				}
+			]
+		},
+		output: {
+			uniqueName: "my-app"
+		},
+		node: {
+			__dirname: false,
+			__filename: false
+		}
+	},
+	{
+		entry: "./index-global.js",
+		name: "web-production-global",
+		target: "web",
+		mode: "production",
+		experiments: {
+			css: true
+		},
+		module: {
+			rules: [
+				{
+					test: /\.css$/i,
+					type: "css/global"
+				},
+				{
+					test: /\.my-css$/i,
+					type: "css/global"
+				},
+				{
+					test: /\.invalid$/i,
+					type: "css/global"
+				}
+			]
+		},
+		output: {
+			uniqueName: "my-app"
+		},
+		node: {
+			__dirname: false,
+			__filename: false
+		}
 	}
 ];

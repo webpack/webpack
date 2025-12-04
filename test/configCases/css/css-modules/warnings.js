@@ -55,5 +55,21 @@ module.exports = [
 	[/Missing whitespace after ':local' in ':local\/\*\* test \*\*\/\.class \{'/],
 	[/Missing whitespace after ':local' in ':local\/\*\* test \*\*\/#hash \{'/],
 	[/Missing whitespace after ':local' in ':local\/\*\* test \*\*\/\{/],
-	[/Broken '@value' at-rule: @value;'/]
+	[/Broken '@value' at-rule: @value;'/],
+
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/],
+	[/a/]
 ];

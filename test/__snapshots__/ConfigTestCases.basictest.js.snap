@@ -807,6 +807,10 @@ div {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
+.my-app-shared_css-local-my-shared-class {
+	color: red;
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -2277,6 +2281,190 @@ div {
 	}
 }
 
+/* Cases for \`css/global\` */
+
+.my-app-style_module_css-my-simple-local {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first.my-app-style_module_css-multiple-second {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first-with-space .my-app-style_module_css-multiple-second-with-space {
+	color: red;
+}
+
+div:not(.my-app-style_module_css-special) {
+	color: blue;
+}
+
+p:not(#my-app-style_module_css-main-paragraph) {
+	font-weight: bold;
+}
+
+.my-app-style_module_css-container {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .my-app-style_module_css-header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .my-app-style_module_css-active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.my-app-style_module_css-highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.my-app-style_module_css-item.my-app-style_module_css-selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-global-befor-local .my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-local-class-name .my-app-style_module_css-global-after-local {
+	color: red;
+}
+
+.my-app-style_module_css-foo {
+	&.my-app-style_module_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.my-app-style_module_css-bar {
+			c_value: some-value;
+		}
+
+		&.my-app-style_module_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.my-app-style_module_css-class {
+	color: black;
+}
+
+.my-app-style_module_css-local-class {
+	color: white;
+}
+
+.my-app-style_module_css-class-with-composes {
+	}
+
+/* At-rules */
+
+@keyframes my-app-style_module_css-basic-keyframes {}
+@keyframes my-app-style_module_css-local-keyframes {}
+@keyframes global-keyframes {}
+/** Deprecated syntax */
+@keyframes my-app-style_module_css-local-keyframes-old-syntax {}
+@keyframes local-keyframes-old-syntax {}
+
+.my-app-style_module_css-foo {
+	animation-name: my-app-style_module_css-basic-keyframes, global-keyframes, my-app-style_module_css-local-keyframes;
+}
+
+@property --my-app-style_module_css-progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes my-app-style_module_css-progressAnimation {
+	to {
+		--my-app-style_module_css-progress: 100%;
+	}
+}
+
+.my-app-style_module_css-bar {
+	display: inline-block;
+	--my-app-style_module_css-progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(local(--my-app-style_module_css-progress)),
+		black var(local(--my-app-style_module_css-progress))
+	);
+	animation: my-app-style_module_css-progressAnimation 2.5s ease infinite;
+}
+
+@scope (.my-app-style_module_css-article-header) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.my-app-style_module_css-class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--my-app-style_module_css-foo-bar: red;
+	--my-app-style_module_css-local-foo-bar: red;
+	--my-app-style_module_css-global-foo-bar: red;
+	--my-app-style_module_css-local-and-global-in-var:
+	red,
+	local(--local-foo-bar),
+	global(--global-foo-bar),
+		/** Deprecated syntax */
+	:local(--my-app-style_module_css-local-foo-bar),
+	:global(--my-app-style_module_css-global-foo-bar);
+}
+
+.my-app-style_module_css-class {
+	background-color:
+		var(--my-app-style_module_css-foo-bar),
+		var(local(--my-app-style_module_css-local-foo-bar)),
+		var(global(--my-app-style_module_css-global-foo-bar)),
+			/** Deprecated syntax */
+		var(:local(--my-app-style_module_css-local-foo-bar)),
+		var(:global(--my-app-style_module_css-global-foo-bar)),
+		var(--global-foo-bar),
+		var(--my-app-shared_css-from-shared);
+}
+
+/** Custom local value */
+
+@unknown-rule local(unknown-at-rule) {}
+
+.my-app-style_module_css-class {
+	custom-name: local(unknown-at-rule);
+}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -2363,6 +2551,46 @@ Object {
   "vars": "--my-app-style_module_css-local-color my-app-style_module_css-vars undefined my-app-style_module_css-globalVars",
   "webkitAnyWmultiParams": "my-app-style_module_css-local16",
   "whereWmultiParams": "my-app-style_module_css-local10",
+}
+`;
+
+exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: dev 4`] = `
+Object {
+  "active": "my-app-style_module_css-active",
+  "article-header": "my-app-style_module_css-article-header",
+  "bar": "my-app-style_module_css-bar",
+  "baz": "my-app-style_module_css-baz",
+  "card": "my-app-style_module_css-card",
+  "class": "my-app-style_module_css-class",
+  "class-1": "my-app-style_module_css-class-1",
+  "class-local-scope": "my-app-style_module_css-class-local-scope",
+  "class-with-composes": "my-app-style_module_css-class-with-composes",
+  "container": "my-app-style_module_css-container",
+  "extend-thumbs": "my-app-style_module_css-extend-thumbs",
+  "foo": "my-app-style_module_css-foo",
+  "hash": "my-app-style_module_css-hash",
+  "header": "my-app-style_module_css-header",
+  "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
+  "local-class": "my-app-style_module_css-local-class",
+  "local-class-name": "my-app-style_module_css-local-class-name",
+  "local-in-global": "my-app-style_module_css-local-in-global",
+  "local-nested": "my-app-style_module_css-local-nested",
+  "local4": "my-app-style_module_css-local4",
+  "localUpperCase": "my-app-style_module_css-localUpperCase",
+  "main-paragraph": "my-app-style_module_css-main-paragraph",
+  "multiple-first": "my-app-style_module_css-multiple-first",
+  "multiple-first-with-space": "my-app-style_module_css-multiple-first-with-space",
+  "multiple-second": "my-app-style_module_css-multiple-second",
+  "multiple-second-with-space": "my-app-style_module_css-multiple-second-with-space",
+  "my-global-class-again": "my-app-style_module_css-my-global-class-again",
+  "my-simple-local": "my-app-style_module_css-my-simple-local",
+  "nested1": "my-app-style_module_css-nested1",
+  "selected": "my-app-style_module_css-selected",
+  "special": "my-app-style_module_css-special",
+  "sticky-heading": "my-app-style_module_css-sticky-heading",
+  "summary": "my-app-style_module_css-summary",
+  "tall": "my-app-style_module_css-tall",
+  "thumbs": "my-app-style_module_css-thumbs",
 }
 `;
 
@@ -3040,6 +3268,10 @@ div {
 
 @color-profile --_6RMPbG {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.wEhvQL {
+	color: red;
 }
 
 /*!******************************!*\\\\
@@ -4512,6 +4744,190 @@ div {
 	}
 }
 
+/* Cases for \`css/global\` */
+
+.xcsnD2 {
+	color: red;
+}
+
+.YK629R.d69pL2 {
+	color: red;
+}
+
+.bBUtJ3 ._10-3eM {
+	color: red;
+}
+
+div:not(._5KiKr2) {
+	color: blue;
+}
+
+p:not(#dBVRDQ) {
+	font-weight: bold;
+}
+
+.lAqA-R {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .Zq4Bgu {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .zwwxVU {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.N3R3DF {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.RKcB4N.n5D5Q0 {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.-bicf2 {
+	color: red;
+}
+
+.EGLCHZ .-bicf2 {
+	color: red;
+}
+
+.-bicf2 .QxeYlf {
+	color: red;
+}
+
+.LXyTj4 {
+	&.Vx2ADA {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.ueKKku {
+			c_value: some-value;
+		}
+
+		&.v4rNLS {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.Vx2ADA {
+	color: black;
+}
+
+.lSYuKq {
+	color: white;
+}
+
+.pdN5nk {
+	}
+
+/* At-rules */
+
+@keyframes _7rJY4U {}
+@keyframes Svchdz {}
+@keyframes global-keyframes {}
+/** Deprecated syntax */
+@keyframes h18zzQ {}
+@keyframes local-keyframes-old-syntax {}
+
+.LXyTj4 {
+	animation-name: _7rJY4U, global-keyframes, Svchdz;
+}
+
+@property --z8dXmV {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes btQQRC {
+	to {
+		--z8dXmV: 100%;
+	}
+}
+
+.ueKKku {
+	display: inline-block;
+	--z8dXmV: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(local(--z8dXmV)),
+		black var(local(--z8dXmV))
+	);
+	animation: btQQRC 2.5s ease infinite;
+}
+
+@scope (.uiPdKt) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.wCljLW {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--lRiOdz: red;
+	--yBn7O5: red;
+	--ho4NPI: red;
+	--hBmufP:
+	red,
+	local(--local-foo-bar),
+	global(--global-foo-bar),
+		/** Deprecated syntax */
+	:local(--yBn7O5),
+	:global(--ho4NPI);
+}
+
+.Vx2ADA {
+	background-color:
+		var(--lRiOdz),
+		var(local(--yBn7O5)),
+		var(global(--ho4NPI)),
+			/** Deprecated syntax */
+		var(:local(--yBn7O5)),
+		var(:global(--ho4NPI)),
+		var(--global-foo-bar),
+		var(--_2qSR8B);
+}
+
+/** Custom local value */
+
+@unknown-rule local(unknown-at-rule) {}
+
+.Vx2ADA {
+	custom-name: local(unknown-at-rule);
+}
 
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
@@ -4598,6 +5014,46 @@ Object {
   "vars": "--NNsA2u ybnHOd undefined UU67Qr",
   "webkitAnyWmultiParams": "rlaEZT",
   "whereWmultiParams": "peTfCX",
+}
+`;
+
+exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: prod 4`] = `
+Object {
+  "active": "zwwxVU",
+  "article-header": "uiPdKt",
+  "bar": "ueKKku",
+  "baz": "v4rNLS",
+  "card": "r3yzH0",
+  "class": "Vx2ADA",
+  "class-1": "wCljLW",
+  "class-local-scope": "XlQsKD",
+  "class-with-composes": "pdN5nk",
+  "container": "lAqA-R",
+  "extend-thumbs": "YZsmDI",
+  "foo": "LXyTj4",
+  "hash": "jcIvvc",
+  "header": "Zq4Bgu",
+  "in-local-global-scope": "MoUXzC",
+  "local-class": "lSYuKq",
+  "local-class-name": "-bicf2",
+  "local-in-global": "NSL9R7",
+  "local-nested": "VxblVB",
+  "local4": "HEwyXh",
+  "localUpperCase": "AgZzby",
+  "main-paragraph": "dBVRDQ",
+  "multiple-first": "YK629R",
+  "multiple-first-with-space": "bBUtJ3",
+  "multiple-second": "d69pL2",
+  "multiple-second-with-space": "_10-3eM",
+  "my-global-class-again": "W4wdXr",
+  "my-simple-local": "xcsnD2",
+  "nested1": "kbu2T9",
+  "selected": "n5D5Q0",
+  "special": "_5KiKr2",
+  "sticky-heading": "_5unArO",
+  "summary": "qYFiUT",
+  "tall": "_16PWt_",
+  "thumbs": "_0L28GV",
 }
 `;
 
@@ -12946,6 +13402,194 @@ div {
 	}
 }
 
+/* Cases for \`css/global\` */
+
+:local(.my-simple-local) {
+	color: red;
+}
+
+:local(.multiple-first.multiple-second) {
+	color: red;
+}
+
+:local(.multiple-first-with-space .multiple-second-with-space) {
+	color: red;
+}
+
+div:not(:local(.special)) {
+	color: blue;
+}
+
+p:not(:local(#main-paragraph)) {
+	font-weight: bold;
+}
+
+:local(.container) {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& :local(.header) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& :local(.active) {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item:local(.selected) {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+:local(.local-class-name) {
+	color: red;
+}
+
+.global-befor-local :local(.local-class-name) {
+	color: red;
+}
+
+:local(.local-class-name) .global-after-local {
+	color: red;
+}
+
+:local(.foo) {
+	&:local(.class) {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		:local(.bar) {
+			c_value: some-value;
+		}
+
+		&:local(.baz) {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.class {
+	color: black;
+}
+
+:local(.local-class) {
+	color: white;
+}
+
+:local(.class-with-composes) {
+	composes:
+		local-class,
+		global-class from global,
+		local-my-shared-class from \\"./shared.css\\";
+}
+
+/* At-rules */
+
+@keyframes basic-keyframes {}
+@keyframes local(local-keyframes) {}
+@keyframes global(global-keyframes) {}
+/** Deprecated syntax */
+@keyframes :local(local-keyframes-old-syntax) {}
+@keyframes :global(local-keyframes-old-syntax) {}
+
+.foo {
+	animation-name: basic-keyframes, global(global-keyframes), local(local-keyframes);
+}
+
+@property local(--progress) {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes local(progressAnimation) {
+	to {
+		--progress: 100%;
+	}
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(local(--progress)),
+		black var(local(--progress))
+	);
+	animation: local(progressAnimation) 2.5s ease infinite;
+}
+
+@scope (:local(.article-header)) to (:global(.class)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	:local(.class-1) {
+		color: red;
+	}
+	:global(.class-2) {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
+	red,
+	local(--local-foo-bar),
+	global(--global-foo-bar),
+		/** Deprecated syntax */
+	:local(--local-foo-bar),
+	:global(--global-foo-bar);
+}
+
+.class {
+	background-color:
+		var(--foo-bar),
+		var(local(--local-foo-bar)),
+		var(global(--global-foo-bar)),
+			/** Deprecated syntax */
+		var(:local(--local-foo-bar)),
+		var(:global(--global-foo-bar)),
+		var(--global-foo-bar from global),
+		var(--from-shared from \\"./shared.css\\");
+}
+
+/** Custom local value */
+
+@unknown-rule local(unknown-at-rule) {}
+
+.class {
+	custom-name: local(unknown-at-rule);
+}
 
 /*!***********************!*\\\\
   !*** css ./style.css ***!
