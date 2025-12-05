@@ -437,16 +437,15 @@ body {
 	color: red;
 }
 
-/* TODO bug */
 /* export-with-composes-imported-class */
-/*:import("./import.modules.css") {*/
-/*	imported_otherClass: otherClass;*/
-/*}*/
+:import("./import.modules.css") {
+	imported_otherClass: otherClass;
+}
 
-/*:local(.exportName) {*/
-/*	composes: imported_otherClass;*/
-/*	color: green;*/
-/*}*/
+:local(.exportName76) {
+	composes: imported_otherClass;
+	color: green;
+}
 
 /* export-with-composes */
 :local(.exportName57) { background: red; }
@@ -457,8 +456,7 @@ body {
 :global(.otherClass) { background: red; }
 :global(.andAgain) { font-size: 2em; }
 :global(.aThirdClass) { color: red; }
-/* TODO bug */
-/*:local(.exportName60) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+:local(.exportName60-function-syntax) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }
 :local(.exportName60) { compose-with: otherClass andAgain from global; compose-with: aThirdClass from global; color: green; }
 
 /* export-with-multiple-composes */
@@ -510,6 +508,7 @@ body {
 	}
 }
 
+/* We pass this limitation, order can be any now */
 /* export-with-composes-broken-order */
 :local(.exportName70) { compose-with: exportName71; color: green; }
 :local(.exportName71) { compose-with: exportName72; color: green; }
@@ -521,3 +520,21 @@ body {
 .exportName75 { color: red }
 .exportName74 { composes: exportName75; color: green; }
 .exportName74 { composes: my-global from global; color: green; }
+
+/* deep transitive composes */
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+:local(.exportName77) {
+	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
+}
+
+:local(.exportName78) {}
+
+:local(.exportName79) {
+	composes: class, bar;
+}

@@ -8896,7 +8896,7 @@ Object {
   "exportName36": "postcss-modules-scope_modules_css-exportName36",
   "exportName37": "postcss-modules-scope_modules_css-exportName37",
   "exportName38": "postcss-modules-scope_modules_css-exportName38",
-  "exportName39": "postcss-modules-scope_modules_css-exportName39",
+  "exportName39": "postcss-modules-scope_modules_css-exportName39 postcss-modules-scope_modules_css-exportName40",
   "exportName4": "postcss-modules-scope_modules_css-exportName4",
   "exportName41": "postcss-modules-scope_modules_css-exportName41",
   "exportName42": "postcss-modules-scope_modules_css-exportName42 postcss-modules-scope_modules_css-exportName41",
@@ -8920,6 +8920,7 @@ Object {
   "exportName59": "postcss-modules-scope_modules_css-exportName59 postcss-modules-scope_modules_css-exportName58 postcss-modules-scope_modules_css-exportName57",
   "exportName6": "postcss-modules-scope_modules_css-exportName6",
   "exportName60": "postcss-modules-scope_modules_css-exportName60 otherClass andAgain aThirdClass",
+  "exportName60-function-syntax": "postcss-modules-scope_modules_css-exportName60-function-syntax otherClass andAgain aThirdClass",
   "exportName63": "postcss-modules-scope_modules_css-exportName63",
   "exportName64": "postcss-modules-scope_modules_css-exportName64",
   "exportName65": "postcss-modules-scope_modules_css-exportName65",
@@ -8928,12 +8929,16 @@ Object {
   "exportName68": "postcss-modules-scope_modules_css-exportName68 postcss-modules-scope_modules_css-exportName67",
   "exportName69": "postcss-modules-scope_modules_css-exportName69 postcss-modules-scope_modules_css-exportName68 postcss-modules-scope_modules_css-exportName67",
   "exportName7": "postcss-modules-scope_modules_css-exportName7",
-  "exportName70": "postcss-modules-scope_modules_css-exportName70",
-  "exportName71": "postcss-modules-scope_modules_css-exportName71",
+  "exportName70": "postcss-modules-scope_modules_css-exportName70 postcss-modules-scope_modules_css-exportName71",
+  "exportName71": "postcss-modules-scope_modules_css-exportName71 postcss-modules-scope_modules_css-exportName72",
   "exportName72": "postcss-modules-scope_modules_css-exportName72",
   "exportName73": "postcss-modules-scope_modules_css-exportName73 classes_css-bar",
   "exportName74": "postcss-modules-scope_modules_css-exportName74 postcss-modules-scope_modules_css-exportName73 classes_css-bar postcss-modules-scope_modules_css-exportName75 my-global",
   "exportName75": "postcss-modules-scope_modules_css-exportName75",
+  "exportName76": "postcss-modules-scope_modules_css-exportName76 import_modules_css-otherClass",
+  "exportName77": "postcss-modules-scope_modules_css-exportName77 abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d",
+  "exportName78": "postcss-modules-scope_modules_css-exportName78",
+  "exportName79": "postcss-modules-scope_modules_css-exportName79 postcss-modules-scope_modules_css-class abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d --postcss-modules-scope_modules_css-bar",
   "exportName8": "postcss-modules-scope_modules_css-exportName8",
   "exportName9": "postcss-modules-scope_modules_css-exportName9",
   "fade-export": "postcss-modules-scope_modules_css-fade-export",
@@ -10968,16 +10973,11 @@ body {
 	color: red;
 }
 
-/* TODO bug */
 /* export-with-composes-imported-class */
-/*:import(\\"./import.modules.css\\") {*/
-/*	imported_otherClass: otherClass;*/
-/*}*/
 
-/*:local(.exportName) {*/
-/*	composes: imported_otherClass;*/
-/*	color: green;*/
-/*}*/
+.postcss-modules-scope_modules_css-exportName76 {
+	color: green;
+}
 
 /* export-with-composes */
 .postcss-modules-scope_modules_css-exportName57 { background: red; }
@@ -10988,8 +10988,7 @@ body {
 .otherClass { background: red; }
 .andAgain { font-size: 2em; }
 .aThirdClass { color: red; }
-/* TODO bug */
-/*:local(.exportName60) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }*/
+.postcss-modules-scope_modules_css-exportName60-function-syntax { color: green; }
 .postcss-modules-scope_modules_css-exportName60 { color: green; }
 
 /* export-with-multiple-composes */
@@ -11032,6 +11031,7 @@ body {
 	}
 }
 
+/* We pass this limitation, order can be any now */
 /* export-with-composes-broken-order */
 .postcss-modules-scope_modules_css-exportName70 { color: green; }
 .postcss-modules-scope_modules_css-exportName71 { color: green; }
@@ -11043,6 +11043,16 @@ body {
 .postcss-modules-scope_modules_css-exportName75 { color: red }
 .postcss-modules-scope_modules_css-exportName74 { color: green; }
 .postcss-modules-scope_modules_css-exportName74 { color: green; }
+
+/* deep transitive composes */
+.postcss-modules-scope_modules_css-exportName77 {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-exportName78 {}
+
+.postcss-modules-scope_modules_css-exportName79 {
+	}
 
 /*!************************!*\\\\
   !*** css ./colors.css ***!
