@@ -5,3 +5,7 @@
 @color-profile --custom-shared {
 	src: url("https://example.org/SWOP2006_Coated5v2.icc");
 }
+
+:local(.local-my-shared-class) {
+	color: red;
+}

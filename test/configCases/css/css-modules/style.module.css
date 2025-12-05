@@ -1489,3 +1489,191 @@ div {
 	}
 }
 
+/* Cases for `css/global` */
+
+:local(.my-simple-local) {
+	color: red;
+}
+
+:local(.multiple-first.multiple-second) {
+	color: red;
+}
+
+:local(.multiple-first-with-space .multiple-second-with-space) {
+	color: red;
+}
+
+div:not(:local(.special)) {
+	color: blue;
+}
+
+p:not(:local(#main-paragraph)) {
+	font-weight: bold;
+}
+
+:local(.container) {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& :local(.header) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& :local(.active) {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item:local(.selected) {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+:local(.local-class-name) {
+	color: red;
+}
+
+.global-befor-local :local(.local-class-name) {
+	color: red;
+}
+
+:local(.local-class-name) .global-after-local {
+	color: red;
+}
+
+:local(.foo) {
+	&:local(.class) {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		:local(.bar) {
+			c_value: some-value;
+		}
+
+		&:local(.baz) {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.class {
+	color: black;
+}
+
+:local(.local-class) {
+	color: white;
+}
+
+:local(.class-with-composes) {
+	composes:
+		local-class,
+		global-class from global,
+		local-my-shared-class from "./shared.css";
+}
+
+/* At-rules */
+
+@keyframes basic-keyframes {}
+@keyframes local(local-keyframes) {}
+@keyframes global(global-keyframes) {}
+/** Deprecated syntax */
+@keyframes :local(local-keyframes-old-syntax) {}
+@keyframes :global(local-keyframes-old-syntax) {}
+
+.foo {
+	animation-name: basic-keyframes, global(global-keyframes), local(local-keyframes);
+}
+
+@property local(--progress) {
+	syntax: "<percentage>";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes local(progressAnimation) {
+	to {
+		--progress: 100%;
+	}
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(local(--progress)),
+		black var(local(--progress))
+	);
+	animation: local(progressAnimation) 2.5s ease infinite;
+}
+
+@scope (:local(.article-header)) to (:global(.class)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	:local(.class-1) {
+		color: red;
+	}
+	:global(.class-2) {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
+	red,
+	local(--local-foo-bar),
+	global(--global-foo-bar),
+		/** Deprecated syntax */
+	:local(--local-foo-bar),
+	:global(--global-foo-bar);
+}
+
+.class {
+	background-color:
+		var(--foo-bar),
+		var(local(--local-foo-bar)),
+		var(global(--global-foo-bar)),
+			/** Deprecated syntax */
+		var(:local(--local-foo-bar)),
+		var(:global(--global-foo-bar)),
+		var(--global-foo-bar from global),
+		var(--from-shared from "./shared.css");
+}
+
+/** Custom local value */
+
+@unknown-rule local(unknown-at-rule) {}
+
+.class {
+	custom-name: local(unknown-at-rule);
+}
