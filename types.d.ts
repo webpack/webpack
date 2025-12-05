@@ -10704,6 +10704,7 @@ declare class ModuleGraph {
 		connection?: ModuleGraphConnection,
 		parentModule?: Module
 	): void;
+	finishUpdateParent(): void;
 	removeConnection(dependency: Dependency): void;
 	addExplanation(dependency: Dependency, explanation: string): void;
 	cloneModuleAttributes(sourceModule: Module, targetModule: Module): void;
@@ -19357,7 +19358,8 @@ declare namespace exports {
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;
 			export let sortWithSourceOrder: (
 				dependencies: Dependency[],
-				dependencySourceOrderMap: WeakMap<Dependency, DependencySourceOrder>
+				dependencySourceOrderMap: WeakMap<Dependency, DependencySourceOrder>,
+				onDependencyReSort?: (dep: Dependency, index: number) => void
 			) => void;
 		}
 		export namespace runtime {
