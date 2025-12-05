@@ -2222,6 +2222,8 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
+			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2272,8 +2274,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "dependency": /css-import-local-module/,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2314,6 +2315,44 @@ describe("snapshots", () => {
 			+         },
 			+       },
 			+       Object {
+			@@ ... @@
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "scheme": /^data$/,
+			+             "type": "css/auto",
+			+           },
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2383,11 +2422,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2399,10 +2437,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2847,8 +2886,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
 			+         },
@@ -2871,6 +2909,46 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
+			+       },
+			+       Object {
+			@@ ... @@
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "scheme": /^data$/,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2923,6 +3001,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2934,11 +3015,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
