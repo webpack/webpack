@@ -4120,6 +4120,19 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "DevToolByTypesItem".
+ */
+declare interface DevToolByTypesItem {
+	type: "all" | "javascript" | "css";
+
+	/**
+	 * devtool string
+	 */
+	use: string;
+}
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -17093,6 +17106,9 @@ declare class SourceMapDevToolPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	static withOptions(
+		options?: SourceMapDevToolPluginOptions
+	): (extra?: SourceMapDevToolPluginOptions) => SourceMapDevToolPlugin;
 }
 declare interface SourceMapDevToolPluginOptions {
 	/**
@@ -18622,6 +18638,11 @@ declare interface WebpackOptionsNormalized {
 	devtool?: string | false;
 
 	/**
+	 * devtool by types (css, js, or css & js...)
+	 */
+	devtoolByTypes?: DevToolByTypesItem[];
+
+	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
 	 */
 	dotenv?: boolean | DotenvPluginOptions;
@@ -18795,7 +18816,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	target: NonNullable<undefined | string | false | string[]>;
 } & { output: OutputNormalizedWithDefaults } & {
 	optimization: OptimizationNormalizedWithDefaults;
-} & { devtool: NonNullable<undefined | string | false> } & {
+} & { devtoolByTypes: DevToolByTypesItem[] } & {
 	stats: NonNullable<StatsValue>;
 } & { node: NonNullable<Node> } & {
 	profile: NonNullable<undefined | boolean>;
