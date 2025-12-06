@@ -548,10 +548,34 @@
           "enum": [false, "eval"]
         },
         {
-          "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+          "$ref": "#/definitions/DevToolString"
         }
       ]
+    },
+    "DevToolByTypes": {
+      "description": "devtool by types (css, js, or css & js...)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DevToolByTypesItem"
+      }
+    },
+    "DevToolByTypesItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": ["all", "javascript", "css"]
+        },
+        "use": {
+          "$ref": "#/definitions/DevToolString"
+        }
+      },
+      "required": ["type", "use"]
+    },
+    "DevToolString": {
+      "description": "devtool string",
+      "type": "string",
+      "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
     },
     "DevtoolFallbackModuleFilenameTemplate": {
       "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
@@ -5823,6 +5847,9 @@
         },
         "devtool": {
           "$ref": "#/definitions/DevTool"
+        },
+        "devtoolByTypes": {
+          "$ref": "#/definitions/DevToolByTypes"
         },
         "dotenv": {
           "$ref": "#/definitions/Dotenv"
