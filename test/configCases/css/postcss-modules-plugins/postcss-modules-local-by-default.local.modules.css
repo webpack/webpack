@@ -186,16 +186,16 @@
 /* localize custom property */
 .foo { animation: --foo; }
 
-/* not localize name in nested function */
+/* don't find a localize name, but localize var */
 .foo { animation: fade .2s var(--easeOutQuart) .1s forwards }
 
-/* not localize name in nested function #2 */
+/* not localize name in nested function */
 .foo { animation: fade .2s env(FOO_BAR) .1s forwards, name }
 
-/* not localize name in nested function #3 */
+/* don't find a localize name, but localize var */
 .foo { animation: var(--foo-bar) .1s forwards, name }
 
-/* not localize name in nested function #4 */
+/* don't find a localize name, but localize var */
 .foo { animation: var(--foo-bar) .1s forwards name, name }
 
 /* localize animation */
