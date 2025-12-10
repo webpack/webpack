@@ -59,5 +59,6 @@ export default {
 	exportNameOtherFromKeywordWithFrom2: style.exportNameOtherFromKeywordWithFrom2,
 	exportNameWeirdCharacters: style.exportNameWeirdCharacters,
 	textColor: style['text-color'],
-	classNameAfterBrokenKeyframes: style['class-name-after-broken-keyframes']
+	classNameAfterBrokenKeyframes: style['class-name-after-broken-keyframes'],
+	__webpack_modules__: Object.keys(__webpack_modules__).length
 };
