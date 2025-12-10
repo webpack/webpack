@@ -15,7 +15,7 @@ that include your webpack.config.js, relevant files, and the full error message 
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
-Do you want to fix an issue? Look at the issues with a tag of [Send a PR)](https://github.com/webpack/webpack/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Send%20a%20PR%22). Here are some of the key labels you may encounter:
+Do you want to fix an issue? Look at the issues with a tag of [Send a PR](https://github.com/webpack/webpack/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Send%20a%20PR%22). Here are some of the key labels you may encounter:
 
 - **bug**: An unexpected problem or unintended behavior.
 - **enhancement**: A suggestion for a new feature or improvement.
