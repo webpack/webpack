@@ -1,0 +1,5 @@
+{
+    "name": "side-effects-reexport",
+    "version": "1.0.0",
+    "sideEffects": false
+  }
