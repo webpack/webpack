@@ -768,5 +768,95 @@ describe("Validation", () => {
 			   -> Options object for splitting chunks into smaller chunks."
 		`)
 		);
+
+		createTestCase(
+			"resolve.alias",
+			{
+				alias: { "@": "./src" }
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'alias'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean resolve.alias?"
+		`)
+		);
+
+		createTestCase(
+			"resolve.extensions",
+			{
+				extensions: [".js", ".jsx"]
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'extensions'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean resolve.extensions?"
+		`)
+		);
+
+		createTestCase(
+			"optimization.minimize",
+			{
+				minimize: true
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'minimize'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean optimization.minimize?"
+		`)
+		);
+
+		createTestCase(
+			"output.publicPath",
+			{
+				publicPath: "/assets/"
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'publicPath'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean output.publicPath?"
+		`)
+		);
+
+		createTestCase(
+			"devtool sourceMap typo",
+			{
+				sourceMap: true
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'sourceMap'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean devtool (e.g. devtool: 'source-map')?"
+		`)
+		);
+
+		createTestCase(
+			"target typo",
+			{
+				targets: "web"
+			},
+			(msg) =>
+				expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration has an unknown property 'targets'. These properties are valid:
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   -> Options object as provided by the user.
+			   Did you mean target?"
+		`)
+		);
 	});
 });
