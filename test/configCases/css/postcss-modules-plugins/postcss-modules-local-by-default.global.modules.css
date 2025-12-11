@@ -10,7 +10,6 @@
 /* default to global when mode provided */
 .foo { a_value: some-value; }
 
-/* TODO bug */
 /* use correct spacing */
 .a :local .b {}
 .a:local.b {}
@@ -23,7 +22,7 @@
 :local(.a) .b {}
 :local( .a ) .b {}
 .a /* test */ :local /* test*/ .b {}
-/*.a !* test *!:local!* test*! .b {}*/
+.a /* test */:local/* test*/ .b {}
 .a/* test */ :local /* test*/.b {}
 .a:local(/* test */ .b /* test */) {}
 .a:local(/* test */.b/* test */) {}

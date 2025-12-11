@@ -9742,23 +9742,18 @@ input { a_value: some-value; }
 /* throw on inconsistent selector result */
 .foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :locals */
+/* throw on nested :locals, but we allow to do it */
 .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :globals */
+/* throw on nested :globals, but we allow to do it */
 .foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested mixed */
+/* throw on nested mixed, but we allow to do it */
 .foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested broad :local */
+/* throw on nested broad :local, but we allow to do it */
 .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
 
-/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .postcss-modules-local-by-default_local_modules_css-foo .bar { a_value: some-value; }
 
@@ -9817,7 +9812,6 @@ input { a_value: some-value; }
 /* not ignore custom property set */
 :root { --postcss-modules-local-by-default_local_modules_css-title-align: center; --postcss-modules-local-by-default_local_modules_css-sr-only: { position: absolute; } }
 
-/* TODO bug? */
 /* not localize imported alias */
 
 .postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
@@ -10000,25 +9994,24 @@ input { a_value: some-value; }
 /* default to global when mode provided */
 .foo { a_value: some-value; }
 
-/* TODO bug */
 /* use correct spacing */
 .a .postcss-modules-local-by-default_global_modules_css-b {}
 .a.postcss-modules-local-by-default_global_modules_css-b {}
 .a.postcss-modules-local-by-default_global_modules_css-b {}
-.a.postcss-modules-local-by-default_global_modules_css-b  {}
+.a.postcss-modules-local-by-default_global_modules_css-b {}
 .a .postcss-modules-local-by-default_global_modules_css-b {}
-.a .postcss-modules-local-by-default_global_modules_css-b  {}
+.a .postcss-modules-local-by-default_global_modules_css-b {}
+.postcss-modules-local-by-default_global_modules_css-a.b {}
 .postcss-modules-local-by-default_global_modules_css-a.b {}
 .postcss-modules-local-by-default_global_modules_css-a .b {}
 .postcss-modules-local-by-default_global_modules_css-a .b {}
-.postcss-modules-local-by-default_global_modules_css-a  .b {}
 .a /* test */ /* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
-/*.a !* test *!:local!* test*! .b {}*/
+.a /* test *//* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
 .a/* test */ /* test*/.postcss-modules-local-by-default_global_modules_css-b {}
-.a/* test */ .postcss-modules-local-by-default_global_modules_css-b /* test */ {}
-.a/* test */.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
-.a/* test */ .postcss-modules-local-by-default_global_modules_css-b/* test */ {}
-.a/* test */.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
 
 /* localize keyframes in global default mode */
 @keyframes foo { a_value: some-value; }
@@ -11023,7 +11016,6 @@ body {
 	color: red;
 }
 
-/* TODO bug */
 /* nested-rule */
 :root {
 	--postcss-modules-scope_modules_css-test: {

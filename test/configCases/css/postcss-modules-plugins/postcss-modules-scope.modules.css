@@ -499,7 +499,6 @@ body {
 	color: red;
 }
 
-/* TODO bug */
 /* nested-rule */
 :root {
 	--test: {

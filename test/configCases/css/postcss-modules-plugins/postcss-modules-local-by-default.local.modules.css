@@ -320,23 +320,18 @@
 /* throw on inconsistent selector result */
 :global .foo, .bar { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :locals */
+/* throw on nested :locals, but we allow to do it */
 :local(:local(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :globals */
+/* throw on nested :globals, but we allow to do it */
 :global(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested mixed */
+/* throw on nested mixed, but we allow to do it */
 :local(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested broad :local */
+/* throw on nested broad :local, but we allow to do it */
 :global(:local .foo) { a_value: some-value; }
 
-/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .foo :global.bar { a_value: some-value; }
 
@@ -395,7 +390,6 @@ input { a_value: some-value; }
 /* not ignore custom property set */
 :root { --title-align: center; --sr-only: { position: absolute; } }
 
-/* TODO bug? */
 /* not localize imported alias */
 :import("./import.modules.css") { a_value1: some-value; }
 
