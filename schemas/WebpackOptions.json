@@ -548,32 +548,31 @@
           "enum": [false, "eval"]
         },
         {
-          "$ref": "#/definitions/DevToolString"
+          "$ref": "#/definitions/DevToolValue"
         }
       ]
     },
     "DevToolByTypes": {
-      "description": "devtool by types (css, js, or css & js...)",
+      "description": "Assign devtool values per asset type (all, javascript, or css).",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/DevToolByTypesItem"
+        "description": "Item to assign devtool values per asset type (all, javascript, or css).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "description": "Which assets should receive this devtool value.",
+            "enum": ["all", "javascript", "css"]
+          },
+          "use": {
+            "$ref": "#/definitions/DevToolValue"
+          }
+        },
+        "required": ["type", "use"]
       }
     },
-    "DevToolByTypesItem": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "enum": ["all", "javascript", "css"]
-        },
-        "use": {
-          "$ref": "#/definitions/DevToolString"
-        }
-      },
-      "required": ["type", "use"]
-    },
-    "DevToolString": {
-      "description": "devtool string",
+    "DevToolValue": {
+      "description": "The devtool setting to apply.",
       "type": "string",
       "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
     },

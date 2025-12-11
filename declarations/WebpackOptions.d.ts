@@ -46,11 +46,11 @@ export type DevServer =
 /**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
-export type DevTool = (false | "eval") | DevToolString;
+export type DevTool = (false | "eval") | DevToolValue;
 /**
- * devtool string
+ * The devtool setting to apply.
  */
-export type DevToolString = string;
+export type DevToolValue = string;
 /**
  * Enable and configure the Dotenv plugin to load environment variables from .env files.
  */
@@ -807,9 +807,18 @@ export type CssParserUrl = boolean;
  */
 export type DeferImportExperimentOptions = boolean;
 /**
- * devtool by types (css, js, or css & js...)
+ * Assign devtool values per asset type (all, javascript, or css).
  */
-export type DevToolByTypes = DevToolByTypesItem[];
+export type DevToolByTypes = {
+	/**
+	 * Which assets should receive this devtool value.
+	 */
+	type: "all" | "javascript" | "css";
+	/**
+	 * The devtool setting to apply.
+	 */
+	use: DevToolValue;
+}[];
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -3058,17 +3067,6 @@ export interface CssParserOptions {
 	url?: CssParserUrl;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "DevToolByTypesItem".
- */
-export interface DevToolByTypesItem {
-	type: "all" | "javascript" | "css";
-	/**
-	 * devtool string
-	 */
-	use: DevToolString;
-}
-/**
  * No generator options are supported for this module type.
  */
 export interface EmptyGeneratorOptions {}
@@ -3813,7 +3811,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	devtool?: DevTool;
 	/**
-	 * devtool by types (css, js, or css & js...)
+	 * Assign devtool values per asset type (all, javascript, or css).
 	 */
 	devtoolByTypes?: DevToolByTypes;
 	/**

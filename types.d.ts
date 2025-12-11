@@ -4120,19 +4120,6 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "DevToolByTypesItem".
- */
-declare interface DevToolByTypesItem {
-	type: "all" | "javascript" | "css";
-
-	/**
-	 * devtool string
-	 */
-	use: string;
-}
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -6786,7 +6773,8 @@ declare abstract class ItemCacheFacade {
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-	extends Iterator<T, TReturn, TNext>, Disposable {
+	extends Iterator<T, TReturn, TNext>,
+		Disposable {
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
@@ -17106,9 +17094,6 @@ declare class SourceMapDevToolPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	static withOptions(
-		options?: SourceMapDevToolPluginOptions
-	): (extra?: SourceMapDevToolPluginOptions) => SourceMapDevToolPlugin;
 }
 declare interface SourceMapDevToolPluginOptions {
 	/**
@@ -18638,9 +18623,18 @@ declare interface WebpackOptionsNormalized {
 	devtool?: string | false;
 
 	/**
-	 * devtool by types (css, js, or css & js...)
+	 * Assign devtool values per asset type (all, javascript, or css).
 	 */
-	devtoolByTypes?: DevToolByTypesItem[];
+	devtoolByTypes?: {
+		/**
+		 * Which assets should receive this devtool value.
+		 */
+		type: "all" | "javascript" | "css";
+		/**
+		 * The devtool setting to apply.
+		 */
+		use: string;
+	}[];
 
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
@@ -18816,9 +18810,18 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	target: NonNullable<undefined | string | false | string[]>;
 } & { output: OutputNormalizedWithDefaults } & {
 	optimization: OptimizationNormalizedWithDefaults;
-} & { devtoolByTypes: DevToolByTypesItem[] } & {
-	stats: NonNullable<StatsValue>;
-} & { node: NonNullable<Node> } & {
+} & {
+	devtoolByTypes: {
+		/**
+		 * Which assets should receive this devtool value.
+		 */
+		type: "all" | "javascript" | "css";
+		/**
+		 * The devtool setting to apply.
+		 */
+		use: string;
+	}[];
+} & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
 	profile: NonNullable<undefined | boolean>;
 } & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
 	externalsPresets: ExternalsPresetsNormalizedWithDefaults;
