@@ -84,6 +84,7 @@ describe("snapshots", () => {
 		  "dependencies": undefined,
 		  "devServer": undefined,
 		  "devtool": false,
+		  "devtoolByTypes": Array [],
 		  "dotenv": undefined,
 		  "entry": Object {
 		    "main": Object {
@@ -881,7 +882,14 @@ describe("snapshots", () => {
 		+   },
 		@@ ... @@
 		-   "devtool": false,
+		-   "devtoolByTypes": Array [],
 		+   "devtool": "eval",
+		+   "devtoolByTypes": Array [
+		+     Object {
+		+       "type": "all",
+		+       "use": "eval",
+		+     },
+		+   ],
 		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
@@ -2138,7 +2146,14 @@ describe("snapshots", () => {
 			+   },
 			@@ ... @@
 			-   "devtool": false,
+			-   "devtoolByTypes": Array [],
 			+   "devtool": "eval",
+			+   "devtoolByTypes": Array [
+			+     Object {
+			+       "type": "all",
+			+       "use": "eval",
+			+     },
+			+   ],
 			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
