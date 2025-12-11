@@ -2282,6 +2282,22 @@ div {
 	}
 }
 
+/* nesting */
+
+.my-app-style_module_css-class{.my-app-style_module_css-class{}}
+.my-app-style_module_css-class{color:#fff5f5}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--my-app-style_module_css-baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--my-app-style_module_css-baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
 /* Cases for \`css/global\` */
 
 .my-app-style_module_css-my-simple-local {
@@ -4746,6 +4762,22 @@ div {
 		color: red;
 	}
 }
+
+/* nesting */
+
+.Vx2ADA{.Vx2ADA{}}
+.Vx2ADA{color:#fff5f5}
+.Vx2ADA{.Vx2ADA{color:#f1f1f1}}
+.Vx2ADA{--LXyTj4:#fff5f5}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;.Vx2ADA{color:#f1f1f1}}
+.Vx2ADA{--LXyTj4:#fff5f5;.Vx2ADA{color:#f1f1f1}color:#f1f1f1;}
+.Vx2ADA{.Vx2ADA{color:#f1f1f1}--LXyTj4:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.Vx2ADA{--ueKKku:{1, 'string', .Vx2ADA, #_5YNl5V, #NRwndY}}
+.Vx2ADA{--v4rNLS:[1, \\"string\\", .class, #f1f1f1, #id]}
+.Vx2ADA{--v4rNLS:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -9977,7 +10009,7 @@ input { a_value: some-value; }
 .postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
 
 /* in-media */
-@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value } }
 
 /*!*****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.global.modules.css ***!
@@ -10332,7 +10364,7 @@ html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-valu
 html { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } }
 
 /* css nesting (unfolded) #6 */
-@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value } }
 
 /* css nesting #7 */
 html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } .postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; } }
@@ -10350,7 +10382,7 @@ html .postcss-modules-local-by-default_pure_modules_css-foo, html .postcss-modul
 html { @media screen and (min-width: 900px) { & > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value; } } }
 
 /* css nesting (unfolded) #9 */
-@media screen and (min-width: 900px) { html > .class { a_value: some-value } }
+@media screen and (min-width: 900px) { html > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value } }
 
 /* css nesting #10 */
 .postcss-modules-local-by-default_pure_modules_css-class { @media screen and (min-width: 900px) { & { a_value: some-value; } } }
@@ -13438,6 +13470,22 @@ div {
 		color: red;
 	}
 }
+
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 

@@ -1489,6 +1489,22 @@ div {
 	}
 }
 
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, "string", .class, #f1f1f1, #id]}
+.class{--baz:(1, "string", .class, #f1f1f1, #id)}
+
 /* Cases for `css/global` */
 
 :local(.my-simple-local) {
