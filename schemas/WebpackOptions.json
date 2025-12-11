@@ -548,7 +548,8 @@
           "enum": [false, "eval"]
         },
         {
-          "$ref": "#/definitions/DevToolValue"
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
         }
       ]
     },
@@ -565,16 +566,11 @@
             "enum": ["all", "javascript", "css"]
           },
           "use": {
-            "$ref": "#/definitions/DevToolValue"
+            "$ref": "#/definitions/DevTool"
           }
         },
         "required": ["type", "use"]
       }
-    },
-    "DevToolValue": {
-      "description": "The devtool setting to apply.",
-      "type": "string",
-      "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
     },
     "DevtoolFallbackModuleFilenameTemplate": {
       "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",

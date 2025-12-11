@@ -46,11 +46,7 @@ export type DevServer =
 /**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
-export type DevTool = (false | "eval") | DevToolValue;
-/**
- * The devtool setting to apply.
- */
-export type DevToolValue = string;
+export type DevTool = (false | "eval") | string;
 /**
  * Enable and configure the Dotenv plugin to load environment variables from .env files.
  */
@@ -815,9 +811,9 @@ export type DevToolByTypes = {
 	 */
 	type: "all" | "javascript" | "css";
 	/**
-	 * The devtool setting to apply.
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	use: DevToolValue;
+	use: DevTool;
 }[];
 /**
  * A Function returning a Promise resolving to a normalized entry.

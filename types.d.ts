@@ -4120,6 +4120,7 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+type DevTool = string | false;
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -18630,9 +18631,9 @@ declare interface WebpackOptionsNormalized {
 		 */
 		type: "all" | "javascript" | "css";
 		/**
-		 * The devtool setting to apply.
+		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 		 */
-		use: string;
+		use: DevTool;
 	}[];
 
 	/**
@@ -18816,9 +18817,9 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		 */
 		type: "all" | "javascript" | "css";
 		/**
-		 * The devtool setting to apply.
+		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 		 */
-		use: string;
+		use: DevTool;
 	}[];
 } & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
 	profile: NonNullable<undefined | boolean>;
