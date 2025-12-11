@@ -2421,7 +2421,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 @scope (.my-app-style_module_css-article-header) to (.class) {
-	.article-footer {
+	.my-app-style_module_css-article-footer {
 		border: 5px solid black;
 	}
 	.my-app-style_module_css-class-1 {
@@ -4886,7 +4886,7 @@ p:not(#dBVRDQ) {
 }
 
 @scope (.uiPdKt) to (.class) {
-	.article-footer {
+	.NBhEtf {
 		border: 5px solid black;
 	}
 	.wCljLW {
@@ -9509,9 +9509,8 @@ Array [
 /* broad global should be limited to selector */
 .foo, .postcss-modules-local-by-default_local_modules_css-bar , .postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
-/* TODO bug */
 /* broad global should be limited to nested selector */
-.postcss-modules-local-by-default_local_modules_css-foo:not(.bar).foobar { a_value: some-value; }
+.postcss-modules-local-by-default_local_modules_css-foo:not(.bar).postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
 /* broad global and local should allow switching */
 .postcss-modules-local-by-default_local_modules_css-foo .bar .postcss-modules-local-by-default_local_modules_css-foobar .postcss-modules-local-by-default_local_modules_css-barfoo { a_value: some-value; }
@@ -9946,10 +9945,9 @@ input { a_value: some-value; }
 	}
 }
 
-/* TODO bug */
 /* @scope at-rule #2 */
 @scope (.postcss-modules-local-by-default_local_modules_css-article-body) to (.class) {
-	.article-footer {
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
 		border: 5px solid black;
 	}
 	.postcss-modules-local-by-default_local_modules_css-class-1 {
@@ -10186,7 +10184,7 @@ input { a_value: some-value; }
 
 /* cssmodules-pure-ignore */
 @scope (.foo) to (.bar) {
-	.article-footer {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
 		border: 5px solid black;
 	}
 }
@@ -10197,7 +10195,7 @@ input { a_value: some-value; }
 /* cssmodules-pure-ignore */
 @scope (.foo)
 to (.bar) {
-	.article-footer {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
 		border: 5px solid black;
 	}
 }
@@ -10508,7 +10506,7 @@ html {
 /* @scope at-rule #7 */
 
 @scope (.article-header.import_modules_css-__foo) to (.class.bar) {
-	.bar {
+	.postcss-modules-local-by-default_pure_modules_css-bar {
 		color: red;
 	}
 }

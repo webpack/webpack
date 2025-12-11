@@ -85,7 +85,6 @@
 /* broad global should be limited to selector */
 :global .foo, .bar :global, .foobar :global { a_value: some-value; }
 
-/* TODO bug */
 /* broad global should be limited to nested selector */
 .foo:not(:global .bar).foobar { a_value: some-value; }
 
@@ -530,7 +529,6 @@ input { a_value: some-value; }
 	}
 }
 
-/* TODO bug */
 /* @scope at-rule #2 */
 @scope (:local(.article-body)) to (:global(.class)) {
 	.article-footer {
