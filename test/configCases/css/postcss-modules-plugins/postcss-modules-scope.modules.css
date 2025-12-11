@@ -330,7 +330,6 @@ body {
 	color: blue;
 }
 
-/* TODO bug */
 /* export-class-attribute */
 :local(.exportName47) {
 	color: red;
@@ -338,6 +337,42 @@ body {
 
 :local(.exportName48) {
 	color: green;
+}
+
+.exportName48[class="exportName47"] {
+	color: blue;
+}
+
+:local(.exportName48[class="exportName47"]) {
+	color: blue;
+}
+
+:local(.exportName48[ class = "exportName47" ]) {
+	color: blue;
+}
+
+:local(.exportName48[ class = exportName47 ]) {
+	color: blue;
+}
+
+:local(.exportName48[class~="exportName47"]) {
+	color: blue;
+}
+
+:local(.exportName48[ class ~= "exportName47" ]) {
+	color: blue;
+}
+
+:local(.exportName48[ class ~= exportName47 ]) {
+	color: blue;
+}
+
+:global(.globalClass[class="otherGlobalClass"]) {
+	color: blue;
+}
+
+:global(.globaClass[class~="otherGlobalClass"]) {
+	color: blue;
 }
 
 :local(.exportName49[class="exportName47"]) {

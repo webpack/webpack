@@ -10860,7 +10860,6 @@ body {
 	color: blue;
 }
 
-/* TODO bug */
 /* export-class-attribute */
 .postcss-modules-scope_modules_css-exportName47 {
 	color: red;
@@ -10870,7 +10869,43 @@ body {
 	color: green;
 }
 
-.postcss-modules-scope_modules_css-exportName49[class=\\"exportName47\\"] {
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class~=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.globalClass[class=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.globaClass[class~=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName49[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
 	color: blue;
 }
 
