@@ -16,5 +16,12 @@ it("should throw helpful error when module is not found at runtime", function ()
 	// Now trying to require the module should throw a helpful error
 	expect(() => {
 		require("./helper");
-	}).toThrow(/Cannot find module with id/);
+	}).toThrow(/Cannot find module/);
+
+	// Verify the error has the correct code property (like Node.js)
+	try {
+		require("./helper");
+	} catch (e) {
+		expect(e.code).toBe("MODULE_NOT_FOUND");
+	}
 });
