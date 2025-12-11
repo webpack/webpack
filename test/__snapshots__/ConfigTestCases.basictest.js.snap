@@ -2456,8 +2456,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	--my-app-style_module_css-global-foo-bar: red;
 	--my-app-style_module_css-local-and-global-in-var:
 	red,
-	local(--local-foo-bar),
-	global(--global-foo-bar),
+	local(--my-app-style_module_css-local-foo-bar),
+	global(--my-app-style_module_css-global-foo-bar),
 		/** Deprecated syntax */
 	:local(--my-app-style_module_css-local-foo-bar),
 	:global(--my-app-style_module_css-global-foo-bar);
@@ -4937,8 +4937,8 @@ p:not(#dBVRDQ) {
 	--ho4NPI: red;
 	--hBmufP:
 	red,
-	local(--local-foo-bar),
-	global(--global-foo-bar),
+	local(--yBn7O5),
+	global(--ho4NPI),
 		/** Deprecated syntax */
 	:local(--yBn7O5),
 	:global(--ho4NPI);
