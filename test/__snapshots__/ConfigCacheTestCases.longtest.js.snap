@@ -1188,18 +1188,21 @@ div {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
-	unknown: :local(.test);
-	unknown1: :local .test;
-	unknown2: :global .test;
-	unknown3: :global .test;
-	unknown4: .foo, .bar, #bar;
+	unknown: .my-app-style_module_css-test;
+	unknown2: .test;
+	unknown3: .my-app-style_module_css-test;
+	unknown4: .test;
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
 }
 
-@unknown :local .local :global .global {
+@unknown .my-app-style_module_css-local .global {
 	color: red;
 }
 
-@unknown :local(.local) :global(.global) {
+@unknown .my-app-style_module_css-local .global {
 	color: red;
 }
 
@@ -1705,7 +1708,7 @@ div {
 	container: my-app-style_module_css-sticky-heading / inline-size;
 	container: my-app-style_module_css-sticky-heading / size;
 	container: my-app-style_module_css-sticky-heading / scroll-state;
-	--my-app-style_module_css-my-var: local(sticky-heading);
+	--my-app-style_module_css-my-var: my-app-style_module_css-sticky-heading;
 
 	container: var(--my-app-style_module_css-my-var);
 	--my-app-style_module_css-cards: small;
@@ -2185,11 +2188,11 @@ div {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --my-app-style_module_css-swop5c {
+@color-profile --my-app-style_module_css-swop5c-local {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --my-app-style_module_css-swop5c {
+@color-profile --my-app-style_module_css-swop5c-local {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -2203,14 +2206,14 @@ div {
 
 .my-app-style_module_css-class {
 	background-color: color(--my-app-style_module_css-swop5c 0% 70% 20% 0%);
-	background-color: color(local(--my-app-style_module_css-swop5c) 0% 70% 20% 0%);
-	background-color: color(:local(--my-app-style_module_css-swop5c) 0% 70% 20% 0%);
-	background-color: color(global(--my-app-style_module_css-swop5c) 0% 70% 20% 0%);
-	background-color: color(:global(--my-app-style_module_css-swop5c) 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--my-app-shared_css-from-shared 0% 70% 20% 0%);
-	background-color: color(local(--my-app-style_module_css-swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
-	background-color: color(:local(--my-app-style_module_css-swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
 }
 
 :root {
@@ -2281,9 +2284,33 @@ div {
 	}
 }
 
+/* nesting */
+
+.my-app-style_module_css-class{.my-app-style_module_css-class{}}
+.my-app-style_module_css-class{color:#fff5f5}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--my-app-style_module_css-baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--my-app-style_module_css-baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
 /* Cases for \`css/global\` */
 
+.my-app-style_module_css-just-class {
+	color: red;
+}
+
 .my-app-style_module_css-my-simple-local {
+	color: red;
+}
+
+.my-global-local {
 	color: red;
 }
 
@@ -2304,6 +2331,41 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-container {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .my-app-style_module_css-header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .my-app-style_module_css-active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.my-app-style_module_css-highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.my-app-style_module_css-item.my-app-style_module_css-selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.my-app-style_module_css-container-only-classes {
 	/* Styles for .container */
 	background-color: lightblue;
 
@@ -2378,6 +2440,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	color: white;
 }
 
+.global-class-other {
+	color: red;
+}
+
 .my-app-style_module_css-class-with-composes {
 	}
 
@@ -2400,7 +2466,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	initial-value: 25%;
 }
 
-@keyframes my-app-style_module_css-progressAnimation {
+@keyframes my-app-style_module_css-progressAnimationLocal {
 	to {
 		--my-app-style_module_css-progress: 100%;
 	}
@@ -2413,14 +2479,14 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	height: 5px;
 	background: linear-gradient(
 		to right,
-		#00d230 var(local(--my-app-style_module_css-progress)),
-		black var(local(--my-app-style_module_css-progress))
+		#00d230 var(--my-app-style_module_css-progress),
+		black var(--my-app-style_module_css-progress)
 	);
-	animation: my-app-style_module_css-progressAnimation 2.5s ease infinite;
+	animation: my-app-style_module_css-progressAnimationLocal 2.5s ease infinite;
 }
 
 @scope (.my-app-style_module_css-article-header) to (.class) {
-	.article-footer {
+	.my-app-style_module_css-article-footer {
 		border: 5px solid black;
 	}
 	.my-app-style_module_css-class-1 {
@@ -2439,31 +2505,38 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	--my-app-style_module_css-global-foo-bar: red;
 	--my-app-style_module_css-local-and-global-in-var:
 	red,
-	local(--local-foo-bar),
-	global(--global-foo-bar),
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar,
 		/** Deprecated syntax */
-	:local(--my-app-style_module_css-local-foo-bar),
-	:global(--my-app-style_module_css-global-foo-bar);
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar;
 }
 
 .my-app-style_module_css-class {
 	background-color:
 		var(--my-app-style_module_css-foo-bar),
-		var(local(--my-app-style_module_css-local-foo-bar)),
-		var(global(--my-app-style_module_css-global-foo-bar)),
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
 			/** Deprecated syntax */
-		var(:local(--my-app-style_module_css-local-foo-bar)),
-		var(:global(--my-app-style_module_css-global-foo-bar)),
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
 		var(--global-foo-bar),
 		var(--my-app-shared_css-from-shared);
 }
 
 /** Custom local value */
 
-@unknown-rule local(unknown-at-rule) {}
+@unknown-rule my-app-style_module_css-unknown-at-rule {}
 
 .my-app-style_module_css-class {
-	custom-name: local(unknown-at-rule);
+	custom-name: my-app-style_module_css-unknown-at-rule;
+}
+
+.class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
 }
 
 /*!*********************************!*\\\\
@@ -2554,26 +2627,30 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 4`] = `
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global dev 1`] = `
 Object {
   "active": "my-app-style_module_css-active",
+  "animation-name-test": "my-app-style_module_css-animation-name-test",
   "article-header": "my-app-style_module_css-article-header",
   "bar": "my-app-style_module_css-bar",
   "baz": "my-app-style_module_css-baz",
-  "card": "my-app-style_module_css-card",
+  "bounce": "my-app-style_module_css-bounce",
   "class": "my-app-style_module_css-class",
   "class-1": "my-app-style_module_css-class-1",
   "class-local-scope": "my-app-style_module_css-class-local-scope",
-  "class-with-composes": "my-app-style_module_css-class-with-composes",
+  "class-with-composes": "my-app-style_module_css-class-with-composes my-app-style_module_css-local-class global-class global-class-other my-app-shared_css-local-my-shared-class",
   "container": "my-app-style_module_css-container",
-  "extend-thumbs": "my-app-style_module_css-extend-thumbs",
   "foo": "my-app-style_module_css-foo",
   "hash": "my-app-style_module_css-hash",
   "header": "my-app-style_module_css-header",
   "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
+  "local": "my-app-style_module_css-local",
   "local-class": "my-app-style_module_css-local-class",
   "local-class-name": "my-app-style_module_css-local-class-name",
+  "local-foo-bar": "--my-app-style_module_css-local-foo-bar",
   "local-in-global": "my-app-style_module_css-local-in-global",
+  "local-keyframes": "my-app-style_module_css-local-keyframes",
+  "local-keyframes-old-syntax": "my-app-style_module_css-local-keyframes-old-syntax",
   "local-nested": "my-app-style_module_css-local-nested",
   "local4": "my-app-style_module_css-local4",
   "localUpperCase": "my-app-style_module_css-localUpperCase",
@@ -2585,13 +2662,4689 @@ Object {
   "my-global-class-again": "my-app-style_module_css-my-global-class-again",
   "my-simple-local": "my-app-style_module_css-my-simple-local",
   "nested1": "my-app-style_module_css-nested1",
+  "progress": "--my-app-style_module_css-progress",
+  "progressAnimationLocal": "my-app-style_module_css-progressAnimationLocal",
   "selected": "my-app-style_module_css-selected",
   "special": "my-app-style_module_css-special",
   "sticky-heading": "my-app-style_module_css-sticky-heading",
-  "summary": "my-app-style_module_css-summary",
-  "tall": "my-app-style_module_css-tall",
-  "thumbs": "my-app-style_module_css-thumbs",
+  "swop5c-local": "--my-app-style_module_css-swop5c-local",
+  "test": "my-app-style_module_css-test",
+  "unknown-at-rule": "my-app-style_module_css-unknown-at-rule",
 }
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global dev 2`] = `
+"/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./at-rule-value.module.css ***!
+  \\\\**************************************/
+
+
+.value-in-class {
+	color: blue;
+}
+
+
+
+
+
+
+@media (max-width: 599px) {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+
+
+.foo { color: red; }
+
+
+
+.foo {
+	&.bar { color: red; }
+}
+
+
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar { color: red; }
+	}
+}
+
+
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+
+
+
+.foo { height: 40px; height: 36px; }
+
+
+
+.red {
+	color: red;
+}
+
+
+
+#colorValue-v1 {
+	color: red;
+}
+
+
+
+.red > .red {
+	color: red;
+}
+
+
+
+.red {
+	color: .red;
+}
+
+
+
+.export {
+	color: blue;
+}
+
+
+
+.foo { color: red; }
+
+
+
+.foo { color: red; }
+.bar { color: yellow }
+
+
+
+
+.foo { color: blue; }
+
+
+
+
+.class-a { color: red; }
+
+
+
+
+.class-a { margin: calc(base * 2); }
+
+
+
+
+.class-a { content: \\"test-a\\" \\"test-b\\"; }
+
+
+
+.foo { color: var(--color); }
+
+
+
+
+
+
+
+.foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+
+
+.foo { color: blue; }
+.bar { color: red }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { color: color(red lightness(50%)); }
+
+
+
+:root { --color: red; }
+
+
+
+:root { --color: ; }
+
+
+
+:root { --color:   ; }
+
+
+
+:root { --color: /* comment */; }
+
+
+
+
+.red {
+	color: red;
+}
+
+
+
+
+.class {
+	color: red;
+	color: red;
+	color: blue;
+}
+
+
+
+.color {
+	color: /* test */red/* test */;
+}
+
+
+
+.color {
+	color: /* test *//* test */red/* test */;
+}
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { color: blue; }
+
+
+
+.foo { color: blue; }
+
+
+
+.foo { color: red; }
+
+
+
+
+/*!*************************************!*\\\\
+  !*** css ./var-function.module.css ***!
+  \\\\*************************************/
+:root {
+	--main-bg-color: brown;
+	--my-var: red;
+	--my-background: blue;
+	--my-global: yellow;
+	--: \\"reserved\\";
+	--a: green;
+}
+
+.class {
+	color: var(--main-bg-color);
+}
+
+@property --logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--logo-color);
+}
+
+div {
+	background-color: var(--box-color);
+}
+
+.two {
+	--box-color: cornflowerblue;
+}
+
+.three {
+	--box-color: aquamarine;
+}
+
+
+.one {
+	/* Red if --my-var is not defined */
+	color: var(--my-var, red);
+}
+
+.two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-var, var(--my-background, pink));
+}
+
+.reserved {
+	color: var(--);
+}
+
+.green {
+	color: var(--a);
+}
+
+.global {
+	color: var(--my-global from global);
+}
+
+.global-and-default {
+	color: var(--my-global from global, pink);
+}
+
+.global-and-default-1 {
+	color: var(--my-global from global, var(--my-global-background from global));
+}
+
+.global-and-default-2 {
+	color: var(--my-global from global, var(--my-global-background from global, pink));
+}
+
+.global-and-default-3 {
+	color: var(--my-global from global, var(--my-background, pink));
+}
+
+.global-and-default-5 {
+	color: var(   --my-global   from   global,var(--my-background,pink));
+}
+
+.global-and-default-6 {
+	background: var(   --main-bg-color   ,   var(   --my-background   ,   pink   )   )   , var(--my-global from   global);
+}
+
+.global-and-default-7 {
+	background: var(--main-bg-color,var(--my-background,pink)),var(--my-global from global);
+}
+
+.from {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-1 {
+	color: var(--main-bg-color, var(--my-var-u1 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-2 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--main-bg-color));
+}
+
+.from-3 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--my-var-u2 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-4 {
+	color: var(--1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-5 {
+	color: var(----a from \\"./var-function-export.modules.css\\");
+}
+
+.from-6 {
+	color: var(--main-bg-color from \\"./var-function-export.modules.css\\");
+}
+
+.mixed {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\", var(--my-global from global, var(--main-bg-color, red)));
+}
+
+.broken {
+	color: var(--my-global from);
+}
+
+.broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--not-override-class: red;
+}
+
+.not-override-class {
+	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
+}
+
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+.parent {
+	--parent-padding: 20px;
+	padding: var(--parent-padding);
+
+	.child {
+		--child-margin: 10px;
+		margin-top: var(--child-margin);
+		padding-left: var(--parent-padding); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--base-padding: 1.5rem;
+		--font-scale: 1.2;
+	}
+}
+
+.container {
+	padding: var(--base-padding); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.item-title {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--font-scale));
+	margin-bottom: calc(var(--base-padding) / 2);
+}
+
+.item-details {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--base-padding) * 2));
+}
+
+.banner {
+	/* Locally scoped variables (pseudo-private) */
+	--banner-bg: #e0f7fa; /* Default info color */
+	--banner-text: #00796b;
+	--banner-icon: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--banner-bg);
+	color: var(--banner-text);
+	border-left: 5px solid var(--banner-text);
+}
+
+:root {
+	--accordion-bg: #fff;
+	--accordion-border: #ddd;
+	--accordion-text: #333;
+	--accordion-accent: royalblue;
+}
+
+.accordion-container {
+	border: 1px solid var(--accordion-border);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& .accordion-item {
+		background: var(--accordion-bg);
+		color: var(--accordion-text);
+		border-bottom: 1px solid var(--accordion-border);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .accordion-header {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--accordion-bg) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.is-active {
+			--accordion-bg: var(--accordion-accent); /* Nested override */
+			--accordion-text: #fff; /* Nested override */
+
+			& .accordion-header {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.is-dark-theme {
+		/* These variables are scoped only to elements within this specific container */
+		--accordion-bg: #333;
+		--accordion-border: #555;
+		--accordion-text: #eee;
+		--accordion-accent: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.media-object {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--avatar-size: 48px;
+	--text-size: 1rem;
+
+	& .avatar {
+		width: var(--avatar-size);
+		height: var(--avatar-size);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .content {
+		font-size: var(--text-size);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--avatar-size: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--text-size: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--primary-color: #007bff;
+	--text-color: var(--primary-color); /* --text-color now uses the value of --primary-color */
+	--highlight-background: linear-gradient(to right, var(--primary-color), #6c757d);
+}
+
+.element {
+	color: var(--text-color);
+	background: var(--highlight-background);
+}
+
+/*!************************!*\\\\
+  !*** css ./shared.css ***!
+  \\\\************************/
+:root {
+	--from-shared: --custom-shared;
+}
+
+@color-profile --custom-shared {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.my-app-shared_css-local-my-shared-class {
+	color: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+
+.class {
+	color: red;
+}
+
+.local1,
+.local2 .global,
+.local3 {
+	color: green;
+}
+
+.global .my-app-style_module_css-local4 {
+	color: yellow;
+}
+
+.local5.global.local6 {
+	color: blue;
+}
+
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local8 :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local10 :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local11 div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.local13 div:past(p, span) {
+	display: none;
+}
+
+.local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.my-app-style_module_css-nested1.nested2.nested3 {
+	color: pink;
+}
+
+#ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+.vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .my-app-style_module_css-localUpperCase {
+	color: yellow;
+}
+
+.VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.globalVarsUpperCase {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.inSupportScope {
+		color: red;
+	}
+}
+
+.a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
+}
+
+.class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: .my-app-style_module_css-test;
+	unknown2: .test;
+	unknown3: .my-app-style_module_css-test;
+	unknown4: .test;
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
+}
+
+@unknown .my-app-style_module_css-local .global {
+	color: red;
+}
+
+@unknown .my-app-style_module_css-local .global {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	.my-app-style_module_css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+.class .my-app-style_module_css-in-local-global-scope,
+.class .my-app-style_module_css-in-local-global-scope,
+.my-app-style_module_css-class-local-scope .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
+
+.global-foo, .my-app-style_module_css-bar {
+	.my-app-style_module_css-local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.my-app-style_module_css-my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .class, .my-app-style_module_css-nested1.nested2.nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	: local(.class) {
+		color: red;
+	}
+
+	: local .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.comments {
+	.class {
+		color: red;
+	}
+
+	.class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.error, #err-404 {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+.qqq {
+	color: green;
+	& .a { color: blue; }
+	color: red;
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		.content {
+			color: red;
+		}
+	}
+
+	.a {
+		color: red;
+	}
+}
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(09a1a1112c577c279435.png);
+	list-style: none;
+	list-style: none disc url(09a1a1112c577c279435.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(09a1a1112c577c279435.png);
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(09a1a1112c577c279435.png) inside;
+
+	/* three values */
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.class {
+		font-size: 1.5em;
+	}
+}
+
+@container tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.post {
+	container-name: tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: my-app-style_module_css-sticky-heading;
+
+	container: var(--my-var);
+	--cards: small;
+	container-type: inline-size;
+}
+
+
+@container summary style(--cards: small) {
+	.card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.feature) {
+	.class { opacity: 0; }
+
+	:scope .class-1 { opacity: 0; }
+
+	& .class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.a {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+	.test {
+		width: 200px;
+	}
+}
+
+#test {
+	c: 1;
+
+	#test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@property --progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--progress),
+		black var(--progress)
+	);
+	animation: progressAnimation 2.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+	to {
+		--progress: 100%;
+	}
+}
+
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused \\"initial\\", localkeyframes2;
+	animation-name: \\"initial\\";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
+.var {
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: \\"test\\";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: \\" (\\" var(--external-link) \\")\\";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
+}
+
+.var-order {
+	background-color: var(--test);
+	--test: red;
+}
+
+.className {
+	border-radius: 12px;
+}
+
+.classNameLocal {
+	border-radius: 12px;
+}
+
+.classNameLocalOther {
+	border-radius: 12px;
+}
+
+.exportName {
+	composes:
+		className    from   \\"./classes.modules.css\\"		,
+		beforeName   from    global   ,
+		className   ,
+		classNameLocal   ,
+		importName   secondImport   from   global   ,
+		otherClassName    otherClassNameToo    from   \\"classes.modules.css\\"
+;
+	composes:   classNameLocal   ;
+	composes:   classNameLocal   classNameLocalOther   ;
+	composes:   classNameLocal ,   classNameLocalOther   ;
+	composes:   className   from    global   ;
+	composes:   className   classNameOther   from    global   ;
+	composes:   className from    global   ,   classNameOther   from    global   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ;
+	composes:   className   otherClassName   from    \\"./classes.modules.css\\"   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ,   otherClassName   from    \\"./classes.modules.css\\"   ;
+	border: red;
+}
+
+.exportNameOtherNoSpaces {
+	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
+}
+
+.from {
+	color: red;
+}
+
+.exportNameOtherFromKeyword {
+	composes: from;
+}
+
+.exportNameOtherFromKeywordWithFrom1 {
+	composes: from from global;
+}
+
+.exportNameOtherFromKeywordWithFrom2 {
+	composes: from from \\"./classes.modules.css\\";
+}
+
+.exportNameWeirdCharacters {
+	composes: a -b b- --c c-- _d d\\\\% from \\"./classes.modules.css\\";
+}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
+}
+
+div {
+	animation: --anim-1s(my-app-style_module_css-bounce, 2);
+}
+
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--mode: sharp;
+}
+
+.apply-sharp {
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --my-app-style_module_css-swop5c-local {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --my-app-style_module_css-swop5c-local {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.class {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
+}
+
+:root {
+	--text-color: #eee;
+}
+
+.simple {
+	color: var(--text-color);
+}
+
+/* Just nesting */
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.post {
+	--themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--themeColor: blue) {
+	.card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
+}
+
+@keyframes broken;
+
+.class-name-after-broken-keyframes {
+	color: red;
+}
+
+.no-space {
+	.class-no-space {
+		color: red;
+	}
+
+	/** test **/.class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	/** test **/.my-app-style_module_css-class {
+		color: red;
+	}
+
+	/** test **/#my-app-style_module_css-hash {
+		color: red;
+	}
+
+	/** test **/{
+		color: red;
+	}
+}
+
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
+/* Cases for \`css/global\` */
+
+.just-class {
+	color: red;
+}
+
+.my-app-style_module_css-my-simple-local {
+	color: red;
+}
+
+.my-global-local {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first.my-app-style_module_css-multiple-second {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first-with-space .my-app-style_module_css-multiple-second-with-space {
+	color: red;
+}
+
+div:not(.my-app-style_module_css-special) {
+	color: blue;
+}
+
+p:not(#my-app-style_module_css-main-paragraph) {
+	font-weight: bold;
+}
+
+.my-app-style_module_css-container {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .my-app-style_module_css-header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .my-app-style_module_css-active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.my-app-style_module_css-selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.container-only-classes {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.global-befor-local .my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-local-class-name .global-after-local {
+	color: red;
+}
+
+.my-app-style_module_css-foo {
+	&.my-app-style_module_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.my-app-style_module_css-bar {
+			c_value: some-value;
+		}
+
+		&.my-app-style_module_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.class {
+	color: black;
+}
+
+.my-app-style_module_css-local-class {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.my-app-style_module_css-class-with-composes {
+	}
+
+/* At-rules */
+
+@keyframes basic-keyframes {}
+@keyframes my-app-style_module_css-local-keyframes {}
+@keyframes global-keyframes {}
+/** Deprecated syntax */
+@keyframes my-app-style_module_css-local-keyframes-old-syntax {}
+@keyframes local-keyframes-old-syntax {}
+
+.foo {
+	animation-name: basic-keyframes, global-keyframes, my-app-style_module_css-local-keyframes;
+}
+
+@property --my-app-style_module_css-progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes my-app-style_module_css-progressAnimationLocal {
+	to {
+		--progress: 100%;
+	}
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--my-app-style_module_css-progress),
+		black var(--my-app-style_module_css-progress)
+	);
+	animation: my-app-style_module_css-progressAnimationLocal 2.5s ease infinite;
+}
+
+@scope (.my-app-style_module_css-article-header) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.my-app-style_module_css-class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
+	red,
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar,
+		/** Deprecated syntax */
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar;
+}
+
+.class {
+	background-color:
+		var(--foo-bar),
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
+			/** Deprecated syntax */
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
+		var(--global-foo-bar from global),
+		var(--from-shared from \\"./shared.css\\");
+}
+
+/** Custom local value */
+
+@unknown-rule my-app-style_module_css-unknown-at-rule {}
+
+.class {
+	custom-name: my-app-style_module_css-unknown-at-rule;
+}
+
+.class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global prod 1`] = `
+Object {
+  "active": "zwwxVU",
+  "animation-name-test": "jOrreA",
+  "article-header": "uiPdKt",
+  "bar": "ueKKku",
+  "baz": "v4rNLS",
+  "bounce": "XEyeRq",
+  "class": "Vx2ADA",
+  "class-1": "wCljLW",
+  "class-local-scope": "XlQsKD",
+  "class-with-composes": "pdN5nk lSYuKq global-class global-class-other wEhvQL",
+  "container": "lAqA-R",
+  "foo": "LXyTj4",
+  "hash": "jcIvvc",
+  "header": "Zq4Bgu",
+  "in-local-global-scope": "MoUXzC",
+  "local": "KBEflt",
+  "local-class": "lSYuKq",
+  "local-class-name": "-bicf2",
+  "local-foo-bar": "--yBn7O5",
+  "local-in-global": "NSL9R7",
+  "local-keyframes": "Svchdz",
+  "local-keyframes-old-syntax": "h18zzQ",
+  "local-nested": "VxblVB",
+  "local4": "HEwyXh",
+  "localUpperCase": "AgZzby",
+  "main-paragraph": "dBVRDQ",
+  "multiple-first": "YK629R",
+  "multiple-first-with-space": "bBUtJ3",
+  "multiple-second": "d69pL2",
+  "multiple-second-with-space": "_10-3eM",
+  "my-global-class-again": "W4wdXr",
+  "my-simple-local": "xcsnD2",
+  "nested1": "kbu2T9",
+  "progress": "--z8dXmV",
+  "progressAnimationLocal": "_1zMqGM",
+  "selected": "n5D5Q0",
+  "special": "_5KiKr2",
+  "sticky-heading": "_5unArO",
+  "swop5c-local": "--uypV5i",
+  "test": "OyMPmk",
+  "unknown-at-rule": "DqBFzD",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global prod 2`] = `
+"/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./at-rule-value.module.css ***!
+  \\\\**************************************/
+
+
+.value-in-class {
+	color: blue;
+}
+
+
+
+
+
+
+@media (max-width: 599px) {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+
+
+.foo { color: red; }
+
+
+
+.foo {
+	&.bar { color: red; }
+}
+
+
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar { color: red; }
+	}
+}
+
+
+
+.foo {
+	@media (min-width: 1024px) {
+		&.bar {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+
+
+
+.foo { height: 40px; height: 36px; }
+
+
+
+.red {
+	color: red;
+}
+
+
+
+#colorValue-v1 {
+	color: red;
+}
+
+
+
+.red > .red {
+	color: red;
+}
+
+
+
+.red {
+	color: .red;
+}
+
+
+
+.export {
+	color: blue;
+}
+
+
+
+.foo { color: red; }
+
+
+
+.foo { color: red; }
+.bar { color: yellow }
+
+
+
+
+.foo { color: blue; }
+
+
+
+
+.class-a { color: red; }
+
+
+
+
+.class-a { margin: calc(base * 2); }
+
+
+
+
+.class-a { content: \\"test-a\\" \\"test-b\\"; }
+
+
+
+.foo { color: var(--color); }
+
+
+
+
+
+
+
+.foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+
+
+.foo { color: blue; }
+.bar { color: red }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { color: color(red lightness(50%)); }
+
+
+
+:root { --color: red; }
+
+
+
+:root { --color: ; }
+
+
+
+:root { --color:   ; }
+
+
+
+:root { --color: /* comment */; }
+
+
+
+
+.red {
+	color: red;
+}
+
+
+
+
+.class {
+	color: red;
+	color: red;
+	color: blue;
+}
+
+
+
+.color {
+	color: /* test */red/* test */;
+}
+
+
+
+.color {
+	color: /* test *//* test */red/* test */;
+}
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.foo { color: blue; }
+
+
+
+.foo { color: blue; }
+
+
+
+.foo { color: red; }
+
+
+
+
+/*!*************************************!*\\\\
+  !*** css ./var-function.module.css ***!
+  \\\\*************************************/
+:root {
+	--main-bg-color: brown;
+	--my-var: red;
+	--my-background: blue;
+	--my-global: yellow;
+	--: \\"reserved\\";
+	--a: green;
+}
+
+.class {
+	color: var(--main-bg-color);
+}
+
+@property --logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--logo-color);
+}
+
+div {
+	background-color: var(--box-color);
+}
+
+.two {
+	--box-color: cornflowerblue;
+}
+
+.three {
+	--box-color: aquamarine;
+}
+
+
+.one {
+	/* Red if --my-var is not defined */
+	color: var(--my-var, red);
+}
+
+.two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-var, var(--my-background, pink));
+}
+
+.reserved {
+	color: var(--);
+}
+
+.green {
+	color: var(--a);
+}
+
+.global {
+	color: var(--my-global from global);
+}
+
+.global-and-default {
+	color: var(--my-global from global, pink);
+}
+
+.global-and-default-1 {
+	color: var(--my-global from global, var(--my-global-background from global));
+}
+
+.global-and-default-2 {
+	color: var(--my-global from global, var(--my-global-background from global, pink));
+}
+
+.global-and-default-3 {
+	color: var(--my-global from global, var(--my-background, pink));
+}
+
+.global-and-default-5 {
+	color: var(   --my-global   from   global,var(--my-background,pink));
+}
+
+.global-and-default-6 {
+	background: var(   --main-bg-color   ,   var(   --my-background   ,   pink   )   )   , var(--my-global from   global);
+}
+
+.global-and-default-7 {
+	background: var(--main-bg-color,var(--my-background,pink)),var(--my-global from global);
+}
+
+.from {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-1 {
+	color: var(--main-bg-color, var(--my-var-u1 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-2 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--main-bg-color));
+}
+
+.from-3 {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\",  var(--my-var-u2 from \\"./var-function-export.modules.css\\"));
+}
+
+.from-4 {
+	color: var(--1 from \\"./var-function-export.modules.css\\");
+}
+
+.from-5 {
+	color: var(----a from \\"./var-function-export.modules.css\\");
+}
+
+.from-6 {
+	color: var(--main-bg-color from \\"./var-function-export.modules.css\\");
+}
+
+.mixed {
+	color: var(--my-var-u1 from \\"./var-function-export.modules.css\\", var(--my-global from global, var(--main-bg-color, red)));
+}
+
+.broken {
+	color: var(--my-global from);
+}
+
+.broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--not-override-class: red;
+}
+
+.not-override-class {
+	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
+}
+
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+.parent {
+	--parent-padding: 20px;
+	padding: var(--parent-padding);
+
+	.child {
+		--child-margin: 10px;
+		margin-top: var(--child-margin);
+		padding-left: var(--parent-padding); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--base-padding: 1.5rem;
+		--font-scale: 1.2;
+	}
+}
+
+.container {
+	padding: var(--base-padding); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.item-title {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--font-scale));
+	margin-bottom: calc(var(--base-padding) / 2);
+}
+
+.item-details {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--base-padding) * 2));
+}
+
+.banner {
+	/* Locally scoped variables (pseudo-private) */
+	--banner-bg: #e0f7fa; /* Default info color */
+	--banner-text: #00796b;
+	--banner-icon: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--banner-bg);
+	color: var(--banner-text);
+	border-left: 5px solid var(--banner-text);
+}
+
+:root {
+	--accordion-bg: #fff;
+	--accordion-border: #ddd;
+	--accordion-text: #333;
+	--accordion-accent: royalblue;
+}
+
+.accordion-container {
+	border: 1px solid var(--accordion-border);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& .accordion-item {
+		background: var(--accordion-bg);
+		color: var(--accordion-text);
+		border-bottom: 1px solid var(--accordion-border);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .accordion-header {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--accordion-bg) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.is-active {
+			--accordion-bg: var(--accordion-accent); /* Nested override */
+			--accordion-text: #fff; /* Nested override */
+
+			& .accordion-header {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.is-dark-theme {
+		/* These variables are scoped only to elements within this specific container */
+		--accordion-bg: #333;
+		--accordion-border: #555;
+		--accordion-text: #eee;
+		--accordion-accent: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.media-object {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--avatar-size: 48px;
+	--text-size: 1rem;
+
+	& .avatar {
+		width: var(--avatar-size);
+		height: var(--avatar-size);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .content {
+		font-size: var(--text-size);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--avatar-size: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--text-size: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--primary-color: #007bff;
+	--text-color: var(--primary-color); /* --text-color now uses the value of --primary-color */
+	--highlight-background: linear-gradient(to right, var(--primary-color), #6c757d);
+}
+
+.element {
+	color: var(--text-color);
+	background: var(--highlight-background);
+}
+
+/*!************************!*\\\\
+  !*** css ./shared.css ***!
+  \\\\************************/
+:root {
+	--from-shared: --custom-shared;
+}
+
+@color-profile --custom-shared {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.wEhvQL {
+	color: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+
+.class {
+	color: red;
+}
+
+.local1,
+.local2 .global,
+.local3 {
+	color: green;
+}
+
+.global .HEwyXh {
+	color: yellow;
+}
+
+.local5.global.local6 {
+	color: blue;
+}
+
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local8 :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local10 :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local11 div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.local13 div:past(p, span) {
+	display: none;
+}
+
+.local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.kbu2T9.nested2.nested3 {
+	color: pink;
+}
+
+#ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+.vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .AgZzby {
+	color: yellow;
+}
+
+.VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.globalVarsUpperCase {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.inSupportScope {
+		color: red;
+	}
+}
+
+.a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
+}
+
+.class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: .OyMPmk;
+	unknown2: .test;
+	unknown3: .OyMPmk;
+	unknown4: .test;
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
+}
+
+@unknown .KBEflt .global {
+	color: red;
+}
+
+@unknown .KBEflt .global {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	.VxblVB {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.VxblVB {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.VxblVB, .global-nested-next {
+		color: red;
+	}
+
+	.VxblVB, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.NSL9R7 {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+.class .MoUXzC,
+.class .MoUXzC,
+.XlQsKD .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
+
+.global-foo, .ueKKku {
+	.NSL9R7       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.W4wdXr {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .class, .kbu2T9.nested2.nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.broken {
+	. global(.class) {
+		color: red;
+	}
+
+	: global(.class) {
+		color: red;
+	}
+
+	: global .class {
+		color: red;
+	}
+
+	: local(.class) {
+		color: red;
+	}
+
+	: local .class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.comments {
+	.class {
+		color: red;
+	}
+
+	.class {
+		color: red;
+	}
+
+	.Vx2ADA {
+		color: red;
+	}
+
+	.Vx2ADA {
+		color: red;
+	}
+
+	./** test **/Vx2ADA {
+		color: red;
+	}
+
+	./** test **/Vx2ADA {
+		color: red;
+	}
+
+	./** test **/Vx2ADA {
+		color: red;
+	}
+}
+
+.foo {
+	color: red;
+	+ .bar + & { color: blue; }
+}
+
+.error, #err-404 {
+	&:hover > .baz { color: red; }
+}
+
+.foo {
+	& :is(.bar, &.baz) { color: red; }
+}
+
+.qqq {
+	color: green;
+	& .a { color: blue; }
+	color: red;
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		& .content {
+			color: red;
+		}
+	}
+}
+
+.parent {
+	color: blue;
+
+	@scope (& > .scope) to (& > .limit) {
+		.content {
+			color: red;
+		}
+	}
+
+	.a {
+		color: red;
+	}
+}
+
+@scope (.card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(09a1a1112c577c279435.png);
+	list-style: none;
+	list-style: none disc url(09a1a1112c577c279435.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(09a1a1112c577c279435.png);
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(09a1a1112c577c279435.png) inside;
+
+	/* three values */
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.class {
+		font-size: 1.5em;
+	}
+}
+
+@container tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.post {
+	container-name: tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: _5unArO;
+
+	container: var(--my-var);
+	--cards: small;
+	container-type: inline-size;
+}
+
+
+@container summary style(--cards: small) {
+	.card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.feature) {
+	.class { opacity: 0; }
+
+	:scope .class-1 { opacity: 0; }
+
+	& .class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.a {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	width: 200px;
+
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+
+		.test {
+			width: 200px;
+		}
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	.test {
+		width: 200px;
+	}
+}
+
+.test {
+	.test {
+		width: 200px;
+	}
+	width: 200px;
+	.test {
+		width: 200px;
+	}
+}
+
+#test {
+	c: 1;
+
+	#test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@property --progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--progress),
+		black var(--progress)
+	);
+	animation: progressAnimation 2.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+	to {
+		--progress: 100%;
+	}
+}
+
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused \\"initial\\", localkeyframes2;
+	animation-name: \\"initial\\";
+	animation-duration: 2s;
+}
+
+.item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
+.var {
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: \\"test\\";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: \\" (\\" var(--external-link) \\")\\";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
+}
+
+.var-order {
+	background-color: var(--test);
+	--test: red;
+}
+
+.className {
+	border-radius: 12px;
+}
+
+.classNameLocal {
+	border-radius: 12px;
+}
+
+.classNameLocalOther {
+	border-radius: 12px;
+}
+
+.exportName {
+	composes:
+		className    from   \\"./classes.modules.css\\"		,
+		beforeName   from    global   ,
+		className   ,
+		classNameLocal   ,
+		importName   secondImport   from   global   ,
+		otherClassName    otherClassNameToo    from   \\"classes.modules.css\\"
+;
+	composes:   classNameLocal   ;
+	composes:   classNameLocal   classNameLocalOther   ;
+	composes:   classNameLocal ,   classNameLocalOther   ;
+	composes:   className   from    global   ;
+	composes:   className   classNameOther   from    global   ;
+	composes:   className from    global   ,   classNameOther   from    global   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ;
+	composes:   className   otherClassName   from    \\"./classes.modules.css\\"   ;
+	composes:   className   from    \\"./classes.modules.css\\"   ,   otherClassName   from    \\"./classes.modules.css\\"   ;
+	border: red;
+}
+
+.exportNameOtherNoSpaces {
+	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
+}
+
+.from {
+	color: red;
+}
+
+.exportNameOtherFromKeyword {
+	composes: from;
+}
+
+.exportNameOtherFromKeywordWithFrom1 {
+	composes: from from global;
+}
+
+.exportNameOtherFromKeywordWithFrom2 {
+	composes: from from \\"./classes.modules.css\\";
+}
+
+.exportNameWeirdCharacters {
+	composes: a -b b- --c c-- _d d\\\\% from \\"./classes.modules.css\\";
+}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
+}
+
+div {
+	animation: --anim-1s(XEyeRq, 2);
+}
+
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+:root {
+	--mode: sharp;
+}
+
+.apply-sharp {
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --uypV5i {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --uypV5i {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.class {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--uypV5i 0% 70% 20% 0%);
+	background-color: color(--uypV5i 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--uypV5i, \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--uypV5i, \\"./shared.css\\" 0% 70% 20% 0%);
+}
+
+:root {
+	--text-color: #eee;
+}
+
+.simple {
+	color: var(--text-color);
+}
+
+/* Just nesting */
+.theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.post {
+	--themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--themeColor: blue) {
+	.card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
+}
+
+@keyframes broken;
+
+.class-name-after-broken-keyframes {
+	color: red;
+}
+
+.no-space {
+	.class-no-space {
+		color: red;
+	}
+
+	/** test **/.class {
+		color: red;
+	}
+
+	.Vx2ADA {
+		color: red;
+	}
+
+	/** test **/.Vx2ADA {
+		color: red;
+	}
+
+	/** test **/#jcIvvc {
+		color: red;
+	}
+
+	/** test **/{
+		color: red;
+	}
+}
+
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
+/* Cases for \`css/global\` */
+
+.just-class {
+	color: red;
+}
+
+.xcsnD2 {
+	color: red;
+}
+
+.my-global-local {
+	color: red;
+}
+
+.YK629R.d69pL2 {
+	color: red;
+}
+
+.bBUtJ3 ._10-3eM {
+	color: red;
+}
+
+div:not(._5KiKr2) {
+	color: blue;
+}
+
+p:not(#dBVRDQ) {
+	font-weight: bold;
+}
+
+.lAqA-R {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .Zq4Bgu {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .zwwxVU {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.n5D5Q0 {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.container-only-classes {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.-bicf2 {
+	color: red;
+}
+
+.global-befor-local .-bicf2 {
+	color: red;
+}
+
+.-bicf2 .global-after-local {
+	color: red;
+}
+
+.LXyTj4 {
+	&.Vx2ADA {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.ueKKku {
+			c_value: some-value;
+		}
+
+		&.v4rNLS {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.class {
+	color: black;
+}
+
+.lSYuKq {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.pdN5nk {
+	}
+
+/* At-rules */
+
+@keyframes basic-keyframes {}
+@keyframes Svchdz {}
+@keyframes global-keyframes {}
+/** Deprecated syntax */
+@keyframes h18zzQ {}
+@keyframes local-keyframes-old-syntax {}
+
+.foo {
+	animation-name: basic-keyframes, global-keyframes, Svchdz;
+}
+
+@property --z8dXmV {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes _1zMqGM {
+	to {
+		--progress: 100%;
+	}
+}
+
+.bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--z8dXmV),
+		black var(--z8dXmV)
+	);
+	animation: _1zMqGM 2.5s ease infinite;
+}
+
+@scope (.uiPdKt) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.wCljLW {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
+	red,
+	--yBn7O5,
+	--global-foo-bar,
+		/** Deprecated syntax */
+	--yBn7O5,
+	--global-foo-bar;
+}
+
+.class {
+	background-color:
+		var(--foo-bar),
+		var(--yBn7O5),
+		var(--global-foo-bar),
+			/** Deprecated syntax */
+		var(--yBn7O5),
+		var(--global-foo-bar),
+		var(--global-foo-bar from global),
+		var(--from-shared from \\"./shared.css\\");
+}
+
+/** Custom local value */
+
+@unknown-rule DqBFzD {}
+
+.class {
+	custom-name: DqBFzD;
+}
+
+.class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: jOrreA animation-name-test
+}
+
+"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
@@ -3651,18 +8404,21 @@ div {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
-	unknown: :local(.test);
-	unknown1: :local .test;
-	unknown2: :global .test;
-	unknown3: :global .test;
-	unknown4: .foo, .bar, #bar;
+	unknown: .OyMPmk;
+	unknown2: .test;
+	unknown3: .OyMPmk;
+	unknown4: .test;
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
 }
 
-@unknown :local .local :global .global {
+@unknown .KBEflt .global {
 	color: red;
 }
 
-@unknown :local(.local) :global(.global) {
+@unknown .KBEflt .global {
 	color: red;
 }
 
@@ -4168,7 +8924,7 @@ div {
 	container: _5unArO / inline-size;
 	container: _5unArO / size;
 	container: _5unArO / scroll-state;
-	--ylD2It: local(sticky-heading);
+	--ylD2It: _5unArO;
 
 	container: var(--ylD2It);
 	--_5bOQpQ: small;
@@ -4648,11 +9404,11 @@ div {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --XQsKZa {
+@color-profile --uypV5i {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile --XQsKZa {
+@color-profile --uypV5i {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -4666,14 +9422,14 @@ div {
 
 .Vx2ADA {
 	background-color: color(--XQsKZa 0% 70% 20% 0%);
-	background-color: color(local(--XQsKZa) 0% 70% 20% 0%);
-	background-color: color(:local(--XQsKZa) 0% 70% 20% 0%);
-	background-color: color(global(--XQsKZa) 0% 70% 20% 0%);
-	background-color: color(:global(--XQsKZa) 0% 70% 20% 0%);
+	background-color: color(--uypV5i 0% 70% 20% 0%);
+	background-color: color(--uypV5i 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--_2qSR8B 0% 70% 20% 0%);
-	background-color: color(local(--XQsKZa, \\"./shared.css\\") 0% 70% 20% 0%);
-	background-color: color(:local(--XQsKZa, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(--uypV5i, \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--uypV5i, \\"./shared.css\\" 0% 70% 20% 0%);
 }
 
 :root {
@@ -4744,9 +9500,33 @@ div {
 	}
 }
 
+/* nesting */
+
+.Vx2ADA{.Vx2ADA{}}
+.Vx2ADA{color:#fff5f5}
+.Vx2ADA{.Vx2ADA{color:#f1f1f1}}
+.Vx2ADA{--LXyTj4:#fff5f5}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;}
+.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;.Vx2ADA{color:#f1f1f1}}
+.Vx2ADA{--LXyTj4:#fff5f5;.Vx2ADA{color:#f1f1f1}color:#f1f1f1;}
+.Vx2ADA{.Vx2ADA{color:#f1f1f1}--LXyTj4:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.Vx2ADA{--ueKKku:{1, 'string', .Vx2ADA, #_5YNl5V, #NRwndY}}
+.Vx2ADA{--v4rNLS:[1, \\"string\\", .class, #f1f1f1, #id]}
+.Vx2ADA{--v4rNLS:(1, \\"string\\", .class, #f1f1f1, #id)}
+
 /* Cases for \`css/global\` */
 
+.y1y3Ez {
+	color: red;
+}
+
 .xcsnD2 {
+	color: red;
+}
+
+.my-global-local {
 	color: red;
 }
 
@@ -4767,6 +9547,41 @@ p:not(#dBVRDQ) {
 }
 
 .lAqA-R {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .Zq4Bgu {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .zwwxVU {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.N3R3DF {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.RKcB4N.n5D5Q0 {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.lQXL_B {
 	/* Styles for .container */
 	background-color: lightblue;
 
@@ -4841,6 +9656,10 @@ p:not(#dBVRDQ) {
 	color: white;
 }
 
+.global-class-other {
+	color: red;
+}
+
 .pdN5nk {
 	}
 
@@ -4863,7 +9682,7 @@ p:not(#dBVRDQ) {
 	initial-value: 25%;
 }
 
-@keyframes btQQRC {
+@keyframes _1zMqGM {
 	to {
 		--z8dXmV: 100%;
 	}
@@ -4876,14 +9695,14 @@ p:not(#dBVRDQ) {
 	height: 5px;
 	background: linear-gradient(
 		to right,
-		#00d230 var(local(--z8dXmV)),
-		black var(local(--z8dXmV))
+		#00d230 var(--z8dXmV),
+		black var(--z8dXmV)
 	);
-	animation: btQQRC 2.5s ease infinite;
+	animation: _1zMqGM 2.5s ease infinite;
 }
 
 @scope (.uiPdKt) to (.class) {
-	.article-footer {
+	.NBhEtf {
 		border: 5px solid black;
 	}
 	.wCljLW {
@@ -4902,31 +9721,38 @@ p:not(#dBVRDQ) {
 	--ho4NPI: red;
 	--hBmufP:
 	red,
-	local(--local-foo-bar),
-	global(--global-foo-bar),
+	--yBn7O5,
+	--global-foo-bar,
 		/** Deprecated syntax */
-	:local(--yBn7O5),
-	:global(--ho4NPI);
+	--yBn7O5,
+	--global-foo-bar;
 }
 
 .Vx2ADA {
 	background-color:
 		var(--lRiOdz),
-		var(local(--yBn7O5)),
-		var(global(--ho4NPI)),
+		var(--yBn7O5),
+		var(--global-foo-bar),
 			/** Deprecated syntax */
-		var(:local(--yBn7O5)),
-		var(:global(--ho4NPI)),
+		var(--yBn7O5),
+		var(--global-foo-bar),
 		var(--global-foo-bar),
 		var(--_2qSR8B);
 }
 
 /** Custom local value */
 
-@unknown-rule local(unknown-at-rule) {}
+@unknown-rule DqBFzD {}
 
 .Vx2ADA {
-	custom-name: local(unknown-at-rule);
+	custom-name: DqBFzD;
+}
+
+.class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: jOrreA animation-name-test
 }
 
 /*!*********************************!*\\\\
@@ -5014,46 +9840,6 @@ Object {
   "vars": "--NNsA2u ybnHOd undefined UU67Qr",
   "webkitAnyWmultiParams": "rlaEZT",
   "whereWmultiParams": "peTfCX",
-}
-`;
-
-exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 4`] = `
-Object {
-  "active": "zwwxVU",
-  "article-header": "uiPdKt",
-  "bar": "ueKKku",
-  "baz": "v4rNLS",
-  "card": "r3yzH0",
-  "class": "Vx2ADA",
-  "class-1": "wCljLW",
-  "class-local-scope": "XlQsKD",
-  "class-with-composes": "pdN5nk",
-  "container": "lAqA-R",
-  "extend-thumbs": "YZsmDI",
-  "foo": "LXyTj4",
-  "hash": "jcIvvc",
-  "header": "Zq4Bgu",
-  "in-local-global-scope": "MoUXzC",
-  "local-class": "lSYuKq",
-  "local-class-name": "-bicf2",
-  "local-in-global": "NSL9R7",
-  "local-nested": "VxblVB",
-  "local4": "HEwyXh",
-  "localUpperCase": "AgZzby",
-  "main-paragraph": "dBVRDQ",
-  "multiple-first": "YK629R",
-  "multiple-first-with-space": "bBUtJ3",
-  "multiple-second": "d69pL2",
-  "multiple-second-with-space": "_10-3eM",
-  "my-global-class-again": "W4wdXr",
-  "my-simple-local": "xcsnD2",
-  "nested1": "kbu2T9",
-  "selected": "n5D5Q0",
-  "special": "_5KiKr2",
-  "sticky-heading": "_5unArO",
-  "summary": "qYFiUT",
-  "tall": "_16PWt_",
-  "thumbs": "_0L28GV",
 }
 `;
 
@@ -8831,8 +13617,10 @@ Object {
   "b": "postcss-modules-local-by-default_global_modules_css-b",
   "bar": "postcss-modules-local-by-default_global_modules_css-bar",
   "baz": "postcss-modules-local-by-default_global_modules_css-baz",
+  "bounce": "postcss-modules-local-by-default_global_modules_css-bounce",
   "class": "postcss-modules-local-by-default_global_modules_css-class",
   "class-1": "postcss-modules-local-by-default_global_modules_css-class-1",
+  "fly": "postcss-modules-local-by-default_global_modules_css-fly",
   "foo": "postcss-modules-local-by-default_global_modules_css-foo",
 }
 `;
@@ -8848,9 +13636,10 @@ Object {
   "class": "postcss-modules-local-by-default_pure_modules_css-class",
   "class-1": "postcss-modules-local-by-default_pure_modules_css-class-1",
   "class-2": "postcss-modules-local-by-default_pure_modules_css-class-2",
+  "export-foo": "__foo",
   "fadeInOut": "postcss-modules-local-by-default_pure_modules_css-fadeInOut",
   "fly": "postcss-modules-local-by-default_pure_modules_css-fly",
-  "foo": "__foo",
+  "foo": "postcss-modules-local-by-default_pure_modules_css-foo",
   "label": "postcss-modules-local-by-default_pure_modules_css-label",
   "local": "postcss-modules-local-by-default_pure_modules_css-local",
   "rotate": "postcss-modules-local-by-default_pure_modules_css-rotate",
@@ -8947,6 +13736,7 @@ Object {
   "fade-out": "postcss-modules-scope_modules_css-fade-out",
   "fadeIn": "postcss-modules-scope_modules_css-fadeIn",
   "fadeIn-export": "postcss-modules-scope_modules_css-fadeIn-export",
+  "global": "postcss-modules-scope_modules_css-global",
   "idName": "postcss-modules-scope_modules_css-idName",
   "local-a": "postcss-modules-scope_modules_css-local-a",
   "local-b": "postcss-modules-scope_modules_css-local-b",
@@ -9505,9 +14295,8 @@ Array [
 /* broad global should be limited to selector */
 .foo, .postcss-modules-local-by-default_local_modules_css-bar , .postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
-/* TODO bug */
 /* broad global should be limited to nested selector */
-.postcss-modules-local-by-default_local_modules_css-foo:not(.bar).foobar { a_value: some-value; }
+.postcss-modules-local-by-default_local_modules_css-foo:not(.bar).postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
 
 /* broad global and local should allow switching */
 .postcss-modules-local-by-default_local_modules_css-foo .bar .postcss-modules-local-by-default_local_modules_css-foobar .postcss-modules-local-by-default_local_modules_css-barfoo { a_value: some-value; }
@@ -9739,23 +14528,18 @@ input { a_value: some-value; }
 /* throw on inconsistent selector result */
 .foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :locals */
+/* throw on nested :locals, but we allow to do it */
 .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :globals */
+/* throw on nested :globals, but we allow to do it */
 .foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested mixed */
+/* throw on nested mixed, but we allow to do it */
 .foo { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested broad :local */
+/* throw on nested broad :local, but we allow to do it */
 .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
 
-/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .postcss-modules-local-by-default_local_modules_css-foo .bar { a_value: some-value; }
 
@@ -9814,32 +14598,31 @@ input { a_value: some-value; }
 /* not ignore custom property set */
 :root { --postcss-modules-local-by-default_local_modules_css-title-align: center; --postcss-modules-local-by-default_local_modules_css-sr-only: { position: absolute; } }
 
-/* TODO bug? */
 /* not localize imported alias */
 
 .postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
+/*
+ * All the original \`import()\` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
 /* not localize nested imported alias */
 
 .postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value > .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* ignore imported in explicit local */
 
 .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* escape local context with explict global */
 
 .postcss-modules-local-by-default_local_modules_css-foo .a_value .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* respect explicit local */
 
 .postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-foo .a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* not localize imported animation-name */
 
 .postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-a_value; }
@@ -9942,10 +14725,9 @@ input { a_value: some-value; }
 	}
 }
 
-/* TODO bug */
 /* @scope at-rule #2 */
 @scope (.postcss-modules-local-by-default_local_modules_css-article-body) to (.class) {
-	.article-footer {
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
 		border: 5px solid black;
 	}
 	.postcss-modules-local-by-default_local_modules_css-class-1 {
@@ -9981,7 +14763,7 @@ input { a_value: some-value; }
 .postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
 
 /* in-media */
-@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value } }
 
 /*!*****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.global.modules.css ***!
@@ -9990,33 +14772,32 @@ input { a_value: some-value; }
 
 
 /* localize and not localize animation-name in mixed case #2 */
-.foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
+.foo { animation-name: fadeInOut, moveLeft300px, postcss-modules-local-by-default_global_modules_css-bounce; }
 
 /* localize and not localize a certain animation in mixed case #2 */
-.foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
+.foo { animation: rotate 1s, spin 3s, postcss-modules-local-by-default_global_modules_css-fly 6s; }
 
 /* default to global when mode provided */
 .foo { a_value: some-value; }
 
-/* TODO bug */
 /* use correct spacing */
 .a .postcss-modules-local-by-default_global_modules_css-b {}
 .a.postcss-modules-local-by-default_global_modules_css-b {}
 .a.postcss-modules-local-by-default_global_modules_css-b {}
-.a.postcss-modules-local-by-default_global_modules_css-b  {}
+.a.postcss-modules-local-by-default_global_modules_css-b {}
 .a .postcss-modules-local-by-default_global_modules_css-b {}
-.a .postcss-modules-local-by-default_global_modules_css-b  {}
+.a .postcss-modules-local-by-default_global_modules_css-b {}
+.postcss-modules-local-by-default_global_modules_css-a.b {}
 .postcss-modules-local-by-default_global_modules_css-a.b {}
 .postcss-modules-local-by-default_global_modules_css-a .b {}
 .postcss-modules-local-by-default_global_modules_css-a .b {}
-.postcss-modules-local-by-default_global_modules_css-a  .b {}
 .a /* test */ /* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
-/*.a !* test *!:local!* test*! .b {}*/
+.a /* test *//* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
 .a/* test */ /* test*/.postcss-modules-local-by-default_global_modules_css-b {}
-.a/* test */ .postcss-modules-local-by-default_global_modules_css-b /* test */ {}
-.a/* test */.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
-.a/* test */ .postcss-modules-local-by-default_global_modules_css-b/* test */ {}
-.a/* test */.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
 
 /* localize keyframes in global default mode */
 @keyframes foo { a_value: some-value; }
@@ -10182,7 +14963,7 @@ input { a_value: some-value; }
 
 /* cssmodules-pure-ignore */
 @scope (.foo) to (.bar) {
-	.article-footer {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
 		border: 5px solid black;
 	}
 }
@@ -10193,7 +14974,7 @@ input { a_value: some-value; }
 /* cssmodules-pure-ignore */
 @scope (.foo)
 to (.bar) {
-	.article-footer {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
 		border: 5px solid black;
 	}
 }
@@ -10337,7 +15118,7 @@ html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-valu
 html { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } }
 
 /* css nesting (unfolded) #6 */
-@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value } }
 
 /* css nesting #7 */
 html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } .postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; } }
@@ -10355,7 +15136,7 @@ html .postcss-modules-local-by-default_pure_modules_css-foo, html .postcss-modul
 html { @media screen and (min-width: 900px) { & > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value; } } }
 
 /* css nesting (unfolded) #9 */
-@media screen and (min-width: 900px) { html > .class { a_value: some-value } }
+@media screen and (min-width: 900px) { html > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value } }
 
 /* css nesting #10 */
 .postcss-modules-local-by-default_pure_modules_css-class { @media screen and (min-width: 900px) { & { a_value: some-value; } } }
@@ -10503,8 +15284,8 @@ html {
 
 /* @scope at-rule #7 */
 
-@scope (.article-header.import_modules_css-__foo) to (.class.bar) {
-	.bar {
+@scope (.article-header.postcss-modules-local-by-default_pure_modules_css-foo) to (.class.postcss-modules-local-by-default_pure_modules_css-bar) {
+	.postcss-modules-local-by-default_pure_modules_css-bar {
 		color: red;
 	}
 }
@@ -10597,10 +15378,10 @@ html {
 .postcss-modules-scope_modules_css-local-a { color: red; }
 .postcss-modules-scope_modules_css-local-b { color: green; }
 .postcss-modules-scope_modules_css-exportName10 {
-	a-composes: global(c);
-	composes-b: global(d);
-	a-composes-b: global(e);
-	a-compose-with-b: global(b);
+	a-composes: c;
+	composes-b: d;
+	a-composes-b: e;
+	a-compose-with-b: b;
 }
 
 /* css-nesting-composes */
@@ -10865,7 +15646,6 @@ body {
 	color: blue;
 }
 
-/* TODO bug */
 /* export-class-attribute */
 .postcss-modules-scope_modules_css-exportName47 {
 	color: red;
@@ -10875,7 +15655,43 @@ body {
 	color: green;
 }
 
-.postcss-modules-scope_modules_css-exportName49[class=\\"exportName47\\"] {
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class~=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.globalClass[class=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.globaClass[class~=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName49[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
 	color: blue;
 }
 
@@ -10895,7 +15711,7 @@ body {
 .postcss-modules-scope_modules_css-fadeIn {
 	animation: postcss-modules-scope_modules_css-fade-in 5s,/* some, :local(comment) */
 	postcss-modules-scope_modules_css-fade-out 1s postcss-modules-scope_modules_css-wrong;
-	content: :local(fade-in), wrong, \\"difficult, :local(wrong)\\" :local(wrong);
+	content: postcss-modules-scope_modules_css-fade-in, wrong, \\"difficult, :local(wrong)\\" postcss-modules-scope_modules_css-wrong;
 }
 
 /* export-global-class */
@@ -10964,7 +15780,7 @@ body {
 }
 
 /* export-nested-class */
-.postcss-modules-scope_modules_css-exportName54:not(.postcss-modules-scope_modules_css-exportName55.global) {
+.postcss-modules-scope_modules_css-exportName54:not(.postcss-modules-scope_modules_css-exportName55.postcss-modules-scope_modules_css-global) {
 	color: green;
 }
 
@@ -11021,7 +15837,6 @@ body {
 	color: red;
 }
 
-/* TODO bug */
 /* nested-rule */
 :root {
 	--postcss-modules-scope_modules_css-test: {
@@ -12296,13 +17111,16 @@ div {
 	opacity: 0.12;
 	padding: .5px;
 	unknown: :local(.test);
-	unknown1: :local .test;
-	unknown2: :global .test;
-	unknown3: :global .test;
-	unknown4: .foo, .bar, #bar;
+	unknown2: :global(.test);
+	unknown3: local(.test);
+	unknown4: global(.test);
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
 }
 
-@unknown :local .local :global .global {
+@unknown local(.local) global(.global) {
 	color: red;
 }
 
@@ -13314,11 +18132,11 @@ div {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile local(--swop5c) {
+@color-profile local(--swop5c-local) {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
-@color-profile :local(--swop5c) {
+@color-profile :local(--swop5c-local) {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -13332,14 +18150,14 @@ div {
 
 .class {
 	background-color: color(--swop5c 0% 70% 20% 0%);
-	background-color: color(local(--swop5c) 0% 70% 20% 0%);
-	background-color: color(:local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(local(--swop5c-local) 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c-local) 0% 70% 20% 0%);
 	background-color: color(global(--swop5c) 0% 70% 20% 0%);
 	background-color: color(:global(--swop5c) 0% 70% 20% 0%);
 	background-color: color(--swop5c from global 0% 70% 20% 0%);
 	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
-	background-color: color(local(--swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
-	background-color: color(:local(--swop5c, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(local(--swop5c-local, \\"./shared.css\\") 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c-local, \\"./shared.css\\") 0% 70% 20% 0%);
 }
 
 :root {
@@ -13410,9 +18228,33 @@ div {
 	}
 }
 
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
 /* Cases for \`css/global\` */
 
+.just-class {
+	color: red;
+}
+
 :local(.my-simple-local) {
+	color: red;
+}
+
+:global(.my-global-local) {
 	color: red;
 }
 
@@ -13467,6 +18309,41 @@ p:not(:local(#main-paragraph)) {
 	}
 }
 
+.container-only-classes {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
 :local(.local-class-name) {
 	color: red;
 }
@@ -13507,10 +18384,15 @@ p:not(:local(#main-paragraph)) {
 	color: white;
 }
 
+:global(.global-class-other) {
+	color: red;
+}
+
 :local(.class-with-composes) {
 	composes:
 		local-class,
 		global-class from global,
+		global-class-other from global,
 		local-my-shared-class from \\"./shared.css\\";
 }
 
@@ -13533,7 +18415,7 @@ p:not(:local(#main-paragraph)) {
 	initial-value: 25%;
 }
 
-@keyframes local(progressAnimation) {
+@keyframes local(progressAnimationLocal) {
 	to {
 		--progress: 100%;
 	}
@@ -13549,7 +18431,7 @@ p:not(:local(#main-paragraph)) {
 		#00d230 var(local(--progress)),
 		black var(local(--progress))
 	);
-	animation: local(progressAnimation) 2.5s ease infinite;
+	animation: local(progressAnimationLocal) 2.5s ease infinite;
 }
 
 @scope (:local(.article-header)) to (:global(.class)) {
@@ -13597,6 +18479,13 @@ p:not(:local(#main-paragraph)) {
 
 .class {
 	custom-name: local(unknown-at-rule);
+}
+
+:global .class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: local(animation-name-test) global(animation-name-test)
 }
 
 /*!***********************!*\\\\

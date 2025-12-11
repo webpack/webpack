@@ -10,7 +10,7 @@ it("should not parse css modules in type: css", () => {
     const links = document.getElementsByTagName("link");
     const css = links[1].sheet.css;
 
-	expect(css).toMatch(/\:local\(\.foo\)/);
+		expect(css).toMatch(/\:local\(\.foo\)/);
     expect(css).toMatch(/\:global\(\.bar\)/);
 });
 
