@@ -6773,8 +6773,7 @@ declare abstract class ItemCacheFacade {
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-	extends Iterator<T, TReturn, TNext>,
-		Disposable {
+	extends Iterator<T, TReturn, TNext>, Disposable {
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
@@ -18810,7 +18809,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	target: NonNullable<undefined | string | false | string[]>;
 } & { output: OutputNormalizedWithDefaults } & {
 	optimization: OptimizationNormalizedWithDefaults;
-} & {
+} & { devtool: NonNullable<undefined | string | false> } & {
 	devtoolByTypes: {
 		/**
 		 * Which assets should receive this devtool value.
