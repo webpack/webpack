@@ -13,15 +13,15 @@ it("should throw helpful error when module is not found at runtime", function ()
 	delete __webpack_module_cache__[moduleId];
 	delete __webpack_modules__[moduleId];
 
-	// Now trying to require the module should throw a helpful error
-	expect(() => {
-		require("./helper");
-	}).toThrow(/Cannot find module/);
-
-	// Verify the error has the correct code property (like Node.js)
+	// Now trying to require the module should throw a helpful error matching Node.js format
+	let thrownError;
 	try {
 		require("./helper");
 	} catch (e) {
-		expect(e.code).toBe("MODULE_NOT_FOUND");
+		thrownError = e;
 	}
+
+	expect(thrownError).toBeDefined();
+	expect(thrownError.message).toMatch(/Cannot find module/);
+	expect(thrownError.code).toBe("MODULE_NOT_FOUND");
 });
