@@ -8884,9 +8884,10 @@ Object {
   "class": "postcss-modules-local-by-default_pure_modules_css-class",
   "class-1": "postcss-modules-local-by-default_pure_modules_css-class-1",
   "class-2": "postcss-modules-local-by-default_pure_modules_css-class-2",
+  "export-foo": "__foo",
   "fadeInOut": "postcss-modules-local-by-default_pure_modules_css-fadeInOut",
   "fly": "postcss-modules-local-by-default_pure_modules_css-fly",
-  "foo": "__foo",
+  "foo": "postcss-modules-local-by-default_pure_modules_css-foo",
   "label": "postcss-modules-local-by-default_pure_modules_css-label",
   "local": "postcss-modules-local-by-default_pure_modules_css-local",
   "rotate": "postcss-modules-local-by-default_pure_modules_css-rotate",
@@ -8983,6 +8984,7 @@ Object {
   "fade-out": "postcss-modules-scope_modules_css-fade-out",
   "fadeIn": "postcss-modules-scope_modules_css-fadeIn",
   "fadeIn-export": "postcss-modules-scope_modules_css-fadeIn-export",
+  "global": "postcss-modules-scope_modules_css-global",
   "idName": "postcss-modules-scope_modules_css-idName",
   "local-a": "postcss-modules-scope_modules_css-local-a",
   "local-b": "postcss-modules-scope_modules_css-local-b",
@@ -10530,7 +10532,7 @@ html {
 
 /* @scope at-rule #7 */
 
-@scope (.article-header.import_modules_css-__foo) to (.class.bar) {
+@scope (.article-header.postcss-modules-local-by-default_pure_modules_css-foo) to (.class.postcss-modules-local-by-default_pure_modules_css-bar) {
 	.postcss-modules-local-by-default_pure_modules_css-bar {
 		color: red;
 	}
@@ -11026,7 +11028,7 @@ body {
 }
 
 /* export-nested-class */
-.postcss-modules-scope_modules_css-exportName54:not(.postcss-modules-scope_modules_css-exportName55.global) {
+.postcss-modules-scope_modules_css-exportName54:not(.postcss-modules-scope_modules_css-exportName55.postcss-modules-scope_modules_css-global) {
 	color: green;
 }
 

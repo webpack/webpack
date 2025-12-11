@@ -425,10 +425,10 @@ html {
 }
 
 /* consider :import statements pure */
-:import("./import.modules.css") { foo: __foo; }
+:import("./import.modules.css") { local-foo: __foo; }
 
 /* consider :export statements pure */
-:export { foo: __foo; }
+:export { export-foo: __foo; }
 
 /* @scope at-rule #4 */
 
