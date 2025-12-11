@@ -401,31 +401,31 @@ input { a_value: some-value; }
 
 .foo > .a_value { a_value1: some-value; }
 
-/* TODO bug? */
+/*
+ * All the original `import()` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
 /* not localize nested imported alias */
 :import("./import.modules.css") { a_value2: some-value; }
 
 .foo > .a_value > .bar { a_value2: some-value; }
 
-/* TODO bug? */
 /* ignore imported in explicit local */
 :import("./import.modules.css") { a_value3: some-value; }
 
 :local(.a_value) { a_value3: some-value; }
 
-/* TODO bug? */
 /* escape local context with explict global */
 :import("./import.modules.css") { a_value4: some-value; }
 
 :local .foo :global(.a_value) .bar { a_value4: some-value; }
 
-/* TODO bug? */
 /* respect explicit local */
 :import("./import.modules.css") { a_value5: some-value; }
 
 .a_value :local .a_value .foo :global .a_value { a_value5: some-value; }
 
-/* TODO bug? */
 /* not localize imported animation-name */
 :import("./import.modules.css") { a_value6: some-value; }
 

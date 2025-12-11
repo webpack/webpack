@@ -9822,27 +9822,27 @@ input { a_value: some-value; }
 
 .postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
+/*
+ * All the original \`import()\` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
 /* not localize nested imported alias */
 
 .postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value > .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* ignore imported in explicit local */
 
 .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* escape local context with explict global */
 
 .postcss-modules-local-by-default_local_modules_css-foo .a_value .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* respect explicit local */
 
 .postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-foo .a_value { import_modules_css-some-value: some-value; }
 
-/* TODO bug? */
 /* not localize imported animation-name */
 
 .postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-a_value; }
