@@ -263,19 +263,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-colorValue {
+.my-app-at-rule-value_module_css-red {
 	color: red;
 }
 
 
 
-#my-app-at-rule-value_module_css-colorValue-v1 {
+#my-app-at-rule-value_module_css-red {
 	color: red;
 }
 
 
 
-.my-app-at-rule-value_module_css-colorValue-v2 > .my-app-at-rule-value_module_css-colorValue-v2 {
+.my-app-at-rule-value_module_css-red > .my-app-at-rule-value_module_css-red {
 	color: red;
 }
 
@@ -370,7 +370,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-override {
+.my-app-at-rule-value_module_css-red {
 	color: red;
 }
 
@@ -2726,19 +2726,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-._0G-LPo {
+.elijK0 {
 	color: red;
 }
 
 
 
-#ijGvN7 {
+#elijK0 {
 	color: red;
 }
 
 
 
-.aXwO75 > .aXwO75 {
+.elijK0 > .elijK0 {
 	color: red;
 }
 
@@ -2833,7 +2833,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.G6gio0 {
+.elijK0 {
 	color: red;
 }
 
@@ -9002,14 +9002,14 @@ Object {
   "exportName6": "red",
   "exportName7": "40px",
   "exportName8": "36px",
-  "exportName9": "red",
-  "exportNameBlue": "exportNameBlue",
+  "exportName9": "fuchsia",
   "exportNameRed": "blue",
   "foo-replace": "postcss-modules-values_modules_css-foo-replace",
   "foo-replace-1": "postcss-modules-values_modules_css-foo-replace-1",
   "foo-replace-2": "postcss-modules-values_modules_css-foo-replace-2",
   "foo-replace-3": "postcss-modules-values_modules_css-foo-replace-3",
   "foo-replace-4": "postcss-modules-values_modules_css-foo-replace-4",
+  "fuchsia": "postcss-modules-values_modules_css-fuchsia",
   "hsla": "hsla(220, 13.0%, 18.0%, 1)",
   "my-own-color": "--postcss-modules-values_modules_css-my-own-color",
   "named": "aqua",
@@ -9388,7 +9388,6 @@ Array [
 .postcss-modules-extract-imports_modules_css-exportName35 {
 	}
 
-/* TODO bug */
 /* composes from-import */
 
 .postcss-modules-extract-imports_modules_css-exportName36 {
@@ -9738,7 +9737,7 @@ input { a_value: some-value; }
 
 /* TODO bug no report */
 /* throw on inconsistent selector result */
-.import_modules_css-__foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+.foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
 
 /* TODO bug no report */
 /* throw on nested :locals */
@@ -9746,11 +9745,11 @@ input { a_value: some-value; }
 
 /* TODO bug no report */
 /* throw on nested :globals */
-.import_modules_css-__foo { a_value: some-value; }
+.foo { a_value: some-value; }
 
 /* TODO bug no report */
 /* throw on nested mixed */
-.import_modules_css-__foo { a_value: some-value; }
+.foo { a_value: some-value; }
 
 /* TODO bug no report */
 /* throw on nested broad :local */
@@ -9982,7 +9981,7 @@ input { a_value: some-value; }
 .postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
 
 /* in-media */
-@media screen and (min-width: 900px) { html .import_modules_css-__foo { a_value: some-value } }
+@media screen and (min-width: 900px) { html .foo { a_value: some-value } }
 
 /*!*****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.global.modules.css ***!
@@ -11117,18 +11116,17 @@ body {
 
 .postcss-modules-values_modules_css-foo-replace-4 { height: 40px; height: 36px; }
 
-/* TODO bug - do not export selector */
 /* should replace selectors within the file */
 
-.postcss-modules-values_modules_css-exportName9 { color: red; }
+.postcss-modules-values_modules_css-fuchsia { color: fuchsia; }
 
 /* should replace selectors within the file #1 */
 
-#postcss-modules-values_modules_css-exportName10 { color: red; }
+#postcss-modules-values_modules_css-red { color: red; }
 
 /* should replace selectors within the file #2 */
 
-.postcss-modules-values_modules_css-exportName11 > .postcss-modules-values_modules_css-exportName11 { color: red; }
+.postcss-modules-values_modules_css-red > .postcss-modules-values_modules_css-red { color: red; }
 
 /* should import and re-export a simple constant */
 

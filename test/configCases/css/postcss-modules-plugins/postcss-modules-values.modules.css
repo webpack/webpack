@@ -39,9 +39,8 @@
 @value exportName8: 36px;
 .foo-replace-4 { height: exportName7; height: exportName8; }
 
-/* TODO bug - do not export selector */
 /* should replace selectors within the file */
-@value exportName9: red;
+@value exportName9: fuchsia;
 .exportName9 { color: exportName9; }
 
 /* should replace selectors within the file #1 */
