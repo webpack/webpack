@@ -3019,7 +3019,7 @@ declare interface Configuration {
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | false;
+	devtool?: string | false | DevToolItem[];
 
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
@@ -4120,7 +4120,21 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-type DevTool = string | false;
+
+/**
+ * Item to assign devtool values per asset type (all, javascript, or css).
+ */
+declare interface DevToolItem {
+	/**
+	 * Which assets should receive this devtool value.
+	 */
+	type: "all" | "javascript" | "css";
+
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	use: RawDevTool;
+}
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -14016,6 +14030,7 @@ declare interface RawChunkGroupOptions {
 	prefetchOrder?: number;
 	fetchPriority?: "auto" | "low" | "high";
 }
+type RawDevTool = string | false;
 type RawLoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -18620,21 +18635,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | false;
+	devtool?: string | false | DevToolItem[];
 
 	/**
 	 * Assign devtool values per asset type (all, javascript, or css).
 	 */
-	devtoolByTypes?: {
-		/**
-		 * Which assets should receive this devtool value.
-		 */
-		type: "all" | "javascript" | "css";
-		/**
-		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
-		 */
-		use: DevTool;
-	}[];
+	devtools?: DevToolItem[];
 
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
@@ -18810,18 +18816,9 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	target: NonNullable<undefined | string | false | string[]>;
 } & { output: OutputNormalizedWithDefaults } & {
 	optimization: OptimizationNormalizedWithDefaults;
-} & { devtool: NonNullable<undefined | string | false> } & {
-	devtoolByTypes: {
-		/**
-		 * Which assets should receive this devtool value.
-		 */
-		type: "all" | "javascript" | "css";
-		/**
-		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
-		 */
-		use: DevTool;
-	}[];
-} & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
+} & { devtool: NonNullable<undefined | string | false | DevToolItem[]> } & {
+	stats: NonNullable<StatsValue>;
+} & { node: NonNullable<Node> } & {
 	profile: NonNullable<undefined | boolean>;
 } & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
 	externalsPresets: ExternalsPresetsNormalizedWithDefaults;

@@ -545,31 +545,36 @@
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
       "anyOf": [
         {
-          "enum": [false, "eval"]
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DevToolItem"
+          }
         },
         {
-          "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+          "$ref": "#/definitions/RawDevTool"
         }
       ]
     },
-    "DevToolByTypes": {
+    "DevToolItem": {
+      "description": "Item to assign devtool values per asset type (all, javascript, or css).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Which assets should receive this devtool value.",
+          "enum": ["all", "javascript", "css"]
+        },
+        "use": {
+          "$ref": "#/definitions/RawDevTool"
+        }
+      },
+      "required": ["type", "use"]
+    },
+    "DevTools": {
       "description": "Assign devtool values per asset type (all, javascript, or css).",
       "type": "array",
       "items": {
-        "description": "Item to assign devtool values per asset type (all, javascript, or css).",
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "description": "Which assets should receive this devtool value.",
-            "enum": ["all", "javascript", "css"]
-          },
-          "use": {
-            "$ref": "#/definitions/DevTool"
-          }
-        },
-        "required": ["type", "use"]
+        "$ref": "#/definitions/DevToolItem"
       }
     },
     "DevtoolFallbackModuleFilenameTemplate": {
@@ -4080,6 +4085,18 @@
         }
       ]
     },
+    "RawDevTool": {
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "anyOf": [
+        {
+          "enum": [false, "eval"]
+        },
+        {
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+        }
+      ]
+    },
     "RawPublicPath": {
       "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
@@ -5843,8 +5860,8 @@
         "devtool": {
           "$ref": "#/definitions/DevTool"
         },
-        "devtoolByTypes": {
-          "$ref": "#/definitions/DevToolByTypes"
+        "devtools": {
+          "$ref": "#/definitions/DevTools"
         },
         "dotenv": {
           "$ref": "#/definitions/Dotenv"

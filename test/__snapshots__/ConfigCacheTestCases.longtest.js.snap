@@ -4988,7 +4988,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
 }
 
-"
+
+/*# sourceMappingURL=use-style-global_js.bundle4.css.map*/"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global prod 1`] = `
