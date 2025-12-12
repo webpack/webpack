@@ -135,6 +135,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "my-app-identifiers_module_css-UsedClassName",
   "VARS": "--my-app-style_module_css-LOCAL-COLOR my-app-style_module_css-VARS undefined my-app-style_module_css-globalVarsUpperCase",
+  "__webpack_modules__": 6,
   "animation": "my-app-style_module_css-animation",
   "animationName": "my-app-style_module_css-animationName",
   "class": "my-app-style_module_css-class",
@@ -909,12 +910,12 @@ div {
 	0% {
 		left: var(--my-app-style_module_css-pos1x);
 		top: var(--my-app-style_module_css-pos1y);
-		color: var(--theme-color1);
+		color: var(--my-app-style_module_css-theme-color1);
 	}
 	100% {
 		left: var(--my-app-style_module_css-pos2x);
 		top: var(--my-app-style_module_css-pos2y);
-		color: var(--theme-color2);
+		color: var(--my-app-style_module_css-theme-color2);
 	}
 }
 
@@ -1009,12 +1010,12 @@ div {
 	0% {
 		left: VAR(--my-app-style_module_css-pos1x);
 		top: VAR(--my-app-style_module_css-pos1y);
-		color: VAR(--theme-color1);
+		color: VAR(--my-app-style_module_css-theme-color1);
 	}
 	100% {
 		left: VAR(--my-app-style_module_css-pos2x);
 		top: VAR(--my-app-style_module_css-pos2y);
-		color: VAR(--theme-color2);
+		color: VAR(--my-app-style_module_css-theme-color2);
 	}
 }
 
@@ -1652,7 +1653,7 @@ div {
 	list-style: my-app-style_module_css-extend-thumbs;
 }
 
-@container (width > 400px) and style(--responsive: true) {
+@container (width > 400px) and style(--my-app-style_module_css-responsive: true) {
 	.my-app-style_module_css-class {
 		font-size: 1.5em;
 	}
@@ -1671,7 +1672,7 @@ div {
 	}
 }
 
-@container my-app-style_module_css-card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+@container my-app-style_module_css-card (width > 400px), style(--my-app-style_module_css-responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -1804,7 +1805,7 @@ div {
 
 .my-app-style_module_css-infobox {
 	position: fixed;
-	position-anchor: --myAnchor;
+	position-anchor: --my-app-style_module_css-myAnchor;
 	position-area: top;
 	width: 200px;
 	margin: 0 0 10px 0;
@@ -2081,7 +2082,7 @@ div {
 	var5: var(--my-app-style_module_css-custom-prop, initial);
 	var6: var(--my-app-style_module_css-custom-prop, var(--my-app-style_module_css-default-value));
 	var7: var(--my-app-style_module_css-custom-prop, var(--my-app-style_module_css-default-value, red));
-	var8: var(--unknown);
+	var8: var(--my-app-style_module_css-unknown);
 	background-color: var(--my-app-style_module_css-main-bg-color, var(--my-app-style_module_css-backup-bg-color, white));
 }
 
@@ -2125,8 +2126,8 @@ div {
 .my-app-style_module_css-exportNameWeirdCharacters {
 	}
 
-@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
-	result: oklch(from var(--color) l c h / var(--alpha));
+@function --transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
 }
 
 section {
@@ -2134,46 +2135,46 @@ section {
 	background-color: --transparent(var(--my-app-style_module_css-base-color), 0.8);
 }
 
-@function --max-plus-x(--list <length>#, --x <length>) {
-	result: calc(max(var(--list)) + var(--x));
+@function --max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
+	result: calc(max(var(--my-app-style_module_css-list)) + var(--my-app-style_module_css-x));
 }
 
 div {
 	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--animation, --count) {
+@function --anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
 	--my-app-style_module_css-duration: 1s;
 	--my-app-style_module_css-easing: linear;
-	result: var(--animation) var(--my-app-style_module_css-duration) var(--count) var(--my-app-style_module_css-easing);
+	result: var(--my-app-style_module_css-animation) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
 }
 
 div {
 	animation: --anim-1s(my-app-style_module_css-bounce, 2);
 }
 
-@function --outer(--outer-arg) {
+@function --outer(--my-app-style_module_css-outer-arg) {
 	--my-app-style_module_css-outer-local: 2;
 	result: --inner();
 }
 
 @function --inner() returns <number> {
-	result: calc(var(--outer-arg) + var(--my-app-style_module_css-outer-local));
+	result: calc(var(--my-app-style_module_css-outer-arg) + var(--my-app-style_module_css-outer-local));
 }
 
 div {
 	z-index: --outer(1); /* 3 */
 }
 
-@function --narrow-wide(--narrow, --wide) {
-	result: var(--wide);
+@function --narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+	result: var(--my-app-style_module_css-wide);
 	@media (width < 700px) {
-		result: var(--narrow);
+		result: var(--my-app-style_module_css-narrow);
 	}
 }
 
-@function --narrow-wide-if-else(--narrow, --wide) {
-	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+@function --narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+	result: if(media(width < 700px): var(--my-app-style_module_css-narrow) ; else: var(--my-app-style_module_css-wide));
 }
 
 :root {
@@ -2575,6 +2576,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "my-app-identifiers_module_css-UsedClassName",
   "VARS": "--my-app-style_module_css-LOCAL-COLOR my-app-style_module_css-VARS undefined my-app-style_module_css-globalVarsUpperCase",
+  "__webpack_modules__": 12,
   "animation": "my-app-style_module_css-animation",
   "animationName": "my-app-style_module_css-animationName",
   "class": "my-app-style_module_css-class",
@@ -7351,6 +7353,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "_7t7sag",
   "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
+  "__webpack_modules__": 2,
   "animation": "I7H8FK",
   "animationName": "bvLAsC",
   "class": "Vx2ADA",
@@ -7362,12 +7365,12 @@ Object {
   "deepClassInContainer": "cVCisO",
   "displayFlexInSupportsInMediaUpperCase": "xtny9t",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "_276lNI beforeName A8YDR8 _0xrNKu importName secondImport _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther",
+  "exportName": "_276lNI qoIJa_ beforeName A8YDR8 _0xrNKu importName secondImport u-Iyhp eHk-1R _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther qoIJa_ qoIJa_ u-Iyhp qoIJa_ u-Iyhp",
   "exportNameOtherFromKeyword": "SVt4hC xjD3LP",
   "exportNameOtherFromKeywordWithFrom1": "y7Ml6Q from",
-  "exportNameOtherFromKeywordWithFrom2": "Ns9ysL",
-  "exportNameOtherNoSpaces": "atrg9z beforeName A8YDR8",
-  "exportNameWeirdCharacters": "i-n39D",
+  "exportNameOtherFromKeywordWithFrom2": "Ns9ysL FVDuEC",
+  "exportNameOtherNoSpaces": "atrg9z qoIJa_ beforeName A8YDR8",
+  "exportNameWeirdCharacters": "i-n39D Ohvj7e XEiQF- dsEYX4 _2sUimK Jsveeg q8W_qY Vfq5Q9",
   "futureWmultiParams": "dUydqb",
   "global": undefined,
   "hasWmultiParams": "ZU5UXg",
@@ -8125,12 +8128,12 @@ div {
 	0% {
 		left: var(--rl5mza);
 		top: var(--GZM3UO);
-		color: var(--theme-color1);
+		color: var(--pQ1bbl);
 	}
 	100% {
 		left: var(--n4CyrU);
 		top: var(--coGU7L);
-		color: var(--theme-color2);
+		color: var(--oeqXKa);
 	}
 }
 
@@ -8225,12 +8228,12 @@ div {
 	0% {
 		left: VAR(--rl5mza);
 		top: VAR(--GZM3UO);
-		color: VAR(--theme-color1);
+		color: VAR(--pQ1bbl);
 	}
 	100% {
 		left: VAR(--n4CyrU);
 		top: VAR(--coGU7L);
-		color: VAR(--theme-color2);
+		color: VAR(--oeqXKa);
 	}
 }
 
@@ -8868,7 +8871,7 @@ div {
 	list-style: YZsmDI;
 }
 
-@container (width > 400px) and style(--responsive: true) {
+@container (width > 400px) and style(--jGz9MW: true) {
 	.Vx2ADA {
 		font-size: 1.5em;
 	}
@@ -8887,7 +8890,7 @@ div {
 	}
 }
 
-@container r3yzH0 (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+@container r3yzH0 (width > 400px), style(--jGz9MW: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -9020,7 +9023,7 @@ div {
 
 .Qtv_4z {
 	position: fixed;
-	position-anchor: --myAnchor;
+	position-anchor: --_6U2qi-;
 	position-area: top;
 	width: 200px;
 	margin: 0 0 10px 0;
@@ -9297,7 +9300,7 @@ div {
 	var5: var(--DU0JmL, initial);
 	var6: var(--DU0JmL, var(--dgphMa));
 	var7: var(--DU0JmL, var(--dgphMa, red));
-	var8: var(--unknown);
+	var8: var(--ASDYPu);
 	background-color: var(--KSHBQc, var(--NfhiW3, white));
 }
 
@@ -9341,8 +9344,8 @@ div {
 .i-n39D {
 	}
 
-@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
-	result: oklch(from var(--color) l c h / var(--alpha));
+@function --transparent(--PmceRj <color>, --mban9m type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
 }
 
 section {
@@ -9350,46 +9353,46 @@ section {
 	background-color: --transparent(var(--qImv4k), 0.8);
 }
 
-@function --max-plus-x(--list <length>#, --x <length>) {
-	result: calc(max(var(--list)) + var(--x));
+@function --max-plus-x(--L8UoHi <length>#, ---vGTrA <length>) {
+	result: calc(max(var(--L8UoHi)) + var(---vGTrA));
 }
 
 div {
 	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--animation, --count) {
+@function --anim-1s(--I7H8FK, --SKv8kz) {
 	---dC2HS: 1s;
 	--owuGkY: linear;
-	result: var(--animation) var(---dC2HS) var(--count) var(--owuGkY);
+	result: var(--I7H8FK) var(---dC2HS) var(--SKv8kz) var(--owuGkY);
 }
 
 div {
 	animation: --anim-1s(XEyeRq, 2);
 }
 
-@function --outer(--outer-arg) {
+@function --outer(--q5OeI3) {
 	--Tzqh_b: 2;
 	result: --inner();
 }
 
 @function --inner() returns <number> {
-	result: calc(var(--outer-arg) + var(--Tzqh_b));
+	result: calc(var(--q5OeI3) + var(--Tzqh_b));
 }
 
 div {
 	z-index: --outer(1); /* 3 */
 }
 
-@function --narrow-wide(--narrow, --wide) {
-	result: var(--wide);
+@function --narrow-wide(--_8NIeZV, --wwBASX) {
+	result: var(--wwBASX);
 	@media (width < 700px) {
-		result: var(--narrow);
+		result: var(--_8NIeZV);
 	}
 }
 
-@function --narrow-wide-if-else(--narrow, --wide) {
-	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+@function --narrow-wide-if-else(--_8NIeZV, --wwBASX) {
+	result: if(media(width < 700px): var(--_8NIeZV) ; else: var(--wwBASX));
 }
 
 :root {
@@ -9791,6 +9794,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "FPwoX1",
   "VARS": "---YmVq7 gAOQgg undefined g45L8B",
+  "__webpack_modules__": 8,
   "animation": "_1CLYv0",
   "animationName": "AndP3O",
   "class": "Q0FGvN",
@@ -9802,12 +9806,12 @@ Object {
   "deepClassInContainer": "_9w8IDB",
   "displayFlexInSupportsInMediaUpperCase": "v0UVbD",
   "exportLocalVarsShouldCleanup": "false false",
-  "exportName": "tavnFA beforeName aPwTqM IPj7ZV importName secondImport IPj7ZV IPj7ZV _2h_741 IPj7ZV _2h_741 className className classNameOther className classNameOther",
+  "exportName": "tavnFA FABkCo beforeName aPwTqM IPj7ZV importName secondImport _1H2HaF _vcSqh IPj7ZV IPj7ZV _2h_741 IPj7ZV _2h_741 className className classNameOther className classNameOther FABkCo FABkCo _1H2HaF FABkCo _1H2HaF",
   "exportNameOtherFromKeyword": "G5CCpw agIvjM",
   "exportNameOtherFromKeywordWithFrom1": "u6EQvk from",
-  "exportNameOtherFromKeywordWithFrom2": "_3wkyOF",
-  "exportNameOtherNoSpaces": "J86C29 beforeName aPwTqM",
-  "exportNameWeirdCharacters": "RQL3eC",
+  "exportNameOtherFromKeywordWithFrom2": "_3wkyOF B1Oyw9",
+  "exportNameOtherNoSpaces": "J86C29 FABkCo beforeName aPwTqM",
+  "exportNameWeirdCharacters": "RQL3eC _4NUXjn _0KbLT1 gCHFDQ _33N44G Inzw3x iEo8-C sB8Vj6",
   "futureWmultiParams": "u7quBe",
   "global": undefined,
   "hasWmultiParams": "ZCcpAQ",
@@ -13274,25 +13278,25 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "fc77d62949e369eed993",
-  "btn-info_is-disabled": "fc77d62949e369eed993",
-  "color-red": "--fc77d62949e369eed993",
+  "btn--info_is-disabled_1": "_55c20387f9ca7de60138",
+  "btn-info_is-disabled": "_55c20387f9ca7de60138",
+  "color-red": "--_55c20387f9ca7de60138",
   "foo": "bar",
-  "foo_bar": "fc77d62949e369eed993",
+  "foo_bar": "_55c20387f9ca7de60138",
   "my-btn-info_is-disabled": "value",
-  "simple": "fc77d62949e369eed993",
+  "simple": "_55c20387f9ca7de60138",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "de4efc0f7e86c28a8159-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "de4efc0f7e86c28a8159-btn-info_is-disabled",
-  "color-red": "--de4efc0f7e86c28a8159-color-red",
+  "btn--info_is-disabled_1": "_8ba310cac5c2b6e7ad38-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_8ba310cac5c2b6e7ad38-btn-info_is-disabled",
+  "color-red": "--_8ba310cac5c2b6e7ad38-color-red",
   "foo": "bar",
-  "foo_bar": "de4efc0f7e86c28a8159-foo_bar",
+  "foo_bar": "_8ba310cac5c2b6e7ad38-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "de4efc0f7e86c28a8159-simple",
+  "simple": "_8ba310cac5c2b6e7ad38-simple",
 }
 `;
 
@@ -13346,13 +13350,13 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "_35b830610beb6d6bc157-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_35b830610beb6d6bc157-btn-info_is-disabled",
-  "color-red": "--_35b830610beb6d6bc157-color-red",
+  "btn--info_is-disabled_1": "_7c825ffc1074b4ee5893-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_7c825ffc1074b4ee5893-btn-info_is-disabled",
+  "color-red": "--_7c825ffc1074b4ee5893-color-red",
   "foo": "bar",
-  "foo_bar": "_35b830610beb6d6bc157-foo_bar",
+  "foo_bar": "_7c825ffc1074b4ee5893-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_35b830610beb6d6bc157-simple",
+  "simple": "_7c825ffc1074b4ee5893-simple",
 }
 `;
 
@@ -13370,25 +13374,25 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "fc77d62949e369eed993",
-  "btn-info_is-disabled": "fc77d62949e369eed993",
-  "color-red": "--fc77d62949e369eed993",
+  "btn--info_is-disabled_1": "_55c20387f9ca7de60138",
+  "btn-info_is-disabled": "_55c20387f9ca7de60138",
+  "color-red": "--_55c20387f9ca7de60138",
   "foo": "bar",
-  "foo_bar": "fc77d62949e369eed993",
+  "foo_bar": "_55c20387f9ca7de60138",
   "my-btn-info_is-disabled": "value",
-  "simple": "fc77d62949e369eed993",
+  "simple": "_55c20387f9ca7de60138",
 }
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "de4efc0f7e86c28a8159-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "de4efc0f7e86c28a8159-btn-info_is-disabled",
-  "color-red": "--de4efc0f7e86c28a8159-color-red",
+  "btn--info_is-disabled_1": "_8ba310cac5c2b6e7ad38-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_8ba310cac5c2b6e7ad38-btn-info_is-disabled",
+  "color-red": "--_8ba310cac5c2b6e7ad38-color-red",
   "foo": "bar",
-  "foo_bar": "de4efc0f7e86c28a8159-foo_bar",
+  "foo_bar": "_8ba310cac5c2b6e7ad38-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "de4efc0f7e86c28a8159-simple",
+  "simple": "_8ba310cac5c2b6e7ad38-simple",
 }
 `;
 
@@ -13442,13 +13446,13 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "_35b830610beb6d6bc157-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_35b830610beb6d6bc157-btn-info_is-disabled",
-  "color-red": "--_35b830610beb6d6bc157-color-red",
+  "btn--info_is-disabled_1": "_7c825ffc1074b4ee5893-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_7c825ffc1074b4ee5893-btn-info_is-disabled",
+  "color-red": "--_7c825ffc1074b4ee5893-color-red",
   "foo": "bar",
-  "foo_bar": "_35b830610beb6d6bc157-foo_bar",
+  "foo_bar": "_7c825ffc1074b4ee5893-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_35b830610beb6d6bc157-simple",
+  "simple": "_7c825ffc1074b4ee5893-simple",
 }
 `;
 
@@ -13574,6 +13578,7 @@ Object {
   "article-header": "postcss-modules-local-by-default_local_modules_css-article-header",
   "b": "postcss-modules-local-by-default_local_modules_css-b",
   "bar": "postcss-modules-local-by-default_local_modules_css-bar",
+  "bar-unique": "--postcss-modules-local-by-default_local_modules_css-bar-unique",
   "barfoo": "postcss-modules-local-by-default_local_modules_css-barfoo",
   "baz": "postcss-modules-local-by-default_local_modules_css-baz",
   "bou@nce": "postcss-modules-local-by-default_local_modules_css-bou@nce",
@@ -13587,12 +13592,14 @@ Object {
   "ease": "postcss-modules-local-by-default_local_modules_css-ease",
   "ease-in": "postcss-modules-local-by-default_local_modules_css-ease-in",
   "ease-out": "postcss-modules-local-by-default_local_modules_css-ease-out",
+  "easeOutQuart": "--postcss-modules-local-by-default_local_modules_css-easeOutQuart",
   "f@oo": "postcss-modules-local-by-default_local_modules_css-f@oo",
   "fade": "postcss-modules-local-by-default_local_modules_css-fade",
   "fade-in": "postcss-modules-local-by-default_local_modules_css-fade-in",
   "fadeInOut": "postcss-modules-local-by-default_local_modules_css-fadeInOut",
   "fly": "postcss-modules-local-by-default_local_modules_css-fly",
   "foo": "__foo",
+  "foo-bar": "--postcss-modules-local-by-default_local_modules_css-foo-bar",
   "foobar": "postcss-modules-local-by-default_local_modules_css-foobar",
   "infinite": "postcss-modules-local-by-default_local_modules_css-infinite",
   "local-name": "postcss-modules-local-by-default_local_modules_css-local-name",
@@ -14310,11 +14317,11 @@ Array [
 
 /* passed because \`--bar\` not found */
 /* not localize animation-name in a var function */
-.postcss-modules-local-by-default_local_modules_css-foo { animation-name: var(--bar-unique); }
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: var(--postcss-modules-local-by-default_local_modules_css-bar-unique); }
 
 /* passed because \`--bar\` not found */
 /* not localize animation-name in a var function #2 */
-.postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--bar-unique); }
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--postcss-modules-local-by-default_local_modules_css-bar-unique); }
 /* Work, because found */
 :root { --postcss-modules-local-by-default_local_modules_css-my-custom-var: name; }
 .postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--postcss-modules-local-by-default_local_modules_css-my-custom-var); }
@@ -14395,17 +14402,17 @@ Array [
 /* localize custom property */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---foo; }
 
-/* not localize name in nested function */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-fade .2s var(--easeOutQuart) .1s forwards }
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-fade .2s var(--postcss-modules-local-by-default_local_modules_css-easeOutQuart) .1s forwards }
 
-/* not localize name in nested function #2 */
+/* not localize name in nested function */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-fade .2s env(FOO_BAR) .1s forwards, postcss-modules-local-by-default_local_modules_css-name }
 
-/* not localize name in nested function #3 */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s forwards, postcss-modules-local-by-default_local_modules_css-name }
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--postcss-modules-local-by-default_local_modules_css-foo-bar) .1s forwards, postcss-modules-local-by-default_local_modules_css-name }
 
-/* not localize name in nested function #4 */
-.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--foo-bar) .1s forwards postcss-modules-local-by-default_local_modules_css-name, postcss-modules-local-by-default_local_modules_css-name }
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--postcss-modules-local-by-default_local_modules_css-foo-bar) .1s forwards postcss-modules-local-by-default_local_modules_css-name, postcss-modules-local-by-default_local_modules_css-name }
 
 /* localize animation */
 .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-a; }
