@@ -2126,24 +2126,24 @@ div {
 .my-app-style_module_css-exportNameWeirdCharacters {
 	}
 
-@function --transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
+@function --my-app-style_module_css-transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
 	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
 }
 
 section {
 	--my-app-style_module_css-base-color: #faa6ff;
-	background-color: --transparent(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
 }
 
-@function --max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
+@function --my-app-style_module_css-max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
 	result: calc(max(var(--my-app-style_module_css-list)) + var(--my-app-style_module_css-x));
 }
 
 div {
-	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+	width: --my-app-style_module_css-max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
+@function --my-app-style_module_css-anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
 	--my-app-style_module_css-duration: 1s;
 	--my-app-style_module_css-easing: linear;
 	result: var(--my-app-style_module_css-animation) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
@@ -2153,28 +2153,47 @@ div {
 	animation: --anim-1s(my-app-style_module_css-bounce, 2);
 }
 
-@function --outer(--my-app-style_module_css-outer-arg) {
+@function --my-app-style_module_css-outer(--my-app-style_module_css-outer-arg) {
 	--my-app-style_module_css-outer-local: 2;
-	result: --inner();
+	result: --my-app-style_module_css-inner();
 }
 
-@function --inner() returns <number> {
+@function --my-app-style_module_css-inner() returns <number> {
 	result: calc(var(--my-app-style_module_css-outer-arg) + var(--my-app-style_module_css-outer-local));
 }
 
 div {
-	z-index: --outer(1); /* 3 */
+	z-index: --my-app-style_module_css-outer(1); /* 3 */
 }
 
-@function --narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+@function --my-app-style_module_css-narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
 	result: var(--my-app-style_module_css-wide);
 	@media (width < 700px) {
 		result: var(--my-app-style_module_css-narrow);
 	}
 }
 
-@function --narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+@function --my-app-style_module_css-narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
 	result: if(media(width < 700px): var(--my-app-style_module_css-narrow) ; else: var(--my-app-style_module_css-wide));
+}
+
+@function --my-app-style_module_css-transparent(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+@function --my-app-style_module_css-transparent-local(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+@function --transparent-global(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+section {
+	--my-app-style_module_css-base-color: #faa6ff;
+	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --transparent-global(var(--my-app-style_module_css-base-color), 0.8);
 }
 
 :root {
@@ -2671,6 +2690,7 @@ Object {
   "sticky-heading": "my-app-style_module_css-sticky-heading",
   "swop5c-local": "--my-app-style_module_css-swop5c-local",
   "test": "my-app-style_module_css-test",
+  "transparent-local": "--my-app-style_module_css-transparent-local",
   "unknown-at-rule": "my-app-style_module_css-unknown-at-rule",
 }
 `;
@@ -4623,6 +4643,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --my-app-style_module_css-transparent-local(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
@@ -5031,6 +5070,7 @@ Object {
   "sticky-heading": "_5unArO",
   "swop5c-local": "--uypV5i",
   "test": "OyMPmk",
+  "transparent-local": "--NxHrla",
   "unknown-at-rule": "DqBFzD",
 }
 `;
@@ -6981,6 +7021,25 @@ div {
 
 @function --narrow-wide-if-else(--narrow, --wide) {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --NxHrla(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --NxHrla(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
 }
 
 :root {
@@ -9344,24 +9403,24 @@ div {
 .i-n39D {
 	}
 
-@function --transparent(--PmceRj <color>, --mban9m type(<number> | <percentage>)) returns <color> {
+@function --HPKrEe(--PmceRj <color>, --mban9m type(<number> | <percentage>)) returns <color> {
 	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
 }
 
 section {
 	--qImv4k: #faa6ff;
-	background-color: --transparent(var(--qImv4k), 0.8);
+	background-color: --HPKrEe(var(--qImv4k), 0.8);
 }
 
-@function --max-plus-x(--L8UoHi <length>#, ---vGTrA <length>) {
+@function --Zbzld7(--L8UoHi <length>#, ---vGTrA <length>) {
 	result: calc(max(var(--L8UoHi)) + var(---vGTrA));
 }
 
 div {
-	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+	width: --Zbzld7({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--I7H8FK, --SKv8kz) {
+@function --vY2Qe3(--I7H8FK, --SKv8kz) {
 	---dC2HS: 1s;
 	--owuGkY: linear;
 	result: var(--I7H8FK) var(---dC2HS) var(--SKv8kz) var(--owuGkY);
@@ -9371,28 +9430,47 @@ div {
 	animation: --anim-1s(XEyeRq, 2);
 }
 
-@function --outer(--q5OeI3) {
+@function --_12bUXN(--q5OeI3) {
 	--Tzqh_b: 2;
-	result: --inner();
+	result: --Sr06Ag();
 }
 
-@function --inner() returns <number> {
+@function --Sr06Ag() returns <number> {
 	result: calc(var(--q5OeI3) + var(--Tzqh_b));
 }
 
 div {
-	z-index: --outer(1); /* 3 */
+	z-index: --_12bUXN(1); /* 3 */
 }
 
-@function --narrow-wide(--_8NIeZV, --wwBASX) {
+@function --_7vN-uQ(--_8NIeZV, --wwBASX) {
 	result: var(--wwBASX);
 	@media (width < 700px) {
 		result: var(--_8NIeZV);
 	}
 }
 
-@function --narrow-wide-if-else(--_8NIeZV, --wwBASX) {
+@function --OPnU-W(--_8NIeZV, --wwBASX) {
 	result: if(media(width < 700px): var(--_8NIeZV) ; else: var(--wwBASX));
+}
+
+@function --HPKrEe(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+@function --NxHrla(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+@function --transparent-global(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+section {
+	--qImv4k: #faa6ff;
+	background-color: --HPKrEe(var(--qImv4k), 0.8);
+	background-color: --NxHrla(var(--qImv4k), 0.8);
+	background-color: --transparent-global(var(--qImv4k), 0.8);
 }
 
 :root {
@@ -18125,6 +18203,25 @@ div {
 
 @function --narrow-wide-if-else(--narrow, --wide) {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :local(--transparent-local)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :global(--transparent-global)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: local(--transparent-local)(var(--base-color), 0.8);
+	background-color: global(--transparent-global)(var(--base-color), 0.8);
 }
 
 :root {

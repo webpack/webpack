@@ -1384,6 +1384,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :local(--transparent-local)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :global(--transparent-global)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: local(--transparent-local)(var(--base-color), 0.8);
+	background-color: global(--transparent-global)(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
