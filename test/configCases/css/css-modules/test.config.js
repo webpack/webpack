@@ -11,9 +11,9 @@ module.exports = {
 
 		return [
 			i === 1
-				? `./142.bundle${i}.js`
+				? `./915.bundle${i}.js`
 				: i === 3
-					? `./132.bundle${i}.js`
+					? `./762.bundle${i}.js`
 					: `./use-style_js.bundle${i}.js`,
 			`./bundle${i}.js`
 		];

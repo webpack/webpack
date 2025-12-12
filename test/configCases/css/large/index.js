@@ -2,7 +2,7 @@ const prod = process.env.NODE_ENV === "production";
 
 it("should allow to create css modules", done => {
 	prod
-		? __non_webpack_require__("./226.bundle1.js")
+		? __non_webpack_require__("./961.bundle1.js")
 		: __non_webpack_require__("./use-style_js.bundle0.js");
 	import("./use-style.js").then(({ default: x }) => {
 		try {

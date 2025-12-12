@@ -375,13 +375,16 @@
 	opacity: 0.12;
 	padding: .5px;
 	unknown: :local(.test);
-	unknown1: :local .test;
-	unknown2: :global .test;
-	unknown3: :global .test;
-	unknown4: .foo, .bar, #bar;
+	unknown2: :global(.test);
+	unknown3: local(.test);
+	unknown4: global(.test);
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
 }
 
-@unknown :local .local :global .global {
+@unknown local(.local) global(.global) {
 	color: red;
 }
 
@@ -1393,11 +1396,11 @@ div {
 	src: url("https://example.org/SWOP2006_Coated5v2.icc");
 }
 
-@color-profile local(--swop5c) {
+@color-profile local(--swop5c-local) {
 	src: url("https://example.org/SWOP2006_Coated5v2.icc");
 }
 
-@color-profile :local(--swop5c) {
+@color-profile :local(--swop5c-local) {
 	src: url("https://example.org/SWOP2006_Coated5v2.icc");
 }
 
@@ -1411,14 +1414,14 @@ div {
 
 .class {
 	background-color: color(--swop5c 0% 70% 20% 0%);
-	background-color: color(local(--swop5c) 0% 70% 20% 0%);
-	background-color: color(:local(--swop5c) 0% 70% 20% 0%);
+	background-color: color(local(--swop5c-local) 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c-local) 0% 70% 20% 0%);
 	background-color: color(global(--swop5c) 0% 70% 20% 0%);
 	background-color: color(:global(--swop5c) 0% 70% 20% 0%);
 	background-color: color(--swop5c from global 0% 70% 20% 0%);
 	background-color: color(--from-shared from "./shared.css" 0% 70% 20% 0%);
-	background-color: color(local(--swop5c, "./shared.css") 0% 70% 20% 0%);
-	background-color: color(:local(--swop5c, "./shared.css") 0% 70% 20% 0%);
+	background-color: color(local(--swop5c-local, "./shared.css") 0% 70% 20% 0%);
+	background-color: color(:local(--swop5c-local, "./shared.css") 0% 70% 20% 0%);
 }
 
 :root {
@@ -1489,9 +1492,33 @@ div {
 	}
 }
 
+/* nesting */
+
+.class{.class{}}
+.class{color:#fff5f5}
+.class{.class{color:#f1f1f1}}
+.class{--foo:#fff5f5}
+.class{--foo:#fff5f5;color:#f1f1f1}
+.class{--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz:[1, "string", .class, #f1f1f1, #id]}
+.class{--baz:(1, "string", .class, #f1f1f1, #id)}
+
 /* Cases for `css/global` */
 
+.just-class {
+	color: red;
+}
+
 :local(.my-simple-local) {
+	color: red;
+}
+
+:global(.my-global-local) {
 	color: red;
 }
 
@@ -1546,6 +1573,41 @@ p:not(:local(#main-paragraph)) {
 	}
 }
 
+.container-only-classes {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.item.selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
 :local(.local-class-name) {
 	color: red;
 }
@@ -1586,10 +1648,15 @@ p:not(:local(#main-paragraph)) {
 	color: white;
 }
 
+:global(.global-class-other) {
+	color: red;
+}
+
 :local(.class-with-composes) {
 	composes:
 		local-class,
 		global-class from global,
+		global-class-other from global,
 		local-my-shared-class from "./shared.css";
 }
 
@@ -1612,7 +1679,7 @@ p:not(:local(#main-paragraph)) {
 	initial-value: 25%;
 }
 
-@keyframes local(progressAnimation) {
+@keyframes local(progressAnimationLocal) {
 	to {
 		--progress: 100%;
 	}
@@ -1628,7 +1695,7 @@ p:not(:local(#main-paragraph)) {
 		#00d230 var(local(--progress)),
 		black var(local(--progress))
 	);
-	animation: local(progressAnimation) 2.5s ease infinite;
+	animation: local(progressAnimationLocal) 2.5s ease infinite;
 }
 
 @scope (:local(.article-header)) to (:global(.class)) {
@@ -1676,4 +1743,11 @@ p:not(:local(#main-paragraph)) {
 
 .class {
 	custom-name: local(unknown-at-rule);
+}
+
+:global .class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: local(animation-name-test) global(animation-name-test)
 }

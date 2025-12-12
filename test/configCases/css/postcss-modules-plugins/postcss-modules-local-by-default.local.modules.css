@@ -85,7 +85,6 @@
 /* broad global should be limited to selector */
 :global .foo, .bar :global, .foobar :global { a_value: some-value; }
 
-/* TODO bug */
 /* broad global should be limited to nested selector */
 .foo:not(:global .bar).foobar { a_value: some-value; }
 
@@ -186,16 +185,16 @@
 /* localize custom property */
 .foo { animation: --foo; }
 
-/* not localize name in nested function */
+/* don't find a localize name, but localize var */
 .foo { animation: fade .2s var(--easeOutQuart) .1s forwards }
 
-/* not localize name in nested function #2 */
+/* not localize name in nested function */
 .foo { animation: fade .2s env(FOO_BAR) .1s forwards, name }
 
-/* not localize name in nested function #3 */
+/* don't find a localize name, but localize var */
 .foo { animation: var(--foo-bar) .1s forwards, name }
 
-/* not localize name in nested function #4 */
+/* don't find a localize name, but localize var */
 .foo { animation: var(--foo-bar) .1s forwards name, name }
 
 /* localize animation */
@@ -306,7 +305,7 @@
 :export { foo: __foo; }
 
 /* ignore :import statements */
-:import("./import.modules.css") { foo: __foo; }
+:import("./import.modules.css") { local-foo: __foo; }
 
 /* incorrectly handle nested selectors */
 .bar:not(:global .foo-name, .baz-name) { a_value: some-value; }
@@ -321,23 +320,18 @@
 /* throw on inconsistent selector result */
 :global .foo, .bar { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :locals */
+/* throw on nested :locals, but we allow to do it */
 :local(:local(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested :globals */
+/* throw on nested :globals, but we allow to do it */
 :global(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested mixed */
+/* throw on nested mixed, but we allow to do it */
 :local(:global(.foo)) { a_value: some-value; }
 
-/* TODO bug no report */
-/* throw on nested broad :local */
+/* throw on nested broad :local, but we allow to do it */
 :global(:local .foo) { a_value: some-value; }
 
-/* TODO bug no report */
 /* throw on incorrect spacing with broad :global */
 .foo :global.bar { a_value: some-value; }
 
@@ -396,37 +390,36 @@ input { a_value: some-value; }
 /* not ignore custom property set */
 :root { --title-align: center; --sr-only: { position: absolute; } }
 
-/* TODO bug? */
 /* not localize imported alias */
 :import("./import.modules.css") { a_value1: some-value; }
 
 .foo > .a_value { a_value1: some-value; }
 
-/* TODO bug? */
+/*
+ * All the original `import()` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
 /* not localize nested imported alias */
 :import("./import.modules.css") { a_value2: some-value; }
 
 .foo > .a_value > .bar { a_value2: some-value; }
 
-/* TODO bug? */
 /* ignore imported in explicit local */
 :import("./import.modules.css") { a_value3: some-value; }
 
 :local(.a_value) { a_value3: some-value; }
 
-/* TODO bug? */
 /* escape local context with explict global */
 :import("./import.modules.css") { a_value4: some-value; }
 
 :local .foo :global(.a_value) .bar { a_value4: some-value; }
 
-/* TODO bug? */
 /* respect explicit local */
 :import("./import.modules.css") { a_value5: some-value; }
 
 .a_value :local .a_value .foo :global .a_value { a_value5: some-value; }
 
-/* TODO bug? */
 /* not localize imported animation-name */
 :import("./import.modules.css") { a_value6: some-value; }
 
@@ -530,7 +523,6 @@ input { a_value: some-value; }
 	}
 }
 
-/* TODO bug */
 /* @scope at-rule #2 */
 @scope (:local(.article-body)) to (:global(.class)) {
 	.article-footer {
