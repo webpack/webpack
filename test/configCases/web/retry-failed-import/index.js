@@ -8,7 +8,8 @@ it("should be able to retry a failed import()", () => {
 	const script = document.head._children[0];
 	expect(script.onerror).toBeTypeOf("function");
 
-	script.onerror({ type: "load", target: script });
+	const firstErrorEvent = { type: "load", target: script };
+	script.onerror(firstErrorEvent);
 
 	return promise.catch(err => {
 		expect(err).toBeInstanceOf(Error);
@@ -18,6 +19,7 @@ it("should be able to retry a failed import()", () => {
 		expect(err.message).toMatch(
 			/^Loading chunk .+ failed\.\n\(missing: https:\/\/test\.cases\/path\/the-chunk\.js\)$/
 		);
+		expect(err.event).toBe(firstErrorEvent);
 
 		const promise = doImport();
 
@@ -36,6 +38,7 @@ it("should be able to retry a failed import()", () => {
 			expect(err.message).toMatch(
 				/^Loading chunk .+ failed\.\n\(undefined: undefined\)$/
 			);
+			expect(err.event).toBe(undefined);
 
 			const promise = doImport();
 
