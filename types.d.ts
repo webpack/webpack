@@ -18125,6 +18125,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
+	_importAttributes?: Record<string, unknown>;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
