@@ -63,6 +63,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
+	_importAttributes?: Record<string, unknown>;
 }
 
 /** These properties are added by the HotModuleReplacementPlugin */
