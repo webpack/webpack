@@ -881,7 +881,12 @@ describe("snapshots", () => {
 		+   },
 		@@ ... @@
 		-   "devtool": false,
-		+   "devtool": "eval",
+		+   "devtool": Array [
+		+     Object {
+		+       "type": "javascript",
+		+       "use": "eval",
+		+     },
+		+   ],
 		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
@@ -2138,7 +2143,12 @@ describe("snapshots", () => {
 			+   },
 			@@ ... @@
 			-   "devtool": false,
-			+   "devtool": "eval",
+			+   "devtool": Array [
+			+     Object {
+			+       "type": "javascript",
+			+       "use": "eval",
+			+     },
+			+   ],
 			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",

@@ -46,7 +46,11 @@ export type DevServer =
 /**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
-export type DevTool = (false | "eval") | string;
+export type DevTool = DevToolItem[] | RawDevTool;
+/**
+ * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+ */
+export type RawDevTool = (false | "eval") | string;
 /**
  * Enable and configure the Dotenv plugin to load environment variables from .env files.
  */
@@ -803,6 +807,10 @@ export type CssParserUrl = boolean;
  */
 export type DeferImportExperimentOptions = boolean;
 /**
+ * Assign devtool values per asset type (all, javascript, or css).
+ */
+export type DevTools = DevToolItem[];
+/**
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
@@ -1122,6 +1130,19 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
+}
+/**
+ * Item to assign devtool values per asset type (all, javascript, or css).
+ */
+export interface DevToolItem {
+	/**
+	 * Which assets should receive this devtool value.
+	 */
+	type: "all" | "javascript" | "css";
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	use: RawDevTool;
 }
 /**
  * Options for Dotenv plugin.
@@ -3793,6 +3814,10 @@ export interface WebpackOptionsNormalized {
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
 	devtool?: DevTool;
+	/**
+	 * Assign devtool values per asset type (all, javascript, or css).
+	 */
+	devtools?: DevTools;
 	/**
 	 * Enable and configure the Dotenv plugin to load environment variables from .env files.
 	 */
