@@ -89,6 +89,12 @@ __webpack_require__.r(module.exports = {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -544,14 +550,14 @@ body {
 ## Unoptimized
 
 ```
-assets by path *.js 16.2 KiB
-  asset output.js 15.9 KiB [emitted] (name: main)
+assets by path *.js 16.4 KiB
+  asset output.js 16.1 KiB [emitted] (name: main)
   asset 1.output.js 331 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 16.9 KiB (14.6 KiB) = output.js 15.9 KiB output.css 1.04 KiB 1 auxiliary asset
+Entrypoint main 17.2 KiB (14.6 KiB) = output.js 16.1 KiB output.css 1.04 KiB 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 256 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.8 KiB 9 modules
@@ -572,26 +578,29 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.2 KiB
-  asset output.js 3.12 KiB [emitted] [minimized] (name: main)
+assets by path *.js 3.12 KiB
+  asset output.js 3.04 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 85 bytes [emitted] [minimized]
 assets by path *.css 475 bytes
   asset output.css 451 bytes [emitted] (name: main)
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.56 KiB (14.6 KiB) = output.js 3.12 KiB output.css 451 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 286 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.48 KiB (14.6 KiB) = output.js 3.04 KiB output.css 451 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 362 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.53 KiB 8 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 279 bytes (css) 106 bytes (javascript) 42 bytes (css-import) [dependent] 4 modules
-  cacheable modules 180 bytes (javascript) 175 bytes (css)
-    ./example.js + 2 modules 178 bytes [built] [code generated]
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
+  cacheable modules 362 bytes (javascript) 375 bytes (css)
+    ./example.js + 3 modules 269 bytes [built] [code generated]
       [no exports]
       [no exports used]
       entry ./example.js main
     css ./style.css 1 bytes (javascript) 148 bytes (css) [built] [code generated]
       [no exports]
       [no exports used]
+    css ./style.module.css 91 bytes (javascript) 200 bytes (css) [built] [code generated]
+      [exports: large, main]
+      [only some exports used: main]
     css ./style2.css 1 bytes (javascript) 27 bytes (css) [built] [code generated]
       [no exports]
       [no exports used]
@@ -599,6 +608,6 @@ chunk (runtime: main) 822.output.js, 822.output.css 1 bytes (javascript) 23 byte
   > ./lazy-style.css ./example.js 4:0-26
   css ./lazy-style.css 1 bytes (javascript) 23 bytes (css) [built] [code generated]
     [no exports]
-    import() ./lazy-style.css ./example.js + 2 modules ./example.js 4:0-26
+    import() ./lazy-style.css ./example.js + 3 modules ./example.js 4:0-26
 webpack X.X.X compiled successfully
 ```

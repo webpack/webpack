@@ -130,6 +130,12 @@ __webpack_unused_export__ = function multiply() {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -172,14 +178,14 @@ inc(a); // 2
 
 ```javascript
 /*! For license information please see output.js.LICENSE.txt */
-(()=>{var r=[,(r,t,n)=>{const o=n(2).W;t.GV=function(r){return o(r,1)}},(r,t)=>{t.W=function(){for(var r=0,t=0,n=arguments,o=n.length;t<o;)r+=n[t++];return r}}],t={};(0,function n(o){var e=t[o];if(void 0!==e)return e.exports;var u=t[o]={exports:{}};return r[o](u,u.exports,n),u.exports}(1).GV)(1)})();
+(()=>{var r=[,(r,n,o)=>{const t=o(2).W;n.GV=function(r){return t(r,1)}},(r,n)=>{n.W=function(){for(var r=0,n=0,o=arguments,t=o.length;n<t;)r+=o[n++];return r}}],n={};(0,function o(t){var e=n[t];if(void 0!==e)return e.exports;if(void 0===r[t]){var i=new Error("Cannot find module '"+t+"'");throw i.code="MODULE_NOT_FOUND",i}var u=n[t]={exports:{}};return r[t](u,u.exports,o),u.exports}(1).GV)(1)})();
 ```
 
 # dist/without.js (same without tree shaking)
 
 ```javascript
 /*! For license information please see without.js.LICENSE.txt */
-(()=>{var n=[,(n,r,t)=>{const e=t(2).add;r.increment=function(n){return e(n,1)},r.incrementBy2=function(n){return e(n,2)},r.decrement=function(n){return e(n,1)}},(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n},r.multiply=function(){for(var n=0,r=arguments,t=r.length;n<t;)sum*=r[n++];return sum}}],r={};(0,function t(e){var u=r[e];if(void 0!==u)return u.exports;var o=r[e]={exports:{}};return n[e](o,o.exports,t),o.exports}(1).increment)(1)})();
+(()=>{var r=[,(r,n,t)=>{const e=t(2).add;n.increment=function(r){return e(r,1)},n.incrementBy2=function(r){return e(r,2)},n.decrement=function(r){return e(r,1)}},(r,n)=>{n.add=function(){for(var r=0,n=0,t=arguments,e=t.length;n<e;)r+=t[n++];return r},n.multiply=function(){for(var r=0,n=arguments,t=n.length;r<t;)sum*=n[r++];return sum}}],n={};(0,function t(e){var o=n[e];if(void 0!==o)return o.exports;if(void 0===r[e]){var u=new Error("Cannot find module '"+e+"'");throw u.code="MODULE_NOT_FOUND",u}var i=n[e]={exports:{}};return r[e](i,i.exports,t),i.exports}(1).increment)(1)})();
 ```
 
 # Info
@@ -187,7 +193,7 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.94 KiB [emitted] (name: main)
+asset output.js 3.2 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
@@ -196,7 +202,7 @@ chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
     entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset without.js 3.09 KiB [emitted] (name: main)
+asset without.js 3.34 KiB [emitted] (name: main)
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
@@ -209,7 +215,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 365 bytes [emitted] [minimized] (name: main) 1 related asset
+asset output.js 463 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
@@ -218,7 +224,7 @@ chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
     entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset without.js 551 bytes [emitted] [minimized] (name: main) 1 related asset
+asset without.js 649 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules

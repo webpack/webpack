@@ -79,6 +79,12 @@ require.ensure(["c"], function(require) {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -332,7 +338,7 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.43 KiB [emitted] (name: main)
+asset output.js 9.69 KiB [emitted] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
 chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main

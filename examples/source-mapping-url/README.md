@@ -117,6 +117,12 @@ exports.greet = greet;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -177,7 +183,7 @@ console.log((0,library__WEBPACK_IMPORTED_MODULE_0__.greet)(128));
 # dist/output.js.map
 
 ```json
-{"version":3,"file":"output.js","mappings":";;;;;;;;;;;;;;;;;;AAAA,IAAM,KAAK,GAAG,UAAC,IAAY;IAC1B,IAAI,OAAO,IAAI,KAAK,QAAQ,EAAE,CAAC;QAC9B,MAAM,IAAI,SAAS,CAAC,mBAAmB,CAAC,CAAC;IAC1C,CAAC;IAED,OAAO,iBAAU,IAAI,MAAG,CAAC;AAC1B,CAAC,CAAC;AAEO,sBAAK;;;;;;UCRd;UACA;;UAEA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;;UAEA;UACA;;UAEA;UACA;UACA;;;;;WCtBA;WACA;WACA;WACA,uDAAuD,iBAAiB;WACxE;WACA,gDAAgD,aAAa;WAC7D,E;;;;;;;;;;;;;;;ACNgC;;AAEhC;AACA,YAAY,8CAAK;AACjB;AACA,YAAY,8CAAK","sources":["webpack:///./node_modules/library/src/index.ts","webpack:///webpack/bootstrap","webpack:///webpack/runtime/make namespace object","webpack:///./example.js"],"sourcesContent":["const greet = (name: string) => {\n\tif (typeof name !== \"string\") {\n\t\tthrow new TypeError(\"Invalid name type\");\n\t}\n\n\treturn `Hello, ${name}!`;\n};\n\nexport { greet }\n","// The module cache\nvar __webpack_module_cache__ = {};\n\n// The require function\nfunction __webpack_require__(moduleId) {\n\t// Check if module is in cache\n\tvar cachedModule = __webpack_module_cache__[moduleId];\n\tif (cachedModule !== undefined) {\n\t\treturn cachedModule.exports;\n\t}\n\t// Create a new module (and put it into the cache)\n\tvar module = __webpack_module_cache__[moduleId] = {\n\t\t// no module.id needed\n\t\t// no module.loaded needed\n\t\texports: {}\n\t};\n\n\t// Execute the module function\n\t__webpack_modules__[moduleId](module, module.exports, __webpack_require__);\n\n\t// Return the exports of the module\n\treturn module.exports;\n}\n\n","// define __esModule on exports\n__webpack_require__.r = (exports) => {\n\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n\t}\n\tObject.defineProperty(exports, '__esModule', { value: true });\n};","import { greet } from \"library\";\n\n// Valid value\nconsole.log(greet(\"world\"));\n// Wrong value\nconsole.log(greet(128));\n"],"names":[],"ignoreList":[],"sourceRoot":""}
+{"version":3,"file":"output.js","mappings":";;;;;;;;;;;;;;;;;;AAAA,IAAM,KAAK,GAAG,UAAC,IAAY;IAC1B,IAAI,OAAO,IAAI,KAAK,QAAQ,EAAE,CAAC;QAC9B,MAAM,IAAI,SAAS,CAAC,mBAAmB,CAAC,CAAC;IAC1C,CAAC;IAED,OAAO,iBAAU,IAAI,MAAG,CAAC;AAC1B,CAAC,CAAC;AAEO,sBAAK;;;;;;UCRd;UACA;;UAEA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;UACA;;UAEA;UACA;;UAEA;UACA;UACA;;;;;WC5BA;WACA;WACA;WACA,uDAAuD,iBAAiB;WACxE;WACA,gDAAgD,aAAa;WAC7D,E;;;;;;;;;;;;;;;ACNgC;;AAEhC;AACA,YAAY,8CAAK;AACjB;AACA,YAAY,8CAAK","sources":["webpack:///./node_modules/library/src/index.ts","webpack:///webpack/bootstrap","webpack:///webpack/runtime/make namespace object","webpack:///./example.js"],"sourcesContent":["const greet = (name: string) => {\n\tif (typeof name !== \"string\") {\n\t\tthrow new TypeError(\"Invalid name type\");\n\t}\n\n\treturn `Hello, ${name}!`;\n};\n\nexport { greet }\n","// The module cache\nvar __webpack_module_cache__ = {};\n\n// The require function\nfunction __webpack_require__(moduleId) {\n\t// Check if module is in cache\n\tvar cachedModule = __webpack_module_cache__[moduleId];\n\tif (cachedModule !== undefined) {\n\t\treturn cachedModule.exports;\n\t}\n\t// Check if module exists (development only)\n\tif (__webpack_modules__[moduleId] === undefined) {\n\t\tvar e = new Error(\"Cannot find module '\" + moduleId + \"'\");\n\t\te.code = 'MODULE_NOT_FOUND';\n\t\tthrow e;\n\t}\n\t// Create a new module (and put it into the cache)\n\tvar module = __webpack_module_cache__[moduleId] = {\n\t\t// no module.id needed\n\t\t// no module.loaded needed\n\t\texports: {}\n\t};\n\n\t// Execute the module function\n\t__webpack_modules__[moduleId](module, module.exports, __webpack_require__);\n\n\t// Return the exports of the module\n\treturn module.exports;\n}\n\n","// define __esModule on exports\n__webpack_require__.r = (exports) => {\n\tif(typeof Symbol !== 'undefined' && Symbol.toStringTag) {\n\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });\n\t}\n\tObject.defineProperty(exports, '__esModule', { value: true });\n};","import { greet } from \"library\";\n\n// Valid value\nconsole.log(greet(\"world\"));\n// Wrong value\nconsole.log(greet(128));\n"],"names":[],"ignoreList":[],"sourceRoot":""}
 ```
 
 # Info
@@ -185,7 +191,7 @@ console.log((0,library__WEBPACK_IMPORTED_MODULE_0__.greet)(128));
 ## Unoptimized
 
 ```
-asset output.js 3.18 KiB [emitted] (name: main) 1 related asset
+asset output.js 3.43 KiB [emitted] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 407 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 289 bytes [dependent] 1 module

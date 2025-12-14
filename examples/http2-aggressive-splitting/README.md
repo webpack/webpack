@@ -52,9 +52,9 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset c02e26dfd935780d12a7.js 37.2 KiB [emitted] [immutable] (name: main)
+asset bba4b945d5761d169cea.js 37.4 KiB [emitted] [immutable] (name: main)
 asset ac73469e04518b945dc6.js 12 KiB [emitted] [immutable]
-chunk (runtime: main) c02e26dfd935780d12a7.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) bba4b945d5761d169cea.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example main
   runtime modules 4.92 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules
