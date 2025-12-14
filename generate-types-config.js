@@ -8,7 +8,5 @@ module.exports = {
 		MultiConfiguration: /^MultiWebpackOptions /
 	},
 	exclude: [/^devServer in WebpackOptions /],
-	include: [
-		/^(_module|_compilation|_compiler|_importAttributes) in NormalModuleLoaderContext /
-	]
+	include: [/^(_module|_compilation|_compiler) in NormalModuleLoaderContext /]
 };
