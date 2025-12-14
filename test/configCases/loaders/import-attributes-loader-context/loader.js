@@ -1,5 +1,5 @@
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source) {
-	const attributes = this._importAttributes;
+	const attributes = this.importAttributes;
 	return `module.exports = ${JSON.stringify(attributes)};`;
 };
