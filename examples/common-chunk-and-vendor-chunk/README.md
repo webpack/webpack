@@ -203,6 +203,12 @@ module.exports = "utility1";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -369,6 +375,12 @@ module.exports = "pageB";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -533,6 +545,12 @@ module.exports = "pageC";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -666,13 +684,13 @@ module.exports = "pageC";
 assets by chunk 744 bytes (id hint: commons)
   asset commons-utility2_js.js 372 bytes [emitted] (id hint: commons)
   asset commons-utility3_js.js 372 bytes [emitted] (id hint: commons)
-asset pageA.js 6.07 KiB [emitted] (name: pageA)
-asset pageB.js 5.79 KiB [emitted] (name: pageB)
-asset pageC.js 5.73 KiB [emitted] (name: pageC)
+asset pageA.js 6.33 KiB [emitted] (name: pageA)
+asset pageB.js 6.05 KiB [emitted] (name: pageB)
+asset pageC.js 5.99 KiB [emitted] (name: pageC)
 asset vendor.js 713 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.13 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.07 KiB
-Entrypoint pageB 7.21 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 5.79 KiB
-Entrypoint pageC 6.45 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.73 KiB
+Entrypoint pageA 7.39 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.33 KiB
+Entrypoint pageB 7.47 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 6.05 KiB
+Entrypoint pageC 6.71 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.99 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB

@@ -185,7 +185,7 @@ assets by info 881 bytes [immutable]
   asset async_js.d6fc644e617b14425795.js 873 bytes [emitted] [immutable] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
-asset output.js 15.2 KiB [emitted] (name: main) 1 related asset
+asset output.js 15.4 KiB [emitted] (name: main) 1 related asset
 asset manifest.json 601 bytes [emitted]
 asset manifest.yml 395 bytes [emitted]
 chunk (runtime: main) async_js.d6fc644e617b14425795.js 24 bytes [rendered]

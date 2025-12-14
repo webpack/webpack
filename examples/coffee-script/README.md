@@ -78,6 +78,12 @@ module.exports = 42;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -117,7 +123,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.24 KiB [emitted] (name: main)
+asset output.js 2.5 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 175 bytes [dependent] 2 modules

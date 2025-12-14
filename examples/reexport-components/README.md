@@ -201,7 +201,7 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset output.js 11 KiB [emitted] (name: main)
+asset output.js 11.2 KiB [emitted] (name: main)
 asset pages_Login_js.output.js 2.79 KiB [emitted]
 asset pages_Dashboard_js.output.js 2.75 KiB [emitted]
 chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]

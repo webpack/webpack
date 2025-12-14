@@ -59,6 +59,12 @@ module.exports = config;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -281,7 +287,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.85 KiB [emitted] (name: main)
+asset output.js 10.1 KiB [emitted] (name: main)
 asset 670.output.js 344 bytes [emitted]
 asset 210.output.js 326 bytes [emitted]
 asset 425.output.js 326 bytes [emitted]
