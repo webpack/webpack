@@ -88,6 +88,12 @@ console.log(lodash, isomorphicFetch);
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -551,7 +557,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset runtime.js 11.1 KiB [emitted] (name: runtime)
+asset runtime.js 11.4 KiB [emitted] (name: runtime)
 asset other-vendors.js 2.13 KiB [emitted] (name: other-vendors)
 asset page1.js 1.9 KiB [emitted] (name: page1)
 asset app.js 1.43 KiB [emitted] (name: app)
@@ -559,8 +565,8 @@ asset react-vendors.js 1.33 KiB [emitted] (name: react-vendors)
 asset lazy_js.js 1.1 KiB [emitted]
 Entrypoint app 1.43 KiB = app.js
 Entrypoint page1 1.9 KiB = page1.js
-Entrypoint react-vendors 12.4 KiB = runtime.js 11.1 KiB react-vendors.js 1.33 KiB
-Entrypoint other-vendors 13.2 KiB = runtime.js 11.1 KiB other-vendors.js 2.13 KiB
+Entrypoint react-vendors 12.7 KiB = runtime.js 11.4 KiB react-vendors.js 1.33 KiB
+Entrypoint other-vendors 13.5 KiB = runtime.js 11.4 KiB other-vendors.js 2.13 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]

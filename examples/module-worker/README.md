@@ -174,6 +174,12 @@ export const add = (content, from) => {
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
+/******/ 	// Check if module exists (development only)
+/******/ 	if (__webpack_modules__[moduleId] === undefined) {
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -446,6 +452,12 @@ fibWorker.onmessage = event => {
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
+/******/ 	// Check if module exists (development only)
+/******/ 	if (__webpack_modules__[moduleId] === undefined) {
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -642,6 +654,12 @@ var e,o,t={},r={};function s(e){var o=r[e];if(void 0!==o)return o.exports;var n=
 /******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Check if module exists (development only)
+/******/ 	if (__webpack_modules__[moduleId] === undefined) {
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
@@ -841,9 +859,9 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 8.83 KiB [emitted] [javascript module] (name: main)
-asset chat.js 6.75 KiB [emitted] [javascript module] (name: chat)
-asset workers/fibonacci.js 6.39 KiB [emitted] [javascript module] (name: fibonacci)
+asset main.js 9.09 KiB [emitted] [javascript module] (name: main)
+asset chat.js 7 KiB [emitted] [javascript module] (name: chat)
+asset workers/fibonacci.js 6.64 KiB [emitted] [javascript module] (name: fibonacci)
 asset 936.js 1.04 KiB [emitted] [javascript module]
 asset 129.js 881 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]

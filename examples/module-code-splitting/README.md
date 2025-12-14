@@ -60,6 +60,12 @@ export function reset() {
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
+/******/ 	// Check if module exists (development only)
+/******/ 	if (__webpack_modules__[moduleId] === undefined) {
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -245,7 +251,7 @@ var e,t,o={},r={};function n(e){var t=r[e];if(void 0!==t)return t.exports;var i=
 ## Unoptimized
 
 ```
-asset output.js 6.71 KiB [emitted] [javascript module] (name: main)
+asset output.js 6.96 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.34 KiB [emitted] [javascript module]
 chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.11 KiB (runtime) [entry] [rendered]
   > ./example.js main

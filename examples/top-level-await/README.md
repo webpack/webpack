@@ -183,6 +183,12 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -586,7 +592,7 @@ __webpack_async_result__();
 ## Unoptimized
 
 ```
-asset output.js 15.1 KiB [emitted] (name: main)
+asset output.js 15.3 KiB [emitted] (name: main)
 asset UserApi_js.output.js 3.05 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52

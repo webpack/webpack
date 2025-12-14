@@ -142,6 +142,12 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -489,7 +495,7 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 13.8 KiB [emitted] (name: main)
+asset output.js 14.1 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 2.28 KiB [emitted]
 chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.75 KiB (runtime) [entry] [rendered]
   > ./example.js main

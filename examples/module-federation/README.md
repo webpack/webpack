@@ -439,6 +439,12 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -1067,6 +1073,12 @@ __webpack_require__.d(exports, {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -1597,6 +1609,12 @@ __webpack_require__.d(exports, {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -2081,7 +2099,7 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 43.8 KiB [emitted]
-  asset app.js 29.8 KiB [emitted] (name: app)
+  asset app.js 30.1 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.8 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
@@ -2109,7 +2127,7 @@ mfe-b:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 24.6 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 24.8 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 2.23 KiB [emitted]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
     > mfeBBB
@@ -2138,7 +2156,7 @@ mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.5 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 25.6 KiB [emitted] (name: mfeCCC)
+  asset mfeCCC.js 25.8 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 2.04 KiB [emitted]
   asset src-c_Component_js.js 1.96 KiB [emitted]
   chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]

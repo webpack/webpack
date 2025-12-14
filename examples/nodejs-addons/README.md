@@ -52,7 +52,7 @@ module.exports = config;
 
 ```
 asset 5d5016427a9d0dbfbe37.node 16.5 KiB [emitted] [immutable] [from: file.node] (auxiliary name: main)
-asset output.js 6.27 KiB [emitted] (name: main)
+asset output.js 6.53 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 457 bytes (javascript) 16.5 KiB (asset) 1.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.26 KiB 6 modules

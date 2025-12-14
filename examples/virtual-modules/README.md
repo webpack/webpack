@@ -369,6 +369,12 @@ const msg = "from virtual module with custom scheme";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -579,7 +585,7 @@ const msg = "from virtual module with custom scheme";
 ## Unoptimized
 
 ```
-asset output.js 16.4 KiB [emitted] (name: main)
+asset output.js 16.7 KiB [emitted] (name: main)
 asset 2.output.js 803 bytes [emitted]
 asset 1.output.js 802 bytes [emitted]
 chunk (runtime: main) output.js (main) 1.46 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
