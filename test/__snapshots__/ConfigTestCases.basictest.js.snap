@@ -1618,24 +1618,24 @@ div {
 	list-style: lower-alpha;
 	list-style: disc;
 	list-style: square;
-	list-style: url(\\"./img/shape.png\\");
-	list-style: georgian inside url(\\"./img/shape.png\\");
-	list-style: georgian outside url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
 	/* type */
 	list-style: square;
 
 	/* image */
-	list-style: url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
 
 	/* position */
 	list-style: inside;
 
 	/* two values */
 	list-style: georgian outside;
-	list-style: url(\\"img/shape.png\\") inside;
+	list-style: url(09a1a1112c577c279435.png) inside;
 
 	/* three values */
-	list-style: lower-roman url(\\"img/shape.png\\") outside;
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
 
 	/* Keyword value */
 	list-style: none;
@@ -2126,24 +2126,24 @@ div {
 .my-app-style_module_css-exportNameWeirdCharacters {
 	}
 
-@function --transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
+@function --my-app-style_module_css-transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
 	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
 }
 
 section {
 	--my-app-style_module_css-base-color: #faa6ff;
-	background-color: --transparent(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
 }
 
-@function --max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
+@function --my-app-style_module_css-max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
 	result: calc(max(var(--my-app-style_module_css-list)) + var(--my-app-style_module_css-x));
 }
 
 div {
-	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+	width: --my-app-style_module_css-max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
+@function --my-app-style_module_css-anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
 	--my-app-style_module_css-duration: 1s;
 	--my-app-style_module_css-easing: linear;
 	result: var(--my-app-style_module_css-animation) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
@@ -2153,28 +2153,47 @@ div {
 	animation: --anim-1s(my-app-style_module_css-bounce, 2);
 }
 
-@function --outer(--my-app-style_module_css-outer-arg) {
+@function --my-app-style_module_css-outer(--my-app-style_module_css-outer-arg) {
 	--my-app-style_module_css-outer-local: 2;
-	result: --inner();
+	result: --my-app-style_module_css-inner();
 }
 
-@function --inner() returns <number> {
+@function --my-app-style_module_css-inner() returns <number> {
 	result: calc(var(--my-app-style_module_css-outer-arg) + var(--my-app-style_module_css-outer-local));
 }
 
 div {
-	z-index: --outer(1); /* 3 */
+	z-index: --my-app-style_module_css-outer(1); /* 3 */
 }
 
-@function --narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+@function --my-app-style_module_css-narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
 	result: var(--my-app-style_module_css-wide);
 	@media (width < 700px) {
 		result: var(--my-app-style_module_css-narrow);
 	}
 }
 
-@function --narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
+@function --my-app-style_module_css-narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
 	result: if(media(width < 700px): var(--my-app-style_module_css-narrow) ; else: var(--my-app-style_module_css-wide));
+}
+
+@function --my-app-style_module_css-transparent(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+@function --my-app-style_module_css-transparent-local(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+@function --transparent-global(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
+	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+}
+
+section {
+	--my-app-style_module_css-base-color: #faa6ff;
+	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--my-app-style_module_css-base-color), 0.8);
+	background-color: --transparent-global(var(--my-app-style_module_css-base-color), 0.8);
 }
 
 :root {
@@ -2540,6 +2559,291 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
 }
 
+/* GRID */
+
+.my-app-style_module_css-grid1 {
+	grid: none;
+}
+
+.my-app-style_module_css-gird2 {
+	grid: \\"my-app-style_module_css-a-a\\" 100px \\"my-app-style_module_css-b-b\\" 1fr;
+}
+
+.my-app-style_module_css-grid3 {
+	grid: [my-app-style_module_css-line-name1-line-name1] \\"my-app-style_module_css-a-a\\" 100px [my-app-style_module_css-line-name2-line-name2];
+}
+
+.my-app-style_module_css-grid4 {
+	grid: \\"my-app-style_module_css-a-a\\" 200px \\"my-app-style_module_css-b-b\\" min-content;
+}
+
+.my-app-style_module_css-grid5 {
+	grid: \\"my-app-style_module_css-a-a\\" minmax(100px, max-content) \\"my-app-style_module_css-b-b\\" 20%;
+}
+
+.my-app-style_module_css-grid6 {
+	grid: 100px / 200px;
+}
+
+.my-app-style_module_css-grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.my-app-style_module_css-grid8 {
+	grid: 200px / auto-flow;
+}
+
+.my-app-style_module_css-grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.my-app-style_module_css-grid10 {
+	grid: repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px) / auto-flow 300px;
+}
+
+.my-app-style_module_css-grid11 {
+	grid: [my-app-style_module_css-line1-line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.my-app-style_module_css-grid12 {
+	grid: auto-flow / 200px;
+}
+
+.my-app-style_module_css-grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.my-app-style_module_css-grid14 {
+	grid: auto-flow 300px / repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px);
+}
+
+.my-app-style_module_css-grid15 {
+	grid: auto-flow dense 40% / [my-app-style_module_css-line1-line1] minmax(20em, max-content);
+}
+
+.my-app-style_module_css-grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.my-app-style_module_css-grid17 {
+	grid-template-areas: 'my-app-style_module_css-nav-nav my-app-style_module_css-main-main';
+}
+
+.my-app-style_module_css-grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.my-app-style_module_css-grid-area1 {
+	grid-area: my-app-style_module_css-some-grid-area-some-grid-area;
+}
+
+.my-app-style_module_css-grid-area2 {
+	grid-area: my-app-style_module_css-some-grid-area-some-grid-area / my-app-style_module_css-another-grid-area-another-grid-area;
+}
+
+.my-app-style_module_css-grid-area3 {
+	grid-area: 4 my-app-style_module_css-some-grid-area-some-grid-area / 2 my-app-style_module_css-another-grid-area-another-grid-area;
+}
+
+.my-app-style_module_css-grid-area4 {
+	grid-area: span 3 / span my-app-style_module_css-some-grid-area-some-grid-area;
+}
+
+/* Keyword value */
+.my-app-style_module_css-grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.my-app-style_module_css-grid-row-start1 {
+	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.my-app-style_module_css-grid-row-start2 {
+	grid-row-start: 2;
+}
+.my-app-style_module_css-grid-row-start3 {
+	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.my-app-style_module_css-grid-row-start4 {
+	grid-row-start: span 3;
+}
+.my-app-style_module_css-grid-row-start5 {
+	grid-row-start: span my-app-style_module_css-some-grid-area-some-grid-area;
+}
+.my-app-style_module_css-grid-row-start6 {
+	grid-row-start: 5 my-app-style_module_css-some-grid-area-some-grid-area span;
+}
+
+/* Global values */
+.my-app-style_module_css-grid-row-start7 {
+	grid-row-start: inherit;
+}
+.my-app-style_module_css-grid-row-start8 {
+	grid-row-start: initial;
+}
+.my-app-style_module_css-grid-row-start9 {
+	grid-row-start: revert;
+}
+.my-app-style_module_css-grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.my-app-style_module_css-grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.my-app-style_module_css-grid-template-areas {
+	grid-template-areas:
+  \\"my-app-style_module_css-a-a my-app-style_module_css-b-b .\\"
+  \\"my-app-style_module_css-a-a   my-app-style_module_css-c-c   my-app-style_module_css-d-d\\";
+}
+
+.my-app-style_module_css-grid-template-rows {
+	grid-template-rows: [my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2 my-app-style_module_css-line-name3-line-name3];
+}
+
+.my-app-style_module_css-grid-template-rows1 {
+	grid-template-rows:
+  	[my-app-style_module_css-line-name1-line-name1 my-app-style_module_css-line-name2-line-name2] 100px
+  	repeat(auto-fit, [my-app-style_module_css-line-name1-line-name1] 300px) [my-app-style_module_css-line-name3-line-name3];
+}
+
+.my-app-style_module_css-grid-template-rows2 {
+	grid-template-rows:
+		[my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2]
+		repeat(auto-fit, [my-app-style_module_css-line-name3-line-name3 my-app-style_module_css-line-name4-line-name4] 300px)
+		100px;
+}
+
+.my-app-style_module_css-grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.my-app-style_module_css-grid-template {
+	grid-template:
+		[my-app-style_module_css-header-top-header-top] \\"my-app-style_module_css-a-a my-app-style_module_css-a-a my-app-style_module_css-a-a\\" [my-app-style_module_css-header-bottom-header-bottom]
+		[my-app-style_module_css-main-top-main-top] \\"my-app-style_module_css-b-b my-app-style_module_css-b-b my-app-style_module_css-b-b\\" 1fr [my-app-style_module_css-main-bottom-main-bottom]
+		/ auto 1fr auto;
+}
+
+.my-app-style_module_css-grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [my-app-style_module_css-header-start-header-start] 100px [my-app-style_module_css-header-end-header-end my-app-style_module_css-content-start-content-start] auto [my-app-style_module_css-content-end-content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.my-app-style_module_css-class {
+	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: [my-app-style_module_css-main-start-main-start] 1fr [my-app-style_module_css-content-start-content-start] 1fr [my-app-style_module_css-content-end-content-end] 1fr [my-app-style_module_css-main-end-main-end];
+	grid-template-rows: [my-app-style_module_css-main-start-main-start] 100px [my-app-style_module_css-content-start-content-start] 100px [my-app-style_module_css-content-end-content-end] 100px [my-app-style_module_css-main-end-main-end];
+}
+
+.my-app-style_module_css-box1 {
+	grid-column-start: my-app-style_module_css-main-start-main-start;
+	grid-row-start: my-app-style_module_css-main-start-main-start;
+	grid-row-end: my-app-style_module_css-main-end-main-end;
+}
+
+.my-app-style_module_css-box2 {
+	grid-column-start: my-app-style_module_css-content-end-content-end;
+	grid-row-start: my-app-style_module_css-main-start-main-start;
+	grid-row-end: my-app-style_module_css-content-end-content-end;
+}
+
+.my-app-style_module_css-box3 {
+	grid-column-start: my-app-style_module_css-content-start-content-start;
+	grid-row-start: my-app-style_module_css-main-start-main-start;
+}
+
+.my-app-style_module_css-box4 {
+	grid-column-start: my-app-style_module_css-content-start-content-start;
+	grid-column-end: my-app-style_module_css-main-end-main-end;
+	grid-row-start: my-app-style_module_css-content-end-content-end;
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd\\"
+    \\"my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main\\"
+    \\"my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft\\";
+}
+
+.my-app-style_module_css-header {
+	grid-area: my-app-style_module_css-hd-hd;
+}
+
+.my-app-style_module_css-footer {
+	grid-area: my-app-style_module_css-ft-ft;
+}
+
+.my-app-style_module_css-content {
+	grid-area: my-app-style_module_css-main-main;
+}
+
+.my-app-style_module_css-sidebar {
+	grid-area: my-app-style_module_css-sd-sd;
+}
+
+.my-app-style_module_css-wrapper > div.my-app-style_module_css-overlay {
+	z-index: 10;
+	grid-column: my-app-style_module_css-main-start-main-start / my-app-style_module_css-main-end-main-end;
+	grid-row: my-app-style_module_css-hd-start-hd-start / my-app-style_module_css-ft-end-ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [my-app-style_module_css-col-start-col-start] 1fr);
+}
+
+.my-app-style_module_css-item1to5 {
+	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5;
+}
+
+.my-app-style_module_css-item7to9 {
+	grid-column: my-app-style_module_css-col-start-col-start 7 / span 3;
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: repeat(4, [my-app-style_module_css-col1-start-col1-start] 1fr [my-app-style_module_css-col2-start-col2-start] 3fr);
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: repeat(4, [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end]);
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -2671,6 +2975,7 @@ Object {
   "sticky-heading": "my-app-style_module_css-sticky-heading",
   "swop5c-local": "--my-app-style_module_css-swop5c-local",
   "test": "my-app-style_module_css-test",
+  "transparent-local": "--my-app-style_module_css-transparent-local",
   "unknown-at-rule": "my-app-style_module_css-unknown-at-rule",
 }
 `;
@@ -4623,6 +4928,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --my-app-style_module_css-transparent-local(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
@@ -4986,6 +5310,291 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
 }
 
+/* GRID */
+
+.grid1 {
+	grid: none;
+}
+
+.gird2 {
+	grid: \\"a\\" 100px \\"b\\" 1fr;
+}
+
+.grid3 {
+	grid: [line-name1] \\"a\\" 100px [line-name2];
+}
+
+.grid4 {
+	grid: \\"a\\" 200px \\"b\\" min-content;
+}
+
+.grid5 {
+	grid: \\"a\\" minmax(100px, max-content) \\"b\\" 20%;
+}
+
+.grid6 {
+	grid: 100px / 200px;
+}
+
+.grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.grid8 {
+	grid: 200px / auto-flow;
+}
+
+.grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.grid10 {
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
+}
+
+.grid11 {
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.grid12 {
+	grid: auto-flow / 200px;
+}
+
+.grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.grid14 {
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
+}
+
+.grid15 {
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
+}
+
+.grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.grid17 {
+	grid-template-areas: 'nav main';
+}
+
+.grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.grid-area1 {
+	grid-area: some-grid-area;
+}
+
+.grid-area2 {
+	grid-area: some-grid-area / another-grid-area;
+}
+
+.grid-area3 {
+	grid-area: 4 some-grid-area / 2 another-grid-area;
+}
+
+.grid-area4 {
+	grid-area: span 3 / span some-grid-area;
+}
+
+/* Keyword value */
+.grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.grid-row-start1 {
+	grid-row-start: some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.grid-row-start2 {
+	grid-row-start: 2;
+}
+.grid-row-start3 {
+	grid-row-start: some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.grid-row-start4 {
+	grid-row-start: span 3;
+}
+.grid-row-start5 {
+	grid-row-start: span some-grid-area;
+}
+.grid-row-start6 {
+	grid-row-start: 5 some-grid-area span;
+}
+
+/* Global values */
+.grid-row-start7 {
+	grid-row-start: inherit;
+}
+.grid-row-start8 {
+	grid-row-start: initial;
+}
+.grid-row-start9 {
+	grid-row-start: revert;
+}
+.grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.grid-template-areas {
+	grid-template-areas:
+  \\"a b .\\"
+  \\"a   c   d\\";
+}
+
+.grid-template-rows {
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
+}
+
+.grid-template-rows1 {
+	grid-template-rows:
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
+}
+
+.grid-template-rows2 {
+	grid-template-rows:
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
+		100px;
+}
+
+.grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.grid-template {
+	grid-template:
+		[header-top] \\"a a a\\" [header-bottom]
+		[main-top] \\"b b b\\" 1fr [main-bottom]
+		/ auto 1fr auto;
+}
+
+.grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.class {
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
+}
+
+.box1 {
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
+}
+
+.box2 {
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
+}
+
+.box3 {
+	grid-column-start: content-start;
+	grid-row-start: main-start;
+}
+
+.box4 {
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"hd hd hd hd   hd   hd   hd   hd   hd\\"
+    \\"sd sd sd main main main main main main\\"
+    \\"ft ft ft ft   ft   ft   ft   ft   ft\\";
+}
+
+.header {
+	grid-area: hd;
+}
+
+.footer {
+	grid-area: ft;
+}
+
+.content {
+	grid-area: main;
+}
+
+.sidebar {
+	grid-area: sd;
+}
+
+.wrapper > div.overlay {
+	z-index: 10;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.item1to5 {
+	grid-column: col-start / col-start 5;
+}
+
+.item7to9 {
+	grid-column: col-start 7 / span 3;
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+}
+
+.wrapper {
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
+}
+
 "
 `;
 
@@ -5031,6 +5640,7 @@ Object {
   "sticky-heading": "_5unArO",
   "swop5c-local": "--uypV5i",
   "test": "OyMPmk",
+  "transparent-local": "--NxHrla",
   "unknown-at-rule": "DqBFzD",
 }
 `;
@@ -6983,6 +7593,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --NxHrla(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --NxHrla(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
@@ -7346,6 +7975,291 @@ p:not(#dBVRDQ) {
 	local-and-global: jOrreA animation-name-test
 }
 
+/* GRID */
+
+.grid1 {
+	grid: none;
+}
+
+.gird2 {
+	grid: \\"a\\" 100px \\"b\\" 1fr;
+}
+
+.grid3 {
+	grid: [line-name1] \\"a\\" 100px [line-name2];
+}
+
+.grid4 {
+	grid: \\"a\\" 200px \\"b\\" min-content;
+}
+
+.grid5 {
+	grid: \\"a\\" minmax(100px, max-content) \\"b\\" 20%;
+}
+
+.grid6 {
+	grid: 100px / 200px;
+}
+
+.grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.grid8 {
+	grid: 200px / auto-flow;
+}
+
+.grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.grid10 {
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
+}
+
+.grid11 {
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.grid12 {
+	grid: auto-flow / 200px;
+}
+
+.grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.grid14 {
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
+}
+
+.grid15 {
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
+}
+
+.grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.grid17 {
+	grid-template-areas: 'nav main';
+}
+
+.grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.grid-area1 {
+	grid-area: some-grid-area;
+}
+
+.grid-area2 {
+	grid-area: some-grid-area / another-grid-area;
+}
+
+.grid-area3 {
+	grid-area: 4 some-grid-area / 2 another-grid-area;
+}
+
+.grid-area4 {
+	grid-area: span 3 / span some-grid-area;
+}
+
+/* Keyword value */
+.grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.grid-row-start1 {
+	grid-row-start: some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.grid-row-start2 {
+	grid-row-start: 2;
+}
+.grid-row-start3 {
+	grid-row-start: some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.grid-row-start4 {
+	grid-row-start: span 3;
+}
+.grid-row-start5 {
+	grid-row-start: span some-grid-area;
+}
+.grid-row-start6 {
+	grid-row-start: 5 some-grid-area span;
+}
+
+/* Global values */
+.grid-row-start7 {
+	grid-row-start: inherit;
+}
+.grid-row-start8 {
+	grid-row-start: initial;
+}
+.grid-row-start9 {
+	grid-row-start: revert;
+}
+.grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.grid-template-areas {
+	grid-template-areas:
+  \\"a b .\\"
+  \\"a   c   d\\";
+}
+
+.grid-template-rows {
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
+}
+
+.grid-template-rows1 {
+	grid-template-rows:
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
+}
+
+.grid-template-rows2 {
+	grid-template-rows:
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
+		100px;
+}
+
+.grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.grid-template {
+	grid-template:
+		[header-top] \\"a a a\\" [header-bottom]
+		[main-top] \\"b b b\\" 1fr [main-bottom]
+		/ auto 1fr auto;
+}
+
+.grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.class {
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
+}
+
+.box1 {
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
+}
+
+.box2 {
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
+}
+
+.box3 {
+	grid-column-start: content-start;
+	grid-row-start: main-start;
+}
+
+.box4 {
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"hd hd hd hd   hd   hd   hd   hd   hd\\"
+    \\"sd sd sd main main main main main main\\"
+    \\"ft ft ft ft   ft   ft   ft   ft   ft\\";
+}
+
+.header {
+	grid-area: hd;
+}
+
+.footer {
+	grid-area: ft;
+}
+
+.content {
+	grid-area: main;
+}
+
+.sidebar {
+	grid-area: sd;
+}
+
+.wrapper > div.overlay {
+	z-index: 10;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.item1to5 {
+	grid-column: col-start / col-start 5;
+}
+
+.item7to9 {
+	grid-column: col-start 7 / span 3;
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+}
+
+.wrapper {
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
+}
+
 "
 `;
 
@@ -7353,7 +8267,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 Object {
   "UsedClassName": "_7t7sag",
   "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
-  "__webpack_modules__": 2,
+  "__webpack_modules__": 3,
   "animation": "I7H8FK",
   "animationName": "bvLAsC",
   "class": "Vx2ADA",
@@ -8836,24 +9750,24 @@ div {
 	list-style: lower-alpha;
 	list-style: disc;
 	list-style: square;
-	list-style: url(\\"./img/shape.png\\");
-	list-style: georgian inside url(\\"./img/shape.png\\");
-	list-style: georgian outside url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
 	/* type */
 	list-style: square;
 
 	/* image */
-	list-style: url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
 
 	/* position */
 	list-style: inside;
 
 	/* two values */
 	list-style: georgian outside;
-	list-style: url(\\"img/shape.png\\") inside;
+	list-style: url(09a1a1112c577c279435.png) inside;
 
 	/* three values */
-	list-style: lower-roman url(\\"img/shape.png\\") outside;
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
 
 	/* Keyword value */
 	list-style: none;
@@ -9344,24 +10258,24 @@ div {
 .i-n39D {
 	}
 
-@function --transparent(--PmceRj <color>, --mban9m type(<number> | <percentage>)) returns <color> {
+@function --HPKrEe(--PmceRj <color>, --mban9m type(<number> | <percentage>)) returns <color> {
 	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
 }
 
 section {
 	--qImv4k: #faa6ff;
-	background-color: --transparent(var(--qImv4k), 0.8);
+	background-color: --HPKrEe(var(--qImv4k), 0.8);
 }
 
-@function --max-plus-x(--L8UoHi <length>#, ---vGTrA <length>) {
+@function --Zbzld7(--L8UoHi <length>#, ---vGTrA <length>) {
 	result: calc(max(var(--L8UoHi)) + var(---vGTrA));
 }
 
 div {
-	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+	width: --Zbzld7({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--I7H8FK, --SKv8kz) {
+@function --vY2Qe3(--I7H8FK, --SKv8kz) {
 	---dC2HS: 1s;
 	--owuGkY: linear;
 	result: var(--I7H8FK) var(---dC2HS) var(--SKv8kz) var(--owuGkY);
@@ -9371,28 +10285,47 @@ div {
 	animation: --anim-1s(XEyeRq, 2);
 }
 
-@function --outer(--q5OeI3) {
+@function --_12bUXN(--q5OeI3) {
 	--Tzqh_b: 2;
-	result: --inner();
+	result: --Sr06Ag();
 }
 
-@function --inner() returns <number> {
+@function --Sr06Ag() returns <number> {
 	result: calc(var(--q5OeI3) + var(--Tzqh_b));
 }
 
 div {
-	z-index: --outer(1); /* 3 */
+	z-index: --_12bUXN(1); /* 3 */
 }
 
-@function --narrow-wide(--_8NIeZV, --wwBASX) {
+@function --_7vN-uQ(--_8NIeZV, --wwBASX) {
 	result: var(--wwBASX);
 	@media (width < 700px) {
 		result: var(--_8NIeZV);
 	}
 }
 
-@function --narrow-wide-if-else(--_8NIeZV, --wwBASX) {
+@function --OPnU-W(--_8NIeZV, --wwBASX) {
 	result: if(media(width < 700px): var(--_8NIeZV) ; else: var(--wwBASX));
+}
+
+@function --HPKrEe(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+@function --NxHrla(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+@function --transparent-global(--PmceRj, --mban9m) {
+	result: oklch(from var(--PmceRj) l c h / var(--mban9m));
+}
+
+section {
+	--qImv4k: #faa6ff;
+	background-color: --HPKrEe(var(--qImv4k), 0.8);
+	background-color: --NxHrla(var(--qImv4k), 0.8);
+	background-color: --transparent-global(var(--qImv4k), 0.8);
 }
 
 :root {
@@ -9758,6 +10691,291 @@ p:not(#dBVRDQ) {
 	local-and-global: jOrreA animation-name-test
 }
 
+/* GRID */
+
+.KKPJ1t {
+	grid: none;
+}
+
+.qDQDaP {
+	grid: \\"rWk7j_-a\\" 100px \\"Sa2viG-b\\" 1fr;
+}
+
+.ufSA87 {
+	grid: [zUFz4T-line-name1] \\"rWk7j_-a\\" 100px [IJTjHw-line-name2];
+}
+
+.U_FjnN {
+	grid: \\"rWk7j_-a\\" 200px \\"Sa2viG-b\\" min-content;
+}
+
+.yVK-Mn {
+	grid: \\"rWk7j_-a\\" minmax(100px, max-content) \\"Sa2viG-b\\" 20%;
+}
+
+.E4-SeR {
+	grid: 100px / 200px;
+}
+
+.M23t0k {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.M49YDn {
+	grid: 200px / auto-flow;
+}
+
+._6owU8c {
+	grid: 30% / auto-flow dense;
+}
+
+._6gnc-c {
+	grid: repeat(3, [NgDCMF-line1 xSFYcu-line2 A9yYcH-line3] 200px) / auto-flow 300px;
+}
+
+.rQpriK {
+	grid: [NgDCMF-line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.LNd3Cl {
+	grid: auto-flow / 200px;
+}
+
+.Weaj1p {
+	grid: auto-flow dense / 30%;
+}
+
+.ysl4TV {
+	grid: auto-flow 300px / repeat(3, [NgDCMF-line1 xSFYcu-line2 A9yYcH-line3] 200px);
+}
+
+.kwQbcr {
+	grid: auto-flow dense 40% / [NgDCMF-line1] minmax(20em, max-content);
+}
+
+._7CduV2 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.Ej09V1 {
+	grid-template-areas: 'xkVZ4Z-nav X982uk-main';
+}
+
+.L5v3x6 {
+	grid-area: auto / auto / auto / auto;
+}
+
+.JUNxQq {
+	grid-area: -UptLF-some-grid-area;
+}
+
+._7ywNs4 {
+	grid-area: -UptLF-some-grid-area / iGBFyB-another-grid-area;
+}
+
+._9TaU0Q {
+	grid-area: 4 -UptLF-some-grid-area / 2 iGBFyB-another-grid-area;
+}
+
+.R_RYW0 {
+	grid-area: span 3 / span -UptLF-some-grid-area;
+}
+
+/* Keyword value */
+.IPnoLw {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+._2P0ffn {
+	grid-row-start: -UptLF-some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.tI6rTa {
+	grid-row-start: 2;
+}
+.dijhL1 {
+	grid-row-start: -UptLF-some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.ORVUsN {
+	grid-row-start: span 3;
+}
+.jz9aWd {
+	grid-row-start: span -UptLF-some-grid-area;
+}
+.tOC1uA {
+	grid-row-start: 5 -UptLF-some-grid-area span;
+}
+
+/* Global values */
+.s7WOvJ {
+	grid-row-start: inherit;
+}
+.YHN0MI {
+	grid-row-start: initial;
+}
+.N8URft {
+	grid-row-start: revert;
+}
+.-pbWvi {
+	grid-row-start: revert-layer;
+}
+.pJgV0N {
+	grid-row-start: unset;
+}
+
+.kvSpTR {
+	grid-template-areas:
+  \\"rWk7j_-a Sa2viG-b .\\"
+  \\"rWk7j_-a   lkeYnD-c   ot4wJ0-d\\";
+}
+
+.Ulocye {
+	grid-template-rows: [zUFz4T-line-name1] 100px [IJTjHw-line-name2 yPPlU6-line-name3];
+}
+
+.wyuk1y {
+	grid-template-rows:
+  	[zUFz4T-line-name1 IJTjHw-line-name2] 100px
+  	repeat(auto-fit, [zUFz4T-line-name1] 300px) [yPPlU6-line-name3];
+}
+
+._3XmJPy {
+	grid-template-rows:
+		[zUFz4T-line-name1] 100px [IJTjHw-line-name2]
+		repeat(auto-fit, [yPPlU6-line-name3 _5sjD27-line-name4] 300px)
+		100px;
+}
+
+.YC2t9- {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.c9md82 {
+	grid-template:
+		[F71VCF-header-top] \\"rWk7j_-a rWk7j_-a rWk7j_-a\\" [mr66Z_-header-bottom]
+		[tsTNVP-main-top] \\"Sa2viG-b Sa2viG-b Sa2viG-b\\" 1fr [_2PB9a0-main-bottom]
+		/ auto 1fr auto;
+}
+
+.-cy8Zv {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [Zfi6tA-header-start] 100px [TFOL0g-header-end RA1tbr-content-start] auto [q_keew-content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.Vx2ADA {
+	grid-template-columns: repeat(auto-fit, [_1Yrglr-col-start] minmax(150px, 1fr) [UIbRwt-col-end]);
+}
+
+.EDnegT {
+	display: grid;
+	grid-template-columns: [rRCri6-main-start] 1fr [RA1tbr-content-start] 1fr [q_keew-content-end] 1fr [xGMSmb-main-end];
+	grid-template-rows: [rRCri6-main-start] 100px [RA1tbr-content-start] 100px [q_keew-content-end] 100px [xGMSmb-main-end];
+}
+
+.E_Xs87 {
+	grid-column-start: rRCri6-main-start;
+	grid-row-start: rRCri6-main-start;
+	grid-row-end: xGMSmb-main-end;
+}
+
+.lG966Z {
+	grid-column-start: q_keew-content-end;
+	grid-row-start: rRCri6-main-start;
+	grid-row-end: q_keew-content-end;
+}
+
+.AyxbM3 {
+	grid-column-start: RA1tbr-content-start;
+	grid-row-start: rRCri6-main-start;
+}
+
+.sEMgMA {
+	grid-column-start: RA1tbr-content-start;
+	grid-column-end: xGMSmb-main-end;
+	grid-row-start: q_keew-content-end;
+}
+
+.EDnegT {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"mtsh_D-hd mtsh_D-hd mtsh_D-hd mtsh_D-hd   mtsh_D-hd   mtsh_D-hd   mtsh_D-hd   mtsh_D-hd   mtsh_D-hd\\"
+    \\"i9q6VM-sd i9q6VM-sd i9q6VM-sd X982uk-main X982uk-main X982uk-main X982uk-main X982uk-main X982uk-main\\"
+    \\"nMcK39-ft nMcK39-ft nMcK39-ft nMcK39-ft   nMcK39-ft   nMcK39-ft   nMcK39-ft   nMcK39-ft   nMcK39-ft\\";
+}
+
+.Zq4Bgu {
+	grid-area: mtsh_D-hd;
+}
+
+.p920hy {
+	grid-area: nMcK39-ft;
+}
+
+.evvjkJ {
+	grid-area: X982uk-main;
+}
+
+.SuLRt4 {
+	grid-area: i9q6VM-sd;
+}
+
+.EDnegT > div.xdTdxz {
+	z-index: 10;
+	grid-column: rRCri6-main-start / xGMSmb-main-end;
+	grid-row: wJdD_6-hd-start / -CSZqj-ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.EDnegT {
+	display: grid;
+	grid-template-columns: repeat(12, [_1Yrglr-col-start] 1fr);
+}
+
+.dBiT79 {
+	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5;
+}
+
+._7kAI1c {
+	grid-column: _1Yrglr-col-start 7 / span 3;
+}
+
+.EDnegT {
+	grid-template-columns: repeat(4, [TzgowJ-col1-start] 1fr [dQggyi-col2-start] 3fr);
+}
+
+.EDnegT {
+	grid-template-columns: repeat(4, [_1Yrglr-col-start] 1fr [UIbRwt-col-end]);
+}
+
+.EDnegT {
+	grid-template-columns: [_1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end];
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -9794,7 +11012,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 Object {
   "UsedClassName": "FPwoX1",
   "VARS": "---YmVq7 gAOQgg undefined g45L8B",
-  "__webpack_modules__": 8,
+  "__webpack_modules__": 9,
   "animation": "_1CLYv0",
   "animationName": "AndP3O",
   "class": "Q0FGvN",
@@ -9845,6 +11063,2874 @@ Object {
   "webkitAnyWmultiParams": "rlaEZT",
   "whereWmultiParams": "peTfCX",
 }
+`;
+
+exports[`ConfigTestCases css css-modules exported tests should allow to disable options: options classes 1`] = `
+Object {
+  "VARS": "my-app-style_module_css-VARS",
+  "a": "my-app-style_module_css-a",
+  "active": "my-app-style_module_css-active",
+  "again": "my-app-style_module_css-again",
+  "animation": "my-app-style_module_css-animation",
+  "animation-name-test": "my-app-style_module_css-animation-name-test",
+  "animationUpperCase": "my-app-style_module_css-animationUpperCase",
+  "apply-sharp": "my-app-style_module_css-apply-sharp",
+  "article-footer": "my-app-style_module_css-article-footer",
+  "article-header": "my-app-style_module_css-article-header",
+  "b": "my-app-style_module_css-b",
+  "bar": "my-app-style_module_css-bar",
+  "baz": "my-app-style_module_css-baz",
+  "baz-1": "my-app-style_module_css-baz-1",
+  "baz-2": "my-app-style_module_css-baz-2",
+  "bounce": "my-app-style_module_css-bounce",
+  "box1": "my-app-style_module_css-box1",
+  "box2": "my-app-style_module_css-box2",
+  "box3": "my-app-style_module_css-box3",
+  "box4": "my-app-style_module_css-box4",
+  "broken": "my-app-style_module_css-broken",
+  "button": "my-app-style_module_css-button",
+  "c": "my-app-style_module_css-c",
+  "card": "my-app-style_module_css-card",
+  "child1": "my-app-style_module_css-child1",
+  "class": "my-app-style_module_css-class",
+  "class-1": "my-app-style_module_css-class-1",
+  "class-in-container": "my-app-style_module_css-class-in-container",
+  "class-local-scope": "my-app-style_module_css-class-local-scope",
+  "class-with-composes": "my-app-style_module_css-class-with-composes my-app-style_module_css-local-class global-class global-class-other my-app-shared_css-local-my-shared-class",
+  "className": "my-app-style_module_css-className",
+  "classNameLocal": "my-app-style_module_css-classNameLocal",
+  "classNameLocalOther": "my-app-style_module_css-classNameLocalOther",
+  "comments": "my-app-style_module_css-comments",
+  "container": "my-app-style_module_css-container",
+  "container-only-classes": "my-app-style_module_css-container-only-classes",
+  "content": "my-app-style_module_css-content",
+  "d": "my-app-style_module_css-d",
+  "deep-class-in-container": "my-app-style_module_css-deep-class-in-container",
+  "description": "my-app-style_module_css-description",
+  "disabled": "my-app-style_module_css-disabled",
+  "displayFlexInMediaInSupports": "my-app-style_module_css-displayFlexInMediaInSupports",
+  "displayFlexInSupportsInMedia": "my-app-style_module_css-displayFlexInSupportsInMedia",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-style_module_css-displayFlexInSupportsInMediaUpperCase",
+  "displayGridInSupports": "my-app-style_module_css-displayGridInSupports",
+  "err-404": "my-app-style_module_css-err-404",
+  "error": "my-app-style_module_css-error",
+  "exportName": "my-app-style_module_css-exportName my-app-classes_modules_css-className beforeName my-app-style_module_css-className my-app-style_module_css-classNameLocal importName secondImport my-app-classes_modules_css-otherClassName my-app-classes_modules_css-otherClassNameToo my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther className className classNameOther className classNameOther my-app-classes_modules_css-className my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName",
+  "exportNameOtherFromKeyword": "my-app-style_module_css-exportNameOtherFromKeyword my-app-style_module_css-from",
+  "exportNameOtherFromKeywordWithFrom1": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom1 from",
+  "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
+  "exportNameOtherNoSpaces": "my-app-style_module_css-exportNameOtherNoSpaces my-app-classes_modules_css-className beforeName my-app-style_module_css-className",
+  "exportNameWeirdCharacters": "my-app-style_module_css-exportNameWeirdCharacters my-app-classes_modules_css-a my-app-classes_modules_css--b my-app-classes_modules_css-b- my-app-classes_modules_css---c my-app-classes_modules_css-c-- my-app-classes_modules_css-_d my-app-classes_modules_css-d%",
+  "f1f1f1": "my-app-style_module_css-f1f1f1",
+  "feature": "my-app-style_module_css-feature",
+  "first-nested": "my-app-style_module_css-first-nested",
+  "first-nested-at-rule": "my-app-style_module_css-first-nested-at-rule",
+  "first-nested-nested": "my-app-style_module_css-first-nested-nested",
+  "first-nested-nested-at-rule-deep": "my-app-style_module_css-first-nested-nested-at-rule-deep",
+  "floatRightInNegativeSupports": "my-app-style_module_css-floatRightInNegativeSupports",
+  "foo": "my-app-style_module_css-foo",
+  "footer": "my-app-style_module_css-footer",
+  "from": "my-app-style_module_css-from",
+  "gird2": "my-app-style_module_css-gird2",
+  "global-after-local": "my-app-style_module_css-global-after-local",
+  "global-befor-local": "my-app-style_module_css-global-befor-local",
+  "globalVars": "my-app-style_module_css-globalVars",
+  "globalVarsUpperCase": "my-app-style_module_css-globalVarsUpperCase",
+  "grid-area": "my-app-style_module_css-grid-area",
+  "grid-area1": "my-app-style_module_css-grid-area1",
+  "grid-area2": "my-app-style_module_css-grid-area2",
+  "grid-area3": "my-app-style_module_css-grid-area3",
+  "grid-area4": "my-app-style_module_css-grid-area4",
+  "grid-container": "my-app-style_module_css-grid-container",
+  "grid-row-start": "my-app-style_module_css-grid-row-start",
+  "grid-row-start1": "my-app-style_module_css-grid-row-start1",
+  "grid-row-start10": "my-app-style_module_css-grid-row-start10",
+  "grid-row-start11": "my-app-style_module_css-grid-row-start11",
+  "grid-row-start2": "my-app-style_module_css-grid-row-start2",
+  "grid-row-start3": "my-app-style_module_css-grid-row-start3",
+  "grid-row-start4": "my-app-style_module_css-grid-row-start4",
+  "grid-row-start5": "my-app-style_module_css-grid-row-start5",
+  "grid-row-start6": "my-app-style_module_css-grid-row-start6",
+  "grid-row-start7": "my-app-style_module_css-grid-row-start7",
+  "grid-row-start8": "my-app-style_module_css-grid-row-start8",
+  "grid-row-start9": "my-app-style_module_css-grid-row-start9",
+  "grid-template": "my-app-style_module_css-grid-template",
+  "grid-template-areas": "my-app-style_module_css-grid-template-areas",
+  "grid-template-rows": "my-app-style_module_css-grid-template-rows",
+  "grid-template-rows1": "my-app-style_module_css-grid-template-rows1",
+  "grid-template-rows2": "my-app-style_module_css-grid-template-rows2",
+  "grid-template-rows3": "my-app-style_module_css-grid-template-rows3",
+  "grid1": "my-app-style_module_css-grid1",
+  "grid10": "my-app-style_module_css-grid10",
+  "grid11": "my-app-style_module_css-grid11",
+  "grid12": "my-app-style_module_css-grid12",
+  "grid13": "my-app-style_module_css-grid13",
+  "grid14": "my-app-style_module_css-grid14",
+  "grid15": "my-app-style_module_css-grid15",
+  "grid16": "my-app-style_module_css-grid16",
+  "grid17": "my-app-style_module_css-grid17",
+  "grid3": "my-app-style_module_css-grid3",
+  "grid4": "my-app-style_module_css-grid4",
+  "grid5": "my-app-style_module_css-grid5",
+  "grid6": "my-app-style_module_css-grid6",
+  "grid7": "my-app-style_module_css-grid7",
+  "grid8": "my-app-style_module_css-grid8",
+  "grid9": "my-app-style_module_css-grid9",
+  "hash": "my-app-style_module_css-hash",
+  "header": "my-app-style_module_css-header",
+  "highlighted": "my-app-style_module_css-highlighted",
+  "horizontal-small": "my-app-style_module_css-horizontal-small",
+  "horizontal-tiny": "my-app-style_module_css-horizontal-tiny",
+  "id": "my-app-style_module_css-id",
+  "id-bar": "my-app-style_module_css-id-bar",
+  "id-foo": "my-app-style_module_css-id-foo",
+  "ident": "my-app-style_module_css-ident",
+  "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
+  "inSupportScope": "my-app-style_module_css-inSupportScope",
+  "infobox": "my-app-style_module_css-infobox",
+  "item": "my-app-style_module_css-item",
+  "item-1": "my-app-style_module_css-item-1",
+  "item1to5": "my-app-style_module_css-item1to5",
+  "item7to9": "my-app-style_module_css-item7to9",
+  "just-class": "my-app-style_module_css-just-class",
+  "limit": "my-app-style_module_css-limit",
+  "local": "my-app-style_module_css-local",
+  "local-class": "my-app-style_module_css-local-class",
+  "local-class-name": "my-app-style_module_css-local-class-name",
+  "local-foo-bar": "--my-app-style_module_css-local-foo-bar",
+  "local-in-global": "my-app-style_module_css-local-in-global",
+  "local-keyframes": "my-app-style_module_css-local-keyframes",
+  "local-keyframes-old-syntax": "my-app-style_module_css-local-keyframes-old-syntax",
+  "local-nested": "my-app-style_module_css-local-nested",
+  "local1": "my-app-style_module_css-local1",
+  "local10": "my-app-style_module_css-local10",
+  "local11": "my-app-style_module_css-local11",
+  "local12": "my-app-style_module_css-local12",
+  "local13": "my-app-style_module_css-local13",
+  "local14": "my-app-style_module_css-local14",
+  "local15": "my-app-style_module_css-local15",
+  "local16": "my-app-style_module_css-local16",
+  "local2": "my-app-style_module_css-local2",
+  "local3": "my-app-style_module_css-local3",
+  "local4": "my-app-style_module_css-local4",
+  "local5": "my-app-style_module_css-local5",
+  "local6": "my-app-style_module_css-local6",
+  "local7": "my-app-style_module_css-local7",
+  "local8": "my-app-style_module_css-local8",
+  "local9": "my-app-style_module_css-local9",
+  "localUpperCase": "my-app-style_module_css-localUpperCase",
+  "mButtonDisabled": "my-app-style_module_css-mButtonDisabled",
+  "main-paragraph": "my-app-style_module_css-main-paragraph",
+  "multiple-first": "my-app-style_module_css-multiple-first",
+  "multiple-first-with-space": "my-app-style_module_css-multiple-first-with-space",
+  "multiple-second": "my-app-style_module_css-multiple-second",
+  "multiple-second-with-space": "my-app-style_module_css-multiple-second-with-space",
+  "my-class": "my-app-style_module_css-my-class",
+  "my-global-class-again": "my-app-style_module_css-my-global-class-again",
+  "my-simple-local": "my-app-style_module_css-my-simple-local",
+  "narrowScreenClass": "my-app-style_module_css-narrowScreenClass",
+  "nested-layer": "my-app-style_module_css-nested-layer",
+  "nested-media": "my-app-style_module_css-nested-media",
+  "nested-parens": "my-app-style_module_css-nested-parens",
+  "nested-pure": "my-app-style_module_css-nested-pure",
+  "nested-supports": "my-app-style_module_css-nested-supports",
+  "nested-var": "my-app-style_module_css-nested-var",
+  "nested-with-local-pseudo": "my-app-style_module_css-nested-with-local-pseudo",
+  "nested1": "my-app-style_module_css-nested1",
+  "nested3": "my-app-style_module_css-nested3",
+  "no-space": "my-app-style_module_css-no-space",
+  "not-selector-inside": "my-app-style_module_css-not-selector-inside",
+  "otherDiv": "my-app-style_module_css-otherDiv",
+  "overlay": "my-app-style_module_css-overlay",
+  "padding-lg": "my-app-style_module_css-padding-lg",
+  "padding-sm": "my-app-style_module_css-padding-sm",
+  "parent": "my-app-style_module_css-parent",
+  "parent1": "my-app-style_module_css-parent1",
+  "placeholder-gray-700": "my-app-style_module_css-placeholder-gray-700",
+  "post": "my-app-style_module_css-post",
+  "progress": "--my-app-style_module_css-progress",
+  "progressAnimationLocal": "my-app-style_module_css-progressAnimationLocal",
+  "qqq": "my-app-style_module_css-qqq",
+  "scope": "my-app-style_module_css-scope",
+  "selected": "my-app-style_module_css-selected",
+  "sidebar": "my-app-style_module_css-sidebar",
+  "simple": "my-app-style_module_css-simple",
+  "special": "my-app-style_module_css-special",
+  "sticky-heading": "my-app-style_module_css-sticky-heading",
+  "swop5c-local": "--my-app-style_module_css-swop5c-local",
+  "test": "my-app-style_module_css-test",
+  "theme-dark": "my-app-style_module_css-theme-dark",
+  "three": "my-app-style_module_css-three",
+  "tipOnly": "my-app-style_module_css-tipOnly",
+  "transparent-local": "--my-app-style_module_css-transparent-local",
+  "two": "my-app-style_module_css-two",
+  "unknown-at-rule": "my-app-style_module_css-unknown-at-rule",
+  "var": "my-app-style_module_css-var",
+  "var-order": "my-app-style_module_css-var-order",
+  "vars": "my-app-style_module_css-vars",
+  "vertical-small": "my-app-style_module_css-vertical-small",
+  "vertical-tiny": "my-app-style_module_css-vertical-tiny",
+  "wideScreenClass": "my-app-style_module_css-wideScreenClass",
+  "wrapper": "my-app-style_module_css-wrapper",
+}
+`;
+
+exports[`ConfigTestCases css css-modules exported tests should allow to disable options: options css 1`] = `
+"/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./at-rule-value.module.css ***!
+  \\\\**************************************/
+
+
+.my-app-at-rule-value_module_css-value-in-class {
+	color: blue;
+}
+
+
+
+
+
+
+@media (max-width: 599px) {
+	abbr:hover {
+		color: limegreen;
+		transition-duration: 1s;
+	}
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { color: red; }
+
+
+
+.my-app-at-rule-value_module_css-foo {
+	&.my-app-at-rule-value_module_css-bar { color: red; }
+}
+
+
+
+.my-app-at-rule-value_module_css-foo {
+	@media (min-width: 1024px) {
+		&.my-app-at-rule-value_module_css-bar { color: red; }
+	}
+}
+
+
+
+.my-app-at-rule-value_module_css-foo {
+	@media (min-width: 1024px) {
+		&.my-app-at-rule-value_module_css-bar {
+			@media (min-width: 1024px) {
+				color: red;
+			}
+		}
+	}
+}
+
+
+
+
+.my-app-at-rule-value_module_css-foo { height: 40px; height: 36px; }
+
+
+
+.my-app-at-rule-value_module_css-red {
+	color: red;
+}
+
+
+
+#my-app-at-rule-value_module_css-red {
+	color: red;
+}
+
+
+
+.my-app-at-rule-value_module_css-red > .my-app-at-rule-value_module_css-red {
+	color: red;
+}
+
+
+
+.red {
+	color: .red;
+}
+
+
+
+.my-app-at-rule-value_module_css-export {
+	color: blue;
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { color: red; }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: red; }
+.my-app-at-rule-value_module_css-bar { color: yellow }
+
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+
+
+
+
+.my-app-at-rule-value_module_css-class-a { color: red; }
+
+
+
+
+.my-app-at-rule-value_module_css-class-a { margin: calc(base * 2); }
+
+
+
+
+.my-app-at-rule-value_module_css-class-a { content: \\"test-a\\" \\"test-b\\"; }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: var(--color); }
+
+
+
+
+
+
+
+.my-app-at-rule-value_module_css-foo {
+	color: red;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+.my-app-at-rule-value_module_css-bar { color: red }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: color(red lightness(50%)); }
+
+
+
+:root { --my-app-at-rule-value_module_css-color: red; }
+
+
+
+:root { --my-app-at-rule-value_module_css-color: ; }
+
+
+
+:root { --my-app-at-rule-value_module_css-color:   ; }
+
+
+
+:root { --my-app-at-rule-value_module_css-color: /* comment */; }
+
+
+
+
+.my-app-at-rule-value_module_css-red {
+	color: red;
+}
+
+
+
+
+.my-app-at-rule-value_module_css-class {
+	color: red;
+	color: red;
+	color: blue;
+}
+
+
+
+.my-app-at-rule-value_module_css-color {
+	color: /* test */red/* test */;
+}
+
+
+
+.my-app-at-rule-value_module_css-color {
+	color: /* test *//* test */red/* test */;
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: /* test */   0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { box-shadow: /* test */0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+
+
+
+.my-app-at-rule-value_module_css-foo { color: red; }
+
+
+
+
+/*!*********************************************!*\\\\
+  !*** css ./var-function-export.modules.css ***!
+  \\\\*********************************************/
+:root {
+	--my-app-var-function-export_modules_css-my-var-u1: red;
+	--my-app-var-function-export_modules_css-my-var-u2: blue;
+	--my-app-var-function-export_modules_css-not-override-class: black;
+	--my-app-var-function-export_modules_css-1: red;
+	--my-app-var-function-export_modules_css---a: red;
+	--my-app-var-function-export_modules_css-main-bg-color: red;
+}
+
+.my-app-var-function-export_modules_css-my-var-u1 {
+	color: red;
+}
+
+/*!*************************************!*\\\\
+  !*** css ./var-function.module.css ***!
+  \\\\*************************************/
+:root {
+	--my-app-var-function_module_css-main-bg-color: brown;
+	--my-app-var-function_module_css-my-var: red;
+	--my-app-var-function_module_css-my-background: blue;
+	--my-app-var-function_module_css-my-global: yellow;
+	--: \\"reserved\\";
+	--my-app-var-function_module_css-a: green;
+}
+
+.my-app-var-function_module_css-class {
+	color: var(--my-app-var-function_module_css-main-bg-color);
+}
+
+@property --my-app-var-function_module_css-logo-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property -- {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.my-app-var-function_module_css-class {
+	color: var(--my-app-var-function_module_css-logo-color);
+}
+
+div {
+	background-color: var(--my-app-var-function_module_css-box-color);
+}
+
+.my-app-var-function_module_css-two {
+	--my-app-var-function_module_css-box-color: cornflowerblue;
+}
+
+.my-app-var-function_module_css-three {
+	--my-app-var-function_module_css-box-color: aquamarine;
+}
+
+
+.my-app-var-function_module_css-one {
+	/* Red if --my-var is not defined */
+	color: var(--my-app-var-function_module_css-my-var, red);
+}
+
+.my-app-var-function_module_css-two {
+	/* pink if --my-var and --my-background are not defined */
+	color: var(--my-app-var-function_module_css-my-var, var(--my-app-var-function_module_css-my-background, pink));
+}
+
+.my-app-var-function_module_css-reserved {
+	color: var(--);
+}
+
+.my-app-var-function_module_css-green {
+	color: var(--my-app-var-function_module_css-a);
+}
+
+.my-app-var-function_module_css-global {
+	color: var(--my-global);
+}
+
+.my-app-var-function_module_css-global-and-default {
+	color: var(--my-global, pink);
+}
+
+.my-app-var-function_module_css-global-and-default-1 {
+	color: var(--my-global, var(--my-global-background));
+}
+
+.my-app-var-function_module_css-global-and-default-2 {
+	color: var(--my-global, var(--my-global-background, pink));
+}
+
+.my-app-var-function_module_css-global-and-default-3 {
+	color: var(--my-global, var(--my-app-var-function_module_css-my-background, pink));
+}
+
+.my-app-var-function_module_css-global-and-default-5 {
+	color: var(   --my-global,var(--my-app-var-function_module_css-my-background,pink));
+}
+
+.my-app-var-function_module_css-global-and-default-6 {
+	background: var(   --my-app-var-function_module_css-main-bg-color   ,   var(   --my-app-var-function_module_css-my-background   ,   pink   )   )   , var(--my-global);
+}
+
+.my-app-var-function_module_css-global-and-default-7 {
+	background: var(--my-app-var-function_module_css-main-bg-color,var(--my-app-var-function_module_css-my-background,pink)),var(--my-global);
+}
+
+.my-app-var-function_module_css-from {
+	color: var(--my-app-var-function-export_modules_css-my-var-u1);
+}
+
+.my-app-var-function_module_css-from-1 {
+	color: var(--my-app-var-function_module_css-main-bg-color, var(--my-app-var-function-export_modules_css-my-var-u1));
+}
+
+.my-app-var-function_module_css-from-2 {
+	color: var(--my-app-var-function-export_modules_css-my-var-u1,  var(--my-app-var-function_module_css-main-bg-color));
+}
+
+.my-app-var-function_module_css-from-3 {
+	color: var(--my-app-var-function-export_modules_css-my-var-u1,  var(--my-app-var-function-export_modules_css-my-var-u2));
+}
+
+.my-app-var-function_module_css-from-4 {
+	color: var(--my-app-var-function-export_modules_css-1);
+}
+
+.my-app-var-function_module_css-from-5 {
+	color: var(--my-app-var-function-export_modules_css---a);
+}
+
+.my-app-var-function_module_css-from-6 {
+	color: var(--my-app-var-function-export_modules_css-main-bg-color);
+}
+
+.my-app-var-function_module_css-mixed {
+	color: var(--my-app-var-function-export_modules_css-my-var-u1, var(--my-global, var(--my-app-var-function_module_css-main-bg-color, red)));
+}
+
+.my-app-var-function_module_css-broken {
+	color: var(--my-global from);
+}
+
+.my-app-var-function_module_css-broken-1 {
+	color: var(--my-global from 1);
+}
+
+:root {
+	--my-app-var-function_module_css-not-override-class: red;
+}
+
+.my-app-var-function_module_css-not-override-class {
+	color: var(--my-app-var-function-export_modules_css-not-override-class)
+}
+
+.my-app-var-function_module_css-theme-dark {
+	--my-app-var-function_module_css-text-color: #fff;
+	--my-app-var-function_module_css-bg-color: #333;
+
+	.my-app-var-function_module_css-button {
+		--my-app-var-function_module_css-button-color: var(--my-app-var-function_module_css-text-color);
+		--my-app-var-function_module_css-button-bg: var(--my-app-var-function_module_css-bg-color);
+		color: var(--my-app-var-function_module_css-button-color);
+		background-color: var(--my-app-var-function_module_css-button-bg);
+	}
+}
+
+.my-app-var-function_module_css-parent {
+	--my-app-var-function_module_css-parent-padding: 20px;
+	padding: var(--my-app-var-function_module_css-parent-padding);
+
+	.my-app-var-function_module_css-child {
+		--my-app-var-function_module_css-child-margin: 10px;
+		margin-top: var(--my-app-var-function_module_css-child-margin);
+		padding-left: var(--my-app-var-function_module_css-parent-padding); /* Accessing parent's variable */
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--my-app-var-function_module_css-base-padding: 1.5rem;
+		--my-app-var-function_module_css-font-scale: 1.2;
+	}
+}
+
+.my-app-var-function_module_css-container {
+	padding: var(--my-app-var-function_module_css-base-padding); /* This will be 1rem or 1.5rem based on screen size */
+}
+
+.my-app-var-function_module_css-item-title {
+	/* Dynamic font size based on screen size using the variable */
+	font-size: calc(1.2rem * var(--my-app-var-function_module_css-font-scale));
+	margin-bottom: calc(var(--my-app-var-function_module_css-base-padding) / 2);
+}
+
+.my-app-var-function_module_css-item-details {
+	/* Using calc() to create a flexible layout */
+	width: calc(100% - (var(--my-app-var-function_module_css-base-padding) * 2));
+}
+
+.my-app-var-function_module_css-banner {
+	/* Locally scoped variables (pseudo-private) */
+	--my-app-var-function_module_css-banner-bg: #e0f7fa; /* Default info color */
+	--my-app-var-function_module_css-banner-text: #00796b;
+	--my-app-var-function_module_css-banner-icon: \\"ℹ️\\";
+
+	padding: 1em;
+	background-color: var(--my-app-var-function_module_css-banner-bg);
+	color: var(--my-app-var-function_module_css-banner-text);
+	border-left: 5px solid var(--my-app-var-function_module_css-banner-text);
+}
+
+:root {
+	--my-app-var-function_module_css-accordion-bg: #fff;
+	--my-app-var-function_module_css-accordion-border: #ddd;
+	--my-app-var-function_module_css-accordion-text: #333;
+	--my-app-var-function_module_css-accordion-accent: royalblue;
+}
+
+.my-app-var-function_module_css-accordion-container {
+	border: 1px solid var(--my-app-var-function_module_css-accordion-border);
+	border-radius: 4px;
+	width: 100%;
+	max-width: 400px;
+
+	/* CSS Nesting starts here */
+	& .my-app-var-function_module_css-accordion-item {
+		background: var(--my-app-var-function_module_css-accordion-bg);
+		color: var(--my-app-var-function_module_css-accordion-text);
+		border-bottom: 1px solid var(--my-app-var-function_module_css-accordion-border);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		& .my-app-var-function_module_css-accordion-header {
+			padding: 1rem;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:hover {
+				background: color-mix(in srgb, var(--my-app-var-function_module_css-accordion-bg) 90%, gray);
+			}
+		}
+
+		/* Override variables locally for a specific state (e.g., active item) */
+		&.my-app-var-function_module_css-is-active {
+			--my-app-var-function_module_css-accordion-bg: var(--my-app-var-function_module_css-accordion-accent); /* Nested override */
+			--my-app-var-function_module_css-accordion-text: #fff; /* Nested override */
+
+			& .my-app-var-function_module_css-accordion-header {
+				font-weight: bold;
+			}
+		}
+	}
+
+	/* Define a complete alternate theme nested inside the container */
+	&.my-app-var-function_module_css-is-dark-theme {
+		/* These variables are scoped only to elements within this specific container */
+		--my-app-var-function_module_css-accordion-bg: #333;
+		--my-app-var-function_module_css-accordion-border: #555;
+		--my-app-var-function_module_css-accordion-text: #eee;
+		--my-app-var-function_module_css-accordion-accent: #2ecc71; /* A new accent color for the dark theme */
+	}
+}
+
+.my-app-var-function_module_css-media-object {
+	/* Establish a container context for cqw units */
+	container-type: inline-size;
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px solid #ccc;
+
+	/* Define default mobile variables */
+	--my-app-var-function_module_css-avatar-size: 48px;
+	--my-app-var-function_module_css-text-size: 1rem;
+
+	& .my-app-var-function_module_css-avatar {
+		width: var(--my-app-var-function_module_css-avatar-size);
+		height: var(--my-app-var-function_module_css-avatar-size);
+		border-radius: 50%;
+		background: lightgray;
+	}
+
+	& .my-app-var-function_module_css-content {
+		font-size: var(--my-app-var-function_module_css-text-size);
+	}
+
+	/* Nested Container Query (Responsive override of variables) */
+	@container (min-width: 400px) {
+		/* Redefine variables when container is wide enough */
+		--my-app-var-function_module_css-avatar-size: 10cqw; /* Dynamic size based on container width (10% of container) */
+		--my-app-var-function_module_css-text-size: 1.2rem;
+		gap: 1.5rem;
+	}
+}
+
+:root {
+	--my-app-var-function_module_css-primary-color: #007bff;
+	--my-app-var-function_module_css-text-color: var(--my-app-var-function_module_css-primary-color); /* --text-color now uses the value of --primary-color */
+	--my-app-var-function_module_css-highlight-background: linear-gradient(to right, var(--my-app-var-function_module_css-primary-color), #6c757d);
+}
+
+.my-app-var-function_module_css-element {
+	color: var(--my-app-var-function_module_css-text-color);
+	background: var(--my-app-var-function_module_css-highlight-background);
+}
+
+/*!*********************************!*\\\\
+  !*** css ./classes.modules.css ***!
+  \\\\*********************************/
+.my-app-classes_modules_css-className {
+	color: red
+}
+
+.my-app-classes_modules_css-otherClassName {
+	color: green;
+}
+
+.my-app-classes_modules_css-otherClassNameToo {
+	color: blue;
+}
+
+.my-app-classes_modules_css-from {
+	color: yellow;
+}
+
+.my-app-classes_modules_css-a {
+	color: red;
+}
+
+.my-app-classes_modules_css--b {
+	color: red;
+}
+
+.my-app-classes_modules_css-b- {
+	color: red;
+}
+
+.my-app-classes_modules_css---c {
+	color: red;
+}
+
+.my-app-classes_modules_css-c-- {
+	color: red;
+}
+
+.my-app-classes_modules_css-_d {
+	color: red;
+}
+
+.my-app-classes_modules_css-d\\\\% {
+	color: tan;
+}
+
+/*!************************!*\\\\
+  !*** css ./shared.css ***!
+  \\\\************************/
+:root {
+	--my-app-shared_css-from-shared: --my-app-shared_css-custom-shared;
+}
+
+@color-profile --my-app-shared_css-custom-shared {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.my-app-shared_css-local-my-shared-class {
+	color: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+
+.my-app-style_module_css-class {
+	color: red;
+}
+
+.my-app-style_module_css-local1,
+.my-app-style_module_css-local2 .global,
+.my-app-style_module_css-local3 {
+	color: green;
+}
+
+.global .my-app-style_module_css-local4 {
+	color: yellow;
+}
+
+.my-app-style_module_css-local5.global.my-app-style_module_css-local6 {
+	color: blue;
+}
+
+.my-app-style_module_css-local7 div:not(.my-app-style_module_css-disabled, .my-app-style_module_css-mButtonDisabled, .my-app-style_module_css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.my-app-style_module_css-local8 :is(div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-tiny,
+    div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-small,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-tiny,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-small div.my-app-style_module_css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-style_module_css-local9 :matches(div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-tiny,
+    div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-small,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-tiny,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-small div.my-app-style_module_css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-style_module_css-local10 :where(div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-tiny,
+    div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-small,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-tiny,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-small div.my-app-style_module_css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-style_module_css-local11 div:has(.my-app-style_module_css-disabled, .my-app-style_module_css-mButtonDisabled, .my-app-style_module_css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.my-app-style_module_css-local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.my-app-style_module_css-local13 div:past(p, span) {
+	display: none;
+}
+
+.my-app-style_module_css-local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.my-app-style_module_css-local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.my-app-style_module_css-local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.my-app-style_module_css-local9 :matches(div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-tiny,
+    div.my-app-style_module_css-parent1.my-app-style_module_css-child1.my-app-style_module_css-vertical-small,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-tiny,
+    div.my-app-style_module_css-otherDiv.my-app-style_module_css-horizontal-small div.my-app-style_module_css-description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.my-app-style_module_css-nested1.nested2.my-app-style_module_css-nested3 {
+	color: pink;
+}
+
+#my-app-style_module_css-ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.my-app-style_module_css-animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+.my-app-style_module_css-vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.my-app-style_module_css-globalVars {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.my-app-style_module_css-wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.my-app-style_module_css-narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.my-app-style_module_css-displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .my-app-style_module_css-floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .my-app-style_module_css-displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .my-app-style_module_css-displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.my-app-style_module_css-displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.my-app-style_module_css-animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .my-app-style_module_css-localUpperCase {
+	color: yellow;
+}
+
+.my-app-style_module_css-VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.my-app-style_module_css-globalVarsUpperCase {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.my-app-style_module_css-inSupportScope {
+		color: red;
+	}
+}
+
+.my-app-style_module_css-a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.my-app-style_module_css-b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.my-app-style_module_css-c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.my-app-style_module_css-d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@property --my-color-1 {
+	initial-value: #c0ffee;
+	syntax: \\"<color>\\";
+	inherits: false;
+}
+
+@property --my-color-2 {
+	syntax: \\"<color>\\";
+	initial-value: #c0ffee;
+	inherits: false;
+}
+
+.my-app-style_module_css-class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.my-app-style_module_css-padding-sm {
+		padding: 0.5rem;
+	}
+
+	.my-app-style_module_css-padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.my-app-style_module_css-class {
+	color: red;
+
+	.my-app-style_module_css-nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.my-app-style_module_css-nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.my-app-style_module_css-nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.my-app-style_module_css-nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.my-app-style_module_css-nested-layer {
+			background: red;
+		}
+	}
+}
+
+.my-app-style_module_css-not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: .my-app-style_module_css-test;
+	unknown2: .test;
+	unknown3: .my-app-style_module_css-test;
+	unknown4: .test;
+	/* No one support it */
+	unknown5: :local .test;
+	unknown6: :global .test;
+	unknown7: .foo, .bar, #bar;
+}
+
+@unknown .my-app-style_module_css-local .global {
+	color: red;
+}
+
+@unknown .my-app-style_module_css-local .global {
+	color: red;
+}
+
+.my-app-style_module_css-nested-var {
+	.my-app-style_module_css-again {
+		color: var(--local-color);
+	}
+}
+
+.my-app-style_module_css-nested-with-local-pseudo {
+	color: red;
+
+	.my-app-style_module_css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .my-app-style_module_css-bar {
+		color: red;
+	}
+}
+
+#my-app-style_module_css-id-foo {
+	color: red;
+
+	#my-app-style_module_css-id-bar {
+		color: red;
+	}
+}
+
+.my-app-style_module_css-nested-parens {
+	.my-app-style_module_css-local9 div:has(.my-app-style_module_css-vertical-tiny, .my-app-style_module_css-vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.my-app-style_module_css-local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+}
+
+.class .my-app-style_module_css-in-local-global-scope,
+.class .my-app-style_module_css-in-local-global-scope,
+.my-app-style_module_css-class-local-scope .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.my-app-style_module_css-class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.my-app-style_module_css-deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.my-app-style_module_css-placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.my-app-style_module_css-placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.my-app-style_module_css-placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.my-app-style_module_css-baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.my-app-style_module_css-class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.my-app-style_module_css-class {
+	bar: env(foo, var(--baz));
+}
+
+.global-foo, .my-app-style_module_css-bar {
+	.my-app-style_module_css-local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.my-app-style_module_css-my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.my-app-style_module_css-first-nested {
+	.my-app-style_module_css-first-nested-nested {
+		color: red;
+	}
+}
+
+.my-app-style_module_css-first-nested-at-rule {
+	@media screen {
+		.my-app-style_module_css-first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .my-app-style_module_css-class, .my-app-style_module_css-nested1.nested2.my-app-style_module_css-nested3 {
+		animation: slidein 3s;
+	}
+
+  .my-app-style_module_css-local2 .global,
+	.my-app-style_module_css-local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.my-app-style_module_css-class {
+	.my-app-style_module_css-class {
+		.my-app-style_module_css-class {
+			.my-app-style_module_css-class {}
+		}
+	}
+}
+
+.my-app-style_module_css-class {
+	.my-app-style_module_css-class {
+		.my-app-style_module_css-class {
+			.my-app-style_module_css-class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.my-app-style_module_css-class {
+	animation: slidein 3s;
+	.my-app-style_module_css-class {
+		animation: slidein 3s;
+		.my-app-style_module_css-class {
+			animation: slidein 3s;
+			.my-app-style_module_css-class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.my-app-style_module_css-broken {
+	. global(.my-app-style_module_css-class) {
+		color: red;
+	}
+
+	: global(.my-app-style_module_css-class) {
+		color: red;
+	}
+
+	: global .my-app-style_module_css-class {
+		color: red;
+	}
+
+	: local(.my-app-style_module_css-class) {
+		color: red;
+	}
+
+	: local .my-app-style_module_css-class {
+		color: red;
+	}
+
+	# hash {
+		color: red;
+	}
+}
+
+.my-app-style_module_css-comments {
+	.class {
+		color: red;
+	}
+
+	.class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+
+	./** test **/my-app-style_module_css-class {
+		color: red;
+	}
+}
+
+.my-app-style_module_css-foo {
+	color: red;
+	+ .my-app-style_module_css-bar + & { color: blue; }
+}
+
+.my-app-style_module_css-error, #my-app-style_module_css-err-404 {
+	&:hover > .my-app-style_module_css-baz { color: red; }
+}
+
+.my-app-style_module_css-foo {
+	& :is(.my-app-style_module_css-bar, &.my-app-style_module_css-baz) { color: red; }
+}
+
+.my-app-style_module_css-qqq {
+	color: green;
+	& .my-app-style_module_css-a { color: blue; }
+	color: red;
+}
+
+.my-app-style_module_css-parent {
+	color: blue;
+
+	@scope (& > .my-app-style_module_css-scope) to (& > .my-app-style_module_css-limit) {
+		& .my-app-style_module_css-content {
+			color: red;
+		}
+	}
+}
+
+.my-app-style_module_css-parent {
+	color: blue;
+
+	@scope (& > .my-app-style_module_css-scope) to (& > .my-app-style_module_css-limit) {
+		.my-app-style_module_css-content {
+			color: red;
+		}
+	}
+
+	.my-app-style_module_css-a {
+		color: red;
+	}
+}
+
+@scope (.my-app-style_module_css-card) {
+	:scope { border-block-end: 1px solid white; }
+}
+
+.my-app-style_module_css-card {
+	inline-size: 40ch;
+	aspect-ratio: 3/4;
+
+	@scope (&) {
+		:scope {
+			border: 1px solid white;
+		}
+	}
+}
+
+.my-app-style_module_css-foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		.my-app-style_module_css-bar {
+			grid-auto-flow: column;
+
+			@media (min-width > 1024px) {
+				.my-app-style_module_css-baz-1 {
+					display: grid;
+				}
+
+				max-inline-size: 1024px;
+
+				.my-app-style_module_css-baz-2 {
+					display: grid;
+				}
+			}
+		}
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+ul {
+	list-style: thumbs;
+}
+
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
+}
+
+div {
+	list-style: inside;
+	list-style: outside;
+	list-style: upper-roman inside;
+	list-style: circle outside;
+	list-style: none disc;
+	list-style: none url(09a1a1112c577c279435.png);
+	list-style: none;
+	list-style: none disc url(09a1a1112c577c279435.png);
+	list-style: lower-alpha;
+	list-style: disc;
+	list-style: square;
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
+	/* type */
+	list-style: square;
+
+	/* image */
+	list-style: url(09a1a1112c577c279435.png);
+
+	/* position */
+	list-style: inside;
+
+	/* two values */
+	list-style: georgian outside;
+	list-style: url(09a1a1112c577c279435.png) inside;
+
+	/* three values */
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
+
+	/* Keyword value */
+	list-style: none;
+
+	/* Global values */
+	list-style: inherit;
+	list-style: initial;
+	list-style: revert;
+	list-style: revert-layer;
+	list-style: unset;
+
+	list-style-type: \\"★\\";
+
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
+}
+
+@container (width > 400px) and style(--responsive: true) {
+	.my-app-style_module_css-class {
+		font-size: 1.5em;
+	}
+}
+
+@container tall (height > 30rem) {
+	p {
+		line-height: 1.6;
+	}
+}
+
+@container sticky-heading scroll-state(stuck: top) {
+	h2 {
+		background: purple;
+		color: white;
+	}
+}
+
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+	h2 {
+		font-size: 1.5em;
+	}
+}
+
+@container (width > 400px) and (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container (width > 400px) or (height > 400px) {
+	/* <stylesheet> */
+}
+
+@container not (width < 400px) {
+	/* <stylesheet> */
+}
+
+@container (min-width: 400px) {
+	/* … */
+}
+@container (orientation: landscape) and (width > 400px) {
+	/* … */
+}
+@container (15em <= block-size <= 30em) {
+	/* … */
+}
+
+.my-app-style_module_css-post {
+	container-name: tall;
+	container-type: inline-size;
+
+	container: none;
+	container: inherit;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: my-app-style_module_css-sticky-heading;
+
+	container: var(--my-var);
+	--cards: small;
+	container-type: inline-size;
+}
+
+
+@container summary style(--cards: small) {
+	.my-app-style_module_css-card {
+		border: thin solid silver;
+		border-radius: 0.5em;
+		padding: 1em;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font One */
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+@font-palette-values --identifier {
+	font-family: Bixa;
+}
+
+.my-app-style_module_css-my-class {
+	font-palette: --identifier;
+}
+
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
+@keyframes { /* ... */ }
+@keyframes{ /* ... */ }
+
+@supports (display: flex) {
+	@media screen and (min-width: 900px) {
+		article {
+			display: flex;
+		}
+	}
+}
+
+@starting-style {
+	.my-app-style_module_css-class {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+.my-app-style_module_css-class {
+	opacity: 1;
+	transform: scaleX(1);
+
+	@starting-style {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+}
+
+@scope (.my-app-style_module_css-feature) {
+	.my-app-style_module_css-class { opacity: 0; }
+
+	:scope .my-app-style_module_css-class-1 { opacity: 0; }
+
+	& .my-app-style_module_css-class { opacity: 0; }
+}
+
+@position-try --custom-left {
+	position-area: left;
+	width: 100px;
+	margin: 0 10px 0 0;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	margin: 10px 0 0 0;
+	position-area: none;
+}
+
+@position-try --custom-right {
+	left: calc(anchor(right) + 10px);
+	align-self: anchor-center;
+	width: 100px;
+	position-area: none;
+}
+
+@position-try --custom-bottom-right {
+	position-area: bottom right;
+	margin: 10px 0 0 10px;
+}
+
+.my-app-style_module_css-infobox {
+	position: fixed;
+	position-anchor: --myAnchor;
+	position-area: top;
+	width: 200px;
+	margin: 0 0 10px 0;
+	position-try-fallbacks:
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
+}
+
+@page {
+	size: 8.5in 9in;
+	margin-top: 4in;
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.my-app-style_module_css-header {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+}
+
+.my-app-style_module_css-test {
+	test: (1, 2) [3, 4], { 1: 2};
+	.my-app-style_module_css-a {
+		width: 200px;
+	}
+}
+
+.my-app-style_module_css-test {
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+}
+
+.my-app-style_module_css-test {
+	width: 200px;
+
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+}
+
+.my-app-style_module_css-test {
+	width: 200px;
+
+	.my-app-style_module_css-test {
+		.my-app-style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-style_module_css-test {
+	width: 200px;
+
+	.my-app-style_module_css-test {
+		width: 200px;
+
+		.my-app-style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-style_module_css-test {
+	.my-app-style_module_css-test {
+		width: 200px;
+
+		.my-app-style_module_css-test {
+			width: 200px;
+		}
+	}
+}
+
+.my-app-style_module_css-test {
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+	width: 200px;
+}
+
+.my-app-style_module_css-test {
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+}
+
+.my-app-style_module_css-test {
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+	width: 200px;
+	.my-app-style_module_css-test {
+		width: 200px;
+	}
+}
+
+#my-app-style_module_css-test {
+	c: 1;
+
+	#my-app-style_module_css-test {
+		c: 2;
+	}
+}
+
+@property --item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+.my-app-style_module_css-container {
+	display: flex;
+	height: 200px;
+	border: 1px dashed black;
+
+	/* set custom property values on parent */
+	--item-size: 20%;
+	--item-color: orange;
+}
+
+.my-app-style_module_css-item {
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
+}
+
+.my-app-style_module_css-two {
+	--item-size: initial;
+	--item-color: inherit;
+}
+
+.my-app-style_module_css-three {
+	/* invalid values */
+	--item-size: 1000px;
+	--item-color: xyz;
+}
+
+@property invalid {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+
+@property --progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+.my-app-style_module_css-bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--progress),
+		black var(--progress)
+	);
+	animation: progressAnimation 2.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+	to {
+		--progress: 100%;
+	}
+}
+
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+@property/**test**/--item-size {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/--item-size/**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/--item-size/**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property/**test**/ --item-size /**test**/{
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+@property /**test**/ --item-size /**test**/ {
+	syntax: \\"<percentage>\\";
+	inherits: true;
+	initial-value: 40%;
+}
+div {
+	animation: 3s ease-in 1s 2 reverse both paused \\"initial\\", localkeyframes2;
+	animation-name: \\"initial\\";
+	animation-duration: 2s;
+}
+
+.my-app-style_module_css-item-1 {
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
+}
+
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+
+./**test**//**test**/my-app-style_module_css-class {
+	background: red;
+}
+
+./**test**/ /**test**/class {
+	background: red;
+}
+
+.my-app-style_module_css-var {
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: \\"test\\";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: \\" (\\" var(--external-link) \\")\\";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
+}
+
+.my-app-style_module_css-var-order {
+	background-color: var(--test);
+	--test: red;
+}
+
+.my-app-style_module_css-className {
+	border-radius: 12px;
+}
+
+.my-app-style_module_css-classNameLocal {
+	border-radius: 12px;
+}
+
+.my-app-style_module_css-classNameLocalOther {
+	border-radius: 12px;
+}
+
+.my-app-style_module_css-exportName {
+	border: red;
+}
+
+.my-app-style_module_css-exportNameOtherNoSpaces {
+	}
+
+.my-app-style_module_css-from {
+	color: red;
+}
+
+.my-app-style_module_css-exportNameOtherFromKeyword {
+	}
+
+.my-app-style_module_css-exportNameOtherFromKeywordWithFrom1 {
+	}
+
+.my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 {
+	}
+
+.my-app-style_module_css-exportNameWeirdCharacters {
+	}
+
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+}
+
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
+}
+
+div {
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+}
+
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
+}
+
+div {
+	animation: --anim-1s(my-app-style_module_css-bounce, 2);
+}
+
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
+}
+
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
+}
+
+div {
+	z-index: --outer(1); /* 3 */
+}
+
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
+	@media (width < 700px) {
+		result: var(--narrow);
+	}
+}
+
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
+}
+
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --my-app-style_module_css-transparent-local(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
+}
+
+:root {
+	--mode: sharp;
+}
+
+.my-app-style_module_css-apply-sharp {
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --my-app-style_module_css-swop5c-local {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --my-app-style_module_css-swop5c-local {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+@color-profile --swop5c {
+	src: url(https://example.org/SWOP2006_Coated5v2.icc);
+}
+
+.my-app-style_module_css-class {
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
+	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
+}
+
+:root {
+	--text-color: #eee;
+}
+
+.my-app-style_module_css-simple {
+	color: var(--text-color);
+}
+
+/* Just nesting */
+.my-app-style_module_css-theme-dark {
+	--text-color: #fff;
+	--bg-color: #333;
+
+	.my-app-style_module_css-button {
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
+	}
+}
+
+/* A container context based on inline size */
+.my-app-style_module_css-post {
+	--themeColor: blue;
+	container-type: inline-size;
+}
+
+/* Apply styles if the container is narrower than 650px */
+@container (width < 650px) and style(--themeColor: blue) {
+	.my-app-style_module_css-card {
+		width: 50%;
+		background-color: lightgray;
+		font-size: 1em;
+	}
+}
+
+@keyframes broken;
+
+.class-name-after-broken-keyframes {
+	color: red;
+}
+
+.my-app-style_module_css-no-space {
+	.class-no-space {
+		color: red;
+	}
+
+	/** test **/.class {
+		color: red;
+	}
+
+	.my-app-style_module_css-class {
+		color: red;
+	}
+
+	/** test **/.my-app-style_module_css-class {
+		color: red;
+	}
+
+	/** test **/#my-app-style_module_css-hash {
+		color: red;
+	}
+
+	/** test **/{
+		color: red;
+	}
+}
+
+/* nesting */
+
+.my-app-style_module_css-class{.my-app-style_module_css-class{}}
+.my-app-style_module_css-class{color:#fff5f5}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--foo:#fff5f5}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+/* TODO fix, but this syntax is not used anywhere */
+.my-app-style_module_css-class{--bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+
+/* Cases for \`css/global\` */
+
+.my-app-style_module_css-just-class {
+	color: red;
+}
+
+.my-app-style_module_css-my-simple-local {
+	color: red;
+}
+
+.my-global-local {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first.my-app-style_module_css-multiple-second {
+	color: red;
+}
+
+.my-app-style_module_css-multiple-first-with-space .my-app-style_module_css-multiple-second-with-space {
+	color: red;
+}
+
+div:not(.my-app-style_module_css-special) {
+	color: blue;
+}
+
+p:not(#my-app-style_module_css-main-paragraph) {
+	font-weight: bold;
+}
+
+.my-app-style_module_css-container {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .my-app-style_module_css-header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .my-app-style_module_css-active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.my-app-style_module_css-highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.my-app-style_module_css-item.my-app-style_module_css-selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.my-app-style_module_css-container-only-classes {
+	/* Styles for .container */
+	background-color: lightblue;
+
+	@media (min-width: 768px) {
+		/* Styles for .card on larger screens */
+		display: flex;
+		gap: 1rem;
+	}
+
+	@supports (display: grid) {
+		& .my-app-style_module_css-header {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	& .my-app-style_module_css-active {
+		/* Styles for .container.active */
+		border: 2px solid blue;
+	}
+
+	&.my-app-style_module_css-highlighted {
+		/* Styles for .container.highlighted */
+		box-shadow: 0 0 5px yellow;
+	}
+
+	/* Nesting a descendant with multiple classes */
+	.my-app-style_module_css-item.my-app-style_module_css-selected {
+		/* Styles for .container .item.selected */
+		font-weight: bold;
+		color: darkgreen;
+	}
+}
+
+.my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-global-befor-local .my-app-style_module_css-local-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-local-class-name .my-app-style_module_css-global-after-local {
+	color: red;
+}
+
+.my-app-style_module_css-foo {
+	&.my-app-style_module_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.my-app-style_module_css-bar {
+			c_value: some-value;
+		}
+
+		&.my-app-style_module_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* Composes */
+
+.my-app-style_module_css-class {
+	color: black;
+}
+
+.my-app-style_module_css-local-class {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.my-app-style_module_css-class-with-composes {
+	}
+
+/* At-rules */
+
+@keyframes basic-keyframes {}
+@keyframes my-app-style_module_css-local-keyframes {}
+@keyframes global-keyframes {}
+/** Deprecated syntax */
+@keyframes my-app-style_module_css-local-keyframes-old-syntax {}
+@keyframes local-keyframes-old-syntax {}
+
+.my-app-style_module_css-foo {
+	animation-name: basic-keyframes, global-keyframes, my-app-style_module_css-local-keyframes;
+}
+
+@property --my-app-style_module_css-progress {
+	syntax: \\"<percentage>\\";
+	inherits: false;
+	initial-value: 25%;
+}
+
+@keyframes my-app-style_module_css-progressAnimationLocal {
+	to {
+		--progress: 100%;
+	}
+}
+
+.my-app-style_module_css-bar {
+	display: inline-block;
+	--progress: 25%;
+	width: 100%;
+	height: 5px;
+	background: linear-gradient(
+		to right,
+		#00d230 var(--my-app-style_module_css-progress),
+		black var(--my-app-style_module_css-progress)
+	);
+	animation: my-app-style_module_css-progressAnimationLocal 2.5s ease infinite;
+}
+
+@scope (.my-app-style_module_css-article-header) to (.class) {
+	.my-app-style_module_css-article-footer {
+		border: 5px solid black;
+	}
+	.my-app-style_module_css-class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/** Custom properties */
+
+:root {
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
+	red,
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar,
+		/** Deprecated syntax */
+	--my-app-style_module_css-local-foo-bar,
+	--global-foo-bar;
+}
+
+.my-app-style_module_css-class {
+	background-color:
+		var(--foo-bar),
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
+			/** Deprecated syntax */
+		var(--my-app-style_module_css-local-foo-bar),
+		var(--global-foo-bar),
+		var(--global-foo-bar from global),
+		var(--from-shared from \\"./shared.css\\");
+}
+
+/** Custom local value */
+
+@unknown-rule my-app-style_module_css-unknown-at-rule {}
+
+.my-app-style_module_css-class {
+	custom-name: my-app-style_module_css-unknown-at-rule;
+}
+
+.class {
+	--test-1: red;
+	color: var(--test-1);
+	animation-name: animation-name-test;
+	local-and-global: my-app-style_module_css-animation-name-test animation-name-test
+}
+
+/* GRID */
+
+.my-app-style_module_css-grid1 {
+	grid: none;
+}
+
+.my-app-style_module_css-gird2 {
+	grid: \\"a\\" 100px \\"b\\" 1fr;
+}
+
+.my-app-style_module_css-grid3 {
+	grid: [line-name1] \\"a\\" 100px [line-name2];
+}
+
+.my-app-style_module_css-grid4 {
+	grid: \\"a\\" 200px \\"b\\" min-content;
+}
+
+.my-app-style_module_css-grid5 {
+	grid: \\"a\\" minmax(100px, max-content) \\"b\\" 20%;
+}
+
+.my-app-style_module_css-grid6 {
+	grid: 100px / 200px;
+}
+
+.my-app-style_module_css-grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.my-app-style_module_css-grid8 {
+	grid: 200px / auto-flow;
+}
+
+.my-app-style_module_css-grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.my-app-style_module_css-grid10 {
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
+}
+
+.my-app-style_module_css-grid11 {
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.my-app-style_module_css-grid12 {
+	grid: auto-flow / 200px;
+}
+
+.my-app-style_module_css-grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.my-app-style_module_css-grid14 {
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
+}
+
+.my-app-style_module_css-grid15 {
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
+}
+
+.my-app-style_module_css-grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.my-app-style_module_css-grid17 {
+	grid-template-areas: 'nav main';
+}
+
+.my-app-style_module_css-grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.my-app-style_module_css-grid-area1 {
+	grid-area: some-grid-area;
+}
+
+.my-app-style_module_css-grid-area2 {
+	grid-area: some-grid-area / another-grid-area;
+}
+
+.my-app-style_module_css-grid-area3 {
+	grid-area: 4 some-grid-area / 2 another-grid-area;
+}
+
+.my-app-style_module_css-grid-area4 {
+	grid-area: span 3 / span some-grid-area;
+}
+
+/* Keyword value */
+.my-app-style_module_css-grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.my-app-style_module_css-grid-row-start1 {
+	grid-row-start: some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.my-app-style_module_css-grid-row-start2 {
+	grid-row-start: 2;
+}
+.my-app-style_module_css-grid-row-start3 {
+	grid-row-start: some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.my-app-style_module_css-grid-row-start4 {
+	grid-row-start: span 3;
+}
+.my-app-style_module_css-grid-row-start5 {
+	grid-row-start: span some-grid-area;
+}
+.my-app-style_module_css-grid-row-start6 {
+	grid-row-start: 5 some-grid-area span;
+}
+
+/* Global values */
+.my-app-style_module_css-grid-row-start7 {
+	grid-row-start: inherit;
+}
+.my-app-style_module_css-grid-row-start8 {
+	grid-row-start: initial;
+}
+.my-app-style_module_css-grid-row-start9 {
+	grid-row-start: revert;
+}
+.my-app-style_module_css-grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.my-app-style_module_css-grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.my-app-style_module_css-grid-template-areas {
+	grid-template-areas:
+  \\"a b .\\"
+  \\"a   c   d\\";
+}
+
+.my-app-style_module_css-grid-template-rows {
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
+}
+
+.my-app-style_module_css-grid-template-rows1 {
+	grid-template-rows:
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
+}
+
+.my-app-style_module_css-grid-template-rows2 {
+	grid-template-rows:
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
+		100px;
+}
+
+.my-app-style_module_css-grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.my-app-style_module_css-grid-template {
+	grid-template:
+		[header-top] \\"a a a\\" [header-bottom]
+		[main-top] \\"b b b\\" 1fr [main-bottom]
+		/ auto 1fr auto;
+}
+
+.my-app-style_module_css-grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.my-app-style_module_css-class {
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
+}
+
+.my-app-style_module_css-box1 {
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
+}
+
+.my-app-style_module_css-box2 {
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
+}
+
+.my-app-style_module_css-box3 {
+	grid-column-start: content-start;
+	grid-row-start: main-start;
+}
+
+.my-app-style_module_css-box4 {
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"hd hd hd hd   hd   hd   hd   hd   hd\\"
+    \\"sd sd sd main main main main main main\\"
+    \\"ft ft ft ft   ft   ft   ft   ft   ft\\";
+}
+
+.my-app-style_module_css-header {
+	grid-area: hd;
+}
+
+.my-app-style_module_css-footer {
+	grid-area: ft;
+}
+
+.my-app-style_module_css-content {
+	grid-area: main;
+}
+
+.my-app-style_module_css-sidebar {
+	grid-area: sd;
+}
+
+.my-app-style_module_css-wrapper > div.my-app-style_module_css-overlay {
+	z-index: 10;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.my-app-style_module_css-wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.my-app-style_module_css-item1to5 {
+	grid-column: col-start / col-start 5;
+}
+
+.my-app-style_module_css-item7to9 {
+	grid-column: col-start 7 / span 3;
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+}
+
+.my-app-style_module_css-wrapper {
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
+}
+
+"
 `;
 
 exports[`ConfigTestCases css css-order exported tests keep consistent css order 1`] = `".button-module {  padding: 8px 16px;  background-color: #007bff;  color: white;  border: none;  border-radius: 4px;}.teaser-module {  padding: 20px;  border: 1px solid #ddd;  border-radius: 8px;  margin: 16px;}.teaser-module {  background-color: orange;}"`;
@@ -18127,6 +22213,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :local(--transparent-local)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :global(--transparent-global)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: local(--transparent-local)(var(--base-color), 0.8);
+	background-color: global(--transparent-global)(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
@@ -18493,6 +22598,291 @@ p:not(:local(#main-paragraph)) {
 	color: var(--test-1);
 	animation-name: animation-name-test;
 	local-and-global: local(animation-name-test) global(animation-name-test)
+}
+
+/* GRID */
+
+.grid1 {
+	grid: none;
+}
+
+.gird2 {
+	grid: \\"a\\" 100px \\"b\\" 1fr;
+}
+
+.grid3 {
+	grid: [line-name1] \\"a\\" 100px [line-name2];
+}
+
+.grid4 {
+	grid: \\"a\\" 200px \\"b\\" min-content;
+}
+
+.grid5 {
+	grid: \\"a\\" minmax(100px, max-content) \\"b\\" 20%;
+}
+
+.grid6 {
+	grid: 100px / 200px;
+}
+
+.grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.grid8 {
+	grid: 200px / auto-flow;
+}
+
+.grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.grid10 {
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
+}
+
+.grid11 {
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.grid12 {
+	grid: auto-flow / 200px;
+}
+
+.grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.grid14 {
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
+}
+
+.grid15 {
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
+}
+
+.grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.grid17 {
+	grid-template-areas: 'nav main';
+}
+
+.grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.grid-area1 {
+	grid-area: some-grid-area;
+}
+
+.grid-area2 {
+	grid-area: some-grid-area / another-grid-area;
+}
+
+.grid-area3 {
+	grid-area: 4 some-grid-area / 2 another-grid-area;
+}
+
+.grid-area4 {
+	grid-area: span 3 / span some-grid-area;
+}
+
+/* Keyword value */
+.grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.grid-row-start1 {
+	grid-row-start: some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.grid-row-start2 {
+	grid-row-start: 2;
+}
+.grid-row-start3 {
+	grid-row-start: some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.grid-row-start4 {
+	grid-row-start: span 3;
+}
+.grid-row-start5 {
+	grid-row-start: span some-grid-area;
+}
+.grid-row-start6 {
+	grid-row-start: 5 some-grid-area span;
+}
+
+/* Global values */
+.grid-row-start7 {
+	grid-row-start: inherit;
+}
+.grid-row-start8 {
+	grid-row-start: initial;
+}
+.grid-row-start9 {
+	grid-row-start: revert;
+}
+.grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.grid-template-areas {
+	grid-template-areas:
+  \\"a b .\\"
+  \\"a   c   d\\";
+}
+
+.grid-template-rows {
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
+}
+
+.grid-template-rows1 {
+	grid-template-rows:
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
+}
+
+.grid-template-rows2 {
+	grid-template-rows:
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
+		100px;
+}
+
+.grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.grid-template {
+	grid-template:
+		[header-top] \\"a a a\\" [header-bottom]
+		[main-top] \\"b b b\\" 1fr [main-bottom]
+		/ auto 1fr auto;
+}
+
+.grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.class {
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
+}
+
+.box1 {
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
+}
+
+.box2 {
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
+}
+
+.box3 {
+	grid-column-start: content-start;
+	grid-row-start: main-start;
+}
+
+.box4 {
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    \\"hd hd hd hd   hd   hd   hd   hd   hd\\"
+    \\"sd sd sd main main main main main main\\"
+    \\"ft ft ft ft   ft   ft   ft   ft   ft\\";
+}
+
+.header {
+	grid-area: hd;
+}
+
+.footer {
+	grid-area: ft;
+}
+
+.content {
+	grid-area: main;
+}
+
+.sidebar {
+	grid-area: sd;
+}
+
+.wrapper > div.overlay {
+	z-index: 10;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.item1to5 {
+	grid-column: col-start / col-start 5;
+}
+
+.item7to9 {
+	grid-column: col-start 7 / span 3;
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+}
+
+.wrapper {
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
 /*!***********************!*\\\\

@@ -466,8 +466,26 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "animation": {
+          "$ref": "#/definitions/CssParserAnimation"
+        },
+        "container": {
+          "$ref": "#/definitions/CssParserContainer"
+        },
+        "customIdents": {
+          "$ref": "#/definitions/CssParserCustomIdents"
+        },
+        "dashedIdents": {
+          "$ref": "#/definitions/CssParserDashedIdents"
+        },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
+        },
+        "function": {
+          "$ref": "#/definitions/CssParserFunction"
+        },
+        "grid": {
+          "$ref": "#/definitions/CssParserGrid"
         },
         "import": {
           "$ref": "#/definitions/CssParserImport"
@@ -480,9 +498,33 @@
         }
       }
     },
+    "CssParserAnimation": {
+      "description": "Enable/disable renaming of `@keyframes`.",
+      "type": "boolean"
+    },
+    "CssParserContainer": {
+      "description": "Enable/disable renaming of `@container` names.",
+      "type": "boolean"
+    },
+    "CssParserCustomIdents": {
+      "description": "Enable/disable renaming of custom identifiers.",
+      "type": "boolean"
+    },
+    "CssParserDashedIdents": {
+      "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+      "type": "boolean"
+    },
     "CssParserExportType": {
       "description": "Configure how CSS content is exported as default.",
       "enum": ["link", "text", "css-style-sheet"]
+    },
+    "CssParserFunction": {
+      "description": "Enable/disable renaming of `@function` names.",
+      "type": "boolean"
+    },
+    "CssParserGrid": {
+      "description": "Enable/disable renaming of grid identifiers.",
+      "type": "boolean"
     },
     "CssParserImport": {
       "description": "Enable/disable `@import` at-rules handling.",

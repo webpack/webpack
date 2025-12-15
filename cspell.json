@@ -248,6 +248,7 @@
     "submodules",
     "subpath",
     "substack",
+    "subgrid",
     "symlinked",
     "syncloader",
     "systemjs",

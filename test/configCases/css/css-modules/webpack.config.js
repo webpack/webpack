@@ -160,5 +160,32 @@ module.exports = (env, { testPath }) => [
 			__dirname: false,
 			__filename: false
 		}
+	},
+	// CSS modules options
+	{
+		...base,
+		entry: "./index-options.js",
+		name: "web-development",
+		target: "web",
+		mode: "development",
+		output: {
+			uniqueName: "my-app"
+		},
+		module: {
+			parser: {
+				"css/auto": {
+					animation: false,
+					customIdents: false,
+					dashedIdents: false,
+					container: false,
+					function: false,
+					grid: false
+				}
+			}
+		},
+		node: {
+			__dirname: false,
+			__filename: false
+		}
 	}
 ];

@@ -2222,6 +2222,8 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
+			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2234,8 +2236,7 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2341,11 +2342,36 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
+			+         },
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
+			@@ ... @@
+			+       "css/auto": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
 			+       },
+			+       "css/global": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			+       },
+			+       "css/module": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2399,10 +2425,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2414,11 +2441,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -2898,11 +2923,36 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
+			+         },
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
 			+       },
+			+       "css/auto": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			@@ ... @@
+			+       "css/global": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			+       },
+			+       "css/module": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2923,6 +2973,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2966,11 +3019,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

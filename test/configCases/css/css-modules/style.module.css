@@ -1384,6 +1384,25 @@ div {
 	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :local(--transparent-local)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+@function :global(--transparent-global)(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
+}
+
+section {
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: local(--transparent-local)(var(--base-color), 0.8);
+	background-color: global(--transparent-global)(var(--base-color), 0.8);
+}
+
 :root {
 	--mode: sharp;
 }
@@ -1750,4 +1769,289 @@ p:not(:local(#main-paragraph)) {
 	color: var(--test-1);
 	animation-name: animation-name-test;
 	local-and-global: local(animation-name-test) global(animation-name-test)
+}
+
+/* GRID */
+
+.grid1 {
+	grid: none;
+}
+
+.gird2 {
+	grid: "a" 100px "b" 1fr;
+}
+
+.grid3 {
+	grid: [line-name1] "a" 100px [line-name2];
+}
+
+.grid4 {
+	grid: "a" 200px "b" min-content;
+}
+
+.grid5 {
+	grid: "a" minmax(100px, max-content) "b" 20%;
+}
+
+.grid6 {
+	grid: 100px / 200px;
+}
+
+.grid7 {
+	grid: minmax(400px, min-content) / repeat(auto-fill, 50px);
+}
+
+.grid8 {
+	grid: 200px / auto-flow;
+}
+
+.grid9 {
+	grid: 30% / auto-flow dense;
+}
+
+.grid10 {
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
+}
+
+.grid11 {
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
+}
+
+.grid12 {
+	grid: auto-flow / 200px;
+}
+
+.grid13 {
+	grid: auto-flow dense / 30%;
+}
+
+.grid14 {
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
+}
+
+.grid15 {
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
+}
+
+.grid16 {
+	grid: inherit;
+	grid: initial;
+	grid: revert;
+	grid: revert-layer;
+	grid: unset;
+}
+
+.grid17 {
+	grid-template-areas: 'nav main';
+}
+
+.grid-area {
+	grid-area: auto / auto / auto / auto;
+}
+
+.grid-area1 {
+	grid-area: some-grid-area;
+}
+
+.grid-area2 {
+	grid-area: some-grid-area / another-grid-area;
+}
+
+.grid-area3 {
+	grid-area: 4 some-grid-area / 2 another-grid-area;
+}
+
+.grid-area4 {
+	grid-area: span 3 / span some-grid-area;
+}
+
+/* Keyword value */
+.grid-row-start {
+	grid-row-start: auto;
+}
+
+/* <custom-ident> values */
+.grid-row-start1 {
+	grid-row-start: some-grid-area;
+}
+
+/* <integer> + <custom-ident> values */
+.grid-row-start2 {
+	grid-row-start: 2;
+}
+.grid-row-start3 {
+	grid-row-start: some-grid-area 4;
+}
+
+/* span + <integer> + <custom-ident> values */
+.grid-row-start4 {
+	grid-row-start: span 3;
+}
+.grid-row-start5 {
+	grid-row-start: span some-grid-area;
+}
+.grid-row-start6 {
+	grid-row-start: 5 some-grid-area span;
+}
+
+/* Global values */
+.grid-row-start7 {
+	grid-row-start: inherit;
+}
+.grid-row-start8 {
+	grid-row-start: initial;
+}
+.grid-row-start9 {
+	grid-row-start: revert;
+}
+.grid-row-start10 {
+	grid-row-start: revert-layer;
+}
+.grid-row-start11 {
+	grid-row-start: unset;
+}
+
+.grid-template-areas {
+	grid-template-areas:
+  "a b ."
+  "a   c   d";
+}
+
+.grid-template-rows {
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
+}
+
+.grid-template-rows1 {
+	grid-template-rows:
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
+}
+
+.grid-template-rows2 {
+	grid-template-rows:
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
+		100px;
+}
+
+.grid-template-rows3 {
+	grid-template-rows: max-content 1fr max-content;
+}
+
+.grid-template {
+	grid-template:
+		[header-top] "a a a" [header-bottom]
+		[main-top] "b b b" 1fr [main-bottom]
+		/ auto 1fr auto;
+}
+
+.grid-container {
+	display: grid;
+	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
+		 Columns will be at least 150px wide, growing to fill available space (1fr).
+		 Lines are named 'col-start' and 'col-end' for each track repetition. */
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+
+	/* 2. Define explicit row heights and name key row lines. */
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
+
+	/* 3. Add gaps for spacing */
+	gap: 20px;
+
+	padding: 20px;
+	background-color: #f0f0f0;
+}
+
+.class {
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
+}
+
+.box1 {
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
+}
+
+.box2 {
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
+}
+
+.box3 {
+	grid-column-start: content-start;
+	grid-row-start: main-start;
+}
+
+.box4 {
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	grid-template-areas:
+    "hd hd hd hd   hd   hd   hd   hd   hd"
+    "sd sd sd main main main main main main"
+    "ft ft ft ft   ft   ft   ft   ft   ft";
+}
+
+.header {
+	grid-area: hd;
+}
+
+.footer {
+	grid-area: ft;
+}
+
+.content {
+	grid-area: main;
+}
+
+.sidebar {
+	grid-area: sd;
+}
+
+.wrapper > div.overlay {
+	z-index: 10;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
+	border: 4px solid rgb(92 148 13);
+	background-color: rgb(92 148 13 / 40%);
+	color: rgb(92 148 13);
+	font-size: 150%;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.item1to5 {
+	grid-column: col-start / col-start 5;
+}
+
+.item7to9 {
+	grid-column: col-start 7 / span 3;
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
+}
+
+.wrapper {
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+}
+
+.wrapper {
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
