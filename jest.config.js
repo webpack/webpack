@@ -1,6 +1,6 @@
 "use strict";
 
-/** @type {import('jest').Config} */
+/** @type {import("jest").Config} */
 const config = {
 	testTimeout: 30000,
 	prettierPath: require.resolve("prettier-2"),

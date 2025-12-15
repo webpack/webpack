@@ -1,6 +1,6 @@
 "use strict";
 
-/** @type {import('webpack').Configuration} */
+/** @type {import("webpack").Configuration} */
 const config = {
 	devtool: "source-map",
 	module: {

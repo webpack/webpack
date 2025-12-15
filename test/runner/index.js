@@ -77,7 +77,7 @@ const urlToRelativePath = (url) => {
 
 /**
  * @typedef {object} TestRunnerOptions
- * @property {string|string[]} target
+ * @property {string | string[]} target
  * @property {string} outputDirectory
  * @property {TestMeta} testMeta
  * @property {TestConfig} testConfig
@@ -93,7 +93,7 @@ const urlToRelativePath = (url) => {
 
 /**
  * @typedef {object} RequireContext
- * @property {"unlinked"|"evaluated"} esmMode
+ * @property {"unlinked" | "evaluated"} esmMode
  */
 
 /**
@@ -115,7 +115,7 @@ class TestRunner {
 		testConfig,
 		webpackOptions
 	}) {
-		/** @type {string|string[]} */
+		/** @type {string | string[]} */
 		this.target = target;
 		/** @type {string} */
 		this.outputDirectory = outputDirectory;
@@ -249,7 +249,7 @@ class TestRunner {
 
 	/**
 	 * @param {string} currentDirectory current directory
-	 * @param {string|string[]} module module
+	 * @param {string | string[]} module module
 	 * @returns {ModuleInfo} module info
 	 */
 	_resolveModule(currentDirectory, module) {
@@ -288,7 +288,7 @@ class TestRunner {
 
 	/**
 	 * @param {string} currentDirectory current directory
-	 * @param {string|string[]} module module
+	 * @param {string | string[]} module module
 	 * @param {RequireContext=} context context
 	 * @returns {EXPECTED_ANY} require result
 	 */
