@@ -1978,6 +1978,58 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-auto-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/auto.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/auto.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/auto.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/auto.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-export-type": Object {
     "configs": Array [
       Object {
@@ -1995,6 +2047,32 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-auto-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/auto.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/auto.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-auto-import": Object {
     "configs": Array [
@@ -2053,6 +2131,58 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-css-global-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/global.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/global.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/global.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/global.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-global-export-type": Object {
     "configs": Array [
       Object {
@@ -2070,6 +2200,32 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-global-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/global.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/global.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-global-import": Object {
     "configs": Array [
@@ -2123,6 +2279,58 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-module-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/module.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/module.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/module.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/module.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-module-export-type": Object {
     "configs": Array [
       Object {
@@ -2140,6 +2348,32 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-module-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/module.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/module.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-module-import": Object {
     "configs": Array [

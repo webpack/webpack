@@ -3726,9 +3726,39 @@ declare interface CssModuleGeneratorOptions {
  */
 declare interface CssModuleParserOptions {
 	/**
+	 * Enable/disable renaming of `@keyframes`.
+	 */
+	animation?: boolean;
+
+	/**
+	 * Enable/disable renaming of `@container` names.
+	 */
+	container?: boolean;
+
+	/**
+	 * Enable/disable renaming of custom identifiers.
+	 */
+	customIdents?: boolean;
+
+	/**
+	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+	 */
+	dashedIdents?: boolean;
+
+	/**
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: "link" | "text" | "css-style-sheet";
+
+	/**
+	 * Enable/disable renaming of `@function` names.
+	 */
+	function?: boolean;
+
+	/**
+	 * Enable/disable renaming of grid identifiers.
+	 */
+	grid?: boolean;
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -3782,10 +3812,52 @@ declare class CssModulesPlugin {
 }
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "pure" | "local";
-	import: boolean;
-	url: boolean;
-	namedExports: boolean;
-	exportType?: "link" | "text" | "css-style-sheet";
+	options: {
+		/**
+		 * Enable/disable renaming of `@keyframes`.
+		 */
+		animation: boolean;
+		/**
+		 * Enable/disable renaming of `@container` names.
+		 */
+		container: boolean;
+		/**
+		 * Enable/disable renaming of custom identifiers.
+		 */
+		customIdents: boolean;
+		/**
+		 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+		 */
+		dashedIdents: boolean;
+		/**
+		 * Configure how CSS content is exported as default.
+		 */
+		exportType?: "link" | "text" | "css-style-sheet";
+		/**
+		 * Enable/disable renaming of `@function` names.
+		 */
+		function: boolean;
+		/**
+		 * Enable/disable renaming of grid identifiers.
+		 */
+		grid: boolean;
+		/**
+		 * Enable/disable `@import` at-rules handling.
+		 */
+		import: boolean;
+		/**
+		 * Use ES modules named export for css exports.
+		 */
+		namedExports: boolean;
+		/**
+		 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+		 */
+		url: boolean;
+		/**
+		 * default mode
+		 */
+		defaultMode?: "global" | "auto" | "pure" | "local";
+	};
 	comments?: CommentCssParser[];
 	magicCommentContext: Context;
 	getComments(range: [number, number]): CommentCssParser[];

@@ -787,6 +787,30 @@ export type CssGeneratorLocalIdentName = string;
  */
 export type CssParserExportType = "link" | "text" | "css-style-sheet";
 /**
+ * Enable/disable renaming of `@keyframes`.
+ */
+export type CssParserAnimation = boolean;
+/**
+ * Enable/disable renaming of `@container` names.
+ */
+export type CssParserContainer = boolean;
+/**
+ * Enable/disable renaming of custom identifiers.
+ */
+export type CssParserCustomIdents = boolean;
+/**
+ * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+ */
+export type CssParserDashedIdents = boolean;
+/**
+ * Enable/disable renaming of `@function` names.
+ */
+export type CssParserFunction = boolean;
+/**
+ * Enable/disable renaming of grid identifiers.
+ */
+export type CssParserGrid = boolean;
+/**
  * Enable/disable `@import` at-rules handling.
  */
 export type CssParserImport = boolean;
@@ -3012,9 +3036,33 @@ export interface CssModuleGeneratorOptions {
  */
 export interface CssModuleParserOptions {
 	/**
+	 * Enable/disable renaming of `@keyframes`.
+	 */
+	animation?: CssParserAnimation;
+	/**
+	 * Enable/disable renaming of `@container` names.
+	 */
+	container?: CssParserContainer;
+	/**
+	 * Enable/disable renaming of custom identifiers.
+	 */
+	customIdents?: CssParserCustomIdents;
+	/**
+	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+	 */
+	dashedIdents?: CssParserDashedIdents;
+	/**
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: CssParserExportType;
+	/**
+	 * Enable/disable renaming of `@function` names.
+	 */
+	function?: CssParserFunction;
+	/**
+	 * Enable/disable renaming of grid identifiers.
+	 */
+	grid?: CssParserGrid;
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
