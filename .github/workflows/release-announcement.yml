@@ -1,0 +1,22 @@
+name: Release Announcement
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  github-releases-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: GitHub Releases to Discord
+        uses: SethCohen/github-releases-to-discord@b96a33520f8ad5e6dcdecee6f1212bdf88b16550 # v1.19.0
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          color: "2105893"
+          username: "webpack Release Changelog"
+          avatar_url: "https://github.com/webpack/media/blob/90b54d02fa1cfc8aa864a8322202f74ac000f5d2/logo/icon.png"
+          content: "||@here||"
+          footer_title: "Changelog"
+          reduce_headings: true
