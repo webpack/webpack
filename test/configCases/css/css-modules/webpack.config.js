@@ -171,6 +171,18 @@ module.exports = (env, { testPath }) => [
 		output: {
 			uniqueName: "my-app"
 		},
+		module: {
+			parser: {
+				"css/auto": {
+					animation: false,
+					customIdents: false,
+					dashedIdents: false,
+					container: false,
+					function: false,
+					grid: false
+				}
+			}
+		},
 		node: {
 			__dirname: false,
 			__filename: false

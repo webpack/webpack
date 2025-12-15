@@ -11067,34 +11067,21 @@ Object {
 
 exports[`ConfigTestCases css css-modules exported tests should allow to disable options: options classes 1`] = `
 Object {
-  "FOO": "--my-app-style_module_css-FOO",
-  "LOCAL-COLOR": "--my-app-style_module_css-LOCAL-COLOR",
-  "None": "my-app-style_module_css-None",
   "VARS": "my-app-style_module_css-VARS",
   "a": "my-app-style_module_css-a",
-  "accent-background": "--my-app-style_module_css-accent-background",
   "active": "my-app-style_module_css-active",
   "again": "my-app-style_module_css-again",
-  "alpha": "--my-app-style_module_css-alpha",
-  "anim-1s": "--my-app-style_module_css-anim-1s",
   "animation": "my-app-style_module_css-animation",
-  "animation-name": "--my-app-style_module_css-animation-name",
   "animation-name-test": "my-app-style_module_css-animation-name-test",
-  "animationName": "my-app-style_module_css-animationName",
   "animationUpperCase": "my-app-style_module_css-animationUpperCase",
-  "another-grid-area": "my-app-style_module_css-another-grid-area-another-grid-area",
   "apply-sharp": "my-app-style_module_css-apply-sharp",
   "article-footer": "my-app-style_module_css-article-footer",
   "article-header": "my-app-style_module_css-article-header",
   "b": "my-app-style_module_css-b",
-  "backup-bg-color": "--my-app-style_module_css-backup-bg-color",
   "bar": "my-app-style_module_css-bar",
-  "base-color": "--my-app-style_module_css-base-color",
-  "basic-keyframes": "my-app-style_module_css-basic-keyframes",
   "baz": "my-app-style_module_css-baz",
   "baz-1": "my-app-style_module_css-baz-1",
   "baz-2": "my-app-style_module_css-baz-2",
-  "bg-color": "--my-app-style_module_css-bg-color",
   "bounce": "my-app-style_module_css-bounce",
   "box1": "my-app-style_module_css-box1",
   "box2": "my-app-style_module_css-box2",
@@ -11102,49 +11089,29 @@ Object {
   "box4": "my-app-style_module_css-box4",
   "broken": "my-app-style_module_css-broken",
   "button": "my-app-style_module_css-button",
-  "button-bg": "--my-app-style_module_css-button-bg",
-  "button-color": "--my-app-style_module_css-button-color",
   "c": "my-app-style_module_css-c",
   "card": "my-app-style_module_css-card",
-  "cards": "--my-app-style_module_css-cards",
   "child1": "my-app-style_module_css-child1",
   "class": "my-app-style_module_css-class",
   "class-1": "my-app-style_module_css-class-1",
   "class-in-container": "my-app-style_module_css-class-in-container",
   "class-local-scope": "my-app-style_module_css-class-local-scope",
-  "class-name-after-broken-keyframes": "my-app-style_module_css-class-name-after-broken-keyframes",
   "class-with-composes": "my-app-style_module_css-class-with-composes my-app-style_module_css-local-class global-class global-class-other my-app-shared_css-local-my-shared-class",
   "className": "my-app-style_module_css-className",
   "classNameLocal": "my-app-style_module_css-classNameLocal",
   "classNameLocalOther": "my-app-style_module_css-classNameLocalOther",
-  "col-end": "my-app-style_module_css-col-end-col-end",
-  "col-start": "my-app-style_module_css-col-start-col-start",
-  "col1-start": "my-app-style_module_css-col1-start-col1-start",
-  "col2-start": "my-app-style_module_css-col2-start-col2-start",
-  "color": "--my-app-style_module_css-color",
   "comments": "my-app-style_module_css-comments",
   "container": "my-app-style_module_css-container",
   "container-only-classes": "my-app-style_module_css-container-only-classes",
   "content": "my-app-style_module_css-content",
-  "content-end": "my-app-style_module_css-content-end-content-end",
-  "content-start": "my-app-style_module_css-content-start-content-start",
-  "count": "--my-app-style_module_css-count",
-  "custom-bottom": "--my-app-style_module_css-custom-bottom",
-  "custom-bottom-right": "--my-app-style_module_css-custom-bottom-right",
-  "custom-left": "--my-app-style_module_css-custom-left",
-  "custom-prop": "--my-app-style_module_css-custom-prop",
-  "custom-right": "--my-app-style_module_css-custom-right",
   "d": "my-app-style_module_css-d",
   "deep-class-in-container": "my-app-style_module_css-deep-class-in-container",
-  "default-value": "--my-app-style_module_css-default-value",
   "description": "my-app-style_module_css-description",
   "disabled": "my-app-style_module_css-disabled",
   "displayFlexInMediaInSupports": "my-app-style_module_css-displayFlexInMediaInSupports",
   "displayFlexInSupportsInMedia": "my-app-style_module_css-displayFlexInSupportsInMedia",
   "displayFlexInSupportsInMediaUpperCase": "my-app-style_module_css-displayFlexInSupportsInMediaUpperCase",
   "displayGridInSupports": "my-app-style_module_css-displayGridInSupports",
-  "duration": "--my-app-style_module_css-duration",
-  "easing": "--my-app-style_module_css-easing",
   "err-404": "my-app-style_module_css-err-404",
   "error": "my-app-style_module_css-error",
   "exportName": "my-app-style_module_css-exportName my-app-classes_modules_css-className beforeName my-app-style_module_css-className my-app-style_module_css-classNameLocal importName secondImport my-app-classes_modules_css-otherClassName my-app-classes_modules_css-otherClassNameToo my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther className className classNameOther className classNameOther my-app-classes_modules_css-className my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName",
@@ -11153,8 +11120,6 @@ Object {
   "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
   "exportNameOtherNoSpaces": "my-app-style_module_css-exportNameOtherNoSpaces my-app-classes_modules_css-className beforeName my-app-style_module_css-className",
   "exportNameWeirdCharacters": "my-app-style_module_css-exportNameWeirdCharacters my-app-classes_modules_css-a my-app-classes_modules_css--b my-app-classes_modules_css-b- my-app-classes_modules_css---c my-app-classes_modules_css-c-- my-app-classes_modules_css-_d my-app-classes_modules_css-d%",
-  "extend-thumbs": "my-app-style_module_css-extend-thumbs",
-  "external-link": "--my-app-style_module_css-external-link",
   "f1f1f1": "my-app-style_module_css-f1f1f1",
   "feature": "my-app-style_module_css-feature",
   "first-nested": "my-app-style_module_css-first-nested",
@@ -11163,15 +11128,11 @@ Object {
   "first-nested-nested-at-rule-deep": "my-app-style_module_css-first-nested-nested-at-rule-deep",
   "floatRightInNegativeSupports": "my-app-style_module_css-floatRightInNegativeSupports",
   "foo": "my-app-style_module_css-foo",
-  "foo-bar": "--my-app-style_module_css-foo-bar",
   "footer": "my-app-style_module_css-footer",
   "from": "my-app-style_module_css-from",
-  "ft": "my-app-style_module_css-ft-ft",
-  "ft-end": "my-app-style_module_css-ft-end-ft-end",
   "gird2": "my-app-style_module_css-gird2",
   "global-after-local": "my-app-style_module_css-global-after-local",
   "global-befor-local": "my-app-style_module_css-global-befor-local",
-  "global-foo-bar": "--my-app-style_module_css-global-foo-bar",
   "globalVars": "my-app-style_module_css-globalVars",
   "globalVarsUpperCase": "my-app-style_module_css-globalVarsUpperCase",
   "grid-area": "my-app-style_module_css-grid-area",
@@ -11215,13 +11176,7 @@ Object {
   "grid8": "my-app-style_module_css-grid8",
   "grid9": "my-app-style_module_css-grid9",
   "hash": "my-app-style_module_css-hash",
-  "hd": "my-app-style_module_css-hd-hd",
-  "hd-start": "my-app-style_module_css-hd-start-hd-start",
   "header": "my-app-style_module_css-header",
-  "header-bottom": "my-app-style_module_css-header-bottom-header-bottom",
-  "header-end": "my-app-style_module_css-header-end-header-end",
-  "header-start": "my-app-style_module_css-header-start-header-start",
-  "header-top": "my-app-style_module_css-header-top-header-top",
   "highlighted": "my-app-style_module_css-highlighted",
   "horizontal-small": "my-app-style_module_css-horizontal-small",
   "horizontal-tiny": "my-app-style_module_css-horizontal-tiny",
@@ -11229,33 +11184,18 @@ Object {
   "id-bar": "my-app-style_module_css-id-bar",
   "id-foo": "my-app-style_module_css-id-foo",
   "ident": "my-app-style_module_css-ident",
-  "identifier": "--my-app-style_module_css-identifier",
   "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
   "inSupportScope": "my-app-style_module_css-inSupportScope",
   "infobox": "my-app-style_module_css-infobox",
-  "initial": "my-app-style_module_css-initial",
-  "inner": "--my-app-style_module_css-inner",
   "item": "my-app-style_module_css-item",
   "item-1": "my-app-style_module_css-item-1",
-  "item-color": "--my-app-style_module_css-item-color",
-  "item-size": "--my-app-style_module_css-item-size",
   "item1to5": "my-app-style_module_css-item1to5",
   "item7to9": "my-app-style_module_css-item7to9",
   "just-class": "my-app-style_module_css-just-class",
   "limit": "my-app-style_module_css-limit",
-  "line-name1": "my-app-style_module_css-line-name1-line-name1",
-  "line-name2": "my-app-style_module_css-line-name2-line-name2",
-  "line-name3": "my-app-style_module_css-line-name3-line-name3",
-  "line-name4": "my-app-style_module_css-line-name4-line-name4",
-  "line1": "my-app-style_module_css-line1-line1",
-  "line2": "my-app-style_module_css-line2-line2",
-  "line3": "my-app-style_module_css-line3-line3",
-  "list": "--my-app-style_module_css-list",
   "local": "my-app-style_module_css-local",
-  "local-and-global-in-var": "--my-app-style_module_css-local-and-global-in-var",
   "local-class": "my-app-style_module_css-local-class",
   "local-class-name": "my-app-style_module_css-local-class-name",
-  "local-color": "--my-app-style_module_css-local-color",
   "local-foo-bar": "--my-app-style_module_css-local-foo-bar",
   "local-in-global": "my-app-style_module_css-local-in-global",
   "local-keyframes": "my-app-style_module_css-local-keyframes",
@@ -11278,39 +11218,16 @@ Object {
   "local8": "my-app-style_module_css-local8",
   "local9": "my-app-style_module_css-local9",
   "localUpperCase": "my-app-style_module_css-localUpperCase",
-  "localkeyframes": "my-app-style_module_css-localkeyframes",
-  "localkeyframes2": "my-app-style_module_css-localkeyframes2",
-  "localkeyframes2UPPPERCASE": "my-app-style_module_css-localkeyframes2UPPPERCASE",
-  "localkeyframesUPPERCASE": "my-app-style_module_css-localkeyframesUPPERCASE",
   "mButtonDisabled": "my-app-style_module_css-mButtonDisabled",
-  "main": "my-app-style_module_css-main-main",
-  "main-bg-color": "--my-app-style_module_css-main-bg-color",
-  "main-bottom": "my-app-style_module_css-main-bottom-main-bottom",
-  "main-color": "--my-app-style_module_css-main-color",
-  "main-end": "my-app-style_module_css-main-end-main-end",
   "main-paragraph": "my-app-style_module_css-main-paragraph",
-  "main-start": "my-app-style_module_css-main-start-main-start",
-  "main-top": "my-app-style_module_css-main-top-main-top",
-  "max-plus-x": "--my-app-style_module_css-max-plus-x",
-  "mode": "--my-app-style_module_css-mode",
-  "mozAnimationName": "my-app-style_module_css-mozAnimationName",
   "multiple-first": "my-app-style_module_css-multiple-first",
   "multiple-first-with-space": "my-app-style_module_css-multiple-first-with-space",
   "multiple-second": "my-app-style_module_css-multiple-second",
   "multiple-second-with-space": "my-app-style_module_css-multiple-second-with-space",
   "my-class": "my-app-style_module_css-my-class",
-  "my-color": "--my-app-style_module_css-my-color",
-  "my-color-1": "--my-app-style_module_css-my-color-1",
-  "my-color-2": "--my-app-style_module_css-my-color-2",
   "my-global-class-again": "my-app-style_module_css-my-global-class-again",
   "my-simple-local": "my-app-style_module_css-my-simple-local",
-  "my-var": "--my-app-style_module_css-my-var",
-  "myAnchor": "--my-app-style_module_css-myAnchor",
-  "narrow": "--my-app-style_module_css-narrow",
-  "narrow-wide": "--my-app-style_module_css-narrow-wide",
-  "narrow-wide-if-else": "--my-app-style_module_css-narrow-wide-if-else",
   "narrowScreenClass": "my-app-style_module_css-narrowScreenClass",
-  "nav": "my-app-style_module_css-nav-nav",
   "nested-layer": "my-app-style_module_css-nested-layer",
   "nested-media": "my-app-style_module_css-nested-media",
   "nested-parens": "my-app-style_module_css-nested-parens",
@@ -11323,62 +11240,37 @@ Object {
   "no-space": "my-app-style_module_css-no-space",
   "not-selector-inside": "my-app-style_module_css-not-selector-inside",
   "otherDiv": "my-app-style_module_css-otherDiv",
-  "outer": "--my-app-style_module_css-outer",
-  "outer-arg": "--my-app-style_module_css-outer-arg",
-  "outer-local": "--my-app-style_module_css-outer-local",
   "overlay": "my-app-style_module_css-overlay",
   "padding-lg": "my-app-style_module_css-padding-lg",
   "padding-sm": "my-app-style_module_css-padding-sm",
   "parent": "my-app-style_module_css-parent",
   "parent1": "my-app-style_module_css-parent1",
   "placeholder-gray-700": "my-app-style_module_css-placeholder-gray-700",
-  "placeholder-opacity": "--my-app-style_module_css-placeholder-opacity",
-  "pos1x": "--my-app-style_module_css-pos1x",
-  "pos1y": "--my-app-style_module_css-pos1y",
-  "pos2x": "--my-app-style_module_css-pos2x",
-  "pos2y": "--my-app-style_module_css-pos2y",
   "post": "my-app-style_module_css-post",
   "progress": "--my-app-style_module_css-progress",
-  "progressAnimation": "my-app-style_module_css-progressAnimation",
   "progressAnimationLocal": "my-app-style_module_css-progressAnimationLocal",
   "qqq": "my-app-style_module_css-qqq",
-  "responsive": "--my-app-style_module_css-responsive",
   "scope": "my-app-style_module_css-scope",
-  "sd": "my-app-style_module_css-sd-sd",
   "selected": "my-app-style_module_css-selected",
   "sidebar": "my-app-style_module_css-sidebar",
   "simple": "my-app-style_module_css-simple",
-  "slidein": "my-app-style_module_css-slidein",
-  "some-grid-area": "my-app-style_module_css-some-grid-area-some-grid-area",
   "special": "my-app-style_module_css-special",
   "sticky-heading": "my-app-style_module_css-sticky-heading",
-  "summary": "my-app-style_module_css-summary",
-  "swop5c": "--my-app-style_module_css-swop5c",
   "swop5c-local": "--my-app-style_module_css-swop5c-local",
-  "tall": "my-app-style_module_css-tall",
   "test": "my-app-style_module_css-test",
-  "text-color": "--my-app-style_module_css-text-color",
-  "theme-color1": "--my-app-style_module_css-theme-color1",
-  "theme-color2": "--my-app-style_module_css-theme-color2",
   "theme-dark": "my-app-style_module_css-theme-dark",
-  "themeColor": "--my-app-style_module_css-themeColor",
   "three": "my-app-style_module_css-three",
-  "thumbs": "my-app-style_module_css-thumbs",
   "tipOnly": "my-app-style_module_css-tipOnly",
-  "transparent": "--my-app-style_module_css-transparent",
   "transparent-local": "--my-app-style_module_css-transparent-local",
   "two": "my-app-style_module_css-two",
-  "unknown": "--my-app-style_module_css-unknown",
   "unknown-at-rule": "my-app-style_module_css-unknown-at-rule",
   "var": "my-app-style_module_css-var",
   "var-order": "my-app-style_module_css-var-order",
   "vars": "my-app-style_module_css-vars",
   "vertical-small": "my-app-style_module_css-vertical-small",
   "vertical-tiny": "my-app-style_module_css-vertical-tiny",
-  "wide": "--my-app-style_module_css-wide",
   "wideScreenClass": "my-app-style_module_css-wideScreenClass",
   "wrapper": "my-app-style_module_css-wrapper",
-  "x": "--my-app-style_module_css-x",
 }
 `;
 
@@ -12100,20 +11992,20 @@ div {
 	color: purple;
 }
 
-@keyframes my-app-style_module_css-localkeyframes {
+@keyframes localkeyframes {
 	0% {
-		left: var(--my-app-style_module_css-pos1x);
-		top: var(--my-app-style_module_css-pos1y);
-		color: var(--my-app-style_module_css-theme-color1);
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--my-app-style_module_css-pos2x);
-		top: var(--my-app-style_module_css-pos2y);
-		color: var(--my-app-style_module_css-theme-color2);
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
 	}
 }
 
-@keyframes my-app-style_module_css-localkeyframes2 {
+@keyframes localkeyframes2 {
 	0% {
 		left: 0;
 	}
@@ -12123,17 +12015,17 @@ div {
 }
 
 .my-app-style_module_css-animation {
-	animation-name: my-app-style_module_css-localkeyframes;
-	animation: 3s ease-in 1s 2 reverse both paused my-app-style_module_css-localkeyframes, my-app-style_module_css-localkeyframes2;
-	--my-app-style_module_css-pos1x: 0px;
-	--my-app-style_module_css-pos1y: 0px;
-	--my-app-style_module_css-pos2x: 10px;
-	--my-app-style_module_css-pos2y: 20px;
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
 }
 
 .my-app-style_module_css-vars {
-	color: var(--my-app-style_module_css-local-color);
-	--my-app-style_module_css-local-color: red;
+	color: var(--local-color);
+	--local-color: red;
 }
 
 .my-app-style_module_css-globalVars {
@@ -12143,15 +12035,15 @@ div {
 
 @media (min-width: 1600px) {
 	.my-app-style_module_css-wideScreenClass {
-		color: var(--my-app-style_module_css-local-color);
-		--my-app-style_module_css-local-color: green;
+		color: var(--local-color);
+		--local-color: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
 	.my-app-style_module_css-narrowScreenClass {
-		color: var(--my-app-style_module_css-local-color);
-		--my-app-style_module_css-local-color: purple;
+		color: var(--local-color);
+		--local-color: purple;
 	}
 }
 
@@ -12192,28 +12084,28 @@ div {
 }
 
 .my-app-style_module_css-animationUpperCase {
-	ANIMATION-NAME: my-app-style_module_css-localkeyframesUPPERCASE;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-style_module_css-localkeyframesUPPERCASE, my-app-style_module_css-localkeyframes2UPPPERCASE;
-	--my-app-style_module_css-pos1x: 0px;
-	--my-app-style_module_css-pos1y: 0px;
-	--my-app-style_module_css-pos2x: 10px;
-	--my-app-style_module_css-pos2y: 20px;
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
 }
 
-@KEYFRAMES my-app-style_module_css-localkeyframesUPPERCASE {
+@KEYFRAMES localkeyframesUPPERCASE {
 	0% {
-		left: VAR(--my-app-style_module_css-pos1x);
-		top: VAR(--my-app-style_module_css-pos1y);
-		color: VAR(--my-app-style_module_css-theme-color1);
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--my-app-style_module_css-pos2x);
-		top: VAR(--my-app-style_module_css-pos2y);
-		color: VAR(--my-app-style_module_css-theme-color2);
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes my-app-style_module_css-localkeyframes2UPPPERCASE {
+@KEYframes localkeyframes2UPPPERCASE {
 	0% {
 		left: 0;
 	}
@@ -12227,8 +12119,8 @@ div {
 }
 
 .my-app-style_module_css-VARS {
-	color: VAR(--my-app-style_module_css-LOCAL-COLOR);
-	--my-app-style_module_css-LOCAL-COLOR: red;
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
 }
 
 .my-app-style_module_css-globalVarsUpperCase {
@@ -12243,25 +12135,25 @@ div {
 }
 
 .my-app-style_module_css-a {
-	animation: 3s my-app-style_module_css-animationName;
-	-webkit-animation: 3s my-app-style_module_css-animationName;
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
 }
 
 .my-app-style_module_css-b {
-	animation: my-app-style_module_css-animationName 3s;
-	-webkit-animation: my-app-style_module_css-animationName 3s;
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
 }
 
 .my-app-style_module_css-c {
-	animation-name: my-app-style_module_css-animationName;
-	-webkit-animation-name: my-app-style_module_css-animationName;
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
 }
 
 .my-app-style_module_css-d {
-	--my-app-style_module_css-animation-name: animationName;
+	--animation-name: animationName;
 }
 
-@keyframes my-app-style_module_css-animationName {
+@keyframes animationName {
 	0% {
 		background: white;
 	}
@@ -12270,7 +12162,7 @@ div {
 	}
 }
 
-@-webkit-keyframes my-app-style_module_css-animationName {
+@-webkit-keyframes animationName {
 	0% {
 		background: white;
 	}
@@ -12279,7 +12171,7 @@ div {
 	}
 }
 
-@-moz-keyframes my-app-style_module_css-mozAnimationName {
+@-moz-keyframes mozAnimationName {
 	0% {
 		background: white;
 	}
@@ -12288,7 +12180,7 @@ div {
 	}
 }
 
-@counter-style my-app-style_module_css-thumbs {
+@counter-style thumbs {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
@@ -12307,26 +12199,26 @@ div {
 	}
 }
 
-@property --my-app-style_module_css-my-color {
+@property --my-color {
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-@property --my-app-style_module_css-my-color-1 {
+@property --my-color-1 {
 	initial-value: #c0ffee;
 	syntax: \\"<color>\\";
 	inherits: false;
 }
 
-@property --my-app-style_module_css-my-color-2 {
+@property --my-color-2 {
 	syntax: \\"<color>\\";
 	initial-value: #c0ffee;
 	inherits: false;
 }
 
 .my-app-style_module_css-class {
-	color: var(--my-app-style_module_css-my-color);
+	color: var(--my-color);
 }
 
 @layer utilities {
@@ -12370,7 +12262,7 @@ div {
 		}
 	}
 
-	@container my-app-style_module_css-foo {
+	@container foo {
 		background: red;
 
 		.my-app-style_module_css-nested-layer {
@@ -12403,7 +12295,7 @@ div {
 
 .my-app-style_module_css-nested-var {
 	.my-app-style_module_css-again {
-		color: var(--my-app-style_module_css-local-color);
+		color: var(--local-color);
 	}
 }
 
@@ -12485,7 +12377,7 @@ div {
 	}
 }
 
-@container my-app-style_module_css-summary (min-width: 400px) {
+@container summary (min-width: 400px) {
 	@container (width > 400px) {
 		.my-app-style_module_css-deep-class-in-container {
 			font-size: 1.5em;
@@ -12498,32 +12390,32 @@ div {
 }
 
 .my-app-style_module_css-placeholder-gray-700:-ms-input-placeholder {
-	--my-app-style_module_css-placeholder-opacity: 1;
+	--placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-style_module_css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
 }
 .my-app-style_module_css-placeholder-gray-700::-ms-input-placeholder {
-	--my-app-style_module_css-placeholder-opacity: 1;
+	--placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-style_module_css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
 }
 .my-app-style_module_css-placeholder-gray-700::placeholder {
-	--my-app-style_module_css-placeholder-opacity: 1;
+	--placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-style_module_css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
 }
 
 :root {
-	--my-app-style_module_css-test: dark;
+	--test: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--my-app-style_module_css-test)) {
+@media screen and (prefers-color-scheme: var(--test)) {
 	.my-app-style_module_css-baz {
 		color: white;
 	}
 }
 
-@keyframes my-app-style_module_css-slidein {
+@keyframes slidein {
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -12537,18 +12429,18 @@ div {
 
 .my-app-style_module_css-class {
 	animation:
-		my-app-style_module_css-foo var(--my-app-style_module_css-animation-name) 3s,
-		var(--my-app-style_module_css-animation-name) 3s,
-		3s linear 1s infinite running my-app-style_module_css-slidein,
-		3s linear env(foo, var(--my-app-style_module_css-baz)) infinite running my-app-style_module_css-slidein;
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
 }
 
 :root {
-	--my-app-style_module_css-baz: 10px;
+	--baz: 10px;
 }
 
 .my-app-style_module_css-class {
-	bar: env(foo, var(--my-app-style_module_css-baz));
+	bar: env(foo, var(--baz));
 }
 
 .global-foo, .my-app-style_module_css-bar {
@@ -12589,7 +12481,7 @@ div {
 }
 
 :root {
-	--my-app-style_module_css-foo: red;
+	--foo: red;
 }
 
 .again-again-global {
@@ -12604,7 +12496,7 @@ div {
 	animation: slidein 3s;
 
 	.again-again-global, .my-app-style_module_css-class, .my-app-style_module_css-nested1.nested2.my-app-style_module_css-nested3 {
-		animation: my-app-style_module_css-slidein 3s;
+		animation: slidein 3s;
 	}
 
   .my-app-style_module_css-local2 .global,
@@ -12613,7 +12505,7 @@ div {
 	}
 }
 
-@unknown var(--my-app-style_module_css-foo) {
+@unknown var(--foo) {
 	color: red;
 }
 
@@ -12629,20 +12521,20 @@ div {
 	.my-app-style_module_css-class {
 		.my-app-style_module_css-class {
 			.my-app-style_module_css-class {
-				animation: my-app-style_module_css-slidein 3s;
+				animation: slidein 3s;
 			}
 		}
 	}
 }
 
 .my-app-style_module_css-class {
-	animation: my-app-style_module_css-slidein 3s;
+	animation: slidein 3s;
 	.my-app-style_module_css-class {
-		animation: my-app-style_module_css-slidein 3s;
+		animation: slidein 3s;
 		.my-app-style_module_css-class {
-			animation: my-app-style_module_css-slidein 3s;
+			animation: slidein 3s;
 			.my-app-style_module_css-class {
-				animation: my-app-style_module_css-slidein 3s;
+				animation: slidein 3s;
 			}
 		}
 	}
@@ -12784,20 +12676,20 @@ div {
 	}
 }
 
-@counter-style my-app-style_module_css-thumbs {
+@counter-style thumbs {
 	system: cyclic;
 	symbols: \\"\\\\1F44D\\";
 	suffix: \\" \\";
 }
 
 ul {
-	list-style: my-app-style_module_css-thumbs;
+	list-style: thumbs;
 }
 
-@counter-style my-app-style_module_css-extend-thumbs {
-	fallback: my-app-style_module_css-thumbs;
-	system: extends my-app-style_module_css-thumbs;
-	speak-as: my-app-style_module_css-thumbs;
+@counter-style extend-thumbs {
+	fallback: thumbs;
+	system: extends thumbs;
+	speak-as: thumbs;
 }
 
 div {
@@ -12806,30 +12698,30 @@ div {
 	list-style: upper-roman inside;
 	list-style: circle outside;
 	list-style: none disc;
-	list-style: none url(img/shape.png);
+	list-style: none url(09a1a1112c577c279435.png);
 	list-style: none;
-	list-style: none disc url(img/shape.png);
+	list-style: none disc url(09a1a1112c577c279435.png);
 	list-style: lower-alpha;
 	list-style: disc;
 	list-style: square;
-	list-style: url(\\"./img/shape.png\\");
-	list-style: georgian inside url(\\"./img/shape.png\\");
-	list-style: georgian outside url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
 	/* type */
 	list-style: square;
 
 	/* image */
-	list-style: url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
 
 	/* position */
 	list-style: inside;
 
 	/* two values */
 	list-style: georgian outside;
-	list-style: url(\\"img/shape.png\\") inside;
+	list-style: url(09a1a1112c577c279435.png) inside;
 
 	/* three values */
-	list-style: lower-roman url(\\"img/shape.png\\") outside;
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
 
 	/* Keyword value */
 	list-style: none;
@@ -12843,30 +12735,30 @@ div {
 
 	list-style-type: \\"★\\";
 
-	list-style-type: my-app-style_module_css-extend-thumbs;
-	list-style: my-app-style_module_css-extend-thumbs;
+	list-style-type: extend-thumbs;
+	list-style: extend-thumbs;
 }
 
-@container (width > 400px) and style(--my-app-style_module_css-responsive: true) {
+@container (width > 400px) and style(--responsive: true) {
 	.my-app-style_module_css-class {
 		font-size: 1.5em;
 	}
 }
 
-@container my-app-style_module_css-tall (height > 30rem) {
+@container tall (height > 30rem) {
 	p {
 		line-height: 1.6;
 	}
 }
 
-@container my-app-style_module_css-sticky-heading scroll-state(stuck: top) {
+@container sticky-heading scroll-state(stuck: top) {
 	h2 {
 		background: purple;
 		color: white;
 	}
 }
 
-@container my-app-style_module_css-card (width > 400px), style(--my-app-style_module_css-responsive: true), scroll-state(stuck: top) {
+@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -12895,23 +12787,23 @@ div {
 }
 
 .my-app-style_module_css-post {
-	container-name: my-app-style_module_css-tall;
+	container-name: tall;
 	container-type: inline-size;
 
 	container: none;
 	container: inherit;
-	container: my-app-style_module_css-sticky-heading / inline-size;
-	container: my-app-style_module_css-sticky-heading / size;
-	container: my-app-style_module_css-sticky-heading / scroll-state;
-	--my-app-style_module_css-my-var: my-app-style_module_css-sticky-heading;
+	container: sticky-heading / inline-size;
+	container: sticky-heading / size;
+	container: sticky-heading / scroll-state;
+	--my-var: my-app-style_module_css-sticky-heading;
 
-	container: var(--my-app-style_module_css-my-var);
-	--my-app-style_module_css-cards: small;
+	container: var(--my-var);
+	--cards: small;
 	container-type: inline-size;
 }
 
 
-@container my-app-style_module_css-summary style(--my-app-style_module_css-cards: small) {
+@container summary style(--cards: small) {
 	.my-app-style_module_css-card {
 		border: thin solid silver;
 		border-radius: 0.5em;
@@ -12926,16 +12818,16 @@ div {
 	}
 }
 
-@font-palette-values --my-app-style_module_css-identifier {
+@font-palette-values --identifier {
 	font-family: Bixa;
 }
 
 .my-app-style_module_css-my-class {
-	font-palette: --my-app-style_module_css-identifier;
+	font-palette: --identifier;
 }
 
-@keyframes my-app-style_module_css-foo { /* ... */ }
-@keyframes my-app-style_module_css-foo { /* ... */ }
+@keyframes foo { /* ... */ }
+@keyframes \\"foo\\" { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -12972,40 +12864,40 @@ div {
 	& .my-app-style_module_css-class { opacity: 0; }
 }
 
-@position-try --my-app-style_module_css-custom-left {
+@position-try --custom-left {
 	position-area: left;
 	width: 100px;
 	margin: 0 10px 0 0;
 }
 
-@position-try --my-app-style_module_css-custom-bottom {
+@position-try --custom-bottom {
 	top: anchor(bottom);
 	justify-self: anchor-center;
 	margin: 10px 0 0 0;
 	position-area: none;
 }
 
-@position-try --my-app-style_module_css-custom-right {
+@position-try --custom-right {
 	left: calc(anchor(right) + 10px);
 	align-self: anchor-center;
 	width: 100px;
 	position-area: none;
 }
 
-@position-try --my-app-style_module_css-custom-bottom-right {
+@position-try --custom-bottom-right {
 	position-area: bottom right;
 	margin: 10px 0 0 10px;
 }
 
 .my-app-style_module_css-infobox {
 	position: fixed;
-	position-anchor: --my-app-style_module_css-myAnchor;
+	position-anchor: --myAnchor;
 	position-area: top;
 	width: 200px;
 	margin: 0 0 10px 0;
 	position-try-fallbacks:
-		--my-app-style_module_css-custom-left, --my-app-style_module_css-custom-bottom,
-		--my-app-style_module_css-custom-right, --my-app-style_module_css-custom-bottom-right;
+		--custom-left, --custom-bottom,
+		--custom-right, --custom-bottom-right;
 }
 
 @page {
@@ -13013,12 +12905,12 @@ div {
 	margin-top: 4in;
 }
 
-@color-profile --my-app-style_module_css-swop5c {
+@color-profile --swop5c {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
 .my-app-style_module_css-header {
-	background-color: color(--my-app-style_module_css-swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
 }
 
 .my-app-style_module_css-test {
@@ -13108,7 +13000,7 @@ div {
 	}
 }
 
-@property --my-app-style_module_css-item-size {
+@property --item-size {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
@@ -13120,25 +13012,25 @@ div {
 	border: 1px dashed black;
 
 	/* set custom property values on parent */
-	--my-app-style_module_css-item-size: 20%;
-	--my-app-style_module_css-item-color: orange;
+	--item-size: 20%;
+	--item-color: orange;
 }
 
 .my-app-style_module_css-item {
-	width: var(--my-app-style_module_css-item-size);
-	height: var(--my-app-style_module_css-item-size);
-	background-color: var(--my-app-style_module_css-item-color);
+	width: var(--item-size);
+	height: var(--item-size);
+	background-color: var(--item-color);
 }
 
 .my-app-style_module_css-two {
-	--my-app-style_module_css-item-size: initial;
-	--my-app-style_module_css-item-color: inherit;
+	--item-size: initial;
+	--item-color: inherit;
 }
 
 .my-app-style_module_css-three {
 	/* invalid values */
-	--my-app-style_module_css-item-size: 1000px;
-	--my-app-style_module_css-item-color: xyz;
+	--item-size: 1000px;
+	--item-color: xyz;
 }
 
 @property invalid {
@@ -13157,7 +13049,7 @@ div {
 	initial-value: 40%;
 }
 
-@property --my-app-style_module_css-progress {
+@property --progress {
 	syntax: \\"<percentage>\\";
 	inherits: false;
 	initial-value: 25%;
@@ -13165,87 +13057,87 @@ div {
 
 .my-app-style_module_css-bar {
 	display: inline-block;
-	--my-app-style_module_css-progress: 25%;
+	--progress: 25%;
 	width: 100%;
 	height: 5px;
 	background: linear-gradient(
 		to right,
-		#00d230 var(--my-app-style_module_css-progress),
-		black var(--my-app-style_module_css-progress)
+		#00d230 var(--progress),
+		black var(--progress)
 	);
-	animation: my-app-style_module_css-progressAnimation 2.5s ease infinite;
+	animation: progressAnimation 2.5s ease infinite;
 }
 
-@keyframes my-app-style_module_css-progressAnimation {
+@keyframes progressAnimation {
 	to {
-		--my-app-style_module_css-progress: 100%;
+		--progress: 100%;
 	}
 }
 
-@keyframes my-app-style_module_css-initial { /* ... */ }
-@keyframes/**test**/my-app-style_module_css-initial { /* ... */ }
-@keyframes/**test**/my-app-style_module_css-initial/**test**/{ /* ... */ }
-@keyframes/**test**//**test**/my-app-style_module_css-initial/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ my-app-style_module_css-initial /**test**/ /**test**/ { /* ... */ }
-@keyframes my-app-style_module_css-None { /* ... */ }
-@property/**test**/--my-app-style_module_css-item-size {
+@keyframes \\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\" { /* ... */ }
+@keyframes/**test**/\\"initial\\"/**test**/{ /* ... */ }
+@keyframes/**test**//**test**/\\"initial\\"/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ \\"initial\\" /**test**/ /**test**/ { /* ... */ }
+@keyframes \\"None\\" { /* ... */ }
+@property/**test**/--item-size {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/--my-app-style_module_css-item-size/**test**/{
+@property/**test**/--item-size/**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/--my-app-style_module_css-item-size/**test**/ {
+@property /**test**/--item-size/**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --my-app-style_module_css-item-size /**test**/ {
+@property /**test**/ --item-size /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property/**test**/ --my-app-style_module_css-item-size /**test**/{
+@property/**test**/ --item-size /**test**/{
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
-@property /**test**/ --my-app-style_module_css-item-size /**test**/ {
+@property /**test**/ --item-size /**test**/ {
 	syntax: \\"<percentage>\\";
 	inherits: true;
 	initial-value: 40%;
 }
 div {
-	animation: 3s ease-in 1s 2 reverse both paused my-app-style_module_css-initial, my-app-style_module_css-localkeyframes2;
-	animation-name: my-app-style_module_css-initial;
+	animation: 3s ease-in 1s 2 reverse both paused \\"initial\\", localkeyframes2;
+	animation-name: \\"initial\\";
 	animation-duration: 2s;
 }
 
 .my-app-style_module_css-item-1 {
-	width: var(   --my-app-style_module_css-item-size   );
-	height: var(/**comment**/--my-app-style_module_css-item-size);
-	background-color: var( /**comment**/--my-app-style_module_css-item-color);
-	background-color-1: var(/**comment**/ --my-app-style_module_css-item-color);
-	background-color-2: var( /**comment**/ --my-app-style_module_css-item-color);
-	background-color-3: var( /**comment**/ --my-app-style_module_css-item-color /**comment**/ );
-	background-color-3: var( /**comment**/--my-app-style_module_css-item-color/**comment**/ );
-	background-color-3: var(/**comment**/--my-app-style_module_css-item-color/**comment**/);
+	width: var(   --item-size   );
+	height: var(/**comment**/--item-size);
+	background-color: var( /**comment**/--item-color);
+	background-color-1: var(/**comment**/ --item-color);
+	background-color-2: var( /**comment**/ --item-color);
+	background-color-3: var( /**comment**/ --item-color /**comment**/ );
+	background-color-3: var( /**comment**/--item-color/**comment**/ );
+	background-color-3: var(/**comment**/--item-color/**comment**/);
 }
 
-@keyframes/**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**//**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ /**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ /**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**//**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**//**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**//**test**/my-app-style_module_css-foo/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ my-app-style_module_css-foo /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/foo { /* ... */ }
+@keyframes /**test**/foo { /* ... */ }
+@keyframes/**test**/ foo { /* ... */ }
+@keyframes /**test**/ foo { /* ... */ }
+@keyframes /**test**//**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/ foo { /* ... */ }
+@keyframes /**test**/ /**test**/foo { /* ... */ }
+@keyframes /**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo { /* ... */ }
+@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/my-app-style_module_css-class {
 	background: red;
@@ -13256,33 +13148,33 @@ div {
 }
 
 .my-app-style_module_css-var {
-	--my-app-style_module_css-main-color: black;
-	--my-app-style_module_css-FOO: 10px;
-	--my-app-style_module_css-foo: 10px;
-	--my-app-style_module_css-bar: calc(var(--my-app-style_module_css-foo) + 10px);
-	--my-app-style_module_css-accent-background: linear-gradient(to top, var(--my-app-style_module_css-main-color), white);
-	--my-app-style_module_css-external-link: \\"test\\";
-	--my-app-style_module_css-custom-prop: yellow;
-	--my-app-style_module_css-default-value: red;
-	--my-app-style_module_css-main-bg-color: red;
-	--my-app-style_module_css-backup-bg-color: black;
-	-foo: calc(var(--my-app-style_module_css-bar) + 10px);
-	var: var(--my-app-style_module_css-main-color);
-	var1: var(--my-app-style_module_css-foo);
-	var2: var(--my-app-style_module_css-FOO);
-	content: \\" (\\" var(--my-app-style_module_css-external-link) \\")\\";
-	var3: var(--my-app-style_module_css-main-color, blue);
-	var4: var(--my-app-style_module_css-custom-prop,);
-	var5: var(--my-app-style_module_css-custom-prop, initial);
-	var6: var(--my-app-style_module_css-custom-prop, var(--my-app-style_module_css-default-value));
-	var7: var(--my-app-style_module_css-custom-prop, var(--my-app-style_module_css-default-value, red));
-	var8: var(--my-app-style_module_css-unknown);
-	background-color: var(--my-app-style_module_css-main-bg-color, var(--my-app-style_module_css-backup-bg-color, white));
+	--main-color: black;
+	--FOO: 10px;
+	--foo: 10px;
+	--bar: calc(var(--foo) + 10px);
+	--accent-background: linear-gradient(to top, var(--main-color), white);
+	--external-link: \\"test\\";
+	--custom-prop: yellow;
+	--default-value: red;
+	--main-bg-color: red;
+	--backup-bg-color: black;
+	-foo: calc(var(--bar) + 10px);
+	var: var(--main-color);
+	var1: var(--foo);
+	var2: var(--FOO);
+	content: \\" (\\" var(--external-link) \\")\\";
+	var3: var(--main-color, blue);
+	var4: var(--custom-prop,);
+	var5: var(--custom-prop, initial);
+	var6: var(--custom-prop, var(--default-value));
+	var7: var(--custom-prop, var(--default-value, red));
+	var8: var(--unknown);
+	background-color: var(--main-bg-color, var(--backup-bg-color, white));
 }
 
 .my-app-style_module_css-var-order {
-	background-color: var(--my-app-style_module_css-test);
-	--my-app-style_module_css-test: red;
+	background-color: var(--test);
+	--test: red;
 }
 
 .my-app-style_module_css-className {
@@ -13320,85 +13212,85 @@ div {
 .my-app-style_module_css-exportNameWeirdCharacters {
 	}
 
-@function --my-app-style_module_css-transparent(--my-app-style_module_css-color <color>, --my-app-style_module_css-alpha type(<number> | <percentage>)) returns <color> {
-	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+@function --transparent(--color <color>, --alpha type(<number> | <percentage>)) returns <color> {
+	result: oklch(from var(--color) l c h / var(--alpha));
 }
 
 section {
-	--my-app-style_module_css-base-color: #faa6ff;
-	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
 }
 
-@function --my-app-style_module_css-max-plus-x(--my-app-style_module_css-list <length>#, --my-app-style_module_css-x <length>) {
-	result: calc(max(var(--my-app-style_module_css-list)) + var(--my-app-style_module_css-x));
+@function --max-plus-x(--list <length>#, --x <length>) {
+	result: calc(max(var(--list)) + var(--x));
 }
 
 div {
-	width: --my-app-style_module_css-max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
+	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --my-app-style_module_css-anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
-	--my-app-style_module_css-duration: 1s;
-	--my-app-style_module_css-easing: linear;
-	result: var(--my-app-style_module_css-animation) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
+@function --anim-1s(--animation, --count) {
+	--duration: 1s;
+	--easing: linear;
+	result: var(--animation) var(--duration) var(--count) var(--easing);
 }
 
 div {
 	animation: --anim-1s(my-app-style_module_css-bounce, 2);
 }
 
-@function --my-app-style_module_css-outer(--my-app-style_module_css-outer-arg) {
-	--my-app-style_module_css-outer-local: 2;
-	result: --my-app-style_module_css-inner();
+@function --outer(--outer-arg) {
+	--outer-local: 2;
+	result: --inner();
 }
 
-@function --my-app-style_module_css-inner() returns <number> {
-	result: calc(var(--my-app-style_module_css-outer-arg) + var(--my-app-style_module_css-outer-local));
+@function --inner() returns <number> {
+	result: calc(var(--outer-arg) + var(--outer-local));
 }
 
 div {
-	z-index: --my-app-style_module_css-outer(1); /* 3 */
+	z-index: --outer(1); /* 3 */
 }
 
-@function --my-app-style_module_css-narrow-wide(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
-	result: var(--my-app-style_module_css-wide);
+@function --narrow-wide(--narrow, --wide) {
+	result: var(--wide);
 	@media (width < 700px) {
-		result: var(--my-app-style_module_css-narrow);
+		result: var(--narrow);
 	}
 }
 
-@function --my-app-style_module_css-narrow-wide-if-else(--my-app-style_module_css-narrow, --my-app-style_module_css-wide) {
-	result: if(media(width < 700px): var(--my-app-style_module_css-narrow) ; else: var(--my-app-style_module_css-wide));
+@function --narrow-wide-if-else(--narrow, --wide) {
+	result: if(media(width < 700px): var(--narrow) ; else: var(--wide));
 }
 
-@function --my-app-style_module_css-transparent(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
-	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+@function --transparent(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
 }
 
-@function --my-app-style_module_css-transparent-local(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
-	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+@function --my-app-style_module_css-transparent-local(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
 }
 
-@function --transparent-global(--my-app-style_module_css-color, --my-app-style_module_css-alpha) {
-	result: oklch(from var(--my-app-style_module_css-color) l c h / var(--my-app-style_module_css-alpha));
+@function --transparent-global(--color, --alpha) {
+	result: oklch(from var(--color) l c h / var(--alpha));
 }
 
 section {
-	--my-app-style_module_css-base-color: #faa6ff;
-	background-color: --my-app-style_module_css-transparent(var(--my-app-style_module_css-base-color), 0.8);
-	background-color: --my-app-style_module_css-transparent-local(var(--my-app-style_module_css-base-color), 0.8);
-	background-color: --transparent-global(var(--my-app-style_module_css-base-color), 0.8);
+	--base-color: #faa6ff;
+	background-color: --transparent(var(--base-color), 0.8);
+	background-color: --my-app-style_module_css-transparent-local(var(--base-color), 0.8);
+	background-color: --transparent-global(var(--base-color), 0.8);
 }
 
 :root {
-	--my-app-style_module_css-mode: sharp;
+	--mode: sharp;
 }
 
 .my-app-style_module_css-apply-sharp {
-	border-radius: if(style(--my-app-style_module_css-mode: sharp): 0px; else: revert-rule);
+	border-radius: if(style(--mode: sharp): 0px; else: revert-rule);
 }
 
-@color-profile --my-app-style_module_css-swop5c {
+@color-profile --swop5c {
 	src: url(https://example.org/SWOP2006_Coated5v2.icc);
 }
 
@@ -13419,46 +13311,46 @@ section {
 }
 
 .my-app-style_module_css-class {
-	background-color: color(--my-app-style_module_css-swop5c 0% 70% 20% 0%);
+	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
 	background-color: color(--my-app-style_module_css-swop5c-local 0% 70% 20% 0%);
 	background-color: color(--swop5c 0% 70% 20% 0%);
 	background-color: color(--swop5c 0% 70% 20% 0%);
-	background-color: color(--swop5c 0% 70% 20% 0%);
-	background-color: color(--my-app-shared_css-from-shared 0% 70% 20% 0%);
+	background-color: color(--swop5c from global 0% 70% 20% 0%);
+	background-color: color(--from-shared from \\"./shared.css\\" 0% 70% 20% 0%);
 	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
 	background-color: color(--my-app-style_module_css-swop5c-local, \\"./shared.css\\" 0% 70% 20% 0%);
 }
 
 :root {
-	--my-app-style_module_css-text-color: #eee;
+	--text-color: #eee;
 }
 
 .my-app-style_module_css-simple {
-	color: var(--my-app-style_module_css-text-color);
+	color: var(--text-color);
 }
 
 /* Just nesting */
 .my-app-style_module_css-theme-dark {
-	--my-app-style_module_css-text-color: #fff;
-	--my-app-style_module_css-bg-color: #333;
+	--text-color: #fff;
+	--bg-color: #333;
 
 	.my-app-style_module_css-button {
-		--my-app-style_module_css-button-color: var(--my-app-style_module_css-text-color);
-		--my-app-style_module_css-button-bg: var(--my-app-style_module_css-bg-color);
-		color: var(--my-app-style_module_css-button-color);
-		background-color: var(--my-app-style_module_css-button-bg);
+		--button-color: var(--text-color);
+		--button-bg: var(--bg-color);
+		color: var(--button-color);
+		background-color: var(--button-bg);
 	}
 }
 
 /* A container context based on inline size */
 .my-app-style_module_css-post {
-	--my-app-style_module_css-themeColor: blue;
+	--themeColor: blue;
 	container-type: inline-size;
 }
 
 /* Apply styles if the container is narrower than 650px */
-@container (width < 650px) and style(--my-app-style_module_css-themeColor: blue) {
+@container (width < 650px) and style(--themeColor: blue) {
 	.my-app-style_module_css-card {
 		width: 50%;
 		background-color: lightgray;
@@ -13466,9 +13358,9 @@ section {
 	}
 }
 
-@keyframes my-app-style_module_css-broken;
+@keyframes broken;
 
-.my-app-style_module_css-class-name-after-broken-keyframes {
+.class-name-after-broken-keyframes {
 	color: red;
 }
 
@@ -13503,16 +13395,16 @@ section {
 .my-app-style_module_css-class{.my-app-style_module_css-class{}}
 .my-app-style_module_css-class{color:#fff5f5}
 .my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
-.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--foo:#fff5f5}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
-.my-app-style_module_css-class{--my-app-style_module_css-baz:[1, \\"string\\", .class, #f1f1f1, #id]}
-.my-app-style_module_css-class{--my-app-style_module_css-baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+.my-app-style_module_css-class{--bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -13663,7 +13555,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 /* At-rules */
 
-@keyframes my-app-style_module_css-basic-keyframes {}
+@keyframes basic-keyframes {}
 @keyframes my-app-style_module_css-local-keyframes {}
 @keyframes global-keyframes {}
 /** Deprecated syntax */
@@ -13671,7 +13563,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 @keyframes local-keyframes-old-syntax {}
 
 .my-app-style_module_css-foo {
-	animation-name: my-app-style_module_css-basic-keyframes, global-keyframes, my-app-style_module_css-local-keyframes;
+	animation-name: basic-keyframes, global-keyframes, my-app-style_module_css-local-keyframes;
 }
 
 @property --my-app-style_module_css-progress {
@@ -13682,13 +13574,13 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 @keyframes my-app-style_module_css-progressAnimationLocal {
 	to {
-		--my-app-style_module_css-progress: 100%;
+		--progress: 100%;
 	}
 }
 
 .my-app-style_module_css-bar {
 	display: inline-block;
-	--my-app-style_module_css-progress: 25%;
+	--progress: 25%;
 	width: 100%;
 	height: 5px;
 	background: linear-gradient(
@@ -13714,10 +13606,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 /** Custom properties */
 
 :root {
-	--my-app-style_module_css-foo-bar: red;
-	--my-app-style_module_css-local-foo-bar: red;
-	--my-app-style_module_css-global-foo-bar: red;
-	--my-app-style_module_css-local-and-global-in-var:
+	--foo-bar: red;
+	--local-foo-bar: red;
+	--global-foo-bar: red;
+	--local-and-global-in-var:
 	red,
 	--my-app-style_module_css-local-foo-bar,
 	--global-foo-bar,
@@ -13728,14 +13620,14 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-class {
 	background-color:
-		var(--my-app-style_module_css-foo-bar),
+		var(--foo-bar),
 		var(--my-app-style_module_css-local-foo-bar),
 		var(--global-foo-bar),
 			/** Deprecated syntax */
 		var(--my-app-style_module_css-local-foo-bar),
 		var(--global-foo-bar),
-		var(--global-foo-bar),
-		var(--my-app-shared_css-from-shared);
+		var(--global-foo-bar from global),
+		var(--from-shared from \\"./shared.css\\");
 }
 
 /** Custom local value */
@@ -13760,19 +13652,19 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-gird2 {
-	grid: \\"my-app-style_module_css-a-a\\" 100px \\"my-app-style_module_css-b-b\\" 1fr;
+	grid: \\"a\\" 100px \\"b\\" 1fr;
 }
 
 .my-app-style_module_css-grid3 {
-	grid: [my-app-style_module_css-line-name1-line-name1] \\"my-app-style_module_css-a-a\\" 100px [my-app-style_module_css-line-name2-line-name2];
+	grid: [line-name1] \\"a\\" 100px [line-name2];
 }
 
 .my-app-style_module_css-grid4 {
-	grid: \\"my-app-style_module_css-a-a\\" 200px \\"my-app-style_module_css-b-b\\" min-content;
+	grid: \\"a\\" 200px \\"b\\" min-content;
 }
 
 .my-app-style_module_css-grid5 {
-	grid: \\"my-app-style_module_css-a-a\\" minmax(100px, max-content) \\"my-app-style_module_css-b-b\\" 20%;
+	grid: \\"a\\" minmax(100px, max-content) \\"b\\" 20%;
 }
 
 .my-app-style_module_css-grid6 {
@@ -13792,11 +13684,11 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid10 {
-	grid: repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px) / auto-flow 300px;
+	grid: repeat(3, [line1 line2 line3] 200px) / auto-flow 300px;
 }
 
 .my-app-style_module_css-grid11 {
-	grid: [my-app-style_module_css-line1-line1] minmax(20em, max-content) / auto-flow dense 40%;
+	grid: [line1] minmax(20em, max-content) / auto-flow dense 40%;
 }
 
 .my-app-style_module_css-grid12 {
@@ -13808,11 +13700,11 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid14 {
-	grid: auto-flow 300px / repeat(3, [my-app-style_module_css-line1-line1 my-app-style_module_css-line2-line2 my-app-style_module_css-line3-line3] 200px);
+	grid: auto-flow 300px / repeat(3, [line1 line2 line3] 200px);
 }
 
 .my-app-style_module_css-grid15 {
-	grid: auto-flow dense 40% / [my-app-style_module_css-line1-line1] minmax(20em, max-content);
+	grid: auto-flow dense 40% / [line1] minmax(20em, max-content);
 }
 
 .my-app-style_module_css-grid16 {
@@ -13824,7 +13716,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid17 {
-	grid-template-areas: 'my-app-style_module_css-nav-nav my-app-style_module_css-main-main';
+	grid-template-areas: 'nav main';
 }
 
 .my-app-style_module_css-grid-area {
@@ -13832,19 +13724,19 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-grid-area1 {
-	grid-area: my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-area: some-grid-area;
 }
 
 .my-app-style_module_css-grid-area2 {
-	grid-area: my-app-style_module_css-some-grid-area-some-grid-area / my-app-style_module_css-another-grid-area-another-grid-area;
+	grid-area: some-grid-area / another-grid-area;
 }
 
 .my-app-style_module_css-grid-area3 {
-	grid-area: 4 my-app-style_module_css-some-grid-area-some-grid-area / 2 my-app-style_module_css-another-grid-area-another-grid-area;
+	grid-area: 4 some-grid-area / 2 another-grid-area;
 }
 
 .my-app-style_module_css-grid-area4 {
-	grid-area: span 3 / span my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-area: span 3 / span some-grid-area;
 }
 
 /* Keyword value */
@@ -13854,7 +13746,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 /* <custom-ident> values */
 .my-app-style_module_css-grid-row-start1 {
-	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-row-start: some-grid-area;
 }
 
 /* <integer> + <custom-ident> values */
@@ -13862,7 +13754,7 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-row-start: 2;
 }
 .my-app-style_module_css-grid-row-start3 {
-	grid-row-start: my-app-style_module_css-some-grid-area-some-grid-area 4;
+	grid-row-start: some-grid-area 4;
 }
 
 /* span + <integer> + <custom-ident> values */
@@ -13870,10 +13762,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-row-start: span 3;
 }
 .my-app-style_module_css-grid-row-start5 {
-	grid-row-start: span my-app-style_module_css-some-grid-area-some-grid-area;
+	grid-row-start: span some-grid-area;
 }
 .my-app-style_module_css-grid-row-start6 {
-	grid-row-start: 5 my-app-style_module_css-some-grid-area-some-grid-area span;
+	grid-row-start: 5 some-grid-area span;
 }
 
 /* Global values */
@@ -13895,24 +13787,24 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-grid-template-areas {
 	grid-template-areas:
-  \\"my-app-style_module_css-a-a my-app-style_module_css-b-b .\\"
-  \\"my-app-style_module_css-a-a   my-app-style_module_css-c-c   my-app-style_module_css-d-d\\";
+  \\"a b .\\"
+  \\"a   c   d\\";
 }
 
 .my-app-style_module_css-grid-template-rows {
-	grid-template-rows: [my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2 my-app-style_module_css-line-name3-line-name3];
+	grid-template-rows: [line-name1] 100px [line-name2 line-name3];
 }
 
 .my-app-style_module_css-grid-template-rows1 {
 	grid-template-rows:
-  	[my-app-style_module_css-line-name1-line-name1 my-app-style_module_css-line-name2-line-name2] 100px
-  	repeat(auto-fit, [my-app-style_module_css-line-name1-line-name1] 300px) [my-app-style_module_css-line-name3-line-name3];
+  	[line-name1 line-name2] 100px
+  	repeat(auto-fit, [line-name1] 300px) [line-name3];
 }
 
 .my-app-style_module_css-grid-template-rows2 {
 	grid-template-rows:
-		[my-app-style_module_css-line-name1-line-name1] 100px [my-app-style_module_css-line-name2-line-name2]
-		repeat(auto-fit, [my-app-style_module_css-line-name3-line-name3 my-app-style_module_css-line-name4-line-name4] 300px)
+		[line-name1] 100px [line-name2]
+		repeat(auto-fit, [line-name3 line-name4] 300px)
 		100px;
 }
 
@@ -13922,8 +13814,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-grid-template {
 	grid-template:
-		[my-app-style_module_css-header-top-header-top] \\"my-app-style_module_css-a-a my-app-style_module_css-a-a my-app-style_module_css-a-a\\" [my-app-style_module_css-header-bottom-header-bottom]
-		[my-app-style_module_css-main-top-main-top] \\"my-app-style_module_css-b-b my-app-style_module_css-b-b my-app-style_module_css-b-b\\" 1fr [my-app-style_module_css-main-bottom-main-bottom]
+		[header-top] \\"a a a\\" [header-bottom]
+		[main-top] \\"b b b\\" 1fr [main-bottom]
 		/ auto 1fr auto;
 }
 
@@ -13932,10 +13824,10 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	/* 1. Use repeat, auto-fit, and minmax for responsive columns.
 		 Columns will be at least 150px wide, growing to fill available space (1fr).
 		 Lines are named 'col-start' and 'col-end' for each track repetition. */
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
 
 	/* 2. Define explicit row heights and name key row lines. */
-	grid-template-rows: [my-app-style_module_css-header-start-header-start] 100px [my-app-style_module_css-header-end-header-end my-app-style_module_css-content-start-content-start] auto [my-app-style_module_css-content-end-content-end];
+	grid-template-rows: [header-start] 100px [header-end content-start] auto [content-end];
 
 	/* 3. Add gaps for spacing */
 	gap: 20px;
@@ -13945,36 +13837,36 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-class {
-	grid-template-columns: repeat(auto-fit, [my-app-style_module_css-col-start-col-start] minmax(150px, 1fr) [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(auto-fit, [col-start] minmax(150px, 1fr) [col-end]);
 }
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: [my-app-style_module_css-main-start-main-start] 1fr [my-app-style_module_css-content-start-content-start] 1fr [my-app-style_module_css-content-end-content-end] 1fr [my-app-style_module_css-main-end-main-end];
-	grid-template-rows: [my-app-style_module_css-main-start-main-start] 100px [my-app-style_module_css-content-start-content-start] 100px [my-app-style_module_css-content-end-content-end] 100px [my-app-style_module_css-main-end-main-end];
+	grid-template-columns: [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+	grid-template-rows: [main-start] 100px [content-start] 100px [content-end] 100px [main-end];
 }
 
 .my-app-style_module_css-box1 {
-	grid-column-start: my-app-style_module_css-main-start-main-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-main-end-main-end;
+	grid-column-start: main-start;
+	grid-row-start: main-start;
+	grid-row-end: main-end;
 }
 
 .my-app-style_module_css-box2 {
-	grid-column-start: my-app-style_module_css-content-end-content-end;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
-	grid-row-end: my-app-style_module_css-content-end-content-end;
+	grid-column-start: content-end;
+	grid-row-start: main-start;
+	grid-row-end: content-end;
 }
 
 .my-app-style_module_css-box3 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-row-start: my-app-style_module_css-main-start-main-start;
+	grid-column-start: content-start;
+	grid-row-start: main-start;
 }
 
 .my-app-style_module_css-box4 {
-	grid-column-start: my-app-style_module_css-content-start-content-start;
-	grid-column-end: my-app-style_module_css-main-end-main-end;
-	grid-row-start: my-app-style_module_css-content-end-content-end;
+	grid-column-start: content-start;
+	grid-column-end: main-end;
+	grid-row-start: content-end;
 }
 
 .my-app-style_module_css-wrapper {
@@ -13982,31 +13874,31 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: repeat(9, 1fr);
 	grid-auto-rows: minmax(100px, auto);
 	grid-template-areas:
-    \\"my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd   my-app-style_module_css-hd-hd\\"
-    \\"my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-sd-sd my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main my-app-style_module_css-main-main\\"
-    \\"my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft   my-app-style_module_css-ft-ft\\";
+    \\"hd hd hd hd   hd   hd   hd   hd   hd\\"
+    \\"sd sd sd main main main main main main\\"
+    \\"ft ft ft ft   ft   ft   ft   ft   ft\\";
 }
 
 .my-app-style_module_css-header {
-	grid-area: my-app-style_module_css-hd-hd;
+	grid-area: hd;
 }
 
 .my-app-style_module_css-footer {
-	grid-area: my-app-style_module_css-ft-ft;
+	grid-area: ft;
 }
 
 .my-app-style_module_css-content {
-	grid-area: my-app-style_module_css-main-main;
+	grid-area: main;
 }
 
 .my-app-style_module_css-sidebar {
-	grid-area: my-app-style_module_css-sd-sd;
+	grid-area: sd;
 }
 
 .my-app-style_module_css-wrapper > div.my-app-style_module_css-overlay {
 	z-index: 10;
-	grid-column: my-app-style_module_css-main-start-main-start / my-app-style_module_css-main-end-main-end;
-	grid-row: my-app-style_module_css-hd-start-hd-start / my-app-style_module_css-ft-end-ft-end;
+	grid-column: main-start / main-end;
+	grid-row: hd-start / ft-end;
 	border: 4px solid rgb(92 148 13);
 	background-color: rgb(92 148 13 / 40%);
 	color: rgb(92 148 13);
@@ -14015,27 +13907,27 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-wrapper {
 	display: grid;
-	grid-template-columns: repeat(12, [my-app-style_module_css-col-start-col-start] 1fr);
+	grid-template-columns: repeat(12, [col-start] 1fr);
 }
 
 .my-app-style_module_css-item1to5 {
-	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5;
+	grid-column: col-start / col-start 5;
 }
 
 .my-app-style_module_css-item7to9 {
-	grid-column: my-app-style_module_css-col-start-col-start 7 / span 3;
+	grid-column: col-start 7 / span 3;
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col1-start-col1-start] 1fr [my-app-style_module_css-col2-start-col2-start] 3fr);
+	grid-template-columns: repeat(4, [col1-start] 1fr [col2-start] 3fr);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: repeat(4, [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end]);
+	grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
 }
 
 .my-app-style_module_css-wrapper {
-	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
+	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
 "
