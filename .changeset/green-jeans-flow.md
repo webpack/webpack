@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Interpolate grid properties for CSS modules.
+Added options to control the renaming of at-rules and various identifiers in CSS modules.
