@@ -1618,24 +1618,24 @@ div {
 	list-style: lower-alpha;
 	list-style: disc;
 	list-style: square;
-	list-style: url(\\"./img/shape.png\\");
-	list-style: georgian inside url(\\"./img/shape.png\\");
-	list-style: georgian outside url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
 	/* type */
 	list-style: square;
 
 	/* image */
-	list-style: url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
 
 	/* position */
 	list-style: inside;
 
 	/* two values */
 	list-style: georgian outside;
-	list-style: url(\\"img/shape.png\\") inside;
+	list-style: url(09a1a1112c577c279435.png) inside;
 
 	/* three values */
-	list-style: lower-roman url(\\"img/shape.png\\") outside;
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
 
 	/* Keyword value */
 	list-style: none;
@@ -8267,7 +8267,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "_7t7sag",
   "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
-  "__webpack_modules__": 2,
+  "__webpack_modules__": 3,
   "animation": "I7H8FK",
   "animationName": "bvLAsC",
   "class": "Vx2ADA",
@@ -9750,24 +9750,24 @@ div {
 	list-style: lower-alpha;
 	list-style: disc;
 	list-style: square;
-	list-style: url(\\"./img/shape.png\\");
-	list-style: georgian inside url(\\"./img/shape.png\\");
-	list-style: georgian outside url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
+	list-style: georgian inside url(09a1a1112c577c279435.png);
+	list-style: georgian outside url(09a1a1112c577c279435.png);
 	/* type */
 	list-style: square;
 
 	/* image */
-	list-style: url(\\"./img/shape.png\\");
+	list-style: url(09a1a1112c577c279435.png);
 
 	/* position */
 	list-style: inside;
 
 	/* two values */
 	list-style: georgian outside;
-	list-style: url(\\"img/shape.png\\") inside;
+	list-style: url(09a1a1112c577c279435.png) inside;
 
 	/* three values */
-	list-style: lower-roman url(\\"img/shape.png\\") outside;
+	list-style: lower-roman url(09a1a1112c577c279435.png) outside;
 
 	/* Keyword value */
 	list-style: none;
@@ -11012,7 +11012,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "FPwoX1",
   "VARS": "---YmVq7 gAOQgg undefined g45L8B",
-  "__webpack_modules__": 8,
+  "__webpack_modules__": 9,
   "animation": "_1CLYv0",
   "animationName": "AndP3O",
   "class": "Q0FGvN",
