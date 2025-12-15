@@ -246,7 +246,7 @@ describe("Compiler", () => {
 					purge: mockPurge
 				};
 				compiler.purgeInputFileSystem();
-				expect(mockPurge.mock.calls).toHaveLength(1);
+				expect(mockPurge).toHaveBeenCalledTimes(1);
 				done();
 			});
 
@@ -254,7 +254,7 @@ describe("Compiler", () => {
 				const mockPurge = jest.fn();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
-				expect(mockPurge.mock.calls).toHaveLength(0);
+				expect(mockPurge).not.toHaveBeenCalled();
 				done();
 			});
 		});

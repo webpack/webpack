@@ -36,22 +36,22 @@ describe("MultiWatching", () => {
 		});
 
 		it("invalidates each watching", () => {
-			expect(watchings[0].invalidate.mock.calls).toHaveLength(1);
-			expect(watchings[1].invalidate.mock.calls).toHaveLength(1);
+			expect(watchings[0].invalidate).toHaveBeenCalledTimes(1);
+			expect(watchings[1].invalidate).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe("suspend", () => {
 		it("suspends each watching", () => {
 			myMultiWatching.suspend();
-			expect(watchings[0].suspend.mock.calls).toHaveLength(1);
-			expect(watchings[1].suspend.mock.calls).toHaveLength(1);
+			expect(watchings[0].suspend).toHaveBeenCalledTimes(1);
+			expect(watchings[1].suspend).toHaveBeenCalledTimes(1);
 		});
 
 		it("resume each watching", () => {
 			myMultiWatching.resume();
-			expect(watchings[0].resume.mock.calls).toHaveLength(1);
-			expect(watchings[1].resume.mock.calls).toHaveLength(1);
+			expect(watchings[0].resume).toHaveBeenCalledTimes(1);
+			expect(watchings[1].resume).toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -67,14 +67,14 @@ describe("MultiWatching", () => {
 		});
 
 		it("closes each watching", () => {
-			expect(watchings[0].close.mock.calls).toHaveLength(1);
-			expect(watchings[1].close.mock.calls).toHaveLength(1);
+			expect(watchings[0].close).toHaveBeenCalledTimes(1);
+			expect(watchings[1].close).toHaveBeenCalledTimes(1);
 		});
 
 		it("calls callback after each watching has closed", () => {
 			callClosedFinishedCallback(watchings[0]);
 			callClosedFinishedCallback(watchings[1]);
-			expect(callback.mock.calls).toHaveLength(1);
+			expect(callback).toHaveBeenCalledTimes(1);
 		});
 	});
 });

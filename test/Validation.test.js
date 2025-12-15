@@ -61,7 +61,7 @@ describe("Validation", () => {
 				webpack(config);
 			} catch (err) {
 				if (err.name === "ValidationError") {
-					throw new Error("Validation didn't success");
+					throw new Error("Validation didn't success", { cause: err });
 				}
 
 				errored = err;

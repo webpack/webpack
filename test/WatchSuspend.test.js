@@ -87,7 +87,7 @@ describe("WatchSuspend", () => {
 			watching.suspend();
 			fs.writeFileSync(filePath, "'bar'", "utf8");
 			setTimeout(() => {
-				expect(onChange.mock.calls).toHaveLength(0);
+				expect(onChange).not.toHaveBeenCalled();
 				onChange = null;
 				done();
 			}, 1000);
