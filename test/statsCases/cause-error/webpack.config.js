@@ -10,7 +10,6 @@ const WebpackError = require("../../../lib/WebpackError");
  * @returns {ErrorWithCause} error with cause
  */
 function createErrorWithCause(message, options) {
-	// @ts-expect-error for tests
 	const error = new Error(message, options);
 
 	if (typeof (/** @type {ErrorWithCause} */ (error).cause) === "undefined") {
@@ -48,7 +47,6 @@ function createWebpackErrorWithCause(message, options) {
  * @returns {AggregateError} error with errors and cause
  */
 function createAggregateError(errors, message, options = {}) {
-	// @ts-expect-error for tests
 	if (typeof AggregateError === "undefined") {
 		const error = new Error(message);
 
@@ -63,7 +61,6 @@ function createAggregateError(errors, message, options = {}) {
 		return /** @type {AggregateError} */ (error);
 	}
 
-	// @ts-expect-error for tests
 	return new AggregateError(errors, message, options);
 }
 
