@@ -17,6 +17,6 @@ jobs:
           color: "2105893"
           username: "webpack Release Changelog"
           avatar_url: "https://github.com/webpack/media/blob/90b54d02fa1cfc8aa864a8322202f74ac000f5d2/logo/icon.png"
-          content: "||@here||"
+          content: "||<@&1450591255485743204>||"
           footer_title: "Changelog"
           reduce_headings: true
