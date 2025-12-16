@@ -71,8 +71,8 @@ const doCompileAndReplace = (args, prefix, callback) => {
 
 	try {
 		require.resolve("webpack-cli");
-	} catch (_err) {
-		throw new Error("Please install webpack-cli at root.");
+	} catch (err) {
+		throw new Error("Please install webpack-cli at root.", { cause: err });
 	}
 
 	/**

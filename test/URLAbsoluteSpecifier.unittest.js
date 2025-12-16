@@ -3,7 +3,7 @@
 const { getProtocol, getScheme } = require("../lib/util/URLAbsoluteSpecifier");
 
 /**
- * @type {Array<{specifier: string, expected: string|undefined}>}
+ * @type {{ specifier: string, expected: string | undefined }[]}
  */
 const samples = [
 	{

@@ -57,7 +57,7 @@ describe("NormalModule", () => {
 			normalModule.readableIdentifier({
 				shorten: spy
 			});
-			expect(spy.mock.calls).toHaveLength(1);
+			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy.mock.calls[0][0]).toBe(userRequest);
 		});
 	});
@@ -291,7 +291,7 @@ describe("NormalModule", () => {
 		describe("given no noParseRule", () => {
 			it("returns false", () => {
 				expect(normalModule.shouldPreventParsing()).toBe(false);
-				expect(applyNoParseRuleSpy.mock.calls).toHaveLength(0);
+				expect(applyNoParseRuleSpy).not.toHaveBeenCalled();
 			});
 		});
 
@@ -308,7 +308,7 @@ describe("NormalModule", () => {
 					expect(normalModule.shouldPreventParsing("some rule")).toBe(
 						returnValOfSpy
 					);
-					expect(applyNoParseRuleSpy.mock.calls).toHaveLength(1);
+					expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 				});
 			});
 
@@ -317,7 +317,7 @@ describe("NormalModule", () => {
 					expect(normalModule.shouldPreventParsing("some rule")).toBe(
 						returnValOfSpy
 					);
-					expect(applyNoParseRuleSpy.mock.calls).toHaveLength(1);
+					expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 				});
 			});
 
@@ -339,7 +339,7 @@ describe("NormalModule", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.mock.calls).toHaveLength(3);
+							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(3);
 						});
 					});
 
@@ -353,7 +353,7 @@ describe("NormalModule", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.mock.calls).toHaveLength(1);
+							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 						});
 					});
 
@@ -369,7 +369,7 @@ describe("NormalModule", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.mock.calls).toHaveLength(3);
+							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(3);
 						});
 					});
 				});

@@ -8,7 +8,7 @@ const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 const watchDir = path.join(__dirname, "./routes");
 
-/** @type {import('webpack').Configuration} */
+/** @type {import("webpack").Configuration} */
 const config = {
 	plugins: [
 		new VirtualUrlPlugin({

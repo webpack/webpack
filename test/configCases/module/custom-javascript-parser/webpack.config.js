@@ -11,7 +11,7 @@ let counter = 0;
 /**
  * @param {string} sourceCode source code
  * @param {{ sourceType: "module", comments: boolean, locations: boolean, semicolons: boolean }} options options
- * @returns {{ ast: Program, comments: Comment[], semicolons: Set<number>}} parsed source code
+ * @returns {{ ast: Program, comments: Comment[], semicolons: Set<number> }} parsed source code
  */
 const parse = (sourceCode, options) => {
 	/** @type {Comment[]} */

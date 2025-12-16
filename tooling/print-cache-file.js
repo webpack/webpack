@@ -15,7 +15,7 @@ const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
-/** @type {Array<SizeInfo | undefined>} */
+/** @type {(SizeInfo | undefined)[]} */
 const lazySizes = [];
 
 /**
@@ -45,7 +45,7 @@ const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
 /**
- * @param {Array<EXPECTED_ANY>} data data
+ * @param {EXPECTED_ANY[]} data data
  * @param {string} indent indent
  * @returns {Promise<void>} promise
  */

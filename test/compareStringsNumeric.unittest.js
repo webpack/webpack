@@ -5,7 +5,7 @@ const { compareStringsNumeric } = require("../lib/util/comparators");
 /**
  * @param {string} a string
  * @param {string} b string
- * @returns {-1|0|1} compare result
+ * @returns {-1 | 0 | 1} compare result
  */
 const referenceComparer = (a, b) => {
 	const partsA = a.split(/(\d+)/);
