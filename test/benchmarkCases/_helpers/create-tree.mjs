@@ -36,6 +36,13 @@ function e() {}
 function f() {}
 `;
 
+/**
+ * @param {string} folder folder
+ * @param {boolean} useRequire true when to use `require(...)`, otherwise `import ... from "..."`
+ * @param {number} count count of modules
+ * @param {number=} async count of async
+ * @returns {Promise<void>}
+ */
 async function createTree(
 	folder,
 	useRequire = false,
@@ -46,6 +53,12 @@ async function createTree(
 
 	let remaining = count - 1;
 
+	/**
+	 * @param {string} prefix prefix
+	 * @param {number} count count of modules
+	 * @param {number} depth depth
+	 * @returns {Promise<void>}
+	 */
 	async function make(prefix, count, depth) {
 		if (count === 0) {
 			await fs.writeFile(

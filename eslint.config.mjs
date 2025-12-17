@@ -182,13 +182,14 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/**/*.mjs"],
-		languageOptions: {
-			ecmaVersion: 2022
-		}
-	},
-	{
-		files: ["setup/**/*.js", "tooling/**/*.js"],
+		files: [
+			"setup/**/*.js",
+			"tooling/**/*.js",
+			"test/*.benchmark.mjs",
+			"test/benchmarkCases/_helpers/**/*.mjs",
+			"test/benchmarkCases/**/webpack.config.mjs",
+			"test/benchmarkCases/**/options.mjs"
+		],
 		languageOptions: {
 			ecmaVersion: 2022
 		},

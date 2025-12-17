@@ -4,7 +4,11 @@ import { fileURLToPath } from "url";
 
 const items = Array.from({ length: 10 }).fill("css");
 
-function generateCSS(i, current) {
+/**
+ * @param {number} i index
+ * @returns {string} generated code
+ */
+function generateCSS(i) {
 	let css = "";
 
 	for (let c = i; c >= 0; c--) {

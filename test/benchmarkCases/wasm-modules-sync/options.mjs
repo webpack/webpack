@@ -4,6 +4,10 @@ import { fileURLToPath } from "url";
 
 const items = Array.from({ length: 25 }).fill("wasm");
 
+/**
+ * @param {number} i index for import
+ * @returns {string} generated code
+ */
 function generateData(i) {
 	return `import { add, getNumber } from "../../wasm.wat?i=${i}";
 

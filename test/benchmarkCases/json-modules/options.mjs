@@ -6,11 +6,23 @@ const items = Array.from({ length: 25 }).fill("file");
 
 const LEVEL_PREFIX = "level_";
 
+/**
+ * @template T
+ * @typedef {{ [key: string]: T | NestedRecord<T> }} NestedRecord
+ */
+
+/**
+ * @param {number} depth depth
+ * @param {string} text text
+ * @param {number} currentDepth current depth
+ * @returns {NestedRecord<string> | string} generated code
+ */
 function generateData(depth, text, currentDepth = 0) {
 	if (currentDepth >= depth) {
 		return text;
 	}
 
+	/** @type {NestedRecord<string>} */
 	const obj = {};
 	obj[`${LEVEL_PREFIX}${currentDepth}`] = generateData(
 		depth,
