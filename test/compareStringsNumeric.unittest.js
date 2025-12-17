@@ -37,6 +37,7 @@ const referenceComparer = (a, b) => {
 };
 
 describe(compareStringsNumeric.name, () => {
+	/** @type {[string, string, number][]} */
 	const testCases = [
 		["", "a", 1],
 		["a", "", -1],

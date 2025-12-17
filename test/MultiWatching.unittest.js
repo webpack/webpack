@@ -3,25 +3,38 @@
 const SyncHook = require("tapable").SyncHook;
 const MultiWatching = require("../lib/MultiWatching");
 
-const createWatching = () => ({
-	invalidate: jest.fn(),
-	suspend: jest.fn(),
-	resume: jest.fn(),
-	close: jest.fn()
-});
+/** @typedef {import("../lib/Watching")} Watching */
+/** @typedef {import("../lib/MultiCompiler")} MultiCompiler */
 
+/**
+ * @returns {Watching} watching
+ */
+const createWatching = () =>
+	/** @type {Watching} */ ({
+		invalidate: jest.fn(),
+		suspend: jest.fn(),
+		resume: jest.fn(),
+		close: jest.fn()
+	});
+
+/**
+ * @returns {MultiCompiler} compiler
+ */
 const createCompiler = () => {
 	const compiler = {
 		hooks: {
 			watchClose: new SyncHook([])
 		}
 	};
-	return compiler;
+	return /** @type {MultiCompiler} */ (compiler);
 };
 
 describe("MultiWatching", () => {
+	/** @type {Watching[]} */
 	let watchings;
+	/** @type {MultiCompiler} */
 	let compiler;
+	/** @type {MultiWatching} */
 	let myMultiWatching;
 
 	beforeEach(() => {

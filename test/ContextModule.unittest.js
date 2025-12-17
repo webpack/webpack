@@ -4,6 +4,7 @@ const ContextModule = require("../lib/ContextModule");
 
 describe("contextModule", () => {
 	let contextModule;
+	/** @type {string} */
 	let request;
 
 	beforeEach(() => {

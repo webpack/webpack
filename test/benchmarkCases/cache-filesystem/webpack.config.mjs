@@ -1,7 +1,5 @@
-"use strict";
-
-/** @type {import("../../../").Configuration} */
-module.exports = {
+/** @type {import("../../../types.d.ts").Configuration} */
+export default {
 	entry: "./index",
 	cache: {
 		type: "filesystem",

@@ -11,6 +11,10 @@
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
+    // "test/*.unittest.js",
+    // "test/*.basictest.js",
+    // "test/*.test.js",
+    // "test/*.longtest.js",
     "declarations.test.d.ts"
   ],
   "exclude": ["test/js/**/*"]

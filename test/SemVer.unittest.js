@@ -128,6 +128,7 @@ describe("SemVer", () => {
 	});
 
 	describe("parseRange", () => {
+		/** @type {Record<string, string[]>} */
 		const cases = {
 			"5 || 6 || 7.x.x": ["5.x.x || 6.x || 7"],
 			"1 - 2": ["1   -   2"],
@@ -163,6 +164,7 @@ describe("SemVer", () => {
 	});
 
 	describe("rangeToString", () => {
+		/** @type {Record<string | number, string>} */
 		const cases = {
 			"*": "*",
 			1: "^1",
@@ -207,6 +209,7 @@ describe("SemVer", () => {
 	});
 
 	describe("satisfies", () => {
+		/** @type {Record<string, string[]>} */
 		const cases = {
 			// table cases
 			">=1": [
