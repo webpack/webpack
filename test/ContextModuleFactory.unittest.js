@@ -3,9 +3,13 @@
 const { Volume, createFsFromVolume } = require("memfs");
 const ContextModuleFactory = require("../lib/ContextModuleFactory");
 
+/** @typedef {import("memfs").IFs} IFs */
+
 describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {
+		/** @type {ContextModuleFactory} */
 		let factory;
+		/** @type {IFs} */
 		let memfs;
 
 		beforeEach(() => {

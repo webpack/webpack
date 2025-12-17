@@ -1,7 +1,5 @@
-"use strict";
-
-/** @type {import("../../../").Configuration} */
-module.exports = {
+/** @type {import("../../../types.d.ts").Configuration} */
+export default {
 	devtool: false,
 	target: "web",
 	entry: "./index.js",

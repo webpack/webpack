@@ -18569,7 +18569,6 @@ declare class WebpackError extends Error {
 	file?: string;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
-	cause: any;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns

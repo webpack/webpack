@@ -6,6 +6,10 @@ const path = require("path");
 const jestDiff = require("jest-diff").diff;
 const stripVTControlCharacters = require("strip-ansi");
 
+/** @typedef {import("../lib/index").Configuration} Configuration */
+/** @typedef {import("../lib/index").WebpackOptionsNormalized} WebpackOptionsNormalized */
+/** @typedef {ReturnType<expect>} ExceptResult */
+
 /**
  * Escapes regular expression metacharacters
  * @param {string} str String to quote
@@ -23,6 +27,11 @@ const escapedCwdRegExp = new RegExp(
 	`${quoteMeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 	"g"
 );
+
+/**
+ * @param {string} str string
+ * @returns {string} normalized string
+ */
 const normalize = (str) => {
 	if (cwd.startsWith("/")) {
 		str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
@@ -38,6 +47,9 @@ const normalize = (str) => {
 };
 
 class Diff {
+	/**
+	 * @param {string} value value
+	 */
 	constructor(value) {
 		this.value = value;
 	}
@@ -47,8 +59,12 @@ expect.addSnapshotSerializer({
 	test(value) {
 		return value instanceof Diff;
 	},
+	/**
+	 * @param {unknown} received received
+	 * @returns {string} result
+	 */
 	print(received) {
-		return normalize(received.value);
+		return normalize(/** @type {Diff} */ (received).value);
 	}
 });
 
@@ -56,11 +72,19 @@ expect.addSnapshotSerializer({
 	test(value) {
 		return typeof value === "string";
 	},
+	/**
+	 * @param {unknown} received received
+	 * @returns {string} result
+	 */
 	print(received) {
-		return JSON.stringify(normalize(received));
+		return JSON.stringify(normalize(/** @type {string} */ (received)));
 	}
 });
 
+/**
+ * @param {Configuration} config configuration
+ * @returns {WebpackOptionsNormalized} normalized configuration
+ */
 const getDefaultConfig = (config) => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
@@ -701,6 +725,13 @@ describe("snapshots", () => {
 	`);
 	});
 
+	/**
+	 * @param {string} name name
+	 * @param {Configuration} options options
+	 * @param {(result1: ExceptResult, result2: ExceptResult) => void} fn expect result
+	 * @param {() => void=} before before
+	 * @param {() => void=} after after
+	 */
 	const test = (name, options, fn, before, after) => {
 		it(`should generate the correct defaults from ${name}`, () => {
 			if (!("mode" in options)) options.mode = "none";
@@ -709,7 +740,8 @@ describe("snapshots", () => {
 				const result = getDefaultConfig(options);
 
 				const diff = stripVTControlCharacters(
-					jestDiff(baseConfig, result, { expand: false, contextLines: 0 })
+					/** @type {string} */
+					(jestDiff(baseConfig, result, { expand: false, contextLines: 0 }))
 				);
 
 				fn(expect(new Diff(diff)), expect(result));
@@ -3298,10 +3330,13 @@ describe("Targets", () => {
 			target: "browserslist: node 12.17"
 		});
 		const diff = stripVTControlCharacters(
-			jestDiff(inlineTarget, browserslistTarget, {
-				expand: false,
-				contextLines: 0
-			})
+			/** @type {string} */
+			(
+				jestDiff(inlineTarget, browserslistTarget, {
+					expand: false,
+					contextLines: 0
+				})
+			)
 		);
 
 		expect(inlineTarget.output.environment.module).toBe(true);

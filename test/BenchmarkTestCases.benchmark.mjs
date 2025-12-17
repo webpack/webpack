@@ -15,6 +15,15 @@ import {
 import { simpleGit } from "simple-git";
 import { Bench, hrtimeNow } from "tinybench";
 
+/** @typedef {import("tinybench").Task} TinybenchTask */
+/** @typedef {import("tinybench").Fn} Fn */
+/** @typedef {import("../types.d.ts")} Webpack */
+/** @typedef {import("../types.d.ts").Configuration} Configuration */
+/** @typedef {import("../types.d.ts").Stats} Stats */
+/** @typedef {import("../types.d.ts").Watching} Watching */
+
+/** @typedef {TinybenchTask & { collectBy?: string }} Task */
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
@@ -38,7 +47,7 @@ const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 
 /**
- * @param {(string | undefined)[]} revList rev list
+ * @param {[string, string, string, string | undefined]} revList rev list
  * @returns {Promise<string>} head
  */
 async function getHead(revList) {
@@ -57,7 +66,7 @@ async function getHead(revList) {
 
 /**
  * @param {string} head head
- * @param {(string | undefined)[]} revList rev list
+ * @param {[string, string, string, string | undefined]} revList rev list
  * @returns {Promise<string>} base
  */
 async function getBase(head, revList) {
@@ -82,7 +91,7 @@ async function getBase(head, revList) {
 
 		const revList = REV_LIST_REGEXP.exec(resultParents);
 
-		if (!revList[1]) {
+		if (!revList || !revList[1] || !revList[2]) {
 			throw new Error("No parent commit found");
 		}
 
@@ -97,7 +106,7 @@ async function getBase(head, revList) {
 }
 
 /**
- * @returns {Promise<{name: string, rev: string}[]>} baseline revs
+ * @returns {Promise<{name: string, rev?: string}[]>} baseline revs
  */
 async function getBaselineRevs() {
 	if (LAST_COMMIT) {
@@ -115,7 +124,9 @@ async function getBaselineRevs() {
 		"1",
 		"HEAD"
 	]);
-	const revList = REV_LIST_REGEXP.exec(resultParents);
+	const revList =
+		/** @type {[string, string, string, string | undefined] | null} */
+		(REV_LIST_REGEXP.exec(resultParents));
 
 	if (!revList) throw new Error("Invalid result from git rev-list");
 
@@ -177,6 +188,9 @@ try {
 	await fs.mkdir(baselinesPath, { recursive: true });
 } catch (_err) {} // eslint-disable-line no-empty
 
+/** @typedef {{ name: string, rev?: string, webpack: (() => Promise<Webpack>) }} Baseline */
+
+/** @type {Baseline[]} */
 const baselines = [];
 
 for (const baselineInfo of baselineRevisions) {
@@ -190,7 +204,9 @@ for (const baselineInfo of baselineRevisions) {
 			webpack: async () => {
 				const webpack = (
 					await import(
-						pathToFileURL(path.resolve(baselinePath, "./lib/index.js"))
+						pathToFileURL(
+							path.resolve(baselinePath, "./lib/index.js")
+						).toString()
 					)
 				).default;
 
@@ -200,6 +216,7 @@ for (const baselineInfo of baselineRevisions) {
 	}
 
 	const baselineRevision = baselineInfo.rev;
+
 	const baselinePath =
 		baselineRevision === undefined
 			? path.resolve(__dirname, "../")
@@ -207,7 +224,11 @@ for (const baselineInfo of baselineRevisions) {
 
 	try {
 		await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
-	} catch (_err) {
+	} catch (err) {
+		if (!baselineRevision) {
+			throw new Error("No baseline revision", { cause: err });
+		}
+
 		try {
 			await fs.mkdir(baselinePath);
 		} catch (_err) {} // eslint-disable-line no-empty
@@ -233,6 +254,14 @@ for (const baselineInfo of baselineRevisions) {
 
 const baseOutputPath = path.join(__dirname, "js", "benchmark");
 
+/**
+ * @param {string} test test
+ * @param {Baseline} baseline baseline
+ * @param {Configuration} realConfig real configuration
+ * @param {Scenario} scenario scenario
+ * @param {string} testDirectory test directory
+ * @returns {Configuration} built configuration
+ */
 function buildConfiguration(
 	test,
 	baseline,
@@ -243,14 +272,17 @@ function buildConfiguration(
 	const { watch, ...rest } = scenario;
 	const config = structuredClone({ ...realConfig, ...rest });
 
-	config.entry = path.resolve(
-		testDirectory,
-		config.entry
-			? /\.(c|m)?js$/.test(config.entry)
-				? config.entry
-				: `${config.entry}.js`
-			: "./index.js"
-	);
+	config.entry =
+		typeof config.entry === "string"
+			? path.resolve(
+					testDirectory,
+					config.entry
+						? /\.(c|m)?js$/.test(config.entry)
+							? config.entry
+							: `${config.entry}.js`
+						: "./index.js"
+				)
+			: config.entry;
 	config.devtool = config.devtool || false;
 	config.name = `${test}-${baseline.name}-${scenario.name}`;
 	config.context = testDirectory;
@@ -263,7 +295,11 @@ function buildConfiguration(
 		`baseline-${baseline.name}`
 	);
 	config.plugins = config.plugins || [];
-	if (config.cache) {
+	if (
+		config.cache &&
+		typeof config.cache !== "boolean" &&
+		config.cache.type === "filesystem"
+	) {
 		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
 	}
 	if (watch) {
@@ -275,7 +311,10 @@ function buildConfiguration(
 	return config;
 }
 
-// Filename sanitization
+/**
+ * @param {string} filename filename
+ * @returns {string} sanitized filename
+ */
 function sanitizeFilename(filename) {
 	// Replace invalid filesystem characters with underscores
 	return filename
@@ -287,6 +326,11 @@ function sanitizeFilename(filename) {
 		.slice(0, 200); // Limit filename length
 }
 
+/**
+ * @param {string} name name
+ * @param {() => void} fn function
+ * @returns {Promise<void>} function wrapper in profiling code
+ */
 async function withProfiling(name, fn) {
 	// Ensure the profiles directory exists
 	await fs.mkdir(path.join(baseOutputPath, "profiles"), { recursive: true });
@@ -295,15 +339,21 @@ async function withProfiling(name, fn) {
 	session.connect();
 
 	// Enable and start profiling
-	await new Promise((resolve, reject) => {
-		session.post("Profiler.enable", (err) => {
-			if (err) return reject(err);
-			session.post("Profiler.start", (err) => {
+	await new Promise(
+		/**
+		 * @param {(val: void) => void} resolve resolve
+		 * @param {(err?: Error) => void} reject reject
+		 */
+		(resolve, reject) => {
+			session.post("Profiler.enable", (err) => {
 				if (err) return reject(err);
-				resolve();
+				session.post("Profiler.start", (err) => {
+					if (err) return reject(err);
+					resolve();
+				});
 			});
-		});
-	});
+		}
+	);
 
 	// Run the benchmarked function
 	// No need to `console.time`, it'll be included in the
@@ -331,29 +381,49 @@ async function withProfiling(name, fn) {
 	console.log(`CPU profile saved to ${outputFile}`);
 }
 
+/**
+ * @param {Webpack} webpack webpack
+ * @param {Configuration} config configuration
+ * @returns {Promise<void>} watching
+ */
 function runWebpack(webpack, config) {
-	return new Promise((resolve, reject) => {
-		const compiler = webpack(config);
-		compiler.run((err, stats) => {
-			if (err) return reject(err);
-			if (stats && (stats.hasWarnings() || stats.hasErrors())) {
-				return reject(new Error(stats.toString()));
-			}
+	return new Promise(
+		/**
+		 * @param {(value: void) => void} resolve resolve
+		 * @param {(err?: Error) => void} reject reject
+		 */
+		(resolve, reject) => {
+			const compiler = webpack(config);
+			compiler.run((err, stats) => {
+				if (err) return reject(err);
+				if (stats && (stats.hasWarnings() || stats.hasErrors())) {
+					return reject(new Error(stats.toString()));
+				}
 
-			compiler.close((closeErr) => {
-				if (closeErr) return reject(closeErr);
-				if (stats) stats.toString(); // Force stats computation
-				resolve();
+				compiler.close((closeErr) => {
+					if (closeErr) return reject(closeErr);
+					if (stats) stats.toString(); // Force stats computation
+					resolve();
+				});
 			});
-		});
-	});
+		}
+	);
 }
 
+/**
+ * @param {Webpack} webpack webpack
+ * @param {Configuration} config configuration
+ * @param {(err: Error | null, stats?: Stats) => void} callback callback
+ * @returns {Promise<Watching>} watching
+ */
 async function runWatch(webpack, config, callback) {
 	const compiler = webpack(config);
-	return compiler.watch({}, callback);
+	return /** @type {Watching} */ (compiler.watch({}, callback));
 }
 
+/** @typedef {{ name: string, mode: "development" | "production", watch?: boolean }} Scenario */
+
+/** @type {Scenario[]} */
 const scenarios = [
 	{
 		name: "mode-development",
@@ -370,14 +440,21 @@ const scenarios = [
 	}
 ];
 
+/** @typedef {string & { prepareStackTrace: string, stackTraceLimit: string }} V8StackTrace */
+
+/**
+ * @param {Fn=} belowFn below function
+ * @returns {NodeJS.CallSite[]} V8 stack trace
+ */
 function getStackTrace(belowFn) {
 	const oldLimit = Error.stackTraceLimit;
 	Error.stackTraceLimit = Infinity;
+	/** @type {{ stack?: NodeJS.CallSite[] }} */
 	const dummyObject = {};
 	const v8Handler = Error.prepareStackTrace;
 	Error.prepareStackTrace = (dummyObject, v8StackTrace) => v8StackTrace;
 	Error.captureStackTrace(dummyObject, belowFn || getStackTrace);
-	const v8StackTrace = dummyObject.stack;
+	const v8StackTrace = /** @type {NodeJS.CallSite[]} */ (dummyObject.stack);
 	Error.prepareStackTrace = v8Handler;
 	Error.stackTraceLimit = oldLimit;
 	return v8StackTrace;
@@ -385,7 +462,7 @@ function getStackTrace(belowFn) {
 
 function getCallingFile() {
 	const stack = getStackTrace();
-	let callingFile = stack[2].getFileName(); // [here, withCodSpeed, actual caller]
+	let callingFile = /** @type {string} */ (stack[2].getFileName()); // [here, withCodSpeed, actual caller]
 	const gitDir = getGitDir(callingFile);
 	if (gitDir === undefined) {
 		throw new Error("Could not find a git repository");
@@ -396,23 +473,41 @@ function getCallingFile() {
 	return path.relative(gitDir, callingFile);
 }
 
+/** @typedef {Map<string, string>} URIMap */
+
+/** @type {WeakMap<Bench, URIMap>} */
 const taskUriMap = new WeakMap();
 
+/**
+ * @param {Bench} bench bench
+ * @returns {URIMap} URI map
+ */
 function getOrCreateUriMap(bench) {
 	let uriMap = taskUriMap.get(bench);
 	if (!uriMap) {
+		/** @type {URIMap} */
 		uriMap = new Map();
 		taskUriMap.set(bench, uriMap);
 	}
 	return uriMap;
 }
 
+/**
+ * @param {Bench} bench bench
+ * @param {string} taskName task name
+ * @param {string} rootCallingFile root calling file
+ * @returns {string} task URI
+ */
 function getTaskUri(bench, taskName, rootCallingFile) {
 	const uriMap = taskUriMap.get(bench);
 	return uriMap?.get(taskName) || `${rootCallingFile}::${taskName}`;
 }
 
-const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
+/**
+ * @param {Bench} bench bench
+ * @returns {Promise<Bench>} modifier bench
+ */
+const withCodSpeed = async (bench) => {
 	const codspeedRunnerMode = getCodspeedRunnerMode();
 
 	if (codspeedRunnerMode === "disabled") {
@@ -446,6 +541,11 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			return bench.tasks;
 		};
 
+		/**
+		 * @param {Fn} fn function
+		 * @param {boolean} isAsync true if async function, otherwise false
+		 * @returns {() => void} function wrapped in codspeed root frame
+		 */
 		const wrapFunctionWithFrame = (fn, isAsync) => {
 			if (isAsync) {
 				return async function __codspeed_root_frame__() {
@@ -458,6 +558,10 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			};
 		};
 
+		/**
+		 * @param {string} uri URI
+		 * @param {string} status status
+		 */
 		const logTaskCompletion = (uri, status) => {
 			console.log(`[CodSpeed] ${status} ${uri}`);
 		};
@@ -465,13 +569,20 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 		const taskCompletionMessage = () =>
 			InstrumentHooks.isInstrumented() ? "Measured" : "Checked";
 
+		/**
+		 * @param {Task} task task
+		 * @returns {Promise<[number, number] | void>} start and end time
+		 */
 		const iterationAsync = async (task) => {
+			// @ts-expect-error no public API
+			const { fn, fnOpts } = task;
+
 			try {
-				await task.fnOpts.beforeEach?.call(task, "run");
+				await fnOpts.beforeEach?.call(task, "run");
 				const start = bench.opts.now();
-				await task.fn();
+				await fn();
 				const end = bench.opts.now() - start || 0;
-				await task.fnOpts.afterEach?.call(this, "run");
+				await fnOpts.afterEach?.call(this, "run");
 				return [start, end];
 			} catch (err) {
 				if (bench.opts.throws) {
@@ -480,6 +591,11 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			}
 		};
 
+		/**
+		 * @param {Fn} fn function
+		 * @param {string} uri URI
+		 * @returns {Promise<ReturnType<Fn>>} result with instrument hooks
+		 */
 		const wrapWithInstrumentHooksAsync = async (fn, uri) => {
 			InstrumentHooks.startBenchmark();
 			const result = await fn();
@@ -488,7 +604,12 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			return result;
 		};
 
+		/**
+		 * @param {Task} task task
+		 * @param {string} uri URI
+		 */
 		const runTaskAsync = async (task, uri) => {
+			// @ts-expect-error no public API
 			const { fnOpts, fn } = task;
 
 			// Custom setup
@@ -519,13 +640,20 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
 
+		/**
+		 * @param {Task} task task
+		 * @returns {[number, number] | undefined} start and end time
+		 */
 		const iteration = (task) => {
+			// @ts-expect-error no public API
+			const { fn, fnOpts } = task;
+
 			try {
-				task.fnOpts.beforeEach?.call(task, "run");
+				fnOpts.beforeEach?.call(task, "run");
 				const start = bench.opts.now();
-				task.fn();
+				fn();
 				const end = bench.opts.now() - start || 0;
-				task.fnOpts.afterEach?.call(this, "run");
+				fnOpts.afterEach?.call(this, "run");
 				return [start, end];
 			} catch (err) {
 				if (bench.opts.throws) {
@@ -534,6 +662,11 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			}
 		};
 
+		/**
+		 * @param {Fn} fn function
+		 * @param {string} uri URI
+		 * @returns {ReturnType<Fn>} result with instrument hooks
+		 */
 		const wrapWithInstrumentHooks = (fn, uri) => {
 			InstrumentHooks.startBenchmark();
 			const result = fn();
@@ -542,7 +675,12 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			return result;
 		};
 
+		/**
+		 * @param {Task} task task
+		 * @param {string} uri URI
+		 */
 		const runTaskSync = (task, uri) => {
+			// @ts-expect-error no public API
 			const { fnOpts, fn } = task;
 
 			// Custom setup
@@ -571,17 +709,20 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
 
-		const finalizeAsyncRun = () => {
-			finalizeBenchRun();
-		};
-		const finalizeSyncRun = () => {
-			finalizeBenchRun();
-		};
+		/**
+		 * @returns {Task[]} tasks
+		 */
+		const finalizeAsyncRun = () => finalizeBenchRun();
+		/**
+		 * @returns {Task[]} tasks
+		 */
+		const finalizeSyncRun = () => finalizeBenchRun();
 
 		bench.run = async () => {
 			setupBenchRun();
 
 			for (const task of bench.tasks) {
+				// @ts-expect-error no public API
 				const uri = getTaskUri(task.bench, task.name, rootCallingFile);
 				await runTaskAsync(task, uri);
 			}
@@ -593,6 +734,7 @@ const withCodSpeed = async (/** @type {import("tinybench").Bench} */ bench) => {
 			setupBenchRun();
 
 			for (const task of bench.tasks) {
+				// @ts-expect-error no public API
 				const uri = getTaskUri(task.bench, task.name, rootCallingFile);
 				runTaskSync(task, uri);
 			}
@@ -614,18 +756,33 @@ const bench = await withCodSpeed(
 		warmupIterations: 2,
 		iterations: 8,
 		setup(task, mode) {
+			if (!task) {
+				return;
+			}
+
 			console.log(`Setup (${mode} mode): ${task.name}`);
 		},
 		teardown(task, mode) {
+			if (!task) {
+				return;
+			}
+
 			console.log(`Teardown (${mode} mode): ${task.name}`);
 		}
 	})
 );
 
+/**
+ * @param {Bench} bench bench
+ * @param {string} test test
+ * @param {Baseline[]} baselines baselines
+ * @returns {Promise<void>}
+ */
 async function registerSuite(bench, test, baselines) {
 	const testDirectory = path.join(casesPath, test);
 	const optionsPath = path.resolve(testDirectory, "options.mjs");
 
+	/** @type {{ setup?: () => Promise<void> }} */
 	let options = {};
 
 	try {
@@ -653,7 +810,7 @@ async function registerSuite(bench, test, baselines) {
 
 	const realConfig = (
 		await import(
-			`${pathToFileURL(path.join(testDirectory, "webpack.config.js"))}`
+			`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
 		)
 	).default;
 
@@ -678,12 +835,22 @@ async function registerSuite(bench, test, baselines) {
 					console.log(`Register: ${fullBenchName}`);
 
 					if (scenario.watch) {
-						const entry = path.resolve(config.entry);
+						if (!config.entry) {
+							throw new Error(`No entry for "${fullBenchName}" bench.`);
+						}
+
+						const entry = path.resolve(/** @type {string} */ (config.entry));
 						const originalEntryContent = await fs.readFile(entry, "utf8");
 
+						/** @type {Watching | undefined} */
 						let watching;
+						/** @type {(err: Error | null, stats?: Stats) => void} */
 						let next;
 
+						/**
+						 * @param {Error | null} err err
+						 * @param {Stats=} stats stats
+						 */
 						const watchCallback = (err, stats) => {
 							if (next) {
 								next(err, stats);
@@ -693,7 +860,9 @@ async function registerSuite(bench, test, baselines) {
 						bench.add(
 							benchName,
 							async () => {
+								/** @type {((value?: void) => void)} */
 								let resolve;
+								/** @type {((err: Error | null) => void)} */
 								let reject;
 
 								const promise = new Promise((res, rej) => {
@@ -702,7 +871,7 @@ async function registerSuite(bench, test, baselines) {
 								});
 
 								next = (err, stats) => {
-									if (err) {
+									if (err || !stats) {
 										reject(err);
 										return;
 									}
@@ -717,34 +886,44 @@ async function registerSuite(bench, test, baselines) {
 									resolve();
 								};
 
-								await new Promise((resolve, reject) => {
-									writeFile(
-										entry,
-										`${originalEntryContent};console.log('watch test')`,
-										(err) => {
-											if (err) {
-												reject(err);
-												return;
-											}
+								await new Promise(
+									/**
+									 * @param {(value?: void) => void} resolve resolve
+									 * @param {(err: Error) => void} reject reject
+									 */
+									(resolve, reject) => {
+										writeFile(
+											entry,
+											`${originalEntryContent};console.log('watch test')`,
+											(err) => {
+												if (err) {
+													reject(err);
+													return;
+												}
 
-											resolve();
-										}
-									);
-								});
+												resolve();
+											}
+										);
+									}
+								);
 
 								await promise;
 							},
 							{
-								beforeEach() {
-									console.time(`Time: ${benchName}`);
+								beforeEach(mode) {
+									console.time(`Time (${mode} mode): ${benchName}`);
 								},
-								afterEach() {
-									console.timeEnd(`Time: ${benchName}`);
+								afterEach(mode) {
+									console.timeEnd(`Time (${mode} mode): ${benchName}`);
 								},
 								async beforeAll() {
-									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
+									/** @type {Task} */
+									(this).collectBy =
+										`${test}, scenario '${stringifiedScenario}'`;
 
+									/** @type {((value?: void) => void)} */
 									let resolve;
+									/** @type {((err: Error | null) => void)} */
 									let reject;
 
 									const promise = new Promise((res, rej) => {
@@ -753,7 +932,7 @@ async function registerSuite(bench, test, baselines) {
 									});
 
 									next = (err, stats) => {
-										if (err) {
+										if (err || !stats) {
 											reject(err);
 											return;
 										}
@@ -784,49 +963,67 @@ async function registerSuite(bench, test, baselines) {
 
 									// Make an extra fs call to warn up filesystem caches
 									// Also wait a first run callback
-									await new Promise((resolve, reject) => {
-										writeFile(
-											entry,
-											`${originalEntryContent};console.log('watch test')`,
-											(err) => {
+									await new Promise(
+										/**
+										 * @param {(value?: void) => void} resolve resolve
+										 * @param {(err: Error) => void} reject reject
+										 */
+										(resolve, reject) => {
+											writeFile(
+												entry,
+												`${originalEntryContent};console.log('watch test')`,
+												(err) => {
+													if (err) {
+														reject(err);
+														return;
+													}
+
+													resolve();
+												}
+											);
+										}
+									);
+
+									await promise;
+								},
+								async afterAll() {
+									// Close watching
+									await new Promise(
+										/**
+										 * @param {(value?: void) => void} resolve resolve
+										 * @param {(err: Error) => void} reject reject
+										 */
+										(resolve, reject) => {
+											if (watching) {
+												watching.close((closeErr) => {
+													if (closeErr) {
+														reject(closeErr);
+														return;
+													}
+
+													resolve();
+												});
+											}
+										}
+									);
+
+									// Write original content
+									await new Promise(
+										/**
+										 * @param {(value?: void) => void} resolve resolve
+										 * @param {(err: Error) => void} reject reject
+										 */
+										(resolve, reject) => {
+											writeFile(entry, originalEntryContent, (err) => {
 												if (err) {
 													reject(err);
 													return;
 												}
 
 												resolve();
-											}
-										);
-									});
-
-									await promise;
-								},
-								async afterAll() {
-									// Close watching
-									await new Promise((resolve, reject) => {
-										if (watching) {
-											watching.close((closeErr) => {
-												if (closeErr) {
-													reject(closeErr);
-													return;
-												}
-
-												resolve();
 											});
 										}
-									});
-
-									// Write original content
-									await new Promise((resolve, reject) => {
-										writeFile(entry, originalEntryContent, (err) => {
-											if (err) {
-												reject(err);
-												return;
-											}
-
-											resolve();
-										});
-									});
+									);
 								}
 							}
 						);
@@ -843,14 +1040,16 @@ async function registerSuite(bench, test, baselines) {
 								}
 							},
 							{
-								beforeEach() {
-									console.time(`Time: ${benchName}`);
+								beforeEach(mode) {
+									console.time(`Time (${mode} mode): ${benchName}`);
 								},
-								afterEach() {
-									console.timeEnd(`Time: ${benchName}`);
+								afterEach(mode) {
+									console.timeEnd(`Time (${mode} mode): ${benchName}`);
 								},
 								beforeAll() {
-									this.collectBy = `${test}, scenario '${stringifiedScenario}'`;
+									/** @type {Task} */
+									(this).collectBy =
+										`${test}, scenario '${stringifiedScenario}'`;
 								}
 							}
 						);
@@ -874,6 +1073,7 @@ const NEGATIVE_FILTER =
 		: undefined;
 
 const casesPath = path.join(__dirname, "benchmarkCases");
+/** @type {string[]} */
 const allBenchmarks = (await fs.readdir(casesPath))
 	.filter(
 		(item) =>
@@ -883,7 +1083,9 @@ const allBenchmarks = (await fs.readdir(casesPath))
 	)
 	.sort((a, b) => a.localeCompare(b));
 
+/** @type {string[]} */
 const benchmarks = allBenchmarks.filter((item) => !item.includes("-long"));
+/** @type {string[]} */
 const longBenchmarks = allBenchmarks.filter((item) => item.includes("-long"));
 const i = Math.floor(benchmarks.length / longBenchmarks.length);
 
@@ -908,11 +1110,21 @@ if (
 	);
 }
 
+/**
+ * @template T
+ * @param {T[]} array an array
+ * @param {number} n number of chunks
+ * @returns {T[][]} splitted to b chunks
+ */
 function splitToNChunks(array, n) {
+	/** @type {T[][]} */
 	const result = [];
 
 	for (let i = n; i > 0; i--) {
-		result.push(array.splice(0, Math.ceil(array.length / i)));
+		result.push(
+			/** @type {T[]} */
+			(array.splice(0, Math.ceil(array.length / i)))
+		);
 	}
 
 	return result;
@@ -932,6 +1144,12 @@ await Promise.all(
 	)
 );
 
+/**
+ * @param {number} value value
+ * @param {number} precision precision
+ * @param {number} fractionDigits fraction digits
+ * @returns {string} formatted number
+ */
 function formatNumber(value, precision, fractionDigits) {
 	return Math.abs(value) >= 10 ** precision
 		? value.toFixed()
@@ -943,6 +1161,10 @@ function formatNumber(value, precision, fractionDigits) {
 const US_PER_MS = 10 ** 3;
 const NS_PER_MS = 10 ** 6;
 
+/**
+ * @param {number} value time
+ * @returns {string} formatted time
+ */
 function formatTime(value) {
 	const toType =
 		Math.round(value) > 0
@@ -968,9 +1190,19 @@ const statsByTests = new Map();
 
 bench.addEventListener("cycle", (event) => {
 	const task = event.task;
+
+	if (!task) {
+		throw new Error("Can't find a task");
+	}
+
 	const runs = task.runs;
 	const nSqrt = Math.sqrt(runs);
 	const z = tDistribution(runs - 1);
+
+	if (!task.result) {
+		throw new Error("Can't find a task result");
+	}
+
 	const { latency } = task.result;
 	const minConfidence = latency.mean - (z * latency.sd) / nSqrt;
 	const maxConfidence = latency.mean + (z * latency.sd) / nSqrt;
@@ -981,7 +1213,7 @@ bench.addEventListener("cycle", (event) => {
 	const confidence = `${mean} ± ${deviation} [${minConfidenceFormatted}; ${maxConfidenceFormatted}]`;
 	const text = `${task.name} ${confidence}`;
 
-	const collectBy = task.collectBy;
+	const collectBy = /** @type {Task} */ (task).collectBy;
 	const allStats = statsByTests.get(collectBy);
 
 	console.log(`Cycle: ${task.name} ${confidence} (${runs} runs sampled)`);

@@ -1,8 +1,15 @@
 "use strict";
 
+/** @typedef {ReturnType<expect>} ExceptResult */
+
 const { itemsToRegexp } = require("../lib/util/compileBooleanMatcher");
 
 describe("itemsToRegexp", () => {
+	/**
+	 * @param {string} name name
+	 * @param {string | string[]} input input
+	 * @param {(e: ExceptResult) => void} fn fn to test
+	 */
 	const expectCompiled = (name, input, fn) => {
 		it(`should compile ${name}`, () => {
 			const items = typeof input === "string" ? input.split(",") : input;
@@ -19,8 +26,12 @@ describe("itemsToRegexp", () => {
 		test() {
 			return true;
 		},
+		/**
+		 * @param {unknown} received received
+		 * @returns {string} result
+		 */
 		print(received) {
-			return received;
+			return /** @type {string} */ (received);
 		}
 	});
 

@@ -4,7 +4,10 @@ const SortableSet = require("../lib/util/SortableSet");
 
 describe("util/SortableSet", () => {
 	it("can be constructed like a normal Set", () => {
-		const sortableSet = new SortableSet([1, 1, 1, 1, 1, 4, 5, 2], () => {});
+		const sortableSet = new SortableSet(
+			[1, 1, 1, 1, 1, 4, 5, 2],
+			(a, b) => a - b
+		);
 		expect([...sortableSet]).toEqual([1, 4, 5, 2]);
 	});
 

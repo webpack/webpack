@@ -7,10 +7,15 @@ const NormalModule = require("../lib/NormalModule");
 
 describe("NormalModule", () => {
 	let normalModule;
+	/** @type {string} */
 	let request;
+	/** @type {string} */
 	let userRequest;
+	/** @type {string} */
 	let rawRequest;
+	/** @type {string[]} */
 	let loaders;
+	/** @type {string} */
 	let resource;
 	let parser;
 
@@ -18,6 +23,7 @@ describe("NormalModule", () => {
 		request = "/some/request";
 		userRequest = "/some/userRequest";
 		rawRequest = "some/rawRequest";
+		/** @type {string[]} */
 		loaders = [];
 		resource = "/some/resource";
 		parser = {

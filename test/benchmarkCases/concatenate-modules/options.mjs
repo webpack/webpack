@@ -4,10 +4,18 @@ import { fileURLToPath } from "url";
 
 const items = Array.from({ length: 25 }).fill("file");
 
+/**
+ * @param {number} i index
+ * @returns {string} generated code
+ */
 function generateDefaultMod(i) {
 	return `export default ${i}`;
 }
 
+/**
+ * @param {number} i index
+ * @returns {string} generated code
+ */
 function generateNamedMod(i) {
 	return `const myVar = ${i}; export { myVar }`;
 }

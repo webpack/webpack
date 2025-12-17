@@ -4,6 +4,10 @@ import { fileURLToPath } from "url";
 
 const items = Array.from({ length: 25 }).fill("image");
 
+/**
+ * @param {string} text text in svg code
+ * @returns {string} generated code
+ */
 function generateSVG(text) {
 	return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
 	<title>${text}</title>

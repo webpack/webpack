@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "nodenext",
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Iterator",
+      "dom"
+    ],
+    "moduleResolution": "node16"
+  },
+  "include": [
+    "test/*.benchmark.mjs",
+    "test/benchmarkCases/_helpers/**/*.mjs",
+    "test/benchmarkCases/**/webpack.config.mjs",
+    "test/benchmarkCases/**/options.mjs"
+  ]
+}
