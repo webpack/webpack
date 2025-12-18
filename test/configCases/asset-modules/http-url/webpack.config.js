@@ -102,5 +102,18 @@ module.exports = [
 				frozen: true
 			})
 		]
+	},
+	{
+		name: "security-userinfo-bypass",
+		...base,
+		entry: "./index.security.js",
+		plugins: [
+			serverPlugin,
+			new HttpUriPlugin({
+				allowedUris,
+				upgrade: false,
+				frozen: false
+			})
+		]
 	}
 ];
