@@ -269,7 +269,7 @@ describe("ProgressPlugin", () => {
 		return runCompilerAsync(compiler).then(() => {
 			const logs = stderr.toString();
 			expect(logs).toEqual(
-				expect.stringMatching(/\d+\/\d+ [custom test logger]/)
+				expect.stringMatching(/\d+\/\d+ \[custom test logger\]/)
 			);
 			expect(logs).toEqual(expect.stringMatching(/\d+ active/));
 			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ modules/));

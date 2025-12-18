@@ -264,7 +264,7 @@ class FakeSheet {
 		css = css
 			// Remove comments
 			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gms, "")
+			.replace(/\/\*.*?\*\//gs, "")
 			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
 					return url;
@@ -376,7 +376,7 @@ class CSSStyleSheet {
 		// Remove comments
 		const cleanCss = cssText
 			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gms, "");
+			.replace(/\/\*.*?\*\//gs, "");
 
 		let ruleStart = 0;
 

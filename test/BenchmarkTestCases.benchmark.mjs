@@ -277,7 +277,7 @@ function buildConfiguration(
 			? path.resolve(
 					testDirectory,
 					config.entry
-						? /\.(c|m)?js$/.test(config.entry)
+						? /\.(?:c|m)?js$/.test(config.entry)
 							? config.entry
 							: `${config.entry}.js`
 						: "./index.js"

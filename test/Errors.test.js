@@ -8,7 +8,7 @@ const prettyFormat = require("pretty-format").default;
 const webpack = require("..");
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
-const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
+const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
 
 /**
  * @param {unknown} err an err
@@ -51,9 +51,9 @@ const prettyFormatOptions = {
 			},
 			print(val) {
 				return `"${val
-					.replace(/\\/gm, "/")
-					.replace(/"/gm, '\\"')
-					.replace(/\r?\n/gm, "\\n")}"`;
+					.replace(/\\/g, "/")
+					.replace(/"/g, '\\"')
+					.replace(/\r?\n/g, "\\n")}"`;
 			}
 		}
 	]

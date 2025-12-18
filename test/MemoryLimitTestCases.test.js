@@ -103,7 +103,7 @@ describe("MemoryLimitTestCases", () => {
 						...args,
 						(err, result) => {
 							if (err) return callback(err);
-							if (!/\.(js|json|txt)$/.test(args[0])) {
+							if (!/\.(?:js|json|txt)$/.test(args[0])) {
 								return callback(null, result);
 							}
 							callback(null, result.toString("utf8").replace(/\r/g, ""));

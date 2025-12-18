@@ -150,7 +150,7 @@ class HtmlInlinePlugin {
 							/** @type {{ start: number, length: number, asset: Asset }[]} */
 							const matches = [];
 							const regExp =
-								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|[^\s]+))?)*\s*><\/script>/g;
+								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|\S+))?)*\s*><\/script>/g;
 							let match = regExp.exec(content);
 							while (match) {
 								let url = match[1];
