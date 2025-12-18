@@ -1,5 +1,12 @@
 # webpack
 
+## 5.104.1
+
+### Patch Changes
+
+- 2efd21b: Reexports runtime calculation should not accessing **WEBPACK_IMPORT_KEY** decl with var.
+- c510070: Fixed a user information bypass vulnerability in the HttpUriPlugin plugin.
+
 ## 5.104.0
 
 ### Minor Changes
