@@ -111,7 +111,7 @@ describe("StatsTestCases", () => {
 						...args,
 						(err, result) => {
 							if (err) return callback(err);
-							if (!/\.(js|json|txt)$/.test(args[0])) {
+							if (!/\.(?:js|json|txt)$/.test(args[0])) {
 								return callback(null, result);
 							}
 							callback(null, result.toString("utf8").replace(/\r/g, ""));
@@ -215,7 +215,7 @@ describe("StatsTestCases", () => {
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
 					.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 					.replace(
-						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
+						/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
 						(match) => `${match.replace(/[0-9a-f]/g, "X")}`
 					)
 					// Normalize stack traces between Jest v27 and v30

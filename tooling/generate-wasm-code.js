@@ -21,7 +21,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 		const content = fs.readFileSync(filePath, "utf8");
 
 		const regexp =
-			/\n\/\/[\s]*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
+			/\n\/\/\s*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
 
 		const replaces = new Map();
 

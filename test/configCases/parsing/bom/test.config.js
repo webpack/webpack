@@ -17,7 +17,7 @@ module.exports = {
 
 			switch (file) {
 				case "resource-with-bom.ext": {
-					if (!/[\uFEFF]/.test(source)) {
+					if (!/\uFEFF/.test(source)) {
 						throw new Error(`Not found BOM in ${filename}.`);
 					}
 					break;

@@ -45,7 +45,7 @@ const exec = (n, options = {}) =>
 			const rawStdout = chunks.join("");
 			const stdout = rawStdout.replace(
 				// This warning is expected
-				/<([ew])> \[.+\n(?:<([ew])> [^[].+\n)*/g,
+				/<([ew])> \[.+\n(?:<[ew]> [^[].+\n)*/g,
 				(message, type) => {
 					(type === "e" ? errors : warnings).push(message);
 					return "";

@@ -125,7 +125,7 @@ const doCompileAndReplace = (args, prefix, callback) => {
 					stdout
 						.replace(/[\r?\n]*$/, "")
 						.replace(
-							/\d\d\d\d-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])/g,
+							/\d\d\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/g,
 							"XXXX-XX-XX"
 						)
 						.replace(/([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g, "XXXX:XX:XX")

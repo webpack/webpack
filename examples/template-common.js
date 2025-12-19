@@ -14,7 +14,7 @@ const path = require("path");
 function lessStrict(regExpStr) {
 	regExpStr = regExpStr
 		.replace(/node_modules/g, "(node_modules|~)")
-		.replace(/(\\\/|\\\\)/g, "[\\/\\\\]");
+		.replace(/\\\/|\\\\/g, "[\\/\\\\]");
 	return regExpStr;
 }
 
