@@ -17,5 +17,13 @@ module.exports = {
 	node: {
 		__dirname: false,
 		__filename: false
+	},
+	module: {
+		rules: [
+			{
+				test: /url\.css$/,
+				type: "css/module"
+			}
+		]
 	}
 };
