@@ -2278,7 +2278,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2307,15 +2308,15 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/module",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "dependency": /css-import-local-module/,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2375,7 +2376,7 @@ describe("snapshots", () => {
 			+             "test": /\\.css$/i,
 			+             "type": "css/auto",
 			+           },
-			+           Object {
+			@@ ... @@
 			+             "generator": Object {
 			+               "esModule": false,
 			+             },
@@ -2391,9 +2392,11 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+               "preferRelative": true,
 			+             },
-			+             "scheme": /^data$/,
+			@@ ... @@
 			+             "type": "css/auto",
 			+           },
+			+           Object {
+			+             "scheme": /^data$/,
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2421,13 +2424,11 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			@@ ... @@
+			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2451,6 +2452,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2474,9 +2476,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2488,10 +2487,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2942,17 +2942,18 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "css/module",
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "dependency": /css-import-global-module/,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
 			+         },
@@ -3042,20 +3043,12 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 			+         },
-=======
->>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
-			+       },
-=======
->>>>>>> fb4b886a2 (test: fix)
+			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-<<<<<<< HEAD
-<<<<<<< HEAD
 			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
@@ -3064,7 +3057,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3080,11 +3073,6 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-=======
->>>>>>> 8407d5465 (feat(css): add exportType url with new URL() syntax)
-=======
-			+       },
->>>>>>> fb4b886a2 (test: fix)
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3105,9 +3093,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3119,10 +3104,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3150,9 +3136,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
