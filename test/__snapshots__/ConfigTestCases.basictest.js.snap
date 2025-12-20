@@ -14726,10 +14726,28 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 `;
 
 exports[`ConfigTestCases css export-type-url exported tests should export URL string when exportType is URL 1`] = `
-"/*!************************************************!*\\\\
+"/*!******************************!*\\\\
+  !*** css ./url-imported.css ***!
+  \\\\******************************/
+.url-imported_css_1d52-url-imported {
+	background: lightblue;
+}
+
+
+/*!*********************!*\\\\
+  !*** css ./url.css ***!
+  \\\\*********************/
+
+.url_css_d598-url-class {
+	background: url(09a1a1112c577c279435.png);
+	color: teal;
+	margin: 10px;
+}
+
+/*!************************************************!*\\\\
   !*** css ./url-imported.css (exportType: url) ***!
   \\\\************************************************/
-.url-imported {
+.url-imported_css_01df-url-imported {
 	background: lightblue;
 }
 
@@ -14738,7 +14756,7 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
   !*** css ./url.css (exportType: url) ***!
   \\\\***************************************/
 
-.url-class {
+.url_css_437f-url-class {
 	background: url(09a1a1112c577c279435.png);
 	color: teal;
 	margin: 10px;
@@ -14750,6 +14768,14 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
 .class-other {
 	color: red;
 }
+
+/*!************************************************!*\\\\
+  !*** css ./url-imported.css (exportType: url) ***!
+  \\\\************************************************/
+.url-imported {
+	background: lightblue;
+}
+
 
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\\\\
   !*** css data:text/css;charset=utf-8,%40import%20url%28%22.%2Furl-imported.css%22%29%3B%0D%0A%0D%0A.url-class%20%7B%0D%0A%09background%3A%20url%28%22.%2Fimg.png%22%29%3B%0D%0A%09color%3A%20teal%3B%0D%0A%09margin%3A%2010px%3B%0D%0A%7D (exportType: url) ***!
@@ -14764,10 +14790,28 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
 `;
 
 exports[`ConfigTestCases css export-type-url exported tests should export URL string when exportType is URL 2`] = `
-"/*!************************************************!*\\\\
+"/*!******************************!*\\\\
+  !*** css ./url-imported.css ***!
+  \\\\******************************/
+.url-imported_css_1d52-url-imported {
+	background: lightblue;
+}
+
+
+/*!*********************!*\\\\
+  !*** css ./url.css ***!
+  \\\\*********************/
+
+.url_css_d598-url-class {
+	background: url(09a1a1112c577c279435.png);
+	color: teal;
+	margin: 10px;
+}
+
+/*!************************************************!*\\\\
   !*** css ./url-imported.css (exportType: url) ***!
   \\\\************************************************/
-.url-imported {
+.url-imported_css_01df-url-imported {
 	background: lightblue;
 }
 
@@ -14776,7 +14820,7 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
   !*** css ./url.css (exportType: url) ***!
   \\\\***************************************/
 
-.url-class {
+.url_css_437f-url-class {
 	background: url(09a1a1112c577c279435.png);
 	color: teal;
 	margin: 10px;
@@ -14788,6 +14832,14 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
 .class-other {
 	color: red;
 }
+
+/*!************************************************!*\\\\
+  !*** css ./url-imported.css (exportType: url) ***!
+  \\\\************************************************/
+.url-imported {
+	background: lightblue;
+}
+
 
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\\\\
   !*** css data:text/css;charset=utf-8,%40import%20url%28%22.%2Furl-imported.css%22%29%3B%0D%0A%0D%0A.url-class%20%7B%0D%0A%09background%3A%20url%28%22.%2Fimg.png%22%29%3B%0D%0A%09color%3A%20teal%3B%0D%0A%09margin%3A%2010px%3B%0D%0A%7D (exportType: url) ***!
@@ -14802,10 +14854,28 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
 `;
 
 exports[`ConfigTestCases css export-type-url exported tests should export URL string when exportType is url and DATA URI is CSS 1`] = `
-"/*!************************************************!*\\\\
+"/*!******************************!*\\\\
+  !*** css ./url-imported.css ***!
+  \\\\******************************/
+.url-imported_css_1d52-url-imported {
+	background: lightblue;
+}
+
+
+/*!*********************!*\\\\
+  !*** css ./url.css ***!
+  \\\\*********************/
+
+.url_css_d598-url-class {
+	background: url(09a1a1112c577c279435.png);
+	color: teal;
+	margin: 10px;
+}
+
+/*!************************************************!*\\\\
   !*** css ./url-imported.css (exportType: url) ***!
   \\\\************************************************/
-.url-imported {
+.url-imported_css_01df-url-imported {
 	background: lightblue;
 }
 
@@ -14814,7 +14884,7 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
   !*** css ./url.css (exportType: url) ***!
   \\\\***************************************/
 
-.url-class {
+.url_css_437f-url-class {
 	background: url(09a1a1112c577c279435.png);
 	color: teal;
 	margin: 10px;
@@ -14826,6 +14896,14 @@ exports[`ConfigTestCases css export-type-url exported tests should export URL st
 .class-other {
 	color: red;
 }
+
+/*!************************************************!*\\\\
+  !*** css ./url-imported.css (exportType: url) ***!
+  \\\\************************************************/
+.url-imported {
+	background: lightblue;
+}
+
 
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\\\\
   !*** css data:text/css;charset=utf-8,%40import%20url%28%22.%2Furl-imported.css%22%29%3B%0D%0A%0D%0A.url-class%20%7B%0D%0A%09background%3A%20url%28%22.%2Fimg.png%22%29%3B%0D%0A%09color%3A%20teal%3B%0D%0A%09margin%3A%2010px%3B%0D%0A%7D (exportType: url) ***!
