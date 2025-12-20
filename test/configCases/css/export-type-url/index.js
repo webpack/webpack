@@ -1,3 +1,9 @@
+import { "url-class" as urlClass } from "./url.css";
+
+it("should export URL string when exportType is url", () => {
+	expect(typeof urlClass).toBe("string");
+});
+
 it("should export URL string when exportType is URL", () => {
 	const urlCss = new URL("./url.css", import.meta.url);
 
