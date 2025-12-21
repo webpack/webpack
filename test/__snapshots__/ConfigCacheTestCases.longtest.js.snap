@@ -127,7 +127,8 @@ div {
 	background: url(09a1a1112c577c279435.png)
 }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -2873,7 +2874,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
     --my-app-identifiers_module_css-variable-used-class: 10px;
 }
 
-"
+
+/*# sourceMappingURL=use-style_js.bundle0.css.map*/"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 3`] = `
@@ -5595,7 +5597,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-"
+
+/*# sourceMappingURL=use-style-global_js.bundle4.css.map*/"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: global prod 1`] = `
@@ -13930,7 +13933,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-"
+
+/*# sourceMappingURL=bundle6.css.map*/"
 `;
 
 exports[`ConfigCacheTestCases css css-order exported tests keep consistent css order 1`] = `".button-module {  padding: 8px 16px;  background-color: #007bff;  color: white;  border: none;  border-radius: 4px;}.teaser-module {  padding: 20px;  border: 1px solid #ddd;  border-radius: 8px;  margin: 16px;}.teaser-module {  background-color: orange;}"`;
@@ -14197,7 +14201,8 @@ details {
 
 @keyframes style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -14341,7 +14346,8 @@ details {
 
 @keyframes style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -15198,7 +15204,7 @@ p {
 .link {
   color: #428bca;
 }
-
+/*# sourceMappingURL=file.css.map */
 /*!**********************************!*\\\\
   !*** css ./with-less-import.css ***!
   \\\\**********************************/
@@ -15248,7 +15254,7 @@ p {
 .conditional-names {
   color: #428bca;
 }
-
+/*# sourceMappingURL=default.css.map */
 /*!**********************************************************************!*\\\\
   !*** css ./node_modules/condition-names-custom-name/custom-name.css ***!
   \\\\**********************************************************************/
@@ -17055,7 +17061,8 @@ body {
 	background: red;
 }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -17334,7 +17341,8 @@ body {
 	background: red;
 }
 
-",
+
+/*# sourceMappingURL=bundle1.css.map*/",
 ]
 `;
 
@@ -20125,7 +20133,8 @@ body {
 
 :root { --postcss-modules-values_modules_css-color: /* comment */; }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -20211,7 +20220,8 @@ Array [
 	unknown: unknown;
 }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
   "/*!********************************!*\\\\
   !*** css ./export.modules.css ***!
   \\\\********************************/
@@ -20292,7 +20302,8 @@ Array [
 	unknown: unknown;
 }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -22927,7 +22938,8 @@ p:not(:local(#main-paragraph)) {
 	animation: test 1s, test;
 }
 
-",
+
+/*# sourceMappingURL=bundle0.css.map*/",
 ]
 `;
 
@@ -24641,7 +24653,8 @@ exports[`ConfigCacheTestCases css webpack-ignore exported tests should compile 1
 	background-image: image-set(/***webpackIgnore:  true***/ url(09a1a1112c577c279435.png) 2x)
 }
 
-"
+
+/*# sourceMappingURL=bundle0.css.map*/"
 `;
 
 exports[`ConfigCacheTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should compile 1`] = `

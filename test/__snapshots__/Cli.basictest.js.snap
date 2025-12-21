@@ -465,6 +465,60 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "devtool-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'devtool' configuration. A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": false,
+        "path": "devtool",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'devtool' configuration. A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "devtool-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Which asset type should receive this devtool value.",
+        "multiple": true,
+        "path": "devtool[].type",
+        "type": "enum",
+        "values": Array [
+          "all",
+          "javascript",
+          "css",
+        ],
+      },
+    ],
+    "description": "Which asset type should receive this devtool value.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "devtool-use": Object {
+    "configs": Array [
+      Object {
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": true,
+        "path": "devtool[].use",
+        "type": "enum",
+        "values": Array [
+          false,
+          "eval",
+        ],
+      },
+      Object {
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": true,
+        "path": "devtool[].use",
+        "type": "string",
+      },
+    ],
+    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "dotenv": Object {
     "configs": Array [
       Object {
