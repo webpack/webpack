@@ -2268,7 +2268,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2297,8 +2298,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/module",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2348,6 +2348,46 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			@@ ... @@
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			@@ ... @@
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			+             "scheme": /^data$/,
+			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
@@ -2374,13 +2414,11 @@ describe("snapshots", () => {
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			@@ ... @@
+			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2404,6 +2442,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2427,9 +2466,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2473,9 +2509,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -2894,10 +2932,10 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "css/module",
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "dependency": /css-import-global-module/,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2928,6 +2966,46 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
+			+       },
+			+       Object {
+			@@ ... @@
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			+             "generator": Object {
+			+               "esModule": false,
+			+             },
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "mimetype": "text/css",
+			+             "parser": Object {
+			+               "exportType": "url",
+			+               "namedExports": false,
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "scheme": /^data$/,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2956,7 +3034,7 @@ describe("snapshots", () => {
 			+       },
 			@@ ... @@
 			+         },
-			+       },
+			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -2969,7 +3047,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3005,9 +3083,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3051,9 +3126,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
