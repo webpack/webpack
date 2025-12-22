@@ -351,6 +351,6 @@
     "test/statsCases/**",
     "test/fixtures/**",
     "test/memoryLimitCases/**",
-    ".changeset/**"
+    "CHANGELOG.md"
   ]
 }
