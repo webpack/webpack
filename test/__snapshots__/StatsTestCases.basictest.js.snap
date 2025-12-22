@@ -1178,6 +1178,27 @@ chunk (runtime: a) a.js (a) X bytes [entry] [rendered]
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for error-stack-disabled-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+ERROR in Test error with stack
+
+webpack x.x.x compiled with 1 error in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for error-stack-enabled-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+ERROR in Test error with stack
+Error: Test error with stack
+    at Test.js:1:1
+    at compile.js:2:2
+
+webpack x.x.x compiled with 1 error in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for errors-space-error 1`] = `
 "assets by status X bytes [cached] 1 asset
 ./loader.js!./index.js X bytes [built] [code generated] [2 errors]
