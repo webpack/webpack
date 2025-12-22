@@ -350,6 +350,7 @@
     "test/configCases/**",
     "test/statsCases/**",
     "test/fixtures/**",
-    "test/memoryLimitCases/**"
+    "test/memoryLimitCases/**",
+    "CHANGELOG.md"
   ]
 }
