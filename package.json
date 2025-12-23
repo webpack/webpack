@@ -108,7 +108,7 @@
     "schema-utils": "^4.3.3",
     "tapable": "^2.3.0",
     "terser-webpack-plugin": "^5.3.16",
-    "watchpack": "^2.4.4",
+    "watchpack": "^2.5.0",
     "webpack-sources": "^3.3.3"
   },
   "devDependencies": {
