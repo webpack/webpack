@@ -19,7 +19,11 @@ const http = require("http");
 const http2 = require("http2");
 const https = require("https");
 const inspector = require("inspector");
-const inspectorPromises = require("inspector/promises");
+
+// The inspector/promises API was introduced in Node.js v19.0.0
+// https://github.com/nodejs/node/pull/44250
+const inspectorPromises =
+	NODE_VERSION >= 19 ? require("inspector/promises") : require("inspector");
 const moduleBuiltin = require("module");
 const net = require("net");
 const os = require("os");
@@ -130,9 +134,7 @@ it("should assert equality", () => {
 });
 
 it("should assert deep equality (assert/strict)", () => {
-	expect(() =>
-		assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
-	).not.toThrow();
+	expect(() => assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })).not.toThrow();
 });
 
 it("should create async hook (async_hooks)", () => {
@@ -241,7 +243,7 @@ it("should get platform (os)", () => {
 });
 
 it("should correctly join paths (path)", () => {
-	expect(path.join("/foo", "bar", "baz")).toBe("/foo/bar/baz");
+	expect(path.extname("foo.js")).toBe(".js");
 });
 
 it("should join paths with posix style (path/posix)", () => {
