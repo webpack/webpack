@@ -366,23 +366,6 @@ declare module "loader-runner" {
 	): void;
 }
 
-declare module "watchpack" {
-	class Watchpack {
-		aggregatedChanges: Set<string>;
-		aggregatedRemovals: Set<string>;
-		constructor(options: import("./declarations/WebpackOptions").WatchOptions);
-		once(eventName: string, callback: any): void;
-		watch(options: any): void;
-		collectTimeInfoEntries(
-			fileTimeInfoEntries: Map<string, number>,
-			contextTimeInfoEntries: Map<string, number>
-		): void;
-		pause(): void;
-		close(): void;
-	}
-	export = Watchpack;
-}
-
 declare module "eslint-scope/lib/referencer" {
 	type Property = import("estree").Property;
 	type PropertyDefinition = import("estree").PropertyDefinition;
