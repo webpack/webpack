@@ -987,28 +987,6 @@ Unexpected token (1:12)
 
 Hint: If you're trying to define a string value, wrap it in JSON.stringify():
   new webpack.DefinePlugin({ \\"BROKEN_VALUE\\": JSON.stringify(yourValue) })
-    at /workspaces/webpack/lib/DefinePlugin.js:655:16
-    at Hook.eval (eval at create (/workspaces/webpack/node_modules/tapable/lib/HookCodeFactory.js:19:10), <anonymous>:7:16)
-    at Hook.CALL_DELEGATE [as _call] (/workspaces/webpack/node_modules/tapable/lib/Hook.js:16:14)
-    at JavascriptParser.callHooksForInfoWithFallback (/workspaces/webpack/lib/javascript/JavascriptParser.js:4254:24)
-    at JavascriptParser.callHooksForNameWithFallback (/workspaces/webpack/lib/javascript/JavascriptParser.js:4273:15)
-    at JavascriptParser.callHooksForName (/workspaces/webpack/lib/javascript/JavascriptParser.js:4185:15)
-    at JavascriptParser.walkIdentifier (/workspaces/webpack/lib/javascript/JavascriptParser.js:4114:8)
-    at JavascriptParser.walkExpression (/workspaces/webpack/lib/javascript/JavascriptParser.js:3365:10)
-    at JavascriptParser.walkExpressions (/workspaces/webpack/lib/javascript/JavascriptParser.js:3324:10)
-    at JavascriptParser.walkCallExpression (/workspaces/webpack/lib/javascript/JavascriptParser.js:3990:35)
-    at JavascriptParser.walkExpression (/workspaces/webpack/lib/javascript/JavascriptParser.js:3350:10)
-    at JavascriptParser.walkExpressionStatement (/workspaces/webpack/lib/javascript/JavascriptParser.js:2302:8)
-    at JavascriptParser.walkStatement (/workspaces/webpack/lib/javascript/JavascriptParser.js:2219:10)
-    at JavascriptParser.walkStatements (/workspaces/webpack/lib/javascript/JavascriptParser.js:2090:9)
-    at JavascriptParser.parse (/workspaces/webpack/lib/javascript/JavascriptParser.js:4750:9)
-    at /workspaces/webpack/lib/NormalModule.js:1409:19
-    at processResult (/workspaces/webpack/lib/NormalModule.js:991:11)
-    at /workspaces/webpack/lib/NormalModule.js:1141:5
-    at /workspaces/webpack/node_modules/loader-runner/lib/LoaderRunner.js:506:3
-    at iterateNormalLoaders (/workspaces/webpack/node_modules/loader-runner/lib/LoaderRunner.js:240:44)
-    at processResourceCallback (/workspaces/webpack/node_modules/loader-runner/lib/LoaderRunner.js:282:5)
-    at Object.processResource (/workspaces/webpack/lib/NormalModule.js:1094:14)
 
 webpack x.x.x compiled with 1 error in X ms"
 `;
@@ -1237,8 +1215,6 @@ exports[`StatsTestCases should print correct stats for error-stack-enabled-error
 
 ERROR in Test error with stack
 Error: Test error with stack
-    at Test.js:1:1
-    at compile.js:2:2
 
 webpack x.x.x compiled with 1 error in X ms"
 `;
