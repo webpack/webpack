@@ -85,13 +85,13 @@ yarn lint
 ### To run only the typechecker use
 
 ```bash
-yarn type-lint
+yarn lint:types
 ```
 
 or incremental (in watch mode)
 
 ```bash
-yarn type-lint --watch
+yarn lint:types --watch
 ```
 
 ### To update all examples use

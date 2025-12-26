@@ -92,7 +92,7 @@ yarn test
 For running specific tests:
 
 ```sh
-jest cases/userLogic.test.js
+yarn test:base cases/userLogic.test.js
 ```
 
 ## Contribution Guide
