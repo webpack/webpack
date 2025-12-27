@@ -90,6 +90,57 @@ describe("util/identifier", () => {
 		}
 	});
 
+	describe("makePathsAbsolute", () => {
+		describe("should only absolutify paths before pipe separators", () => {
+			it("should not absolutify regex patterns after pipe separator", () => {
+				// Issue #16259: Context module identifiers with regex patterns
+				// containing ./ should not have regex patterns made absolute
+				const context = "/project";
+				const identifier = "./src|sync|^\\.\\/.*\\.js$";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				// Only ./src should be made absolute, regex pattern should remain unchanged
+				// The result should end with the unchanged regex pattern
+				expect(result).toMatch(
+					/[/\\]project[/\\]src\|sync\|\^\\\.\\\/\.\*\\\.js\$$/
+				);
+			});
+
+			it("should absolutify loader chains separated by !", () => {
+				const context = "/project";
+				const identifier = "./loader!./file.js";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toMatch(
+					/[/\\]project[/\\]loader![/\\]project[/\\]file\.js$/
+				);
+			});
+
+			it("should handle mixed ! and | separators correctly", () => {
+				const context = "/project";
+				const identifier = "./loader!./context|sync|./pattern";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				// ./loader and ./context should be made absolute (before |)
+				// ./pattern after | should NOT be made absolute
+				expect(result).toMatch(
+					/[/\\]project[/\\]loader![/\\]project[/\\]context\|sync\|\.\/pattern$/
+				);
+			});
+
+			it("should handle identifiers without separators", () => {
+				const context = "/project";
+				const identifier = "./src/file.js";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toMatch(/[/\\]project[/\\]src[/\\]file\.js$/);
+			});
+
+			it("should not modify non-relative paths", () => {
+				const context = "/project";
+				const identifier = "module-name|sync|^\\.\\/.*$";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toBe("module-name|sync|^\\.\\/.*$");
+			});
+		});
+	});
+
 	describe("parseResourceWithoutFragment", () => {
 		// [input, expectedPath, expectedQuery]
 		/** @type {[string, string, string][]} */
