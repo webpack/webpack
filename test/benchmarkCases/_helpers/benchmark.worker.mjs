@@ -622,7 +622,7 @@ async function addBuildBench({
 			},
 			beforeAll() {
 				/** @type {Task} */
-				(this).collectBy = `${test}, scenario '${scenario}'`;
+				(this).collectBy = `${benchmarkName}, scenario '${scenario}'`;
 			}
 		}
 	);
