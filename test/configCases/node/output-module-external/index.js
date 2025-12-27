@@ -9,7 +9,7 @@ const constants = require("constants");
 const crypto = require("crypto");
 const dgram = require("dgram");
 const dns = require("dns");
-const dnsPromises = require("dns/promises");
+const dnsPromises = NODE_VERSION >= 15 ? require("dns/promises") : undefined;
 const domain = require("domain");
 const events = require("events");
 const fs = require("fs");
@@ -76,7 +76,7 @@ const builtinImports = {
 	crypto,
 	dgram,
 	dns,
-	"dns/promises": dnsPromises,
+
 	domain,
 	events,
 	fs,
@@ -123,7 +123,8 @@ const optionalBuiltins = [
 	["timers/promises", timersPromises],
 	["wasi", wasi],
 	["worker_threads", workerThreads],
-	["inspector/promises", inspectorPromises]
+	["inspector/promises", inspectorPromises],
+	["dns/promises", dnsPromises]
 ];
 
 for (const [request, imported] of optionalBuiltins) {
@@ -136,7 +137,9 @@ const itIfAvailable = (imported) =>
 				it(desc, () => {
 					fn(imported);
 				})
-		: it.skip;
+		: () => {
+				// skip
+			};
 
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
