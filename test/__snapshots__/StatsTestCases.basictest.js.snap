@@ -4248,7 +4248,7 @@ asset table-643--shared.js X bytes [emitted]
 asset row-359--shared.js X bytes [emitted]
 asset cell-221--shared.js X bytes [emitted]
 asset templater-743--shared.js X bytes [emitted]
-runtime modules X KiB 11 modules
+runtime modules X KiB 10 modules
 built modules X bytes (javascript) X bytes (share-init) X bytes (consume-shared) [built]
   cacheable modules X bytes
     modules by path ./node_modules/ X bytes 4 modules
