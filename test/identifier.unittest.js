@@ -91,15 +91,14 @@ describe("util/identifier", () => {
 	});
 
 	describe("makePathsAbsolute", () => {
-		describe("should only absolutify paths before pipe separators", () => {
-			it("should not absolutify regex patterns after pipe separator", () => {
+		describe("should not absolutify regex patterns", () => {
+			it("should not absolutify regex patterns in context module identifiers", () => {
 				// Issue #16259: Context module identifiers with regex patterns
 				// containing ./ should not have regex patterns made absolute
 				const context = "/project";
 				const identifier = "./src|sync|^\\.\\/.*\\.js$";
 				const result = identifierUtil.makePathsAbsolute(context, identifier);
 				// Only ./src should be made absolute, regex pattern should remain unchanged
-				// The result should end with the unchanged regex pattern
 				expect(result).toMatch(
 					/[/\\]project[/\\]src\|sync\|\^\\\.\\\/\.\*\\\.js\$$/
 				);
@@ -114,15 +113,12 @@ describe("util/identifier", () => {
 				);
 			});
 
-			it("should handle mixed ! and | separators correctly", () => {
+			it("should absolutify paths after pipe separators when not regex", () => {
 				const context = "/project";
-				const identifier = "./loader!./context|sync|./pattern";
+				const identifier = "css/auto|./bar.css";
 				const result = identifierUtil.makePathsAbsolute(context, identifier);
-				// ./loader and ./context should be made absolute (before |)
-				// ./pattern after | should NOT be made absolute
-				expect(result).toMatch(
-					/[/\\]project[/\\]loader![/\\]project[/\\]context\|sync\|\.\/pattern$/
-				);
+				// ./bar.css should be made absolute since it's not a regex pattern
+				expect(result).toMatch(/css\/auto\|[/\\]project[/\\]bar\.css$/);
 			});
 
 			it("should handle identifiers without separators", () => {
@@ -132,7 +128,7 @@ describe("util/identifier", () => {
 				expect(result).toMatch(/[/\\]project[/\\]src[/\\]file\.js$/);
 			});
 
-			it("should not modify non-relative paths", () => {
+			it("should not modify regex patterns with metacharacters", () => {
 				const context = "/project";
 				const identifier = "module-name|sync|^\\.\\/.*$";
 				const result = identifierUtil.makePathsAbsolute(context, identifier);
