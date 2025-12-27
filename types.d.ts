@@ -3669,6 +3669,11 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface CssLoadingRuntimeModulePluginHooks {
 	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
@@ -5570,6 +5575,11 @@ declare class ExternalModule extends Module {
 	static getExternalModuleNodeCommonjsInitFragment: (
 		runtimeTemplate: RuntimeTemplate
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
@@ -6243,6 +6253,11 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface GotHandler<T> {
 	(result: T, callback: () => void): void;
@@ -8711,6 +8726,11 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface JsonpCompilationPluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
@@ -9665,6 +9685,11 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 
 /**
@@ -10494,6 +10519,11 @@ declare class Module extends DependenciesBlock {
 	get errors(): any;
 	get warnings(): any;
 	used: any;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
@@ -10520,6 +10550,11 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare class ModuleConcatenationPlugin {
 	constructor();
@@ -11583,6 +11618,11 @@ declare class NormalModule extends Module {
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
@@ -16260,6 +16300,11 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static getExportsTypeByModule(
+		module: Module,
+		moduleGraph: ModuleGraph,
+		strict?: boolean
+	): ExportsType;
 }
 declare interface RuntimeRequirementsContext {
 	/**
