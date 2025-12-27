@@ -1,5 +1,4 @@
 const assertBuiltin = require("assert");
-const assertStrict = require("assert/strict");
 const asyncHooks = require("async_hooks");
 const buffer = require("buffer");
 const childProcess = require("child_process");
@@ -9,64 +8,38 @@ const constants = require("constants");
 const crypto = require("crypto");
 const dgram = require("dgram");
 const dns = require("dns");
-const dnsPromises = require("dns/promises");
 const domain = require("domain");
 const events = require("events");
 const fs = require("fs");
-const fsPromises = require("fs/promises");
 const http = require("http");
 const http2 = require("http2");
 const https = require("https");
 const inspector = require("inspector");
-const inspectorPromises =
-	NODE_VERSION >= 19 ? require("inspector/promises") : undefined;
 const moduleBuiltin = require("module");
 const net = require("net");
 const os = require("os");
 const path = require("path");
-const pathPosix = require("path/posix");
-const pathWin32 = require("path/win32");
 const perfHooks = require("perf_hooks");
 const processBuiltin = require("process");
 const punycode = require("punycode");
 const querystring = require("querystring");
 const readline = require("readline");
-const readlinePromises =
-	NODE_VERSION >= 17 ? require("readline/promises") : undefined;
 const repl = require("repl");
 const stream = require("stream");
-const streamConsumers =
-	NODE_VERSION >= 16 ? require("stream/consumers") : undefined;
-const streamPromises =
-	NODE_VERSION >= 15 ? require("stream/promises") : undefined;
-
-const streamWeb = NODE_VERSION >= 16 ? require("stream/web") : undefined;
 const stringDecoder = require("string_decoder");
 const sys = require("sys");
 const timers = require("timers");
-
-const timersPromises =
-	NODE_VERSION >= 15 ? require("timers/promises") : undefined;
 const tls = require("tls");
 const traceEvents = require("trace_events");
 const tty = require("tty");
 const url = require("url");
 const util = require("util");
-const utilTypes = require("util/types");
 const v8 = require("v8");
 const vm = require("vm");
-
-// diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
-const diagnosticsChannel =
-	NODE_VERSION >= 14 ? require("diagnostics_channel") : undefined;
-const wasi = NODE_VERSION >= 12 ? require("wasi") : undefined;
-const workerThreads =
-	NODE_VERSION >= 12 ? require("worker_threads") : undefined;
 const zlib = require("zlib");
 
 const builtinImports = {
 	assert: assertBuiltin,
-	"assert/strict": assertStrict,
 	async_hooks: asyncHooks,
 	buffer,
 	child_process: childProcess,
@@ -76,11 +49,9 @@ const builtinImports = {
 	crypto,
 	dgram,
 	dns,
-	"dns/promises": dnsPromises,
 	domain,
 	events,
 	fs,
-	"fs/promises": fsPromises,
 	http,
 	http2,
 	https,
@@ -89,8 +60,6 @@ const builtinImports = {
 	net,
 	os,
 	path,
-	"path/posix": pathPosix,
-	"path/win32": pathWin32,
 	perf_hooks: perfHooks,
 	process: processBuiltin,
 	punycode,
@@ -106,13 +75,44 @@ const builtinImports = {
 	tty,
 	url,
 	util,
-	"util/types": utilTypes,
 	v8,
 	vm,
 	zlib
 };
 
 const baseBuiltinCount = Object.keys(builtinImports).length;
+
+// diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
+const diagnosticsChannel =
+	NODE_VERSION >= 14 ? require("diagnostics_channel") : undefined;
+
+// It's hidden on Node <=16 unless `--experimental-wasi-unstable-preview1` is provided
+const wasi = NODE_VERSION >= 18 ? require("wasi") : undefined;
+const workerThreads =
+	NODE_VERSION >= 12 ? require("worker_threads") : undefined;
+
+// https://github.com/nodejs/node/pull/34962
+const pathPosix = NODE_VERSION >= 15 ? require("path/posix") : undefined;
+// https://github.com/nodejs/node/pull/34962
+const pathWin32 = NODE_VERSION >= 15 ? require("path/win32") : undefined;
+const dnsPromises = NODE_VERSION >= 15 ? require("dns/promises") : undefined;
+const inspectorPromises =
+	NODE_VERSION >= 19 ? require("inspector/promises") : undefined;
+const streamConsumers =
+	NODE_VERSION >= 16 ? require("stream/consumers") : undefined;
+const streamPromises =
+	NODE_VERSION >= 15 ? require("stream/promises") : undefined;
+
+// https://github.com/nodejs/node/pull/34055
+const utilTypes = NODE_VERSION >= 15 ? require("util/types") : undefined;
+const streamWeb = NODE_VERSION >= 16 ? require("stream/web") : undefined;
+const readlinePromises =
+	NODE_VERSION >= 17 ? require("readline/promises") : undefined;
+const timersPromises =
+	NODE_VERSION >= 15 ? require("timers/promises") : undefined;
+
+const assertStrict = NODE_VERSION >= 15 ? require("assert/strict") : undefined;
+const fsPromises = NODE_VERSION >= 14 ? require("fs/promises") : undefined;
 
 const optionalBuiltins = [
 	["diagnostics_channel", diagnosticsChannel],
@@ -123,7 +123,13 @@ const optionalBuiltins = [
 	["timers/promises", timersPromises],
 	["wasi", wasi],
 	["worker_threads", workerThreads],
-	["inspector/promises", inspectorPromises]
+	["inspector/promises", inspectorPromises],
+	["dns/promises", dnsPromises],
+	["path/posix", pathPosix],
+	["path/win32", pathWin32],
+	["util/types", utilTypes],
+	["assert/strict", assertStrict],
+	["fs/promises", fsPromises]
 ];
 
 for (const [request, imported] of optionalBuiltins) {
@@ -136,7 +142,9 @@ const itIfAvailable = (imported) =>
 				it(desc, () => {
 					fn(imported);
 				})
-		: it.skip;
+		: () => {
+				// skip
+			};
 
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -160,9 +168,14 @@ it("should assert equality", () => {
 	expect(() => assertBuiltin.strictEqual(1, 1)).not.toThrow();
 });
 
-it("should assert deep equality (assert/strict)", () => {
-	expect(() => assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })).not.toThrow();
-});
+itIfAvailable(assertStrict)(
+	"should assert deep equality (assert/strict)",
+	(assertStrict) => {
+		expect(() =>
+			assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
+		).not.toThrow();
+	}
+);
 
 it("should create async hook (async_hooks)", () => {
 	const hook = asyncHooks.createHook({});
@@ -214,9 +227,12 @@ it("should have lookup method (dns)", () => {
 	expect(typeof dns.lookup).toBe("function");
 });
 
-it("should have lookup method (dns/promises)", () => {
-	expect(typeof dnsPromises.lookup).toBe("function");
-});
+itIfAvailable(dnsPromises)(
+	"should have lookup method (dns/promises)",
+	(dnsPromises) => {
+		expect(typeof dnsPromises.lookup).toBe("function");
+	}
+);
 
 it("should create domain (domain)", () => {
 	const d = domain.create();
@@ -232,9 +248,12 @@ it("should check if file exists (fs)", () => {
 	expect(typeof fs.existsSync).toBe("function");
 });
 
-it("should have readFile method (fs/promises)", () => {
-	expect(typeof fsPromises.readFile).toBe("function");
-});
+itIfAvailable(fsPromises)(
+	"should have readFile method (fs/promises)",
+	(fsPromises) => {
+		expect(typeof fsPromises.readFile).toBe("function");
+	}
+);
 
 it("should create server (http)", () => {
 	const server = http.createServer();
@@ -279,13 +298,19 @@ it("should correctly join paths (path)", () => {
 	expect(path.extname("foo.js")).toBe(".js");
 });
 
-it("should join paths with posix style (path/posix)", () => {
-	expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
-});
+itIfAvailable(pathPosix)(
+	"should join paths with posix style (path/posix)",
+	(pathPosix) => {
+		expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
+	}
+);
 
-it("should join paths with win32 style (path/win32)", () => {
-	expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
-});
+itIfAvailable(pathWin32)(
+	"should join paths with win32 style (path/win32)",
+	(pathWin32) => {
+		expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
+	}
+);
 
 it("should get performance (perf_hooks)", () => {
 	expect(perfHooks.performance).toBeDefined();
@@ -388,9 +413,12 @@ it("should format string (util)", () => {
 	expect(util.format("Hello %s", "World")).toBe("Hello World");
 });
 
-it("should check if promise (util/types)", () => {
-	expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
-});
+itIfAvailable(utilTypes)(
+	"should check if promise (util/types)",
+	(utilTypes) => {
+		expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
+	}
+);
 
 it("should get heap statistics (v8)", () => {
 	const stats = v8.getHeapStatistics();
