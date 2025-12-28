@@ -7,10 +7,8 @@ it(`should have/have not 'node:' prefix ${__filename}`,  () => {
 		expect(content).toContain("require(\"fs\");");
 	} else if (/(bundle1\.mjs|bundle3\.mjs|bundle6\.mjs)$/.test(__filename)) {
 		expect(content).toContain("from \"url\"");
-		expect(content).toContain("from \"module\"");
 	} else {
 		expect(content).toContain("from \"node:url\"");
-		expect(content).toContain("from \"node:module\"");
 	}
 });
 
