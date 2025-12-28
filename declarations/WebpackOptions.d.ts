@@ -745,6 +745,10 @@ export type WarningFilterItemTypes =
  */
 export type Target = string[] | false | string;
 /**
+ * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+ */
+export type Validate = boolean;
+/**
  * Enter watch mode, which rebuilds on file change.
  */
 export type Watch = boolean;
@@ -1046,6 +1050,10 @@ export interface WebpackOptions {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: Validate;
 	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
@@ -3960,6 +3968,10 @@ export interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: Validate;
 	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */

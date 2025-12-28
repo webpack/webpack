@@ -2793,6 +2793,7 @@ declare class Compiler {
 		afterPlugins: SyncHook<[Compiler]>;
 		afterResolvers: SyncHook<[Compiler]>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean | void>;
+		validate: AsyncParallelHook<[typeof validateFunction]>;
 	}>;
 	webpack: typeof exports;
 	name?: string;
@@ -2812,22 +2813,8 @@ declare class Compiler {
 	immutablePaths: Set<string | RegExp>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
-	fileTimestamps?: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
-	contextTimestamps?: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	fileTimestamps?: Map<string, any>;
+	contextTimestamps?: Map<string, any>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (
@@ -2892,6 +2879,7 @@ declare class Compiler {
 	};
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
+	validate(...args: Parameters<typeof validateFunction>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
@@ -3263,6 +3251,11 @@ declare interface Configuration {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -4639,6 +4632,11 @@ type EncodingOption =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptions;
+type Entry =
+	| string
+	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
+	| EntryObject
+	| string[];
 declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint that should be evaluated at startup
@@ -4777,11 +4775,6 @@ declare interface EntryDescriptionNormalized {
 	wasmLoading?: string | false;
 }
 type EntryItem = string | string[];
-type EntryLibIndex =
-	| string
-	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
-	| EntryObject
-	| string[];
 type EntryNormalized =
 	| (() => Promise<EntryStaticNormalized>)
 	| EntryStaticNormalized;
@@ -4835,11 +4828,6 @@ type EntryStatic = string | EntryObject | string[];
  */
 declare interface EntryStaticNormalized {
 	[index: string]: EntryDescriptionNormalized;
-}
-declare interface EntryTypesIndex {
-	safeTime: number;
-	timestamp: number;
-	accuracy: number;
 }
 declare abstract class Entrypoint extends ChunkGroup {
 	/**
@@ -5078,8 +5066,7 @@ declare interface ExecuteOptions {
 	 */
 	require: WebpackRequire;
 }
-declare interface ExistenceOnlyTimeEntryFileSystemInfo {}
-declare interface ExistenceOnlyTimeEntryTypesIndex {}
+declare interface ExistenceOnlyTimeEntry {}
 type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
@@ -5980,20 +5967,14 @@ declare abstract class FileSystemInfo {
 	addFileTimestamps(
 		map: ReadonlyMap<
 			string,
-			| null
-			| FileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
+			null | FileSystemInfoEntry | "ignore" | ExistenceOnlyTimeEntry
 		>,
 		immutable?: boolean
 	): void;
 	addContextTimestamps(
 		map: ReadonlyMap<
 			string,
-			| null
-			| ContextFileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
+			null | ContextFileSystemInfoEntry | "ignore" | ExistenceOnlyTimeEntry
 		>,
 		immutable?: boolean
 	): void;
@@ -12246,9 +12227,6 @@ declare interface OccurrenceModuleIdsPluginOptions {
 	 */
 	prioritiseInitial?: boolean;
 }
-declare interface OnlySafeTimeEntry {
-	safeTime: number;
-}
 declare interface Open {
 	(
 		file: PathLikeFs,
@@ -18439,22 +18417,8 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			err: null | Error,
-			timeInfoEntries1?: Map<
-				string,
-				| null
-				| EntryTypesIndex
-				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
-			>,
-			timeInfoEntries2?: Map<
-				string,
-				| null
-				| EntryTypesIndex
-				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
-			>,
+			timeInfoEntries1?: Map<string, any>,
+			timeInfoEntries2?: Map<string, any>,
 			changes?: Set<string>,
 			removals?: Set<string>
 		) => void,
@@ -18530,26 +18494,12 @@ declare interface Watcher {
 	/**
 	 * get info about files
 	 */
-	getFileTimeInfoEntries: () => Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	getFileTimeInfoEntries: () => Map<string, any>;
 
 	/**
 	 * get info about directories
 	 */
-	getContextTimeInfoEntries: () => Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	getContextTimeInfoEntries: () => Map<string, any>;
 
 	/**
 	 * get info about timestamps and changes
@@ -18570,26 +18520,12 @@ declare interface WatcherInfo {
 	/**
 	 * get info about files
 	 */
-	fileTimeInfoEntries: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	fileTimeInfoEntries: Map<string, any>;
 
 	/**
 	 * get info about directories
 	 */
-	contextTimeInfoEntries: Map<
-		string,
-		| null
-		| EntryTypesIndex
-		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
-	>;
+	contextTimeInfoEntries: Map<string, any>;
 }
 declare abstract class Watching {
 	startTime: null | number;
@@ -18984,6 +18920,11 @@ declare interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -19838,7 +19779,7 @@ declare namespace exports {
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
-		EntryLibIndex as Entry,
+		Entry,
 		EntryNormalized,
 		EntryObject,
 		ExternalItem,
