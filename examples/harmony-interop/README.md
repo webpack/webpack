@@ -121,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack___webpack_module__, __unused_webpack_exports, __webpack_require__) => {
 
 // CommonJs module
 
@@ -283,7 +283,7 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 7.38 KiB [emitted] (name: main)
+asset output.js 7.39 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 937 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
