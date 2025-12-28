@@ -12331,6 +12331,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "validate": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.",
+        "multiple": false,
+        "path": "validate",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "watch": Object {
     "configs": Array [
       Object {
