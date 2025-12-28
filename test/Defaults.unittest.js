@@ -719,6 +719,7 @@ describe("snapshots", () => {
 		  },
 		  "stats": Object {},
 		  "target": "web",
+		  "validate": false,
 		  "watch": false,
 		  "watchOptions": Object {},
 		}
@@ -826,6 +827,9 @@ describe("snapshots", () => {
 		+       "hash": true,
 		@@ ... @@
 		+       "hash": true,
+		@@ ... @@
+		-   "validate": false,
+		+   "validate": true,
 	`)
 	);
 
@@ -896,6 +900,9 @@ describe("snapshots", () => {
 		+       "hash": true,
 		@@ ... @@
 		+       "hash": true,
+		@@ ... @@
+		-   "validate": false,
+		+   "validate": true,
 	`)
 	);
 

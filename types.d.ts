@@ -2792,6 +2792,7 @@ declare class Compiler {
 		afterPlugins: SyncHook<[Compiler]>;
 		afterResolvers: SyncHook<[Compiler]>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean | void>;
+		validate: AsyncParallelHook<[typeof validateFunction]>;
 	}>;
 	webpack: typeof exports;
 	name?: string;
@@ -2877,6 +2878,7 @@ declare class Compiler {
 	};
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
+	validate(...args: Parameters<typeof validateFunction>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
@@ -3248,6 +3250,11 @@ declare interface Configuration {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -18890,6 +18897,11 @@ declare interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.
