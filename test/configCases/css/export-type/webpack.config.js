@@ -13,6 +13,9 @@ const getConfig = ({ concatenateModules } = { concatenateModules: false }) => ({
 	devtool: false,
 	target: "web",
 	mode: "development",
+	output: {
+		cssFilename: "bundle.[name].[contenthash].css"
+	},
 	optimization: {
 		chunkIds: "named",
 		concatenateModules
