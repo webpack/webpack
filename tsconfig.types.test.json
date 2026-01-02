@@ -7,6 +7,7 @@
     "declarations.d.ts",
     "declarations/*.d.ts",
     "test/**/webpack.config.js",
+    "test/**/webpack.config.cjs",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",

@@ -11,6 +11,7 @@ export default defineConfig([
 		"!test/*.cjs",
 		"!test/*.mjs",
 		"!test/**/webpack.config.js",
+		"!test/**/webpack.config.cjs",
 		"!test/**/test.config.js",
 		"!test/**/test.filter.js",
 		"test/cases/parsing/es2022/test.filter.js",
@@ -48,6 +49,7 @@ export default defineConfig([
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/**/webpack.config.js",
+		"!examples/**/webpack.config.cjs",
 		"!examples/**/test.filter.js"
 	]),
 	{

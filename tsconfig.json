@@ -20,6 +20,7 @@
     "setup/**/*.js",
     "examples/*.js",
     "examples/**/webpack.config.js",
+    "examples/**/webpack.config.cjs",
     "examples/**/test.filter.js"
   ]
 }
