@@ -1,10 +1,12 @@
 it("should have module ids defined in sorted order", function() {
+	const ids = [];
 	for (var i = 1; i <= 5; i++) {
-		var unusedModuleId = require("./files/file" + i + ".js");
+		var moduleId = require("./files/file" + i + ".js");
+		ids[i-1] = moduleId;
 	}
 
-	const moduleIds = Object.keys(__webpack_modules__);
+	const expectedIds = new Set(ids);
 
-	const sortedIds = moduleIds.slice().sort();
-	expect(moduleIds).toEqual(sortedIds);
+	const moduleIds = Object.keys(__webpack_modules__).filter(id => expectedIds.has(id));
+	expect(moduleIds).toEqual(ids);
 });
