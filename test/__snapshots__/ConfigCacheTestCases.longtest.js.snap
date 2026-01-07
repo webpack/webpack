@@ -26337,7 +26337,7 @@ it(\\"import.meta.env behaves like process.env\\", async (done) => {
         importMetaEnv;
         const processEnv = process.env;
         processEnv;
-        const UNKNOWN_PROPERTY = {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"}.UNKNOWN_PROPERTY;
+        const UNKNOWN_PROPERTY = {}.UNKNOWN_PROPERTY;
         UNKNOWN_PROPERTY;
         const UNKNOWN_PROPERTY_2 = process.env.UNKNOWN_PROPERTY_2;
         UNKNOWN_PROPERTY_2;
