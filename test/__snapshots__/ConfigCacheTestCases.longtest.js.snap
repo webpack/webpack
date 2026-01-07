@@ -58,16 +58,6 @@ export const __webpack_esm_id__ = \\"foo\\";
 export const __webpack_esm_ids__ = [\\"foo\\"];
 export const __webpack_esm_modules__ = {
 
-/***/ 125
-/*!***********************!*\\\\
-  !*** css ./style.css ***!
-  \\\\***********************/
-() {
-
-
-
-/***/ },
-
 /***/ 353
 /*!****************!*\\\\
   !*** ./foo.js ***!
@@ -86,6 +76,16 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () =>
 
 	expect(source).toMatchSnapshot();
 });
+
+
+/***/ },
+
+/***/ 125
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+() {
+
 
 
 /***/ }
@@ -17344,18 +17344,6 @@ body {
 
 /*# sourceMappingURL=bundle1.css.map*/",
 ]
-`;
-
-exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
-Object {
-  "placeholder": "my-app-tailwind_module_css-placeholder-gray-700",
-}
-`;
-
-exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
-Object {
-  "placeholder": "Xk90he",
-}
 `;
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 1`] = `
