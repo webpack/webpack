@@ -7348,44 +7348,7 @@ declare class JavascriptParser extends ParserClass {
 		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
-		expression: HookMap<
-			SyncBailHook<
-				[
-					Expression,
-					(
-						| undefined
-						| ImportExpressionImport
-						| UnaryExpression
-						| ArrayExpression
-						| ArrowFunctionExpression
-						| AssignmentExpression
-						| AwaitExpression
-						| BinaryExpression
-						| SimpleCallExpression
-						| NewExpression
-						| ChainExpression
-						| ClassExpression
-						| ConditionalExpression
-						| FunctionExpression
-						| Identifier
-						| SimpleLiteral
-						| RegExpLiteral
-						| BigIntLiteral
-						| LogicalExpression
-						| MemberExpression
-						| MetaProperty
-						| ObjectExpression
-						| SequenceExpression
-						| TaggedTemplateExpression
-						| TemplateLiteral
-						| ThisExpression
-						| UpdateExpression
-						| YieldExpression
-					)
-				],
-				boolean | void
-			>
-		>;
+		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<
 				[MemberExpression, string[], boolean[], [number, number][]],
