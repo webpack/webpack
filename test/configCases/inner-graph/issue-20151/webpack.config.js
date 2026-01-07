@@ -3,6 +3,7 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "production",
+	target: "node14",
 	optimization: {
 		minimize: false,
 		mangleExports: false,
