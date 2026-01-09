@@ -17346,6 +17346,18 @@ body {
 ]
 `;
 
+exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "placeholder": "my-app-tailwind_module_css-placeholder-gray-700",
+}
+`;
+
+exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "placeholder": "Xk90he",
+}
+`;
+
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 1`] = `
 Object {
   "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
