@@ -245,6 +245,11 @@ simple expressions. This allows you to **support most existing libraries** out o
 
 Webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
+> **Note**
+> A dynamic import (`import()`) does not create a new runtime.
+> Async chunks share the same runtime as their parent entry.
+> Modules already instantiated in the parent runtime will not be duplicated or partially emitted into async chunks.
+
 
 ### [Optimizations](https://webpack.js.org/guides/production-build/)
 
