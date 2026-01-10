@@ -934,5 +934,20 @@ module.exports = (env, { testPath }) => [
 				type: "system"
 			}
 		}
+	},
+	{
+		entry: "./esm-star-reexport-and-external",
+		target: "node14",
+		output: {
+			uniqueName: "esm-star-reexport-and-external",
+			filename: "esm-star-reexport-and-external.mjs",
+			module: true,
+			library: {
+				type: "module"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
 	}
 ];
