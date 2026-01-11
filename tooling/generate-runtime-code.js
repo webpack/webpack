@@ -27,9 +27,29 @@ const files = ["lib/util/semver.js"];
 		while (match) {
 			const [fullMatch, name] = match;
 			const originalCode = exports[name].toString();
+			// NOTE: Runtime code exports must be written as arrow functions
+			// with a block body, in the form:
+			//
+			//   (args) => {
+			//     ...
+			//   }
+			//
+			// This constraint allows this script to reliably extract the
+			// function arguments and body for minification and runtime
+			// code generation. Do not use function declarations or
+			// expression-bodied arrows here.
+
 			const header =
 				/** @type {RegExpExecArray} */
 				(/^\(?([^=)]+)\)?\s=> \{/.exec(originalCode));
+
+			if (!header) {
+				throw new Error(
+					`Runtime export "${name}" in ${file} must be an arrow function ` +
+					`with a block body: (args) => { ... }`
+				);
+			}
+
 			const body = originalCode.slice(header[0].length, -1);
 			const result = await terser.minify(
 				{
