@@ -13963,6 +13963,10 @@ declare class ProgressPlugin {
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
 	percentBy?: null | "modules" | "entries" | "dependencies";
+	progressBar?: boolean;
+	estimatedTime?: boolean;
+	phaseTimings?: boolean;
+	progressBarWidth?: number;
 	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -13975,10 +13979,20 @@ declare class ProgressPlugin {
 		dependencies: boolean;
 		activeModules: boolean;
 		entries: boolean;
+		progressBar: boolean;
+		estimatedTime: boolean;
+		phaseTimings: boolean;
+		progressBarWidth: number;
 	};
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
-		logger: WebpackLogger
+		logger: WebpackLogger,
+		options?: {
+			progressBar?: boolean;
+			estimatedTime?: boolean;
+			phaseTimings?: boolean;
+			progressBarWidth?: number;
+		}
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -14010,6 +14024,11 @@ declare interface ProgressPluginOptions {
 	entries?: boolean;
 
 	/**
+	 * Show estimated time remaining based on build progress.
+	 */
+	estimatedTime?: boolean;
+
+	/**
 	 * Function that executes for every progress step.
 	 */
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
@@ -14030,9 +14049,24 @@ declare interface ProgressPluginOptions {
 	percentBy?: null | "modules" | "entries" | "dependencies";
 
 	/**
+	 * Show timing breakdown for each build phase.
+	 */
+	phaseTimings?: boolean;
+
+	/**
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
+
+	/**
+	 * Show a visual progress bar in the console output.
+	 */
+	progressBar?: boolean;
+
+	/**
+	 * Width of the progress bar in characters. Default: 40.
+	 */
+	progressBarWidth?: number;
 }
 declare class ProvidePlugin {
 	constructor(definitions: Record<string, string | string[]>);
