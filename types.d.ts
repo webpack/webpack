@@ -19449,6 +19449,10 @@ declare namespace exports {
 				a: DependencyLocation,
 				b: DependencyLocation
 			) => 0 | 1 | -1;
+			export let compareModulesByFullName: ParameterizedComparator<
+				Compiler,
+				Module
+			>;
 			export let compareModulesById: ParameterizedComparator<
 				ChunkGraph,
 				Module
