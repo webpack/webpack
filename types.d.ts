@@ -2795,7 +2795,7 @@ declare class Compiler {
 				(
 					value: object | object[],
 					schema: Schema,
-					check?: (value: object | object[]) => boolean,
+					check?: (value?: any) => boolean,
 					options?: ValidationErrorConfiguration
 				) => void
 			]
@@ -2892,7 +2892,7 @@ declare class Compiler {
 	validate(
 		value: object | object[],
 		schema: Schema,
-		check?: (value: object | object[]) => boolean,
+		check?: (value?: any) => boolean,
 		options?: ValidationErrorConfiguration
 	): void;
 }
