@@ -734,5 +734,16 @@ module.exports = (env, { testPath }) => [
 				NAME: JSON.stringify("commonjs-bundle-to-esm")
 			})
 		]
+	},
+	{
+		entry: "./esm-star-reexport-and-external",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-star-reexport-and-external.mjs"
+				)
+			}
+		}
 	}
 ];
