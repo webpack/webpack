@@ -12370,13 +12370,13 @@ Object {
   "validate": Object {
     "configs": Array [
       Object {
-        "description": "Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.",
+        "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
         "multiple": false,
         "path": "validate",
         "type": "boolean",
       },
     ],
-    "description": "Enable validation of webpack configuration. Defaults to false in development mode and true in production mode.",
+    "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
     "multiple": false,
     "simpleType": "boolean",
   },
