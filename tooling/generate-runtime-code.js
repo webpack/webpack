@@ -46,7 +46,7 @@ const files = ["lib/util/semver.js"];
 			if (!header) {
 				throw new Error(
 					`Runtime export "${name}" in ${file} must be an arrow function ` +
-					`with a block body: (args) => { ... }`
+						"with a block body: (args) => { ... }"
 				);
 			}
 
