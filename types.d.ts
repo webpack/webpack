@@ -139,7 +139,7 @@ declare class AbstractLibraryPlugin<T> {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	parseOptions(library: LibraryOptions): false | T;
+	parseOptions(library: LibraryOptions): T;
 	finishEntryModule(
 		module: Module,
 		entryName: string,
@@ -3796,14 +3796,14 @@ declare class CssModulesPlugin {
 	apply(compiler: Compiler): void;
 	getModulesInOrder(
 		chunk: Chunk,
-		modules: Iterable<Module>,
+		modules: undefined | Iterable<Module>,
 		compilation: Compilation
 	): Module[];
 	getOrderedChunkCssModules(
 		chunk: Chunk,
 		chunkGraph: ChunkGraph,
 		compilation: Compilation
-	): Module[];
+	): CssModule[];
 	renderChunk(
 		__0: RenderContextCssModulesPlugin,
 		hooks: CompilationHooksCssModulesPlugin
@@ -9941,7 +9941,21 @@ declare abstract class LocalModule {
 	deserialize(context: ObjectDeserializerContext): void;
 }
 declare interface LogEntry {
-	type: string;
+	type:
+		| "error"
+		| "warn"
+		| "info"
+		| "log"
+		| "profile"
+		| "debug"
+		| "trace"
+		| "group"
+		| "groupCollapsed"
+		| "groupEnd"
+		| "profileEnd"
+		| "time"
+		| "clear"
+		| "status";
 	args?: any[];
 	time: number;
 	trace?: string[];
@@ -16556,6 +16570,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		module: Module;
 		/**
+		 * module in which the statement is emitted
+		 */
+		originModule: Module;
+		/**
 		 * the module graph
 		 */
 		moduleGraph: ModuleGraph;
@@ -16564,29 +16582,25 @@ declare abstract class RuntimeTemplate {
 		 */
 		chunkGraph: ChunkGraph;
 		/**
-		 * the request that should be printed as comment
+		 * if set, will be filled with runtime requirements
 		 */
-		request: string;
+		runtimeRequirements: Set<string>;
 		/**
 		 * name of the import variable
 		 */
 		importVar: string;
 		/**
-		 * module in which the statement is emitted
+		 * the request that should be printed as comment
 		 */
-		originModule: Module;
+		request?: string;
 		/**
 		 * true, if this is a weak dependency
 		 */
 		weak?: boolean;
 		/**
-		 * if set, will be filled with runtime requirements
-		 */
-		runtimeRequirements: Set<string>;
-		/**
 		 * module dependency
 		 */
-		dependency: ModuleDependency;
+		dependency?: ModuleDependency;
 	}): [string, string];
 	exportFromImport<GenerateContext>(__0: {
 		/**
