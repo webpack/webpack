@@ -1,5 +1,7 @@
+const doSomething = () => {};
+
 export function __( v ) {
-    console.log( v );
+    doSomething( v );
 }
 
 export default {

@@ -214,7 +214,7 @@ jobs:
 
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
 
-      - run: yarn cover:merge
+      - run: yarn report:cover:merge
 
       - name: Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
