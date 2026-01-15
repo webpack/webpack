@@ -2817,7 +2817,7 @@ declare class Compiler {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 	contextTimestamps?: Map<
@@ -2825,7 +2825,7 @@ declare class Compiler {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 	fsStartTime?: number;
@@ -5078,8 +5078,8 @@ declare interface ExecuteOptions {
 	 */
 	require: WebpackRequire;
 }
-declare interface ExistanceOnlyTimeEntry {}
-declare interface ExistenceOnlyTimeEntry {}
+declare interface ExistenceOnlyTimeEntryFileSystemInfo {}
+declare interface ExistenceOnlyTimeEntryTypesIndex {}
 type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
@@ -5980,14 +5980,20 @@ declare abstract class FileSystemInfo {
 	addFileTimestamps(
 		map: ReadonlyMap<
 			string,
-			null | FileSystemInfoEntry | "ignore" | ExistanceOnlyTimeEntry
+			| null
+			| FileSystemInfoEntry
+			| "ignore"
+			| ExistenceOnlyTimeEntryFileSystemInfo
 		>,
 		immutable?: boolean
 	): void;
 	addContextTimestamps(
 		map: ReadonlyMap<
 			string,
-			null | ContextFileSystemInfoEntry | "ignore" | ExistanceOnlyTimeEntry
+			| null
+			| ContextFileSystemInfoEntry
+			| "ignore"
+			| ExistenceOnlyTimeEntryFileSystemInfo
 		>,
 		immutable?: boolean
 	): void;
@@ -18438,7 +18444,7 @@ declare interface WatchFileSystem {
 				| null
 				| EntryTypesIndex
 				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntry
+				| ExistenceOnlyTimeEntryTypesIndex
 				| "ignore"
 			>,
 			timeInfoEntries2?: Map<
@@ -18446,7 +18452,7 @@ declare interface WatchFileSystem {
 				| null
 				| EntryTypesIndex
 				| OnlySafeTimeEntry
-				| ExistenceOnlyTimeEntry
+				| ExistenceOnlyTimeEntryTypesIndex
 				| "ignore"
 			>,
 			changes?: Set<string>,
@@ -18529,7 +18535,7 @@ declare interface Watcher {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 
@@ -18541,7 +18547,7 @@ declare interface Watcher {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 
@@ -18569,7 +18575,7 @@ declare interface WatcherInfo {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 
@@ -18581,7 +18587,7 @@ declare interface WatcherInfo {
 		| null
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
-		| ExistenceOnlyTimeEntry
+		| ExistenceOnlyTimeEntryTypesIndex
 		| "ignore"
 	>;
 }
