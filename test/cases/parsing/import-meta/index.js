@@ -38,7 +38,26 @@ it("should return correct import.meta.webpack", () => {
 	}
 });
 
+it("should return undefined for unknown property", () => {
+	expect(import.meta.other).toBe(undefined);
+	if (typeof import.meta.other !== "undefined") require("fail");
+	expect(() => import.meta.other.other.other).toThrow();
+});
+
 it("should add warning on direct import.meta usage", () => {
 	expect(Object.keys(import.meta)).toHaveLength(0);
 });
 
+it("should support destructuring assignment", async () => {
+	let version, url2, c;
+	({ webpack: version } = { url: url2 } = { c } = import.meta);
+	expect(version).toBeTypeOf("number");
+	expect(url2).toBe(url);
+	expect(c).toBe(undefined);
+
+	let version2, url3, d;
+	({ webpack: version2 } = await ({ url: url3 } = ({ d } = await import.meta)));
+	expect(version2).toBeTypeOf("number");
+	expect(url3).toBe(url);
+	expect(d).toBe(undefined);
+});

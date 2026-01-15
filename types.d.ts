@@ -8470,9 +8470,9 @@ declare interface JavascriptParserOptions {
 	importExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
-	 * Enable/disable evaluating import.meta.
+	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.
 	 */
-	importMeta?: boolean;
+	importMeta?: boolean | "preserve-unknown";
 
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.
