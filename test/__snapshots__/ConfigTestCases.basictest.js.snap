@@ -25098,6 +25098,9 @@ it(\\"import.meta.env behaves like process.env\\", async (done) => {
         UNKNOWN_PROPERTY_2;
         \\"object\\";
         typeof process.env;
+
+        const { env } = ({env: {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"},});
+        env;
     } catch (_e) {
         // ignore
     }

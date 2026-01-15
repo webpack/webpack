@@ -18,6 +18,9 @@ it("import.meta.env behaves like process.env", async (done) => {
         UNKNOWN_PROPERTY_2;
         typeof import.meta.env;
         typeof process.env;
+
+        const { env } = import.meta;
+        env;
     } catch (_e) {
         // ignore
     }
