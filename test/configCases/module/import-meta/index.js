@@ -3,6 +3,11 @@ if (!import.meta.UNKNOWN_PROPERTY) {
     import.meta.UNKNOWN_PROPERTY = "HELLO";
 }
 
+const { pathToFileURL } = require("url");
+const url = pathToFileURL(
+	require("path").resolve("./test/configCases/module/import-meta/index.js")
+).toString();
+
 it("should keep import.meta.UNKNOWN_PROPERTY", () => {
     try {
         const UNKNOWN_PROPERTY = import.meta.UNKNOWN_PROPERTY;
