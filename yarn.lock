@@ -8936,10 +8936,10 @@ wast-loader@^1.12.1:
   dependencies:
     wabt "1.0.0-nightly.20180421"
 
-watchpack@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.5.0.tgz#fa115d5ccaa4bf3aa594f586257c0bc4768939fd"
-  integrity sha512-e6vZvY6xboSwLz2GD36c16+O/2Z6fKvIf4pOXptw2rY9MVwE/TXc6RGqxD3I3x0a28lwBY7DE+76uTPSsBrrCA==
+watchpack@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.5.1.tgz#dd38b601f669e0cbf567cb802e75cead82cde102"
+  integrity sha512-Zn5uXdcFNIA1+1Ei5McRd+iRzfhENPCe7LeABkJtNulSxjma+l7ltNx55BWZkRlwRnpOgHqxnjyaDgJnNXnqzg==
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"

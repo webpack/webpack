@@ -2003,6 +2003,7 @@ type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
 	Map<"filename", string> &
 	Map<"assetInfo", AssetInfo> &
 	Map<"fullContentHash", string> &
+	Map<"url", { javascript: string }> &
 	Map<"share-init", [{ shareScope: string; initStage: number; init: string }]> &
 	Map<string, any>;
 declare abstract class CodeGenerationResults {
@@ -2811,8 +2812,22 @@ declare class Compiler {
 	immutablePaths: Set<string | RegExp>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
-	fileTimestamps?: Map<string, FileSystemInfoEntry | "ignore">;
-	contextTimestamps?: Map<string, FileSystemInfoEntry | "ignore">;
+	fileTimestamps?: Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
+	contextTimestamps?: Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger?: (
@@ -3573,7 +3588,6 @@ declare interface ContextResolveData {
 	contextDependencies: LazySet<string>;
 	dependencies: ContextDependency[];
 }
-type ContextTimestamp = null | ContextFileSystemInfoEntry | "ignore";
 declare interface ContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
@@ -4625,11 +4639,6 @@ type EncodingOption =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptions;
-type Entry =
-	| string
-	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
-	| EntryObject
-	| string[];
 declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint that should be evaluated at startup
@@ -4768,6 +4777,11 @@ declare interface EntryDescriptionNormalized {
 	wasmLoading?: string | false;
 }
 type EntryItem = string | string[];
+type EntryLibIndex =
+	| string
+	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
+	| EntryObject
+	| string[];
 type EntryNormalized =
 	| (() => Promise<EntryStaticNormalized>)
 	| EntryStaticNormalized;
@@ -4821,6 +4835,11 @@ type EntryStatic = string | EntryObject | string[];
  */
 declare interface EntryStaticNormalized {
 	[index: string]: EntryDescriptionNormalized;
+}
+declare interface EntryTypesIndex {
+	safeTime: number;
+	timestamp: number;
+	accuracy: number;
 }
 declare abstract class Entrypoint extends ChunkGroup {
 	/**
@@ -5059,6 +5078,8 @@ declare interface ExecuteOptions {
 	 */
 	require: WebpackRequire;
 }
+declare interface ExistanceOnlyTimeEntry {}
+declare interface ExistenceOnlyTimeEntry {}
 type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
@@ -5957,11 +5978,17 @@ declare abstract class FileSystemInfo {
 	logStatistics(): void;
 	clear(): void;
 	addFileTimestamps(
-		map: ReadonlyMap<string, FileTimestamp>,
+		map: ReadonlyMap<
+			string,
+			null | FileSystemInfoEntry | "ignore" | ExistanceOnlyTimeEntry
+		>,
 		immutable?: boolean
 	): void;
 	addContextTimestamps(
-		map: ReadonlyMap<string, ContextTimestamp>,
+		map: ReadonlyMap<
+			string,
+			null | ContextFileSystemInfoEntry | "ignore" | ExistanceOnlyTimeEntry
+		>,
 		immutable?: boolean
 	): void;
 	getFileTimestamp(
@@ -6028,7 +6055,6 @@ declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
 }
-type FileTimestamp = null | FileSystemInfoEntry | "ignore";
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
@@ -12081,6 +12107,9 @@ declare abstract class NormalReexportItem {
 	checked: boolean;
 	hidden: boolean;
 }
+declare interface NormalizedModules {
+	[index: string]: VirtualModuleConfig;
+}
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -12210,6 +12239,9 @@ declare interface OccurrenceModuleIdsPluginOptions {
 	 * Prioritise initial size over total size.
 	 */
 	prioritiseInitial?: boolean;
+}
+declare interface OnlySafeTimeEntry {
+	safeTime: number;
 }
 declare interface Open {
 	(
@@ -16634,7 +16666,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * true, if expression will be called
 		 */
-		isCall: boolean;
+		isCall?: boolean;
 		/**
 		 * when false, call context will not be preserved
 		 */
@@ -18374,7 +18406,7 @@ declare interface VirtualModules {
 declare class VirtualUrlPlugin {
 	constructor(modules: VirtualModules, scheme?: string);
 	scheme: string;
-	modules: { [index: string]: VirtualModuleConfig };
+	modules: NormalizedModules;
 
 	/**
 	 * Apply the plugin
@@ -18401,8 +18433,22 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			err: null | Error,
-			timeInfoEntries1?: Map<string, FileSystemInfoEntry | "ignore">,
-			timeInfoEntries2?: Map<string, FileSystemInfoEntry | "ignore">,
+			timeInfoEntries1?: Map<
+				string,
+				| null
+				| EntryTypesIndex
+				| OnlySafeTimeEntry
+				| ExistenceOnlyTimeEntry
+				| "ignore"
+			>,
+			timeInfoEntries2?: Map<
+				string,
+				| null
+				| EntryTypesIndex
+				| OnlySafeTimeEntry
+				| ExistenceOnlyTimeEntry
+				| "ignore"
+			>,
 			changes?: Set<string>,
 			removals?: Set<string>
 		) => void,
@@ -18478,12 +18524,26 @@ declare interface Watcher {
 	/**
 	 * get info about files
 	 */
-	getFileTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
+	getFileTimeInfoEntries: () => Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
 
 	/**
 	 * get info about directories
 	 */
-	getContextTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
+	getContextTimeInfoEntries: () => Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
 
 	/**
 	 * get info about timestamps and changes
@@ -18504,12 +18564,26 @@ declare interface WatcherInfo {
 	/**
 	 * get info about files
 	 */
-	fileTimeInfoEntries: Map<string, FileSystemInfoEntry | "ignore">;
+	fileTimeInfoEntries: Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
 
 	/**
 	 * get info about directories
 	 */
-	contextTimeInfoEntries: Map<string, FileSystemInfoEntry | "ignore">;
+	contextTimeInfoEntries: Map<
+		string,
+		| null
+		| EntryTypesIndex
+		| OnlySafeTimeEntry
+		| ExistenceOnlyTimeEntry
+		| "ignore"
+	>;
 }
 declare abstract class Watching {
 	startTime: null | number;
@@ -19758,7 +19832,7 @@ declare namespace exports {
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
-		Entry,
+		EntryLibIndex as Entry,
 		EntryNormalized,
 		EntryObject,
 		ExternalItem,
