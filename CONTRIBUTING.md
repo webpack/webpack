@@ -2,7 +2,10 @@
 
 From opening a bug report to creating a pull request: every contribution is
 appreciated and welcome. If you're planning to implement a new feature or change
-the api please create an issue first. This way we can ensure that your precious
+the api please create an issue first.
+This allows maintainers and the community to discuss the proposal early and provide guidance.
+
+This way we can ensure that your precious
 work is not in vain.
 
 ## Issues
