@@ -719,6 +719,7 @@ describe("snapshots", () => {
 		  },
 		  "stats": Object {},
 		  "target": "web",
+		  "validate": true,
 		  "watch": false,
 		  "watchOptions": Object {},
 		}
