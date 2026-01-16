@@ -1014,6 +1014,9 @@ describe("snapshots", () => {
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
+		-         "importMeta": true,
+		+         "importMeta": "preserve-unknown",
+		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		-     "chunkFormat": "array-push",
 		+     "chunkFilename": "[name].mjs",
@@ -1876,6 +1879,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "target": "web",
 			+     "target": undefined,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
@@ -3192,6 +3198,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-         "createRequire": false,
 			+         "createRequire": true,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",

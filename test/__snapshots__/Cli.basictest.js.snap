@@ -2811,15 +2811,24 @@ Object {
   "module-parser-javascript-auto-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/auto.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-import-meta-context": Object {
     "configs": Array [
@@ -3579,15 +3588,24 @@ Object {
   "module-parser-javascript-dynamic-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-import-meta-context": Object {
     "configs": Array [
@@ -4320,15 +4338,24 @@ Object {
   "module-parser-javascript-esm-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/esm.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-import-meta-context": Object {
     "configs": Array [
@@ -4822,15 +4849,24 @@ Object {
   "module-parser-javascript-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-import-meta-context": Object {
     "configs": Array [
