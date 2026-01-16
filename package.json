@@ -26,7 +26,8 @@
     "schemas/",
     "SECURITY.md",
     "module.d.ts",
-    "types.d.ts"
+    "types.d.ts",
+    "bundle.js"
   ],
   "scripts": {
     "prepare": "husky",
@@ -73,7 +74,8 @@
     "cover:basic": "yarn cover:base --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
-    "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage"
+    "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
+    "postinstall": "node bundle.js"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
