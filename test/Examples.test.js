@@ -28,7 +28,10 @@ describe("Examples", () => {
 
 		it(`should compile ${relativePath}`, (done) => {
 			let options = {};
-			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
+			let webpackConfigPath = path.join(examplePath, "webpack.config.cjs");
+			if (!fs.existsSync(webpackConfigPath)) {
+				webpackConfigPath = path.join(examplePath, "webpack.config.js");
+			}
 			webpackConfigPath =
 				webpackConfigPath.slice(0, 1).toUpperCase() +
 				webpackConfigPath.slice(1);
