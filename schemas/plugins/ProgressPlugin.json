@@ -26,6 +26,10 @@
           "description": "Show entries count in progress message.",
           "type": "boolean"
         },
+        "estimatedTime": {
+          "description": "Show estimated time remaining based on build progress.",
+          "type": "boolean"
+        },
         "handler": {
           "description": "Function that executes for every progress step.",
           "oneOf": [
@@ -46,9 +50,21 @@
           "description": "Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.",
           "enum": ["entries", "modules", "dependencies", null]
         },
+        "phaseTimings": {
+          "description": "Show timing breakdown for each build phase.",
+          "type": "boolean"
+        },
         "profile": {
           "description": "Collect profile data for progress steps. Default: false.",
           "enum": [true, false, null]
+        },
+        "progressBar": {
+          "description": "Show a visual progress bar in the console output.",
+          "type": "boolean"
+        },
+        "progressBarWidth": {
+          "description": "Width of the progress bar in characters. Default: 40.",
+          "type": "number"
         }
       }
     }

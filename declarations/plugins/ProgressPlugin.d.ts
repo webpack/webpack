@@ -31,6 +31,10 @@ export interface ProgressPluginOptions {
 	 */
 	entries?: boolean;
 	/**
+	 * Show estimated time remaining based on build progress.
+	 */
+	estimatedTime?: boolean;
+	/**
 	 * Function that executes for every progress step.
 	 */
 	handler?: HandlerFunction;
@@ -47,7 +51,19 @@ export interface ProgressPluginOptions {
 	 */
 	percentBy?: "entries" | "modules" | "dependencies" | null;
 	/**
+	 * Show timing breakdown for each build phase.
+	 */
+	phaseTimings?: boolean;
+	/**
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: true | false | null;
+	/**
+	 * Show a visual progress bar in the console output.
+	 */
+	progressBar?: boolean;
+	/**
+	 * Width of the progress bar in characters. Default: 40.
+	 */
+	progressBarWidth?: number;
 }
