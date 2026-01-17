@@ -1,5 +1,10 @@
 "use strict";
 
+const major = Number(process.versions.node.split(".")[0]);
+if (major < 16) {
+	throw new Error("Node.js 16+ required to build embedded WASM");
+}
+
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
