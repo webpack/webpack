@@ -14,6 +14,12 @@
   },
   "license": "MIT",
   "author": "Tobias Koppers @sokra",
+  "exports": {
+    ".": "./lib/index.js",
+    "./globals": "./globals.js",
+    "./hot/*": "./hot/*.js",
+    "./package.json": "./package.json"
+  },
   "main": "lib/index.js",
   "types": "types.d.ts",
   "bin": {
@@ -26,7 +32,8 @@
     "schemas/",
     "SECURITY.md",
     "module.d.ts",
-    "types.d.ts"
+    "types.d.ts",
+    "globals.js"
   ],
   "scripts": {
     "prepare": "husky",
