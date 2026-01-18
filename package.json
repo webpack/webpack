@@ -26,8 +26,19 @@
     "schemas/",
     "SECURITY.md",
     "module.d.ts",
-    "types.d.ts"
+    "types.d.ts",
+    "globals.d.ts"
   ],
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./globals": {
+      "types": "./globals.d.ts",
+      "default": "./lib/globals.js"
+    }
+  },
   "scripts": {
     "prepare": "husky",
     "setup": "node ./setup/setup.js",
