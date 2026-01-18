@@ -584,7 +584,7 @@ __webpack_async_result__();
 ## in production mode:
 
 ```javascript
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{312(a,e,s){s.a(a,async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");t()}catch(a){t(a)}},1)},560(a,e,s){s.a(a,async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>i});var c=s(312),n=a([c]),m=n.then?(await n)():n;c=m[0];const i=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}})}}]);
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["UserApi_js"],{560(a,e,s){s.a(a,async(a,t)=>{try{s.r(e),s.d(e,{createUser:()=>i});var c=s(312),n=a([c]),m=n.then?(await n)():n;c=m[0];const i=async a=>{command=`CREATE USER ${a}`,await(0,c.D)({command})};t()}catch(a){t(a)}})},312(a,e,s){s.a(a,async(a,t)=>{try{s.d(e,{D:()=>c});const a=async a=>{await new Promise(a=>setTimeout(a,1e3))};await a("my-sql://example.com");const c=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");t()}catch(a){t(a)}},1)}}]);
 ```
 
 # Info
