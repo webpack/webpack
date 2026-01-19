@@ -44,13 +44,17 @@ async function runSetupSymlinkAsync() {
  */
 function checkSymlinkExistsAsync() {
 	return new Promise((resolve) => {
-		if (
-			fs.existsSync(nodeModulesFolder) &&
-			fs.existsSync(webpackDependencyFolder) &&
-			fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
-		) {
-			resolve(true);
-		} else {
+		try {
+			if (
+				fs.existsSync(nodeModulesFolder) &&
+				fs.existsSync(webpackDependencyFolder) &&
+				fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
+			) {
+				resolve(true);
+			} else {
+				resolve(false);
+			}
+		} catch {
 			resolve(false);
 		}
 	});
