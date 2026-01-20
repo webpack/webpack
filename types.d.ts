@@ -273,6 +273,12 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
+declare abstract class AppendOnlyStackedSet<T> {
+	add(el: T): void;
+	has(el: T): boolean;
+	clear(): void;
+	createChild(): AppendOnlyStackedSet<T>;
+}
 declare interface Argument {
 	description?: string;
 	simpleType: SimpleType;
@@ -6343,6 +6349,9 @@ declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyI
 		hidden?: Set<string>;
 	};
 }
+declare interface HarmonyGuardsSettings {
+	guards?: AppendOnlyStackedSet<string>;
+}
 declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
@@ -7151,6 +7160,10 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
+		collectGuards: SyncBailHook<
+			[Expression],
+			void | ((walk: () => void) => void)
+		>;
 		classExtendsExpression: SyncBailHook<
 			[
 				Expression,
@@ -7444,7 +7457,8 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings;
+		| CompatibilitySettings
+		| HarmonyGuardsSettings;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -8214,7 +8228,8 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings;
+		| CompatibilitySettings
+		| HarmonyGuardsSettings;
 	tagVariable(
 		name: string,
 		tag: symbol,
@@ -8224,7 +8239,8 @@ declare class JavascriptParser extends ParserClass {
 			| HarmonySettings
 			| ImportSettings
 			| CommonJsImportSettings
-			| CompatibilitySettings,
+			| CompatibilitySettings
+			| HarmonyGuardsSettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 	defineVariable(name: string): void;
@@ -18218,7 +18234,8 @@ declare interface TagInfo {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings;
+		| CompatibilitySettings
+		| HarmonyGuardsSettings;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
