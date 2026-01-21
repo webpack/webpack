@@ -1,0 +1,3 @@
+.i {
+    composes: e from "./e.modules.css";
+}
