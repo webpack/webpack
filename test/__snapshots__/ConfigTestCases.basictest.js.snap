@@ -2882,7 +2882,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 Object {
   "UsedClassName": "my-app-identifiers_module_css-UsedClassName",
   "VARS": "--my-app-style_module_css-LOCAL-COLOR my-app-style_module_css-VARS undefined my-app-style_module_css-globalVarsUpperCase",
-  "__webpack_modules__": 12,
+  "__webpack_modules__": 6,
   "animation": "my-app-style_module_css-animation",
   "animationName": "my-app-style_module_css-animationName",
   "class": "my-app-style_module_css-class",
@@ -11015,7 +11015,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 Object {
   "UsedClassName": "FPwoX1",
   "VARS": "---YmVq7 gAOQgg undefined g45L8B",
-  "__webpack_modules__": 9,
+  "__webpack_modules__": 3,
   "animation": "_1CLYv0",
   "animationName": "AndP3O",
   "class": "Q0FGvN",
