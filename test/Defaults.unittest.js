@@ -629,6 +629,7 @@ describe("snapshots", () => {
 		          "browser",
 		        ],
 		        "conditionNames": Array [
+		          "worker",
 		          "import",
 		          "module",
 		          "...",
