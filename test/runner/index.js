@@ -447,40 +447,49 @@ class TestRunner {
 			const esm = getModuleInstance(modulePath, content);
 			if (esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
-			const evaluate = async () => {
-				// 1. Link all deps
-				if (esm.status === ESModuleStatus.Unlinked) {
-					await esm.link(
-						async (specifier, referrer) =>
-							// `linker` should return `vm.SourceTextModule`
-							await asModule(
-								await this.require(
-									path.dirname(
-										referrer.identifier || fileURLToPath(referrer.url)
-									),
-									specifier,
-									{ esmReturnStatus: ESModuleStatus.Unlinked }
+			const link = async () => {
+				await esm.link(
+					async (specifier, referencingModule) =>
+						// `linker` should return `vm.SourceTextModule`
+						await asModule(
+							await this.require(
+								path.dirname(
+									referencingModule.identifier ||
+										fileURLToPath(referencingModule.url)
 								),
-								referrer.context,
-								{
-									esmReturnStatus: ESModuleStatus.Unlinked
-								}
-							)
-					);
+								specifier,
+								{ esmReturnStatus: ESModuleStatus.Unlinked }
+							),
+							referencingModule.context,
+							{
+								esmReturnStatus: ESModuleStatus.Unlinked
+							}
+						)
+				);
+			};
+
+			const run = async () => {
+				// Link module dependencies
+				if (major === 10) {
+					if (esm.linkingStatus === ESModuleStatus.Unlinked) {
+						await link();
+					}
+					if (esm.linkingStatus === ESModuleStatus.Linked) {
+						esm.instantiate();
+					}
+				} else {
+					await link();
 				}
 
-				// 2. Evaluate the module
-				// Node.js 10 needs instantiate
-				if (major === 10 && esm.instantiate) esm.instantiate();
+				// Evaluate the module
 				await esm.evaluate();
 				if (esmReturnStatus === ESModuleStatus.Evaluated) return esm;
 
-				// 3. Return module namespace
 				const ns = esm.namespace;
 				return ns.default && ns.default instanceof Promise ? ns.default : ns;
 			};
 
-			return evaluate();
+			return run();
 		};
 	}
 

@@ -38,9 +38,17 @@ module.exports = async (something, context, options = {}) => {
 	});
 	if (options.esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
-	await esm.link(LINKER);
-	// Node.js 10 needs instantiate
-	if (major === 10 && esm.instantiate) esm.instantiate();
+	if (major === 10) {
+		if (esm.linkingStatus === ESModuleStatus.Unlinked) {
+			await esm.link(LINKER);
+		}
+		if (esm.linkingStatus === ESModuleStatus.Linked) {
+			esm.instantiate();
+		}
+	} else {
+		await esm.link(LINKER);
+	}
+
 	await esm.evaluate();
 	return esm;
 };
