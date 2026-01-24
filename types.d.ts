@@ -19053,14 +19053,8 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 } & { watch: NonNullable<undefined | boolean> } & {
 	performance: NonNullable<undefined | false | PerformanceOptions>;
 } & { recordsInputPath: NonNullable<undefined | string | false> } & {
-	recordsOutputPath:
-		| (string & {
-				dotenv: NonNullable<undefined | boolean | DotenvPluginOptions>;
-		  })
-		| (false & {
-				dotenv: NonNullable<undefined | boolean | DotenvPluginOptions>;
-		  });
-};
+	recordsOutputPath: NonNullable<undefined | string | false>;
+} & { dotenv: NonNullable<undefined | boolean | DotenvPluginOptions> };
 
 /**
  * Plugin instance.
