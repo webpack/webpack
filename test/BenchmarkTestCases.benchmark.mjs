@@ -106,7 +106,7 @@ async function getBase(head, revList) {
 }
 
 /**
- * @returns {Promise<{name: string, rev?: string}[]>} baseline revs
+ * @returns {Promise<{ name: string, rev?: string }[]>} baseline revs
  */
 async function getBaselineRevs() {
 	if (LAST_COMMIT) {
