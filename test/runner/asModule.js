@@ -1,10 +1,11 @@
 "use strict";
 
 const vm = require("vm");
+const { ESModuleStatus, getNodeVersion } = require("./RunnerHelpers");
+
+const [major] = getNodeVersion();
 
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
-const [major] = process.versions.node.split(".").map(Number);
-
 const LINKER = () => {};
 
 /**
@@ -35,7 +36,7 @@ module.exports = async (something, context, options = {}) => {
 	const esm = new vm.SourceTextModule(code, {
 		context
 	});
-	if (options.esmReturnStatus === "unlinked") return esm;
+	if (options.esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
 	await esm.link(LINKER);
 	// Node.js 10 needs instantiate
