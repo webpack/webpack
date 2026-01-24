@@ -5,12 +5,21 @@ const vm = require("vm");
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
 const [major] = process.versions.node.split(".").map(Number);
 
-module.exports = async (something, context, unlinked) => {
+const LINKER = () => {};
+
+/**
+ * @param {vm.SourceTextModule | vm.Module | EXPECTED_ANY} something module or object
+ * @param {EXPECTED_ANY} context context
+ * @param {{esmReturnStatus?: boolean}=} options options
+ * @returns {Promise<vm.SourceTextModule>} module
+ */
+module.exports = async (something, context, options = {}) => {
 	if (
 		something instanceof (vm.Module || /* node.js 10 */ vm.SourceTextModule)
 	) {
 		return something;
 	}
+
 	context[SYNTHETIC_MODULES_STORE] = context[SYNTHETIC_MODULES_STORE] || [];
 	const i = context[SYNTHETIC_MODULES_STORE].length;
 	context[SYNTHETIC_MODULES_STORE].push(something);
@@ -22,13 +31,15 @@ module.exports = async (something, context, unlinked) => {
 				}; export { _${name} as ${name}};`
 		)
 		.join("\n");
-	const m = new vm.SourceTextModule(code, {
+
+	const esm = new vm.SourceTextModule(code, {
 		context
 	});
-	if (unlinked) return m;
-	await m.link(() => {});
-	// node.js 10 needs instantiate
-	if (major === 10 && m.instantiate) m.instantiate();
-	await m.evaluate();
-	return m;
+	if (options.esmReturnStatus === "unlinked") return esm;
+
+	await esm.link(LINKER);
+	// Node.js 10 needs instantiate
+	if (major === 10 && esm.instantiate) esm.instantiate();
+	await esm.evaluate();
+	return esm;
 };
