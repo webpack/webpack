@@ -8,8 +8,7 @@ import text3 from "data:text/plain,XXXXXXXXXXXXXXXXX"; // 17 chars
 import css from "./a.css";
 import source from "./a.source";
 
-const log = () => {
-	return png + svg + jpg + html + text1 + text2 + text3 + css + source;
-};
+const call = () =>
+	png + svg + jpg + html + text1 + text2 + text3 + css + source;
 
-log();
+call();
