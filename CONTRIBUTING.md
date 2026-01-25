@@ -13,7 +13,7 @@ If you are still having difficulty after looking over your configuration careful
 a question to [Discussions](https://github.com/webpack/webpack/discussions), [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack) or ask this in our [Discord](https://discord.gg/5sxFZPdx2k). Questions
 that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
 
-> ⚠️ Note on dependency vulnerability warnings  
+> ⚠️ Note on dependency vulnerability warnings
 >
 > Tools like `npm audit` may report vulnerabilities originating from development-only dependencies
 > (for example `webpack-dev-server`). These warnings do not always indicate a security issue
@@ -21,7 +21,6 @@ that include your webpack.config.js, relevant files, and the full error message 
 >
 > Before opening an issue, please check whether the warning comes from a dev dependency
 > and whether an update or workaround already exists.
-
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
