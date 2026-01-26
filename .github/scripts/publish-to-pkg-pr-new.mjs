@@ -4,7 +4,7 @@
 import fs from "fs";
 
 /**
- * @param {{github: EXPECTED_ANY, context: EXPECTED_ANY}} params params
+ * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY }} params params
  */
 export async function run({ github, context }) {
 	const output = JSON.parse(fs.readFileSync("output.json", "utf8"));

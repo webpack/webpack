@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 /**
- * @param {{output: {path: string}}} options options
+ * @param {{ output: { path: string } }} options options
  * @param {RegExp} regexp regexp
  * @param {string=} subpath path in output directory
  * @returns {string[]} files

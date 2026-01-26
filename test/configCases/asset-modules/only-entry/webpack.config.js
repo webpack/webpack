@@ -6,7 +6,7 @@ const webpack = require("../../../../");
 
 /** @typedef {import("../../../../").Configuration} Configuration */
 
-/** @type {(i: number,  options: Partial<Configuration>) => Configuration} */
+/** @type {(i: number, options: Partial<Configuration>) => Configuration} */
 const common = (i, options) => ({
 	target: "web",
 	output: {

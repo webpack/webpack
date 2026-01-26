@@ -3,7 +3,7 @@ import { getInfo, getInfoFromPullRequest } from "@changesets/get-github-info";
 /** @typedef {import("@changesets/types").ChangelogFunctions} ChangelogFunctions */
 
 /**
- * @returns {{GITHUB_SERVER_URL: string}} value
+ * @returns {{ GITHUB_SERVER_URL: string }} value
  */
 function readEnv() {
 	const GITHUB_SERVER_URL =

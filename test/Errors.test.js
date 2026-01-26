@@ -104,7 +104,7 @@ const defaults = {
 
 /**
  * @param {import("../").Configuration} options options
- * @returns {Promise<{errors: TODO[], warnings: TODO[]}>} errors and warnings
+ * @returns {Promise<{ errors: TODO[], warnings: TODO[] }>} errors and warnings
  */
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
