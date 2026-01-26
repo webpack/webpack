@@ -461,16 +461,18 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 			| string
 			| (RawChunkGroupOptions & { name?: null | string } & {
 					entryOptions?: EntryOptions;
-			  }),
+			  } & { key?: string | boolean }),
 		loc?: null | SyntheticDependencyLocation | RealDependencyLocation,
 		request?: null | string
 	);
 	groupOptions: RawChunkGroupOptions & { name?: null | string } & {
 		entryOptions?: EntryOptions;
-	};
+	} & { key?: string | boolean };
 	loc?: null | SyntheticDependencyLocation | RealDependencyLocation;
 	request?: null | string;
 	chunkName?: null | string;
+	get circular(): boolean;
+	identifier(): string;
 	module: any;
 }
 declare abstract class AsyncQueue<T, K, R> {
