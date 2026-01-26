@@ -1100,18 +1100,6 @@ __webpack_require__.d(exports, {
 /******/ 	__webpack_require__.c = __webpack_module_cache__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -1797,7 +1785,7 @@ __webpack_require__.d(exports, {
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("date-fns", "4.1.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 8))))));
-/******/ 					register("lodash/random", "4.17.21", () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/lodash/random.js */ 311))))));
+/******/ 					register("lodash/random", "4.17.23", () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/lodash/random.js */ 311))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -2098,7 +2086,7 @@ __webpack_require__.d(exports, {
 
 ```
 app:
-  asset src_bootstrap_js.js 43.8 KiB [emitted]
+  asset src_bootstrap_js.js 43.3 KiB [emitted]
   asset app.js 30.1 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.8 KiB (runtime) [entry] [rendered]
@@ -2127,11 +2115,11 @@ mfe-b:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 995 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 24.8 KiB [emitted] (name: mfeBBB)
-  asset src-b_Component_js.js 2.09 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
+  asset mfeBBB.js 24.4 KiB [emitted] (name: mfeBBB)
+  asset src-b_Component_js.js 1.9 KiB [emitted]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.9 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.2 KiB 11 modules
+    runtime modules 15.9 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2165,7 +2153,7 @@ mfe-c:
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) lodash/random@4.17.23 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
   chunk (runtime: mfeCCC) src-c_Component_js.js 467 bytes (javascript) 42 bytes (consume-shared) [rendered]
     > ./src-c/Component container entry ./Component
     dependent modules 42 bytes [dependent] 1 module
@@ -2180,7 +2168,7 @@ mfe-c:
     dependent modules 512 KiB [dependent] 302 modules
     ../../node_modules/date-fns/index.js 8.68 KiB [built] [code generated]
   chunk (runtime: mfeCCC) vendors-node_modules_lodash_random_js.js (id hint: vendors) 16 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js
+    > provide shared module (default) lodash/random@4.17.23 = ../../node_modules/lodash/random.js
     > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
     dependent modules 13.7 KiB [dependent] 20 modules
     ../../node_modules/lodash/random.js 2.32 KiB [built] [code generated]
@@ -2223,11 +2211,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.29 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 486 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
+  asset mfeBBB.js 6.22 KiB [emitted] [minimized] (name: mfeBBB)
+  asset src-b_Component_js.js 471 bytes [emitted] [minimized]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16 KiB 11 modules
+    runtime modules 15.8 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2259,10 +2247,10 @@ mfe-c:
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
+      provide shared module (default) lodash/random@4.17.23 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
   chunk (runtime: mfeCCC) node_modules_lodash_random_js.js 16 KiB [rendered]
+    > provide shared module (default) lodash/random@4.17.23 = ../../node_modules/lodash/random.js
     > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
-    > provide shared module (default) lodash/random@4.17.21 = ../../node_modules/lodash/random.js
     dependent modules 13.7 KiB [dependent] 20 modules
     ../../node_modules/lodash/random.js 2.32 KiB [built] [code generated]
   chunk (runtime: mfeCCC) src-c_Component_js.js 467 bytes (javascript) 42 bytes (consume-shared) [rendered]
