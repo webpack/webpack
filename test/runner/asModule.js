@@ -45,7 +45,7 @@ module.exports = async (something, context, options = {}) => {
 		if (esm.linkingStatus === ESModuleStatus.Linked) {
 			esm.instantiate();
 		}
-	} else {
+	} else if (esm.status === ESModuleStatus.Unlinked) {
 		await esm.link(LINKER);
 	}
 
