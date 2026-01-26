@@ -6,58 +6,18 @@ const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
 
-const [major] = process.versions.node.split(".").map(Number);
+const {
+	ESModuleStatus,
+	getNodeVersion,
+	getSubPath,
+	isRelativePath,
+	urlToPath,
+	urlToRelativePath
+} = require("./RunnerHelpers");
 
-/**
- * @param {string} path path
- * @returns {string} subPath
- */
-const getSubPath = (path) => {
-	let subPath = "";
-	const lastSlash = path.lastIndexOf("/");
-	let firstSlash = path.indexOf("/");
-	if (lastSlash !== -1 && firstSlash !== lastSlash) {
-		if (firstSlash !== -1) {
-			let next = path.indexOf("/", firstSlash + 1);
-			let dir = path.slice(firstSlash + 1, next);
+const [major] = getNodeVersion();
 
-			while (dir === ".") {
-				firstSlash = next;
-				next = path.indexOf("/", firstSlash + 1);
-				dir = path.slice(firstSlash + 1, next);
-			}
-		}
-		subPath = path.slice(firstSlash + 1, lastSlash + 1);
-	}
-	return subPath;
-};
-
-/**
- * @param {string} path path
- * @returns {boolean} whether path is a relative path
- */
-const isRelativePath = (path) => /^\.\.?\//.test(path);
-
-/**
- * @param {string} url url
- * @param {string} outputDirectory outputDirectory
- * @returns {string} absolute path
- */
-const urlToPath = (url, outputDirectory) => {
-	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
-	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
-	return path.resolve(outputDirectory, `./${url}`);
-};
-
-/**
- * @param {string} url url
- * @returns {string} relative path
- */
-const urlToRelativePath = (url) => {
-	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
-	else if (url.startsWith("https://test.cases/")) url = url.slice(19);
-	return `./${url}`;
-};
+/** @typedef {import("./RunnerHelpers").ESModuleStatus} ESModuleStatus */
 
 /**
  * @typedef {object} TestMeta
@@ -93,7 +53,7 @@ const urlToRelativePath = (url) => {
 
 /**
  * @typedef {object} RequireContext
- * @property {"unlinked" | "evaluated"} esmMode
+ * @property {typeof ESModuleStatus.Unlinked | typeof ESModuleStatus.Evaluated} esmReturnStatus
  */
 
 /**
@@ -403,6 +363,8 @@ class TestRunner {
 	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm runner
 	 */
 	createEsmRunner() {
+		const asModule = require("./asModule");
+
 		const createEsmContext = () =>
 			vm.createContext(
 				{ ...this._moduleScope, ...this._esmContext },
@@ -410,88 +372,124 @@ class TestRunner {
 					name: "context for esm"
 				}
 			);
+
+		let esmContext = null;
+
+		/** @type {Map<string, vm.SourceTextModule>} */
 		const esmCache = new Map();
 		const { category, name, round } = this.testMeta;
-		const esmIdentifier = `${category}-${name}-${round || 0}`;
-		let esmContext = null;
-		return (moduleInfo, context) => {
-			const asModule = require("../helpers/asModule");
 
-			// lazy bind esm context
-			if (!esmContext) {
-				esmContext = createEsmContext();
-			}
-			const { modulePath, content } = moduleInfo;
-			const { esmMode } = context;
-			if (!vm.SourceTextModule) {
-				throw new Error(
-					"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
-				);
-			}
-			let esm = esmCache.get(modulePath);
-			if (!esm) {
-				esm = new vm.SourceTextModule(content, {
-					identifier: `${esmIdentifier}-${modulePath}`,
-					url: `${pathToFileURL(modulePath).href}?${esmIdentifier}`,
+		const testMetaStr = `${category}-${name}-${round || 0}`;
+		const appendTestMeta = (identifier) => `${identifier}?${testMetaStr}`;
+
+		/**
+		 * @param {string} identifier identifier
+		 * @param {string} content content
+		 * @returns {vm.SourceTextModule} SourceTextModule
+		 */
+		const getModuleInstance = (identifier, content) => {
+			let instance = esmCache.get(identifier);
+			if (!instance) {
+				instance = new vm.SourceTextModule(content, {
+					identifier: appendTestMeta(identifier),
+					url: appendTestMeta(pathToFileURL(identifier).href),
 					context: esmContext,
-					initializeImportMeta: (meta, module) => {
-						meta.url = pathToFileURL(modulePath).href;
+					initializeImportMeta: (meta, _module) => {
+						meta.url = pathToFileURL(identifier).href;
 
 						if (this.target === "node" || this.target.includes("node")) {
-							meta.filename = modulePath;
-							meta.dirname = path.dirname(modulePath);
+							meta.filename = identifier;
+							meta.dirname = path.dirname(identifier);
 						}
 					},
 					importModuleDynamically: async (specifier, module) => {
 						const normalizedSpecifier = specifier.startsWith("file:")
 							? `./${path.relative(
-									path.dirname(modulePath),
+									path.dirname(identifier),
 									fileURLToPath(specifier)
 								)}`
 							: specifier.replace(
 									/https:\/\/example.com\/public\/path\//,
 									"./"
 								);
-						const result = await this.require(
-							path.dirname(modulePath),
+
+						const res = await this.require(
+							path.dirname(identifier),
 							normalizedSpecifier,
 							{
-								esmMode: "evaluated"
+								esmReturnStatus: ESModuleStatus.Evaluated
 							}
 						);
-						return await asModule(result, module.context);
+
+						return await asModule(res, module.context);
 					}
 				});
-				esmCache.set(modulePath, esm);
+				esmCache.set(identifier, instance);
 			}
-			if (esmMode === "unlinked") return esm;
-			return (async () => {
-				if (esmMode === "unlinked") return esm;
+
+			return instance;
+		};
+
+		return (moduleInfo, context) => {
+			if (!vm.SourceTextModule) {
+				throw new Error(
+					"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+				);
+			}
+
+			// lazy bind esm context
+			if (!esmContext) {
+				esmContext = createEsmContext();
+			}
+			const { modulePath, content } = moduleInfo;
+			const { esmReturnStatus } = context;
+
+			const esm = getModuleInstance(modulePath, content);
+			if (esmReturnStatus === ESModuleStatus.Unlinked) return esm;
+
+			const link = async () => {
 				await esm.link(
 					async (specifier, referencingModule) =>
+						// `linker` should return `vm.SourceTextModule`
 						await asModule(
 							await this.require(
 								path.dirname(
-									referencingModule.identifier
-										? referencingModule.identifier.slice(
-												esmIdentifier.length + 1
-											)
-										: fileURLToPath(referencingModule.url)
+									referencingModule.identifier ||
+										fileURLToPath(referencingModule.url)
 								),
 								specifier,
-								{ esmMode: "unlinked" }
+								{ esmReturnStatus: ESModuleStatus.Unlinked }
 							),
 							referencingModule.context,
-							true
+							{
+								esmReturnStatus: ESModuleStatus.Unlinked
+							}
 						)
 				);
-				// node.js 10 needs instantiate
-				if (major === 10 && esm.instantiate) esm.instantiate();
+			};
+
+			const run = async () => {
+				// Link module dependencies
+				if (major === 10) {
+					if (esm.linkingStatus === ESModuleStatus.Unlinked) {
+						await link();
+					}
+					if (esm.linkingStatus === ESModuleStatus.Linked) {
+						esm.instantiate();
+					}
+				} else {
+					await link();
+				}
+
+				// Evaluate the module
 				await esm.evaluate();
-				if (esmMode === "evaluated") return esm;
+				if (esmReturnStatus === ESModuleStatus.Evaluated) return esm;
+
 				const ns = esm.namespace;
 				return ns.default && ns.default instanceof Promise ? ns.default : ns;
-			})();
+			};
+
+			return run();
 		};
 	}
 

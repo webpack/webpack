@@ -318,7 +318,8 @@
     "thelarkinn",
     "behaviour",
     "WHATWG",
-    "publicpath"
+    "publicpath",
+    "Uninstantiated"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
