@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Preserve star exports for dependencies in ESMA module output.
+Preserve star exports for dependencies in ECMA module output.

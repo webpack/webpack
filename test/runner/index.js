@@ -477,7 +477,7 @@ class TestRunner {
 					if (esm.linkingStatus === ESModuleStatus.Linked) {
 						esm.instantiate();
 					}
-				} else {
+				} else if (esm.status === ESModuleStatus.Unlinked) {
 					await link();
 				}
 

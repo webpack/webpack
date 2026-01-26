@@ -8957,8 +8957,8 @@ declare interface KnownBuildMeta {
 	sideEffectFree?: boolean;
 	isCSSModule?: boolean;
 	jsIncompatibleExports?: Record<string, string>;
-	exportsFinalNameByRuntime?: Map<RuntimeSpec, Record<string, string>>;
-	exportsSourceByRuntime?: Map<RuntimeSpec, string>;
+	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
+	exportsSourceByRuntime?: Map<string, string>;
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;

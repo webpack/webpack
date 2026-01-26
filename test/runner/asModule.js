@@ -11,7 +11,7 @@ const LINKER = () => {};
 /**
  * @param {vm.SourceTextModule | vm.Module | EXPECTED_ANY} something module or object
  * @param {EXPECTED_ANY} context context
- * @param {{esmReturnStatus?: boolean}=} options options
+ * @param {{ esmReturnStatus?: boolean }=} options options
  * @returns {Promise<vm.SourceTextModule>} module
  */
 module.exports = async (something, context, options = {}) => {
@@ -45,7 +45,7 @@ module.exports = async (something, context, options = {}) => {
 		if (esm.linkingStatus === ESModuleStatus.Linked) {
 			esm.instantiate();
 		}
-	} else {
+	} else if (esm.status === ESModuleStatus.Unlinked) {
 		await esm.link(LINKER);
 	}
 
