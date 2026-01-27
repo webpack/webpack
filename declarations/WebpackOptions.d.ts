@@ -3356,6 +3356,10 @@ export interface JavascriptParserOptions {
 	 */
 	requireJs?: boolean;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
+	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
@@ -3986,6 +3990,10 @@ export interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
 	[k: string]: any;
 }
 /**
@@ -4008,6 +4016,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

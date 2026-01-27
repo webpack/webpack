@@ -1090,6 +1090,10 @@
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+          "type": "boolean"
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
@@ -1178,6 +1182,10 @@
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean"
         },
         "syncWebAssembly": {
@@ -2012,6 +2020,10 @@
         },
         "requireJs": {
           "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+          "type": "boolean"
+        },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean"
         },
         "strictExportPresence": {
