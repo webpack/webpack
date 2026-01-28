@@ -1,3 +1,5 @@
+"use strict";
+
 const webpack = require("../../../../");
 
 class ReplacePlugin {
@@ -6,24 +8,24 @@ class ReplacePlugin {
 	}
 
 	apply(compiler) {
-		compiler.hooks.thisCompilation.tap("Test", compilation => {
+		compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 			compilation.hooks.processAssets.tap(
 				{
 					name: "Test",
 					stage:
 						compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_HASH - 1
 				},
-				assets => {
-					const asyncChunkFile = Object.keys(assets).find(file =>
+				(assets) => {
+					const asyncChunkFile = Object.keys(assets).find((file) =>
 						file.startsWith("async")
 					);
 					const asyncChunkContentHash = compilation
 						.getAsset(asyncChunkFile)
 						.info.contenthash.slice(this.hashPrefix.length);
-					const mainChunkFile = Object.keys(assets).find(file =>
+					const mainChunkFile = Object.keys(assets).find((file) =>
 						file.startsWith("bundle")
 					);
-					compilation.updateAsset(mainChunkFile, old => {
+					compilation.updateAsset(mainChunkFile, (old) => {
 						const replaced = old
 							.source()
 							.replace(
