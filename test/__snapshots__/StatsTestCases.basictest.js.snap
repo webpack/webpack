@@ -2986,17 +2986,17 @@ b-source-map:
 
 a-normal-prefixed:
   assets by path *.js X KiB
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
-  Entrypoint a X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
-  Entrypoint b X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -3013,17 +3013,17 @@ a-normal-prefixed:
 
 b-normal-prefixed:
   assets by path *.js X KiB
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
-  Entrypoint a X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
-  Entrypoint b X bytes = XXXXXXXXXXXXXXXX-XXXXXX.js
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 1 auxiliary asset
+  Entrypoint a X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
+  Entrypoint b X bytes = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -3040,21 +3040,21 @@ b-normal-prefixed:
 
 a-source-map-prefixed:
   assets by path *.js X KiB
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
-  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
-  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
@@ -3071,21 +3071,21 @@ a-source-map-prefixed:
 
 b-source-map-prefixed:
   assets by path *.js X KiB
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
-    asset XXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
-      sourceMap XXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: runtime)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: index)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: index)
+    asset XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes [emitted] [immutable] [minimized] (name: a, b)
+      sourceMap XXXXXXXXXXXXXXXXXXXX-XXXXXX.js.map X bytes [emitted] [dev] (auxiliary name: a, b)
   assets by chunk X KiB (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
-    asset XXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
-  asset XXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
-  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
-  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+    asset XXXXXXXXXXXXXXXXXXXX.png X KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset XXXXXXXXXXXXXXXXXXXX.jpg?query X KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
+  asset XXXXXXXXXXXXXXXXXXXX.jpg X KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
+  Entrypoint index X KiB (X KiB) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X KiB XXXXXXXXXXXXXXXXXXXX-XXXXXX.js X bytes 3 auxiliary assets
+  Entrypoint a X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
+  Entrypoint b X bytes (X bytes) = XXXXXXXXXXXXXXXXXXXX-XXXXXX.js 1 auxiliary asset
   runtime modules X KiB 8 modules
   orphan modules X bytes [orphan] 1 module
   cacheable modules X bytes (javascript) X KiB (asset)
