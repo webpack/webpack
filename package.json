@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.104.1",
+  "version": "5.105.0",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "homepage": "https://github.com/webpack/webpack",
   "bugs": "https://github.com/webpack/webpack/issues",
