@@ -1516,6 +1516,10 @@ export interface RuleSetRule {
 	 */
 	issuerLayer?: RuleSetConditionOrConditions;
 	/**
+	 * Match the import phase of the dependency.
+	 */
+	phase?: RuleSetConditionOrConditions;
+	/**
 	 * Specifies the layer in which the module should be placed in.
 	 */
 	layer?: string;
