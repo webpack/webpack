@@ -5,7 +5,6 @@
  */
 
 import { Parser as ParserImport } from "acorn";
-import { Buffer } from "buffer";
 import { Scope } from "eslint-scope";
 import {
 	ArrayExpression,
@@ -88,21 +87,24 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
+import { Buffer } from "node:buffer";
 import {
 	IncomingMessage,
 	Server as ServerImportHttp,
 	ServerOptions as ServerOptionsImportHttp
-} from "http";
+} from "node:http";
 import {
 	Server as ServerImportHttps,
 	ServerOptions as ServerOptionsImportHttps
-} from "https";
+} from "node:https";
 import {
 	Session as SessionImportInspectorClass_1,
 	Session as SessionImportInspectorClass_2
-} from "inspector";
-import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
-import { ListenOptions } from "net";
+} from "node:inspector";
+import { ListenOptions } from "node:net";
+import { URL } from "node:url";
+import { Context } from "node:vm";
 import {
 	ValidationErrorConfiguration,
 	validate as validateFunction
@@ -123,13 +125,8 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { URL } from "url";
-import { Context } from "vm";
 
 declare interface Abortable {
-	/**
-	 * When provided the corresponding `AbortController` can be used to cancel an asynchronous action.
-	 */
 	signal?: AbortSignal;
 }
 declare class AbstractLibraryPlugin<T> {
@@ -13258,7 +13255,10 @@ declare interface Output {
 declare interface OutputFileSystem {
 	mkdir: Mkdir;
 	readdir?: ReaddirFs;
-	rmdir?: Rmdir;
+	rmdir?: (
+		file: PathLikeFs,
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
 	writeFile: WriteFile;
 	unlink?: (
 		pathLike: PathLikeFs,
@@ -15819,22 +15819,6 @@ declare interface RestoreProvidedDataExports {
 	canMangleProvide?: boolean;
 	terminalBinding: boolean;
 	exportsInfo?: RestoreProvidedData;
-}
-declare interface RmDirOptions {
-	maxRetries?: number;
-	recursive?: boolean;
-	retryDelay?: number;
-}
-declare interface Rmdir {
-	(
-		file: PathLikeFs,
-		callback: (err: null | NodeJS.ErrnoException) => void
-	): void;
-	(
-		file: PathLikeFs,
-		options: RmDirOptions,
-		callback: (err: null | NodeJS.ErrnoException) => void
-	): void;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
 declare interface RuleSet {
