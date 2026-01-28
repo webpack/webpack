@@ -4688,6 +4688,7 @@ declare interface EffectData {
 	compiler?: string;
 	issuer: string;
 	issuerLayer: string;
+	phase?: string;
 }
 declare interface EffectUse {
 	type: EffectUseType;
@@ -16413,6 +16414,16 @@ declare interface RuleSetRule {
 	 * Options for parsing.
 	 */
 	parser?: { [index: string]: any };
+
+	/**
+	 * Match the import phase of the dependency.
+	 */
+	phase?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
 
 	/**
 	 * Match the real resource path of the module.
