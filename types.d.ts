@@ -12373,7 +12373,7 @@ declare interface Optimization {
 	/**
 	 * Use real [contenthash] based on final content of the assets.
 	 */
-	realContentHash?: boolean;
+	realContentHash?: boolean | "prefixed";
 
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.
@@ -12517,7 +12517,7 @@ declare interface OptimizationNormalized {
 	/**
 	 * Use real [contenthash] based on final content of the assets.
 	 */
-	realContentHash?: boolean;
+	realContentHash?: boolean | "prefixed";
 
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.
@@ -12601,7 +12601,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	checkWasmTypes: NonNullable<undefined | boolean>;
 	mangleWasmImports: NonNullable<undefined | boolean>;
 	portableRecords: NonNullable<undefined | boolean>;
-	realContentHash: NonNullable<undefined | boolean>;
+	realContentHash: NonNullable<undefined | boolean | "prefixed">;
 	minimize: NonNullable<undefined | boolean>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
@@ -14809,6 +14809,11 @@ declare interface RealContentHashPluginOptions {
 	 * the hash digest to use
 	 */
 	hashDigest: string;
+
+	/**
+	 * the hash prefix to use
+	 */
+	hashPrefix?: string;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;

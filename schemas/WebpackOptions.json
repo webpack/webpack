@@ -2836,7 +2836,14 @@
         },
         "realContentHash": {
           "description": "Use real [contenthash] based on final content of the assets.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["prefixed"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "removeAvailableModules": {
           "description": "Removes modules from chunks when these modules are already included in all parents.",
@@ -3000,7 +3007,14 @@
         },
         "realContentHash": {
           "description": "Use real [contenthash] based on final content of the assets.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["prefixed"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "removeAvailableModules": {
           "description": "Removes modules from chunks when these modules are already included in all parents.",
