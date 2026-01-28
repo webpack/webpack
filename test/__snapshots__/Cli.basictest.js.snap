@@ -5648,6 +5648,44 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-phase": Object {
+    "configs": Array [
+      Object {
+        "description": "Match the import phase of the dependency.",
+        "multiple": true,
+        "path": "module.rules[].phase",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match the import phase of the dependency.",
+        "multiple": true,
+        "path": "module.rules[].phase",
+        "type": "string",
+      },
+    ],
+    "description": "Match the import phase of the dependency.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-phase-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].phase.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].phase.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-real-resource": Object {
     "configs": Array [
       Object {
