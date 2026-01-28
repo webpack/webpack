@@ -8745,10 +8745,10 @@ timers-ext@^0.1.7:
     es5-ext "^0.10.64"
     next-tick "^1.1.0"
 
-tinybench@^5.0.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.1.0.tgz#796a599a58114ef61279d8550bc2f34e1ad3cbf0"
-  integrity sha512-LXKNtFualiKOm6gADe1UXPtf8+Nfn1CtPMEHAT33Fd2YjQatrujkDcK0+4wRC1X6t7fxUDXUs6BsvuIgfkDgDg==
+tinybench@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-6.0.0.tgz#890309d74e0c3f60b20def20295bfd937c1d7521"
+  integrity sha512-BWlWpVbbZXaYjRV0twGLNQO00Zj4HA/sjLOQP2IvzQqGwRGp+2kh7UU3ijyJ3ywFRogYDRbiHDMrUOfaMnN56g==
 
 tinyglobby@^0.2.12, tinyglobby@^0.2.15, tinyglobby@^0.2.9:
   version "0.2.15"
