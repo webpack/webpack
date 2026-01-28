@@ -5,6 +5,7 @@
  */
 
 import { Parser as ParserImport } from "acorn";
+import { Buffer } from "buffer";
 import { Scope } from "eslint-scope";
 import {
 	ArrayExpression,
@@ -87,24 +88,21 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
-import { Buffer } from "node:buffer";
 import {
 	IncomingMessage,
 	Server as ServerImportHttp,
 	ServerOptions as ServerOptionsImportHttp
-} from "node:http";
+} from "http";
 import {
 	Server as ServerImportHttps,
 	ServerOptions as ServerOptionsImportHttps
-} from "node:https";
+} from "https";
 import {
 	Session as SessionImportInspectorClass_1,
 	Session as SessionImportInspectorClass_2
-} from "node:inspector";
-import { ListenOptions } from "node:net";
-import { URL } from "node:url";
-import { Context } from "node:vm";
+} from "inspector";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
+import { ListenOptions } from "net";
 import {
 	ValidationErrorConfiguration,
 	validate as validateFunction
@@ -125,6 +123,8 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
+import { URL } from "url";
+import { Context } from "vm";
 
 declare interface Abortable {
 	signal?: AbortSignal;
