@@ -4907,6 +4907,14 @@
           "type": "object",
           "additionalProperties": true
         },
+        "phase": {
+          "description": "Match the import phase of the dependency.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "realResource": {
           "description": "Match the real resource path of the module.",
           "oneOf": [
