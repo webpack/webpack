@@ -46,7 +46,7 @@ jobs:
         uses: CodSpeedHQ/action@ac0b0207a067aeb38de75cda57d2662345cac92a # v4.10.0
         with:
           run: yarn benchmark --ci
-          mode: "instrumentation"
+          mode: "simulation"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
