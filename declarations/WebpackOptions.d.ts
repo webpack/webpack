@@ -1548,6 +1548,10 @@ export interface RuleSetRule {
 		[k: string]: any;
 	};
 	/**
+	 * Match the import phase of the dependency.
+	 */
+	phase?: RuleSetConditionOrConditions;
+	/**
 	 * Match the real resource path of the module.
 	 */
 	realResource?: RuleSetConditionOrConditionsAbsolute;
