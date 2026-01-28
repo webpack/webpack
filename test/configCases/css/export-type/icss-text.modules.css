@@ -1,0 +1,16 @@
+:import("./icss-export.modules.css") {
+	i-primary: primaryColor;
+	i-secondary: secondaryColor;
+	i-spacing: spacing;
+}
+
+.button {
+	background-color: i-primary;
+	border-color: i-secondary;
+	padding: i-spacing;
+}
+
+.link {
+	color: i-primary;
+}
+

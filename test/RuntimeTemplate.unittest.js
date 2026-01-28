@@ -1,7 +1,7 @@
 "use strict";
 
-const RuntimeTemplate = require("../lib/RuntimeTemplate");
 const RequestShortener = require("../lib/RequestShortener");
+const RuntimeTemplate = require("../lib/RuntimeTemplate");
 
 describe("RuntimeTemplate.concatenation", () => {
 	it("no args", () => {

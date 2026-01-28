@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
@@ -33,8 +35,10 @@ module.exports = [
 					defaultVendors: false,
 					vendors: {
 						test: /node_modules/,
-						name: m => {
-							const match = m.nameForCondition().match(/([b-d]+)\.js$/);
+						name: (m) => {
+							const match =
+								/** @type {string} */
+								(m.nameForCondition()).match(/([b-d]+)\.js$/);
 							if (match) return `vendors-${match[1]}`;
 						}
 					}

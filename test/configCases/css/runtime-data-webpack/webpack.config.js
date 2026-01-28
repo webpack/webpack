@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -8,16 +10,16 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "Test",
 							stage:
 								compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
 						},
-						assets => {
+						(assets) => {
 							const name = "bundle0.css";
-							const code = assets[name].source();
+							const code = /** @type {string} */ (assets[name].source());
 
 							compilation.updateAsset(
 								name,

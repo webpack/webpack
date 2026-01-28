@@ -1,3 +1,3 @@
-module.exports = function (config) {
-	return !config.module;
-};
+"use strict";
+
+module.exports = (config) => !config.module;

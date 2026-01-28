@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports.default = [
-	function () {
+	function empty() {
 		return {};
 	}
 ];

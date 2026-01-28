@@ -148,7 +148,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -161,7 +161,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -352,7 +352,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((filename: string) => boolean)"
+              "tsType": "(import(\"../lib/CleanPlugin\").KeepFn)"
             }
           ]
         }
@@ -370,41 +370,6 @@
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
-    },
-    "CssAutoGeneratorOptions": {
-      "description": "Generator options for css/auto modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "esModule": {
-          "$ref": "#/definitions/CssGeneratorEsModule"
-        },
-        "exportsConvention": {
-          "$ref": "#/definitions/CssGeneratorExportsConvention"
-        },
-        "exportsOnly": {
-          "$ref": "#/definitions/CssGeneratorExportsOnly"
-        },
-        "localIdentName": {
-          "$ref": "#/definitions/CssGeneratorLocalIdentName"
-        }
-      }
-    },
-    "CssAutoParserOptions": {
-      "description": "Parser options for css/auto modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "import": {
-          "$ref": "#/definitions/CssParserImport"
-        },
-        "namedExports": {
-          "$ref": "#/definitions/CssParserNamedExports"
-        },
-        "url": {
-          "$ref": "#/definitions/CssParserUrl"
-        }
-      }
     },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -465,41 +430,6 @@
         }
       }
     },
-    "CssGlobalGeneratorOptions": {
-      "description": "Generator options for css/global modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "esModule": {
-          "$ref": "#/definitions/CssGeneratorEsModule"
-        },
-        "exportsConvention": {
-          "$ref": "#/definitions/CssGeneratorExportsConvention"
-        },
-        "exportsOnly": {
-          "$ref": "#/definitions/CssGeneratorExportsOnly"
-        },
-        "localIdentName": {
-          "$ref": "#/definitions/CssGeneratorLocalIdentName"
-        }
-      }
-    },
-    "CssGlobalParserOptions": {
-      "description": "Parser options for css/global modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "import": {
-          "$ref": "#/definitions/CssParserImport"
-        },
-        "namedExports": {
-          "$ref": "#/definitions/CssParserNamedExports"
-        },
-        "url": {
-          "$ref": "#/definitions/CssParserUrl"
-        }
-      }
-    },
     "CssModuleGeneratorOptions": {
       "description": "Generator options for css/module modules.",
       "type": "object",
@@ -508,11 +438,23 @@
         "esModule": {
           "$ref": "#/definitions/CssGeneratorEsModule"
         },
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "exportsConvention": {
           "$ref": "#/definitions/CssGeneratorExportsConvention"
         },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentHashDigest": {
+          "$ref": "#/definitions/HashDigest"
+        },
+        "localIdentHashDigestLength": {
+          "$ref": "#/definitions/HashDigestLength"
+        },
+        "localIdentHashSalt": {
+          "$ref": "#/definitions/HashSalt"
         },
         "localIdentName": {
           "$ref": "#/definitions/CssGeneratorLocalIdentName"
@@ -524,6 +466,27 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "animation": {
+          "$ref": "#/definitions/CssParserAnimation"
+        },
+        "container": {
+          "$ref": "#/definitions/CssParserContainer"
+        },
+        "customIdents": {
+          "$ref": "#/definitions/CssParserCustomIdents"
+        },
+        "dashedIdents": {
+          "$ref": "#/definitions/CssParserDashedIdents"
+        },
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
+        "function": {
+          "$ref": "#/definitions/CssParserFunction"
+        },
+        "grid": {
+          "$ref": "#/definitions/CssParserGrid"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },
@@ -534,6 +497,34 @@
           "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserAnimation": {
+      "description": "Enable/disable renaming of `@keyframes`.",
+      "type": "boolean"
+    },
+    "CssParserContainer": {
+      "description": "Enable/disable renaming of `@container` names.",
+      "type": "boolean"
+    },
+    "CssParserCustomIdents": {
+      "description": "Enable/disable renaming of custom identifiers.",
+      "type": "boolean"
+    },
+    "CssParserDashedIdents": {
+      "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+      "type": "boolean"
+    },
+    "CssParserExportType": {
+      "description": "Configure how CSS content is exported as default.",
+      "enum": ["link", "text", "css-style-sheet"]
+    },
+    "CssParserFunction": {
+      "description": "Enable/disable renaming of `@function` names.",
+      "type": "boolean"
+    },
+    "CssParserGrid": {
+      "description": "Enable/disable renaming of grid identifiers.",
+      "type": "boolean"
     },
     "CssParserImport": {
       "description": "Enable/disable `@import` at-rules handling.",
@@ -548,6 +539,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
         "import": {
           "$ref": "#/definitions/CssParserImport"
         },
@@ -562,6 +556,11 @@
     "CssParserUrl": {
       "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
       "type": "boolean"
+    },
+    "DeferImportExperimentOptions": {
+      "description": "Options for defer import.",
+      "type": "boolean",
+      "required": ["asyncModule"]
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -588,11 +587,25 @@
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
       "anyOf": [
         {
-          "enum": [false, "eval"]
+          "type": "array",
+          "items": {
+            "description": "Allow to assign devtool values per asset type (all, javascript, or css).",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "description": "Which asset type should receive this devtool value.",
+                "enum": ["all", "javascript", "css"]
+              },
+              "use": {
+                "$ref": "#/definitions/RawDevTool"
+              }
+            },
+            "required": ["type", "use"]
+          }
         },
         {
-          "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+          "$ref": "#/definitions/RawDevTool"
         }
       ]
     },
@@ -604,7 +617,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -616,13 +629,70 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
     "DevtoolNamespace": {
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
       "type": "string"
+    },
+    "Dotenv": {
+      "description": "Enable and configure the Dotenv plugin to load environment variables from .env files.",
+      "anyOf": [
+        {
+          "description": "Enable Dotenv plugin with default options.",
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/DotenvPluginOptions"
+        }
+      ]
+    },
+    "DotenvPluginOptions": {
+      "description": "Options for Dotenv plugin.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dir": {
+          "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "absolutePath": true
+            }
+          ]
+        },
+        "prefix": {
+          "description": "Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "description": "A prefix that environment variables must start with to be exposed.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "template": {
+          "description": "Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+          "type": "array",
+          "items": {
+            "description": "A template pattern for .env file names.",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     },
     "EmptyGeneratorOptions": {
       "description": "No generator options are supported for this module type.",
@@ -938,6 +1008,14 @@
           "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
+        "importMetaDirnameAndFilename": {
+          "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
+          "type": "boolean"
+        },
+        "methodShorthand": {
+          "description": "The environment supports object method shorthand ('{ module() {} }').",
+          "type": "boolean"
+        },
         "module": {
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
@@ -960,7 +1038,7 @@
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
       "implements": ["#/definitions/ExperimentsCommon"],
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
@@ -989,12 +1067,12 @@
           "description": "Enable css support.",
           "type": "boolean"
         },
-        "futureDefaults": {
-          "description": "Apply defaults of next major version.",
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -1014,10 +1092,6 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -1043,20 +1117,12 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
-          "type": "boolean"
-        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -1091,12 +1157,12 @@
           "description": "Enable css support.",
           "type": "boolean"
         },
-        "futureDefaults": {
-          "description": "Apply defaults of next major version.",
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean"
         },
-        "layers": {
-          "description": "Enable module layers.",
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -1116,10 +1182,6 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        },
-        "topLevelAwait": {
-          "description": "Allow using top-level-await in EcmaScript Modules.",
           "type": "boolean"
         }
       }
@@ -1179,40 +1241,30 @@
           }
         },
         {
-          "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
-          "instanceof": "Function",
-          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
+          "$ref": "#/definitions/ExternalItemFunction"
         }
       ]
     },
-    "ExternalItemFunctionData": {
-      "description": "Data object passed as argument when a function is set for 'externals'.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "context": {
-          "description": "The directory in which the request is placed.",
-          "type": "string"
+    "ExternalItemFunction": {
+      "description": "The function is called on each dependency.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ExternalItemFunctionCallback"
         },
-        "contextInfo": {
-          "description": "Contextual information.",
-          "type": "object",
-          "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
-        },
-        "dependencyType": {
-          "description": "The category of the referencing dependencies.",
-          "type": "string"
-        },
-        "getResolve": {
-          "description": "Get a resolve function with the current resolver options.",
-          "instanceof": "Function",
-          "tsType": "((options?: ResolveOptions) => ((context: string, request: string, callback: (err?: Error, result?: string) => void) => void) | ((context: string, request: string) => Promise<string>))"
-        },
-        "request": {
-          "description": "The request as written by the user in the require/import expression/statement.",
-          "type": "string"
+        {
+          "$ref": "#/definitions/ExternalItemFunctionPromise"
         }
-      }
+      ]
+    },
+    "ExternalItemFunctionCallback": {
+      "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
+      "instanceof": "Function",
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback)"
+    },
+    "ExternalItemFunctionPromise": {
+      "description": "The function is called on each dependency (`function(context, request)`).",
+      "instanceof": "Function",
+      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise)"
     },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
@@ -1315,7 +1367,10 @@
         "import",
         "module-import",
         "script",
-        "node-commonjs"
+        "node-commonjs",
+        "asset",
+        "css-import",
+        "css-url"
       ]
     },
     "Falsy": {
@@ -1396,8 +1451,7 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -1416,8 +1470,7 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -1481,7 +1534,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -1542,20 +1595,26 @@
         "asset": {
           "$ref": "#/definitions/AssetGeneratorOptions"
         },
+        "asset/bytes": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
         "asset/inline": {
           "$ref": "#/definitions/AssetInlineGeneratorOptions"
         },
         "asset/resource": {
           "$ref": "#/definitions/AssetResourceGeneratorOptions"
         },
+        "asset/source": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
         "css": {
           "$ref": "#/definitions/CssGeneratorOptions"
         },
         "css/auto": {
-          "$ref": "#/definitions/CssAutoGeneratorOptions"
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "css/global": {
-          "$ref": "#/definitions/CssGlobalGeneratorOptions"
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "css/module": {
           "$ref": "#/definitions/CssModuleGeneratorOptions"
@@ -1571,6 +1630,9 @@
         },
         "javascript/esm": {
           "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "json": {
+          "$ref": "#/definitions/JsonGeneratorOptions"
         }
       }
     },
@@ -1580,7 +1642,7 @@
       "minLength": 1
     },
     "HashDigest": {
-      "description": "Digest type used for the hash.",
+      "description": "Digest types used for the hash.",
       "type": "string"
     },
     "HashDigestLength": {
@@ -1730,7 +1792,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+            "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
           }
         ]
       }
@@ -1741,7 +1803,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+        "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
       }
     },
     "Iife": {
@@ -1791,14 +1853,14 @@
         },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
-          "tsType": "NodeJS.WritableStream"
+          "tsType": "NodeJS.WritableStream & { isTTY?: boolean, columns?: number, rows?: number }"
         }
       }
     },
     "JavascriptParserOptions": {
       "description": "Parser options for javascript modules.",
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "amd": {
           "$ref": "#/definitions/Amd"
@@ -1825,6 +1887,10 @@
               "type": "string"
             }
           ]
+        },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+          "type": "boolean"
         },
         "dynamicImportFetchPriority": {
           "description": "Specifies global fetchPriority for dynamic import.",
@@ -1855,6 +1921,10 @@
               "type": "boolean"
             }
           ]
+        },
+        "dynamicUrl": {
+          "description": "Enable/disable parsing of dynamic URL.",
+          "type": "boolean"
         },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
@@ -1897,8 +1967,16 @@
           "enum": ["error", "warn", "auto", false]
         },
         "importMeta": {
-          "description": "Enable/disable evaluating import.meta.",
-          "type": "boolean"
+          "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": ["preserve-unknown"]
+            }
+          ]
         },
         "importMetaContext": {
           "description": "Enable/disable evaluating import.meta.webpackContext.",
@@ -1910,6 +1988,11 @@
         "overrideStrict": {
           "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
           "enum": ["strict", "non-strict"]
+        },
+        "parse": {
+          "description": "Function to parser source code.",
+          "instanceof": "Function",
+          "tsType": "(import('../lib/javascript/JavascriptParser').ParseFunction)"
         },
         "reexportExportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",
@@ -2009,6 +2092,37 @@
         }
       }
     },
+    "JsonGeneratorOptions": {
+      "description": "Generator options for json modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JSONParse": {
+          "description": "Use `JSON.parse` when the JSON string is longer than 20 characters.",
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonParserOptions": {
+      "description": "Parser options for JSON modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsDepth": {
+          "description": "The depth of json dependency flagged as `exportInfo`.",
+          "type": "number"
+        },
+        "namedExports": {
+          "description": "Allow named exports for json of object type.",
+          "type": "boolean"
+        },
+        "parse": {
+          "description": "Function to parser content and return JSON.",
+          "instanceof": "Function",
+          "tsType": "(import('../lib/json/JsonParser').ParseFn)"
+        }
+      }
+    },
     "Layer": {
       "description": "Specifies the layer in which modules of this entrypoint are placed.",
       "anyOf": [
@@ -2056,7 +2170,7 @@
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "((server: import(\"net\").Server) => void)"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
             }
           ]
         },
@@ -2072,12 +2186,12 @@
               "type": "object",
               "additionalProperties": true,
               "properties": {},
-              "tsType": "(import(\"https\").ServerOptions | import(\"http\").ServerOptions)"
+              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend\").HttpServerOptions)"
             },
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "(() => import(\"net\").Server)"
+              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction)"
             }
           ]
         }
@@ -2094,7 +2208,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err: Error | null, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+              "tsType": "(import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd)"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -2121,7 +2235,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module')) => boolean)"
+              "tsType": "(import('../lib/hmr/LazyCompilationPlugin').TestFn)"
             }
           ]
         }
@@ -2460,7 +2574,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module')) => boolean)"
             }
           ]
         },
@@ -2520,7 +2634,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module')) => boolean)"
             }
           ]
         }
@@ -2551,7 +2665,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "Function"
+                "tsType": "((content: string) => boolean)"
               }
             ]
           },
@@ -2569,7 +2683,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((content: string) => boolean)"
         }
       ]
     },
@@ -2777,6 +2891,170 @@
         }
       }
     },
+    "OptimizationNormalized": {
+      "description": "Enables/Disables integrated optimizations.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "avoidEntryIife": {
+          "description": "Avoid wrapping the entry module in an IIFE.",
+          "type": "boolean"
+        },
+        "checkWasmTypes": {
+          "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
+          "type": "boolean"
+        },
+        "chunkIds": {
+          "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).",
+          "enum": [
+            "natural",
+            "named",
+            "deterministic",
+            "size",
+            "total-size",
+            false
+          ]
+        },
+        "concatenateModules": {
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+          "type": "boolean"
+        },
+        "emitOnErrors": {
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
+          "type": "boolean"
+        },
+        "flagIncludedChunks": {
+          "description": "Also flag chunks as loaded which contain a subset of the modules.",
+          "type": "boolean"
+        },
+        "innerGraph": {
+          "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
+          "type": "boolean"
+        },
+        "mangleExports": {
+          "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\"deterministic\": generate short deterministic names optimized for caching, \"size\": generate the shortest possible names).",
+          "anyOf": [
+            {
+              "enum": ["size", "deterministic"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
+        "mergeDuplicateChunks": {
+          "description": "Merge chunks which contain the same modules.",
+          "type": "boolean"
+        },
+        "minimize": {
+          "description": "Enable minimizing the output. Uses optimization.minimizer.",
+          "type": "boolean"
+        },
+        "minimizer": {
+          "description": "Minimizer(s) to use for minimizing the output.",
+          "type": "array",
+          "cli": {
+            "exclude": true
+          },
+          "items": {
+            "description": "Plugin of type object or instanceof Function.",
+            "anyOf": [
+              {
+                "enum": ["..."]
+              },
+              {
+                "$ref": "#/definitions/WebpackPluginInstance"
+              },
+              {
+                "$ref": "#/definitions/WebpackPluginFunction"
+              }
+            ]
+          }
+        },
+        "moduleIds": {
+          "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
+          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
+        },
+        "noEmitOnErrors": {
+          "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
+          "type": "boolean",
+          "cli": {
+            "exclude": true
+          }
+        },
+        "nodeEnv": {
+          "description": "Set process.env.NODE_ENV to a specific value.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "portableRecords": {
+          "description": "Generate records with relative paths to be able to move the context folder.",
+          "type": "boolean"
+        },
+        "providedExports": {
+          "description": "Figure out which exports are provided by modules to generate more efficient code.",
+          "type": "boolean"
+        },
+        "realContentHash": {
+          "description": "Use real [contenthash] based on final content of the assets.",
+          "type": "boolean"
+        },
+        "removeAvailableModules": {
+          "description": "Removes modules from chunks when these modules are already included in all parents.",
+          "type": "boolean"
+        },
+        "removeEmptyChunks": {
+          "description": "Remove chunks which are empty.",
+          "type": "boolean"
+        },
+        "runtimeChunk": {
+          "$ref": "#/definitions/OptimizationRuntimeChunkNormalized"
+        },
+        "sideEffects": {
+          "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+          "anyOf": [
+            {
+              "enum": ["flag"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "splitChunks": {
+          "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksOptions"
+            }
+          ]
+        },
+        "usedExports": {
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \"global\": analyse exports globally for all runtimes combined).",
+          "anyOf": [
+            {
+              "enum": ["global"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    },
     "OptimizationRuntimeChunk": {
       "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
       "anyOf": [
@@ -2798,7 +3076,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "Function"
+                  "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
                 }
               ]
             }
@@ -2819,7 +3097,7 @@
             "name": {
               "description": "The name factory for the runtime chunks.",
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
             }
           }
         }
@@ -2847,7 +3125,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
             }
           ]
         },
@@ -2873,7 +3151,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
             }
           ]
         },
@@ -2893,7 +3171,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((layer: string | null) => boolean)"
             }
           ]
         },
@@ -2971,7 +3249,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
             }
           ]
         },
@@ -2995,7 +3273,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((module: import('../lib/Module'), context: import('../lib/optimize/SplitChunksPlugin').CacheGroupsContext) => boolean)"
             }
           ]
         },
@@ -3011,7 +3289,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((type: string) => boolean)"
             }
           ]
         },
@@ -3053,8 +3331,7 @@
                 "type": "string"
               },
               {
-                "instanceof": "Function",
-                "tsType": "Function"
+                "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
               },
               {
                 "$ref": "#/definitions/OptimizationSplitChunksCacheGroup"
@@ -3077,8 +3354,7 @@
                     "type": "string"
                   },
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
                   }
                 ]
               }
@@ -3098,7 +3374,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
             }
           ]
         },
@@ -3107,7 +3383,8 @@
           "type": "array",
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
-            "type": "string"
+            "type": "string",
+            "tsType": "(import(\"../lib/Module\").SourceType)"
           },
           "minItems": 1
         },
@@ -3141,7 +3418,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                  "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
                 }
               ]
             },
@@ -3197,7 +3474,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
             }
           ]
         },
@@ -3279,7 +3556,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
             }
           ]
         },
@@ -3715,6 +3992,9 @@
         "asset": {
           "$ref": "#/definitions/AssetParserOptions"
         },
+        "asset/bytes": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
         "asset/inline": {
           "$ref": "#/definitions/EmptyParserOptions"
         },
@@ -3728,10 +4008,10 @@
           "$ref": "#/definitions/CssParserOptions"
         },
         "css/auto": {
-          "$ref": "#/definitions/CssAutoParserOptions"
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "css/global": {
-          "$ref": "#/definitions/CssGlobalParserOptions"
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "css/module": {
           "$ref": "#/definitions/CssModuleParserOptions"
@@ -3747,6 +4027,9 @@
         },
         "javascript/esm": {
           "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "json": {
+          "$ref": "#/definitions/JsonParserOptions"
         }
       }
     },
@@ -3785,7 +4068,7 @@
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((name: import('../lib/Compilation').Asset['name'], source: import('../lib/Compilation').Asset['source'], assetInfo: import('../lib/Compilation').Asset['info'])  => boolean)"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
@@ -3819,6 +4102,21 @@
         ]
       }
     },
+    "PluginsNormalized": {
+      "description": "Add additional plugins to the compiler.",
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/WebpackPluginInstance"
+          },
+          {
+            "$ref": "#/definitions/WebpackPluginFunction"
+          }
+        ]
+      }
+    },
     "Profile": {
       "description": "Capture timing information for each module.",
       "type": "boolean"
@@ -3834,6 +4132,18 @@
         }
       ]
     },
+    "RawDevTool": {
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "anyOf": [
+        {
+          "enum": [false, "eval"]
+        },
+        {
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+        }
+      ]
+    },
     "RawPublicPath": {
       "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
@@ -3842,7 +4152,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -4193,8 +4503,7 @@
               },
               {
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -4478,6 +4787,10 @@
             }
           ]
         },
+        "extractSourceMap": {
+          "description": "Enable/Disable extracting source map.",
+          "type": "boolean"
+        },
         "generator": {
           "description": "The options for the module generator.",
           "type": "object"
@@ -4693,13 +5006,17 @@
           }
         },
         {
-          "instanceof": "Function",
-          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => (Falsy | RuleSetUseItem)[])"
+          "$ref": "#/definitions/RuleSetUseFunction"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"
         }
       ]
+    },
+    "RuleSetUseFunction": {
+      "description": "The function is called on each data and return rule set item.",
+      "instanceof": "Function",
+      "tsType": "((data: import('../lib/rules/RuleSetCompiler').EffectData) => (RuleSetUseItem | (Falsy | RuleSetUseItem)[]))"
     },
     "RuleSetUseItem": {
       "description": "A description of an applied loader.",
@@ -4731,8 +5048,7 @@
           }
         },
         {
-          "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])"
+          "$ref": "#/definitions/RuleSetUseFunction"
         },
         {
           "$ref": "#/definitions/RuleSetLoader"
@@ -4763,6 +5079,21 @@
             }
           }
         },
+        "contextModule": {
+          "description": "Options for snapshotting the context module to determine if it needs to be built again.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
         "immutablePaths": {
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
@@ -4777,8 +5108,7 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -4797,8 +5127,7 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -4862,8 +5191,7 @@
               {
                 "description": "A path to an unmanaged directory.",
                 "type": "string",
-                "absolutePath": true,
-                "minLength": 1
+                "absolutePath": true
               }
             ]
           }
@@ -4894,7 +5222,14 @@
         },
         "assetsSort": {
           "description": "Sort the assets by that field.",
-          "type": "string"
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "assetsSpace": {
           "description": "Space to display assets (groups will be collapsed to fit this space).",
@@ -4918,7 +5253,17 @@
         },
         "children": {
           "description": "Add children information.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StatsValue"
+              }
+            },
+            {
+              "$ref": "#/definitions/StatsValue"
+            }
+          ]
         },
         "chunkGroupAuxiliary": {
           "description": "Display auxiliary assets in chunk groups.",
@@ -4958,7 +5303,14 @@
         },
         "chunksSort": {
           "description": "Sort the chunks by that field.",
-          "type": "string"
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "colors": {
           "description": "Enables/Disables colorful output.",
@@ -5027,8 +5379,30 @@
           "description": "Add --env information.",
           "type": "boolean"
         },
+        "errorCause": {
+          "description": "Add cause to errors.",
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "errorDetails": {
           "description": "Add details to errors (like resolving log).",
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "errorErrors": {
+          "description": "Add nested errors to errors (like in AggregateError).",
           "anyOf": [
             {
               "enum": ["auto"]
@@ -5186,7 +5560,14 @@
         },
         "modulesSort": {
           "description": "Sort the modules by that field.",
-          "type": "string"
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "modulesSpace": {
           "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
@@ -5386,7 +5767,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((warning: import('../lib/stats/DefaultStatsFactoryPlugin').StatsError, value: string) => boolean)"
+          "tsType": "(import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn)"
         }
       ]
     },
@@ -5526,6 +5907,9 @@
         "devtool": {
           "$ref": "#/definitions/DevTool"
         },
+        "dotenv": {
+          "$ref": "#/definitions/Dotenv"
+        },
         "entry": {
           "$ref": "#/definitions/EntryNormalized"
         },
@@ -5563,7 +5947,7 @@
           "$ref": "#/definitions/Node"
         },
         "optimization": {
-          "$ref": "#/definitions/Optimization"
+          "$ref": "#/definitions/OptimizationNormalized"
         },
         "output": {
           "$ref": "#/definitions/OutputNormalized"
@@ -5575,7 +5959,7 @@
           "$ref": "#/definitions/Performance"
         },
         "plugins": {
-          "$ref": "#/definitions/Plugins"
+          "$ref": "#/definitions/PluginsNormalized"
         },
         "profile": {
           "$ref": "#/definitions/Profile"
@@ -5675,6 +6059,9 @@
     },
     "devtool": {
       "$ref": "#/definitions/DevTool"
+    },
+    "dotenv": {
+      "$ref": "#/definitions/Dotenv"
     },
     "entry": {
       "$ref": "#/definitions/Entry"

@@ -1,4 +1,9 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+
 class ReadRecordsPlugin {
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.readRecords.tapAsync("ReadRecordsPlugin", callback => {
 			setTimeout(() => {

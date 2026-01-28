@@ -1,6 +1,9 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	module: {
 		rules: [
 			{
@@ -24,3 +27,5 @@ module.exports = {
 		usedExports: true
 	}
 };
+
+module.exports = config;

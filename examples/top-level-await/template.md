@@ -68,16 +68,16 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 _{{dist/output.js}}_
 ```
 
-# dist/497.output.js
+# dist/UserApi_js.output.js
 
 ```javascript
-_{{dist/497.output.js}}_
+_{{dist/UserApi_js.output.js}}_
 ```
 
 ## in production mode:
 
 ```javascript
-_{{production:dist/497.output.js}}_
+_{{production:dist/UserApi_js.output.js}}_
 ```
 
 # Info

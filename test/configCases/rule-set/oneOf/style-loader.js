@@ -1,4 +1,9 @@
-/** @type {import("../../../../types").LoaderDefinition<{ get(): string }>} */
+/** @typedef {import("../../../../types").LoaderDefinition} LoaderDefinition */
+/** @typedef {import("../../../../types").LoaderContext<{}>} LoaderContext */
+
+/**
+ * @type {LoaderDefinition}
+ */
 module.exports.pitch = function (request) {
 	return `
     var content = require(${stringifyRequest(this, `!!${request}`)});
@@ -6,6 +11,11 @@ module.exports.pitch = function (request) {
     `
 };
 
+/**
+ * @param {LoaderContext} loaderContext loaderContext
+ * @param {string} request request
+ * @returns {string} stringified request
+ */
 function stringifyRequest(loaderContext, request) {
     return JSON.stringify(
       loaderContext.utils.contextify(

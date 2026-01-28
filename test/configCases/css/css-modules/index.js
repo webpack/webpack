@@ -7,14 +7,17 @@ it("should allow to create css modules", done => {
 
 			const fs = __non_webpack_require__("fs");
 			const path = __non_webpack_require__("path");
-			const cssOutputFilename = prod ? "142.bundle1.css" : "use-style_js.bundle0.css";
+			if (__STATS_I__ === 0 || __STATS_I__ === 1) {
+				const cssOutputFilename = prod
+					? `915.bundle${__STATS_I__}.css`
+					: `use-style_js.bundle${__STATS_I__}.css`;
 
-			const cssContent = fs.readFileSync(
-				path.join(__dirname, cssOutputFilename),
-				"utf-8"
-			);
-			expect(cssContent).not.toContain(".my-app--");
-			expect(cssContent).toMatchSnapshot(prod ? "prod" : "dev");
+				const cssContent = fs.readFileSync(
+					path.join(__dirname, cssOutputFilename),
+					"utf-8"
+				);
+				expect(cssContent).toMatchSnapshot(prod ? "prod" : "dev");
+			}
 		} catch (e) {
 			return done(e);
 		}

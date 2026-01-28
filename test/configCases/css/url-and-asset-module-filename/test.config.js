@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i) {
 		return [`index_css.bundle${i}.js`, `bundle${i}.js`];
 	}
 };

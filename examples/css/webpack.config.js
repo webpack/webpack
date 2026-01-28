@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	output: {
 		uniqueName: "app"
 	},
@@ -6,3 +9,5 @@ module.exports = {
 		css: true
 	}
 };
+
+module.exports = config;

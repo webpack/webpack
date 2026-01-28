@@ -1,6 +1,6 @@
 import "./style.css";
 
-it(`should work with URLs in CSS`, done => {
+it(`should work with URLs in CSS`, () => {
 	const links = document.getElementsByTagName("link");
 	const css = [];
 
@@ -10,5 +10,4 @@ it(`should work with URLs in CSS`, done => {
 	}
 
 	expect(css).toMatchSnapshot();
-	done();
 });

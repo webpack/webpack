@@ -45,6 +45,21 @@ module.exports = function (level, msg) {
 	}
 };
 
+/**
+ * @param {Error} err error
+ * @returns {string} formatted error
+ */
+module.exports.formatError = function (err) {
+	var message = err.message;
+	var stack = err.stack;
+	if (!stack) {
+		return message;
+	} else if (stack.indexOf(message) < 0) {
+		return message + "\n" + stack;
+	}
+	return stack;
+};
+
 var group = console.group || dummy;
 var groupCollapsed = console.groupCollapsed || dummy;
 var groupEnd = console.groupEnd || dummy;
@@ -60,19 +75,4 @@ module.exports.groupEnd = logGroup(groupEnd);
  */
 module.exports.setLogLevel = function (level) {
 	logLevel = level;
-};
-
-/**
- * @param {Error} err error
- * @returns {string} formatted error
- */
-module.exports.formatError = function (err) {
-	var message = err.message;
-	var stack = err.stack;
-	if (!stack) {
-		return message;
-	} else if (stack.indexOf(message) < 0) {
-		return message + "\n" + stack;
-	}
-	return stack;
 };

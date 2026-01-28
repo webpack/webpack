@@ -15,8 +15,12 @@ Note: When your library has dependencies that should not be included in the comp
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-module.exports = {
+"use strict";
+
+const path = require("path");
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		alpha: "./alpha",
@@ -29,6 +33,8 @@ module.exports = {
 		libraryTarget: "umd"
 	}
 };
+
+module.exports = config;
 ```
 
 # dist/MyLibrary.alpha.js
@@ -74,6 +80,12 @@ module.exports = "alpha";
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -152,6 +164,12 @@ module.exports = "beta";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -189,8 +207,8 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.06 KiB [emitted] (name: beta)
-asset MyLibrary.alpha.js 2.06 KiB [emitted] (name: alpha)
+asset MyLibrary.beta.js 2.32 KiB [emitted] (name: beta)
+asset MyLibrary.alpha.js 2.32 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]
@@ -205,21 +223,14 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 423 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 419 bytes [emitted] [minimized] (name: beta)
-chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-  > ./alpha alpha
-  ./alpha.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./alpha.js 1:0-14
-    entry ./alpha alpha
-    used as library export
+asset MyLibrary.alpha.js 420 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 418 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]
@@ -227,5 +238,12 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.78.0 compiled successfully
+chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+  > ./alpha alpha
+  ./alpha.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./alpha.js 1:0-14
+    entry ./alpha alpha
+    used as library export
+webpack X.X.X compiled successfully
 ```

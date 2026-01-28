@@ -7,6 +7,7 @@ it("should have correct local ident for css export locals", (done) => {
 		import("./style.module.css?file-local"),
 		import("./style.module.css?q#f"),
 		import("./style.module.css?uniqueName-id-contenthash"),
+		import("./style.module.css?hash-local-custom"),
 		import("./style.module.less"),
 	]).then(([idLocal, hash, hashLocal, pathNameLocal, fileLocal, queryFragment, uniqueNameIdContenthash, less]) => {
 		expect(idLocal).toMatchSnapshot();

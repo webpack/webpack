@@ -1,0 +1,4 @@
+body {
+	background: url(//example.com/image.png) url(https://example.com/image.png);
+	background-image: url(http://example.com/image.png);
+}

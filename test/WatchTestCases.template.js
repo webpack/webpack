@@ -2,17 +2,24 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {Record<string, EXPECTED_ANY>} Env */
+/** @typedef {{ testPath: string, srcPath: string }} TestOptions */
+
 const path = require("path");
 const fs = require("graceful-fs");
-const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const { remove } = require("./helpers/remove");
-const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const FakeDocument = require("./helpers/FakeDocument");
+const prepareOptions = require("./helpers/prepareOptions");
+const { remove } = require("./helpers/remove");
+const { TestRunner } = require("./runner");
 
+/**
+ * @param {string} src src
+ * @param {string} dest dest
+ * @param {boolean} initial is initial?
+ */
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
@@ -23,10 +30,10 @@ function copyDiff(src, dest, initial) {
 		if (directory) {
 			copyDiff(srcFile, destFile, initial);
 		} else {
-			var content = fs.readFileSync(srcFile);
-			if (/^DELETE\s*$/.test(content.toString("utf-8"))) {
+			const content = fs.readFileSync(srcFile);
+			if (/^DELETE\s*$/.test(content.toString("utf8"))) {
 				fs.unlinkSync(destFile);
-			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf-8"))) {
+			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf8"))) {
 				rimraf.sync(destFile);
 			} else {
 				fs.writeFileSync(destFile, content);
@@ -43,41 +50,44 @@ function copyDiff(src, dest, initial) {
 	}
 }
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
-		if (process.env.NO_WATCH_TESTS) {
-			// eslint-disable-next-line jest/no-disabled-tests
-			it.skip("long running tests excluded", () => {});
-			return;
-		}
-
-		const casesPath = path.join(__dirname, "watchCases");
-		let categories = fs.readdirSync(casesPath);
-
-		categories = categories.map(cat => ({
-			name: cat,
-			tests: fs
-				.readdirSync(path.join(casesPath, cat))
-				.filter(folder => !folder.includes("_"))
-				.filter(testName => {
-					const testDirectory = path.join(casesPath, cat, testName);
-					const filterPath = path.join(testDirectory, "test.filter.js");
-					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
-						// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
-						describe.skip(testName, () => it("filtered", () => {}));
-						return false;
-					}
-					return true;
-				})
-				.sort()
-		}));
 		beforeAll(() => {
 			let dest = path.join(__dirname, "js");
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 			dest = path.join(__dirname, "js", `${config.name}-src`);
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 		});
+
+		if (process.env.NO_WATCH_TESTS) {
+			// eslint-disable-next-line jest/no-disabled-tests
+			it.skip("long running tests excluded", () => {});
+
+			return;
+		}
+
+		const casesPath = path.join(__dirname, "watchCases");
+		const categories = fs.readdirSync(casesPath).map((cat) => ({
+			name: cat,
+			tests: fs
+				.readdirSync(path.join(casesPath, cat))
+				.filter((folder) => !folder.includes("_"))
+				.filter((testName) => {
+					const testDirectory = path.join(casesPath, cat, testName);
+					const filterPath = path.join(testDirectory, "test.filter.js");
+					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
+						// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
+						describe.skip(testName, () => it("filtered", () => {}));
+
+						return false;
+					}
+					return true;
+				})
+				.sort()
+		}));
+
 		for (const category of categories) {
+			// eslint-disable-next-line jest/prefer-hooks-on-top, jest/no-duplicate-hooks
 			beforeAll(() => {
 				const dest = path.join(
 					__dirname,
@@ -87,6 +97,7 @@ const describeCases = config => {
 				);
 				if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 			});
+
 			describe(category.name, () => {
 				for (const testName of category.tests) {
 					describe(testName, () => {
@@ -98,19 +109,20 @@ const describeCases = config => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
+						/** @type {TODO} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
-							.filter(name =>
+							.filter((name) =>
 								fs.statSync(path.join(testDirectory, name)).isDirectory()
 							)
-							.map(name => ({ name }));
+							.map((name) => ({ name }));
 
-						beforeAll(done => {
+						beforeAll((done) => {
 							rimraf(tempDirectory, done);
 						});
 
-						it(`${testName} should compile`, done => {
+						it(`${testName} should compile`, (done) => {
 							const outputDirectory = path.join(
 								__dirname,
 								"js",
@@ -135,11 +147,20 @@ const describeCases = config => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								if (options.output.clean === undefined) {
+									options.output.clean = true;
+								}
 								if (!options.output.path) options.output.path = outputDirectory;
-								if (typeof options.output.pathinfo === "undefined")
+								if (typeof options.output.pathinfo === "undefined") {
 									options.output.pathinfo = true;
-								if (!options.output.filename)
-									options.output.filename = "bundle.js";
+								}
+								if (!options.output.filename) {
+									options.output.filename = `bundle${
+										options.experiments && options.experiments.outputModule
+											? ".mjs"
+											: ".js"
+									}`;
+								}
 								if (options.cache && options.cache.type === "filesystem") {
 									const cacheDirectory = path.join(tempDirectory, ".cache");
 									options.cache.cacheDirectory = cacheDirectory;
@@ -148,15 +169,17 @@ const describeCases = config => {
 								if (config.experiments) {
 									if (!options.experiments) options.experiments = {};
 									for (const key of Object.keys(config.experiments)) {
-										if (options.experiments[key] === undefined)
+										if (options.experiments[key] === undefined) {
 											options.experiments[key] = config.experiments[key];
+										}
 									}
 								}
 								if (config.optimization) {
 									if (!options.optimization) options.optimization = {};
 									for (const key of Object.keys(config.optimization)) {
-										if (options.optimization[key] === undefined)
+										if (options.optimization[key] === undefined) {
 											options.optimization[key] = config.optimization[key];
+										}
 									}
 								}
 							};
@@ -174,18 +197,22 @@ const describeCases = config => {
 							let run = runs[runIdx];
 							let triggeringFilename;
 							let lastHash = "";
+
 							const currentWatchStepModule = require("./helpers/currentWatchStep");
+
 							let compilationFinished = done;
 							currentWatchStepModule.step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
 							setTimeout(() => {
 								const deprecationTracker = deprecationTracking.start();
+
 								const webpack = require("..");
+
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
 									"WatchTestCasesTest",
-									(filename, mtime) => {
+									(filename, _mtime) => {
 										triggeringFilename = filename;
 									}
 								);
@@ -193,7 +220,7 @@ const describeCases = config => {
 									{
 										aggregateTimeout: 1000
 									},
-									(err, stats) => {
+									async (err, stats) => {
 										if (err) return compilationFinished(err);
 										if (!stats) {
 											return compilationFinished(
@@ -230,7 +257,7 @@ const describeCases = config => {
 												`stats.${runs[runIdx] && runs[runIdx].name}.txt`
 											),
 											stats.toString(statOptions),
-											"utf-8"
+											"utf8"
 										);
 										const jsonStats = stats.toJson({
 											errorDetails: true
@@ -244,8 +271,9 @@ const describeCases = config => {
 												options,
 												compilationFinished
 											)
-										)
+										) {
 											return;
+										}
 										if (
 											checkArrayExpectation(
 												path.join(testDirectory, run.name),
@@ -255,82 +283,8 @@ const describeCases = config => {
 												options,
 												compilationFinished
 											)
-										)
+										) {
 											return;
-
-										const globalContext = {
-											console: console,
-											expect: expect,
-											setTimeout,
-											clearTimeout,
-											document: new FakeDocument()
-										};
-
-										function _require(currentDirectory, module) {
-											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
-												let fn;
-												let content;
-												let p;
-												if (Array.isArray(module)) {
-													p = path.join(currentDirectory, module[0]);
-													content = module
-														.map(arg => {
-															p = path.join(currentDirectory, arg);
-															return fs.readFileSync(p, "utf-8");
-														})
-														.join("\n");
-												} else {
-													p = path.join(currentDirectory, module);
-													content = fs.readFileSync(p, "utf-8");
-												}
-												if (
-													options.target === "web" ||
-													options.target === "webworker"
-												) {
-													fn = vm.runInNewContext(
-														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window, self) {" +
-															`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
-																content
-															}\n})`,
-														globalContext,
-														p
-													);
-												} else {
-													fn = vm.runInThisContext(
-														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
-															"global.expect = expect;" +
-															`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
-																content
-															}\n})`,
-														p
-													);
-												}
-												const m = {
-													exports: {}
-												};
-												fn.call(
-													m.exports,
-													_require.bind(null, path.dirname(p)),
-													m,
-													m.exports,
-													path.dirname(p),
-													p,
-													run.it,
-													run.name,
-													jsonStats,
-													state,
-													expect,
-													globalContext,
-													globalContext
-												);
-												return module.exports;
-											} else if (
-												testConfig.modules &&
-												module in testConfig.modules
-											) {
-												return testConfig.modules[module];
-											}
-											return jest.requireActual(module);
 										}
 
 										let testConfig = {};
@@ -343,21 +297,66 @@ const describeCases = config => {
 											// empty
 										}
 
-										if (testConfig.noTests)
+										if (testConfig.noTests) {
 											return process.nextTick(compilationFinished);
-										_require(
+										}
+										const runner = new TestRunner({
+											target: options.target,
+											outputDirectory,
+											testMeta: {
+												category: category.name,
+												name: testName
+											},
+											testConfig: {
+												...testConfig,
+												evaluateScriptOnAttached: true
+											},
+											webpackOptions: options
+										});
+										runner.mergeModuleScope({
+											it: run.it,
+											beforeEach: _beforeEach,
+											afterEach: _afterEach,
+											STATS_JSON: jsonStats,
+											STATE: state,
+											WATCH_STEP: run.name
+										});
+										const getBundle = (outputDirectory, module) => {
+											if (Array.isArray(module)) {
+												return module.map((arg) =>
+													path.join(outputDirectory, arg)
+												);
+											} else if (module instanceof RegExp) {
+												return fs
+													.readdirSync(outputDirectory)
+													.filter((f) => module.test(f))
+													.map((f) => path.join(outputDirectory, f));
+											}
+											return [path.join(outputDirectory, module)];
+										};
+
+										const promises = [];
+										for (const p of getBundle(
 											outputDirectory,
 											testConfig.bundlePath || "./bundle.js"
-										);
+										)) {
+											promises.push(
+												Promise.resolve().then(() =>
+													runner.require(outputDirectory, p)
+												)
+											);
+										}
+										await Promise.all(promises);
 
-										if (run.getNumberOfTests() < 1)
+										if (run.getNumberOfTests() < 1) {
 											return compilationFinished(
 												new Error("No tests exported by test case")
 											);
+										}
 
 										run.it(
 											"should compile the next step",
-											done => {
+											(done) => {
 												runIdx++;
 												if (runIdx < runs.length) {
 													run = runs[runIdx];
@@ -406,7 +405,8 @@ const describeCases = config => {
 							);
 							run.it = _it;
 							run.getNumberOfTests = getNumberOfTests;
-							it(`${run.name} should allow to read stats`, done => {
+
+							it(`${run.name} should allow to read stats`, (done) => {
 								if (run.stats) {
 									run.stats.toString({ all: true });
 									run.stats = undefined;
@@ -415,9 +415,16 @@ const describeCases = config => {
 							});
 						}
 
+						// eslint-disable-next-line jest/prefer-hooks-on-top
 						afterAll(() => {
 							remove(tempDirectory);
 						});
+
+						const {
+							it: _it,
+							beforeEach: _beforeEach,
+							afterEach: _afterEach
+						} = createLazyTestEnv(10000);
 					});
 				}
 			});

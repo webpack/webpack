@@ -1,6 +1,9 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
@@ -32,3 +35,5 @@ module.exports = {
 		filename: "[name].js"
 	}
 };
+
+module.exports = config;

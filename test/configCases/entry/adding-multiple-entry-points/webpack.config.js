@@ -1,4 +1,7 @@
+"use strict";
+
 const EntryPlugin = require("../../../../").EntryPlugin;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: () => ({}),

@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	moduleScope: function (scope) {
+	moduleScope(scope) {
 		delete scope.__dirname;
 		delete scope.__filename;
 	}

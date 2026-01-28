@@ -1,4 +1,6 @@
-var regexEscape = require("./regexEscape.js");
+"use strict";
+
+const regexEscape = require("./regexEscape");
 
 // These expect* methods are necessary because 'source' contains the code for this test file, which will always contain the string
 // being tested for, so we have to use the "DO NOT MATCH BELOW..." technique to exclude the actual testing code from the test.
@@ -7,9 +9,18 @@ var regexEscape = require("./regexEscape.js");
 // Break up the match string so we don't match it in these expect* functions either.
 const doNotMatch = ["DO", "NOT", "MATCH", "BELOW", "THIS", "LINE"].join(" ");
 
+/**
+ * @param {string} source value
+ * @param {string} str string for searching
+ */
 function expectSourceToContain(source, str) {
 	expect(source).toMatch(new RegExp(`${regexEscape(str)}.*${doNotMatch}`, "s"));
 }
+
+/**
+ * @param {string} source value
+ * @param {RegExp} regexStr regexp
+ */
 function expectSourceToMatch(source, regexStr) {
 	expect(source).toMatch(new RegExp(`${regexStr}.*${doNotMatch}`, "s"));
 }

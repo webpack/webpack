@@ -1,0 +1,574 @@
+/* postcss-modules-scope */
+
+/* at-rule-scope */
+:local(.exportName4) {
+	color: red;
+}
+
+@scope (:local(.exportName1)) to (:local(.exportName2)) {
+	:local(.exportName3) {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope (:local(.exportName1)) {
+	:local(.exportName5) {
+		border: 5px solid black;
+	}
+}
+
+@scope (:local(.exportName1)) to (img) {
+	:local(.exportName3) {
+		background-color: goldenrod;
+	}
+}
+
+@scope (:local(.exportName6)) {
+	img {
+		backdrop-filter: blur(2px);
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/* at-rule */
+:local(.exportName7) {
+	background: red;
+}
+
+@media screen {
+	:local(.exportName8) {
+		color: green;
+		:local(.exportName9) {
+			color: blue;
+		}
+	}
+}
+
+/* composes-only-allowed */
+.local-a { color: red; }
+.local-b { color: green; }
+:local(.exportName10) {
+	composes: global(a);
+	compose-with: global(b);
+	composes: local(local-a);
+	compose-with: local(local-b);
+	a-composes: global(c);
+	composes-b: global(d);
+	a-composes-b: global(e);
+	a-compose-with-b: global(b);
+}
+
+/* css-nesting-composes */
+:local(.exportName11) {
+	color: red;
+}
+
+:local(.exportName12) {
+	display: grid;
+	composes: exportName11;
+
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+	}
+}
+
+/* css-nesting */
+:local(.exportName12) {
+	background: red;
+}
+
+:local(.exportName13) {
+	color: green;
+
+	@media (max-width: 520px) {
+		:local(.exportName14) {
+			color: darkgreen;
+		}
+
+		&:local(.exportName15) {
+			color: blue;
+		}
+	}
+}
+
+:local(.exportName16) {
+	color: red;
+
+	&:local(.exportName17) {
+		color: green;
+	}
+
+	:local(.exportName18) {
+		color: blue;
+	}
+}
+
+/* error-comma-in-local */
+.className { color: red; }
+:local(.exportName19, .exportName20) {
+	composes: className;
+}
+
+/* error-composes-css-nesting-at-rule */
+:local(.exportName21) {
+}
+
+@media (min-width: 1024px) {
+	:local(.exportName22) {
+		:local(.exportName23) {
+			compose-with: exportName21;
+		}
+	}
+}
+
+/* error-composes-css-nesting-with-media */
+:local(.exportName24) {
+}
+
+:local(.exportName25) {
+	@media (min-width: 1024px) {
+		:local(.exportName26) {
+			compose-with: exportName24;
+		}
+	}
+}
+
+/* error-composes-css-nesting */
+:local(.exportName27) {
+}
+
+:local(.exportName28) {
+	:local(.exportName29) {
+		compose-with: exportName27;
+	}
+}
+
+/* TODO bug no report */
+/* error-composes-keyframes */
+:local(.exportName30) {
+}
+
+@keyframes slidein {
+	from {
+		transform: translateX(0%);
+	}
+
+	to {
+		composes: exportName30;
+	}
+}
+
+/* TODO bug no report */
+/* error-composes-not-allowed-in-local-id */
+.exportName31 {}
+
+:local(#idName) {
+	composes: exportName31;
+}
+
+/* error-composes-not-allowed-in-multiple */
+.exportName32 {}
+:local(.exportName33) :local(.exportName34) {
+	composes: exportName32;
+}
+
+/* TODO bug no report */
+/* error-composes-not-allowed-in-simple */
+.exportName35 {}
+body {
+	composes: exportName35;
+}
+
+/* error-composes-not-allowed-in-wrong-local */
+.exportName36 {}
+:local(.exportName37.exportName38) {
+	composes: exportName36;
+}
+
+/* error-composes-not-defined-class */
+:local(.exportName39) {
+	compose-with: exportName40;
+}
+
+/* TODO bug no report */
+/* error-multiple-nested-media */
+:local(.exportName41) {
+	color: blue;
+}
+
+:local(.exportName42) {
+	display: grid;
+
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+
+		@media (min-width: 1024px) {
+			composes: exportName41;
+		}
+	}
+}
+
+/* TODO bug no report */
+/* error-not-allowed-in-local */
+:local(body) {
+	color: red;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-href */
+:local(.exportName42[href^="https"]) {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-target */
+:local(.exportName43[target="_blank"]) {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-title */
+:local(.exportName44[title="flower"]) {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-title */
+:local(.exportName45[type="text"]) {
+	color: blue;
+}
+
+/* escape-sequence */
+:local(.smile) {
+	color: red;
+}
+
+:local(.smile) :local(.smile) {
+	color: red;
+}
+
+:local(.smile) :local(.smile) :local(.smile) {
+	color: red;
+}
+
+:local(.smile_with_A) {
+	color: red;
+}
+
+.\1F600  :local(.smile) {
+	color: red;
+}
+
+:local(.smile) .\1F600 {
+	color: red;
+}
+
+.\1F600  :local(.smile) .\1F600 {
+	color: red;
+}
+
+.\1F600  :local(.smile_with_A) .\1F600 {
+	color: red;
+}
+
+#\1F600  :local(#smile) #\1F600 {
+	color: red;
+}
+
+#\1F600  :local(#smile_with_A) #\1F600 {
+	color: red;
+}
+
+.a :local(.smile) b {
+	color: red;
+}
+
+:local(.smile) > :local(.smile) > :local(.smile) {
+	color: red;
+}
+
+.\1F600 :local(.smile) {
+	color: red;
+}
+
+.\1F600:local(.smile) {
+	color: red;
+}
+
+.\1F600  :local(.smile) {
+	color: red;
+}
+
+:local(.smile) .a {
+	color: red;
+}
+
+:local(.smile).a {
+	color: red;
+}
+
+.a :local(.smile) {
+	color: red;
+}
+
+.a:local(.smile) {
+	color: red;
+}
+
+/* export-child-class */
+:local(.exportName46) {
+	color: red;
+}
+
+:local(.exportName46) h1 {
+	color: blue;
+}
+
+/* export-class-attribute */
+:local(.exportName47) {
+	color: red;
+}
+
+:local(.exportName48) {
+	color: green;
+}
+
+.exportName48[class="exportName47"] {
+	color: blue;
+}
+
+:local(.exportName48[class="exportName47"]) {
+	color: blue;
+}
+
+:local(.exportName48[ class = "exportName47" ]) {
+	color: blue;
+}
+
+:local(.exportName48[ class = exportName47 ]) {
+	color: blue;
+}
+
+:local(.exportName48[class~="exportName47"]) {
+	color: blue;
+}
+
+:local(.exportName48[ class ~= "exportName47" ]) {
+	color: blue;
+}
+
+:local(.exportName48[ class ~= exportName47 ]) {
+	color: blue;
+}
+
+:global(.globalClass[class="otherGlobalClass"]) {
+	color: blue;
+}
+
+:global(.globaClass[class~="otherGlobalClass"]) {
+	color: blue;
+}
+
+:local(.exportName49[class="exportName47"]) {
+	color: blue;
+}
+
+/* export-difficult */
+@keyframes :local(fade-in) {
+	from {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes :local(fade-out) {
+	to {
+		opacity: 0;
+	}
+}
+
+:local(.fadeIn) {
+	animation: :local(fade-in) 5s,/* some, :local(comment) */
+	:local(fade-out) 1s :local(wrong);
+	content: :local(fade-in), wrong, "difficult, :local(wrong)" :local(wrong);
+}
+
+/* export-global-class */
+.exportName50 {
+	color: green;
+}
+
+.exportName50:hover {
+	color: red;
+}
+
+@media screen {
+	body {
+		background: red;
+	}
+}
+
+:local(.exportName51) {
+	color: blue;
+}
+
+/* export-keyframes */
+@keyframes :local(fade-in-export) {
+	from {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-export {
+	from {
+		opacity: 0.5;
+	}
+}
+
+:local(.fadeIn-export) {
+	animation-name: :local(fade-in-export);
+}
+
+:local(.fadeIn-export) {
+	animation: 2s :local(fade-in-export);
+}
+
+:local(.fadeIn-export) {
+	animation: :local(fade-in-export) 2s;
+}
+
+/* export-keywords-selector */
+:local(.constructor) {
+	color: green;
+}
+
+:local(.toString) {
+	color: red;
+}
+
+/* export-multiple-classes */
+:local(.exportName52) :local(.exportName53) {
+	color: green;
+}
+
+:local(.exportName52):local(.exportName53) {
+	color: red;
+}
+
+/* export-nested-class */
+:local(.exportName54):not(:local(.exportName55).global) {
+	color: green;
+}
+
+:local(.exportName54):has(:local(.exportName55), :local(.exportName56)) {
+	color: red;
+}
+
+/* export-with-composes-imported-class */
+:import("./import.modules.css") {
+	imported_otherClass: otherClass;
+}
+
+:local(.exportName76) {
+	composes: imported_otherClass;
+	color: green;
+}
+
+/* export-with-composes */
+:local(.exportName57) { background: red; }
+:local(.exportName58) { compose-with: exportName57; color: green; }
+:local(.exportName59) { compose-with: exportName58; color: green; }
+
+ /* export-with-global-composes */
+:global(.otherClass) { background: red; }
+:global(.andAgain) { font-size: 2em; }
+:global(.aThirdClass) { color: red; }
+:local(.exportName60-function-syntax) { compose-with: global(otherClass) global(andAgain); compose-with: global(aThirdClass); color: green; }
+:local(.exportName60) { compose-with: otherClass andAgain from global; compose-with: aThirdClass from global; color: green; }
+
+/* export-with-multiple-composes */
+:local(.exportName63) { background: red; }
+:local(.exportName64) { font-size: 2em; }
+:local(.exportName65) { color: red; }
+:local(.exportName66) { compose-with: exportName63 exportName64; compose-with: exportName65; color: green; }
+
+/* export-with-transitive-composes */
+:local(.exportName67) {
+	font-size: 2em;
+}
+:local(.exportName68) {
+	composes: exportName67;
+	background: red;
+}
+:local(.exportName69) {
+	composes: exportName68;
+	color: green;
+}
+
+/* Not related to us */
+/* ignore-custom-property-set */
+:root {
+	--title-align: center;
+	--sr-only: {
+		position: absolute;
+	}
+}
+
+/* multiple-composes */
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+:local(.class) {
+	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
+}
+
+/* nested-rule */
+:root {
+	--test: {
+		--test: foo;
+		--bar: 1;
+	}
+}
+
+/* We pass this limitation, order can be any now */
+/* export-with-composes-broken-order */
+:local(.exportName70) { compose-with: exportName71; color: green; }
+:local(.exportName71) { compose-with: exportName72; color: green; }
+:local(.exportName72) { background: red; }
+
+/* transitive composes */
+.exportName73 { composes: bar from "./classes.css"; color: green; }
+.exportName74 { composes: exportName73; color: green; }
+.exportName75 { color: red }
+.exportName74 { composes: exportName75; color: green; }
+.exportName74 { composes: my-global from global; color: green; }
+
+/* deep transitive composes */
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+:local(.exportName77) {
+	composes: i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
+}
+
+:local(.exportName78) {}
+
+:local(.exportName79) {
+	composes: class, bar;
+}

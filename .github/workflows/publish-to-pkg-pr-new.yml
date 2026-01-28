@@ -1,0 +1,41 @@
+name: Publish to pkg.pr.new
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ["!**"]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  publish:
+    if: |
+      github.repository == 'webpack/webpack' &&
+      (github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository)
+    name: Publish to pkg.pr.new
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.publish.outputs.sha }}
+      urls: ${{ steps.publish.outputs.urls }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - run: corepack enable
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - run: npx pkg-pr-new publish --compact --json output.json --comment=off
+      - name: Add metadata to output
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { run } = await import('${{ github.workspace }}/.github/scripts/publish-to-pkg-pr-new.mjs');
+            await run({ github, context });

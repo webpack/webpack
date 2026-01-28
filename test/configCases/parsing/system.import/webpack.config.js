@@ -1,5 +1,11 @@
+"use strict";
+
 const webpack = require("../../../../");
 
+/**
+ * @param {boolean | undefined} system system
+ * @returns {import("../../../../").Configuration} configuration
+ */
 function createConfig(system) {
 	const systemString = "" + system;
 	return {

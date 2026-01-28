@@ -1,4 +1,7 @@
+"use strict";
+
 const System = require("../../../helpers/fakeSystem");
+
 module.exports = {
 	beforeExecute: () => {
 		System.init();

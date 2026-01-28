@@ -1,13 +1,14 @@
+"use strict";
+
 const path = require("path");
 
 module.exports = ({ outputDirectory }) =>
 	class Worker {
 		constructor(resource, options = {}) {
-			expect(resource).toBeInstanceOf(URL);
-
 			const isFileURL = /^file:/i.test(resource);
+			const isBlobURL = /^blob:/i.test(resource);
 
-			if (!isFileURL) {
+			if (!isFileURL && !isBlobURL) {
 				expect(resource.origin).toBe("https://test.cases");
 				expect(resource.pathname.startsWith("/path/")).toBe(true);
 			}
@@ -15,7 +16,12 @@ module.exports = ({ outputDirectory }) =>
 			this.url = resource;
 			const file = isFileURL
 				? resource
-				: path.resolve(outputDirectory, resource.pathname.slice(6));
+				: path.resolve(
+						outputDirectory,
+						isBlobURL
+							? options.originalURL.pathname.slice(6)
+							: resource.pathname.slice(6)
+					);
 
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");
@@ -24,7 +30,11 @@ const path = require("path");
 const fs = require("fs");
 global.self = global;
 self.URL = URL;
-self.location = new URL(${JSON.stringify(resource.toString())});
+self.location = new URL(${JSON.stringify(
+				isBlobURL
+					? resource.toString().replace("nodedata:", "https://test.cases/path/")
+					: resource.toString()
+			)});
 const urlToPath = url => {
   if (/^file:/i.test(url)) return fileURLToPath(url);
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
@@ -89,11 +99,12 @@ if (${options.type === "module"}) {
 			this._onmessage = undefined;
 		}
 
+		// eslint-disable-next-line accessor-pairs
 		set onmessage(value) {
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			this.worker.on(
 				"message",
-				(this._onmessage = data => {
+				(this._onmessage = (data) => {
 					value({
 						data
 					});

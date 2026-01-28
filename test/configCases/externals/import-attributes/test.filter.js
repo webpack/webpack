@@ -1,1 +1,3 @@
-module.exports = () => /^v(2[2-9])/.test(process.version);
+"use strict";
+
+module.exports = () => /^v2[2-9]/.test(process.version);

@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 
@@ -8,10 +10,10 @@ module.exports = {
 		link.href = "bundle0.css";
 		scope.window.document.head.appendChild(link);
 	},
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const source = fs.readFileSync(
 			path.resolve(options.output.path, "bundle0.css"),
-			"utf-8"
+			"utf8"
 		);
 
 		if (

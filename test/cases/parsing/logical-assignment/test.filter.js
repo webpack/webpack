@@ -1,5 +1,5 @@
-var supportsLogicalAssignment = require("../../../helpers/supportsLogicalAssignment");
+"use strict";
 
-module.exports = function (config) {
-	return supportsLogicalAssignment();
-};
+const supportsLogicalAssignment = require("../../../helpers/supportsLogicalAssignment");
+
+module.exports = () => supportsLogicalAssignment();

@@ -1,6 +1,6 @@
 "use strict";
 
-var objectToMap = require("../lib/util/objectToMap");
+const objectToMap = require("../lib/util/objectToMap");
 
 describe("objectToMap", () => {
 	it("should convert a plain object into a Map successfully", () => {

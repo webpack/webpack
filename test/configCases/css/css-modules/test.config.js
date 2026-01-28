@@ -1,7 +1,25 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
-		return i === 0
-			? ["./use-style_js.bundle0.js", "./bundle0.js"]
-			: ["./142.bundle1.js", "./bundle1.js"];
+	findBundle(i) {
+		if (i === 6) {
+			return [`bundle${i}.js`];
+		}
+
+		if (i === 4 || i === 5) {
+			return [
+				i === 4 ? `./use-style-global_js.bundle${i}.js` : `638.bundle${i}.js`,
+				`./bundle${i}.js`
+			];
+		}
+
+		return [
+			i === 1
+				? `./915.bundle${i}.js`
+				: i === 3
+					? `./762.bundle${i}.js`
+					: `./use-style_js.bundle${i}.js`,
+			`./bundle${i}.js`
+		];
 	}
 };

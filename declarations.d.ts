@@ -1,3 +1,7 @@
+type EXPECTED_ANY = any;
+type EXPECTED_FUNCTION = Function;
+type EXPECTED_OBJECT = object;
+
 declare module "*.json";
 
 // Deprecated NodeJS API usages in webpack
@@ -10,140 +14,56 @@ declare namespace NodeJS {
 	}
 }
 
-declare module "neo-async" {
-	interface QueueObject<T, E> {
-		push(item: T): void;
-		drain: () => void;
-		error: (err: E) => void;
+declare module "typescript-iterable" {
+	// New iterator interfaces from `lib.es2015.iterable.d.ts` for compatibility with old typescript versions and `dispose`
+	interface Disposable {
+		[Symbol.dispose](): void;
 	}
 
-	export interface Dictionary<T> {
-		[key: string]: T;
-	}
-	export type IterableCollection<T> = T[] | Iterable<T> | Dictionary<T>;
-
-	export interface ErrorCallback<T> {
-		(err?: T): void;
-	}
-	export interface AsyncBooleanResultCallback<E> {
-		(err?: E, truthValue?: boolean): void;
-	}
-	export interface AsyncResultCallback<T, E> {
-		(err?: E, result?: T): void;
-	}
-	export interface AsyncResultArrayCallback<T, E> {
-		(err?: E, results?: Array<T | undefined>): void;
-	}
-	export interface AsyncResultObjectCallback<T, E> {
-		(err: E | undefined, results: Dictionary<T | undefined>): void;
+	export interface IteratorObject<T, TReturn = unknown, TNext = unknown>
+		extends Iterator<T, TReturn, TNext>, Disposable {
+		[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	}
 
-	export interface AsyncFunction<T, E> {
-		(callback: (err?: E, result?: T) => void): void;
+	export interface SetIterator<T> extends IteratorObject<
+		T,
+		BuiltinIteratorReturn,
+		unknown
+	> {
+		[Symbol.iterator](): SetIterator<T>;
 	}
-	export interface AsyncFunctionEx<T, E> {
-		(callback: (err?: E, ...results: T[]) => void): void;
-	}
-	export interface AsyncIterator<T, E> {
-		(item: T, callback: ErrorCallback<E>): void;
-	}
-	export interface AsyncForEachOfIterator<T, E> {
-		(item: T, key: number | string, callback: ErrorCallback<E>): void;
-	}
-	export interface AsyncResultIterator<T, R, E> {
-		(item: T, callback: AsyncResultCallback<R, E>): void;
-	}
-	export interface AsyncMemoIterator<T, R, E> {
-		(memo: R | undefined, item: T, callback: AsyncResultCallback<R, E>): void;
-	}
-	export interface AsyncBooleanIterator<T, E> {
-		(item: T, callback: AsyncBooleanResultCallback<E>): void;
-	}
-
-	export interface AsyncWorker<T, E> {
-		(task: T, callback: ErrorCallback<E>): void;
-	}
-	export interface AsyncVoidFunction<E> {
-		(callback: ErrorCallback<E>): void;
-	}
-
-	export type AsyncAutoTasks<R extends Dictionary<any>, E> = {
-		[K in keyof R]: AsyncAutoTask<R[K], R, E>;
-	};
-	export type AsyncAutoTask<R1, R extends Dictionary<any>, E> =
-		| AsyncAutoTaskFunctionWithoutDependencies<R1, E>
-		| (keyof R | AsyncAutoTaskFunction<R1, R, E>)[];
-	export interface AsyncAutoTaskFunctionWithoutDependencies<R1, E> {
-		(cb: AsyncResultCallback<R1, E> | ErrorCallback<E>): void;
-	}
-	export interface AsyncAutoTaskFunction<R1, R extends Dictionary<any>, E> {
-		(results: R, cb: AsyncResultCallback<R1, E> | ErrorCallback<E>): void;
-	}
-
-	export function each<T, E>(
-		arr: IterableCollection<T>,
-		iterator: AsyncIterator<T, E>,
-		callback?: ErrorCallback<E>
-	): void;
-
-	export function eachLimit<T, E>(
-		arr: IterableCollection<T>,
-		limit: number,
-		iterator: AsyncIterator<T, E>,
-		callback?: ErrorCallback<E>
-	): void;
-
-	export function map<T, R, E>(
-		arr: T[] | IterableIterator<T>,
-		iterator: AsyncResultIterator<T, R, E>,
-		callback?: AsyncResultArrayCallback<R, E>
-	): void;
-	export function map<T, R, E>(
-		arr: Dictionary<T>,
-		iterator: AsyncResultIterator<T, R, E>,
-		callback?: AsyncResultArrayCallback<R, E>
-	): void;
-
-	export function parallel<T, E>(
-		tasks: Array<AsyncFunction<T, E>>,
-		callback?: AsyncResultArrayCallback<T, E>
-	): void;
-	export function parallel<T, E>(
-		tasks: Dictionary<AsyncFunction<T, E>>,
-		callback?: AsyncResultObjectCallback<T, E>
-	): void;
-
-	export function queue<T, E>(
-		worker: AsyncIterator<T, E>,
-		concurrency?: number
-	): QueueObject<T, E>;
-
-	export const forEach: typeof each;
-	export const forEachLimit: typeof eachLimit;
 }
 
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
+	export class AST extends Node {
+		type: "Program";
+		body: [Module];
+	}
 	export interface Visitor {
 		ModuleImport?: (p: NodePath<ModuleImport>) => void;
 		ModuleExport?: (p: NodePath<ModuleExport>) => void;
 		Start?: (p: NodePath<Start>) => void;
 		Global?: (p: NodePath<Global>) => void;
 	}
-	export function traverse(
-		ast: any,
-		visitor: Visitor
-	): void;
+	export function traverse(node: Node, visitor: Visitor): void;
 	export class NodePath<T> {
 		node: T;
 		remove(): void;
 	}
-	export class Node {}
+	export class Node {
+		type: string;
+	}
 	export class Identifier extends Node {
 		value: string;
 	}
 	export class Start extends Node {
 		index: Identifier;
+	}
+	export class Module extends Node {
+		id: string;
+		fields: Node[];
+		metadata?: Record<string, EXPECTED_ANY>;
 	}
 	export class ModuleImportDescription {
 		type: string;
@@ -161,7 +81,7 @@ declare module "@webassemblyjs/ast" {
 		name: string;
 		descr: ModuleExportDescr;
 	}
-	type Index = Identifier | NumberLiteral;
+	type Index = NumberLiteral;
 	export class ModuleExportDescr extends Node {
 		type: string;
 		exportType: string;
@@ -207,7 +127,7 @@ declare module "@webassemblyjs/ast" {
 		inf?: boolean,
 		raw?: string
 	): FloatLiteral;
-	export function global(globalType: string, nodes: Node[]): Global;
+	export function global(globalType: GlobalType, nodes: Node[]): Global;
 	export function identifier(identifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
 	export function instruction(inst: string, args?: Node[]): Instruction;
@@ -218,7 +138,11 @@ declare module "@webassemblyjs/ast" {
 		init: Node[]
 	): ObjectInstruction;
 	export function signature(params: FuncParam[], results: string[]): Signature;
-	export function func(initFuncId: Identifier, signature: Signature, funcBody: Instruction[]): Func;
+	export function func(
+		initFuncId: Identifier,
+		signature: Signature,
+		funcBody: Instruction[]
+	): Func;
 	export function typeInstruction(
 		id: Identifier | undefined,
 		functype: Signature
@@ -233,12 +157,18 @@ declare module "@webassemblyjs/ast" {
 		index: Index
 	): ModuleExportDescr;
 
-	export function getSectionMetadata(ast: any, section: string): { vectorOfSize: { value: number } };
+	export function getSectionMetadata(
+		ast: AST,
+		section: string
+	): { vectorOfSize: { value: number } };
 	export class FuncSignature {
 		args: string[];
 		result: string[];
 	}
-	export function moduleContextFromModuleAST(ast: any): any;
+	export function moduleContextFromModuleAST(module: Module): {
+		getFunction(i: number): FuncSignature;
+		getStart(): Index;
+	};
 
 	// Node matcher
 	export function isGlobalType(n: Node): boolean;
@@ -248,166 +178,56 @@ declare module "@webassemblyjs/ast" {
 }
 
 declare module "@webassemblyjs/wasm-parser" {
-	export function decode(source: string | Buffer, options: { dump?: boolean, ignoreCodeSection?: boolean, ignoreDataSection?: boolean, ignoreCustomNameSection?: boolean }): any;
+	export function decode(
+		source: string | Buffer,
+		options: {
+			dump?: boolean;
+			ignoreCodeSection?: boolean;
+			ignoreDataSection?: boolean;
+			ignoreCustomNameSection?: boolean;
+		}
+	): import("@webassemblyjs/ast").AST;
 }
 
 declare module "@webassemblyjs/wasm-edit" {
-	export function addWithAST(ast: any, bin: any, newNodes: import("@webassemblyjs/ast").Node[]): ArrayBuffer;
-	export function editWithAST(ast: any, bin: any, visitors: import("@webassemblyjs/ast").Visitor): ArrayBuffer;
+	export function addWithAST(
+		ast: import("@webassemblyjs/ast").AST,
+		bin: any,
+		newNodes: import("@webassemblyjs/ast").Node[]
+	): ArrayBuffer;
+	export function editWithAST(
+		ast: import("@webassemblyjs/ast").AST,
+		bin: any,
+		visitors: import("@webassemblyjs/ast").Visitor
+	): ArrayBuffer;
 }
 
 declare module "webpack-sources" {
-	export type MapOptions = { columns?: boolean; module?: boolean };
-
-	export type RawSourceMap = {
-		version: number;
-		sources: string[];
-		names: string[];
-		sourceRoot?: string;
-		sourcesContent?: string[];
-		mappings: string;
-		file: string;
-	};
-
-	export abstract class Source {
-		size(): number;
-
-		map(options?: MapOptions): RawSourceMap | null;
-
-		sourceAndMap(options?: MapOptions): {
-			source: string | Buffer;
-			map: Object;
-		};
-
-		updateHash(hash: import("./lib/util/Hash")): void;
-
-		source(): string | Buffer;
-
-		buffer(): Buffer;
-	}
-
-	export class RawSource extends Source {
-		constructor(source: string | Buffer, convertToString?: boolean);
-
-		isBuffer(): boolean;
-	}
-
-	export class OriginalSource extends Source {
-		constructor(source: string | Buffer, name: string);
-
-		getName(): string;
-	}
-
-	export class ReplaceSource extends Source {
-		constructor(source: Source, name?: string);
-
-		replace(start: number, end: number, newValue: string, name?: string): void;
-		insert(pos: number, newValue: string, name?: string): void;
-
-		getName(): string;
-		original(): string;
-		getReplacements(): {
-			start: number;
-			end: number;
-			content: string;
-			insertIndex: number;
-			name: string;
-		}[];
-	}
-
-	export class SourceMapSource extends Source {
-		constructor(
-			source: string | Buffer,
-			name: string,
-			sourceMap: Object | string | Buffer,
-			originalSource?: string | Buffer,
-			innerSourceMap?: Object | string | Buffer,
-			removeOriginalSource?: boolean
-		);
-
-		getArgsAsBuffers(): [
-			Buffer,
-			string,
-			Buffer,
-			Buffer | undefined,
-			Buffer | undefined,
-			boolean
-		];
-	}
-
-	export class ConcatSource extends Source {
-		constructor(...args: (string | Source)[]);
-
-		getChildren(): Source[];
-
-		add(item: string | Source): void;
-		addAllSkipOptimizing(items: Source[]): void;
-	}
-
-	export class PrefixSource extends Source {
-		constructor(prefix: string, source: string | Source);
-
-		original(): Source;
-		getPrefix(): string;
-	}
-
-	export class CachedSource extends Source {
-		constructor(source: Source);
-		constructor(source: Source | (() => Source), cachedData?: any);
-
-		original(): Source;
-		originalLazy(): Source | (() => Source);
-		getCachedData(): any;
-	}
-
-	export class SizeOnlySource extends Source {
-		constructor(size: number);
-	}
-
-	interface SourceLike {
-		source(): string | Buffer;
-	}
-
-	export class CompatSource extends Source {
-		constructor(sourceLike: SourceLike);
-
-		static from(sourceLike: SourceLike): Source;
-	}
-}
-
-declare module "browserslist" {
-	function browserslist(query: string): string[] | undefined;
-	namespace browserslist {
-		export function loadConfig(
-			options:
-				| {
-						config: string;
-						env?: string;
-				  }
-				| {
-						path: string;
-						env?: string;
-				  }
-		): string | undefined;
-		export function findConfig(path: string): Record<string, string[]>;
-	}
-	export = browserslist;
+	export {
+		SourceLike,
+		RawSourceMap,
+		MapOptions,
+		Source,
+		RawSource,
+		OriginalSource,
+		ReplaceSource,
+		SourceMapSource,
+		ConcatSource,
+		PrefixSource,
+		CachedSource,
+		SizeOnlySource,
+		CompatSource
+	} from "webpack-sources/types";
 }
 
 declare module "json-parse-even-better-errors" {
-	function parseJson(text: string, reviver?: (this: any, key: string, value: any) => any, context?: number): any;
+	function parseJson(
+		text: string,
+		reviver?: (this: any, key: string, value: any) => any,
+		context?: number
+	): any;
 	export = parseJson;
 }
-
-// TODO remove that when @types/estree is updated
-interface ImportAttributeNode {
-	type: "ImportAttribute";
-	key: import("estree").Identifier | import("estree").Literal;
-	value: import("estree").Literal;
-}
-
-type TODO = any;
-type EXPECTED_ANY = any;
 
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
@@ -415,25 +235,20 @@ type RecursiveArrayOrRecord<T> =
 	| T;
 
 declare module "loader-runner" {
-	export function getContext(resource: string) : string;
-	export function runLoaders(options: any, callback: (err: Error | null, result: any) => void): void;
-}
-
-declare module "watchpack" {
-	class Watchpack {
-		aggregatedChanges: Set<string>;
-		aggregatedRemovals: Set<string>;
-		constructor(options: import("./declarations/WebpackOptions").WatchOptions);
-		once(eventName: string, callback: any): void;
-		watch(options: any): void;
-		collectTimeInfoEntries(fileTimeInfoEntries: Map<string, number>, contextTimeInfoEntries: Map<string, number>): void;
-		pause(): void;
-		close(): void;
-	}
-	export = Watchpack;
+	export function getContext(resource: string): string;
+	export function runLoaders(
+		options: any,
+		callback: (err: Error | null, result: any) => void
+	): void;
 }
 
 declare module "eslint-scope/lib/referencer" {
-	class Referencer {}
+	type Property = import("estree").Property;
+	type PropertyDefinition = import("estree").PropertyDefinition;
+
+	class Referencer {
+		Property(node: PropertyDefinition | Property): void;
+		PropertyDefinition(node: PropertyDefinition): void;
+	}
 	export = Referencer;
 }

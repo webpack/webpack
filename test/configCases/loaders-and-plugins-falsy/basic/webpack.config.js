@@ -1,4 +1,8 @@
-var DefinePlugin = require("../../../../").DefinePlugin;
+"use strict";
+
+/** @typedef {import("../../../../").Compiler} Compiler */
+
+const DefinePlugin = require("../../../../").DefinePlugin;
 
 const nullValue = null;
 const undefinedValue = undefined;
@@ -13,15 +17,16 @@ class FailPlugin {
 }
 
 class TestChildCompilationPlugin {
-	constructor(output) {}
-
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.make.tapAsync(
 			"TestChildCompilationFailurePlugin",
 			(compilation, cb) => {
 				const child = compilation.createChildCompiler(
 					"name",
-					compiler.outputOptions,
+					compilation.outputOptions,
 					[
 						undefinedValue && new FailPlugin(),
 						nullValue && new FailPlugin(),
@@ -31,7 +36,9 @@ class TestChildCompilationPlugin {
 					]
 				);
 
-				child.runAsChild(cb);
+				child.runAsChild((err) => {
+					cb(err);
+				});
 			}
 		);
 	}

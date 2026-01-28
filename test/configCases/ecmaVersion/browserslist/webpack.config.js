@@ -1,9 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: ["browserslist"],
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": true,
@@ -13,9 +15,11 @@ module.exports = {
 			  "destructuring": true,
 			  "document": false,
 			  "dynamicImport": true,
-			  "dynamicImportInWorker": false,
+			  "dynamicImportInWorker": true,
 			  "forOf": true,
 			  "globalThis": true,
+			  "importMetaDirnameAndFilename": false,
+			  "methodShorthand": true,
 			  "module": true,
 			  "nodePrefixForCoreModules": true,
 			  "optionalChaining": true,

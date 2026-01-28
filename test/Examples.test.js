@@ -5,9 +5,12 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 
+jest.setTimeout(60000);
+
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
-	const examples = require("../examples/examples.js");
+
+	const examples = require("../examples/examples");
 
 	for (const examplePath of examples) {
 		const filterPath = path.join(examplePath, "test.filter.js");
@@ -15,20 +18,23 @@ describe("Examples", () => {
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 			describe.skip(relativePath, () =>
-				it("filtered", done => {
+				it("filtered", (done) => {
 					done();
 				})
 			);
+
 			continue;
 		}
-		it(`should compile ${relativePath}`, function (done) {
+
+		it(`should compile ${relativePath}`, (done) => {
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath =
 				webpackConfigPath.slice(0, 1).toUpperCase() +
 				webpackConfigPath.slice(1);
-			if (fs.existsSync(webpackConfigPath))
+			if (fs.existsSync(webpackConfigPath)) {
 				options = require(webpackConfigPath);
+			}
 			if (typeof options === "function") options = options();
 			if (Array.isArray(options)) {
 				for (const [_, item] of options.entries()) {
@@ -38,6 +44,9 @@ describe("Examples", () => {
 				processOptions(options);
 			}
 
+			/**
+			 * @param {import("../").Configuration} options options
+			 */
 			function processOptions(options) {
 				options.context = examplePath;
 				options.output = options.output || {};
@@ -47,7 +56,9 @@ describe("Examples", () => {
 				if (!options.entry) options.entry = "./example.js";
 				if (!options.plugins) options.plugins = [];
 			}
+
 			const webpack = require("..");
+
 			webpack(options, (err, stats) => {
 				if (err) return done(err);
 				if (stats.hasErrors()) {

@@ -4,7 +4,7 @@
 */
 /* globals __webpack_hash__ */
 if (module.hot) {
-	/** @type {undefined|string} */
+	/** @type {undefined | string} */
 	var lastHash;
 	var upToDate = function upToDate() {
 		return /** @type {string} */ (lastHash).indexOf(__webpack_hash__) >= 0;
@@ -79,9 +79,13 @@ if (module.hot) {
 				}
 			});
 	};
+	/** @type {EventTarget | NodeJS.EventEmitter} */
 	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function (currentHash) {
-		lastHash = currentHash;
+	/**
+	 * @param {CustomEvent<{ currentHash: string }>} event event or hash
+	 */
+	var handler = function (event) {
+		lastHash = typeof event === "string" ? event : event.detail.currentHash;
 		if (!upToDate()) {
 			var status = module.hot.status();
 			if (status === "idle") {
@@ -96,7 +100,18 @@ if (module.hot) {
 				);
 			}
 		}
-	});
+	};
+
+	if (typeof EventTarget !== "undefined" && hotEmitter instanceof EventTarget) {
+		hotEmitter.addEventListener(
+			"webpackHotUpdate",
+			/** @type {EventListener} */
+			(handler)
+		);
+	} else {
+		hotEmitter.on("webpackHotUpdate", handler);
+	}
+
 	log("info", "[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled.");

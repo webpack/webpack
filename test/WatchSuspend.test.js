@@ -2,17 +2,16 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
+
 		return;
 	}
-
-	jest.setTimeout(5000);
 
 	describe("suspend and resume watcher", () => {
 		const fixturePath = path.join(
@@ -36,13 +35,15 @@ describe("WatchSuspend", () => {
 				// skip
 			}
 			try {
-				fs.writeFileSync(filePath, "'foo'", "utf-8");
-				fs.writeFileSync(file2Path, "'file2'", "utf-8");
-				fs.writeFileSync(file3Path, "'file3'", "utf-8");
+				fs.writeFileSync(filePath, "'foo'", "utf8");
+				fs.writeFileSync(file2Path, "'file2'", "utf8");
+				fs.writeFileSync(file3Path, "'file3'", "utf8");
 			} catch (_err) {
 				// skip
 			}
+
 			const webpack = require("../");
+
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,
@@ -73,65 +74,64 @@ describe("WatchSuspend", () => {
 			}
 		});
 
-		it("should compile successfully", done => {
+		it("should compile successfully", (done) => {
 			onChange = () => {
-				expect(fs.readFileSync(outputFile, "utf-8")).toContain("'foo'");
+				expect(fs.readFileSync(outputFile, "utf8")).toContain("'foo'");
 				onChange = null;
 				done();
 			};
 		});
 
-		it("should suspend compilation", done => {
+		it("should suspend compilation", (done) => {
 			onChange = jest.fn();
 			watching.suspend();
-			fs.writeFileSync(filePath, "'bar'", "utf-8");
+			fs.writeFileSync(filePath, "'bar'", "utf8");
 			setTimeout(() => {
-				expect(onChange.mock.calls.length).toBe(0);
+				expect(onChange).not.toHaveBeenCalled();
 				onChange = null;
 				done();
 			}, 1000);
 		});
 
-		it("should resume compilation", done => {
+		it("should resume compilation", (done) => {
 			onChange = () => {
-				expect(fs.readFileSync(outputFile, "utf-8")).toContain("'bar'");
+				expect(fs.readFileSync(outputFile, "utf8")).toContain("'bar'");
 				onChange = null;
 				done();
 			};
 			watching.resume();
 		});
 
-		for (const changeBefore of [false, true])
+		for (const changeBefore of [false, true]) {
 			for (const delay of [200, 1500]) {
 				// eslint-disable-next-line no-loop-func
 				it(`should not ignore changes during resumed compilation (changeBefore: ${changeBefore}, delay: ${delay}ms)`, async () => {
 					// aggregateTimeout must be long enough for this test
 					//  So set-up new watcher and wait when initial compilation is done
-					await new Promise(resolve => {
+					await new Promise((resolve) => {
 						watching.close(() => {
 							watching = compiler.watch({ aggregateTimeout: 1000 }, () => {
 								resolve();
 							});
 						});
 					});
-					return new Promise(resolve => {
-						if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf-8");
+					return new Promise((resolve) => {
+						if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf8");
 						setTimeout(() => {
 							watching.suspend();
-							fs.writeFileSync(filePath, "'baz'", "utf-8");
+							fs.writeFileSync(filePath, "'baz'", "utf8");
 
 							onChange = "throw";
 							setTimeout(() => {
 								onChange = () => {
-									expect(fs.readFileSync(outputFile, "utf-8")).toContain(
+									expect(fs.readFileSync(outputFile, "utf8")).toContain(
 										"'baz'"
 									);
 									expect(
-										compiler.modifiedFiles &&
-											Array.from(compiler.modifiedFiles).sort()
+										compiler.modifiedFiles && [...compiler.modifiedFiles].sort()
 									).toEqual([filePath]);
 									expect(
-										compiler.removedFiles && Array.from(compiler.removedFiles)
+										compiler.removedFiles && [...compiler.removedFiles]
 									).toEqual([]);
 									onChange = null;
 									resolve();
@@ -142,14 +142,15 @@ describe("WatchSuspend", () => {
 					});
 				});
 			}
+		}
 
-		it("should not drop changes when suspended", done => {
+		it("should not drop changes when suspended", (done) => {
 			const aggregateTimeout = 50;
 			// Trigger initial compilation with file2.js (assuming correct)
 			fs.writeFileSync(
 				filePath,
 				'require("./file2.js"); require("./file3.js")',
-				"utf-8"
+				"utf8"
 			);
 
 			onChange = () => {
@@ -157,11 +158,11 @@ describe("WatchSuspend", () => {
 				watching.suspend();
 
 				// Trigger the first change (works as expected):
-				fs.writeFileSync(file2Path, "'foo'", "utf-8");
+				fs.writeFileSync(file2Path, "'foo'", "utf8");
 
 				// Trigger the second change _after_ aggregation timeout of the first
 				setTimeout(() => {
-					fs.writeFileSync(file3Path, "'bar'", "utf-8");
+					fs.writeFileSync(file3Path, "'bar'", "utf8");
 
 					// Wait when the file3 edit is settled and re-compile
 					setTimeout(() => {
@@ -169,7 +170,7 @@ describe("WatchSuspend", () => {
 
 						onChange = () => {
 							onChange = null;
-							expect(fs.readFileSync(outputFile, "utf-8")).toContain("'bar'");
+							expect(fs.readFileSync(outputFile, "utf8")).toContain("'bar'");
 							done();
 						};
 					}, 200);

@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["main.js", "runtime~main.js", "separate-public-path_js.js"];
 	}
 };

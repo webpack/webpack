@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["b.js", "deep/path/a.js", "somewhere/c.js"];
 	}
 };

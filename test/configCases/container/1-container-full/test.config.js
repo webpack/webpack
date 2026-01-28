@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i) {
 		return i === 0 ? "./main.js" : "./module/main.mjs";
 	}
 };

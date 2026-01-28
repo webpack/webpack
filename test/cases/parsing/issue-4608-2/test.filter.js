@@ -1,5 +1,5 @@
-var supportsForOf = require("../../../helpers/supportsForOf");
+"use strict";
 
-module.exports = function (config) {
-	return supportsForOf();
-};
+const supportsForOf = require("../../../helpers/supportsForOf");
+
+module.exports = () => supportsForOf();

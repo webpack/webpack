@@ -1,4 +1,6 @@
-var DefinePlugin = require("../../../../").DefinePlugin;
+"use strict";
+
+const DefinePlugin = require("../../../../").DefinePlugin;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

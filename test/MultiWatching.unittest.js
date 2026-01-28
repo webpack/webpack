@@ -3,25 +3,38 @@
 const SyncHook = require("tapable").SyncHook;
 const MultiWatching = require("../lib/MultiWatching");
 
-const createWatching = () => ({
-	invalidate: jest.fn(),
-	suspend: jest.fn(),
-	resume: jest.fn(),
-	close: jest.fn()
-});
+/** @typedef {import("../lib/Watching")} Watching */
+/** @typedef {import("../lib/MultiCompiler")} MultiCompiler */
 
+/**
+ * @returns {Watching} watching
+ */
+const createWatching = () =>
+	/** @type {Watching} */ ({
+		invalidate: jest.fn(),
+		suspend: jest.fn(),
+		resume: jest.fn(),
+		close: jest.fn()
+	});
+
+/**
+ * @returns {MultiCompiler} compiler
+ */
 const createCompiler = () => {
 	const compiler = {
 		hooks: {
 			watchClose: new SyncHook([])
 		}
 	};
-	return compiler;
+	return /** @type {MultiCompiler} */ (compiler);
 };
 
 describe("MultiWatching", () => {
+	/** @type {Watching[]} */
 	let watchings;
+	/** @type {MultiCompiler} */
 	let compiler;
+	/** @type {MultiWatching} */
 	let myMultiWatching;
 
 	beforeEach(() => {
@@ -36,28 +49,28 @@ describe("MultiWatching", () => {
 		});
 
 		it("invalidates each watching", () => {
-			expect(watchings[0].invalidate.mock.calls.length).toBe(1);
-			expect(watchings[1].invalidate.mock.calls.length).toBe(1);
+			expect(watchings[0].invalidate).toHaveBeenCalledTimes(1);
+			expect(watchings[1].invalidate).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe("suspend", () => {
 		it("suspends each watching", () => {
 			myMultiWatching.suspend();
-			expect(watchings[0].suspend.mock.calls.length).toBe(1);
-			expect(watchings[1].suspend.mock.calls.length).toBe(1);
+			expect(watchings[0].suspend).toHaveBeenCalledTimes(1);
+			expect(watchings[1].suspend).toHaveBeenCalledTimes(1);
 		});
 
 		it("resume each watching", () => {
 			myMultiWatching.resume();
-			expect(watchings[0].resume.mock.calls.length).toBe(1);
-			expect(watchings[1].resume.mock.calls.length).toBe(1);
+			expect(watchings[0].resume).toHaveBeenCalledTimes(1);
+			expect(watchings[1].resume).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe("close", () => {
 		let callback;
-		const callClosedFinishedCallback = watching => {
+		const callClosedFinishedCallback = (watching) => {
 			watching.close.mock.calls[0][0]();
 		};
 
@@ -67,14 +80,14 @@ describe("MultiWatching", () => {
 		});
 
 		it("closes each watching", () => {
-			expect(watchings[0].close.mock.calls.length).toBe(1);
-			expect(watchings[1].close.mock.calls.length).toBe(1);
+			expect(watchings[0].close).toHaveBeenCalledTimes(1);
+			expect(watchings[1].close).toHaveBeenCalledTimes(1);
 		});
 
 		it("calls callback after each watching has closed", () => {
 			callClosedFinishedCallback(watchings[0]);
 			callClosedFinishedCallback(watchings[1]);
-			expect(callback.mock.calls.length).toBe(1);
+			expect(callback).toHaveBeenCalledTimes(1);
 		});
 	});
 });

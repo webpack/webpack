@@ -1,8 +1,13 @@
+"use strict";
+
 const { ChunkGraph, ExternalModule } = require("../../../../");
+
+/** @typedef {import("../../../../").Module} Module */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
 				const { chunkGraph } = compilation;
 				for (const chunk of compilation.chunks) {
@@ -18,7 +23,7 @@ module.exports = {
 					expect(chunk.getNumberOfModules()).toBe(4);
 					expect(new Set(chunk.modulesIterable)).toContain(module);
 					expect(new Set(chunk.getModules())).toContain(chunk.entryModule);
-					expect(chunk.hasModuleInGraph(m => m === module)).toBe(true);
+					expect(chunk.hasModuleInGraph((m) => m === module)).toBe(true);
 					expect(chunk.containsModule(module)).toBe(true);
 					chunk.removeModule(module);
 					module.removeChunk(chunk);
@@ -27,7 +32,7 @@ module.exports = {
 					expect(chunk.isEmpty()).toBe(false);
 					expect(chunk.modulesSize()).toBeTypeOf("number");
 					expect(chunk.size()).toBe(chunk.modulesSize() * 10 + 10000);
-					expect(chunk.getChunkModuleMaps(m => true)).toEqual({
+					expect(chunk.getChunkModuleMaps(() => true)).toEqual({
 						id: {},
 						hash: {}
 					});
@@ -43,7 +48,7 @@ module.exports = {
 					).toMatch(/should compile with deprecations/);
 					expect(m.hash).toMatch(/^[0-9a-f]{32}$/);
 					expect(m.renderedHash).toMatch(/^[0-9a-f]{20}$/);
-					expect(m.profile).toBe(undefined);
+					expect(m.profile).toBeUndefined();
 					expect(m.index).toBe(0);
 					m.index = 1000;
 					expect(m.index).toBe(1000);
@@ -53,11 +58,13 @@ module.exports = {
 					expect(m.depth).toBe(0);
 					m.depth = 1000;
 					expect(m.depth).toBe(1000);
-					expect(m.issuer).toBe(null);
+					expect(m.issuer).toBeNull();
 					m.issuer = module;
 					expect(m.issuer).toBe(module);
 					expect(
-						typeof m.usedExports === "boolean" ? [] : [...m.usedExports]
+						typeof m.usedExports === "boolean"
+							? []
+							: [.../** @type {Set<string>} */ (m.usedExports)]
 					).toEqual(["testExport"]);
 					expect(Array.isArray(m.optimizationBailout)).toBe(true);
 					expect(m.optional).toBe(false);
@@ -65,7 +72,7 @@ module.exports = {
 					expect(m.isEntryModule()).toBe(true);
 					expect(m.getChunks()).toEqual([chunk]);
 					expect(m.getNumberOfChunks()).toBe(1);
-					expect(Array.from(m.chunksIterable)).toEqual([chunk]);
+					expect([...m.chunksIterable]).toEqual([chunk]);
 					expect(m.isProvided("testExport")).toBe(true);
 					expect(m.isProvided("otherExport")).toBe(false);
 				}

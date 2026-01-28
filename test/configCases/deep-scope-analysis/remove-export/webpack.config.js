@@ -1,4 +1,7 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compilation} Compilation */
+/** @typedef {import("../../../../").Module} Module */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -8,29 +11,33 @@ module.exports = {
 		sideEffects: false
 	},
 	plugins: [
-		function () {
-			this.hooks.compilation.tap("Test", compilation => {
+		function apply() {
+			this.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.dependencyReferencedExports.tap(
 					"Test",
 					(referencedExports, dep) => {
-						const module = compilation.moduleGraph.getParentModule(dep);
-						if (!module.identifier().endsWith("module.js"))
+						const module =
+							/** @type {Module} */
+							(compilation.moduleGraph.getParentModule(dep));
+						if (!module.identifier().endsWith("module.js")) {
 							return referencedExports;
+						}
 						const refModule = compilation.moduleGraph.getModule(dep);
 						if (
 							refModule &&
 							refModule.identifier().endsWith("reference.js") &&
 							referencedExports.some(
-								names =>
+								(names) =>
 									Array.isArray(names) &&
 									names.length === 1 &&
 									names[0] === "unused"
 							)
 						) {
 							return referencedExports.filter(
-								names =>
+								(names) =>
 									(Array.isArray(names) && names.length !== 1) ||
-									names[0] !== "unused"
+									/** @type {string[]} */
+									(names)[0] !== "unused"
 							);
 						}
 						return referencedExports;

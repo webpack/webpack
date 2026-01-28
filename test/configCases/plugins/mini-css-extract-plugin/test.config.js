@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i) {
 		return [`${i}_a.js`, `${i}_b.js`, `${i}_c.js`];
 	}
 };

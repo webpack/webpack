@@ -1,3 +1,5 @@
+"use strict";
+
 const { ModuleFederationPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */
@@ -20,8 +22,5 @@ module.exports = {
 				invalid: "./invalid.js"
 			}
 		})
-	],
-	experiments: {
-		topLevelAwait: true
-	}
+	]
 };

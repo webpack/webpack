@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["11.js", "22.js", "aa.js", "bbb.js"];
 	}
 };

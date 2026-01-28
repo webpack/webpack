@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -49,9 +51,6 @@ module.exports = {
 			}
 		]
 	},
-	experiments: {
-		layers: true
-	},
 	externals: [
 		{
 			external1: "var 42",
@@ -63,7 +62,7 @@ module.exports = {
 		},
 		{
 			external2: "var 42",
-			byLayer: layer => {
+			byLayer: (layer) => {
 				if (layer === "layer") {
 					return {
 						external2: "var 43"

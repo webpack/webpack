@@ -1,0 +1,564 @@
+/* postcss-modules-local-by-default */
+
+
+/* scope selectors */
+.foobar { a_value: some-value; }
+
+/* scope escaped selectors */
+.\3A \) {}
+
+/* scope ids */
+#foobar { a_value: some-value; }
+
+/* scope escaped ids */
+#\#test {}
+
+/* scope escaped ids (2) */
+#u-m\00002b {}
+
+/* scope multiple selectors */
+.foo, .baz { a_value: some-value; }
+
+/* scope sibling selectors */
+.foo ~ .baz { a_value: some-value; }
+
+/* scope pseudo elements */
+.foo:after { a_value: some-value; }
+
+/* scope media queries */
+@media only screen { .foo { a_value: some-value; } }
+
+/* allow narrow global selectors */
+:global(.foo .bar) { a_value: some-value; }
+
+/* allow narrow local selectors */
+:local(.foo .bar) { a_value: some-value; }
+
+/* allow broad global selectors */
+:global .foo .bar { a_value: some-value; }
+
+/* allow broad local selectors */
+:local .foo .bar { a_value: some-value; }
+
+/* allow multiple narrow global selectors */
+:global(.foo), :global(.bar) { a_value: some-value; }
+
+/* allow multiple broad global selectors */
+:global .foo, :global .bar { a_value: some-value; }
+
+/* allow multiple broad local selectors */
+:local .foo, :local .bar { a_value: some-value; }
+
+/* allow narrow global selectors nested inside local styles */
+.foo :global(.foo .bar) { a_value: some-value; }
+
+/* allow broad global selectors nested inside local styles */
+.foo :global .foo .bar { a_value: some-value; }
+
+/* allow parentheses inside narrow global selectors */
+.foo :global(.foo:not(.bar)) { a_value: some-value; }
+
+/* allow parentheses inside narrow local selectors */
+.foo :local(.foo:not(.bar)) { a_value: some-value; }
+
+/* allow narrow global selectors appended to local styles */
+.foo:global(.foo.bar) { a_value: some-value; }
+
+/* ignore selectors that are already local */
+:local(.foobar) { a_value: some-value; }
+
+/* ignore nested selectors that are already local */
+:local(.foo) :local(.bar) { a_value: some-value; }
+
+/* ignore multiple selectors that are already local */
+:local(.foo), :local(.bar) { a_value: some-value; }
+
+/* ignore sibling selectors that are already local */
+:local(.foo) ~ :local(.bar) { a_value: some-value; }
+
+/* ignore psuedo elements that are already local */
+:local(.foo):after { a_value: some-value; }
+
+/* trim whitespace after empty broad selector */
+.bar :global :global { a_value: some-value; }
+
+/* broad global should be limited to selector */
+:global .foo, .bar :global, .foobar :global { a_value: some-value; }
+
+/* broad global should be limited to nested selector */
+.foo:not(:global .bar).foobar { a_value: some-value; }
+
+/* broad global and local should allow switching */
+.foo :global .bar :local .foobar :local .barfoo { a_value: some-value; }
+
+/* localize a single animation-name */
+.foo { animation-name: bar; }
+
+/* localize a single animation-name #2 */
+.foo { animation-name: local(bar); }
+.foo { animation-name: :local(bar); }
+
+/* passed because `--bar` not found */
+/* not localize animation-name in a var function */
+.foo { animation-name: var(--bar-unique); }
+
+/* passed because `--bar` not found */
+/* not localize animation-name in a var function #2 */
+.foo { animation-name: vAr(--bar-unique); }
+/* Work, because found */
+:root { --my-custom-var: name; }
+.foo { animation-name: vAr(--my-custom-var); }
+
+/* not localize animation-name in an env function */
+.foo { animation-name: env(bar); }
+
+/* not localize animation-name in an global function */
+.foo { animation-name: global(bar); }
+.foo { animation-name: :global(bar); }
+
+/* localize and not localize animation-name in mixed case */
+.foo { animation-name: fadeInOut, global(moveLeft300px), local(bounce); }
+
+/* not localize animation in an global function */
+.foo { animation: global(bar); }
+
+/* not localize a certain animation in an global function */
+.foo { animation: global(bar), foo; }
+
+/* localize and not localize a certain animation in mixed case */
+.foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
+
+/* not localize animation-name in an env function #2 */
+.foo { animation-name: eNv(bar); }
+
+/* not localize a single animation-delay */
+.foo { animation-delay: 1s; }
+
+/* localize multiple animation-names */
+.foo { animation-name: bar, foobar; }
+
+/* not localize revert */
+.foo { animation: revert; }
+
+/* not localize revert #2 */
+.foo { animation-name: revert; }
+
+/* not localize revert #3 */
+.foo { animation-name: revert, foo, none; }
+
+/* not localize revert-layer */
+.foo { animation: revert-layer; }
+
+/* not localize revert */
+.foo { animation-name: revert-layer; }
+
+/* localize animation using special characters */
+.foo { animation: \@bounce; }
+
+/* localize animation using special characters */
+.foo { animation: bou\@nce; }
+
+/* localize animation using special characters */
+.foo { animation: \ as; }
+
+/* localize animation using special characters */
+.foo { animation: t\ t; }
+
+/* localize animation using special characters */
+.foo { animation: -\a; }
+
+/* localize animation using special characters */
+.foo { animation: --\a; }
+
+/* localize animation using special characters */
+.foo { animation: \a; }
+
+/* localize animation using special characters */
+.foo { animation: -\a; }
+
+/* localize animation using special characters */
+.foo { animation: --; }
+
+/* localize animation using special characters */
+.foo { animation: 😃bounce😃; }
+
+/* localize custom property */
+.foo { animation: --foo; }
+
+/* don't find a localize name, but localize var */
+.foo { animation: fade .2s var(--easeOutQuart) .1s forwards }
+
+/* not localize name in nested function */
+.foo { animation: fade .2s env(FOO_BAR) .1s forwards, name }
+
+/* don't find a localize name, but localize var */
+.foo { animation: var(--foo-bar) .1s forwards, name }
+
+/* don't find a localize name, but localize var */
+.foo { animation: var(--foo-bar) .1s forwards name, name }
+
+/* localize animation */
+.foo { animation: a; }
+
+/* localize animation #2 */
+.foo { animation: bar 5s, foobar; }
+
+/* localize animation #3 */
+.foo { animation: ease ease; }
+.foo { animation: ease ease; }
+.foo { animation: ease ease, ease-in ease-in, ease-out ease-out; }
+
+/* localize animation #4 */
+.foo { animation: 0s ease 0s 1 normal none test running; }
+
+/* localize animation with vendor prefix */
+.foo { -webkit-animation: bar; animation: bar; }
+
+/* not localize other rules */
+.foo { content: "animation: bar;" }
+
+/* not localize global rules */
+:global .foo { animation: foo; animation-name: bar; }
+
+/* handle nested global */
+:global .a:not(:global .b) { a_value: some-value; }
+
+/* handle nested global #1 */
+:global .a:not(:global .b:not(:global .c)) { a_value: some-value; }
+
+/* handle nested global #2 */
+:local .a:not(:not(:not(:global .c))) { a_value: some-value; }
+
+/* handle nested global #3 */
+:global .a:not(:global .b, :global .c) { a_value: some-value; }
+
+/* handle nested global #4 */
+:local .a:not(:global .b, :local .c) { a_value: some-value; }
+
+/* handle nested global #5 */
+:global .a:not(:local .b, :global .c) { a_value: some-value; }
+
+/* handle nested global #6 */
+:global .a:not(.b, .c) { a_value: some-value; }
+
+/* handle nested global #7 */
+:local .a:not(.b, .c) { a_value: some-value; }
+
+/* handle nested global #8 */
+:global .a:not(:local .b, .c) { a_value: some-value; }
+
+/* handle a complex animation rule */
+.foo { animation: foo, bar 5s linear 2s infinite alternate, barfoo 1s; }
+.foo { animation: foo, BAR 5s LINEAR 2s INFINITE ALTERNATE, barfoo 1s; }
+
+/* handle animations where the first value is not the animation name */
+.foo { animation: 1s foo; }
+
+/* handle animations where the first value is not the animation name whilst also using keywords */
+.foo { animation: 1s normal ease-out infinite foo; }
+
+/* not treat animation curve as identifier of animation name even if it separated by comma */
+.foo { animation: slide-right 300ms forwards ease-out, fade-in 300ms forwards ease-out; }
+.foo { animation: slide-right 300ms forwards ease-out }
+.foo { animation: slide-right 300ms forwards ease-out; @media screen { animation: slide-right 300ms forwards ease-out; } }
+.foo { animation: slide-right 300ms forwards ease-out; .foo { animation: slide-right 300ms forwards ease-out; } }
+
+/* not treat "start" and "end" keywords in steps() function as identifiers */
+.foo { animation: spin 1s steps(12, end) infinite; }
+.foo { animation: spin 1s STEPS(12, start) infinite; }
+.foo { animation: spin 1s steps(12, END) infinite; }
+.foo { animation: spin 1s steps(12, START) infinite; }
+
+/* handle animations with custom timing functions */
+.foo { animation: 1s normal cubic-bezier(0.25, 0.5, 0.5. 0.75) foo; }
+
+/* handle animations whose names are keywords */
+.foo { animation: 1s infinite infinite; }
+
+/* handle not localize an animation shorthand value of "inherit" */
+.foo { animation: inherit; }
+
+/* handle "constructor" as animation name */
+.foo { animation: constructor constructor; }
+
+/* default to local when mode provided */
+.foo { a_value: some-value; }
+
+/* localize keyframes */
+@keyframes foo { from { a_value: some-value; } to { a_value: some-value; } }
+
+/* localize keyframes starting with special characters */
+@keyframes \@foo { from { color: red; } to { color: blue; } }
+
+/* localize keyframes containing special characters */
+@keyframes f\@oo { from { color: red; } to { color: blue; } }
+
+/* localize explicit keyframes */
+@keyframes :local(foo) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@-webkit-keyframes :global(bar) { from { color: red; } to { color: blue; } }
+@keyframes local(local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes :local(colon-local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes global(global-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes :global(colon-global-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+
+/* ignore :export statements */
+:export { foo: __foo; }
+
+/* ignore :import statements */
+:import("./import.modules.css") { local-foo: __foo; }
+
+/* incorrectly handle nested selectors */
+.bar:not(:global .foo-name, .baz-name) { a_value: some-value; }
+
+/* compile explict global element */
+:global(input) { a_value: some-value; }
+
+/* compile explict global attribute */
+:global([type="radio"]), :not(:global [type="radio"]) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on inconsistent selector result */
+:global .foo, .bar { a_value: some-value; }
+
+/* throw on nested :locals, but we allow to do it */
+:local(:local(.foo)) { a_value: some-value; }
+
+/* throw on nested :globals, but we allow to do it */
+:global(:global(.foo)) { a_value: some-value; }
+
+/* throw on nested mixed, but we allow to do it */
+:local(:global(.foo)) { a_value: some-value; }
+
+/* throw on nested broad :local, but we allow to do it */
+:global(:local .foo) { a_value: some-value; }
+
+/* throw on incorrect spacing with broad :global */
+.foo :global.bar { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on incorrect spacing with broad :local */
+.foo:local .bar { a_value: some-value; }
+
+/* pass through global element */
+input { a_value: some-value; }
+
+/* localise class and pass through element */
+.foo input { a_value: some-value; }
+
+/* pass through attribute selector */
+[type="radio"] { a_value: some-value; }
+
+/* Not related to us */
+/* not modify urls without option */
+/*.a { background: url(./image.png); }*/
+/*:global .b { background: url(image.png); }*/
+/*.c { background: url("./image.png"); }*/
+
+/* Not related to us */
+/* rewrite url in local block */
+/*.a { background: url(./image.png); }*/
+/*:global .b { background: url(image.png); }*/
+/*.c { background: url("./image.png"); }*/
+/*.c { background: url('./image.png'); }*/
+/*.d { background: -webkit-image-set(url("./image.png") 1x, url("./image2x.png") 2x); }*/
+/*@font-face { src: url("./font.woff"); }*/
+/*@-webkit-font-face { src: url("./font.woff"); }*/
+/*@media screen { .a { src: url("./image.png"); } }*/
+/*@keyframes :global(ani1) { 0% { src: url("image.png"); } }*/
+/*@keyframes ani2 { 0% { src: url("./image.png"); } }*/
+/*foo { background: end-with-url(something); }*/
+
+/* Not related to us */
+/* not crash on atrule without nodes */
+/*@charset "utf-8";*/
+
+/* not break unicode characters */
+.a { content: "\2193" }
+
+/* not break unicode characters */
+.a { content: "\2193\2193" }
+
+/* not break unicode characters */
+.a { content: "\2193 \2193" }
+
+/* not break unicode characters */
+.a { content: "\2193\2193\2193" }
+
+/* not break unicode characters */
+.a { content: "\2193 \2193 \2193" }
+
+/* not ignore custom property set */
+:root { --title-align: center; --sr-only: { position: absolute; } }
+
+/* not localize imported alias */
+:import("./import.modules.css") { a_value1: some-value; }
+
+.foo > .a_value { a_value1: some-value; }
+
+/*
+ * All the original `import()` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
+/* not localize nested imported alias */
+:import("./import.modules.css") { a_value2: some-value; }
+
+.foo > .a_value > .bar { a_value2: some-value; }
+
+/* ignore imported in explicit local */
+:import("./import.modules.css") { a_value3: some-value; }
+
+:local(.a_value) { a_value3: some-value; }
+
+/* escape local context with explict global */
+:import("./import.modules.css") { a_value4: some-value; }
+
+:local .foo :global(.a_value) .bar { a_value4: some-value; }
+
+/* respect explicit local */
+:import("./import.modules.css") { a_value5: some-value; }
+
+.a_value :local .a_value .foo :global .a_value { a_value5: some-value; }
+
+/* not localize imported animation-name */
+:import("./import.modules.css") { a_value6: some-value; }
+
+.foo { animation-name: a_value; }
+
+/* Not related to us */
+/* throw on invalid syntax id usage */
+. { a_value: some-value; }
+
+/* Not related to us */
+/* throw on invalid syntax class usage */
+# { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid syntax local class usage */
+:local(.) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid syntax local id usage */
+:local(#) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+:global(.) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+:global(#) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+:global(.a:not(:global .b, :global .c)) { a_value: some-value; }
+
+/* css nesting */
+.foo {
+	&.class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.bar {
+			c_value: some-value;
+		}
+
+		&.baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* handle negative animation-delay in animation shorthand */
+.foo { animation: 1s -500ms; }
+
+/* handle negative animation-delay in animation shorthand #1 */
+.foo { animation: 1s -500.0ms; }
+
+/* handle negative animation-delay in animation shorthand #2 */
+.foo { animation: 1s -500.0ms -a_value; }
+
+/* @scope at-rule */
+.article-header {
+	color: red;
+}
+
+.article-body {
+	color: blue;
+}
+
+@scope      (.article-body)     to       (.article-header)        {
+	.article-body {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope(.article-body)to(.article-header){
+	.article-footer {
+		border: 5px solid black;
+	}
+}
+
+@scope    (   .article-body   )    {
+	img {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/* @scope at-rule #1 */
+@scope (.article-body) to (figure) {
+	.article-footer {
+		border: 5px solid black;
+	}
+}
+
+/* @scope at-rule #2 */
+@scope (:local(.article-body)) to (:global(.class)) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	:local(.class-1) {
+		color: red;
+	}
+	:global(.class-2) {
+		color: blue;
+	}
+}
+
+/* @scope at-rule #5 */
+@scope (.article-header) to (.class) {
+	.article-footer {
+		color: red;
+	}
+}
+
+/* @scope at-rule #6 */
+.foo {
+	@scope (.article-header) to (.class) {
+		:scope {
+			background: blue;
+		}
+
+		.bar {
+			color: red;
+		}
+	}
+}
+
+/* duplicate-name */
+#duplicate-name { color: red; }
+.duplicate-name { color: red; }
+
+/* in-media */
+@media screen and (min-width: 900px) { html .foo { a_value: some-value } }

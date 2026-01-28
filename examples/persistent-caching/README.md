@@ -17,8 +17,12 @@ console.log(_);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
-module.exports = (env = "development") => ({
+
+/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+const config = (env = "development") => ({
 	mode: env,
 	infrastructureLogging: {
 		// Optional: print more verbose logging about caching
@@ -48,6 +52,8 @@ module.exports = (env = "development") => ({
 		]
 	}
 });
+
+module.exports = config;
 ```
 
 # Info
@@ -55,34 +61,34 @@ module.exports = (env = "development") => ({
 ## Unoptimized
 
 ```
-asset output.js 4.52 MiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.26 MiB (javascript) 1.29 KiB (runtime) [entry]
+asset output.js 3.62 MiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 2.25 MiB (javascript) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 3.26 MiB (javascript) 1.29 KiB (runtime) [cached] 1415 modules
-webpack 5.78.0 compiled successfully
+  cached modules 2.25 MiB (javascript) 1.29 KiB (runtime) [cached] 1526 modules
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 630 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 2.18 MiB (javascript) 1.29 KiB (runtime) [entry]
+asset output.js 547 KiB [emitted] [minimized] [big] (name: main) 1 related asset
+chunk (runtime: main) output.js (main) 2.19 MiB (javascript) 1.29 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.18 MiB (javascript) 1.29 KiB (runtime) [cached] 791 modules
+  cached modules 2.19 MiB (javascript) 1.29 KiB (runtime) [cached] 903 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  output.js (630 KiB)
+  output.js (547 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (630 KiB)
+  main (547 KiB)
       output.js
 
 WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
-webpack 5.78.0 compiled with 3 warnings
+webpack X.X.X compiled with 3 warnings
 ```

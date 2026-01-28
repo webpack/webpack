@@ -1,3 +1,5 @@
+"use strict";
+
 expect.extend({
 	toBeTypeOf(received, expected) {
 		const objType = typeof received;
@@ -43,7 +45,8 @@ expect.extend({
 if (process.env.ALTERNATIVE_SORT) {
 	const oldSort = Array.prototype.sort;
 
-	Array.prototype.sort = function (cmp) {
+	// eslint-disable-next-line no-extend-native
+	Array.prototype.sort = function sort(cmp) {
 		oldSort.call(this, cmp);
 		if (cmp) {
 			for (let i = 1; i < this.length; i++) {
@@ -69,7 +72,7 @@ if (process.env.ALTERNATIVE_SORT) {
 
 // Setup debugging info for tests
 if (process.env.DEBUG_INFO) {
-	const addDebugInfo = it => (name, fn, timeout) => {
+	const addDebugInfo = (it) => (name, fn, timeout) => {
 		if (fn.length === 0) {
 			it(
 				name,
@@ -79,11 +82,11 @@ if (process.env.DEBUG_INFO) {
 						const promise = fn();
 						if (promise && promise.then) {
 							return promise.then(
-								r => {
+								(r) => {
 									process.stdout.write(`DONE OK ${name}\n`);
 									return r;
 								},
-								err => {
+								(err) => {
 									process.stdout.write(`DONE FAIL ${name}\n`);
 									throw err;
 								}
@@ -101,9 +104,9 @@ if (process.env.DEBUG_INFO) {
 		} else {
 			it(
 				name,
-				done => {
+				(done) => {
 					process.stdout.write(`START2 ${name}\n`);
-					return fn(err => {
+					return fn((err) => {
 						if (err) {
 							process.stdout.write(`DONE FAIL ${name}\n`);
 						} else {
@@ -116,6 +119,7 @@ if (process.env.DEBUG_INFO) {
 			);
 		}
 	};
+
 	// eslint-disable-next-line no-global-assign
 	it = addDebugInfo(it);
 }

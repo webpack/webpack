@@ -1,5 +1,10 @@
+"use strict";
+
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/**
+ * @returns {import("../../../../").Configuration} configuration
+ */
 function createConfig() {
 	return {
 		output: {

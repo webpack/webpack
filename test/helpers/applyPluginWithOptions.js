@@ -1,12 +1,14 @@
-var PluginEnvironment = require("./PluginEnvironment");
+"use strict";
+
+const PluginEnvironment = require("./PluginEnvironment");
 
 module.exports = function applyPluginWithOptions(Plugin) {
 	// eslint-disable-next-line prefer-rest-params
-	var plugin = new (Function.prototype.bind.apply(Plugin, arguments))();
-	var pluginEnvironment = new PluginEnvironment();
+	const plugin = new (Function.prototype.bind.apply(Plugin, arguments))();
+	const pluginEnvironment = new PluginEnvironment();
 	plugin.apply(pluginEnvironment.getEnvironmentStub());
 
-	var env = this === global ? {} : this;
+	const env = this === global ? {} : this;
 	env.plugin = plugin;
 	env.pluginEnvironment = pluginEnvironment;
 

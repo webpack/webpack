@@ -1,3 +1,5 @@
+"use strict";
+
 const { ContainerPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */

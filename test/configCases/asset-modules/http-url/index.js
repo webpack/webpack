@@ -7,8 +7,8 @@ import redirect1 from "http://localhost:9990/redirect";
 import redirect2 from "http://localhost:9990/redirect.js";
 import text from "http://localhost:9990/asset.txt";
 import textUrl from "http://localhost:9990/url.js";
-import codeOfConduct1 from "https://raw.githubusercontent.com//webpack//webpack//main/CODE_OF_CONDUCT.md";
-import codeOfConduct2 from "https://raw.githubusercontent.com/webpack/webpack/main/CODE_OF_CONDUCT.md";
+import license1 from "https://raw.githubusercontent.com//webpack//webpack//main/LICENSE";
+import license2 from "https://raw.githubusercontent.com/webpack/webpack/main/LICENSE";
 
 it("http url request should be supported", () => {
 	expect(cssContent).toBe("a {}.webpack{}");
@@ -26,6 +26,6 @@ it("http url request should be supported", () => {
 });
 
 it("https url request should be supported", () => {
-	expect(codeOfConduct1.includes("CODE_OF_CONDUCT")).toBeTruthy();
-	expect(codeOfConduct2.includes("CODE_OF_CONDUCT")).toBeTruthy();
+	expect(license1.includes("Copyright JS Foundation and other contributors")).toBeTruthy();
+	expect(license2.includes("Copyright JS Foundation and other contributors")).toBeTruthy();
 });

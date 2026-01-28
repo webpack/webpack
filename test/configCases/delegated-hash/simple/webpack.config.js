@@ -1,4 +1,7 @@
-var DelegatedPlugin = require("../../../../").DelegatedPlugin;
+"use strict";
+
+const DelegatedPlugin = require("../../../../").DelegatedPlugin;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {

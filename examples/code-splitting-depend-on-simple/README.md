@@ -3,7 +3,10 @@ This example shows how to use Code Splitting with entrypoint dependOn
 # webpack.config.js
 
 ```javascript
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	entry: {
 		app: { import: "./app.js", dependOn: ["react-vendors"] },
 		"react-vendors": ["react", "react-dom", "prop-types"]
@@ -16,6 +19,8 @@ module.exports = {
 		chunkRelations: true
 	}
 };
+
+module.exports = config;
 ```
 
 # app.js
@@ -34,14 +39,14 @@ console.log(react, reactDOM, propTypes);
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
 
-/***/ 3:
+/***/ 3
 /*!****************!*\
   !*** ./app.js ***!
   \****************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ 0);
@@ -57,7 +62,7 @@ __webpack_require__.r(__webpack_exports__);
 console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_IMPORTED_MODULE_1___default()), (prop_types__WEBPACK_IMPORTED_MODULE_2___default()));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -127,6 +132,12 @@ module.exports = 'prop-types';
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -295,8 +306,8 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 7.62 KiB [emitted] (name: react-vendors)
-asset app.js 1.63 KiB [emitted] (name: app)
+asset react-vendors.js 7.88 KiB [emitted] (name: react-vendors)
+asset app.js 1.62 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
@@ -330,14 +341,14 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
         harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset react-vendors.js 1.15 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 185 bytes [emitted] [minimized] (name: app)
+asset app.js 184 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
@@ -371,5 +382,5 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
         harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

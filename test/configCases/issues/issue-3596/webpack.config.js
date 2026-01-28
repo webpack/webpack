@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -8,9 +10,9 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		function () {
-			this.hooks.compilation.tap("TestPlugin", function (compilation) {
-				compilation.hooks.processAssets.tap("TestPlugin", function (assets) {
+		function apply() {
+			this.hooks.compilation.tap("TestPlugin", (compilation) => {
+				compilation.hooks.processAssets.tap("TestPlugin", () => {
 					delete compilation.assets["b.js"];
 				});
 			});

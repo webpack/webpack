@@ -1,13 +1,18 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const createHash = require("../../../lib/util/createHash");
 
 const hashedFiles = {
-	"file.jpg": a => a.name.endsWith(".jpg"),
-	"file.png": a => a.name.endsWith(".png")
+	"file.jpg": (a) => a.name.endsWith(".jpg"),
+	"file.png": (a) => a.name.endsWith(".png")
 };
 
 module.exports = {
+	/**
+	 * @param {import("../../../").MultiStats} stats stats
+	 */
 	validate(stats) {
 		for (let i = 0; i < 8; i += 2) {
 			const a = stats.stats[i + 0].toJson({
@@ -16,7 +21,7 @@ module.exports = {
 			const b = stats.stats[i + 1].toJson({
 				assets: true
 			});
-			expect(Object.keys(a.assetsByChunkName).length).toBe(5);
+			expect(Object.keys(a.assetsByChunkName)).toHaveLength(5);
 			expect(a.assetsByChunkName.main).toEqual(b.assetsByChunkName.main);
 			expect(a.assetsByChunkName.lazy).toEqual(b.assetsByChunkName.lazy);
 			expect(a.assetsByChunkName.a).toEqual(b.assetsByChunkName.a);
@@ -29,7 +34,7 @@ module.exports = {
 			});
 			for (const name of Object.keys(hashedFiles)) {
 				const asset = statsData.assets.find(hashedFiles[name]);
-				expect(asset).not.toBe(undefined);
+				expect(asset).toBeDefined();
 				const content = fs.readFileSync(path.resolve(__dirname, "a", name));
 				const hash = createHash("md4")
 					.update(content)

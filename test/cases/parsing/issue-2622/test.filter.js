@@ -1,5 +1,5 @@
-var supportsDefaultArgs = require("../../../helpers/supportsDefaultArgs");
+"use strict";
 
-module.exports = function (config) {
-	return supportsDefaultArgs();
-};
+const supportsDefaultArgs = require("../../../helpers/supportsDefaultArgs");
+
+module.exports = () => supportsDefaultArgs();

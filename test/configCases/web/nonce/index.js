@@ -6,6 +6,7 @@ it("should set nonce", () => {
 
 it("should set nonce attributes", () => {
 	import(/* webpackChunkName: "chunk-js" */ "./chunk.js");
+	__non_webpack_require__('./chunk-js.js');
 
 	expect(document.head._children).toHaveLength(1);
 

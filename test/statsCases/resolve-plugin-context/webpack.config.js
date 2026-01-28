@@ -1,4 +1,6 @@
-var ResolvePackageFromRootPlugin = require("./ResolvePackageFromRootPlugin");
+"use strict";
+
+const ResolvePackageFromRootPlugin = require("./ResolvePackageFromRootPlugin");
 
 /** @type {import("../../../").Configuration} */
 module.exports = {

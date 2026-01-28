@@ -5,36 +5,90 @@ require("./helpers/warmup-webpack");
 describe("Validation", () => {
 	const createTestCase = (name, config, fn) => {
 		it(`should fail validation for ${name}`, () => {
+			let errored;
+
 			try {
 				const webpack = require("..");
+
 				webpack(config);
 			} catch (err) {
 				if (err.name !== "ValidationError") throw err;
-
-				expect(err.message).toMatch(/^Invalid configuration object./);
+				errored = err;
 				fn(err.message);
 
 				return;
 			}
 
-			throw new Error("Validation didn't fail");
+			if (!errored) {
+				throw new Error("Validation didn't fail");
+			}
+
+			expect(errored.message).toMatch(/^Invalid configuration object./);
 		});
 	};
 
-	createTestCase("undefined configuration", undefined, msg =>
+	const createTestCaseOnlyValidate = (name, config, fn) => {
+		it(`should fail validation for ${name}`, () => {
+			let errored;
+
+			try {
+				const webpack = require("..");
+
+				webpack.validate(config);
+			} catch (err) {
+				if (err.name !== "ValidationError") throw err;
+				errored = err;
+				fn(err.message);
+
+				return;
+			}
+
+			if (!errored) {
+				throw new Error("Validation didn't fail");
+			}
+
+			expect(errored.message).toMatch(/^Invalid configuration object./);
+		});
+	};
+
+	const createTestCaseWithoutError = (name, config, fn) => {
+		it(`should success validation for ${name}`, () => {
+			let errored;
+
+			try {
+				const webpack = require("..");
+
+				webpack(config);
+			} catch (err) {
+				if (err.name === "ValidationError") {
+					throw new Error("Validation didn't success", { cause: err });
+				}
+
+				errored = err;
+
+				return;
+			}
+
+			if (errored) {
+				throw new Error("Validation didn't success");
+			}
+		});
+	};
+
+	createTestCase("undefined configuration", undefined, (msg) =>
 		expect(msg).toMatchInlineSnapshot(`
 		"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 		 - configuration should be an object:
-		   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+		   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 		   -> Options object as provided by the user."
 	`)
 	);
 
-	createTestCase("null configuration", null, msg =>
+	createTestCase("null configuration", null, (msg) =>
 		expect(msg).toMatchInlineSnapshot(`
 		"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 		 - configuration should be an object:
-		   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+		   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 		   -> Options object as provided by the user."
 	`)
 	);
@@ -44,7 +98,7 @@ describe("Validation", () => {
 		{
 			entry: ""
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.entry should be a non-empty string.
@@ -59,7 +113,7 @@ describe("Validation", () => {
 				bundle: []
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.entry.bundle should be a non-empty array.
@@ -75,7 +129,7 @@ describe("Validation", () => {
 				wrappedContextRegExp: 1337
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.module.wrappedContextRegExp should be an instance of RegExp.
@@ -89,7 +143,7 @@ describe("Validation", () => {
 			entry: "a",
 			parallelism: 0
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.parallelism should be >= 1.
@@ -102,7 +156,7 @@ describe("Validation", () => {
 		{
 			entry: ["abc", "def", "abc"]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.entry should not contain the item 'abc' twice.
@@ -118,7 +172,7 @@ describe("Validation", () => {
 				filename: /a/
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.entry[0] should be a non-empty string.
@@ -145,7 +199,7 @@ describe("Validation", () => {
 				}
 			}
 		],
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration[0].entry[0] should be a non-empty string.
@@ -178,11 +232,11 @@ describe("Validation", () => {
 				]
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:
-			   object { assert?, compiler?, dependency?, descriptionData?, enforce?, exclude?, generator?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, scheme?, sideEffects?, test?, type?, use?, with? }
+			   object { assert?, compiler?, dependency?, descriptionData?, enforce?, exclude?, extractSourceMap?, generator?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, scheme?, sideEffects?, test?, type?, use?, with? }
 			   -> A rule description with conditions and effects for modules."
 		`)
 	);
@@ -193,11 +247,11 @@ describe("Validation", () => {
 			entry: "a",
 			postcss: () => {}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration has an unknown property 'postcss'. These properties are valid:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user.
 			   For typos: please correct them.
 			   For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.
@@ -220,16 +274,22 @@ describe("Validation", () => {
 			entry: "a",
 			devtool: true
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.devtool should be one of these:
-			   false | \\"eval\\" | string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\")
+			   [object { type, use }, ...] | false | \\"eval\\" | string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\")
 			   -> A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 			   Details:
+			    * configuration.devtool should be an array:
+			      [object { type, use }, ...]
 			    * configuration.devtool should be one of these:
-			      false | \\"eval\\"
-			    * configuration.devtool should be a string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\")."
+			      false | \\"eval\\" | string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\")
+			      -> A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+			      Details:
+			       * configuration.devtool should be one of these:
+			         false | \\"eval\\"
+			       * configuration.devtool should be a string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\")."
 		`)
 	);
 
@@ -242,7 +302,7 @@ describe("Validation", () => {
 				filename: "bar"
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.output.path: The provided value \\"/somepath/!test\\" contains exclamation mark (!) which is not allowed because it's reserved for loader syntax.
@@ -258,7 +318,7 @@ describe("Validation", () => {
 				filename: "/bar"
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.output.filename: A relative path is expected. However, the provided value \\"/bar\\" is an absolute path!
@@ -275,7 +335,7 @@ describe("Validation", () => {
 			},
 			context: "baz"
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.context: The provided value \\"baz\\" is not an absolute path!
@@ -291,7 +351,7 @@ describe("Validation", () => {
 				foobar: true
 			}
 		},
-		msg => {
+		(msg) => {
 			expect(
 				msg
 					.replace(/object \{ .* \}/g, "object {...}")
@@ -311,7 +371,7 @@ describe("Validation", () => {
 			entry: "foo.js",
 			plugins: [true]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
@@ -335,7 +395,7 @@ describe("Validation", () => {
 			entry: "foo.js",
 			plugins: [[]]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
@@ -359,7 +419,7 @@ describe("Validation", () => {
 			entry: "foo.js",
 			plugins: ["abc123"]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
@@ -383,7 +443,7 @@ describe("Validation", () => {
 			entry: "foo.js",
 			plugins: [12]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
@@ -407,7 +467,7 @@ describe("Validation", () => {
 			entry: "foo.js",
 			plugins: [{}]
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] misses the property 'apply'. Should be:
@@ -422,7 +482,7 @@ describe("Validation", () => {
 		{
 			mode: "protuction"
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.mode should be one of these:
@@ -436,11 +496,11 @@ describe("Validation", () => {
 		{
 			debug: true
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration has an unknown property 'debug'. These properties are valid:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user.
 			   The 'debug' property was removed in webpack 2.0.0.
 			   Loaders should be updated to allow passing this option via loader options in module.rules.
@@ -464,7 +524,7 @@ describe("Validation", () => {
 				}
 			}
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }.
@@ -484,11 +544,11 @@ describe("Validation", () => {
 		"holey array",
 		// eslint-disable-next-line no-sparse-arrays
 		[{ mode: "production" }, , { mode: "development" }],
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration[1] should be an object:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user."
 		`)
 	);
@@ -498,7 +558,7 @@ describe("Validation", () => {
 		{
 			output: { ecmaVersion: 2015 }
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
@@ -513,7 +573,7 @@ describe("Validation", () => {
 		{
 			devtool: "sourcemap"
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
@@ -527,7 +587,7 @@ describe("Validation", () => {
 		{
 			devtool: "source-maps"
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
@@ -541,7 +601,7 @@ describe("Validation", () => {
 		{
 			watchOptions: true
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.watchOptions should be an object:
@@ -555,7 +615,7 @@ describe("Validation", () => {
 		{
 			devtool: "cheap-eval-nosource-source-map"
 		},
-		msg =>
+		(msg) =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
@@ -564,49 +624,88 @@ describe("Validation", () => {
 		`)
 	);
 
+	createTestCaseOnlyValidate(
+		"devtool",
+		{
+			devtool: "cheap-eval-nosource-source-map"
+		},
+		(msg) =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
+			   BREAKING CHANGE since webpack 5: The devtool option is more strict.
+			   Please strictly follow the order of the keywords in the pattern."
+		`)
+	);
+
+	createTestCaseOnlyValidate(
+		"devtool",
+		[
+			{
+				devtool: "cheap-eval-nosource-source-map"
+			},
+			{
+				devtool: "unknown"
+			}
+		],
+		(msg) =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration[0].devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\".
+			 - configuration[1].devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$\\"."
+		`)
+	);
+
+	createTestCaseWithoutError("experiments", {
+		experiments: { unknown: true }
+	});
+
 	describe("did you mean", () => {
 		createTestCase(
 			"module.rules",
 			{
 				rules: []
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration has an unknown property 'rules'. These properties are valid:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user.
 			   Did you mean module.rules?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.splitChunks",
 			{
 				splitChunks: false
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration has an unknown property 'splitChunks'. These properties are valid:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user.
 			   Did you mean optimization.splitChunks?"
 		`)
 		);
+
 		createTestCase(
 			"module.noParse",
 			{
 				noParse: /a/
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration has an unknown property 'noParse'. These properties are valid:
-			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
+			   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, dotenv?, entry?, experiments?, extends?, externals?, externalsPresets?, externalsType?, ignoreWarnings?, infrastructureLogging?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, snapshot?, stats?, target?, watch?, watchOptions? }
 			   -> Options object as provided by the user.
 			   Did you mean module.noParse?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.moduleIds",
 			{
@@ -614,7 +713,7 @@ describe("Validation", () => {
 					hashedModuleIds: true
 				}
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization has an unknown property 'hashedModuleIds'. These properties are valid:
@@ -623,6 +722,7 @@ describe("Validation", () => {
 			   Did you mean optimization.moduleIds: \\"hashed\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.chunkIds",
 			{
@@ -630,7 +730,7 @@ describe("Validation", () => {
 					namedChunks: true
 				}
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization has an unknown property 'namedChunks'. These properties are valid:
@@ -639,6 +739,7 @@ describe("Validation", () => {
 			   Did you mean optimization.chunkIds: \\"named\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.chunk/moduleIds",
 			{
@@ -646,7 +747,7 @@ describe("Validation", () => {
 					occurrenceOrder: true
 				}
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization has an unknown property 'occurrenceOrder'. These properties are valid:
@@ -655,6 +756,7 @@ describe("Validation", () => {
 			   Did you mean optimization.chunkIds: \\"size\\" and optimization.moduleIds: \\"size\\" (BREAKING CHANGE since webpack 5)?"
 		`)
 		);
+
 		createTestCase(
 			"optimization.idHint",
 			{
@@ -664,7 +766,7 @@ describe("Validation", () => {
 					}
 				}
 			},
-			msg =>
+			(msg) =>
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization.splitChunks has an unknown property 'automaticNamePrefix'. These properties are valid:

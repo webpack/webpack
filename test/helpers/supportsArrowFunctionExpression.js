@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function supportArrowFunctionExpression() {
 	try {
 		eval(

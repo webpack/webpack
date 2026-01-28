@@ -1,3 +1,5 @@
+"use strict";
+
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
@@ -15,7 +17,7 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new webpack.ProgressPlugin(),
+		new webpack.ProgressPlugin(() => {}),
 		{
 			apply(compiler) {
 				compiler.hooks.done.tapPromise("CacheTest", async () => {

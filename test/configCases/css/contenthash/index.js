@@ -8,7 +8,7 @@ it("should work with js", done => {
 });
 
 it("should work with css", done => {
-	expect(style).toEqual(nsObj({}));
+	expect(style).toEqual({});
 
 	const computedStyle = getComputedStyle(document.body);
 
@@ -16,7 +16,7 @@ it("should work with css", done => {
 	expect(computedStyle.getPropertyValue("color")).toBe(" yellow");
 
 	import("./async.css").then(x => {
-		expect(x).toEqual(nsObj({}));
+		expect(x).toEqual({});
 
 		const style = getComputedStyle(document.body);
 

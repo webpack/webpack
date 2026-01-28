@@ -10,16 +10,16 @@ _{{example.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/666.output.js
+# dist/my own chunk.output.js
 
 ```javascript
-_{{dist/666.output.js}}_
+_{{dist/my own chunk.output.js}}_
 ```
 
-# dist/885.output.js
+# dist/node_modules_b_js-node_modules_d_js.output.js
 
 ```javascript
-_{{dist/885.output.js}}_
+_{{dist/node_modules_b_js-node_modules_d_js.output.js}}_
 ```
 
 # Info

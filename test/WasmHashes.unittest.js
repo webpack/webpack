@@ -1,10 +1,14 @@
-const { randomBytes, createHash } = require("crypto");
+"use strict";
+
+const { createHash, randomBytes } = require("crypto");
 
 const wasmHashes = {
 	xxhash64: () => {
 		const createHash = require("../lib/util/hash/xxhash64");
 		const createReferenceHash =
-			require("hash-wasm/dist/xxhash64.umd.min.js").createXXHash64;
+			// @ts-expect-error
+			require("hash-wasm/dist/xxhash64.umd.min").createXXHash64;
+
 		return {
 			createHash,
 			createReferenceHash: async () => (await createReferenceHash()).init(),
@@ -14,6 +18,7 @@ const wasmHashes = {
 	"xxhash64-createHash": () => {
 		const createXxHash = require("../lib/util/hash/xxhash64");
 		const createHash = require("../lib/util/createHash");
+
 		return {
 			createHash: () => createHash("xxhash64"),
 			createReferenceHash: createXxHash,
@@ -22,6 +27,7 @@ const wasmHashes = {
 	},
 	md4: () => {
 		const createMd4Hash = require("../lib/util/hash/md4");
+
 		return {
 			createHash: createMd4Hash,
 			createReferenceHash:
@@ -34,6 +40,7 @@ const wasmHashes = {
 	"md4-createHash": () => {
 		const createMd4Hash = require("../lib/util/hash/md4");
 		const createHash = require("../lib/util/createHash");
+
 		return {
 			createHash: () => createHash("md4"),
 			createReferenceHash: createMd4Hash,
@@ -76,6 +83,10 @@ for (const name of Object.keys(wasmHashes)) {
 			65536 * 9 + 31
 		];
 
+		/**
+		 * @param {string} name name
+		 * @param {number[]} sizes sizes
+		 */
 		const test = (name, sizes) => {
 			it(`${name} should generate a hash from binary data`, async () => {
 				const hash = createHash();
@@ -109,11 +120,19 @@ for (const name of Object.keys(wasmHashes)) {
 				test(`two updates ${size1} + ${size2} bytes`, [size1, size2]);
 			}
 		}
-		test("many updates 1", sizes);
-		test("many updates 2", sizes.slice().reverse());
-		test("many updates 3", sizes.concat(sizes.slice().reverse()));
-		test("many updates 4", sizes.slice().reverse().concat(sizes));
 
+		test("many updates 1", sizes);
+
+		test("many updates 2", [...sizes].reverse());
+
+		test("many updates 3", [...sizes, ...[...sizes].reverse()]);
+
+		test("many updates 4", [...[...sizes].reverse(), ...sizes]);
+
+		/**
+		 * @param {string} name name
+		 * @param {string | number[]} codePoints code points
+		 */
 		const unicodeTest = (name, codePoints) => {
 			it(`${name} should hash unicode chars correctly`, async () => {
 				const hash = createHash();
@@ -131,6 +150,11 @@ for (const name of Object.keys(wasmHashes)) {
 			});
 		};
 
+		/**
+		 * @param {string} name name
+		 * @param {number} start start
+		 * @param {number} end end
+		 */
 		const unicodeRangeTest = (name, start, end) => {
 			const codePoints = [];
 			for (let i = start; i <= end; i++) {

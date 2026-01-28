@@ -1,32 +1,42 @@
-const { resolve, join } = require("path");
+"use strict";
+
+const { join, resolve } = require("path");
 const { NormalModule } = require("../../../../");
+
+/**
+ * @typedef {import("../../../../").Module} Module
+ */
 
 /**
  * @param {import("../../../../").Compiler} compiler the compiler
  */
-var testPlugin = compiler => {
-	compiler.hooks.compilation.tap("TestPlugin", compilation => {
+const testPlugin = (compiler) => {
+	compiler.hooks.compilation.tap("TestPlugin", (compilation) => {
 		let shouldReplace = false;
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
-			loaderContext => {
-				/** @type {any} */ (loaderContext).shouldReplace = shouldReplace;
+			(loaderContext) => {
+				/** @type {EXPECTED_ANY} */
+				(loaderContext).shouldReplace = shouldReplace;
 			}
 		);
 		compilation.hooks.finishModules.tapAsync(
 			"TestPlugin",
-			function (modules, callback) {
+			(modules, callback) => {
 				const src = resolve(join(__dirname, "other-file.js"));
 
 				/**
-				 * @param {any} m test
-				 * @returns {boolean} test
+				 * @param {Module} m test
+				 * @returns {boolean | string} test
 				 */
 				function matcher(m) {
-					return m.resource && m.resource === src;
+					return (
+						/** @type {NormalModule} */ (m).resource &&
+						/** @type {NormalModule} */ (m).resource === src
+					);
 				}
 
-				const module = Array.from(modules).find(matcher);
+				const module = [...modules].find(matcher);
 
 				if (!module) {
 					throw new Error("something went wrong");
@@ -34,10 +44,15 @@ var testPlugin = compiler => {
 
 				// Check if already build the updated version
 				// this will happen when using caching
-				if (module.buildInfo._isReplaced) return callback();
+				if (
+					/** @type {NonNullable<Module["buildInfo"]>} */
+					(module.buildInfo)._isReplaced
+				) {
+					return callback();
+				}
 
 				shouldReplace = true;
-				compilation.rebuildModule(module, err => {
+				compilation.rebuildModule(module, (err) => {
 					shouldReplace = false;
 					callback(err);
 				});

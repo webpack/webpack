@@ -51,5 +51,14 @@ export default {
 	cssModuleWithCustomFileExtension: myCssClass,
 	notAValidCssModuleExtension: isNotACSSModule,
 	UsedClassName,
-	exportLocalVarsShouldCleanup: `${hasOwnProperty(notACssModule, 'local-color')} ${hasOwnProperty(notACssModule, "LOCAL-COLOR")}`
+	exportLocalVarsShouldCleanup: `${hasOwnProperty(notACssModule, 'local-color')} ${hasOwnProperty(notACssModule, "LOCAL-COLOR")}`,
+	exportName: style.exportName,
+	exportNameOtherNoSpaces: style.exportNameOtherNoSpaces,
+	exportNameOtherFromKeyword: style.exportNameOtherFromKeyword,
+	exportNameOtherFromKeywordWithFrom1: style.exportNameOtherFromKeywordWithFrom1,
+	exportNameOtherFromKeywordWithFrom2: style.exportNameOtherFromKeywordWithFrom2,
+	exportNameWeirdCharacters: style.exportNameWeirdCharacters,
+	textColor: style['text-color'],
+	classNameAfterBrokenKeyframes: style['class-name-after-broken-keyframes'],
+	__webpack_modules__: Object.keys(__webpack_modules__).length
 };

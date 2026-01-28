@@ -86,16 +86,16 @@ _{{webpack.config.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/872.output.js
+# dist/lazy_js.output.js
 
 ```javascript
-_{{dist/872.output.js}}_
+_{{dist/lazy_js.output.js}}_
 ```
 
 Minimized
 
 ```javascript
-_{{production:dist/872.output.js}}_
+_{{production:dist/lazy_js.output.js}}_
 ```
 
 # Info

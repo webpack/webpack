@@ -1,6 +1,9 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	entry: "./example.js",
 	output: {
 		path: path.join(__dirname, "dist"),
@@ -15,3 +18,5 @@ module.exports = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;

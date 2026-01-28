@@ -15,9 +15,11 @@ module.exports = async function () {
 	const resolved3 = await overrideResolve(this.context, "./package");
 	const resolved4 = await customKnownResolve(this.context, "package2");
 	const resolved5 = await customUnknownResolve(this.context, "package2");
+	// @ts-expect-error undefined should not be a valid type
 	expect(await defaultResolve(this.context, undefined).catch(e => "ok")).toBe(
 		"ok"
 	);
+	// @ts-expect-error undefined should not be a valid type
 	expect(await defaultResolve(undefined, "package2").catch(e => "ok")).toBe(
 		"ok"
 	);

@@ -1,5 +1,5 @@
-var supportsArrowFn = require("../../../helpers/supportsArrowFunctionExpression");
+"use strict";
 
-module.exports = function (config) {
-	return supportsArrowFn();
-};
+const supportsArrowFn = require("../../../helpers/supportsArrowFunctionExpression");
+
+module.exports = () => supportsArrowFn();

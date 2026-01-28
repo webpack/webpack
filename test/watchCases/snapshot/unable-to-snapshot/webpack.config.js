@@ -1,5 +1,8 @@
+"use strict";
+
 const path = require("path");
-/** @type {function(any, any): import("../../../../").Configuration} */
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => ({
 	cache: {
 		type: "memory"

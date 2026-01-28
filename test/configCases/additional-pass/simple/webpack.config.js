@@ -1,9 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").WebpackPluginFunction} */
 function testPlugin() {
-	var counter = 1;
-	this.hooks.compilation.tap("TestPlugin", compilation => {
-		var nr = counter++;
-		compilation.hooks.needAdditionalPass.tap("TestPlugin", function () {
+	let counter = 1;
+	this.hooks.compilation.tap("TestPlugin", (compilation) => {
+		const nr = counter++;
+		compilation.hooks.needAdditionalPass.tap("TestPlugin", () => {
 			if (nr < 5) return true;
 		});
 	});

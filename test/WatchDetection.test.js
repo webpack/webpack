@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 
 const webpack = require("..");
 
@@ -10,10 +10,9 @@ describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("long running tests excluded", () => {});
+
 		return;
 	}
-
-	jest.setTimeout(10000);
 
 	createTestCase(100, true);
 	createTestCase(10, true);
@@ -25,6 +24,10 @@ describe("WatchDetection", () => {
 		createTestCase(changeTimeout);
 	}
 
+	/**
+	 * @param {number} changeTimeout change timeout
+	 * @param {boolean=} invalidate need invalidate?
+	 */
 	function createTestCase(changeTimeout, invalidate) {
 		describe(`time between changes ${changeTimeout}ms${
 			invalidate ? " with invalidate call" : ""
@@ -44,11 +47,11 @@ describe("WatchDetection", () => {
 				} catch (_err) {
 					// empty
 				}
-				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
-				fs.writeFileSync(file2Path, "original", "utf-8");
+				fs.writeFileSync(filePath, "require('./file2')", "utf8");
+				fs.writeFileSync(file2Path, "original", "utf8");
 			});
 
-			afterAll(done => {
+			afterAll((done) => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
@@ -69,7 +72,7 @@ describe("WatchDetection", () => {
 				}, 100); // cool down a bit
 			});
 
-			it("should build the bundle correctly", done => {
+			it("should build the bundle correctly", (done) => {
 				const compiler = webpack({
 					mode: "development",
 					entry: `${loaderPath}!${filePath}`,
@@ -90,6 +93,9 @@ describe("WatchDetection", () => {
 
 				step1();
 
+				/**
+				 * @returns {void}
+				 */
 				function step1() {
 					onChange = () => {
 						if (
@@ -98,8 +104,9 @@ describe("WatchDetection", () => {
 								.readFileSync("/directory/bundle.js")
 								.toString()
 								.includes("original")
-						)
+						) {
 							step2();
+						}
 					};
 
 					watcher = compiler.watch(
@@ -110,45 +117,58 @@ describe("WatchDetection", () => {
 					);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step2() {
 					onChange = () => {
-						expect(compiler.modifiedFiles).not.toBe(undefined);
-						expect(compiler.removedFiles).not.toBe(undefined);
+						expect(compiler.modifiedFiles).toBeDefined();
+						expect(compiler.removedFiles).toBeDefined();
 					};
 
 					fs.writeFile(
 						filePath,
 						"require('./file2'); again",
-						"utf-8",
+						"utf8",
 						handleError
 					);
 
 					setTimeout(step3, changeTimeout);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step3() {
 					if (invalidate) watcher.invalidate();
-					fs.writeFile(file2Path, "wrong", "utf-8", handleError);
+					fs.writeFile(file2Path, "wrong", "utf8", handleError);
 
 					setTimeout(step4, changeTimeout);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step4() {
 					onChange = () => {
-						expect(compiler.modifiedFiles).not.toBe(undefined);
-						expect(compiler.removedFiles).not.toBe(undefined);
+						expect(compiler.modifiedFiles).toBeDefined();
+						expect(compiler.removedFiles).toBeDefined();
 						if (
 							memfs
 								.readFileSync("/directory/bundle.js")
 								.toString()
 								.includes("correct")
-						)
+						) {
 							step5();
+						}
 					};
 
-					fs.writeFile(file2Path, "correct", "utf-8", handleError);
+					fs.writeFile(file2Path, "correct", "utf8", handleError);
 				}
 
+				/**
+				 * @returns {void}
+				 */
 				function step5() {
 					onChange = null;
 
@@ -157,6 +177,9 @@ describe("WatchDetection", () => {
 					});
 				}
 
+				/**
+				 * @param {unknown} err err
+				 */
 				function handleError(err) {
 					if (err) done(err);
 				}

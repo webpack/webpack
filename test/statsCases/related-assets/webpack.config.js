@@ -1,8 +1,17 @@
+"use strict";
+
+/** @typedef {import("../../../").Compiler} Compiler */
+/** @typedef {import("../../../").Configuration} Configuration */
+
 const MCEP = require("mini-css-extract-plugin");
 const { Compilation } = require("../../../");
 
-const compression = exts => compiler => {
-	compiler.hooks.thisCompilation.tap("Test", compilation => {
+/**
+ * @param {string[]} exts extensions
+ * @returns {(compiler: Compiler) => void} callback for comperssion
+ */
+const compression = (exts) => (compiler) => {
+	compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 		compilation.hooks.processAssets.tap(
 			{
 				name: "Test",
@@ -28,7 +37,11 @@ const compression = exts => compiler => {
 	});
 };
 
-const base = name => ({
+/**
+ * @param {string} name name
+ * @returns {Configuration} configuration
+ */
+const base = (name) => ({
 	name,
 	mode: "development",
 	devtool: "source-map",

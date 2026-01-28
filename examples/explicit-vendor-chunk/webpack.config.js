@@ -1,7 +1,10 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = [
+/** @type {import("webpack").Configuration[]} */
+const config = [
 	{
 		name: "vendor",
 		// mode: "development" || "production",
@@ -18,7 +21,6 @@ module.exports = [
 			})
 		]
 	},
-
 	{
 		name: "app",
 		// mode: "development" || "production",
@@ -39,3 +41,5 @@ module.exports = [
 		]
 	}
 ];
+
+module.exports = config;

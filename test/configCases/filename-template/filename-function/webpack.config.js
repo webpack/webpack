@@ -1,3 +1,8 @@
+"use strict";
+
+/** @typedef {import("../../../../").Chunk & { name: string }} Chunk */
+/** @typedef {import("../../../../").PathData & { chunk: Chunk }} PathData */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
@@ -5,12 +10,24 @@ module.exports = {
 		a: "./a",
 		b: {
 			import: "./b",
-			filename: data =>
+			/**
+			 * @param {PathData} data data
+			 * @returns {string} filename
+			 */
+			filename: (data) =>
 				`${data.chunk.name + data.chunk.name + data.chunk.name}.js`
 		}
 	},
 	output: {
-		filename: data => `${data.chunk.name + data.chunk.name}.js`,
-		chunkFilename: data => `${data.chunk.name + data.chunk.name}.js`
+		/**
+		 * @param {PathData} data data
+		 * @returns {string} filename
+		 */
+		filename: (data) => `${data.chunk.name + data.chunk.name}.js`,
+		/**
+		 * @param {PathData} data data
+		 * @returns {string} filename
+		 */
+		chunkFilename: (data) => `${data.chunk.name + data.chunk.name}.js`
 	}
 };

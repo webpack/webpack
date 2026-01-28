@@ -1,14 +1,12 @@
-var supportsES6 = require("../../../helpers/supportsES6");
-var supportDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
-var supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
-var supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+"use strict";
 
-module.exports = function (config) {
-	return (
-		!config.minimize &&
-		supportsES6() &&
-		supportDefaultAssignment() &&
-		supportsObjectDestructuring() &&
-		supportsIteratorDestructuring()
-	);
-};
+const supportDefaultAssignment = require("../../../helpers/supportDefaultAssignment");
+const supportsES6 = require("../../../helpers/supportsES6");
+const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+const supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
+
+module.exports = () =>
+	supportsES6() &&
+	supportDefaultAssignment() &&
+	supportsObjectDestructuring() &&
+	supportsIteratorDestructuring();

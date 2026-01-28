@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -6,6 +8,7 @@ module.exports = {
 		crossOriginLoading: "anonymous"
 	},
 	optimization: {
+		chunkIds: "named",
 		minimize: false,
 		splitChunks: {
 			minSize: 1

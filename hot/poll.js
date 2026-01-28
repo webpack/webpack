@@ -4,6 +4,7 @@
 */
 /* globals __resourceQuery */
 if (module.hot) {
+	// eslint-disable-next-line no-implicit-coercion
 	var hotPollInterval = +__resourceQuery.slice(1) || 10 * 60 * 1000;
 	var log = require("./log");
 

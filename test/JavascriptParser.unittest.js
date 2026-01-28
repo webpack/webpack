@@ -1,5 +1,7 @@
 "use strict";
 
+/* eslint-disable no-unused-expressions, no-unassigned-vars, func-names */
+
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
@@ -69,6 +71,7 @@ describe("JavascriptParser", () => {
 		"member expression": [
 			function () {
 				test[memberExpr];
+
 				// eslint-disable-next-line no-implicit-coercion
 				test[+memberExpr];
 			},
@@ -103,7 +106,7 @@ describe("JavascriptParser", () => {
 		"var definition": [
 			function () {
 				// eslint-disable-next-line one-var
-				var abc, cde, fgh;
+				let abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
 				cde.ddd.abc("test");
@@ -176,7 +179,7 @@ describe("JavascriptParser", () => {
 		],
 		"renaming with var": [
 			function () {
-				var xyz = abc;
+				const xyz = abc;
 				xyz("test");
 			},
 			{
@@ -237,7 +240,7 @@ describe("JavascriptParser", () => {
 		],
 		"new Foo(...)": [
 			function () {
-				// eslint-disable-next-line new-cap
+				// eslint-disable-next-line new-cap, no-new
 				new xyz("membertest");
 			},
 			{
@@ -246,7 +249,7 @@ describe("JavascriptParser", () => {
 		],
 		"spread calls/literals": [
 			function () {
-				var xyz = [...abc("xyz"), cde];
+				const xyz = [...abc("xyz"), cde];
 				Math.max(...fgh);
 			},
 			{
@@ -267,23 +270,27 @@ describe("JavascriptParser", () => {
 			const testParser = new JavascriptParser({});
 			testParser.hooks.canRename
 				.for("abc")
-				.tap("JavascriptParserTest", expr => true);
+				.tap("JavascriptParserTest", (_expr) => true);
 			testParser.hooks.canRename
 				.for("ijk")
-				.tap("JavascriptParserTest", expr => true);
-			testParser.hooks.call.for("abc").tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (_expr) => true);
+			testParser.hooks.call.for("abc").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.abc) testParser.state.abc = [];
 				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.hooks.call.for("cde.abc").tap("JavascriptParserTest", expr => {
-				if (!testParser.state.cdeabc) testParser.state.cdeabc = [];
-				testParser.state.cdeabc.push(testParser.parseString(expr.arguments[0]));
-				return true;
-			});
+			testParser.hooks.call
+				.for("cde.abc")
+				.tap("JavascriptParserTest", (expr) => {
+					if (!testParser.state.cdeabc) testParser.state.cdeabc = [];
+					testParser.state.cdeabc.push(
+						testParser.parseString(expr.arguments[0])
+					);
+					return true;
+				});
 			testParser.hooks.call
 				.for("cde.ddd.abc")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
 					testParser.state.cdedddabc.push(
 						testParser.parseString(expr.arguments[0])
@@ -292,16 +299,16 @@ describe("JavascriptParser", () => {
 				});
 			testParser.hooks.expression
 				.for("fgh")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (_expr) => {
 					if (!testParser.state.fgh) testParser.state.fgh = [];
 					testParser.state.fgh.push(
-						Array.from(testParser.scope.definitions.asSet()).join(" ")
+						[...testParser.scope.definitions.asSet()].join(" ")
 					);
 					return true;
 				});
 			testParser.hooks.expression
 				.for("fgh.sub")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (_expr) => {
 					if (!testParser.state.fghsub) testParser.state.fghsub = [];
 					testParser.state.fghsub.push(
 						testParser.scope.inTry ? "try" : "notry"
@@ -310,19 +317,19 @@ describe("JavascriptParser", () => {
 				});
 			testParser.hooks.expression
 				.for("ijk.sub")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (_expr) => {
 					if (!testParser.state.ijksub) testParser.state.ijksub = [];
 					testParser.state.ijksub.push("test");
 					return true;
 				});
 			testParser.hooks.expression
 				.for("memberExpr")
-				.tap("JavascriptParserTest", expr => {
+				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.expressions) testParser.state.expressions = [];
 					testParser.state.expressions.push(expr.name);
 					return true;
 				});
-			testParser.hooks.new.tap("xyz", "JavascriptParserTest", expr => {
+			testParser.hooks.new.for("xyz").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.xyz) testParser.state.xyz = [];
 				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
@@ -365,21 +372,25 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("expression evaluation", () => {
+		/**
+		 * @param {string} source source
+		 * @returns {import("../lib/javascript/JavascriptParser").ParserState} the parser state
+		 */
 		function evaluateInParser(source) {
 			const parser = new JavascriptParser();
-			parser.hooks.call.for("test").tap("JavascriptParserTest", expr => {
+			parser.hooks.call.for("test").tap("JavascriptParserTest", (expr) => {
 				parser.state.result = parser.evaluateExpression(expr.arguments[0]);
 			});
 			parser.hooks.evaluateIdentifier
 				.for("aString")
-				.tap("JavascriptParserTest", expr =>
+				.tap("JavascriptParserTest", (expr) =>
 					new BasicEvaluatedExpression()
 						.setString("aString")
 						.setRange(expr.range)
 				);
 			parser.hooks.evaluateIdentifier
 				.for("b.Number")
-				.tap("JavascriptParserTest", expr =>
+				.tap("JavascriptParserTest", (expr) =>
 					new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
 				);
 			return parser.parse(`test(${source});`, {}).result;
@@ -569,6 +580,10 @@ describe("JavascriptParser", () => {
 		};
 
 		for (const key of Object.keys(testCases)) {
+			/**
+			 * @param {import("../lib/javascript/BasicEvaluatedExpression")} evalExpr eval expr
+			 * @returns {string} result
+			 */
 			function evalExprToString(evalExpr) {
 				if (!evalExpr) {
 					return "null";
@@ -579,26 +594,31 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isBigInt()) result.push(`bigint=${evalExpr.bigint}`);
 				if (evalExpr.isBoolean()) result.push(`bool=${evalExpr.bool}`);
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
-				if (evalExpr.isConditional())
+				if (evalExpr.isConditional()) {
 					result.push(
 						`options=[${evalExpr.options.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isArray())
+				}
+				if (evalExpr.isArray()) {
 					result.push(
 						`items=[${evalExpr.items.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isConstArray())
+				}
+				if (evalExpr.isConstArray()) {
 					result.push(`array=[${evalExpr.array.join("],[")}]`);
-				if (evalExpr.isTemplateString())
+				}
+				if (evalExpr.isTemplateString()) {
 					result.push(
 						`template=[${evalExpr.quasis.map(evalExprToString).join("],[")}]`
 					);
-				if (evalExpr.isWrapped())
+				}
+				if (evalExpr.isWrapped()) {
 					result.push(
 						`wrapped=[${evalExprToString(evalExpr.prefix)}]+[${evalExprToString(
 							evalExpr.postfix
 						)}]`
 					);
+				}
 				if (evalExpr.range) {
 					const start = evalExpr.range[0] - 5;
 					const end = evalExpr.range[1] - 5;
@@ -630,12 +650,14 @@ describe("JavascriptParser", () => {
 			const parser = new JavascriptParser();
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
 					const actual = parser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			}
 		});
+
 		describe("should parse await", () => {
 			const cases = {
 				require: [
@@ -653,11 +675,11 @@ describe("JavascriptParser", () => {
 			};
 
 			const parser = new JavascriptParser();
-			parser.hooks.call.for("require").tap("JavascriptParserTest", expr => {
+			parser.hooks.call.for("require").tap("JavascriptParserTest", (expr) => {
 				const param = parser.evaluateExpression(expr.arguments[0]);
 				parser.state.param = param.string;
 			});
-			parser.hooks.importCall.tap("JavascriptParserTest", expr => {
+			parser.hooks.importCall.tap("JavascriptParserTest", (expr) => {
 				const param = parser.evaluateExpression(expr.source);
 				parser.state.param = param.string;
 			});
@@ -679,6 +701,7 @@ describe("JavascriptParser", () => {
 			};
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
 					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
@@ -691,7 +714,7 @@ describe("JavascriptParser", () => {
 
 			const parser = new JavascriptParser();
 
-			parser.hooks.statement.tap("JavascriptParserTest", expr => {
+			parser.hooks.statement.tap("JavascriptParserTest", (_expr) => {
 				definitions = parser.scope.definitions;
 				return true;
 			});
@@ -703,16 +726,121 @@ describe("JavascriptParser", () => {
 		});
 	});
 
-	describe("optional catch binding support", () => {
-		describe("should accept", () => {
+	describe("parse calculated string", () => {
+		describe("should work", () => {
 			const cases = {
-				"optional binding": "try {} catch {}"
+				123: {
+					code: "123",
+					result: {
+						code: false,
+						conditional: false,
+						range: [0, 3],
+						value: "123"
+					}
+				},
+				"'test'": {
+					code: "'test'",
+					result: {
+						code: false,
+						conditional: false,
+						range: [0, 6],
+						value: "test"
+					}
+				},
+				"'test' + 'test'": {
+					code: "'test' + 'test'",
+					result: {
+						code: false,
+						conditional: false,
+						range: [0, 15],
+						value: "testtest"
+					}
+				},
+				"myVar + 'test'": {
+					code: "myVar + 'test'",
+					result: {
+						code: true,
+						conditional: false,
+						range: undefined,
+						value: ""
+					}
+				},
+				"'test' + myVar": {
+					code: "'test' + myVar",
+					result: {
+						code: true,
+						conditional: false,
+						range: [0, 6],
+						value: "test"
+					}
+				},
+				"true ? 'one' : 'two'": {
+					code: "true ? 'one' : 'two'",
+					result: {
+						code: true,
+						conditional: [
+							{
+								code: false,
+								conditional: false,
+								range: [7, 12],
+								value: "one"
+							},
+							{
+								code: false,
+								conditional: false,
+								range: [15, 20],
+								value: "two"
+							}
+						],
+						range: undefined,
+						value: ""
+					}
+				},
+				"true ? true ? 'one' : 'two' : true ? 'three': 'four'": {
+					code: "true ? true ? 'one' : 'two' : true ? 'three': 'four'",
+					result: {
+						code: true,
+						conditional: [
+							{
+								code: false,
+								conditional: false,
+								range: [14, 19],
+								value: "one"
+							},
+							{
+								code: false,
+								conditional: false,
+								range: [22, 27],
+								value: "two"
+							},
+							{
+								code: false,
+								conditional: false,
+								range: [37, 44],
+								value: "three"
+							},
+							{
+								code: false,
+								conditional: false,
+								range: [46, 52],
+								value: "four"
+							}
+						],
+						range: undefined,
+						value: ""
+					}
+				}
 			};
 			for (const name of Object.keys(cases)) {
 				const expr = cases[name];
+
 				it(name, () => {
-					const actual = JavascriptParser._parse(expr);
-					expect(typeof actual).toBe("object");
+					const parser = new JavascriptParser();
+					const { ast } = JavascriptParser._parse(expr.code, { ranges: true });
+					expect(typeof ast).toBe("object");
+					expect(parser.parseCalculatedString(ast.body[0].expression)).toEqual(
+						expr.result
+					);
 				});
 			}
 		});

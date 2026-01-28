@@ -10,17 +10,26 @@ work is not in vain.
 Most of the time, if webpack is not working correctly for you, it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
-a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions
+a question to [Discussions](https://github.com/webpack/webpack/discussions), [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack) or ask this in our [Discord](https://discord.gg/5sxFZPdx2k). Questions
 that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
+
+> ⚠️ Note on dependency vulnerability warnings
+>
+> Tools like `npm audit` may report vulnerabilities originating from development-only dependencies
+> (for example `webpack-dev-server`). These warnings do not always indicate a security issue
+> in your production bundle.
+>
+> Before opening an issue, please check whether the warning comes from a dev dependency
+> and whether an update or workaround already exists.
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
-Do you want to fix an issue? Look at the issues with a tag of [X5: work required (PR / Help Wanted)](https://github.com/webpack/webpack/labels/X5%3A%20work%20required%20%28PR%20%2F%20Help%20Wanted%29). Each issue should be tagged with a difficulty tag -
+Do you want to fix an issue? Look at the issues with a tag of [Send a PR](https://github.com/webpack/webpack/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Send%20a%20PR%22). Here are some of the key labels you may encounter:
 
-- D0: My First Commit (Contribution Difficulty)
-- D1: Easy (Contribution Difficulty)
-- D2: Medium (Contribution Difficulty)
-- D3: Hard (Contribution Difficulty)
+- **bug**: An unexpected problem or unintended behavior.
+- **enhancement**: A suggestion for a new feature or improvement.
+- **question**: Requests for clarification or more information.
+- **documentation**: Issues related to improving or adding documentation.
 
 ## Contributing to the webpack ecosystem
 
@@ -47,6 +56,7 @@ Something that will increase the chance that your pull request is accepted:
 - For a major fix/feature make sure your PR has an issue and if it doesn't, please create one. This would help discussion with the community, and polishing ideas in case of a new feature.
 - Make sure your PR's description contains GitHub's special keyword references that automatically close the related issue when the PR is merged. ([More info](https://github.com/blog/1506-closing-issues-via-pull-requests))
 - When you have a lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
+- For a better understanding of the folder structure and testing procedures, refer to the [Testing Documentation](./TESTING_DOCS.md).
 
 ## Documentation
 
@@ -69,7 +79,7 @@ Then, automatically generate the type declarations by running `yarn fix` locally
 
 ## Discussions
 
-Gitter is only for small questions. To discuss a subject in detail, please send a link to your forum or blog in the Gitter chat.
+For discussions please use our [Discussions](https://github.com/webpack/webpack/discussions).
 
 ## Join the development
 

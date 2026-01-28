@@ -3,12 +3,13 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
 const fs = require("graceful-fs");
+const { Volume, createFsFromVolume } = require("memfs");
 const rimraf = require("rimraf");
 
-const createCompiler = config => {
+const createCompiler = (config) => {
 	const webpack = require("..");
+
 	const compiler = webpack(config);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
@@ -36,46 +37,44 @@ const onceDone = (compiler, action) => {
 	});
 };
 
-const getChanges = compiler => {
+const getChanges = (compiler) => {
 	const modifiedFiles = compiler.modifiedFiles;
 	const removedFiles = compiler.removedFiles;
 	return {
-		removed: removedFiles && Array.from(removedFiles),
-		modified: modifiedFiles && Array.from(modifiedFiles)
+		removed: removedFiles && [...removedFiles],
+		modified: modifiedFiles && [...modifiedFiles]
 	};
 };
 
+/**
+ * @param {(err?: unknown) => void} callback callback
+ */
 function cleanup(callback) {
 	rimraf(tempFolderPath, callback);
 }
 
+/**
+ * @returns {void}
+ */
 function createFiles() {
 	fs.mkdirSync(tempFolderPath, { recursive: true });
 
 	fs.writeFileSync(
 		tempFilePath,
 		"module.exports = function temp() {return 'temp file';};\n require('./temp-file2')",
-		"utf-8"
+		"utf8"
 	);
 
 	fs.writeFileSync(
 		tempFile2Path,
 		"module.exports = function temp2() {return 'temp file 2';};",
-		"utf-8"
+		"utf8"
 	);
 }
 
 describe("ChangesAndRemovals", () => {
-	if (process.env.NO_WATCH_TESTS) {
-		// eslint-disable-next-line jest/no-disabled-tests
-		it.skip("watch tests excluded", () => {});
-		return;
-	}
-
-	jest.setTimeout(30000);
-
-	beforeEach(done => {
-		cleanup(err => {
+	beforeEach((done) => {
+		cleanup((err) => {
 			if (err) return done(err);
 			createFiles();
 			// Wait 2.5s after creating the files,
@@ -83,12 +82,20 @@ describe("ChangesAndRemovals", () => {
 			setTimeout(done, 2500);
 		});
 	});
+
 	afterEach(cleanup);
 
-	it("should not track modified/removed files during initial watchRun", done => {
+	if (process.env.NO_WATCH_TESTS) {
+		// eslint-disable-next-line jest/no-disabled-tests
+		it.skip("watch tests excluded", () => {});
+
+		return;
+	}
+
+	it("should not track modified/removed files during initial watchRun", (done) => {
 		const compiler = createSingleCompiler();
-		const watchRunFinished = new Promise(resolve => {
-			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
+		const watchRunFinished = new Promise((resolve) => {
+			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
 				expect(getChanges(compiler)).toEqual({
 					removed: undefined,
 					modified: undefined
@@ -96,7 +103,7 @@ describe("ChangesAndRemovals", () => {
 				resolve();
 			});
 		});
-		const watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
+		const watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
 			if (err) done(err);
 		});
 
@@ -105,11 +112,11 @@ describe("ChangesAndRemovals", () => {
 		});
 	});
 
-	it("should track modified files when they've been modified", done => {
+	it("should track modified files when they've been modified", (done) => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
 			if (!watcher) return;
 			if (!compiler.modifiedFiles) return;
 			expect(getChanges(compiler)).toEqual({
@@ -120,7 +127,7 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
+		watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
 			if (err) done(err);
 		});
 
@@ -129,11 +136,11 @@ describe("ChangesAndRemovals", () => {
 		});
 	});
 
-	it("should track removed file when removing file", done => {
+	it("should track removed file when removing file", (done) => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
 			if (!watcher) return;
 			if (!compiler.modifiedFiles) return;
 			expect(getChanges(compiler)).toEqual({
@@ -144,7 +151,7 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = compiler.watch({ aggregateTimeout: 200 }, err => {
+		watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
 			if (err) done(err);
 		});
 

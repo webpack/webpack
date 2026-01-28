@@ -1,5 +1,7 @@
-const { describeCases } = require("./TestCases.template");
+"use strict";
+
 const webpack = require("..");
+const { describeCases } = require("./TestCases.template");
 
 describe("TestCases", () => {
 	describeCases({

@@ -4,10 +4,11 @@
 /test/fixtures/temp-*
 /test/temp
 /test/ChangesAndRemovals
+/test/ChangesAndRemovalsTemp
 /test/**/dev-defaults.webpack.lock
-/benchmark/js
-/benchmark/fixtures
+/test/**/generated/**
 /examples/**/dist
+/examples/nodejs-addons/build/**
 /assembly/**/*.wat
 /assembly/**/*.wasm
 /coverage

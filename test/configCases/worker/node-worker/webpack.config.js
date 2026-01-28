@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -7,6 +9,9 @@ module.exports = {
 		d: { import: "./index.js?d", filename: "[name].js" }
 	},
 	output: {
-		filename: "[name].[contenthash].js"
+		filename: "[name].[contenthash].js",
+		environment: {
+			nodePrefixForCoreModules: false
+		}
 	}
 };

@@ -1,4 +1,6 @@
-const stripAnsi = require("strip-ansi");
+"use strict";
+
+const stripVTControlCharacters = require("strip-ansi");
 
 module.exports = (stdio, tty) => {
 	let logs = [];
@@ -6,7 +8,7 @@ module.exports = (stdio, tty) => {
 	const write = stdio.write;
 	const isTTY = stdio.isTTY;
 
-	stdio.write = function (str) {
+	stdio.write = function write(str) {
 		logs.push(str);
 	};
 	if (tty !== undefined) stdio.isTTY = tty;
@@ -17,10 +19,16 @@ module.exports = (stdio, tty) => {
 		reset: () => (logs = []),
 
 		toString: () =>
-			stripAnsi(logs.join("")).replace(
-				/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
-				""
-			),
+			stripVTControlCharacters(logs.join(""))
+				.replace(
+					/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
+					""
+				)
+				// Ignore deprecated `import * as pkg from "file.json" assert { type: "json" };`
+				.replace(
+					/\([^)]+\) (\[[^\]]+\]\s*)?(V8:).* 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead\n/g,
+					""
+				),
 
 		toStringRaw: () => logs.join(""),
 

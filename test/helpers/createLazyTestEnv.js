@@ -1,4 +1,5 @@
-// eslint-disable-next-line jest/no-export
+"use strict";
+
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
 	let currentDescribeBlock;
@@ -12,7 +13,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		if (!fn) return null;
 		const rfn =
 			fn.length >= 1
-				? done => {
+				? (done) => {
 						fn((...args) => {
 							if (isTest) runTests++;
 							done(...args);
@@ -36,7 +37,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			it("should run the exported tests", () => {
 				runTests++;
 			});
-			afterAll(done => {
+			afterAll((done) => {
 				for (const dispose of disposables) {
 					dispose();
 				}
@@ -47,7 +48,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		}
 	);
 	let numberOfTests = 0;
-	const inSuite = fn => {
+	const inSuite = (fn) => {
 		const {
 			currentDescribeBlock: oldCurrentDescribeBlock,
 			currentlyRunningTest: oldCurrentlyRunningTest,
@@ -59,15 +60,18 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		try {
 			fn();
 		} catch (err) {
+			/* eslint-disable no-unused-expressions */
 			// avoid leaking memory
-			err.stack;
+			/** @type {EXPECTED_ANY} */
+			(err).stack;
+			/* eslint-enable no-unused-expressions */
 			throw err;
 		}
 		state.currentDescribeBlock = oldCurrentDescribeBlock;
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;
 	};
-	const fixAsyncError = block => {
+	const fixAsyncError = (block) => {
 		// By default jest leaks memory as it stores asyncError
 		// for each "it" call to track the origin test suite
 		// We want to evaluate this early here to avoid leaking memory
@@ -76,6 +80,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		};
 	};
 	return {
+		/**
+		 * @param {number} time time
+		 */
 		setDefaultTimeout(time) {
 			globalTimeout = time;
 		},
@@ -88,7 +95,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[1] = createDisposableFn(args[1], true);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
-				// eslint-disable-next-line jest/no-disabled-tests
+				// @ts-expect-error expected
 				it(...args);
 				fixAsyncError(
 					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
@@ -96,10 +103,12 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			});
 		},
 		beforeEach(...args) {
-			if (runTests >= numberOfTests)
+			if (runTests >= numberOfTests) {
 				throw new Error("beforeEach called too late");
+			}
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
+				// @ts-expect-error expected
 				beforeEach(...args);
 				fixAsyncError(
 					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
@@ -107,10 +116,12 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			});
 		},
 		afterEach(...args) {
-			if (runTests >= numberOfTests)
+			if (runTests >= numberOfTests) {
 				throw new Error("afterEach called too late");
+			}
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
+				// @ts-expect-error expected
 				afterEach(...args);
 				fixAsyncError(
 					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]

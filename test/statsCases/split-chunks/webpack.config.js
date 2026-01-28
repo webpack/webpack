@@ -1,3 +1,5 @@
+"use strict";
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -9,6 +11,7 @@ const stats = {
 	entrypoints: true,
 	modules: false
 };
+
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
@@ -117,7 +120,7 @@ module.exports = [
 		optimization: {
 			splitChunks: {
 				minSize: 0,
-				chunks: chunk => chunk.name !== "a"
+				chunks: (chunk) => chunk.name !== "a"
 			}
 		},
 		stats
@@ -145,7 +148,7 @@ module.exports = [
 						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true,
-						chunks: chunk => chunk.name !== "a"
+						chunks: (chunk) => chunk.name !== "a"
 					}
 				}
 			}

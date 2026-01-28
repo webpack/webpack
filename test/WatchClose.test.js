@@ -5,8 +5,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 
 describe("WatchClose", () => {
-	jest.setTimeout(5000);
-
 	describe("multiple calls watcher", () => {
 		const fixturePath = path.join(__dirname, "fixtures");
 		const outputPath = path.join(__dirname, "js/WatchClose");
@@ -17,6 +15,7 @@ describe("WatchClose", () => {
 
 		beforeEach(() => {
 			const webpack = require("../");
+
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,
@@ -33,8 +32,13 @@ describe("WatchClose", () => {
 			compiler = null;
 		});
 
+		/**
+		 * @param {import("../").Watching} watcher watcher
+		 * @param {(err?: null | Error) -> void} callback callback
+		 * @returns {Promise<void>}
+		 */
 		function close(watcher, callback) {
-			return new Promise(res => {
+			return new Promise((res) => {
 				const onClose = () => {
 					callback();
 					res();

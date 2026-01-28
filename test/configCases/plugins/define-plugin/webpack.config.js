@@ -1,5 +1,8 @@
-var DefinePlugin = require("../../../../").DefinePlugin;
+"use strict";
+
+const DefinePlugin = require("../../../../").DefinePlugin;
 const Module = require("../../../../").Module;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
@@ -19,6 +22,11 @@ module.exports = {
 			NEGATIVE_ZER0: -0,
 			NEGATIVE_NUMBER: -100.25,
 			POSITIVE_NUMBER: +100.25,
+			/**
+			 * @param {number} a a
+			 * @returns {number} result
+			 */
+			// eslint-disable-next-line object-shorthand
 			FUNCTION: /* istanbul ignore next */ function (a) {
 				return a + 1;
 			},
@@ -27,6 +35,11 @@ module.exports = {
 			OBJECT: {
 				SUB: {
 					UNDEFINED: undefined,
+					/**
+					 * @param {number} a a
+					 * @returns {number} result
+					 */
+					// eslint-disable-next-line object-shorthand
 					FUNCTION: /* istanbul ignore next */ function (a) {
 						return a + 1;
 					},
@@ -43,9 +56,7 @@ module.exports = {
 			wurst: "suppe",
 			suppe: "wurst",
 			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(
-				function ({ module }) {
-					return module instanceof Module;
-				}
+				({ module }) => module instanceof Module
 			),
 			A_DOT_J: '"a.j"',
 			OBJECT2: {
@@ -55,7 +66,10 @@ module.exports = {
 					used: 1,
 					unused: "(() => throw new Error('unused property was rendered'))()"
 				}
-			}
+			},
+			"FOO.BAR.BAZ": 1,
+			"FOO.BAR.BAZZ": 2,
+			"X.Y.BAZ": 3
 		})
 	]
 };

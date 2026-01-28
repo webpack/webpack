@@ -1,6 +1,6 @@
-var fs = require("fs");
-var path = require("path");
+"use strict";
 
-module.exports = function (config) {
-	return fs.existsSync(path.join(__dirname, "TEST.FILTER.JS"));
-};
+const fs = require("fs");
+const path = require("path");
+
+module.exports = () => fs.existsSync(path.join(__dirname, "TEST.FILTER.JS"));

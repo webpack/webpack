@@ -1,0 +1,9 @@
+.className {
+	border-radius: 12px;
+}
+
+.exportName {
+	composes: className;
+	composes: className from global;
+	composes: otherClassName from "./classes.modules.css";
+}

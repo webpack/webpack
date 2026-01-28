@@ -81,13 +81,7 @@ var __webpack_exports__ = {};
 /*! export print [provided] [used in main] [could be renamed] -> ./methods.js .print */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "inc": () => (/* reexport */ increment),
-  "print": () => (/* reexport */ print)
-});
-
-;// CONCATENATED MODULE: ./counter.js
+;// ./counter.js
 let value = 0;
 function increment() {
 	value++;
@@ -99,12 +93,12 @@ function counter_reset() {
 	value = 0;
 }
 
-;// CONCATENATED MODULE: ./methods.js
+;// ./methods.js
 
 
 const print = value => console.log(value);
 
-;// CONCATENATED MODULE: ./example.js
+;// ./example.js
 
 
 print(value);
@@ -117,15 +111,13 @@ print(value);
 
 
 
-var __webpack_exports__inc = __webpack_exports__.inc;
-var __webpack_exports__print = __webpack_exports__.print;
-export { __webpack_exports__inc as inc, __webpack_exports__print as print };
+export { increment as inc, print };
 ```
 
 # dist/output.js (production)
 
 ```javascript
-var e={d:(o,r)=>{for(var t in r)e.o(r,t)&&!e.o(o,t)&&Object.defineProperty(o,t,{enumerable:!0,get:r[t]})},o:(e,o)=>Object.prototype.hasOwnProperty.call(e,o)},o={};e.d(o,{a:()=>t,S:()=>a});let r=0;function t(){r++}const a=e=>console.log(e);a(r),t(),t(),t(),a(r),r=0,a(r);var n=o.a,c=o.S;export{n as inc,c as print};
+let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),o=0,c(o);export{n as inc,c as print};
 ```
 
 # Info
@@ -133,7 +125,7 @@ var e={d:(o,r)=>{for(var t in r)e.o(r,t)&&!e.o(o,t)&&Object.defineProperty(o,t,{
 ## Unoptimized
 
 ```
-asset output.js 2.03 KiB [emitted] [javascript module] (name: main)
+asset output.js 1.68 KiB [emitted] [javascript module] (name: main)
 chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 396 bytes 2 modules
@@ -142,13 +134,13 @@ chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 314 bytes [emitted] [javascript module] [minimized] (name: main)
+asset output.js 110 bytes [emitted] [javascript module] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 396 bytes 2 modules
@@ -157,5 +149,5 @@ chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

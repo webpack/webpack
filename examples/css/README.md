@@ -26,22 +26,53 @@ body {
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 3:
-/*!*************************!*\
-  !*** ./images/file.png ***!
-  \*************************/
-/*! default exports */
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/*!***********************!*\
+  !*** css ./style.css ***!
+  \***********************/
+/*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
+/*! runtime requirements: has css modules */
+/***/ (() => {
+
+
+
+/***/ }),
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */
+/*!************************!*\
+  !*** css ./style2.css ***!
+  \************************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: has css modules */
+/***/ (() => {
+
+
+
+/***/ }),
+/* 6 */
+/*!******************************!*\
+  !*** css ./style.module.css ***!
+  \******************************/
+/*! namespace exports */
+/*! export large [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export main [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, module, has css modules, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
+__webpack_require__.r(module.exports = {
+	"large": "--QRIlVD",
+	"main": "zI6JBT"
+});
 
 /***/ })
-
-/******/ 	});
+/******/ 	]);
 ```
 
 <details><summary><code>/* webpack runtime code */</code></summary>
@@ -57,6 +88,12 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -132,11 +169,11 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -178,28 +215,11 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {};
+/******/ 		var installedChunks = {
+/******/ 			0: 0
+/******/ 		};
 /******/ 		
 /******/ 		var uniqueName = "app";
-/******/ 		var loadCssChunkData = (target, link, chunkId) => {
-/******/ 			var data, token = "", token2, exports = {}, exportsWithId = [], exportsWithDashes = [], i = 0, cc = 1;
-/******/ 			try { if(!link) link = loadStylesheet(chunkId); data = link.sheet.cssRules; data = data[data.length - 1].style; } catch(e) { data = getComputedStyle(document.head); }
-/******/ 			data = data.getPropertyValue("--webpack-" + uniqueName + "-" + chunkId);
-/******/ 			if(!data) return [];
-/******/ 			for(; cc; i++) {
-/******/ 				cc = data.charCodeAt(i);
-/******/ 				if(cc == 40) { token2 = token; token = ""; }
-/******/ 				else if(cc == 41) { exports[token2.replace(/^_/, "")] = token.replace(/^_/, ""); token = ""; }
-/******/ 				else if(cc == 47 || cc == 37) { token = token.replace(/^_/, ""); exports[token] = token; exportsWithId.push(token); if(cc == 37) exportsWithDashes.push(token); token = ""; }
-/******/ 				else if(!cc || cc == 44) { token = token.replace(/^_/, ""); exportsWithId.forEach((x) => (exports[x] = uniqueName + "-" + token + "-" + exports[x])); exportsWithDashes.forEach((x) => (exports[x] = "--" + exports[x])); __webpack_require__.r(exports); target[token] = ((exports, module) => {
-/******/ 					module.exports = exports;
-/******/ 				}).bind(null, exports); token = ""; exports = {}; exportsWithId.length = 0; }
-/******/ 				else if(cc == 92) { token += data[++i] }
-/******/ 				else { token += data[i]; }
-/******/ 			}
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		
-/******/ 		}
 /******/ 		var loadingAttribute = "data-webpack-loading";
 /******/ 		var loadStylesheet = (chunkId, url, done) => {
 /******/ 			var link, needAttach, key = "chunk-" + chunkId;
@@ -214,7 +234,12 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			if(!link) {
 /******/ 				needAttach = true;
 /******/ 				link = document.createElement('link');
+/******/ 				link.charset = 'utf-8';
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					link.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
 /******/ 				link.setAttribute("data-webpack", uniqueName + ":" + key);
+/******/ 		
 /******/ 				link.setAttribute(loadingAttribute, 1);
 /******/ 				link.rel = "stylesheet";
 /******/ 				link.href = url;
@@ -233,11 +258,10 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				link.onload = onLinkComplete.bind(null, link.onload);
 /******/ 			} else onLinkComplete(undefined, { type: 'load', target: link });
 /******/ 		
+/******/ 		
 /******/ 			needAttach && document.head.appendChild(link);
 /******/ 			return link;
 /******/ 		};
-/******/ 		loadCssChunkData(__webpack_require__.m, 0, 0);
-/******/ 		
 /******/ 		__webpack_require__.f.css = (chunkId, promises) => {
 /******/ 			// css chunk loading
 /******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
@@ -263,25 +287,29 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 								if(installedChunkData) {
 /******/ 									if(event.type !== "load") {
 /******/ 										var errorType = event && event.type;
-/******/ 										var realSrc = event && event.target && event.target.src;
-/******/ 										error.message = 'Loading css chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										var realHref = event && event.target && event.target.href;
+/******/ 										error.message = 'Loading css chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realHref + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
-/******/ 										error.request = realSrc;
+/******/ 										error.request = realHref;
 /******/ 										installedChunkData[1](error);
 /******/ 									} else {
-/******/ 										loadCssChunkData(__webpack_require__.m, link, chunkId);
+/******/ 										installedChunks[chunkId] = 0;
 /******/ 										installedChunkData[0]();
 /******/ 									}
 /******/ 								}
 /******/ 							}
 /******/ 						};
-/******/ 						var link = loadStylesheet(chunkId, url, loadingEnded);
+/******/ 		
+/******/ 							loadStylesheet(chunkId, url, loadingEnded);
 /******/ 					} else installedChunks[chunkId] = 0;
 /******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
 /******/ 		// no hmr
 /******/ 	})();
 /******/ 	
@@ -305,7 +333,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if(0 == chunkId) {
+/******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
@@ -330,7 +358,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -410,45 +438,58 @@ document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_
 # dist/output.css
 
 ```javascript
+/*!********************************************************************!*\
+  !*** external "https://fonts.googleapis.com/css?family=Open+Sans" ***!
+  \********************************************************************/
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
+/*!********************************!*\
+  !*** css ./style-imported.css ***!
+  \********************************/
 .img {
 	width: 150px;
 	height: 150px;
-	background: url(89a353e9c515885abd8e.png);
+	background: url(dist/89a353e9c515885abd8e.png);
 }
 
+/*!***********************!*\
+  !*** css ./style.css ***!
+  \***********************/
 
 body {
 	background: green;
 	font-family: "Open Sans";
 }
 
+/*!************************!*\
+  !*** css ./style2.css ***!
+  \************************/
 body {
 	background: red;
 }
 
+/*!******************************!*\
+  !*** css ./style.module.css ***!
+  \******************************/
 :root {
-	--app-6-large: 72px;
+	--QRIlVD: 72px;
 }
 
-.app-6-main {
-	font-size: var(--app-6-large);
+.zI6JBT {
+	font-size: var(--QRIlVD);
 	color: darkblue;
 }
 
 @media (min-width: 1024px) {
-	.app-6-main {
+	.zI6JBT {
 		color: green;
 	}
 }
 
 @supports (display: grid) {
-	.app-6-main {
+	.zI6JBT {
 		display: grid
 	}
 }
-
-head{--webpack-app-0:_4,_2,_1,_5,large%main/_6;}
 ```
 
 ## production
@@ -458,7 +499,7 @@ head{--webpack-app-0:_4,_2,_1,_5,large%main/_6;}
 .img {
 	width: 150px;
 	height: 150px;
-	background: url(89a353e9c515885abd8e.png);
+	background: url(dist/89a353e9c515885abd8e.png);
 }
 
 
@@ -472,37 +513,36 @@ body {
 }
 
 :root {
-	--app-491-b: 72px;
+	--QRIlVD: 72px;
 }
 
-.app-491-D {
-	font-size: var(--app-491-b);
+.zI6JBT {
+	font-size: var(--QRIlVD);
 	color: darkblue;
 }
 
 @media (min-width: 1024px) {
-	.app-491-D {
+	.zI6JBT {
 		color: green;
 	}
 }
 
 @supports (display: grid) {
-	.app-491-D {
+	.zI6JBT {
 		display: grid
 	}
 }
-
-head{--webpack-app-179:_548,_431,_258,_268,b%D/_491;}
 ```
 
 # dist/1.output.css
 
 ```javascript
+/*!****************************!*\
+  !*** css ./lazy-style.css ***!
+  \****************************/
 body {
 	color: blue;
 }
-
-head{--webpack-app-1:_7;}
 ```
 
 # Info
@@ -510,50 +550,64 @@ head{--webpack-app-1:_7;}
 ## Unoptimized
 
 ```
-assets by chunk 17 KiB (name: main)
-  asset output.js 16.5 KiB [emitted] (name: main)
-  asset output.css 516 bytes [emitted] (name: main)
+assets by path *.js 16.4 KiB
+  asset output.js 16.1 KiB [emitted] (name: main)
+  asset 1.output.js 331 bytes [emitted]
+assets by path *.css 1.16 KiB
+  asset output.css 1.04 KiB [emitted] (name: main)
+  asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset 1.output.css 49 bytes [emitted]
-Entrypoint main 17 KiB (14.6 KiB) = output.js 16.5 KiB output.css 516 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
+Entrypoint main 17.2 KiB (14.6 KiB) = output.js 16.1 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 256 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 10 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 454 bytes (css) 42 bytes (css-import) [dependent] 6 modules
+  runtime modules 8.8 KiB 9 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 80 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 1.output.css 23 bytes
+chunk (runtime: main) 1.output.js, 1.output.css 1 bytes (javascript) 23 bytes (css) [rendered]
   > ./lazy-style.css ./example.js 4:0-26
-  ./lazy-style.css 23 bytes [built] [code generated]
+  css ./lazy-style.css 1 bytes (javascript) 23 bytes (css) [built] [code generated]
     [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 4:0-26
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by chunk 4.38 KiB (name: main)
-  asset output.js 3.88 KiB [emitted] [minimized] (name: main)
-  asset output.css 514 bytes [emitted] (name: main)
+assets by path *.js 3.12 KiB
+  asset output.js 3.04 KiB [emitted] [minimized] (name: main)
+  asset 822.output.js 85 bytes [emitted] [minimized]
+assets by path *.css 475 bytes
+  asset output.css 451 bytes [emitted] (name: main)
+  asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset 159.output.css 53 bytes [emitted]
-Entrypoint main 4.38 KiB (14.6 KiB) = output.js 3.88 KiB output.css 514 bytes 1 auxiliary asset
-chunk (runtime: main) 159.output.css 23 bytes
-  > ./lazy-style.css ./example.js 4:0-26
-  ./lazy-style.css 23 bytes [built] [code generated]
-    [no exports]
-    import() ./lazy-style.css ./example.js 4:0-26
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.48 KiB (14.6 KiB) = output.js 3.04 KiB output.css 451 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 362 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 10 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 454 bytes (css) 42 bytes (css-import) [dependent] 6 modules
-  ./example.js 176 bytes [built] [code generated]
+  runtime modules 8.53 KiB 8 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
+  cacheable modules 362 bytes (javascript) 375 bytes (css)
+    ./example.js + 3 modules 269 bytes [built] [code generated]
+      [no exports]
+      [no exports used]
+      entry ./example.js main
+    css ./style.css 1 bytes (javascript) 148 bytes (css) [built] [code generated]
+      [no exports]
+      [no exports used]
+    css ./style.module.css 91 bytes (javascript) 200 bytes (css) [built] [code generated]
+      [exports: large, main]
+      [only some exports used: main]
+    css ./style2.css 1 bytes (javascript) 27 bytes (css) [built] [code generated]
+      [no exports]
+      [no exports used]
+chunk (runtime: main) 822.output.js, 822.output.css 1 bytes (javascript) 23 bytes (css) [rendered]
+  > ./lazy-style.css ./example.js 4:0-26
+  css ./lazy-style.css 1 bytes (javascript) 23 bytes (css) [built] [code generated]
     [no exports]
-    [no exports used]
-    entry ./example.js main
-webpack 5.78.0 compiled successfully
+    import() ./lazy-style.css ./example.js + 3 modules ./example.js 4:0-26
+webpack X.X.X compiled successfully
 ```

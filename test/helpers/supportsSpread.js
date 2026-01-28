@@ -1,7 +1,10 @@
+"use strict";
+
 module.exports = function supportsSpread() {
 	try {
-		var x = { a: true };
-		var y;
+		const x = { a: true };
+		// eslint-disable-next-line no-unassigned-vars
+		let y;
 		eval("y = { ...x }");
 		return y !== x && y.a;
 	} catch (_err) {

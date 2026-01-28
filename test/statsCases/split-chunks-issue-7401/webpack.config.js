@@ -1,3 +1,5 @@
+"use strict";
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -10,6 +12,7 @@ const stats = {
 	chunkGroups: true,
 	modules: false
 };
+
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	name: "default",

@@ -1,8 +1,8 @@
 "use strict";
 
-const path = require("path");
-const child_process = require("child_process");
+const childProcess = require("child_process");
 const fs = require("fs");
+const path = require("path");
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
@@ -12,9 +12,10 @@ const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 const exec = (n, options = {}) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
+
 		const coverageEnabled = webpack.toString().includes("++");
 
-		const p = child_process.execFile(
+		const p = childProcess.execFile(
 			process.execPath,
 			[
 				...(coverageEnabled
@@ -36,15 +37,15 @@ const exec = (n, options = {}) =>
 			}
 		);
 		const chunks = [];
-		p.stderr.on("data", chunk => chunks.push(chunk));
-		p.stdout.on("data", chunk => chunks.push(chunk));
-		p.once("exit", code => {
+		p.stderr.on("data", (chunk) => chunks.push(chunk));
+		p.stdout.on("data", (chunk) => chunks.push(chunk));
+		p.once("exit", (code) => {
 			const errors = [];
 			const warnings = [];
 			const rawStdout = chunks.join("");
 			const stdout = rawStdout.replace(
 				// This warning is expected
-				/<([ew])> \[.+\n(?:<([ew])> [^[].+\n)*/g,
+				/<([ew])> \[.+\n(?:<[ew]> [^[].+\n)*/g,
 				(message, type) => {
 					(type === "e" ? errors : warnings).push(message);
 					return "";
@@ -60,7 +61,7 @@ const exec = (n, options = {}) =>
 				);
 			}
 			for (const regexp of options.warnings || []) {
-				const idx = warnings.findIndex(w => regexp.test(w));
+				const idx = warnings.findIndex((w) => regexp.test(w));
 				if (idx < 0) {
 					return reject(
 						new Error(
@@ -80,14 +81,15 @@ const exec = (n, options = {}) =>
 				);
 			}
 			if (code === 0) {
-				if (!options.ignoreErrors && /<[ew]>/.test(stdout))
+				if (!options.ignoreErrors && /<[ew]>/.test(stdout)) {
 					return reject(new Error(stdout));
+				}
 				resolve(stdout);
 			} else {
 				reject(new Error(`Code ${code}: ${stdout}`));
 			}
 		});
-		p.once("error", err => {
+		p.once("error", (err) => {
 			const stdout = chunks.join("");
 			console.log(stdout);
 			reject(err);
@@ -97,19 +99,16 @@ const exec = (n, options = {}) =>
 const supportsEsm = Number(process.versions.modules) >= 83;
 
 describe("BuildDependencies", () => {
-	beforeEach(done => {
-		rimraf(cacheDirectory, done);
-	});
-	beforeEach(done => {
-		rimraf(outputDirectory, done);
+	beforeEach((done) => {
+		rimraf(cacheDirectory, () => {
+			rimraf(outputDirectory, () => {
+				rimraf(inputDirectory, () => {
+					fs.mkdir(inputDirectory, { recursive: true }, done);
+				});
+			});
+		});
 	});
 
-	beforeEach(done => {
-		rimraf(inputDirectory, done);
-	});
-	beforeEach(done => {
-		fs.mkdir(inputDirectory, { recursive: true }, done);
-	});
 	it("should capture loader and config dependencies", async () => {
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "package.json"),

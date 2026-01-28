@@ -9,10 +9,13 @@ A manifest is created which includes mappings from module names to internal ids.
 ### webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../../");
+"use strict";
 
-module.exports = {
+const path = require("path");
+const webpack = require("../../../");
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
@@ -28,6 +31,8 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # example-vendor
@@ -41,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_bef1463383efb1c65306;
+var vendor_lib_1fb982cf4f66bf2251ee;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -68,7 +73,7 @@ module.exports = __webpack_require__;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "square": () => (/* binding */ square)
+/* harmony export */   square: () => (/* binding */ square)
 /* harmony export */ });
 function square(n) {
 	return n * n;
@@ -92,6 +97,12 @@ function square(n) {
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -147,7 +158,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_bef1463383efb1c65306 = __webpack_exports__;
+/******/ 	vendor_lib_1fb982cf4f66bf2251ee = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -156,7 +167,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_bef1463383efb1c65306","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_1fb982cf4f66bf2251ee","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -164,7 +175,7 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.68 KiB [emitted] (name: main)
+asset vendor.js 3.94 KiB [emitted] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 670 bytes 3 modules
@@ -173,13 +184,13 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime)
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset vendor.js 653 bytes [emitted] [minimized] (name: main)
+asset vendor.js 647 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 670 bytes 3 modules
@@ -187,5 +198,5 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime)
   dll main 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

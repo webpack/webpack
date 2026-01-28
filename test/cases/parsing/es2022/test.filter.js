@@ -1,7 +1,6 @@
-module.exports = function (config) {
-	// terser doesn't support static {}
-	if (config.mode === "production") return false;
+"use strict";
 
+module.exports = function (config) {
 	try {
 		eval("class A { static {} }");
 		return true;

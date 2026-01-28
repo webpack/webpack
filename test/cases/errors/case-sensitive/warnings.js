@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/There are multiple modules with names that only differ in casing/,

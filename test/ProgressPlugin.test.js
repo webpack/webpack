@@ -2,9 +2,9 @@
 
 require("./helpers/warmup-webpack");
 
-const _ = require("lodash");
 const path = require("path");
-const { createFsFromVolume, Volume } = require("memfs");
+const _ = require("lodash");
+const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
@@ -31,7 +31,7 @@ const createMultiCompiler = (progressOptions, configOptions) => {
 	return compiler;
 };
 
-const createSimpleCompiler = progressOptions => {
+const createSimpleCompiler = (progressOptions) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js",
@@ -51,7 +51,7 @@ const createSimpleCompiler = progressOptions => {
 	return compiler;
 };
 
-const createSimpleCompilerWithCustomHandler = options => {
+const createSimpleCompilerWithCustomHandler = (options) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js"
@@ -68,11 +68,11 @@ const createSimpleCompilerWithCustomHandler = options => {
 	return compiler;
 };
 
-const getLogs = logsStr => logsStr.split(/\r/).filter(v => !(v === " "));
+const getLogs = (logsStr) => logsStr.split(/\r/).filter((v) => v !== " ");
 
-const runCompilerAsync = compiler =>
+const runCompilerAsync = (compiler) =>
 	new Promise((resolve, reject) => {
-		compiler.run(err => {
+		compiler.run((err) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -81,7 +81,7 @@ const runCompilerAsync = compiler =>
 		});
 	});
 
-describe("ProgressPlugin", function () {
+describe("ProgressPlugin", () => {
 	let stderr;
 	let stdout;
 
@@ -89,12 +89,15 @@ describe("ProgressPlugin", function () {
 		stderr = captureStdio(process.stderr, true);
 		stdout = captureStdio(process.stdout, true);
 	});
+
 	afterEach(() => {
+		// eslint-disable-next-line no-unused-expressions
 		stderr && stderr.restore();
+		// eslint-disable-next-line no-unused-expressions
 		stdout && stdout.restore();
 	});
 
-	const nanTest = createCompiler => () => {
+	const nanTest = (createCompiler) => () => {
 		const compiler = createCompiler();
 
 		return runCompilerAsync(compiler).then(() => {
@@ -107,16 +110,18 @@ describe("ProgressPlugin", function () {
 		"should not contain NaN as a percentage when it is applied to Compiler",
 		nanTest(createSimpleCompiler)
 	);
+
 	it(
 		"should not contain NaN as a percentage when it is applied to MultiCompiler",
 		nanTest(createMultiCompiler)
 	);
+
 	it(
 		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
 
-	it("should start print only on call run/watch", done => {
+	it("should start print only on call run/watch", (done) => {
 		const compiler = createSimpleCompiler();
 
 		const logs = getLogs(stderr.toString());
@@ -157,7 +162,7 @@ describe("ProgressPlugin", function () {
 		});
 	});
 
-	const monotonicTest = createCompiler => () => {
+	const monotonicTest = (createCompiler) => () => {
 		const handlerCalls = [];
 		const compiler = createCompiler({
 			handler: (p, ...args) => {
@@ -182,13 +187,15 @@ describe("ProgressPlugin", function () {
 		"should have monotonic increasing progress",
 		monotonicTest(createSimpleCompiler)
 	);
+
 	it(
 		"should have monotonic increasing progress (multi compiler)",
 		monotonicTest(createMultiCompiler)
 	);
+
 	it(
 		"should have monotonic increasing progress (multi compiler, parallelism)",
-		monotonicTest(o => createMultiCompiler(o, { parallelism: 1 }))
+		monotonicTest((o) => createMultiCompiler(o, { parallelism: 1 }))
 	);
 
 	it("should not print lines longer than stderr.columns", () => {

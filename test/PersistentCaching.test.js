@@ -1,10 +1,12 @@
+"use strict";
+
 require("./helpers/warmup-webpack");
 
+const fs = require("fs");
 const path = require("path");
 const util = require("util");
-const fs = require("fs");
-const rimraf = require("rimraf");
 const vm = require("vm");
+const rimraf = require("rimraf");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -46,11 +48,11 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	beforeEach(done => {
+	beforeEach((done) => {
 		rimraf(tempPath, done);
 	});
 
-	const updateSrc = async data => {
+	const updateSrc = async (data) => {
 		const ts = new Date(Date.now() - 10000);
 		await mkdir(srcPath, { recursive: true });
 		for (const key of Object.keys(data)) {
@@ -63,6 +65,7 @@ describe("Persistent Caching", () => {
 	const compile = async (configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
+
 			webpack(
 				{
 					...config,
@@ -71,20 +74,31 @@ describe("Persistent Caching", () => {
 				},
 				(err, stats) => {
 					if (err) return reject(err);
-					if (stats.hasErrors())
+					if (stats.hasErrors()) {
 						return reject(stats.toString({ preset: "errors-only" }));
+					}
 					resolve(stats);
 				}
 			);
 		});
 
+	const getCacheFileTimes = async () => {
+		const cacheFiles = (await readdir(cachePath)).sort();
+		return new Map(
+			cacheFiles.map((f) => [
+				f,
+				fs.statSync(path.join(cachePath, f)).mtime.toString()
+			])
+		);
+	};
+
 	const execute = () => {
 		const cache = {};
-		const require = name => {
+		const require = (name) => {
 			if (cache[name]) return cache[name].exports;
 			if (!name.endsWith(".js")) name += ".js";
 			const p = path.resolve(outputPath, name);
-			const source = fs.readFileSync(p, "utf-8");
+			const source = fs.readFileSync(p, "utf8");
 			const context = {};
 			const fn = vm.runInThisContext(
 				`(function(require, module, exports) { ${source} })`,
@@ -157,9 +171,9 @@ export { style };
 			"e.js": 'import "lodash";'
 		};
 		await updateSrc(data);
-		const c = items => {
+		const c = (items) => {
 			const entry = {};
-			for (const item of items.split("")) entry[item] = `./src/${item}.js`;
+			for (const item of items) entry[item] = `./src/${item}.js`;
 			return compile({ entry, cache: { compression: false } });
 		};
 		await c("abcde");
@@ -181,7 +195,9 @@ export { style };
 			"lib2.js": "export default 21"
 		};
 		await updateSrc(data);
+
 		const webpack = require("../");
+
 		const configAdditions = {
 			plugins: [
 				new webpack.container.ModuleFederationPlugin({
@@ -224,11 +240,7 @@ sum([1,2,3])
 			`
 		});
 		await compile({ entry: "./src/main.js" });
-		const firstCacheFiles = (await readdir(cachePath)).sort();
-		// cSpell:words Mtimes
-		const firstMtimes = firstCacheFiles.map(
-			f => fs.statSync(path.join(cachePath, f)).mtime
-		);
+		const firstCacheFileTimes = await getCacheFileTimes();
 
 		await updateSrc({
 			"main.js": `
@@ -242,11 +254,29 @@ import 'lodash';
 				readonly: true
 			}
 		});
-		const cacheFiles = (await readdir(cachePath)).sort();
-		expect(cacheFiles).toStrictEqual(firstCacheFiles);
-		expect(
-			firstCacheFiles.map(f => fs.statSync(path.join(cachePath, f)).mtime)
-			// cSpell:words Mtimes
-		).toStrictEqual(firstMtimes);
+		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
+	}, 20000);
+
+	it("should not invalidate cache files if timestamps changed with dynamic import()", async () => {
+		const configAdditions = {
+			entry: "./src/main.js",
+			snapshot: {
+				resolve: { hash: true },
+				module: { hash: true },
+				contextModule: { hash: true }
+			}
+		};
+		await updateSrc({
+			"newer.js": "export default 2;",
+			// eslint-disable-next-line no-template-curly-in-string
+			"main.js": 'const f = "newer.js"; import(`./${f}`);'
+		});
+		await compile(configAdditions);
+		const firstCacheFileTimes = await getCacheFileTimes();
+
+		await utimes(path.resolve(srcPath, "newer.js"), new Date(), new Date());
+
+		await compile(configAdditions);
+		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 });

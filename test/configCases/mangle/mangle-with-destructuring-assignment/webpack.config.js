@@ -1,4 +1,7 @@
-// const { getRuntimeKey } = require("../../../../lib/util/runtime");
+"use strict";
+
+/** @typedef {import("webpack").CodeGenerationResults} CodeGenerationResults */
+/** @typedef {import("webpack-sources").Source} Source */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -20,17 +23,18 @@ module.exports = {
 		function getJsonCodeGeneratedSource(compiler) {
 			compiler.hooks.compilation.tap(
 				getJsonCodeGeneratedSource.name,
-				compilation => {
+				(compilation) => {
 					compilation.hooks.processAssets.tap(
 						getJsonCodeGeneratedSource.name,
 						() => {
 							for (const module of compilation.modules) {
 								if (module.type === "json") {
-									const { sources } = compilation.codeGenerationResults.get(
-										module,
-										"main"
-									);
-									const source = sources.get("javascript");
+									const { sources } =
+										/** @type {CodeGenerationResults} */
+										(compilation.codeGenerationResults).get(module, "main");
+									const source =
+										/** @type {Source} */
+										(sources.get("javascript"));
 									const file = compilation.getAssetPath("[name].js", {
 										filename: `${module
 											.readableIdentifier(compilation.requestShortener)

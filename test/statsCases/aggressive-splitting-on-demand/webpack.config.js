@@ -1,4 +1,8 @@
-var webpack = require("../../../");
+"use strict";
+
+const path = require("path");
+const webpack = require("../../../");
+
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
@@ -14,7 +18,7 @@ module.exports = {
 			maxSize: 2500
 		})
 	],
-	recordsInputPath: `${__dirname}/input-records.json`,
+	recordsInputPath: path.resolve(__dirname, "./input-records.json"),
 	// recordsOutputPath: __dirname + "/records.json",
 	stats: {
 		chunks: true,

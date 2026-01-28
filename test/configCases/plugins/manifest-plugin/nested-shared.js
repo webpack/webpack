@@ -1,0 +1,3 @@
+function doSomething() {}
+
+doSomething();

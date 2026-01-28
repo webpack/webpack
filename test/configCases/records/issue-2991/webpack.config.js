@@ -1,6 +1,8 @@
-var path = require("path");
+"use strict";
 
-/** @type {function(any, any): import("../../../../").Configuration} */
+const path = require("path");
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { testPath }) => ({
 	entry: "./test",
 	recordsOutputPath: path.resolve(testPath, "records.json"),

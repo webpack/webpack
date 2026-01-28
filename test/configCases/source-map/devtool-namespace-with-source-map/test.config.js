@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["entry-a-bundle.js", "entry-b-bundle.js"];
 	}
 };

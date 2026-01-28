@@ -1,8 +1,12 @@
-const path = require("path");
+"use strict";
+
 const fs = require("fs");
+const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {(number, any) => import("../../../../").Configuration} */
+/** @typedef {import("../../../../").Configuration} Configuration */
+
+/** @type {(i: number, options: Partial<Configuration>) => Configuration} */
 const common = (i, options) => ({
 	target: "web",
 	output: {
@@ -26,7 +30,7 @@ const common = (i, options) => ({
 	plugins: [
 		{
 			apply(compiler) {
-				compiler.hooks.compilation.tap("Test", compilation => {
+				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.processAssets.tap(
 						{
 							name: "copy-webpack-plugin",

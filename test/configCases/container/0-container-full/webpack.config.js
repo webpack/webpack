@@ -1,3 +1,5 @@
+"use strict";
+
 const { ModuleFederationPlugin } = require("../../../../").container;
 
 /** @type {ConstructorParameters<typeof ModuleFederationPlugin>[0]} */

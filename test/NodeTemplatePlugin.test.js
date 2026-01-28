@@ -6,9 +6,9 @@ const path = require("path");
 
 // cspell:word nodetest
 describe("NodeTemplatePlugin", () => {
-	jest.setTimeout(20000);
-	it("should compile and run a simple module", done => {
+	it("should compile and run a simple module", (done) => {
 		const webpack = require("..");
+
 		webpack(
 			{
 				mode: "production",
@@ -27,13 +27,14 @@ describe("NodeTemplatePlugin", () => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
 				expect(stats.hasWarnings()).toBe(false);
-				// eslint-disable-next-line n/no-missing-require
+
 				const result = require("./js/NodeTemplatePlugin/result").abc;
+
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
-				result.loadChunk(456, chunk => {
+				result.loadChunk(456, (chunk) => {
 					expect(chunk).toBe(123);
-					result.loadChunk(567, chunk => {
+					result.loadChunk(567, (chunk) => {
 						expect(chunk).toEqual({
 							a: 1
 						});
@@ -44,8 +45,9 @@ describe("NodeTemplatePlugin", () => {
 		);
 	});
 
-	it("should compile and run a simple module in single mode", done => {
+	it("should compile and run a simple module in single mode", (done) => {
 		const webpack = require("..");
+
 		webpack(
 			{
 				mode: "production",
@@ -69,15 +71,16 @@ describe("NodeTemplatePlugin", () => {
 			(err, stats) => {
 				if (err) return err;
 				expect(stats.hasErrors()).toBe(false);
-				// eslint-disable-next-line n/no-missing-require
+
 				const result = require("./js/NodeTemplatePluginSingle/result2");
+
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
 				const sameTick = true;
-				result.loadChunk(456, chunk => {
+				result.loadChunk(456, (chunk) => {
 					expect(chunk).toBe(123);
 					expect(sameTick).toBe(true);
-					result.loadChunk(567, chunk => {
+					result.loadChunk(567, (chunk) => {
 						expect(chunk).toEqual({
 							a: 1
 						});

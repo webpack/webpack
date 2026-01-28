@@ -1,5 +1,7 @@
-const path = require("path");
+"use strict";
+
 const fs = require("fs");
+const path = require("path");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
@@ -13,14 +15,14 @@ const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
-/** @type {Array<SizeInfo | undefined>} */
+/** @type {(SizeInfo | undefined)[]} */
 const lazySizes = [];
 
 /**
- * @param {Array<any>} data data
+ * @param {(Buffer | (() => Promise<Buffer[]>))[]} data data
  * @returns {Promise<SizeInfo>} size info
  */
-const captureSize = async data => {
+const captureSize = async (data) => {
 	let size = 0;
 	let lazySize = 0;
 	for (const b of data) {
@@ -43,7 +45,7 @@ const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
 /**
- * @param {Array<any>} data data
+ * @param {EXPECTED_ANY[]} data data
  * @param {string} indent indent
  * @returns {Promise<void>} promise
  */
@@ -76,7 +78,7 @@ const printData = async (data, indent) => {
 	/**
 	 * @param {string} content content
 	 */
-	const printLine = content => {
+	const printLine = (content) => {
 		console.log(`${indent}${content}`);
 	};
 	printLine(`Version: ${read()}`);
@@ -149,8 +151,8 @@ const printData = async (data, indent) => {
 			printLine(String(item));
 		}
 	}
-	const refCounters = Array.from(referencedValuesCounters);
-	refCounters.sort(([a, A], [b, B]) => B - A);
+	const refCounters = [...referencedValuesCounters];
+	refCounters.sort(([_a, A], [_b, B]) => B - A);
 	printLine("SUMMARY: top references:");
 	for (const [ref, count] of refCounters.slice(10)) {
 		const value = referencedValues.get(ref);

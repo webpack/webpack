@@ -1,5 +1,5 @@
-var supportsTemplateStrings = require("../../../helpers/supportsTemplateStrings");
+"use strict";
 
-module.exports = function (config) {
-	return supportsTemplateStrings();
-};
+const supportsTemplateStrings = require("../../../helpers/supportsTemplateStrings");
+
+module.exports = () => supportsTemplateStrings();

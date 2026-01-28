@@ -42,13 +42,13 @@ document.body.appendChild(pre);
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const { HotModuleReplacementPlugin } = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration & { devServer: Record<string, EXPECTED_ANY> }} */
+const config = {
 	mode: "development",
-	entry: {
-		main: "./example.js"
-	},
 	cache: {
 		type: "filesystem",
 		idleTimeout: 5000
@@ -64,4 +64,6 @@ module.exports = {
 	},
 	plugins: [new HotModuleReplacementPlugin()]
 };
+
+module.exports = config;
 ```

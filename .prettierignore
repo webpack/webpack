@@ -3,7 +3,11 @@ package.json
 # Ignore some test files
 test/**/*.*
 !test/*.js
+!test/*.cjs
+!test/*.mjs
 !test/**/webpack.config.js
+!test/**/webpack.config.cjs
+!test/**/webpack.config.mjs
 !test/**/test.config.js
 !test/**/test.filter.js
 !test/**/errors.js
@@ -12,6 +16,9 @@ test/**/*.*
 !test/**/infrastructure-log.js
 !test/*.md
 !test/helpers/*.*
+!test/runner/**/*.*
+!test/benchmarkCases/**/*.mjs
+test/js/**/*.*
 
 # Ignore some folders
 benchmark/
@@ -19,16 +26,17 @@ coverage/
 
 # Ignore generated files
 *.check.js
-
-# Ignore not supported files
-*.d.ts
-!module.d.ts
+*.check.d.ts
+types.d.ts
+declarations/WebpackOptions.d.ts
 
 # Ignore precompiled schemas
 schemas/**/*.check.js
 
 # Ignore example fixtures
-examples/
+examples/**/*
+!examples/*
 !examples/**/webpack.config.js
+!examples/**/test.filter.js
 
 .vscode/**/*.*

@@ -4,10 +4,13 @@ const ContextModule = require("../lib/ContextModule");
 
 describe("contextModule", () => {
 	let contextModule;
+	/** @type {string} */
 	let request;
+
 	beforeEach(() => {
 		request = "/some/request";
 	});
+
 	describe("#identifier", () => {
 		it("returns an safe identifier for this module", () => {
 			contextModule = new ContextModule(() => {}, {

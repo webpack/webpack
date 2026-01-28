@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const url = require("url");
 
@@ -8,7 +10,7 @@ module.exports = {
 			delete scope.document;
 			delete scope.self;
 		} else {
-			scope.fetch = resource =>
+			scope.fetch = (resource) =>
 				new Promise((resolve, reject) => {
 					fs.readFile(url.fileURLToPath(resource), (err, data) => {
 						if (err) {
@@ -17,7 +19,6 @@ module.exports = {
 						}
 
 						return resolve(
-							// eslint-disable-next-line n/no-unsupported-features/node-builtins
 							new Response(data, {
 								headers: { "Content-Type": "application/wasm" }
 							})

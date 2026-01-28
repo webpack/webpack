@@ -2,14 +2,16 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
+/** @typedef {import("../../../../../").Compiler} Compiler */
+
 /**
  * @returns {import("http").Server} server instance
  */
 function createServer() {
 	const server = http.createServer((req, res) => {
 		let file;
-		const pathname = "." + req.url.replace(/\?.*$/, "");
-		if (req.url.endsWith("?no-cache")) {
+		const pathname = "." + /** @type {string} */ (req.url).replace(/\?.*$/, "");
+		if (/** @type {string} */ (req.url).endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
 		} else {
 			res.setHeader("Cache-Control", "public, immutable, max-age=600");
@@ -52,23 +54,28 @@ class ServerPlugin {
 	}
 
 	/**
-	 * @param {import("../../../../../").Compiler} compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.beforeRun.tapPromise(
 			"ServerPlugin",
-			async (compiler, callback) => {
+			async () => {
 				this.refs++;
 				if (!this.server) {
 					this.server = createServer();
-					await new Promise((resolve, reject) => {
-						this.server.listen(this.port, err => {
-							if (err) {
-								reject(err);
-							} else {
-								resolve();
-							}
-						});
+					await new Promise(
+						/**
+						 * @param {(value: void) => void} resolve resolve
+						 * @param {(reason?: Error) => void} _reject reject
+						 */
+						(resolve, _reject) => {
+							/** @type {import("http").Server} */
+							(this.server).listen(
+								this.port,
+								() => {
+									resolve();
+								}
+							);
 					});
 				}
 			}

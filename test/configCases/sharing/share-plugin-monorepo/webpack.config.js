@@ -1,9 +1,11 @@
-// eslint-disable-next-line n/no-unpublished-require
+"use strict";
+
+const path = require("path");
 const { SharePlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	context: `${__dirname}/app1`,
+	context: path.resolve(__dirname, "./app1"),
 	plugins: [
 		new SharePlugin({
 			shared: {

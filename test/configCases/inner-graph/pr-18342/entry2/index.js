@@ -1,7 +1,6 @@
 it("entry2 should compile and run", () => {
 	import(/* webpackChunkName: "chunk-reason-webpackChunkName" */'../common').then(common => {
-		common.default()
-		console.log('entry2');
+		common.default();
 		expect(true).toBe(true)
 	})
 });

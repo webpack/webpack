@@ -1,7 +1,9 @@
-const { getScheme, getProtocol } = require("../lib/util/URLAbsoluteSpecifier");
+"use strict";
+
+const { getProtocol, getScheme } = require("../lib/util/URLAbsoluteSpecifier");
 
 /**
- * @type {Array<{specifier: string, expected: string|undefined}>}
+ * @type {{ specifier: string, expected: string | undefined }[]}
  */
 const samples = [
 	{

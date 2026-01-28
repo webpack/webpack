@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
@@ -15,6 +18,8 @@ module.exports = {
 				}
 			}
 		},
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;

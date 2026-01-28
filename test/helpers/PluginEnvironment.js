@@ -1,6 +1,15 @@
+"use strict";
+
 module.exports = function PluginEnvironment() {
+	/**
+	 * @type {{ name: string, handler: EXPECTED_FUNCTION }[]}
+	 */
 	const events = [];
 
+	/**
+	 * @param {string} name the name
+	 * @param {EXPECTED_FUNCTION} handler the handler
+	 */
 	function addEvent(name, handler) {
 		events.push({
 			name,
@@ -8,13 +17,17 @@ module.exports = function PluginEnvironment() {
 		});
 	}
 
+	/**
+	 * @param {string} hookName a hook name
+	 * @returns {string} an event name
+	 */
 	function getEventName(hookName) {
 		// Convert a hook name to an event name.
 		// e.g. `buildModule` -> `build-module`
-		return hookName.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`);
+		return hookName.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 	}
 
-	this.getEnvironmentStub = function () {
+	this.getEnvironmentStub = function getEnvironmentStub() {
 		const hooks = new Map();
 		return {
 			plugin: addEvent,
@@ -49,7 +62,7 @@ module.exports = function PluginEnvironment() {
 		};
 	};
 
-	this.getEventBindings = function () {
+	this.getEventBindings = function getEventBindings() {
 		return events;
 	};
 };

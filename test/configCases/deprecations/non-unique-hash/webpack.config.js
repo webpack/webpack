@@ -1,3 +1,7 @@
+"use strict";
+
+/** @typedef {import("../../../../").Chunk} Chunk */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -13,13 +17,14 @@ module.exports = {
 		concatenateModules: false
 	},
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.afterModuleHash.tap("Test", () => {
 					const hashes = [];
 					expect(() => {
 						for (const module of compilation.chunkGraph.getChunkModulesIterable(
-							compilation.namedChunks.get("a")
+							/** @type {Chunk} */
+							(compilation.namedChunks.get("a"))
 						)) {
 							hashes.push(module.hash);
 						}

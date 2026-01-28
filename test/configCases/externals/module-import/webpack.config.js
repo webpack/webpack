@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	target: ["web", "es2020"],
@@ -14,17 +16,15 @@ module.exports = {
 		main: "./index"
 	},
 	optimization: {
-		concatenateModules: true
+		concatenateModules: true,
+		usedExports: true
 	},
 	experiments: {
 		outputModule: true
 	},
 	externalsType: "module-import",
 	externals: [
-		function (
-			{ context, request, contextInfo, getResolve, dependencyType },
-			callback
-		) {
+		function externals({ request }, callback) {
 			if (request === "external2") {
 				return callback(null, "node-commonjs external2");
 			}

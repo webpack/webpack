@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	output: {
 		webassemblyModuleFilename: "[hash].wasm",
@@ -19,3 +22,5 @@ module.exports = {
 		asyncWebAssembly: true
 	}
 };
+
+module.exports = config;

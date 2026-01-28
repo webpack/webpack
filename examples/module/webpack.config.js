@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	output: {
 		module: true,
 		library: {
@@ -13,3 +16,5 @@ module.exports = {
 		outputModule: true
 	}
 };
+
+module.exports = config;

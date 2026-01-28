@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["split-foo.js", "foo.js", "main.js"];
 	}
 };

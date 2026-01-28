@@ -62,11 +62,15 @@ document.querySelector('#app').innerHTML = [toml, yaml, json].map(data => `
 # webpack.config.js
 
 ```javascript
-const toml = require("toml");
+"use strict";
+
 const json5 = require("json5");
+const toml = require("toml");
+// @ts-expect-error no types for yamljs
 const yaml = require("yamljs");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	module: {
 		rules: [
 			{
@@ -93,6 +97,8 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;
 ```
 
 # js/output.js
@@ -119,7 +125,7 @@ module.exports = {
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ }),
 /* 2 */
@@ -139,7 +145,7 @@ module.exports = JSON.parse('{"title":"TOML Example","owner":{"name":"Tom Presto
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ }),
 /* 3 */
@@ -158,7 +164,7 @@ module.exports = JSON.parse('{"title":"YAML Example","owner":{"name":"Tom Presto
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Preston-Werner","organization":"GitHub","bio":"GitHub Cofounder & CEO\\nLikes tater tots and beer.","dob":"1979-05-27T07:32:00.000Z"}}');
 
 /***/ })
 /******/ 	]);
@@ -177,6 +183,12 @@ module.exports = JSON.parse('{"title":"JSON5 Example","owner":{"name":"Tom Prest
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -246,7 +258,7 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 5.87 KiB [emitted] (name: main)
+asset output.js 6.17 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
@@ -255,5 +267,5 @@ chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

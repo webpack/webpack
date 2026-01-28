@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	module: {
 		rules: [
@@ -12,3 +15,5 @@ module.exports = {
 		extensions: [".web.coffee", ".web.js", ".coffee", ".js"]
 	}
 };
+
+module.exports = config;

@@ -1,7 +1,9 @@
+"use strict";
+
 const findOutputFiles = require("../../../helpers/findOutputFiles");
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		const async1 = findOutputFiles(options, /^async.async_js.+.js/)[0];
 		const async2 = findOutputFiles(options, /^async.async_css.+.js/)[0];
 		const bundle = findOutputFiles(options, /^bundle.+.js/)[0];

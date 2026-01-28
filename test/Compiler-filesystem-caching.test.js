@@ -9,8 +9,6 @@ const rimraf = require("rimraf");
 let fixtureCount = 0;
 
 describe("Compiler (filesystem caching)", () => {
-	jest.setTimeout(5000);
-
 	const tempFixturePath = path.join(
 		__dirname,
 		"fixtures",
@@ -19,6 +17,7 @@ describe("Compiler (filesystem caching)", () => {
 
 	function compile(entry, onSuccess, onError) {
 		const webpack = require("..");
+
 		const options = webpack.config.getNormalizedWebpackOptions({});
 		options.cache = {
 			type: "filesystem",
@@ -43,16 +42,16 @@ describe("Compiler (filesystem caching)", () => {
 
 		const isBigIntSupported = typeof BigInt !== "undefined";
 		const isErrorCaseSupported =
-			// eslint-disable-next-line n/no-unsupported-features/es-syntax
 			typeof new Error("test", { cause: new Error("cause") }).cause !==
 			"undefined";
+		const isAggregateErrorSupported = typeof AggregateError !== "undefined";
 
 		options.plugins = [
 			{
 				apply(compiler) {
 					const name = "TestCachePlugin";
 
-					compiler.hooks.thisCompilation.tap(name, compilation => {
+					compiler.hooks.thisCompilation.tap(name, (compilation) => {
 						compilation.hooks.processAssets.tapPromise(
 							{
 								name,
@@ -68,31 +67,39 @@ describe("Compiler (filesystem caching)", () => {
 								const result = await cacheItem.getPromise(ident);
 
 								if (result) {
-									expect(result.number).toEqual(42);
-									expect(result.number1).toEqual(3.14);
-									expect(result.number2).toEqual(6.2);
-									expect(result.string).toEqual("string");
+									expect(result.number).toBe(42);
+									expect(result.number1).toBe(3.14);
+									expect(result.number2).toBe(6.2);
+									expect(result.string).toBe("string");
 
 									if (isErrorCaseSupported) {
-										expect(result.error.cause.message).toEqual("cause");
+										expect(result.error.cause.message).toBe("cause");
 										expect(result.error1.cause.string).toBe("string");
 										expect(result.error1.cause.number).toBe(42);
 									}
 
-									if (isBigIntSupported) {
-										expect(result.bigint).toEqual(5n);
-										expect(result.bigint1).toEqual(124n);
-										expect(result.bigint2).toEqual(125n);
-										expect(result.bigint3).toEqual(12345678901234567890n);
-										expect(result.bigint4).toEqual(5n);
-										expect(result.bigint5).toEqual(1000000n);
-										expect(result.bigint6).toEqual(128n);
-										expect(result.bigint7).toEqual(2147483647n);
-										expect(result.obj.foo).toBe(BigInt(-10));
-										expect(Array.from(result.set)).toEqual([
-											BigInt(1),
-											BigInt(2)
+									if (isAggregateErrorSupported) {
+										expect(result.aggregateError.errors).toEqual([
+											new Error("first", { cause: "nested cause" }),
+											"second"
 										]);
+										expect(result.aggregateError.message).toBe(
+											"aggregate error"
+										);
+										expect(result.aggregateError.cause.message).toBe("cause");
+									}
+
+									if (isBigIntSupported) {
+										expect(result.bigint).toBe(5n);
+										expect(result.bigint1).toBe(124n);
+										expect(result.bigint2).toBe(125n);
+										expect(result.bigint3).toBe(12345678901234567890n);
+										expect(result.bigint4).toBe(5n);
+										expect(result.bigint5).toBe(1000000n);
+										expect(result.bigint6).toBe(128n);
+										expect(result.bigint7).toBe(2147483647n);
+										expect(result.obj.foo).toBe(BigInt(-10));
+										expect([...result.set]).toEqual([BigInt(1), BigInt(2)]);
 										expect(result.arr).toEqual([256n, 257n, 258n]);
 									}
 
@@ -107,14 +114,20 @@ describe("Compiler (filesystem caching)", () => {
 								storeValue.string = "string";
 
 								if (isErrorCaseSupported) {
-									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error = new Error("error", {
 										cause: new Error("cause")
 									});
-									// eslint-disable-next-line n/no-unsupported-features/es-syntax
 									storeValue.error1 = new Error("error", {
 										cause: { string: "string", number: 42 }
 									});
+								}
+
+								if (isAggregateErrorSupported) {
+									storeValue.aggregateError = new AggregateError(
+										[new Error("first", { cause: "nested cause" }), "second"],
+										"aggregate error",
+										{ cause: new Error("cause") }
+									);
 								}
 
 								if (isBigIntSupported) {
@@ -143,7 +156,7 @@ describe("Compiler (filesystem caching)", () => {
 			const c = webpack(options);
 			c.hooks.compilation.tap(
 				"CompilerCachingTest",
-				compilation => (compilation.bail = true)
+				(compilation) => (compilation.bail = true)
 			);
 			c.run((err, stats) => {
 				if (err) throw err;
@@ -171,13 +184,20 @@ describe("Compiler (filesystem caching)", () => {
 		};
 	}
 
+	/**
+	 * @returns {void}
+	 */
 	function cleanup() {
 		rimraf.sync(`${tempFixturePath}*`);
 	}
 
 	beforeAll(cleanup);
+
 	afterAll(cleanup);
 
+	/**
+	 * @returns {{ rootPath: string, usesAssetFilepath: string, svgFilepath: string }} temp fixture paths
+	 */
 	function createTempFixture() {
 		const fixturePath = `${tempFixturePath}-${fixtureCount}`;
 		const usesAssetFilepath = path.join(fixturePath, "uses-asset.js");
@@ -197,19 +217,19 @@ describe("Compiler (filesystem caching)", () => {
 		fixtureCount++;
 		return {
 			rootPath: fixturePath,
-			usesAssetFilepath: usesAssetFilepath,
-			svgFilepath: svgFilepath
+			usesAssetFilepath,
+			svgFilepath
 		};
 	}
 
-	it("should compile again when cached asset has changed but loader output remains the same", done => {
+	it("should compile again when cached asset has changed but loader output remains the same", (done) => {
 		const tempFixture = createTempFixture();
 
-		const onError = error => done(error);
+		const onError = (error) => done(error);
 
 		const helper = compile(
 			tempFixture.usesAssetFilepath,
-			stats => {
+			(stats) => {
 				// Not cached the first time
 				expect(stats.assets[0].name).toBe("bundle.js");
 				expect(stats.assets[0].emitted).toBe(true);
@@ -217,7 +237,7 @@ describe("Compiler (filesystem caching)", () => {
 				expect(stats.assets[1].name).toMatch(/\w+\.svg$/);
 				expect(stats.assets[0].emitted).toBe(true);
 
-				helper.runAgain(stats => {
+				helper.runAgain((stats) => {
 					// Cached the second run
 					expect(stats.assets[0].name).toBe("bundle.js");
 					expect(stats.assets[0].emitted).toBe(false);
@@ -232,7 +252,7 @@ describe("Compiler (filesystem caching)", () => {
 
 					fs.writeFileSync(tempFixture.svgFilepath, svgContent);
 
-					helper.runAgain(stats => {
+					helper.runAgain((stats) => {
 						// Still cached after file modification because loader always returns empty
 						expect(stats.assets[0].name).toBe("bundle.js");
 						expect(stats.assets[0].emitted).toBe(false);

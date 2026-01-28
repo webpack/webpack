@@ -1,19 +1,19 @@
 "use strict";
 
 const {
+	parseRange,
 	parseVersion,
 	parseVersionRuntimeCode,
-	versionLt,
-	versionLtRuntimeCode,
-	parseRange,
 	rangeToString,
 	rangeToStringRuntimeCode,
 	satisfy,
-	satisfyRuntimeCode
+	satisfyRuntimeCode,
+	versionLt,
+	versionLtRuntimeCode
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {
-	const createRuntimeFunction = runtimeCodeFunction => {
+	const createRuntimeFunction = (runtimeCodeFunction) => {
 		const runtimeFunction = runtimeCodeFunction({
 			basicFunction: (args, body) => `(${args}) => {\n${body.join("\n")}\n}`,
 			supportsArrowFunction: () => true
@@ -128,6 +128,7 @@ describe("SemVer", () => {
 	});
 
 	describe("parseRange", () => {
+		/** @type {Record<string, string[]>} */
 		const cases = {
 			"5 || 6 || 7.x.x": ["5.x.x || 6.x || 7"],
 			"1 - 2": ["1   -   2"],
@@ -153,15 +154,17 @@ describe("SemVer", () => {
 		};
 		for (const key of Object.keys(cases)) {
 			describe(key, () => {
-				for (const c of cases[key])
+				for (const c of cases[key]) {
 					it(`should be equal ${c}`, () => {
 						expect(parseRange(c)).toEqual(parseRange(key));
 					});
+				}
 			});
 		}
 	});
 
 	describe("rangeToString", () => {
+		/** @type {Record<string | number, string>} */
 		const cases = {
 			"*": "*",
 			1: "^1",
@@ -206,6 +209,7 @@ describe("SemVer", () => {
 	});
 
 	describe("satisfies", () => {
+		/** @type {Record<string, string[]>} */
 		const cases = {
 			// table cases
 			">=1": [
@@ -567,6 +571,7 @@ describe("SemVer", () => {
 				it(`should be able to parse ${range}`, () => {
 					parseRange(range);
 				});
+
 				for (const item of cases[range]) {
 					for (const [name, fn] of [
 						["normal", satisfy],

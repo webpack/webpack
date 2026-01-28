@@ -1,9 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "browserslist: ie 9",
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": false,
@@ -16,6 +18,8 @@ module.exports = {
 			  "dynamicImportInWorker": false,
 			  "forOf": false,
 			  "globalThis": false,
+			  "importMetaDirnameAndFilename": false,
+			  "methodShorthand": false,
 			  "module": false,
 			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,

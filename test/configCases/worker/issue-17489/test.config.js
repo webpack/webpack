@@ -1,3 +1,5 @@
+"use strict";
+
 let outputDirectory;
 
 module.exports = {
@@ -10,12 +12,12 @@ module.exports = {
 		scope.AudioContext = class AudioContext {
 			constructor() {
 				this.audioWorklet = {
-					addModule: url => Promise.resolve(FakeWorker.bind(null, url))
+					addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
 				};
 			}
 		};
 	},
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		outputDirectory = options.output.path;
 		return ["main.js"];
 	}

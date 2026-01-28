@@ -11,22 +11,26 @@ console.log("Hello World!");
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 
-module.exports = {
-    output: {
+/** @type {import("webpack").Configuration} */
+const config = {
+	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "output.js"
 	},
 	stats: "summary"
 };
+
+module.exports = config;
 ```
 
 # dist/output.js
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -43,5 +47,5 @@ console.log("Hello World!");
 ## Production mode
 
 ```
-webpack 5.88.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

@@ -1,6 +1,6 @@
 "use strict";
 
-var TestApplyEntryOptionPlugin = require("./TestApplyEntryOptionPlugin");
+const TestApplyEntryOptionPlugin = require("./TestApplyEntryOptionPlugin");
 
 /** @type {import("../../../").Configuration} */
 module.exports = {

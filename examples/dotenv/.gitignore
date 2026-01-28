@@ -1,0 +1,7 @@
+# Local environment files (should not be committed)
+.env.local
+.env.*.local
+
+# Build output
+dist/
+

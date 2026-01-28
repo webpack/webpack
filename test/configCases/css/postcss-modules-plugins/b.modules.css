@@ -1,0 +1,11 @@
+.b { color: red; }
+
+.hidden-d {
+	color: blue;
+}
+
+.b-last {
+	color: red;
+}
+
+:export { localvalue: red }

@@ -1,22 +1,14 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 
-var webpack = require("../../../../");
-var path = require("path");
-/** @type {function(any, any): import("../../../../").Configuration[]} */
+const path = require("path");
+const webpack = require("../../../../");
+const supportsAsync = require("../../../helpers/supportsAsync");
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
-	{
-		resolve: {
-			alias: {
-				library: path.resolve(testPath, "../0-create-library/esm.js")
-			}
-		},
-		plugins: [
-			new webpack.DefinePlugin({
-				NAME: JSON.stringify("esm")
-			})
-		]
-	},
 	{
 		entry: "./default-test-modern-module.js",
 		optimization: {
@@ -34,13 +26,13 @@ module.exports = (env, { testPath }) => [
 			/**
 			 * @this {Compiler} compiler
 			 */
-			function () {
+			function apply() {
 				/**
 				 * @param {Compilation} compilation compilation
 				 * @returns {void}
 				 */
-				const handler = compilation => {
-					compilation.hooks.afterProcessAssets.tap("testcase", assets => {
+				const handler = (compilation) => {
+					compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 						for (const asset of Object.keys(assets)) {
 							const source = assets[asset].source();
 							expect(source).not.toContain('"a"');
@@ -48,7 +40,7 @@ module.exports = (env, { testPath }) => [
 							expect(source).not.toContain('"non-external"');
 							// expect pure ESM export without webpack runtime
 							expect(source).not.toContain('"__webpack_exports__"');
-							expect(source).not.toContain('"__webpack_require__"');
+							expect(source).not.toContain(".exports=");
 						}
 					});
 				};
@@ -56,6 +48,113 @@ module.exports = (env, { testPath }) => [
 			}
 		]
 	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm")
+			})
+		]
+	},
+	{
+		entry: "./esm-with-commonjs",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-with-commonjs.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-with-commonjs")
+			})
+		]
+	},
+	{
+		entry: "./esm-with-commonjs",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-with-commonjs-avoid-entry-iife.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-with-commonjs")
+			})
+		]
+	},
+	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm-export.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export")
+			})
+		]
+	},
+	{
+		entry: "./module-export-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-export-no-concatenate-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-export-no-concatenate-modules.js")
+			})
+		]
+	},
+	...(supportsAsync()
+		? [
+				{
+					resolve: {
+						alias: {
+							library: path.resolve(
+								testPath,
+								"../0-create-library/esm-async.js"
+							)
+						}
+					},
+					plugins: [
+						new webpack.DefinePlugin({
+							NAME: JSON.stringify("esm-async")
+						})
+					]
+				},
+				{
+					resolve: {
+						alias: {
+							library: path.resolve(
+								testPath,
+								"../0-create-library/esm-async-no-concatenate-modules.js"
+							)
+						}
+					},
+					plugins: [
+						new webpack.DefinePlugin({
+							NAME: JSON.stringify("esm-async-no-concatenate-modules")
+						})
+					]
+				}
+			]
+		: []),
 	{
 		resolve: {
 			alias: {
@@ -68,6 +167,66 @@ module.exports = (env, { testPath }) => [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("esm-runtimeChunk")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-concatenateModules/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-concatenateModules")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-no-concatenateModules/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-no-concatenateModules")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-runtimeChunk-concatenateModules-splitChunks/main.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-runtimeChunk-concatenateModules-splitChunks")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-multiple-entry-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-multiple-entry-modules")
 			})
 		]
 	},
@@ -293,7 +452,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -310,7 +473,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-iife-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -327,7 +494,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external-eval.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -344,7 +515,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-external-eval-source-map.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -363,7 +538,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs-static-external.js"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -380,7 +559,11 @@ module.exports = (env, { testPath }) => [
 					testPath,
 					"../0-create-library/commonjs2-split-chunks/"
 				),
-				external: path.resolve(__dirname, "node_modules/external.js")
+				external: path.resolve(__dirname, "node_modules/external.js"),
+				"external-named": path.resolve(
+					__dirname,
+					"node_modules/external-named.js"
+				)
 			}
 		},
 		plugins: [
@@ -504,5 +687,63 @@ module.exports = (env, { testPath }) => [
 				NAME: JSON.stringify("entryC")
 			})
 		]
+	},
+	{
+		entry: "./esm-with-bundled-commonjs",
+		output: {
+			module: true
+		},
+		experiments: { outputModule: true },
+		externals: {
+			lib1: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-1.mjs"
+			),
+			lib2: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-2.mjs"
+			),
+			lib3: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-3.mjs"
+			),
+			lib4: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-4.mjs"
+			),
+			lib5: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-5.mjs"
+			),
+			lib6: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-6.mjs"
+			),
+			lib7: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-7.mjs"
+			),
+			lib8: path.resolve(
+				testPath,
+				"../0-create-library/commonjs-bundle-to-esm-8.mjs"
+			)
+		},
+		externalsType: "module-import",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-bundle-to-esm")
+			})
+		]
+	},
+	{
+		entry: "./esm-star-reexport-and-external",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-star-reexport-and-external.mjs"
+				)
+			}
+		}
 	}
 ];

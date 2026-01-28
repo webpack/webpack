@@ -58,15 +58,15 @@ exports.multiply = function multiply() {
   !*** ./increment.js ***!
   \**********************/
 /*! default exports */
-/*! export decrement [provided] [unused] [renamed to Mj] */
-/*! export increment [provided] [used in main] [renamed to nP] */
-/*! export incrementBy2 [provided] [unused] [renamed to pN] */
+/*! export decrement [provided] [unused] [renamed to Kt] */
+/*! export increment [provided] [used in main] [renamed to GV] */
+/*! export incrementBy2 [provided] [unused] [renamed to Bd] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 var __webpack_unused_export__;
-const add = (__webpack_require__(/*! ./math */ 2)/* .add */ .I);
-exports.nP = function increment(val) {
+const add = (__webpack_require__(/*! ./math */ 2)/* .add */ .W);
+exports.GV = function increment(val) {
 	return add(val, 1);
 };
 __webpack_unused_export__ = function incrementBy2(val) {
@@ -83,13 +83,13 @@ __webpack_unused_export__ = function decrement(val) {
   !*** ./math.js ***!
   \*****************/
 /*! default exports */
-/*! export add [provided] [used in main] [renamed to I] */
-/*! export multiply [provided] [unused] [renamed to J] */
+/*! export add [provided] [used in main] [renamed to W] */
+/*! export multiply [provided] [unused] [renamed to l] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports) => {
 
 var __webpack_unused_export__;
-exports.I = function add() {
+exports.W = function add() {
 	var sum = 0,
 		i = 0,
 		args = arguments,
@@ -130,6 +130,12 @@ __webpack_unused_export__ = function multiply() {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -158,7 +164,7 @@ var __webpack_exports__ = {};
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
-const inc = (__webpack_require__(/*! ./increment */ 1)/* .increment */ .nP);
+const inc = (__webpack_require__(/*! ./increment */ 1)/* .increment */ .GV);
 var a = 1;
 inc(a); // 2
 
@@ -172,14 +178,14 @@ inc(a); // 2
 
 ```javascript
 /*! For license information please see output.js.LICENSE.txt */
-(()=>{var r=[,(r,n,t)=>{const o=t(2).I;n.nP=function(r){return o(r,1)}},(r,n)=>{n.I=function(){for(var r=0,n=0,t=arguments,o=t.length;n<o;)r+=t[n++];return r}}],n={};(0,function t(o){var e=n[o];if(void 0!==e)return e.exports;var u=n[o]={exports:{}};return r[o](u,u.exports,t),u.exports}(1).nP)(1)})();
+(()=>{var r=[,(r,n,o)=>{const t=o(2).W;n.GV=function(r){return t(r,1)}},(r,n)=>{n.W=function(){for(var r=0,n=0,o=arguments,t=o.length;n<t;)r+=o[n++];return r}}],n={};(0,function o(t){var e=n[t];if(void 0!==e)return e.exports;if(void 0===r[t]){var i=new Error("Cannot find module '"+t+"'");throw i.code="MODULE_NOT_FOUND",i}var u=n[t]={exports:{}};return r[t](u,u.exports,o),u.exports}(1).GV)(1)})();
 ```
 
 # dist/without.js (same without tree shaking)
 
 ```javascript
 /*! For license information please see without.js.LICENSE.txt */
-(()=>{var n=[,(n,r,t)=>{const e=t(2).add;r.increment=function(n){return e(n,1)},r.incrementBy2=function(n){return e(n,2)},r.decrement=function(n){return e(n,1)}},(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n},r.multiply=function(){for(var n=0,r=arguments,t=r.length;n<t;)sum*=r[n++];return sum}}],r={};(0,function t(e){var u=r[e];if(void 0!==u)return u.exports;var o=r[e]={exports:{}};return n[e](o,o.exports,t),o.exports}(1).increment)(1)})();
+(()=>{var r=[,(r,n,t)=>{const e=t(2).add;n.increment=function(r){return e(r,1)},n.incrementBy2=function(r){return e(r,2)},n.decrement=function(r){return e(r,1)}},(r,n)=>{n.add=function(){for(var r=0,n=0,t=arguments,e=t.length;n<e;)r+=t[n++];return r},n.multiply=function(){for(var r=0,n=arguments,t=n.length;r<t;)sum*=n[r++];return sum}}],n={};(0,function t(e){var o=n[e];if(void 0!==o)return o.exports;if(void 0===r[e]){var u=new Error("Cannot find module '"+e+"'");throw u.code="MODULE_NOT_FOUND",u}var i=n[e]={exports:{}};return r[e](i,i.exports,t),i.exports}(1).increment)(1)})();
 ```
 
 # Info
@@ -187,43 +193,43 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.94 KiB [emitted] (name: main)
+asset output.js 3.2 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 
-asset without.js 3.08 KiB [emitted] (name: main)
+asset without.js 3.34 KiB [emitted] (name: main)
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 365 bytes [emitted] [minimized] (name: main) 1 related asset
+asset output.js 463 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 
-asset without.js 551 bytes [emitted] [minimized] (name: main) 1 related asset
+asset without.js 649 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

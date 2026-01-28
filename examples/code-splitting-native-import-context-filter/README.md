@@ -50,9 +50,9 @@ export default foo;
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!*******************************************************************************************!*\
-  !*** ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ***!
-  \*******************************************************************************************/
+/*!***************************************************************************************************************!*\
+  !*** ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ***!
+  \***************************************************************************************************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
@@ -61,27 +61,27 @@ export default foo;
 var map = {
 	"./bar": [
 		2,
-		398
+		776
 	],
 	"./bar.js": [
 		2,
-		398
+		776
 	],
 	"./baz": [
 		3,
-		544
+		0
 	],
 	"./baz.js": [
 		3,
-		544
+		0
 	],
 	"./foo": [
 		4,
-		718
+		717
 	],
 	"./foo.js": [
 		4,
-		718
+		717
 	]
 };
 function webpackAsyncContext(req) {
@@ -119,6 +119,12 @@ module.exports = webpackAsyncContext;
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -197,10 +203,10 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
+/******/ 		
 /******/ 		
 /******/ 				script.src = url;
 /******/ 			}
@@ -246,7 +252,7 @@ module.exports = webpackAsyncContext;
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			792: 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -283,7 +289,7 @@ module.exports = webpackAsyncContext;
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -371,78 +377,78 @@ getTemplate("baz.noimport");
 ## Unoptimized
 
 ```
-asset output.js 11.2 KiB [emitted] (name: main)
-asset 398.output.js 858 bytes [emitted]
-asset 544.output.js 858 bytes [emitted]
-asset 718.output.js 858 bytes [emitted]
-chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+asset output.js 11.4 KiB [emitted] (name: main)
+asset 717.output.js 846 bytes [emitted]
+asset 776.output.js 846 bytes [emitted]
+asset 0.output.js 844 bytes [emitted]
+chunk (runtime: main) 0.output.js 38 bytes [rendered]
+  > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js
+  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    import() context element ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js
+chunk (runtime: main) 717.output.js 38 bytes [rendered]
+  > ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo.js
+  ./templates/foo.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    import() context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo
+    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo.js
+chunk (runtime: main) 776.output.js 38 bytes [rendered]
+  > ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
+  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
+chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 398.output.js 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
-  ./templates/bar.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    [used exports unknown]
-    import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
-chunk (runtime: main) 544.output.js 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
-  ./templates/baz.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    [used exports unknown]
-    import() context element ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
-chunk (runtime: main) 718.output.js 38 bytes [rendered]
-  > ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-  > ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-  ./templates/foo.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    [used exports unknown]
-    import() context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.47 KiB [emitted] [minimized] (name: main)
-asset 398.output.js 130 bytes [emitted] [minimized]
-asset 544.output.js 130 bytes [emitted] [minimized]
-asset 718.output.js 130 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+asset output.js 2.42 KiB [emitted] [minimized] (name: main)
+asset 717.output.js 127 bytes [emitted] [minimized]
+asset 776.output.js 127 bytes [emitted] [minimized]
+asset 0.output.js 124 bytes [emitted] [minimized]
+chunk (runtime: main) 0.output.js 38 bytes [rendered]
+  > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js
+  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    import() context element ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js
+chunk (runtime: main) 717.output.js 38 bytes [rendered]
+  > ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo.js
+  ./templates/foo.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    import() context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo
+    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./foo.js
+chunk (runtime: main) 776.output.js 38 bytes [rendered]
+  > ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
+  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
+chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 398.output.js 38 bytes [rendered]
-  > ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-  > ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
-  ./templates/bar.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-    import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
-chunk (runtime: main) 544.output.js 38 bytes [rendered]
-  > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-  > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
-  ./templates/baz.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    import() context element ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-    import() context element ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
-chunk (runtime: main) 718.output.js 38 bytes [rendered]
-  > ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-  > ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-  ./templates/foo.js 38 bytes [optional] [built] [code generated]
-    [exports: default]
-    import() context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-    import() context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

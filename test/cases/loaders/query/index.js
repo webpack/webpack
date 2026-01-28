@@ -19,6 +19,7 @@ it("should pass query to loader without resource with resource query", function(
 it("should pass query to loader without resource", function() {
 	var result = require("./loaders/queryloader?query!");
 	expect(result).toEqual({
+		resourceQuery: "",
 		query: "?query",
 		prev: null
 	});

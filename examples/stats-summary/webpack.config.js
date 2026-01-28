@@ -1,9 +1,14 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
-    output: {
+/** @type {import("webpack").Configuration} */
+const config = {
+	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "output.js"
 	},
 	stats: "summary"
 };
+
+module.exports = config;

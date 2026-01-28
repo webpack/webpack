@@ -34,10 +34,13 @@ export { c } from "./cjs";
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
+"use strict";
 
-module.exports = {
+const path = require("path");
+const webpack = require("../../");
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		dll: ["./example"]
@@ -58,12 +61,14 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # dist/dll.js
 
 ```javascript
-var dll_3f097cf91db05865c656;
+var dll_94914b2e5c944a0a4873;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -87,7 +92,7 @@ module.exports = __webpack_require__;
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] -> ./b.js .b */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./cjs.js .c */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -97,25 +102,25 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "a": () => (/* reexport */ a),
-  "b": () => (/* reexport */ b),
-  "c": () => (/* reexport */ cjs.c)
+  a: () => (/* reexport */ a),
+  b: () => (/* reexport */ b),
+  c: () => (/* reexport */ cjs.c)
 });
 
-;// CONCATENATED MODULE: ./b.js
+;// ./b.js
 // module b
 function b() {
 	return "b";
 }
 
-;// CONCATENATED MODULE: ./a.js
+;// ./a.js
 // module a
 var a = "a";
 
 
 // EXTERNAL MODULE: ./cjs.js
 var cjs = __webpack_require__(2);
-;// CONCATENATED MODULE: ./example.js
+;// ./example.js
 
 
 
@@ -153,6 +158,12 @@ exports.c = "c";
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -208,7 +219,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_3f097cf91db05865c656 = __webpack_exports__;
+/******/ 	dll_94914b2e5c944a0a4873 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -217,7 +228,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_3f097cf91db05865c656","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_94914b2e5c944a0a4873","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -225,7 +236,7 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 4.71 KiB [emitted] (name: dll)
+asset dll.js 4.9 KiB [emitted] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 670 bytes 3 modules
@@ -234,13 +245,13 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [en
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset dll.js 694 bytes [emitted] [minimized] (name: dll)
+asset dll.js 685 bytes [emitted] [minimized] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 670 bytes 3 modules
@@ -248,5 +259,5 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [en
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

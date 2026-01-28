@@ -86,21 +86,11 @@ var __webpack_exports__ = {};
 /*! export resetCounter [provided] [used in main] [missing usage info prevents renaming] -> ./counter.js .reset */
 /*! export value [provided] [used in main] [missing usage info prevents renaming] -> ./counter.js .value */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "decrement": () => (/* reexport */ decrement),
-  "increment": () => (/* reexport */ increment),
-  "print": () => (/* reexport */ print),
-  "reset": () => (/* reexport */ counter_reset),
-  "resetCounter": () => (/* reexport */ counter_reset),
-  "value": () => (/* reexport */ value)
-});
-
-;// CONCATENATED MODULE: ./counter.js
+;// ./counter.js
 let value = 0;
 function increment() {
 	value++;
@@ -112,28 +102,22 @@ function counter_reset() {
 	value = 0;
 }
 
-;// CONCATENATED MODULE: ./methods.js
+;// ./methods.js
 
 
 const print = value => console.log(value);
 
-;// CONCATENATED MODULE: ./example.js
+;// ./example.js
 
 
 
-var __webpack_exports__decrement = __webpack_exports__.decrement;
-var __webpack_exports__increment = __webpack_exports__.increment;
-var __webpack_exports__print = __webpack_exports__.print;
-var __webpack_exports__reset = __webpack_exports__.reset;
-var __webpack_exports__resetCounter = __webpack_exports__.resetCounter;
-var __webpack_exports__value = __webpack_exports__.value;
-export { __webpack_exports__decrement as decrement, __webpack_exports__increment as increment, __webpack_exports__print as print, __webpack_exports__reset as reset, __webpack_exports__resetCounter as resetCounter, __webpack_exports__value as value };
+export { decrement, increment, print, counter_reset as reset, counter_reset as resetCounter, value };
 ```
 
 # dist/output.js (production)
 
 ```javascript
-var e={d:(n,t)=>{for(var o in t)e.o(t,o)&&!e.o(n,o)&&Object.defineProperty(n,o,{enumerable:!0,get:t[o]})},o:(e,n)=>Object.prototype.hasOwnProperty.call(e,n)},n={};e.d(n,{Mj:()=>r,nP:()=>o,S0:()=>c,mc:()=>a,Uh:()=>a,S3:()=>t});let t=0;function o(){t++}function r(){t--}function a(){t=0}const c=e=>console.log(e);var s=n.Mj,i=n.nP,l=n.S0,p=n.mc,u=n.Uh,f=n.S3;export{s as decrement,i as increment,l as print,p as reset,u as resetCounter,f as value};
+let n=0;function o(){n++}function t(){n--}function e(){n=0}const s=n=>console.log(n);export{t as decrement,o as increment,s as print,e as reset,e as resetCounter,n as value};
 ```
 
 # Info
@@ -141,7 +125,7 @@ var e={d:(n,t)=>{for(var o in t)e.o(t,o)&&!e.o(n,o)&&Object.defineProperty(n,o,{
 ## Unoptimized
 
 ```
-asset output.js 3.61 KiB [emitted] [javascript module] (name: main)
+asset output.js 2.69 KiB [emitted] [javascript module] (name: main)
 chunk (runtime: main) output.js (main) 302 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 670 bytes 3 modules
@@ -150,13 +134,13 @@ chunk (runtime: main) output.js (main) 302 bytes (javascript) 670 bytes (runtime
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 446 bytes [emitted] [javascript module] [minimized] (name: main)
+asset output.js 174 bytes [emitted] [javascript module] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 302 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 396 bytes 2 modules
@@ -165,5 +149,5 @@ chunk (runtime: main) output.js (main) 302 bytes (javascript) 396 bytes (runtime
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

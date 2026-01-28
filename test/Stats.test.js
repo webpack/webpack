@@ -2,11 +2,12 @@
 
 require("./helpers/warmup-webpack");
 
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 
-const compile = options =>
+const compile = (options) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("..");
+
 		const compiler = webpack(options);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
@@ -19,6 +20,52 @@ const compile = options =>
 	});
 
 describe("Stats", () => {
+	it("should work with a boolean value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(stats.toJson(false)).toMatchInlineSnapshot("Object {}");
+		expect(stats.toString(false)).toMatchInlineSnapshot('""');
+	});
+
+	it("should work with a string value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(stats.toJson("none")).toMatchInlineSnapshot("Object {}");
+		expect(stats.toString("none")).toMatchInlineSnapshot('""');
+	});
+
+	it("should work with an object value", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(
+			stats.toJson({
+				all: false,
+				version: false,
+				errorsCount: true,
+				warningsCount: true
+			})
+		).toMatchInlineSnapshot(`
+		Object {
+		  "errorsCount": 0,
+		  "warningsCount": 1,
+		}
+	`);
+		expect(
+			stats.toString({
+				all: false,
+				version: false,
+				errorsCount: true,
+				warningsCount: true
+			})
+		).toMatchInlineSnapshot('"webpack compiled with 1 warning"');
+	});
+
 	it("should print env string in stats", async () => {
 		const stats = await compile({
 			context: __dirname,
@@ -50,6 +97,7 @@ describe("Stats", () => {
 				"}"
 		);
 	});
+
 	it("should omit all properties with all false", async () => {
 		const stats = await compile({
 			context: __dirname,
@@ -61,6 +109,7 @@ describe("Stats", () => {
 			})
 		).toEqual({});
 	});
+
 	it("should the results of hasWarnings() be affected by ignoreWarnings", async () => {
 		const stats = await compile({
 			mode: "development",
@@ -77,6 +126,7 @@ describe("Stats", () => {
 		});
 		expect(stats.hasWarnings()).toBeFalsy();
 	});
+
 	describe("chunkGroups", () => {
 		it("should be empty when there is no additional chunks", async () => {
 			const stats = await compile({
@@ -100,10 +150,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -117,10 +167,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -134,6 +184,7 @@ describe("Stats", () => {
 			}
 		`);
 		});
+
 		it("should contain additional chunks", async () => {
 			const stats = await compile({
 				context: __dirname,
@@ -156,10 +207,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "chunkB.js",
-			          "size": 107,
+			          "size": 106,
 			        },
 			      ],
-			      "assetsSize": 107,
+			      "assetsSize": 106,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -173,10 +224,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 196,
+			          "size": 195,
 			        },
 			      ],
-			      "assetsSize": 196,
+			      "assetsSize": 195,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -190,10 +241,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 3060,
+			          "size": 3076,
 			        },
 			      ],
-			      "assetsSize": 3060,
+			      "assetsSize": 3076,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -207,6 +258,7 @@ describe("Stats", () => {
 			}
 		`);
 		});
+
 		it("should contain assets", async () => {
 			const stats = await compile({
 				context: __dirname,
@@ -238,10 +290,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 3060,
+			        "size": 3076,
 			      },
 			      "name": "entryB.js",
-			      "size": 3060,
+			      "size": 3076,
 			      "type": "asset",
 			    },
 			    Object {
@@ -258,10 +310,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 196,
+			        "size": 195,
 			      },
 			      "name": "entryA.js",
-			      "size": 196,
+			      "size": 195,
 			      "type": "asset",
 			    },
 			    Object {
@@ -278,10 +330,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 107,
+			        "size": 106,
 			      },
 			      "name": "chunkB.js",
-			      "size": 107,
+			      "size": 106,
 			      "type": "asset",
 			    },
 			  ],

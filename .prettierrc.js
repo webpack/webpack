@@ -1,9 +1,11 @@
+"use strict";
+
 module.exports = {
 	printWidth: 80,
 	useTabs: true,
 	tabWidth: 2,
 	trailingComma: "none",
-	arrowParens: "avoid",
+	arrowParens: "always",
 	overrides: [
 		{
 			files: "*.json",
@@ -13,7 +15,7 @@ module.exports = {
 			}
 		},
 		{
-			files: "*.ts",
+			files: "*.{cts,mts,ts}",
 			options: {
 				parser: "typescript"
 			}

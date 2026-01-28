@@ -1,7 +1,14 @@
-const path = require("path");
+"use strict";
+
+const major = Number(process.versions.node.split(".")[0]);
+if (major < 16) {
+	throw new Error("Node.js 16+ required to build embedded WASM");
+}
+
 const fs = require("fs");
-const terser = require("terser");
+const path = require("path");
 const prettier = require("prettier");
+const terser = require("terser");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -12,7 +19,8 @@ const files = ["lib/util/semver.js"];
 (async () => {
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
-		const content = fs.readFileSync(filePath, "utf-8");
+		const content = fs.readFileSync(filePath, "utf8");
+
 		const exports = require(`../${file}`);
 
 		const regexp =
@@ -24,13 +32,33 @@ const files = ["lib/util/semver.js"];
 		while (match) {
 			const [fullMatch, name] = match;
 			const originalCode = exports[name].toString();
+			// NOTE: Runtime code exports must be written as arrow functions
+			// with a block body, in the form:
+			//
+			//   (args) => {
+			//     ...
+			//   }
+			//
+			// This constraint allows this script to reliably extract the
+			// function arguments and body for minification and runtime
+			// code generation. Do not use function declarations or
+			// expression-bodied arrows here.
+
 			const header =
 				/** @type {RegExpExecArray} */
 				(/^\(?([^=)]+)\)?\s=> \{/.exec(originalCode));
+
+			if (!header) {
+				throw new Error(
+					`Runtime export "${name}" in ${file} must be an arrow function ` +
+						"with a block body: (args) => { ... }"
+				);
+			}
+
 			const body = originalCode.slice(header[0].length, -1);
 			const result = await terser.minify(
 				{
-					["input.js"]: body
+					"input.js": body
 				},
 				{
 					compress: true,
@@ -82,13 +110,13 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 
 		const prettierConfig = await prettier.resolveConfig(filePath);
 		const newContent = await prettier.format(
-			content.replace(regexp, match => replaces.get(match)),
+			content.replace(regexp, (match) => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);
 
 		if (newContent !== content) {
 			if (doWrite) {
-				fs.writeFileSync(filePath, newContent, "utf-8");
+				fs.writeFileSync(filePath, newContent, "utf8");
 				console.error(`${file} updated`);
 			} else {
 				console.error(`${file} need to be updated`);

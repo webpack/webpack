@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle() {
 		return ["runtime.js", "common-index_js.js", "main.js"];
 	}
 };

@@ -1,6 +1,8 @@
-var path = require("path");
+"use strict";
 
-/** @type {function(any, any): import("../../../../types").Configuration} */
+const path = require("path");
+
+/** @type {(env: Env, options: TestOptions) => import("../../../../types").Configuration} */
 module.exports = (env, { testPath }) => ({
 	target: "node14",
 	output: {
@@ -12,7 +14,6 @@ module.exports = (env, { testPath }) => ({
 		}
 	},
 	experiments: {
-		topLevelAwait: true,
 		outputModule: true
 	}
 });

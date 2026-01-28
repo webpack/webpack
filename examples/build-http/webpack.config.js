@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// enable debug logging to see network requests!
 	// stats: {
 	// 	loggingDebug: /HttpUriPlugin/
@@ -12,3 +15,5 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;

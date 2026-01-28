@@ -1,6 +1,8 @@
+"use strict";
+
 module.exports = function supportsLogicalAssignment() {
 	try {
-		var f = eval(
+		const f = eval(
 			"(function f() { var x = null; x ??= true; x &&= true; return x ||= false; })"
 		);
 		return f();

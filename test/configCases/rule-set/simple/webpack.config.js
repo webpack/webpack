@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
@@ -24,7 +26,7 @@ module.exports = {
 							{
 								loader: "./loader",
 								options: {
-									get: function () {
+									get() {
 										return "second-3";
 									}
 								}

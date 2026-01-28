@@ -35,6 +35,12 @@ getTemplate("b", function(b) {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -100,10 +106,10 @@ getTemplate("b", function(b) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
+/******/ 		
 /******/ 		
 /******/ 				script.src = url;
 /******/ 			}
@@ -138,7 +144,7 @@ getTemplate("b", function(b) {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			179: 0
+/******/ 			"main": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -175,7 +181,7 @@ getTemplate("b", function(b) {
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -226,14 +232,13 @@ getTemplate("b", function(b) {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__.e, __webpack_require__, __webpack_require__.* */
 function getTemplate(templateName, callback) {
-	__webpack_require__.e(/*! require.ensure */ 577).then((function(require) {
+	__webpack_require__.e(/*! require.ensure */ "require_context_templates_sync_recursive_").then((function(require) {
 		callback(__webpack_require__(1)("./"+templateName)());
 	}).bind(null, __webpack_require__))['catch'](__webpack_require__.oe);
 }
@@ -247,10 +252,10 @@ getTemplate("b", function(b) {
 ;
 ```
 
-# dist/577.output.js
+# dist/require_context_templates_sync_recursive_.output.js
 
 ``` javascript
-(self["webpackChunk"] = self["webpackChunk"] || []).push([[577],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["require_context_templates_sync_recursive_"],[
 /* 0 */,
 /* 1 */
 /*!***************************************************!*\
@@ -341,40 +346,40 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.95 KiB [emitted] (name: main)
-asset 577.output.js 2.23 KiB [emitted]
-chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+asset output.js 9.16 KiB [emitted] (name: main)
+asset require_context_templates_sync_recursive_.output.js 2.27 KiB [emitted]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 577.output.js 457 bytes [rendered]
+chunk (runtime: main) require_context_templates_sync_recursive_.output.js 457 bytes [rendered]
   > ./example.js 2:1-4:3
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     cjs require context ./example.js 3:11-64
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.79 KiB [emitted] [minimized] (name: main)
-asset 577.output.js 609 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+asset output.js 1.81 KiB [emitted] [minimized] (name: main)
+asset require_context_templates_sync_recursive_.output.js 646 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 577.output.js 457 bytes [rendered]
+chunk (runtime: main) require_context_templates_sync_recursive_.output.js 457 bytes [rendered]
   > ./example.js 2:1-4:3
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     cjs require context ./example.js 3:11-64
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

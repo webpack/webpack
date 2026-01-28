@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+"use strict";
+
 /**
  * @param {string} command process to run
  * @param {string[]} args command line arguments
@@ -7,17 +9,18 @@
  */
 const runCommand = (command, args) => {
 	const cp = require("child_process");
+
 	return new Promise((resolve, reject) => {
 		const executedCommand = cp.spawn(command, args, {
 			stdio: "inherit",
 			shell: true
 		});
 
-		executedCommand.on("error", error => {
+		executedCommand.on("error", (error) => {
 			reject(error);
 		});
 
-		executedCommand.on("exit", code => {
+		executedCommand.on("exit", (code) => {
 			if (code === 0) {
 				resolve();
 			} else {
@@ -31,7 +34,7 @@ const runCommand = (command, args) => {
  * @param {string} packageName name of the package
  * @returns {boolean} is the package installed?
  */
-const isInstalled = packageName => {
+const isInstalled = (packageName) => {
 	if (process.versions.pnp) {
 		return true;
 	}
@@ -73,14 +76,16 @@ const isInstalled = packageName => {
  * @param {CliOption} cli options
  * @returns {void}
  */
-const runCli = cli => {
+const runCli = (cli) => {
 	const path = require("path");
+
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
+
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			err => {
+			(err) => {
 				console.error(err);
 				process.exitCode = 1;
 			}
@@ -147,7 +152,7 @@ if (!cli.installed) {
 	// executed. Setting the exit code here to ensure the script exits correctly in those cases. The callback
 	// function is responsible for clearing the exit code if the user wishes to install webpack-cli.
 	process.exitCode = 1;
-	questionInterface.question(question, answer => {
+	questionInterface.question(question, (answer) => {
 		questionInterface.close();
 
 		const normalizedAnswer = answer.toLowerCase().startsWith("y");
@@ -171,13 +176,14 @@ if (!cli.installed) {
 		);
 
 		runCommand(
-			/** @type {string} */ (packageManager),
-			installOptions.concat(cli.package)
+			/** @type {string} */
+			(packageManager),
+			[...installOptions, cli.package]
 		)
 			.then(() => {
 				runCli(cli);
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.error(err);
 				process.exitCode = 1;
 			});

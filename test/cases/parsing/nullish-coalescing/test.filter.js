@@ -1,5 +1,5 @@
-var supportsNullishCoalescing = require("../../../helpers/supportsNullishCoalescing");
+"use strict";
 
-module.exports = function (config) {
-	return supportsNullishCoalescing();
-};
+const supportsNullishCoalescing = require("../../../helpers/supportsNullishCoalescing");
+
+module.exports = () => supportsNullishCoalescing();

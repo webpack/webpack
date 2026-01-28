@@ -1,3 +1,8 @@
+"use strict";
+
+/** @typedef {import("../../../").Module} Module */
+/** @typedef {import("../../../").WebpackError} WebpackError */
+
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	entry: "./index.js",
@@ -10,6 +15,8 @@ module.exports = {
 			message: /homepage/
 		},
 		/The 'mode' option has not been set/,
-		warning => warning.module.identifier().endsWith("?2")
+		(warning) =>
+			/** @type {Module} */
+			(/** @type {WebpackError} */ (warning).module).identifier().endsWith("?2")
 	]
 };

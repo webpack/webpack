@@ -11,22 +11,26 @@ console.log("Hello World!");
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "output.js"
 	},
 	stats: "minimal"
 };
+
+module.exports = config;
 ```
 
 # dist/output.js
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -45,5 +49,5 @@ console.log("Hello World!");
 ```
 1 asset
 1 module
-webpack 5.87.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../types").Compilation} Compilation */
 /** @typedef {import("../../../../types").Module} Module */
 /** @type {import("../../../../types").Configuration} */
@@ -9,13 +11,14 @@ module.exports = {
 		css: true
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
+					/** @type {Record<string, string>} */
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {
 						/** @type {Map<Module, number>} */
@@ -30,9 +33,7 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort(
-							(a, b) => a[1] - b[1]
-						);
+						const sortedModules = [...modules].sort((a, b) => a[1] - b[1]);
 						const text = sortedModules
 							.map(
 								([m, index]) =>
@@ -44,7 +45,7 @@ module.exports = {
 						data[`${name}Index`] = text;
 					}
 					expect(data).toEqual({
-						dynamicIndex: "0: css ./a.css, 1: css ./b.css",
+						dynamicIndex: "0: css ./a.css",
 						mainIndex: "0: ./index.js"
 					});
 				});

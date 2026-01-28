@@ -1,5 +1,10 @@
+"use strict";
+
 module.exports = {
 	output: {
-		filename: "[name].js"
+		filename: "[name].js",
+		environment: {
+			nodePrefixForCoreModules: false
+		}
 	}
 };

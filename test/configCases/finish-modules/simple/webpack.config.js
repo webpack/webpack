@@ -1,11 +1,13 @@
+"use strict";
+
 /**
  * @this {import("../../../../").Compiler} the compiler
  */
 function testPlugin() {
-	this.hooks.compilation.tap("TestPlugin", compilation => {
+	this.hooks.compilation.tap("TestPlugin", (compilation) => {
 		compilation.hooks.finishModules.tapAsync(
 			"TestPlugin",
-			function (_modules, callback) {
+			(_modules, callback) => {
 				callback();
 			}
 		);

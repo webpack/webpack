@@ -1,5 +1,5 @@
-var supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+"use strict";
 
-module.exports = function (config) {
-	return supportsIteratorDestructuring();
-};
+const supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDestructuring");
+
+module.exports = () => supportsIteratorDestructuring();

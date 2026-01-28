@@ -1,3 +1,5 @@
+"use strict";
+
 const base = {
 	mode: "production",
 	optimization: {
@@ -15,6 +17,7 @@ const base = {
 		}
 	}
 };
+
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{

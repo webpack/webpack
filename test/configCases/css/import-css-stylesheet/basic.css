@@ -1,0 +1,20 @@
+@import url("./imported.css");
+
+.test {
+	color: red;
+	background: blue;
+
+	& .child {
+		color: green;
+	}
+}
+
+.another {
+	font-size: 16px;
+}
+
+.with-image {
+	background-image: url("./test.png");
+	width: 100px;
+	height: 100px;
+}

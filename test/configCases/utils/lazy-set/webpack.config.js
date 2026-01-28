@@ -1,9 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
-		compiler => {
+		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
-				const items1 = Array.from(compilation.fileDependencies);
+				const items1 = [...compilation.fileDependencies];
 				const items2 = new Set(compilation.fileDependencies.keys());
 				const items3 = new Set(compilation.fileDependencies.values());
 				const items4 = new Set(compilation.fileDependencies.entries());
@@ -17,7 +19,7 @@ module.exports = {
 				const items1Set = new Set(items1);
 				expect(items2).toEqual(items1Set);
 				expect(items3).toEqual(items1Set);
-				expect(items4).toEqual(new Set(items1.map(x => [x, x])));
+				expect(items4).toEqual(new Set(items1.map((x) => [x, x])));
 			});
 		}
 	]

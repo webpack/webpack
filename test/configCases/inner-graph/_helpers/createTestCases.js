@@ -1,18 +1,17 @@
-/**
- * Escapes regular expression metacharacters
- * @param {string} str String to quote
- * @returns {string} Escaped string
- */
-const quotemeta = str => {
-	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
-};
+/** @typedef {import("../../../../").Configuration} Configuration */
 
+/**
+ * @param {Record<string, { name?: string, usedExports: string[], expect: Record<string, string[]> }>} testCases
+ * @returns {Configuration[]} configurations
+ */
 module.exports = testCases => {
+	/** @type {Configuration[]} */
 	const configs = [];
 	for (const name of Object.keys(testCases)) {
 		const testCase = testCases[name];
 		testCase.name = name;
 		const entry = `../_helpers/entryLoader.js?${JSON.stringify(testCase)}!`;
+		/** @type {{ alias: Record<string, string> }} */
 		const resolve = {
 			alias: {}
 		};

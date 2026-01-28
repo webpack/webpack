@@ -1,4 +1,5 @@
-// eslint-disable-next-line n/no-unpublished-require
+"use strict";
+
 const { ModuleFederationPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */

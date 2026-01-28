@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
 "fitting:
@@ -498,6 +498,98 @@ all:
   all (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for cause-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+WARNING in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+WARNING in error with case
+  [cause]: error case
+
+WARNING in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+WARNING in error with string case
+  [cause]: string case
+
+WARNING in webpack error with case
+  [cause]: cause
+
+WARNING in webpack error
+
+ERROR in aggregate error
+  [cause]: cause
+  cause
+  cause
+    [cause]: nested string cause
+  [errors]: first error
+    [cause]: cause
+      [cause]: nested cause in errors
+  [errors]: second string error
+  [errors]: third nested aggregate error
+    [errors]: nested first
+    [errors]: nested second
+
+ERROR in error with case
+  [cause]: error case
+
+ERROR in error with nested error case
+  [cause]: test
+    [cause]: nested case
+
+ERROR in error with string case
+  [cause]: string case
+
+ERROR in webpack error with case
+  [cause]: cause
+
+ERROR in webpack error
+
+error cause (webpack x.x.x) compiled with 6 errors and 6 warnings in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for child-compiler 1`] = `
+"asset child1.js X bytes [emitted]
+asset child2.js X bytes [emitted]
+asset parent.js X bytes [emitted] (name: parent)
+./parent.js X bytes [built] [code generated]
+  PublicPath: auto
+  asset child1.js X bytes {12} [cached] (name: child1)
+  Entrypoint child1 = child1.js
+  chunk {12} (runtime: child1) child1.js (child1) X bytes [entry] [rendered]
+    > ./child1 child1
+  ./child1.js [84] X bytes {12} [depth 0] [built] [code generated]
+    [no exports used]
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    entry ./child1 child1
+    
+  Child first compiled successfully
+
+  1 asset
+  1 module
+  Child second compiled successfully
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value.
+Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
 "asset child.js X bytes [emitted]
 asset parent.js X bytes [emitted] (name: parent)
@@ -515,6 +607,12 @@ Set 'mode' option to 'development' or 'production' to enable defaults for each e
 You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
 
 webpack x.x.x compiled with 1 warning in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for chunk-assets 1`] = `
+"asset bundle.js X bytes [emitted] (name: main) 1 related asset
+./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
@@ -672,7 +770,7 @@ exports[`StatsTestCases should print correct stats for common-libs 1`] = `
 "asset react.js X KiB [emitted] [minimized] (name: react) 1 related asset
 ./react.js X bytes [built] [code generated]
 ../../../node_modules/react/index.js X bytes [built] [code generated]
-../../../node_modules/react/cjs/react.production.min.js X KiB [built] [code generated]
+../../../node_modules/react/cjs/react.production.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -755,14 +853,14 @@ exports[`StatsTestCases should print correct stats for context-independence 1`] 
   sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
   sourceMap 977-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
     ./a/index.js (in my-layer) X bytes [built] [code generated]
     ./a/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./a/c/ X bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./a/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
@@ -771,70 +869,70 @@ asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
   sourceMap main-XXXXXXXXXXXXXXXXXXXX.js.map X KiB [emitted] [dev] (auxiliary name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
   sourceMap 977-XXXXXXXXXXXXXXXXXXXX.js.map X bytes [emitted] [dev]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes
     ./b/index.js (in my-layer) X bytes [built] [code generated]
     ./b/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./b/c/ X bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./b/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./b/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
     ./a/index.js (in my-layer) X bytes [built] [code generated]
     ./a/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./a/c/ X bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./a/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes
     ./b/index.js (in my-layer) X bytes [built] [code generated]
     ./b/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./b/c/ X bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./b/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./b/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./a/*.js X bytes
     ./a/index.js (in my-layer) X bytes [built] [code generated]
     ./a/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./a/c/ X bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./a/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./a/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
 asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 977-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-runtime modules X KiB 9 modules
+runtime modules X KiB 8 modules
 orphan modules X bytes [orphan] 1 module
 built modules X bytes [built]
   modules by path ./b/*.js X bytes
     ./b/index.js (in my-layer) X bytes [built] [code generated]
     ./b/chunk.js + 1 modules (in my-layer) X bytes [built] [code generated]
   modules by path ./b/c/ X bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object (in my-layer) X bytes [built] [code generated]
+    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ referencedExports: default namespace object (in my-layer) X bytes [built] [code generated]
     ./b/c/a.js (in my-layer) X bytes [optional] [built] [code generated]
   ./b/cc/b.js (in my-layer) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
@@ -1039,24 +1137,24 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for dynamic-import 1`] = `
-"asset common.js 1.13 MiB [emitted] (name: common) (id hint: vendors)
+"asset common.js X MiB [emitted] (name: common) (id hint: vendors)
 asset runtime.js X KiB [emitted] (name: runtime)
 asset pages/home.js X KiB [emitted] (name: pages/home)
 asset main.js X KiB [emitted] (name: main)
-Entrypoint main 1.14 MiB = runtime.js X KiB common.js 1.13 MiB main.js X KiB
+Entrypoint main X MiB = runtime.js X KiB common.js X MiB main.js X KiB
 runtime modules X KiB 12 modules
-built modules 1.14 MiB [built]
-  modules by path ../../../node_modules/ 1.13 MiB
+built modules X MiB [built]
+  modules by path ../../../node_modules/ X MiB
     modules by path ../../../node_modules/react/ X KiB 4 modules
-    modules by path ../../../node_modules/react-dom/ X KiB
-      ../../../node_modules/react-dom/client.js X bytes [built] [code generated]
-      + 2 modules
+    modules by path ../../../node_modules/react-dom/ X MiB
+      modules by path ../../../node_modules/react-dom/*.js X KiB 2 modules
+      modules by path ../../../node_modules/react-dom/cjs/*.js X MiB 2 modules
     modules by path ../../../node_modules/scheduler/ X KiB
       ../../../node_modules/scheduler/index.js X bytes [built] [code generated]
       ../../../node_modules/scheduler/cjs/scheduler.development.js X KiB [built] [code generated]
   modules by path ./src/ X KiB
     ./src/index.js X bytes [built] [code generated]
-    ./src/pages/ lazy ^\\\\.\\\\/.*$ chunkName: pages/[request] namespace object X bytes [built] [code generated]
+    ./src/pages/ lazy ^\\\\.\\\\/.*$ referencedExports: default chunkName: pages/[request]...(truncated) X bytes [built] [code generated]
     ./src/pages/home.js X KiB [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
@@ -1078,6 +1176,27 @@ chunk (runtime: a) a.js (a) X bytes [entry] [rendered]
     entry ./a.js a
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 webpack x.x.x compiled successfully in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for error-stack-disabled-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+ERROR in Test error with stack
+
+webpack x.x.x compiled with 1 error in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for error-stack-enabled-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+ERROR in Test error with stack
+Error: Test error with stack
+    at Test.js:1:1
+    at compile.js:2:2
+
+webpack x.x.x compiled with 1 error in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for errors-space-error 1`] = `
@@ -1319,9 +1438,9 @@ asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]"
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
 "asset entry.js X KiB [emitted] (name: entry)
+asset 0.js X bytes [emitted]
 asset 717.js X bytes [emitted]
 asset 776.js X bytes [emitted]
-asset 0.js X bytes [emitted]
 runtime modules X KiB 9 modules
 built modules X bytes [built]
   modules by path ./templates/*.js X bytes
@@ -1329,7 +1448,7 @@ built modules X bytes [built]
     ./templates/baz.js X bytes [optional] [built] [code generated]
     ./templates/foo.js X bytes [optional] [built] [code generated]
   ./entry.js X bytes [built] [code generated]
-  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ na...(truncated) X bytes [optional] [built] [code generated]
+  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ referencedExp...(truncated) X bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -1495,9 +1614,9 @@ asset <CLR=32,BOLD>main.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR> (name: mai
 
 <CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ./node_modules/custom-loader/index.js ./node_modules/custom-loader/index.js!./index.js</CLR>
 <e> <CLR=31,BOLD>An error</CLR>
-|     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
+|     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
 <w> <CLR=33,BOLD>A warning</CLR>
-|     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
+|     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
 <-> <CLR=36,BOLD>Unimportant</CLR>
   <i> <CLR=32,BOLD>Info message</CLR>
       <CLR=BOLD>Just log</CLR>
@@ -1506,7 +1625,7 @@ asset <CLR=32,BOLD>main.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR> (name: mai
   <-> <CLR=36,BOLD>Nested</CLR>
         <CLR=BOLD>Log inside collapsed group</CLR>
       Trace
-  |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
+  |     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
   <t> <CLR=35,BOLD>Measure: X ms</CLR>
       -------
       <CLR=BOLD>After clear</CLR>
@@ -1748,19 +1867,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for module-not-found-error 1`] = `
-"ERROR in ./index.js 1:0-17
-Module not found: Error: Can't resolve 'buffer' in 'Xdir/module-not-found-error'
-
-BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
-This is no longer the case. Verify if you need this module and configure a polyfill for it.
-
-If you want to include a polyfill, you need to:
-	- add a fallback 'resolve.fallback: { \\"buffer\\": require.resolve(\\"buffer/\\") }'
-	- install 'buffer'
-If you don't want to include a polyfill, you can use an empty module like this:
-	resolve.fallback: { \\"buffer\\": false }
-
-ERROR in ./index.js 2:0-13
+"ERROR in ./index.js 2:0-13
 Module not found: Error: Can't resolve 'os' in 'Xdir/module-not-found-error'
 
 BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
@@ -1772,7 +1879,7 @@ If you want to include a polyfill, you need to:
 If you don't want to include a polyfill, you can use an empty module like this:
 	resolve.fallback: { \\"os\\": false }
 
-webpack compiled with 2 errors"
+webpack compiled with 1 error"
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
@@ -2061,15 +2168,15 @@ asset no-warning.pro-node.js X KiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-web.js 1.72 MiB [emitted] (name: main)
+asset no-warning.dev-web.js X MiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-node.js 1.72 MiB [emitted] (name: main)
+asset no-warning.dev-node.js X MiB [emitted] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset no-warning.dev-web-with-limit-set.js 1.72 MiB [emitted] [big] (name: main)
+asset no-warning.dev-web-with-limit-set.js X MiB [emitted] [big] (name: main)
 ./index.js X KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
@@ -2310,7 +2417,7 @@ runtime modules X KiB
   webpack/runtime/load script X KiB {792} [code generated]
     [no exports]
     [used exports unknown]
-  webpack/runtime/publicPath X bytes {792} [code generated]
+  webpack/runtime/publicPath X KiB {792} [code generated]
     [no exports]
     [used exports unknown]
 cacheable modules X bytes
@@ -2600,7 +2707,7 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
     webpack/runtime/load script X KiB {792} [code generated]
       [no exports]
       [used exports unknown]
-    webpack/runtime/publicPath X bytes {792} [code generated]
+    webpack/runtime/publicPath X KiB {792} [code generated]
       [no exports]
       [used exports unknown]
   cacheable modules X bytes
@@ -3511,8 +3618,8 @@ cacheable modules X bytes
   ./first.js X bytes [built] [code generated]
   ./second.js X bytes [built] [code generated]
   ./vendor.js X bytes [built] [code generated]
-  ./module_first.js X bytes [built] [code generated]
   ./common2.js X bytes [built] [code generated]
+  ./module_first.js X bytes [built] [code generated]
   ./lazy_first.js X bytes [built] [code generated]
   ./lazy_shared.js X bytes [built] [code generated]
   ./lazy_second.js X bytes [built] [code generated]
@@ -3538,8 +3645,8 @@ cacheable modules X bytes
       ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js: Module ./common_lazy_shared.js is referenced from different chunks by these modules: ./lazy_shared.js
     ./common_lazy_shared.js X bytes [built] [code generated]
   orphan modules X bytes [orphan]
-    ./module_first.js X bytes [orphan] [built]
     ./common2.js X bytes [orphan] [built]
+    ./module_first.js X bytes [orphan] [built]
     ./common.js X bytes [orphan] [built]
       ModuleConcatenation bailout: Module is not in any chunk
     ./common_lazy.js X bytes [orphan] [built]
@@ -3597,6 +3704,7 @@ cacheable modules X bytes
       |   [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
       |   harmony import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
     ./foo.js X bytes [built] [code generated]
+      [only some exports used: default]
       import() ./foo ./main.js + 1 modules ./main.js 6:0-15
 webpack x.x.x compiled successfully in X ms"
 `;
@@ -3613,10 +3721,10 @@ cacheable modules X KiB
     |   [no exports]
     |   [no exports used]
     |   Statement (ExpressionStatement) with side effects in source code at 4:0-30
-    | ./node_modules/module-with-export/index.js X KiB [built]
-    |   [only some exports used: smallVar]
     | ./node_modules/big-module/a.js X bytes [built]
     |   [only some exports used: a]
+    | ./node_modules/module-with-export/index.js X KiB [built]
+    |   [only some exports used: smallVar]
   ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
     [used exports unknown]
     ModuleConcatenation bailout: Module is not an ECMAScript module
@@ -4177,6 +4285,20 @@ chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{asyn
 production (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-cache-group-filename 1`] = `
+"Entrypoint main X KiB = 587.vendors.js X bytes 414.vendors.js X bytes 605.vendors.js X bytes main.js X KiB
+chunk (runtime: main) 414.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
+  ./node_modules/b.js X bytes [built] [code generated]
+chunk (runtime: main) 587.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
+  ./node_modules/a.js X bytes [built] [code generated]
+chunk (runtime: main) 605.vendors.js (id hint: vendors) X bytes [initial] [rendered] split chunk (cache group: vendors)
+  ./node_modules/c.js X bytes [built] [code generated]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 4 modules
+  ./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-chunk-name 1`] = `
 "Entrypoint main X KiB = default/main.js
 chunk (runtime: main) default/async-b.js (async-b) (id hint: vendors) X bytes <{792}> [rendered] reused as split chunk (cache group: defaultVendors)
@@ -4242,7 +4364,7 @@ asset table-643--shared.js X bytes [emitted]
 asset row-359--shared.js X bytes [emitted]
 asset cell-221--shared.js X bytes [emitted]
 asset templater-743--shared.js X bytes [emitted]
-runtime modules X KiB 11 modules
+runtime modules X KiB 10 modules
 built modules X bytes (javascript) X bytes (share-init) X bytes (consume-shared) [built]
   cacheable modules X bytes
     modules by path ./node_modules/ X bytes 4 modules
@@ -4886,6 +5008,26 @@ global:
   global (webpack x.x.x) compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for track-returned 1`] = `
+"asset bundle.js X KiB [emitted] (name: main)
+./index.js X KiB [built] [code generated]
+./used.js?n=171 X bytes [built] [code generated]
+./used.js?n=164 X bytes [built] [code generated]
+./used.js?n=165 X bytes [built] [code generated]
+./used.js?n=166 X bytes [built] [code generated]
+./used.js?n=172 X bytes [built] [code generated]
+./used.js?n=173 X bytes [built] [code generated]
+./used.js?n=174 X bytes [built] [code generated]
+./used.js?n=167 X bytes [built] [code generated]
+./used.js?n=175 X bytes [built] [code generated]
+./used.js?n=176 X bytes [built] [code generated]
+./used.js?n=177 X bytes [built] [code generated]
+./used.js?n=178 X bytes [built] [code generated]
+./used.js?n=245 X bytes [built] [code generated]
++ 232 modules
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
 "asset bundle.js X KiB [emitted] (name: main)
 runtime modules X bytes 3 modules
@@ -4959,7 +5101,7 @@ chunk (runtime: main) 672.bundle.js X bytes (javascript) X bytes (webassembly) [
 chunk (runtime: main) 787.bundle.js (id hint: vendors) X bytes [rendered] split chunk (cache group: defaultVendors)
   ./node_modules/env.js X bytes [built] [code generated]
 chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-  runtime modules X KiB 11 modules
+  runtime modules X KiB 10 modules
   ./index.js X bytes [built] [code generated]
 chunk (runtime: main) 836.bundle.js X KiB (javascript) X bytes (webassembly) [rendered]
   ./testFunction.wasm X bytes (javascript) X bytes (webassembly) [dependent] [built] [code generated]
@@ -4969,7 +5111,7 @@ chunk (runtime: main) 946.bundle.js X bytes (javascript) X bytes (webassembly) [
   ./fast-math.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
 chunk (runtime: main) 989.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
   ./popcnt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
-runtime modules X KiB 11 modules
+runtime modules X KiB 10 modules
 cacheable modules X KiB (javascript) X KiB (webassembly)
   webassembly modules X bytes (javascript) X KiB (webassembly)
     ./Q_rsqrt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]

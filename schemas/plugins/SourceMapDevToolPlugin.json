@@ -1,7 +1,7 @@
 {
   "definitions": {
     "rule": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "description": "Condition used to match resource (string, RegExp or Function).",
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -10,11 +10,15 @@
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((str: string) => boolean)"
         }
       ]
     },
     "rules": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "description": "One or multiple conditions used to match resource.",
       "anyOf": [
         {
           "type": "array",
@@ -50,7 +54,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((pathData: import(\"../../lib/Compilation\").PathData, assetInfo?: import(\"../../lib/Compilation\").AssetInfo) => string)"
+          "tsType": "(import(\"../../lib/TemplatedPathPlugin\").TemplatePathFn)"
         }
       ]
     },
@@ -80,7 +84,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -99,6 +103,14 @@
           "type": "string",
           "absolutePath": false,
           "minLength": 1
+        }
+      ]
+    },
+    "ignoreList": {
+      "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/rules"
         }
       ]
     },
@@ -124,7 +136,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -145,7 +157,12 @@
       "type": "string"
     },
     "test": {
-      "$ref": "#/definitions/rules"
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
     }
   }
 }

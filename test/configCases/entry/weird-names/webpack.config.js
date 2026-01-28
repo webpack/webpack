@@ -1,3 +1,5 @@
+"use strict";
+
 const entry = {
 	"././../entry/point/./../": "./index.js",
 	"/////": "./index.js",

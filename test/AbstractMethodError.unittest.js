@@ -13,7 +13,7 @@ describe("WebpackError", () => {
 
 	const expectedMessage = "Abstract method $1. Must be overridden.";
 
-	it("Should construct message with caller info", () => {
+	it("should construct message with caller info", () => {
 		const fooClassError = new Foo().abstractMethod();
 		const childClassError = new Child().abstractMethod();
 

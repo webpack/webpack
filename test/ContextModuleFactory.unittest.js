@@ -1,17 +1,23 @@
 "use strict";
 
-const { createFsFromVolume, Volume } = require("memfs");
+const { Volume, createFsFromVolume } = require("memfs");
 const ContextModuleFactory = require("../lib/ContextModuleFactory");
+
+/** @typedef {import("memfs").IFs} IFs */
 
 describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {
+		/** @type {ContextModuleFactory} */
 		let factory;
+		/** @type {IFs} */
 		let memfs;
+
 		beforeEach(() => {
 			factory = new ContextModuleFactory([]);
 			memfs = createFsFromVolume(new Volume());
 		});
-		it("should not report an error when ENOENT errors happen", done => {
+
+		it("should not report an error when ENOENT errors happen", (done) => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -30,12 +36,13 @@ describe("ContextModuleFactory", () => {
 				(err, res) => {
 					expect(err).toBeFalsy();
 					expect(Array.isArray(res)).toBe(true);
-					expect(res.length).toBe(0);
+					expect(res).toHaveLength(0);
 					done();
 				}
 			);
 		});
-		it("should report an error when non-ENOENT errors happen", done => {
+
+		it("should report an error when non-ENOENT errors happen", (done) => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -58,7 +65,8 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
-		it("should return callback with [] if circular symlinks exist", done => {
+
+		it("should return callback with [] if circular symlinks exist", (done) => {
 			let statDirStatus = 0;
 			memfs.readdir = (dir, callback) => {
 				statDirStatus++;
@@ -88,7 +96,8 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
-		it("should not return callback with [] if there are no circular symlinks", done => {
+
+		it("should not return callback with [] if there are no circular symlinks", (done) => {
 			let statDirStatus = 0;
 			memfs.readdir = (dir, callback) => {
 				statDirStatus++;
@@ -115,13 +124,13 @@ describe("ContextModuleFactory", () => {
 				(err, res) => {
 					expect(res).not.toStrictEqual([]);
 					expect(Array.isArray(res)).toBe(true);
-					expect(res.length).toBe(1);
+					expect(res).toHaveLength(1);
 					done();
 				}
 			);
 		});
 
-		it("should resolve correctly several resources", done => {
+		it("should resolve correctly several resources", (done) => {
 			memfs.readdir = (dir, callback) => {
 				if (dir === "/a") setTimeout(() => callback(null, ["/B"]));
 				if (dir === "/b") setTimeout(() => callback(null, ["/A"]));
@@ -148,12 +157,12 @@ describe("ContextModuleFactory", () => {
 				(err, res) => {
 					expect(res).not.toStrictEqual([]);
 					expect(Array.isArray(res)).toBe(true);
-					expect(res.map(r => r.request)).toEqual([
+					expect(res.map((r) => r.request)).toEqual([
 						"./B/a?query#hash",
 						"./A/b?query#hash"
 					]);
-					expect(res.map(r => r.getContext())).toEqual(["/a", "/b"]);
-					expect(res.map(r => r.userRequest)).toEqual(["./B/a", "./A/b"]);
+					expect(res.map((r) => r.getContext())).toEqual(["/a", "/b"]);
+					expect(res.map((r) => r.userRequest)).toEqual(["./B/a", "./A/b"]);
 					done();
 				}
 			);

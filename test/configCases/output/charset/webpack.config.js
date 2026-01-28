@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	target: "web",
@@ -7,6 +9,9 @@ module.exports = {
 	},
 	performance: {
 		hints: false
+	},
+	experiments: {
+		css: true
 	},
 	optimization: {
 		chunkIds: "named",

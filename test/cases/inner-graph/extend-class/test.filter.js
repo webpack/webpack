@@ -1,5 +1,5 @@
-var supportsClassStaticBlock = require("../../../helpers/supportsClassStaticBlock");
+"use strict";
 
-module.exports = function (config) {
-	return supportsClassStaticBlock();
-};
+const supportsClassStaticBlock = require("../../../helpers/supportsClassStaticBlock");
+
+module.exports = () => supportsClassStaticBlock();

@@ -1,3 +1,4 @@
-module.exports = function (config) {
-	return !(config.experiments && config.experiments.cacheUnaffected);
-};
+"use strict";
+
+module.exports = (config) =>
+	!(config.experiments && config.experiments.cacheUnaffected);

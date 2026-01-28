@@ -1,6 +1,8 @@
-var supportsWorker = require("../../../helpers/supportsWorker");
+"use strict";
 
-module.exports = function (config) {
+const supportsWorker = require("../../../helpers/supportsWorker");
+
+module.exports = (config) => {
 	if (config.target !== "web") {
 		return false;
 	}

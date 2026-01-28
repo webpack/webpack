@@ -1,6 +1,9 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: "./example",
 	output: {
@@ -10,3 +13,5 @@ module.exports = {
 		libraryTarget: "umd"
 	}
 };
+
+module.exports = config;

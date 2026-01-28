@@ -1,5 +1,7 @@
-const webpack = require("../../../../");
+"use strict";
+
 const path = require("path");
+const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -12,9 +14,9 @@ module.exports = {
 		]
 	},
 	plugins: [
-		compiler => {
-			compiler.hooks.compilation.tap("Test", compilation => {
-				compilation.hooks.succeedModule.tap("Test", module => {
+		(compiler) => {
+			compiler.hooks.compilation.tap("Test", (compilation) => {
+				compilation.hooks.succeedModule.tap("Test", (module) => {
 					const fileDeps = new webpack.util.LazySet();
 					const contextDeps = new webpack.util.LazySet();
 					const missingDeps = new webpack.util.LazySet();
@@ -25,21 +27,21 @@ module.exports = {
 						missingDeps,
 						buildDeps
 					);
-					expect(Array.from(fileDeps).sort()).toEqual([
+					expect([...fileDeps].sort()).toEqual([
 						path.join(__dirname, "index.js"),
 						path.join(__dirname, "loader.js")
 					]);
-					expect(Array.from(contextDeps).sort()).toEqual([
+					expect([...contextDeps].sort()).toEqual([
 						path.join(__dirname, ".."),
 						__dirname
 					]);
-					expect(Array.from(missingDeps).sort()).toEqual([
+					expect([...missingDeps].sort()).toEqual([
 						path.join(__dirname, "missing1.js"),
 						path.join(__dirname, "missing2.js"),
 						path.join(__dirname, "missing3.js"),
 						path.join(__dirname, "missing4.js")
 					]);
-					expect(Array.from(fileDeps).sort()).toEqual([
+					expect([...fileDeps].sort()).toEqual([
 						path.join(__dirname, "index.js"),
 						path.join(__dirname, "loader.js")
 					]);

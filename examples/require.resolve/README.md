@@ -80,6 +80,12 @@ module.exports = Math.random();
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
@@ -121,25 +127,25 @@ module.exports = Math.random();
 ## Unoptimized
 
 ```
-asset output.js 2.41 KiB [emitted] (name: main)
+asset output.js 2.67 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module
   ./example.js 282 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 311 bytes [emitted] [minimized] (name: main)
+asset output.js 307 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module
   ./example.js 282 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

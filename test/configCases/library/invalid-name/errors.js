@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = [
 	[
 		/Library name base \(123-hello world\) must be a valid identifier/,

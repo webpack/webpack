@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -38,8 +40,5 @@ module.exports = {
 				sideEffects: false
 			}
 		]
-	},
-	experiments: {
-		topLevelAwait: true
 	}
 };

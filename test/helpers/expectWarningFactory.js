@@ -1,21 +1,23 @@
+"use strict";
+
 module.exports = () => {
 	const warnings = [];
 	let oldWarn;
 
-	beforeEach(done => {
+	beforeEach((done) => {
 		oldWarn = console.warn;
-		console.warn = m => warnings.push(m);
+		console.warn = (m) => warnings.push(m);
 		done();
 	});
 
-	afterEach(done => {
+	afterEach((done) => {
 		expectWarning();
 		console.warn = oldWarn;
 		done();
 	});
 
 	const expectWarning = (...regexp) => {
-		expect(warnings).toEqual(regexp.map(r => expect.stringMatching(r)));
+		expect(warnings).toEqual(regexp.map((r) => expect.stringMatching(r)));
 		warnings.length = 0;
 	};
 

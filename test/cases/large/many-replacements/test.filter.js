@@ -1,3 +1,3 @@
-module.exports = function (config) {
-	return !process.env.CI;
-};
+"use strict";
+
+module.exports = () => !process.env.CI;

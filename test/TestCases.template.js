@@ -1,32 +1,31 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
-const vm = require("vm");
-const { pathToFileURL, URL } = require("url");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const captureStdio = require("./helpers/captureStdio");
-const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
+const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
-categories = categories.map(cat => ({
+categories = categories.map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter(folder => !folder.includes("_"))
+		.filter((folder) => !folder.includes("_"))
 }));
 
-const createLogger = appendTarget => ({
-	log: l => appendTarget.push(l),
-	debug: l => appendTarget.push(l),
-	trace: l => appendTarget.push(l),
-	info: l => appendTarget.push(l),
+const createLogger = (appendTarget) => ({
+	log: (l) => appendTarget.push(l),
+	debug: (l) => appendTarget.push(l),
+	trace: (l) => appendTarget.push(l),
+	info: (l) => appendTarget.push(l),
 	warn: console.warn.bind(console),
 	error: console.error.bind(console),
 	logTime: () => {},
@@ -39,21 +38,24 @@ const createLogger = appendTarget => ({
 	status: () => {}
 });
 
-const describeCases = config => {
+const describeCases = (config) => {
 	describe(config.name, () => {
 		let stderr;
+
 		beforeEach(() => {
 			stderr = captureStdio(process.stderr, true);
 		});
+
 		afterEach(() => {
 			stderr.restore();
 		});
+
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
-			describe(category.name, function () {
-				jest.setTimeout(20000);
+			describe(category.name, () => {
+				jest.setTimeout(30000);
 
-				for (const testName of category.tests.filter(test => {
+				for (const testName of category.tests.filter((test) => {
 					const testDirectory = path.join(casesPath, category.name, test);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -61,6 +63,7 @@ const describeCases = config => {
 						describe.skip(test, () => {
 							it("filtered", () => {});
 						});
+
 						return false;
 					}
 					return true;
@@ -89,7 +92,9 @@ const describeCases = config => {
 						if (fs.existsSync(testConfigPath)) {
 							testConfig = require(testConfigPath);
 						}
+
 						const TerserPlugin = require("terser-webpack-plugin");
+
 						const terserForTesting = new TerserPlugin({
 							parallel: false
 						});
@@ -182,21 +187,24 @@ const describeCases = config => {
 									}
 								]
 							},
-							plugins: (config.plugins || []).concat(function () {
-								this.hooks.compilation.tap("TestCasesTest", compilation => {
-									for (const hook of [
-										"optimize",
-										"optimizeModules",
-										"optimizeChunks",
-										"afterOptimizeTree",
-										"afterOptimizeAssets"
-									]) {
-										compilation.hooks[hook].tap("TestCasesTest", () =>
-											compilation.checkConstraints()
-										);
-									}
-								});
-							}),
+							plugins: [
+								...(config.plugins || []),
+								function testCasesTest() {
+									this.hooks.compilation.tap("TestCasesTest", (compilation) => {
+										for (const hook of [
+											"optimize",
+											"optimizeModules",
+											"optimizeChunks",
+											"afterOptimizeTree",
+											"afterOptimizeAssets"
+										]) {
+											compilation.hooks[hook].tap("TestCasesTest", () =>
+												compilation.checkConstraints()
+											);
+										}
+									});
+								}
+							],
 							experiments: {
 								asyncWebAssembly: true,
 								topLevelAwait: true,
@@ -208,19 +216,23 @@ const describeCases = config => {
 								console: createLogger(infraStructureLog)
 							}
 						};
+
+						beforeAll((done) => {
+							rimraf(cacheDirectory, done);
+						});
+
 						const cleanups = [];
+
 						afterAll(() => {
 							options = undefined;
 							testConfig = undefined;
 							for (const fn of cleanups) fn();
 						});
-						beforeAll(done => {
-							rimraf(cacheDirectory, done);
-						});
+
 						if (config.cache) {
 							it(
 								`${testName} should pre-compile to fill disk cache (1st)`,
-								done => {
+								(done) => {
 									const oldPath = options.output.path;
 									options.output.path = path.join(
 										options.output.path,
@@ -228,8 +240,10 @@ const describeCases = config => {
 									);
 									infraStructureLog.length = 0;
 									const deprecationTracker = deprecationTracking.start();
+
 									const webpack = require("..");
-									webpack(options, err => {
+
+									webpack(options, (err) => {
 										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
@@ -259,9 +273,10 @@ const describeCases = config => {
 								},
 								testConfig.timeout || 60000
 							);
+
 							it(
 								`${testName} should pre-compile to fill disk cache (2nd)`,
-								done => {
+								(done) => {
 									const oldPath = options.output.path;
 									options.output.path = path.join(
 										options.output.path,
@@ -269,8 +284,10 @@ const describeCases = config => {
 									);
 									infraStructureLog.length = 0;
 									const deprecationTracker = deprecationTracking.start();
+
 									const webpack = require("..");
-									webpack(options, err => {
+
+									webpack(options, (err) => {
 										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
@@ -301,11 +318,14 @@ const describeCases = config => {
 								testConfig.cachedTimeout || testConfig.timeout || 10000
 							);
 						}
+
 						it(
 							`${testName} should compile`,
-							done => {
+							(done) => {
 								infraStructureLog.length = 0;
+
 								const webpack = require("..");
+
 								const compiler = webpack(options);
 								const run = () => {
 									const deprecationTracker = deprecationTracking.start();
@@ -333,7 +353,7 @@ const describeCases = config => {
 										) {
 											return;
 										}
-										compiler.close(err => {
+										compiler.close((err) => {
 											if (err) return done(err);
 											const statOptions = {
 												preset: "verbose",
@@ -345,7 +365,7 @@ const describeCases = config => {
 											fs.writeFileSync(
 												path.join(outputDirectory, "stats.txt"),
 												stats.toString(statOptions),
-												"utf-8"
+												"utf8"
 											);
 											const jsonStats = stats.toJson({
 												errorDetails: true,
@@ -397,7 +417,7 @@ const describeCases = config => {
 								if (config.cache) {
 									// pre-compile to fill memory cache
 									const deprecationTracker = deprecationTracking.start();
-									compiler.run(err => {
+									compiler.run((err) => {
 										deprecationTracker();
 										if (err) return done(err);
 										run();
@@ -411,102 +431,34 @@ const describeCases = config => {
 								(config.cache ? 20000 : 60000)
 						);
 
-						it(`${testName} should load the compiled tests`, done => {
-							const esmContext = vm.createContext({
-								it: _it,
-								expect,
-								process,
-								global,
-								URL,
-								Buffer,
-								setTimeout,
-								setImmediate,
-								nsObj: function (m) {
-									Object.defineProperty(m, Symbol.toStringTag, {
-										value: "Module"
-									});
-									return m;
-								}
+						it(`${testName} should load the compiled tests`, (done) => {
+							const runner = new TestRunner({
+								target: options.target,
+								outputDirectory,
+								testMeta: {
+									category: category.name,
+									name: testName
+								},
+								testConfig,
+								webpackOptions: options
 							});
-							cleanups.push(() => (esmContext.it = undefined));
-							function _require(module, esmMode) {
-								if (module.startsWith("./")) {
-									const p = path.join(outputDirectory, module);
-									const content = fs.readFileSync(p, "utf-8");
-									if (p.endsWith(".mjs")) {
-										let esm;
-										try {
-											esm = new vm.SourceTextModule(content, {
-												identifier: p,
-												context: esmContext,
-												initializeImportMeta: (meta, module) => {
-													meta.url = pathToFileURL(p).href;
-												},
-												importModuleDynamically: async (specifier, module) => {
-													const result = await _require(specifier, "evaluated");
-													return await asModule(result, module.context);
-												}
-											});
-											cleanups.push(() => (esmContext.it = undefined));
-										} catch (err) {
-											console.log(err);
-											err.message += `\nwhile parsing ${p}`;
-											throw err;
-										}
-										if (esmMode === "unlinked") return esm;
-										return (async () => {
-											await esm.link(
-												async (specifier, module) =>
-													await asModule(
-														await _require(specifier, "unlinked"),
-														module.context,
-														true
-													)
-											);
-											// node.js 10 needs instantiate
-											if (esm.instantiate) esm.instantiate();
-											await esm.evaluate();
-											if (esmMode === "evaluated") return esm;
-											const ns = esm.namespace;
-											return ns.default && ns.default instanceof Promise
-												? ns.default
-												: ns;
-										})();
-									}
-									const fn = vm.runInThisContext(
-										"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-											"global.expect = expect;" +
-											`function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }${
-												content
-											}\n})`,
-										p
-									);
-									const m = {
-										exports: {},
-										webpackTestSuiteModule: true
-									};
-									fn.call(
-										m.exports,
-										_require,
-										m,
-										m.exports,
-										outputDirectory,
-										p,
-										_it,
-										expect
-									);
-									return m.exports;
-								}
-								return require(module);
+							runner.mergeModuleScope({
+								it: _it
+							});
+							if (testConfig.moduleScope) {
+								testConfig.moduleScope(runner._moduleScope, options);
 							}
-							_require.webpackTestSuiteRequire = true;
-							Promise.resolve()
-								.then(() => _require(`./${options.output.filename}`))
-								.then(() => {
-									if (getNumberOfTests() === 0)
-										return done(new Error("No tests exported by test case"));
-									done();
-								}, done);
+							runner.require.webpackTestSuiteRequire = true;
+							const results = [];
+							results.push(
+								runner.require(outputDirectory, `./${options.output.filename}`)
+							);
+							Promise.all(results).then(() => {
+								if (getNumberOfTests() === 0) {
+									return done(new Error("No tests exported by test case"));
+								}
+								done();
+							}, done);
 						}, 10000);
 
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(

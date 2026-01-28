@@ -1,7 +1,9 @@
-var fs = require("fs");
+"use strict";
+
+const fs = require("fs");
 
 const findFile = (files, regex) =>
-	files.find(function (file) {
+	files.find((file) => {
 		if (regex.test(file)) {
 			return true;
 		}
@@ -14,10 +16,9 @@ const verifyFilenameLength = (filename, expectedNameLength) => {
 };
 
 module.exports = {
-	findBundle: function (i, options) {
-		var files = fs.readdirSync(options.output.path);
-
-		var bundleDetects = [
+	findBundle(i, options) {
+		const files = fs.readdirSync(options.output.path);
+		const bundleDetects = [
 			options.amd.expectedChunkFilenameLength && {
 				regex: new RegExp(`^\\d+.bundle${i}`, "i"),
 				expectedNameLength: options.amd.expectedChunkFilenameLength
@@ -28,8 +29,8 @@ module.exports = {
 			}
 		].filter(Boolean);
 
-		var bundleDetect;
-		var filename;
+		let bundleDetect;
+		let filename;
 
 		for (bundleDetect of bundleDetects) {
 			filename = findFile(files, bundleDetect.regex);

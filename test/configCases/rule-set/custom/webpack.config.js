@@ -1,18 +1,26 @@
+"use strict";
+
+/** @typedef {import("../../../../").RuleSetUseFunction} RuleSetUseFunction */
+/** @typedef {import("../../../../").RuleSetUseItem} RuleSetUseItem */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [
 			{
 				test: /[ab]\.js$/,
-				use: function (data) {
-					return {
+				/** @type {RuleSetUseFunction} */
+				use(data) {
+					return /** @type {RuleSetUseItem} */ ({
 						loader: "./loader",
 						options: {
-							resource: data.resource.replace(/^.*[\\/]/g, ""),
+							resource:
+								/** @type {string} */
+								(data.resource).replace(/^.*[\\/]/g, ""),
 							resourceQuery: data.resourceQuery,
 							issuer: data.issuer.replace(/^.*[\\/]/g, "")
 						}
-					};
+					});
 				}
 			}
 		]

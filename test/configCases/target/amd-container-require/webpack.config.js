@@ -1,4 +1,7 @@
+"use strict";
+
 const webpack = require("../../../../");
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	output: {

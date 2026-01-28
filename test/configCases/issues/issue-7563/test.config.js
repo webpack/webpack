@@ -1,13 +1,13 @@
-var fs = require("fs");
+"use strict";
+
+const fs = require("fs");
 
 module.exports = {
 	noTests: true,
-	findBundle: function (i, options) {
-		var regex = new RegExp(`^bundle.${options.name}`, "i");
-		var files = fs.readdirSync(options.output.path);
-		var bundle = files.find(function (file) {
-			return regex.test(file);
-		});
+	findBundle(i, options) {
+		const regex = new RegExp(`^bundle.${options.name}`, "i");
+		const files = fs.readdirSync(options.output.path);
+		const bundle = files.find((file) => regex.test(file));
 
 		if (!bundle) {
 			throw new Error(

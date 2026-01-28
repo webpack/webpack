@@ -1,5 +1,5 @@
-var supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
+"use strict";
 
-module.exports = function (config) {
-	return supportsWebAssembly();
-};
+const supportsWebAssembly = require("../../../helpers/supportsWebAssembly");
+
+module.exports = () => supportsWebAssembly();

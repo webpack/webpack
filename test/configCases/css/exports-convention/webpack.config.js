@@ -1,4 +1,8 @@
+"use strict";
+
 const webpack = require("../../../../");
+
+/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
 const common = {
 	optimization: {
@@ -42,8 +46,9 @@ const common = {
 					},
 					{
 						resourceQuery: /\?upper$/,
+						/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 						generator: {
-							exportsConvention: name => name.toUpperCase()
+							exportsConvention: (name) => name.toUpperCase()
 						}
 					}
 				]
@@ -69,6 +74,7 @@ module.exports = [
 	},
 	{
 		...common,
+		devtool: false,
 		mode: "production",
 		target: "web",
 		plugins: [

@@ -1,7 +1,7 @@
 "use strict";
 
-const { createFsFromVolume, Volume } = require("memfs");
 const util = require("util");
+const { Volume, createFsFromVolume } = require("memfs");
 const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");
 
@@ -132,7 +132,7 @@ describe("FileSystemInfo", () => {
 		return fs;
 	};
 
-	const createFsInfo = fs => {
+	const createFsInfo = (fs) => {
 		const logger = {
 			error: (...args) => {
 				throw new Error(util.format(...args));
@@ -154,7 +154,7 @@ describe("FileSystemInfo", () => {
 				fsInfo.logs.push(`[${method}] ${msg}`);
 			};
 		}
-		fsInfo.addFileTimestamps(new Map(ignored.map(i => [i, "ignore"])));
+		fsInfo.addFileTimestamps(new Map(ignored.map((i) => [i, "ignore"])));
 		return fsInfo;
 	};
 
@@ -186,7 +186,7 @@ describe("FileSystemInfo", () => {
 		);
 	};
 
-	const clone = object => {
+	const clone = (object) => {
 		const serialized = buffersSerializer.serialize(object, {});
 		return buffersSerializer.deserialize(serialized, {});
 	};
@@ -198,7 +198,7 @@ describe("FileSystemInfo", () => {
 		expected,
 		callback
 	) => {
-		expectSnapshotState(fs, snapshot, expected, err => {
+		expectSnapshotState(fs, snapshot, expected, (err) => {
 			if (err) return callback(err);
 			if (!snapshot2) return callback();
 			expectSnapshotState(fs, snapshot2, expected, callback);
@@ -207,7 +207,7 @@ describe("FileSystemInfo", () => {
 
 	const expectSnapshotState = (fs, snapshot, expected, callback) => {
 		const fsInfo = createFsInfo(fs);
-		const details = snapshot => `${fsInfo.logs.join("\n")}
+		const details = (snapshot) => `${fsInfo.logs.join("\n")}
 ${util.inspect(snapshot, false, Infinity, true)}`;
 		fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
 			if (err) return callback(err);
@@ -244,7 +244,7 @@ ${details(snapshot)}`)
 	};
 
 	const updateFile = (fs, filename) => {
-		const oldContent = fs.readFileSync(filename, "utf-8");
+		const oldContent = fs.readFileSync(filename, "utf8");
 		if (filename.endsWith(".json")) {
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
@@ -265,7 +265,7 @@ ${details(snapshot)}`)
 		["tsh", { timestamp: true, hash: true }]
 	]) {
 		describe(`${name} mode`, () => {
-			it("should always accept an empty snapshot", done => {
+			it("should always accept an empty snapshot", (done) => {
 				const fs = createFs();
 				const fsInfo = createFsInfo(fs);
 				fsInfo.createSnapshot(
@@ -282,7 +282,7 @@ ${details(snapshot)}`)
 				);
 			});
 
-			it("should accept a snapshot when fs is unchanged", done => {
+			it("should accept a snapshot when fs is unchanged", (done) => {
 				const fs = createFs();
 				createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 					if (err) return done(err);
@@ -319,7 +319,7 @@ ${details(snapshot)}`)
 				...(name !== "timestamp" ? ignoredFileChanges : []),
 				...(name === "hash" ? ["/path/context/sub/ignored.txt"] : [])
 			]) {
-				it(`should invalidate the snapshot when ${fileChange} is changed`, done => {
+				it(`should invalidate the snapshot when ${fileChange} is changed`, (done) => {
 					const fs = createFs();
 					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 						if (err) return done(err);
@@ -338,7 +338,7 @@ ${details(snapshot)}`)
 				...(name === "timestamp" ? ignoredFileChanges : []),
 				...(name !== "hash" ? ["/path/context/sub/ignored.txt"] : [])
 			]) {
-				it(`should not invalidate the snapshot when ${fileChange} is changed`, done => {
+				it(`should not invalidate the snapshot when ${fileChange} is changed`, (done) => {
 					const fs = createFs();
 					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 						if (err) return done(err);
@@ -354,7 +354,7 @@ ${details(snapshot)}`)
 				"/path/context+files/file2.txt",
 				"/path/node_modules/package.txt"
 			]) {
-				it(`should invalidate the snapshot when ${newFile} is created`, done => {
+				it(`should invalidate the snapshot when ${newFile} is created`, (done) => {
 					const fs = createFs();
 					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 						if (err) return done(err);
@@ -370,7 +370,7 @@ ${details(snapshot)}`)
 				"/path/cache/package-2345",
 				"/path/ignored.txt"
 			]) {
-				it(`should not invalidate the snapshot when ${newFile} is created`, done => {
+				it(`should not invalidate the snapshot when ${newFile} is created`, (done) => {
 					const fs = createFs();
 					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 						if (err) return done(err);
@@ -381,7 +381,7 @@ ${details(snapshot)}`)
 			}
 
 			if (name !== "timestamp") {
-				it("should not invalidate snapshot when only timestamps have changed", done => {
+				it("should not invalidate snapshot when only timestamps have changed", (done) => {
 					const fs = createFs();
 					createSnapshot(fs, options, (err, snapshot, snapshot2) => {
 						if (err) return done(err);
@@ -397,7 +397,7 @@ ${details(snapshot)}`)
 		const options = { timestamp: true };
 
 		/**
-		 * @param {function((WebpackError | null)=, (Snapshot | null)=): void} callback callback function
+		 * @param {(err?: WebpackError | null, snapshot?: Snapshot | null) => void} callback callback function
 		 */
 		function getSnapshot(callback) {
 			const fs = createFs();
@@ -412,7 +412,7 @@ ${details(snapshot)}`)
 			);
 		}
 
-		it("should return same iterable for getFileIterable()", done => {
+		it("should return same iterable for getFileIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
 				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
@@ -420,7 +420,7 @@ ${details(snapshot)}`)
 			});
 		});
 
-		it("should return same iterable for getContextIterable()", done => {
+		it("should return same iterable for getContextIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
 				expect(snapshot.getContextIterable()).toEqual(
@@ -430,7 +430,7 @@ ${details(snapshot)}`)
 			});
 		});
 
-		it("should return same iterable for getMissingIterable()", done => {
+		it("should return same iterable for getMissingIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
 				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
@@ -440,7 +440,7 @@ ${details(snapshot)}`)
 	});
 
 	describe("symlinks", () => {
-		it("should work with symlinks with errors", done => {
+		it("should work with symlinks with errors", (done) => {
 			const fs = createFs();
 
 			fs.symlinkSync(
@@ -473,7 +473,7 @@ ${details(snapshot)}`)
 			);
 		});
 
-		it("should work with symlinks with errors #1", done => {
+		it("should work with symlinks with errors #1", (done) => {
 			const fs = createFs();
 
 			fs.symlinkSync(
@@ -494,7 +494,7 @@ ${details(snapshot)}`)
 				missing,
 				["timestamp", { timestamp: true }],
 				(err, snapshot) => {
-					expect(snapshot).toBe(null);
+					expect(snapshot).toBeNull();
 					done();
 				}
 			);

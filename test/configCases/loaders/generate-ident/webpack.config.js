@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
@@ -9,7 +11,7 @@ module.exports = {
 					{
 						loader: "./loader2",
 						options: {
-							f: function () {
+							f() {
 								return "ok";
 							}
 						}
@@ -25,7 +27,7 @@ module.exports = {
 				use: {
 					loader: "./loader2",
 					options: {
-						f: function () {
+						f() {
 							return "maybe";
 						}
 					}
@@ -36,7 +38,7 @@ module.exports = {
 				use: {
 					loader: "./loader2",
 					options: {
-						f: function () {
+						f() {
 							return "yes";
 						}
 					}
@@ -51,7 +53,7 @@ module.exports = {
 					{
 						loader: "./loader2",
 						options: {
-							f: function () {
+							f() {
 								return "ok";
 							}
 						}

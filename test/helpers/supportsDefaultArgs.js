@@ -1,6 +1,8 @@
+"use strict";
+
 module.exports = function supportsDefaultArgs() {
 	try {
-		var f = eval("(function f(a = 123) { return a; })");
+		const f = eval("(function f(a = 123) { return a; })");
 		return f() === 123;
 	} catch (_err) {
 		return false;

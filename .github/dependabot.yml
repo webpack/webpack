@@ -17,9 +17,9 @@ updates:
         exclude-patterns:
           - "eslint-scope"
           - "json-parse-even-better-errors"
-          - "schema-utils"
           - "strip-ansi"
           - "rimraf"
+          - "mime-types"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

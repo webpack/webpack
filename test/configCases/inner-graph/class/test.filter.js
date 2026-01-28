@@ -1,5 +1,5 @@
-var supportsClassFields = require("../../../helpers/supportsClassFields");
+"use strict";
 
-module.exports = function (config) {
-	return supportsClassFields();
-};
+const supportsClassFields = require("../../../helpers/supportsClassFields");
+
+module.exports = () => supportsClassFields();

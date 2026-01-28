@@ -1,6 +1,10 @@
-var webpack = require("../../../");
+"use strict";
+
+const path = require("path");
+const webpack = require("../../../");
+
 /** @type {import("../../../").Configuration[]} */
-module.exports = ["fitting", "content-change"].map(type => ({
+module.exports = ["fitting", "content-change"].map((type) => ({
 	name: type,
 	mode: "production",
 	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
@@ -17,7 +21,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 			maxSize: 2500
 		})
 	],
-	recordsInputPath: `${__dirname}/input-records-${type}.json`,
+	recordsInputPath: path.resolve(__dirname, `./input-records-${type}.json`),
 	// recordsOutputPath: __dirname + `/records-${type}.json`,
 	stats: {
 		chunks: true,

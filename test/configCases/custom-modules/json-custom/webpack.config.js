@@ -1,4 +1,8 @@
+"use strict";
+
 const toml = require("toml");
+
+/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
@@ -9,9 +13,11 @@ module.exports = [
 				{
 					test: /\.toml$/,
 					type: "json",
+					/** @type {ParserOptionsByModuleTypeKnown['json']} */
 					parser: {
 						parse(input) {
-							expect(arguments.length).toBe(1);
+							// eslint-disable-next-line prefer-rest-params
+							expect(arguments).toHaveLength(1);
 							return toml.parse(input);
 						}
 					}

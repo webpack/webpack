@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	optimization: {
 		splitChunks: {
@@ -7,3 +10,5 @@ module.exports = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	}
 };
+
+module.exports = config;

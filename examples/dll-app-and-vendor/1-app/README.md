@@ -5,10 +5,15 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../../");
+"use strict";
 
-module.exports = {
+const path = require("path");
+const webpack = require("../../../");
+
+const manifest = "../0-vendor/dist/vendor-manifest.json";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	context: __dirname,
 	entry: "./example-app",
@@ -18,10 +23,12 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			manifest: require("../0-vendor/dist/vendor-manifest.json") // eslint-disable-line
+			manifest: require(manifest)
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # example-app.js
@@ -53,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_bef1463383efb1c65306 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1fb982cf4f66bf2251ee ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -61,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_bef1463383efb1c65306 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_1fb982cf4f66bf2251ee */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_bef1463383efb1c65306" ***!
+  !*** external "vendor_lib_1fb982cf4f66bf2251ee" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -74,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_bef1463383efb
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_bef1463383efb1c65306;
+module.exports = vendor_lib_1fb982cf4f66bf2251ee;
 
 /***/ })
 /******/ 	]);
@@ -93,6 +100,12 @@ module.exports = vendor_lib_bef1463383efb1c65306;
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -154,7 +167,7 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 ## Unoptimized
 
 ```
-asset app.js 3.44 KiB [emitted] (name: main)
+asset app.js 3.7 KiB [emitted] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -163,13 +176,13 @@ chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset app.js 333 bytes [emitted] [minimized] (name: main)
+asset app.js 329 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -177,7 +190,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 <!-- @TODO:

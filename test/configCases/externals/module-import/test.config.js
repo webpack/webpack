@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
-	findBundle: (i, options) => ["main.js"]
+	findBundle: () => ["main.js"]
 };

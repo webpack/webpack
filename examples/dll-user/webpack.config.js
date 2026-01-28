@@ -1,7 +1,10 @@
+"use strict";
+
 const path = require("path");
 const webpack = require("../../");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
@@ -15,3 +18,5 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;

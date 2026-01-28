@@ -1,4 +1,4 @@
-/** @type {import("../../../../").LoaderDefinitionFunction} */
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = function () {
 	const callback = this.async();
 	this.importModule("./module1", { baseUri: "webpack://" }, (err, exports) => {

@@ -1,18 +1,22 @@
+"use strict";
+
 describe("warmup", () => {
-	it("should warmup webpack", done => {
+	it("should warmup webpack", (done) => {
+		/** @type {typeof import("../../") | undefined} */
 		let webpack = require("../../");
+
 		const END = new Error("end warmup");
 		webpack(
 			{
 				entry: "data:text/javascript,import 'data:text/javascript,'",
 				plugins: [
-					c =>
+					(c) =>
 						c.hooks.emit.tap("Warmup", () => {
 							throw END;
 						})
 				]
 			},
-			err => {
+			(err) => {
 				webpack = undefined;
 				try {
 					expect(err).toBe(END);

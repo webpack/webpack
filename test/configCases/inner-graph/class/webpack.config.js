@@ -1,5 +1,9 @@
+"use strict";
+
 const createTestCases = require("../_helpers/createTestCases");
+
 const base = ["getNameA", "getNameB"];
+
 module.exports = createTestCases({
 	nothing: {
 		usedExports: [],

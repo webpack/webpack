@@ -2,67 +2,67 @@ function donotcallme() {
 	expect("asi unsafe call happened").toBe(false);
 }
 
-it("should define FALSE", function() {
+it("should define FALSE", function () {
 	expect(FALSE).toBe(false);
 	expect(typeof FALSE).toBe("boolean");
 	var x = require(FALSE ? "fail" : "./dir/a");
 	var y = FALSE ? require("fail") : require("./dir/a");
 });
-it("should define TRUE", function() {
+it("should define TRUE", function () {
 	expect(TRUE).toBe(true);
 	expect(typeof TRUE).toBe("boolean");
 	var x = require(TRUE ? "./dir/a" : "fail");
 	var y = TRUE ? require("./dir/a") : require("fail");
 });
-it("should define CODE", function() {
+it("should define CODE", function () {
 	expect(CODE).toBe(3);
 	expect(typeof CODE).toBe("number");
 	if (CODE !== 3) require("fail");
 	if (typeof CODE !== "number") require("fail");
 });
-it("should define FUNCTION", function() {
+it("should define FUNCTION", function () {
 	expect(FUNCTION(5)).toBe(6);
 	expect(typeof FUNCTION).toBe("function");
 	if (typeof FUNCTION !== "function") require("fail");
 });
-it("should define NULL", function() {
+it("should define NULL", function () {
 	expect(NULL).toBeNull();
 	if (NULL) require("fail");
 	if (NULL !== null) require("fail");
 	if (typeof NULL !== "object") require("fail");
 });
-it("should define UNDEFINED", function() {
+it("should define UNDEFINED", function () {
 	expect(typeof UNDEFINED).toBe("undefined");
 	if (typeof UNDEFINED !== "undefined") require("fail");
 });
-it("should define NUMBER", function() {
+it("should define NUMBER", function () {
 	expect(NUMBER).toBe(100.05);
 	expect(typeof NUMBER).toBe("number");
 	if (NUMBER !== 100.05) require("fail");
 	if (typeof NUMBER !== "number") require("fail");
 });
-it("should define ZERO", function() {
+it("should define ZERO", function () {
 	expect(ZERO).toBe(0);
 	expect(typeof ZERO).toBe("number");
 	if (ZERO !== 0) require("fail");
 	if (typeof ZERO !== "number") require("fail");
 });
-it("should define ONE", function() {
+it("should define ONE", function () {
 	expect(ONE).toBe(1);
 	expect(typeof ONE).toBe("number");
 	expect(42 / ONE).toBe(42);
 	if (ONE !== 1) require("fail");
 	if (typeof ONE !== "number") require("fail");
 });
-it("should define BIGINT", function() {
+it("should define BIGINT", function () {
 	expect(BIGINT).toBe(9007199254740993n);
 	expect(typeof BIGINT).toBe("bigint");
 });
-it("should define ZERO_BIGINT", function() {
+it("should define ZERO_BIGINT", function () {
 	expect(ZERO_BIGINT).toBe(0n);
 	expect(typeof BIGINT).toBe("bigint");
 });
-it("should define POSITIVE_ZERO", function() {
+it("should define POSITIVE_ZERO", function () {
 	expect(POSITIVE_ZERO).toBe(+0);
 	expect(POSITIVE_ZERO).toBe(0);
 	expect(typeof POSITIVE_ZERO).toBe("number");
@@ -76,7 +76,7 @@ it("should define POSITIVE_ZERO", function() {
 	if (POSITIVE_ZERO !== 0) require("fail");
 	if (POSITIVE_ZERO != 0) require("fail");
 });
-it("should define NEGATIVE_ZER0", function() {
+it("should define NEGATIVE_ZER0", function () {
 	expect(NEGATIVE_ZER0).toBe(-0);
 	expect(typeof NEGATIVE_ZER0).toBe("number");
 	expect(Object.is(NEGATIVE_ZER0, 0)).toBe(false);
@@ -89,21 +89,21 @@ it("should define NEGATIVE_ZER0", function() {
 	if (NEGATIVE_ZER0 !== 0) require("fail");
 	if (NEGATIVE_ZER0 != 0) require("fail");
 });
-it("should define NEGATIVE_NUMBER", function() {
+it("should define NEGATIVE_NUMBER", function () {
 	expect(NEGATIVE_NUMBER).toBe(-100.25);
 	expect(typeof NEGATIVE_NUMBER).toBe("number");
 	expect(100.25 / NEGATIVE_NUMBER).toBe(-1);
 	if (!NEGATIVE_NUMBER) require("fail");
 	if (typeof NEGATIVE_NUMBER !== "number") require("fail");
 });
-it("should define POSITIVE_NUMBER", function() {
+it("should define POSITIVE_NUMBER", function () {
 	expect(POSITIVE_NUMBER).toBe(+100.25);
 	expect(typeof POSITIVE_NUMBER).toBe("number");
 	expect(POSITIVE_NUMBER / 100.25).toBe(1);
 	if (!POSITIVE_NUMBER) require("fail");
 	if (typeof POSITIVE_NUMBER !== "number") require("fail");
 });
-it("should define STRING", function() {
+it("should define STRING", function () {
 	expect(STRING).toBe("string");
 	expect(typeof STRING).toBe("string");
 	if (!STRING) require("fail");
@@ -111,7 +111,7 @@ it("should define STRING", function() {
 	if (STRING === "") require("fail");
 	if (STRING == "") require("fail");
 });
-it("should define EMPTY_STRING", function() {
+it("should define EMPTY_STRING", function () {
 	expect(EMPTY_STRING).toBe("");
 	expect(typeof EMPTY_STRING).toBe("string");
 	if (EMPTY_STRING) require("fail");
@@ -119,16 +119,16 @@ it("should define EMPTY_STRING", function() {
 	if (EMPTY_STRING !== "") require("fail");
 	if (EMPTY_STRING != "") require("fail");
 });
-it("should define REGEXP", function() {
+it("should define REGEXP", function () {
 	expect(REGEXP.toString()).toBe("/abc/i");
 	expect(typeof REGEXP).toBe("object");
 	if (typeof REGEXP !== "object") require("fail");
 });
-it("should define OBJECT", function() {
+it("should define OBJECT", function () {
 	var o = OBJECT;
 	expect(o.SUB.FUNCTION(10)).toBe(11);
 });
-it("should define OBJECT.SUB.CODE", function() {
+it("should define OBJECT.SUB.CODE", function () {
 	(donotcallme)
 	OBJECT;
 	(donotcallme)
@@ -138,37 +138,37 @@ it("should define OBJECT.SUB.CODE", function() {
 	if (OBJECT.SUB.CODE !== 3) require("fail");
 	if (typeof OBJECT.SUB.CODE !== "number") require("fail");
 
-	(function(sub) {
+	(function (sub) {
 		// should not crash
 		expect(sub.CODE).toBe(3);
 	})(OBJECT.SUB);
 });
-it("should define OBJECT.SUB.STRING", function() {
+it("should define OBJECT.SUB.STRING", function () {
 	expect(typeof OBJECT.SUB.STRING).toBe("string");
 	expect(OBJECT.SUB.STRING).toBe("string");
 	if (OBJECT.SUB.STRING !== "string") require("fail");
 	if (typeof OBJECT.SUB.STRING !== "string") require("fail");
 
-	(function(sub) {
+	(function (sub) {
 		// should not crash
 		expect(sub.STRING).toBe("string");
 	})(OBJECT.SUB);
 });
-it("should define ARRAY", function() {
+it("should define ARRAY", function () {
 	(donotcallme)
 	ARRAY;
 	expect(Array.isArray(ARRAY)).toBeTruthy();
 	expect(ARRAY).toHaveLength(2);
 });
-it("should define ARRAY[0]", function() {
+it("should define ARRAY[0]", function () {
 	expect(ARRAY[0]).toBe(2);
 });
-it("should define ARRAY[1][0]", function() {
+it("should define ARRAY[1][0]", function () {
 	expect(Array.isArray(ARRAY[1])).toBeTruthy();
 	expect(ARRAY[1]).toHaveLength(1);
 	expect(ARRAY[1][0]).toBe("six");
 });
-it("should define process.env.DEFINED_NESTED_KEY", function() {
+it("should define process.env.DEFINED_NESTED_KEY", function () {
 	expect(process.env.DEFINED_NESTED_KEY).toBe(5);
 	expect(typeof process.env.DEFINED_NESTED_KEY).toBe("number");
 	if (process.env.DEFINED_NESTED_KEY !== 5) require("fail");
@@ -180,7 +180,7 @@ it("should define process.env.DEFINED_NESTED_KEY", function() {
 	var indirect = process.env;
 	expect(indirect.DEFINED_NESTED_KEY).toBe(5);
 
-	(function(env) {
+	(function (env) {
 		expect(env.DEFINED_NESTED_KEY).toBe(5);
 		expect(typeof env.DEFINED_NESTED_KEY).toBe("number");
 		if (env.DEFINED_NESTED_KEY !== 5) require("fail");
@@ -212,7 +212,7 @@ it("should not explode on recursive typeof calls", function() {
 it("should not explode on recursive statements", function() {
 	expect(function() {
 		wurst; // <- is recursively defined in config
-	}).toThrowError("suppe is not defined");
+	}).toThrow("suppe is not defined");
 });
 
 it("should evaluate composed expressions (issue 5100)", function() {
@@ -231,7 +231,7 @@ it("should follow renamings in var (issue 5215)", function() {
 	expect(DEFINED_NESTED_KEY).toBe(5);
 });
 
-it("should check that runtimeValue callback argument is a module", function() {
+it("should check that runtimeValue callback argument is a module", function () {
 	expect(RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE).toEqual(true);
 });
 
@@ -250,48 +250,57 @@ it("should expand properly", function() {
 });
 
 it("destructuring assignment", () => {
-	const {used} = OBJECT2;
-	const {['used']: used2, used: used3} = OBJECT2.sub;
+	const { used } = OBJECT2;
+	const { ["used"]: used2, used: used3 } = OBJECT2.sub;
 	expect(used).toBe(used2);
 	expect(used).toBe(used3);
+
+	const { DEFINED_NESTED_KEY, DEFINED_NESTED_KEY_STRING } = process.env;
+	expect(DEFINED_NESTED_KEY).toBe(process.env.DEFINED_NESTED_KEY);
+	expect(DEFINED_NESTED_KEY_STRING).toBe(process.env.DEFINED_NESTED_KEY_STRING);
+
+	const { BAZ, BAZZ } = FOO.BAR;
+	expect(BAZ).toBe(FOO.BAR.BAZ);
+	expect(BAZZ).toBe(FOO.BAR.BAZZ);
+
+	const { BAZ: BAZ2 } = X.Y;
+	expect(BAZ2).toBe(X.Y.BAZ);
 });
 
-it('should allow shorthand property (issue #16764)', () => {
+it("should allow shorthand property (issue #16764)", () => {
 	const simple = { ONE, TRUE, NULL, STRING, BIGINT, NEGATIVE_NUMBER };
-	expect(simple).toStrictEqual({ 
-		ONE: 1, 
+	expect(simple).toStrictEqual({
+		ONE: 1,
 		TRUE: true,
-		NULL: null, 
-		STRING: "string", 
-		BIGINT: BigInt("9007199254740993"), 
-		NEGATIVE_NUMBER: -100.25 
-	})
+		NULL: null,
+		STRING: "string",
+		BIGINT: BigInt("9007199254740993"),
+		NEGATIVE_NUMBER: -100.25
+	});
 
 	const func = { FUNCTION };
 	expect(func.FUNCTION(3)).toBe(4);
 	expect(typeof func.FUNCTION).toBe("function");
-	
+
 	const code = { CODE };
 	expect(code.CODE).toBe(3);
 	expect(typeof code.CODE).toBe("number");
-	
-	
+
 	const regex = { REGEXP };
 	expect(regex.REGEXP.toString()).toBe("/abc/i");
 	expect(typeof regex.REGEXP).toBe("object");
-	
-	const nested = { OBJECT }
+
+	const nested = { OBJECT };
 	expect(nested.OBJECT.SUB.FUNCTION(7)).toBe(8);
 	expect(nested.OBJECT.SUB.CODE).toBe(3);
 	expect(nested.OBJECT.SUB.UNDEFINED).toBeUndefined();
 	expect(nested.OBJECT.SUB.REGEXP.toString()).toBe("/abc/i");
 	expect(nested.OBJECT.SUB.STRING).toBe("string");
 
-
-	const array = { ARRAY }
-	expect(array).toStrictEqual({ ARRAY: [2, ['six']] })
-})
+	const array = { ARRAY };
+	expect(array).toStrictEqual({ ARRAY: [2, ["six"]] });
+});
 
 it("fails for unknown property", () => {
-	expect(() => ({ UNKNOWN })).toThrowError("UNKNOWN is not defined")
-})
+	expect(() => ({ UNKNOWN })).toThrow("UNKNOWN is not defined");
+});

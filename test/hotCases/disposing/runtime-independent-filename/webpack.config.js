@@ -1,6 +1,8 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		hotUpdateMainFilename: "[hash].main-filename.json"
+		hotUpdateMainFilename: "[fullhash].main-filename.json"
 	}
 };

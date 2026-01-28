@@ -2,13 +2,11 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017", "dom", "es2022.error"],
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": false,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    "strict": true,
     "types": ["node"],
     "esModuleInterop": true
   },
@@ -18,6 +16,10 @@
     "schemas/**/*.json",
     "bin/*.js",
     "lib/**/*.js",
-    "tooling/**/*.js"
+    "tooling/**/*.js",
+    "setup/**/*.js",
+    "examples/*.js",
+    "examples/**/webpack.config.js",
+    "examples/**/test.filter.js"
   ]
 }

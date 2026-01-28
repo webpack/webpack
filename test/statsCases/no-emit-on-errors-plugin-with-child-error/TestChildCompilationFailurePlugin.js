@@ -1,5 +1,8 @@
 "use strict";
 
+/** @typedef {import("../../../").Compiler} Compiler */
+/** @typedef {import("../../../").EntryNormalized} EntryNormalized */
+
 var EntryPlugin = require("../../../").EntryPlugin;
 
 /**
@@ -7,10 +10,16 @@ var EntryPlugin = require("../../../").EntryPlugin;
  * recognizes errors within child compilations.
  */
 module.exports = class TestChildCompilationFailurePlugin {
+	/**
+	 * @param {{ filename: string }} output output
+	 */
 	constructor(output) {
 		this.output = output;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.make.tapAsync(
 			"TestChildCompilationFailurePlugin",
@@ -23,11 +32,19 @@ module.exports = class TestChildCompilationFailurePlugin {
 					}
 				);
 				new EntryPlugin(
-					compiler.options.context,
-					compiler.options.entry.main.import[0],
+					/** @type {string} */
+					(compiler.options.context),
+					/** @type {string[]} */
+					(
+						/** @type {Exclude<EntryNormalized, EXPECTED_FUNCTION>} */
+						(compiler.options.entry).main.import
+					)[0],
 					"child"
 				).apply(child);
-				child.runAsChild(cb);
+				child.runAsChild(
+					/** @type {EXPECTED_ANY} */
+					(cb)
+				);
 			}
 		);
 	}

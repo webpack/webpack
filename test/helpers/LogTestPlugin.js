@@ -1,10 +1,24 @@
+"use strict";
+
+/** @typedef {import("../../").Compiler} Compiler */
+/** @typedef {import("../../").Compilation} Compilation */
+
 module.exports = class LogTestPlugin {
+	/**
+	 * @param {boolean=} noTraced noTraced
+	 */
 	constructor(noTraced) {
 		this.noTraced = noTraced;
 	}
 
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
-		const logSome = logger => {
+		/**
+		 * @param {ReturnType<Compilation["getLogger"]>} logger logger
+		 */
+		const logSome = (logger) => {
 			logger.group("Group");
 			if (!this.noTraced) {
 				logger.error("Error");
@@ -24,7 +38,7 @@ module.exports = class LogTestPlugin {
 			logger.log("End");
 		};
 		logSome(compiler.getInfrastructureLogger("LogTestPlugin"));
-		compiler.hooks.compilation.tap("LogTestPlugin", compilation => {
+		compiler.hooks.compilation.tap("LogTestPlugin", (compilation) => {
 			const logger = compilation.getLogger("LogTestPlugin");
 			logSome(logger);
 

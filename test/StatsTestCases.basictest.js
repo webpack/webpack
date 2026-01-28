@@ -1,34 +1,36 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const captureStdio = require("./helpers/captureStdio");
 const webpack = require("..");
+const captureStdio = require("./helpers/captureStdio");
 
 /**
  * Escapes regular expression metacharacters
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
 const tests = fs
 	.readdirSync(base)
 	.filter(
-		testName =>
+		(testName) =>
 			fs.existsSync(path.join(base, testName, "index.js")) ||
 			fs.existsSync(path.join(base, testName, "webpack.config.js"))
 	)
-	.filter(testName => {
+	.filter((testName) => {
 		const testDirectory = path.join(base, testName);
 		const filterPath = path.join(testDirectory, "test.filter.js");
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
-			describe.skip(testName, () => it("filtered"));
+			describe.skip(testName, () => it("filtered", () => {}));
+
 			return false;
 		}
 		return true;
@@ -37,15 +39,18 @@ const tests = fs
 describe("StatsTestCases", () => {
 	jest.setTimeout(30000);
 	let stderr;
+
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
 	});
+
 	afterEach(() => {
 		stderr.restore();
 	});
+
 	for (const testName of tests) {
 		// eslint-disable-next-line no-loop-func
-		it(`should print correct stats for ${testName}`, done => {
+		it(`should print correct stats for ${testName}`, (done) => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -77,8 +82,9 @@ describe("StatsTestCases", () => {
 				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
-				if (options.optimization.minimize === undefined)
+				if (options.optimization.minimize === undefined) {
 					options.optimization.minimize = false;
+				}
 				if (
 					options.cache &&
 					options.cache !== true &&
@@ -96,24 +102,23 @@ describe("StatsTestCases", () => {
 			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function () {
+				c.inputFileSystem.readFile = function readFile() {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
-					// eslint-disable-next-line prefer-spread
-					ifs.readFile.apply(
-						ifs,
-						args.concat([
-							(err, result) => {
-								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0]))
-									return callback(null, result);
-								callback(null, result.toString("utf-8").replace(/\r/g, ""));
+					// eslint-disable-next-line no-useless-call
+					ifs.readFile.apply(ifs, [
+						...args,
+						(err, result) => {
+							if (err) return callback(err);
+							if (!/\.(?:js|json|txt)$/.test(args[0])) {
+								return callback(null, result);
 							}
-						])
-					);
+							callback(null, result.toString("utf8").replace(/\r/g, ""));
+						}
+					]);
 				};
-				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
+				c.hooks.compilation.tap("StatsTestCasesTest", (compilation) => {
 					for (const hook of [
 						"optimize",
 						"optimizeModules",
@@ -130,14 +135,13 @@ describe("StatsTestCases", () => {
 			}
 			c.run((err, stats) => {
 				if (err) return done(err);
-				for (const compilation of []
-					.concat(stats.stats || stats)
-					.map(s => s.compilation)) {
+				for (const compilation of [
+					...(stats.stats ? stats.stats : [stats])
+				].map((s) => s.compilation)) {
 					compilation.logging.delete("webpack.Compilation.ModuleProfile");
 				}
-				if (testName.endsWith("error")) {
-					expect(stats.hasErrors()).toBe(true);
-				} else if (stats.hasErrors()) {
+				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
+				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(
 						new Error(
 							stats.toString({
@@ -148,17 +152,17 @@ describe("StatsTestCases", () => {
 							})
 						)
 					);
-				} else {
-					fs.writeFileSync(
-						path.join(outputBase, testName, "stats.txt"),
-						stats.toString({
-							preset: "verbose",
-							context: path.join(base, testName),
-							colors: false
-						}),
-						"utf-8"
-					);
 				}
+				fs.writeFileSync(
+					path.join(outputBase, testName, "stats.txt"),
+					stats.toString({
+						preset: "verbose",
+						context: path.join(base, testName),
+						colors: false
+					}),
+					"utf8"
+				);
+
 				let toStringOptions = {
 					context: path.join(base, testName),
 					colors: false
@@ -166,17 +170,19 @@ describe("StatsTestCases", () => {
 				let hasColorSetting = false;
 				if (typeof c.options.stats !== "undefined") {
 					toStringOptions = c.options.stats;
-					if (toStringOptions === null || typeof toStringOptions !== "object")
+					if (toStringOptions === null || typeof toStringOptions !== "object") {
 						toStringOptions = { preset: toStringOptions };
-					if (!toStringOptions.context)
+					}
+					if (!toStringOptions.context) {
 						toStringOptions.context = path.join(base, testName);
+					}
 					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
 				if (Array.isArray(c.options) && !toStringOptions.children) {
-					toStringOptions.children = c.options.map(o => o.stats);
+					toStringOptions.children = c.options.map((o) => o.stats);
 				}
 				// mock timestamps
-				for (const { compilation: s } of [].concat(stats.stats || stats)) {
+				for (const { compilation: s } of stats.stats ? stats.stats : [stats]) {
 					expect(s.startTime).toBeGreaterThan(0);
 					expect(s.endTime).toBeGreaterThan(0);
 					s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
@@ -207,13 +213,26 @@ describe("StatsTestCases", () => {
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "")
 					.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
-					.replace(/[.0-9]+(\s?(bytes|KiB))/g, "X$1")
+					.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 					.replace(
-						/ms\s\([0-9a-f]{6,32}\)|(?![0-9]+-)[0-9a-f-]{6,32}\./g,
-						match => `${match.replace(/[0-9a-f]/g, "X")}`
-					);
+						/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
+						(match) => `${match.replace(/[0-9a-f]/g, "X")}`
+					)
+					// Normalize stack traces between Jest v27 and v30
+					// Jest v27: at Object.<anonymous>.module.exports
+					// Jest v30: at Object.module.exports
+					.replace(/Object\.<anonymous>\./g, "Object.");
 				expect(actual).toMatchSnapshot();
-				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
+
+				if (testConfig.validate) {
+					try {
+						testConfig.validate(stats, stderr.toString());
+					} catch (err) {
+						done(err);
+						return;
+					}
+				}
+
 				done();
 			});
 		});

@@ -1,5 +1,5 @@
-var supportsSpread = require("../../../helpers/supportsSpread");
+"use strict";
 
-module.exports = function (config) {
-	return supportsSpread();
-};
+const supportsSpread = require("../../../helpers/supportsSpread");
+
+module.exports = () => supportsSpread();

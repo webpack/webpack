@@ -1,3 +1,7 @@
+"use strict";
+
+/** @typedef {import("../../../../").Chunk} Chunk */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -5,7 +9,8 @@ module.exports = {
 		b: "./b"
 	},
 	output: {
-		filename: data => `${data.chunk.name || data.chunk.id}.js`,
+		filename: (data) =>
+			`${/** @type {Chunk} */ (data.chunk).name || /** @type {Chunk} */ (data.chunk).id}.js`,
 		libraryTarget: "commonjs2"
 	},
 	optimization: {
@@ -15,7 +20,8 @@ module.exports = {
 				shared: {
 					chunks: "all",
 					test: /shared/,
-					filename: data => `shared-${data.chunk.name || data.chunk.id}.js`,
+					filename: (data) =>
+						`shared-${/** @type {Chunk} */ (data.chunk).name || /** @type {Chunk} */ (data.chunk).id}.js`,
 					enforce: true
 				},
 				common: {

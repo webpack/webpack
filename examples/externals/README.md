@@ -27,7 +27,10 @@ exports.exampleValue = subtract(add(42, 2), 2);
 # webpack.config.js
 
 ```javascript
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	output: {
 		libraryTarget: "umd"
@@ -44,6 +47,8 @@ module.exports = {
 		}
 	]
 };
+
+module.exports = config;
 ```
 
 # dist/output.js
@@ -105,6 +110,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -153,7 +164,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Unoptimized
 
 ```
-asset output.js 3.27 KiB [emitted] (name: main)
+asset output.js 3.53 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -162,13 +173,13 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 665 bytes [emitted] [minimized] (name: main)
+asset output.js 661 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -176,5 +187,5 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [exports: exampleValue]
     entry ./example.js main
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

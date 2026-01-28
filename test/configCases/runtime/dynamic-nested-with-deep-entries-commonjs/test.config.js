@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function () {
+	findBundle() {
 		return [
 			"./dir5/dir6/runtime~one.js",
 			"./one.js",

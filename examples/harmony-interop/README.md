@@ -102,7 +102,7 @@ exports.readFile = function() {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "readFile": () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
+/* harmony export */   readFile: () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
 /* harmony export */ });
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
 // reexport a CommonJs module
@@ -121,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack___webpack_module__, __unused_webpack_exports, __webpack_require__) => {
 
 // CommonJs module
 
@@ -148,7 +148,7 @@ var namedExport = module.named;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "named": () => (/* binding */ named)
+/* harmony export */   named: () => (/* binding */ named)
 /* harmony export */ });
 // just some exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("default");
@@ -172,6 +172,12 @@ var named = "named";
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -277,7 +283,7 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 7.12 KiB [emitted] (name: main)
+asset output.js 7.39 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 937 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
@@ -286,13 +292,13 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 937 bytes (runtime)
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 773 bytes [emitted] [minimized] (name: main)
+asset output.js 764 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 484 bytes [dependent] 3 modules
@@ -301,5 +307,5 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 670 bytes (runtime)
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

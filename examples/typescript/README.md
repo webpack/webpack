@@ -21,9 +21,12 @@ console.log(getArray(1, 2, 3));
 # webpack.config.js
 
 ```javascript
+"use strict";
+
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-module.exports = (env = "development") => ({
+/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+const config = (env = "development") => ({
 	mode: env,
 	module: {
 		rules: [
@@ -41,6 +44,8 @@ module.exports = (env = "development") => ({
 	},
 	plugins: [new ForkTsCheckerWebpackPlugin({ async: env === "production" })]
 });
+
+module.exports = config;
 ```
 
 # dist/output.js
@@ -98,6 +103,12 @@ console.log(getArray(1, 2, 3));
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -118,7 +129,6 @@ console.log(getArray(1, 2, 3));
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -139,25 +149,25 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.4 KiB [emitted] (name: main)
+asset output.js 2.63 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 663 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 553 bytes [emitted] [minimized] (name: main)
+asset output.js 544 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 663 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

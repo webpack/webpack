@@ -1,16 +1,19 @@
+"use strict";
+
 const webpack = require("../../../../");
-/** @type {import("../../../../").Configuration[]} */
+
+/** @type {import("../../../../types").Configuration[]} */
 module.exports = [
 	{
 		output: {
-			libraryTarget: "commonjs2"
+			libraryTarget: "global"
 		},
 		externals: {
-			external: ["webpack", "version"]
+			external: ["process", "version"]
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				EXPECTED: JSON.stringify(webpack.version)
+				EXPECTED: JSON.stringify(process.version)
 			})
 		]
 	},

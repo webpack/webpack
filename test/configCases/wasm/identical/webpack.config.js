@@ -1,3 +1,5 @@
+"use strict";
+
 const { CachedSource } = require("webpack-sources");
 const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 
@@ -24,13 +26,13 @@ module.exports = {
 		/**
 		 * @this {Compiler} compiler
 		 */
-		function () {
-			this.hooks.compilation.tap("Test", compilation => {
+		function test() {
+			this.hooks.compilation.tap("Test", (compilation) => {
 				AsyncWebAssemblyModulesPlugin.getCompilationHooks(
 					compilation
 				).renderModuleContent.tap(
 					"Test",
-					source =>
+					(source) =>
 						// this is important to make each returned value a new instance
 						new CachedSource(source)
 				);

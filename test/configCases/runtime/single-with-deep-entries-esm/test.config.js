@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function () {
+	findBundle() {
 		return [
 			"./runtime.mjs",
 			"./one.mjs",

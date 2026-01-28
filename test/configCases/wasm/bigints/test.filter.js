@@ -1,6 +1,7 @@
+"use strict";
+
 const supports = require("webassembly-feature");
 
-module.exports = function (config) {
+module.exports = () =>
 	// eslint-disable-next-line new-cap
-	return supports["JS-BigInt-integration"]();
-};
+	supports["JS-BigInt-integration"]();

@@ -1,5 +1,5 @@
-var supportsWorker = require("../../../helpers/supportsWorker");
+"use strict";
 
-module.exports = function (config) {
-	return supportsWorker();
-};
+const supportsWorker = require("../../../helpers/supportsWorker");
+
+module.exports = () => supportsWorker();

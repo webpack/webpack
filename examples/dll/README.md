@@ -7,9 +7,13 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
-module.exports = {
+"use strict";
+
+const path = require("path");
+const webpack = require("../../");
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
@@ -30,12 +34,14 @@ module.exports = {
 		})
 	]
 };
+
+module.exports = config;
 ```
 
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_a53f6ab3ecd4de18316c;
+var alpha_ca803ba9b1c1f84bc50c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -84,6 +90,7 @@ module.exports = "a";
 
 module.exports = "module";
 
+
 /***/ })
 /******/ 	]);
 ```
@@ -101,6 +108,12 @@ module.exports = "module";
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -127,7 +140,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_a53f6ab3ecd4de18316c = __webpack_exports__;
+/******/ 	alpha_ca803ba9b1c1f84bc50c = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -136,7 +149,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_a53f6ab3ecd4de18316c","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_ca803ba9b1c1f84bc50c","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info
@@ -144,41 +157,41 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-asset MyDll.alpha.js 2.58 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.55 KiB [emitted] (name: beta)
-chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+asset MyDll.alpha.js 2.84 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.81 KiB [emitted] (name: beta)
+chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   > alpha
-  dependent modules 72 bytes [dependent] 3 modules
+  dependent modules 73 bytes [dependent] 3 modules
   dll alpha 12 bytes [built] [code generated]
     [used exports unknown]
     dll entry
     used as library export
-chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
   > beta
-  dependent modules 68 bytes [dependent] 3 modules
+  dependent modules 69 bytes [dependent] 3 modules
   dll beta 12 bytes [built] [code generated]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyDll.alpha.js 313 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 303 bytes [emitted] [minimized] (name: beta)
-chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-  > alpha
-  dependent modules 72 bytes [dependent] 3 modules
-  dll alpha 12 bytes [built] [code generated]
-    dll entry
-    used as library export
-chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+asset MyDll.alpha.js 307 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 301 bytes [emitted] [minimized] (name: beta)
+chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
   > beta
-  dependent modules 68 bytes [dependent] 3 modules
+  dependent modules 69 bytes [dependent] 3 modules
   dll beta 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.78.0 compiled successfully
+chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
+  > alpha
+  dependent modules 73 bytes [dependent] 3 modules
+  dll alpha 12 bytes [built] [code generated]
+    dll entry
+    used as library export
+webpack X.X.X compiled successfully
 ```

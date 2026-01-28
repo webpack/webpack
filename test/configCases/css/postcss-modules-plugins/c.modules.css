@@ -1,0 +1,13 @@
+.c { color: red }
+
+.hidden-d {
+	color: blue;
+}
+
+.c-last {
+	color: red;
+}
+
+.deep-nested-c {
+	color: red;
+}

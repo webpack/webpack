@@ -1,5 +1,9 @@
+"use strict";
+
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
+/** @typedef {import("../../../../").Chunk} Chunk */
+/** @typedef {import("../../../../").Module} Module */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -15,20 +19,27 @@ module.exports = {
 		/**
 		 * @this {Compiler} compiler
 		 */
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const { chunkGraph } = compilation;
+					/** @type {Record<string, Set<Module>>} */
 					const chunkModules = {};
 					for (const chunk of compilation.chunks) {
-						chunkModules[chunk.name] = new Set();
+						chunkModules[
+							/** @type {NonNullable<Chunk["name"]>} */
+							(chunk.name)
+						] = new Set();
 
 						for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
-							chunkModules[chunk.name].add(module);
+							chunkModules[
+								/** @type {NonNullable<Chunk["name"]>} */
+								(chunk.name)
+							].add(module);
 						}
 					}
 

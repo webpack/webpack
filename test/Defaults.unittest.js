@@ -1,15 +1,21 @@
+"use strict";
+
 require("./helpers/warmup-webpack");
 
 const path = require("path");
 const jestDiff = require("jest-diff").diff;
-const stripAnsi = require("strip-ansi");
+const stripVTControlCharacters = require("strip-ansi");
+
+/** @typedef {import("../lib/index").Configuration} Configuration */
+/** @typedef {import("../lib/index").WebpackOptionsNormalized} WebpackOptionsNormalized */
+/** @typedef {ReturnType<expect>} ExceptResult */
 
 /**
  * Escapes regular expression metacharacters
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = str => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const cwd = process.cwd();
 const cwdRegExp = new RegExp(
@@ -21,7 +27,12 @@ const escapedCwdRegExp = new RegExp(
 	`${quoteMeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 	"g"
 );
-const normalize = str => {
+
+/**
+ * @param {string} str string
+ * @returns {string} normalized string
+ */
+const normalize = (str) => {
 	if (cwd.startsWith("/")) {
 		str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
 	} else {
@@ -36,6 +47,9 @@ const normalize = str => {
 };
 
 class Diff {
+	/**
+	 * @param {string} value value
+	 */
 	constructor(value) {
 		this.value = value;
 	}
@@ -45,8 +59,12 @@ expect.addSnapshotSerializer({
 	test(value) {
 		return value instanceof Diff;
 	},
+	/**
+	 * @param {unknown} received received
+	 * @returns {string} result
+	 */
 	print(received) {
-		return normalize(received.value);
+		return normalize(/** @type {Diff} */ (received).value);
 	}
 });
 
@@ -54,14 +72,23 @@ expect.addSnapshotSerializer({
 	test(value) {
 		return typeof value === "string";
 	},
+	/**
+	 * @param {unknown} received received
+	 * @returns {string} result
+	 */
 	print(received) {
-		return JSON.stringify(normalize(received));
+		return JSON.stringify(normalize(/** @type {string} */ (received)));
 	}
 });
 
-const getDefaultConfig = config => {
+/**
+ * @param {Configuration} config configuration
+ * @returns {WebpackOptionsNormalized} normalized configuration
+ */
+const getDefaultConfig = (config) => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
+
 	config = getNormalizedWebpackOptions(config);
 	applyWebpackOptionsDefaults(config);
 	process.chdir(cwd);
@@ -81,6 +108,7 @@ describe("snapshots", () => {
 		  "dependencies": undefined,
 		  "devServer": undefined,
 		  "devtool": false,
+		  "dotenv": undefined,
 		  "entry": Object {
 		    "main": Object {
 		      "import": Array [
@@ -94,12 +122,11 @@ describe("snapshots", () => {
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
 		    "css": undefined,
+		    "deferImport": false,
 		    "futureDefaults": false,
-		    "layers": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
-		    "topLevelAwait": true,
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
@@ -126,6 +153,8 @@ describe("snapshots", () => {
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
 		      "globalThis": undefined,
+		      "importMetaDirnameAndFilename": undefined,
+		      "methodShorthand": true,
 		      "module": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
@@ -213,19 +242,41 @@ describe("snapshots", () => {
 		        ],
 		      },
 		      Object {
-		        "assert": Object {
-		          "type": "json",
+		        "parser": Object {
+		          "namedExports": false,
 		        },
-		        "type": "json",
-		      },
-		      Object {
 		        "type": "json",
 		        "with": Object {
 		          "type": "json",
 		        },
 		      },
+		      Object {
+		        "assert": Object {
+		          "type": "json",
+		        },
+		        "parser": Object {
+		          "namedExports": false,
+		        },
+		        "type": "json",
+		      },
+		      Object {
+		        "type": "asset/source",
+		        "with": Object {
+		          "type": "text",
+		        },
+		      },
+		      Object {
+		        "type": "asset/bytes",
+		        "with": Object {
+		          "type": "bytes",
+		        },
+		      },
 		    ],
-		    "generator": Object {},
+		    "generator": Object {
+		      "json": Object {
+		        "JSONParse": true,
+		      },
+		    },
 		    "noParse": undefined,
 		    "parser": Object {
 		      "asset": Object {
@@ -235,10 +286,12 @@ describe("snapshots", () => {
 		      },
 		      "javascript": Object {
 		        "createRequire": false,
+		        "deferImport": false,
 		        "dynamicImportFetchPriority": false,
 		        "dynamicImportMode": "lazy",
 		        "dynamicImportPrefetch": false,
 		        "dynamicImportPreload": false,
+		        "dynamicUrl": true,
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
@@ -326,7 +379,7 @@ describe("snapshots", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext][query]",
+		    "assetModuleFilename": "[hash][ext][query][fragment]",
 		    "asyncChunks": true,
 		    "charset": true,
 		    "chunkFilename": "[name].js",
@@ -361,6 +414,8 @@ describe("snapshots", () => {
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
 		      "globalThis": undefined,
+		      "importMetaDirnameAndFilename": undefined,
+		      "methodShorthand": true,
 		      "module": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
@@ -574,6 +629,7 @@ describe("snapshots", () => {
 		          "browser",
 		        ],
 		        "conditionNames": Array [
+		          "worker",
 		          "import",
 		          "module",
 		          "...",
@@ -643,6 +699,9 @@ describe("snapshots", () => {
 		      "hash": true,
 		      "timestamp": true,
 		    },
+		    "contextModule": Object {
+		      "timestamp": true,
+		    },
 		    "immutablePaths": Array [],
 		    "managedPaths": Array [
 		      "<cwd>/node_modules/",
@@ -667,6 +726,13 @@ describe("snapshots", () => {
 	`);
 	});
 
+	/**
+	 * @param {string} name name
+	 * @param {Configuration} options options
+	 * @param {(result1: ExceptResult, result2: ExceptResult) => void} fn expect result
+	 * @param {() => void=} before before
+	 * @param {() => void=} after after
+	 */
 	const test = (name, options, fn, before, after) => {
 		it(`should generate the correct defaults from ${name}`, () => {
 			if (!("mode" in options)) options.mode = "none";
@@ -674,8 +740,9 @@ describe("snapshots", () => {
 				if (before) before();
 				const result = getDefaultConfig(options);
 
-				const diff = stripAnsi(
-					jestDiff(baseConfig, result, { expand: false, contextLines: 0 })
+				const diff = stripVTControlCharacters(
+					/** @type {string} */
+					(jestDiff(baseConfig, result, { expand: false, contextLines: 0 }))
 				);
 
 				fn(expect(new Diff(diff)), expect(result));
@@ -685,13 +752,15 @@ describe("snapshots", () => {
 		});
 	};
 
-	test("empty config", {}, e =>
+	test("empty config", {}, (e) =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
-	test("none mode", { mode: "none" }, e =>
+
+	test("none mode", { mode: "none" }, (e) =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
-	test("no mode provided", { mode: undefined }, e =>
+
+	test("no mode provided", { mode: undefined }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -760,7 +829,8 @@ describe("snapshots", () => {
 		+       "hash": true,
 	`)
 	);
-	test("production", { mode: "production" }, e =>
+
+	test("production", { mode: "production" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -829,7 +899,8 @@ describe("snapshots", () => {
 		+       "hash": true,
 	`)
 	);
-	test("development", { mode: "development" }, e =>
+
+	test("development", { mode: "development" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -843,7 +914,12 @@ describe("snapshots", () => {
 		+   },
 		@@ ... @@
 		-   "devtool": false,
-		+   "devtool": "eval",
+		+   "devtool": Array [
+		+     Object {
+		+       "type": "javascript",
+		+       "use": "eval",
+		+     },
+		+   ],
 		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
@@ -878,7 +954,8 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
-	test("sync wasm", { experiments: { syncWebAssembly: true } }, e =>
+
+	test("sync wasm", { experiments: { syncWebAssembly: true } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -917,7 +994,8 @@ describe("snapshots", () => {
 		+         "type": "webassembly/sync",
 	`)
 	);
-	test("output module", { experiments: { outputModule: true } }, e =>
+
+	test("output module", { experiments: { outputModule: true } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -936,6 +1014,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
+		@@ ... @@
+		-         "importMeta": true,
+		+         "importMeta": "preserve-unknown",
 		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		-     "chunkFormat": "array-push",
@@ -963,6 +1044,9 @@ describe("snapshots", () => {
 		-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
 		@@ ... @@
+		-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+		@@ ... @@
 		-     "iife": true,
 		+     "iife": false,
 		@@ ... @@
@@ -976,7 +1060,8 @@ describe("snapshots", () => {
 		+     "workerChunkLoading": "import",
 	`)
 	);
-	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
+
+	test("async wasm", { experiments: { asyncWebAssembly: true } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1015,10 +1100,11 @@ describe("snapshots", () => {
 		+         "type": "webassembly/async",
 	`)
 	);
+
 	test(
 		"both wasm",
 		{ experiments: { syncWebAssembly: true, asyncWebAssembly: true } },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1060,7 +1146,8 @@ describe("snapshots", () => {
 			+         "type": "webassembly/async",
 		`)
 	);
-	test("const filename", { output: { filename: "bundle.js" } }, e =>
+
+	test("const filename", { output: { filename: "bundle.js" } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1078,7 +1165,8 @@ describe("snapshots", () => {
 		+     "filename": "bundle.js",
 	`)
 	);
-	test("function filename", { output: { filename: () => "bundle.js" } }, e =>
+
+	test("function filename", { output: { filename: () => "bundle.js" } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1096,7 +1184,8 @@ describe("snapshots", () => {
 		+     "filename": [Function filename],
 	`)
 	);
-	test("library", { output: { library: ["myLib", "awesome"] } }, e =>
+
+	test("library", { output: { library: ["myLib", "awesome"] } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1133,6 +1222,7 @@ describe("snapshots", () => {
 		+     "uniqueName": "myLib.awesome",
 	`)
 	);
+
 	test(
 		"library contains [name] placeholder",
 		{
@@ -1140,7 +1230,7 @@ describe("snapshots", () => {
 				library: ["myLib", "[name]"]
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1177,6 +1267,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib",
 		`)
 	);
+
 	test(
 		"library.name contains [name] placeholder",
 		{
@@ -1187,7 +1278,7 @@ describe("snapshots", () => {
 				}
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1225,6 +1316,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib.lib",
 		`)
 	);
+
 	test(
 		"library.name.root contains [name] placeholder",
 		{
@@ -1237,7 +1329,7 @@ describe("snapshots", () => {
 				}
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1276,6 +1368,7 @@ describe("snapshots", () => {
 			+     "uniqueName": "myLib",
 		`)
 	);
+
 	test(
 		"library.name.root contains escaped placeholder",
 		{
@@ -1288,7 +1381,7 @@ describe("snapshots", () => {
 				}
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1328,7 +1421,8 @@ describe("snapshots", () => {
 			+     "uniqueName": "[name].my[name]Lib.[name]",
 		`)
 	);
-	test("target node", { target: "node" }, e =>
+
+	test("target node", { target: "node" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1457,7 +1551,8 @@ describe("snapshots", () => {
 		+   "target": "node",
 	`)
 	);
-	test("target webworker", { target: "webworker" }, e =>
+
+	test("target webworker", { target: "webworker" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1480,7 +1575,8 @@ describe("snapshots", () => {
 		+   "target": "webworker",
 	`)
 	);
-	test("target electron-main", { target: "electron-main" }, e =>
+
+	test("target electron-main", { target: "electron-main" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1615,7 +1711,8 @@ describe("snapshots", () => {
 		+   "target": "electron-main",
 	`)
 	);
-	test("target electron-main", { target: "electron-preload" }, e =>
+
+	test("target electron-main", { target: "electron-preload" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1748,7 +1845,176 @@ describe("snapshots", () => {
 		+   "target": "electron-preload",
 	`)
 	);
-	test("records", { recordsPath: "some-path" }, e =>
+
+	test(
+		"target node and web (universal)",
+		{
+			target: ["web", "node"],
+			output: { module: true },
+			experiments: { outputModule: true }
+		},
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "outputModule": false,
+			+     "outputModule": true,
+			@@ ... @@
+			-     "node": false,
+			+     "node": true,
+			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": undefined,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
+			@@ ... @@
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "fetch",
+			+       "universal",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			+     "filename": "[name].mjs",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "scriptType": false,
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": "universal",
+			@@ ... @@
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkLoading": "import",
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": "universal",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": Array [
+			+     "web",
+			+     "node",
+			+   ],
+		`)
+	);
+
+	test("records", { recordsPath: "some-path" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1763,25 +2029,31 @@ describe("snapshots", () => {
 		+   "recordsOutputPath": "some-path",
 	`)
 	);
-	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, e =>
+
+	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, (e) =>
 		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
-	test("single runtimeChunk", { optimization: { runtimeChunk: "single" } }, e =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
 
-		@@ ... @@
-		-     "runtimeChunk": false,
-		+     "runtimeChunk": Object {
-		+       "name": [Function name],
-		+     },
-	`)
+	test(
+		"single runtimeChunk",
+		{ optimization: { runtimeChunk: "single" } },
+		(e) =>
+			e.toMatchInlineSnapshot(`
+					- Expected
+					+ Received
+
+					@@ ... @@
+					-     "runtimeChunk": false,
+					+     "runtimeChunk": Object {
+					+       "name": [Function name],
+					+     },
+			`)
 	);
+
 	test(
 		"single runtimeChunk",
 		{ optimization: { runtimeChunk: "multiple" } },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1793,7 +2065,8 @@ describe("snapshots", () => {
 			+     },
 		`)
 	);
-	test("single runtimeChunk", { optimization: { runtimeChunk: true } }, e =>
+
+	test("single runtimeChunk", { optimization: { runtimeChunk: true } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1805,7 +2078,8 @@ describe("snapshots", () => {
 		+     },
 	`)
 	);
-	test("cache true", { cache: true }, e =>
+
+	test("cache true", { cache: true }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1828,7 +2102,8 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
-	test("cache filesystem", { cache: { type: "filesystem" } }, e =>
+
+	test("cache filesystem", { cache: { type: "filesystem" } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -1870,10 +2145,11 @@ describe("snapshots", () => {
 		+     "cache": true,
 	`)
 	);
+
 	test(
 		"cache filesystem development",
 		{ mode: "development", cache: { type: "filesystem" } },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -1906,7 +2182,12 @@ describe("snapshots", () => {
 			+   },
 			@@ ... @@
 			-   "devtool": false,
-			+   "devtool": "eval",
+			+   "devtool": Array [
+			+     Object {
+			+       "type": "javascript",
+			+       "use": "eval",
+			+     },
+			+   ],
 			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
@@ -1943,6 +2224,288 @@ describe("snapshots", () => {
 	);
 
 	test(
+		"cache filesystem and futureDefaults",
+		{ cache: { type: "filesystem" }, experiments: { futureDefaults: true } },
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			+   "cache": Object {
+			+     "allowCollectingMemory": false,
+			+     "buildDependencies": Object {
+			+       "defaultWebpack": Array [
+			+         "<cwd>/lib/",
+			+       ],
+			+     },
+			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
+			+     "compression": false,
+			+     "hashAlgorithm": "xxhash64",
+			+     "idleTimeout": 60000,
+			+     "idleTimeoutAfterLargeChanges": 1000,
+			+     "idleTimeoutForInitialStore": 5000,
+			+     "maxAge": 5184000000,
+			+     "maxMemoryGenerations": Infinity,
+			+     "memoryCacheUnaffected": false,
+			+     "name": "default-none",
+			+     "profile": false,
+			+     "readonly": false,
+			+     "store": "pack",
+			+     "type": "filesystem",
+			+     "version": "",
+			+   },
+			@@ ... @@
+			-     "asyncWebAssembly": false,
+			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
+			+     "backCompat": false,
+			@@ ... @@
+			-     "cacheUnaffected": false,
+			-     "css": undefined,
+			+     "cacheUnaffected": true,
+			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
+			+     "futureDefaults": true,
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			@@ ... @@
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "test": /\\.css$/i,
+			+         "type": "css/auto",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css+module",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-local-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-global-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/global",
+			+       },
+			+       Object {
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "with": Object {
+			+           "type": "css",
+			+         },
+			+       },
+			+       Object {
+			+         "assert": Object {
+			+           "type": "css",
+			+         },
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+       },
+			+       Object {
+			@@ ... @@
+			+       "css": Object {
+			+         "esModule": true,
+			+         "exportsOnly": false,
+			+       },
+			+       "css/auto": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
+			+       },
+			+       "css/global": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
+			+       },
+			+       "css/module": Object {
+			+         "exportsConvention": "as-is",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
+			+       },
+			@@ ... @@
+			+         },
+			+       },
+			+       "css": Object {
+			+         "import": true,
+			+         "namedExports": true,
+			+         "url": true,
+			@@ ... @@
+			+       "css/auto": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			+       },
+			+       "css/global": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			+       },
+			+       "css/module": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			@@ ... @@
+			+         "exportsPresence": "error",
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
+			@@ ... @@
+			+         "css",
+			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
+			@@ ... @@
+			-     "hashDigestLength": 20,
+			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
+			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
+			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-global-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-local-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			@@ ... @@
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "<cwd>/node_modules/",
+			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+		`)
+	);
+
+	test(
 		"disable",
 		{
 			cache: false,
@@ -1950,7 +2513,7 @@ describe("snapshots", () => {
 			amd: false,
 			optimization: { splitChunks: false }
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2008,7 +2571,7 @@ describe("snapshots", () => {
 				trustedTypes: true
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2033,7 +2596,7 @@ describe("snapshots", () => {
 		`)
 	);
 
-	test("stats true", { stats: true }, e =>
+	test("stats true", { stats: true }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -2046,7 +2609,7 @@ describe("snapshots", () => {
 		`)
 	);
 
-	test("stats false", { stats: false }, e =>
+	test("stats false", { stats: false }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -2059,7 +2622,7 @@ describe("snapshots", () => {
 		`)
 	);
 
-	test("stats string", { stats: "minimal" }, e =>
+	test("stats string", { stats: "minimal" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
@@ -2075,7 +2638,7 @@ describe("snapshots", () => {
 	test(
 		"browserslist",
 		{ context: path.resolve(__dirname, "fixtures/browserslist") },
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2099,6 +2662,8 @@ describe("snapshots", () => {
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
 			-       "globalThis": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			-       "methodShorthand": true,
 			-       "module": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
@@ -2107,6 +2672,8 @@ describe("snapshots", () => {
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
+			+       "importMetaDirnameAndFilename": false,
+			+       "methodShorthand": false,
 			+       "module": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -2133,6 +2700,8 @@ describe("snapshots", () => {
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
 			-       "globalThis": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			-       "methodShorthand": true,
 			-       "module": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
@@ -2141,6 +2710,8 @@ describe("snapshots", () => {
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
+			+       "importMetaDirnameAndFilename": false,
+			+       "methodShorthand": false,
 			+       "module": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -2167,7 +2738,7 @@ describe("snapshots", () => {
 				type: "filesystem"
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2244,7 +2815,7 @@ describe("snapshots", () => {
 				enabledWasmLoadingTypes: ["...", "async-node"]
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2263,7 +2834,7 @@ describe("snapshots", () => {
 				futureDefaults: true
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2276,9 +2847,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
@@ -2333,32 +2905,103 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-local-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "dependency": /css-import-global-module/,
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css/global",
+			+       },
+			+       Object {
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "with": Object {
+			+           "type": "css",
+			+         },
+			+       },
+			+       Object {
+			+         "assert": Object {
+			+           "type": "css",
+			+         },
+			+         "parser": Object {
+			+           "exportType": "css-style-sheet",
+			+         },
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
 			@@ ... @@
-			-     "generator": Object {},
-			+     "generator": Object {
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
 			+       },
 			+       "css/auto": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/global": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
 			+       "css/module": Object {
 			+         "exportsConvention": "as-is",
-			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+         "localIdentHashDigest": "base64url",
+			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashSalt": undefined,
+			+         "localIdentName": "[fullhash]",
 			+       },
-			+     },
 			@@ ... @@
+			+         },
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
 			+       },
+			+       "css/auto": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			@@ ... @@
+			+       "css/global": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
+			+       },
+			+       "css/module": Object {
+			+         "animation": true,
+			+         "container": true,
+			+         "customIdents": true,
+			+         "dashedIdents": true,
+			+         "function": true,
+			+         "grid": true,
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2371,6 +3014,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "css",
 			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
+			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
@@ -2380,6 +3026,38 @@ describe("snapshots", () => {
 			+         ],
 			+       },
 			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-global-module": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
+			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
 			+           "production",
@@ -2407,7 +3085,7 @@ describe("snapshots", () => {
 				futureDefaults: true
 			}
 		},
-		e =>
+		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
@@ -2420,14 +3098,16 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": false,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2438,8 +3118,7 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2464,6 +3143,9 @@ describe("snapshots", () => {
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
 			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
+			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
@@ -2473,23 +3155,213 @@ describe("snapshots", () => {
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
+
+	test(
+		"target node with ESM output",
+		{ target: "node14", experiments: { outputModule: true } },
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "outputModule": false,
+			+     "outputModule": true,
+			@@ ... @@
+			-     "node": false,
+			+     "node": true,
+			@@ ... @@
+			-     "web": true,
+			+     "web": false,
+			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			+       "globalThis": true,
+			+       "importMetaDirnameAndFilename": false,
+			@@ ... @@
+			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
+			+       "module": true,
+			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": "node",
+			@@ ... @@
+			-         "createRequire": false,
+			+         "createRequire": true,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
+			+     "global": false,
+			@@ ... @@
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "fetch",
+			+       "async-node",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			+       "globalThis": true,
+			+       "importMetaDirnameAndFilename": false,
+			@@ ... @@
+			-       "module": undefined,
+			-       "nodePrefixForCoreModules": true,
+			+       "module": true,
+			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-     "filename": "[name].js",
+			-     "globalObject": "self",
+			+     "filename": "[name].mjs",
+			+     "globalObject": "global",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "scriptType": false,
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": "async-node",
+			@@ ... @@
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkLoading": "import",
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": "async-node",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			+       "node",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "node14",
+		`)
+	);
 });
 
-it("should result in the same target options for same target", () => {
-	const inlineTarget = getDefaultConfig({ target: "node12.17" });
-	const browserslistTarget = getDefaultConfig({
-		target: "browserslist: node 12.17"
-	});
-	const diff = stripAnsi(
-		jestDiff(inlineTarget, browserslistTarget, {
-			expand: false,
-			contextLines: 0
-		})
-	);
+describe("Targets", () => {
+	it("should result in the same target options for same target", () => {
+		const inlineTarget = getDefaultConfig({ target: "node12.17" });
+		const browserslistTarget = getDefaultConfig({
+			target: "browserslist: node 12.17"
+		});
+		const diff = stripVTControlCharacters(
+			/** @type {string} */
+			(
+				jestDiff(inlineTarget, browserslistTarget, {
+					expand: false,
+					contextLines: 0
+				})
+			)
+		);
 
-	expect(inlineTarget.output.environment.module).toBe(true);
-	expect(inlineTarget.output.environment.dynamicImport).toBe(true);
-	expect(new Diff(diff)).toMatchInlineSnapshot(`
+		expect(inlineTarget.output.environment.module).toBe(true);
+		expect(inlineTarget.output.environment.dynamicImport).toBe(true);
+		expect(new Diff(diff)).toMatchInlineSnapshot(`
 		- Expected
 		+ Received
 
@@ -2497,4 +3369,5 @@ it("should result in the same target options for same target", () => {
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
 	`);
+	});
 });

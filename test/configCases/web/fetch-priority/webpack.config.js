@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -9,6 +11,7 @@ module.exports = {
 		css: true
 	},
 	optimization: {
+		chunkIds: "named",
 		minimize: false,
 		splitChunks: {
 			minSize: 1

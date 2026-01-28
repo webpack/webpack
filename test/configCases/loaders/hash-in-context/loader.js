@@ -1,7 +1,9 @@
 /** @type {import("../../../../").LoaderDefinition}} */
 module.exports = function () {
 	const hashValue = this.utils.createHash(this.hashFunction);
-	hashValue.update(this.hashSalt);
+	if (this.hashSalt) {
+		hashValue.update(this.hashSalt);
+	}
 	hashValue.update("test");
 	const digest = hashValue.digest(this.hashDigest);
 

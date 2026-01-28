@@ -1,8 +1,13 @@
+"use strict";
+
+/** @typedef {import("../../../").Module} Module */
+
 const webpack = require("../../../");
-const { ModuleFederationPlugin } = webpack.container;
 const {
 	WEBPACK_MODULE_TYPE_PROVIDE
 } = require("../../../lib/ModuleTypeConstants");
+
+const { ModuleFederationPlugin } = webpack.container;
 
 const chunkIdChunkNameMap = new Map();
 const usedSharedModuleNames = new Set();
@@ -33,7 +38,8 @@ module.exports = {
 					if (group.origins) {
 						for (const origin of group.origins) {
 							if (
-								origin.module.type === WEBPACK_MODULE_TYPE_PROVIDE &&
+								/** @type {Module} */
+								(origin.module).type === WEBPACK_MODULE_TYPE_PROVIDE &&
 								chunk.id
 							) {
 								if (chunkIdChunkNameMap.has(chunk.id)) {

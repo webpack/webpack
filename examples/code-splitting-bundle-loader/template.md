@@ -20,10 +20,10 @@ _{{file.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/929.output.js
+# dist/file_js.output.js
 
 ```javascript
-_{{dist/929.output.js}}_
+_{{dist/file_js.output.js}}_
 ```
 
 # Info

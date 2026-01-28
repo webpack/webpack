@@ -1,3 +1,5 @@
+"use strict";
+
 /** @typedef {import("../../../../types").Compilation} Compilation */
 /** @typedef {import("../../../../types").Module} Module */
 /** @type {import("../../../../types").Configuration} */
@@ -13,13 +15,14 @@ module.exports = {
 		chunkIds: "named"
 	},
 	plugins: [
-		function () {
+		function apply() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}
 			 */
-			const handler = compilation => {
+			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
+					/** @type {Record<string, string>} */
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {
 						/** @type {Map<Module, number>} */
@@ -34,9 +37,7 @@ module.exports = {
 								}
 							}
 						}
-						const sortedModules = Array.from(modules).sort(
-							(a, b) => a[1] - b[1]
-						);
+						const sortedModules = [...modules].sort((a, b) => a[1] - b[1]);
 						const text = sortedModules
 							.map(
 								([m, index]) =>
@@ -52,7 +53,7 @@ module.exports = {
 						"B-2Index": "0: ./B-2.js",
 						BIndex: "0: ./B.js",
 						mainIndex: "0: ./main.js",
-						sharedIndex: "1: css ./m.css, 2: css ./n.css"
+						sharedIndex: "1: css ./m.css"
 					});
 				});
 			};

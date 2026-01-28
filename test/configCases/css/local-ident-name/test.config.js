@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i) {
 		return [
 			`style_module_css.bundle${i}.js`,
 			`style_module_css_hash.bundle${i}.js`,
@@ -8,6 +10,7 @@ module.exports = {
 			`style_module_css_file-local.bundle${i}.js`,
 			`style_module_css_q_f.bundle${i}.js`,
 			`style_module_css_uniqueName-id-contenthash.bundle${i}.js`,
+			`style_module_css_hash-local-custom.bundle${i}.js`,
 			`style_module_less.bundle${i}.js`,
 			`bundle${i}.js`
 		];

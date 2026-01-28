@@ -1,6 +1,6 @@
-var supportsWorker = require("../../../helpers/supportsWorker");
-var supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
+"use strict";
 
-module.exports = function (config) {
-	return supportsWorker() && supportsOptionalChaining();
-};
+const supportsOptionalChaining = require("../../../helpers/supportsOptionalChaining");
+const supportsWorker = require("../../../helpers/supportsWorker");
+
+module.exports = () => supportsWorker() && supportsOptionalChaining();

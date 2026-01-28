@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function () {
+	findBundle() {
 		return ["./vendors.js", "./tst_examples_uiform.js"];
 	}
 };

@@ -1,6 +1,9 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
+
 const dir = path.resolve(__dirname, "temp");
 const file = path.resolve(dir, "index.js");
 

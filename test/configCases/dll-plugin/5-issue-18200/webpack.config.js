@@ -1,5 +1,7 @@
-var path = require("path");
-var webpack = require("../../../../");
+"use strict";
+
+const path = require("path");
+const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

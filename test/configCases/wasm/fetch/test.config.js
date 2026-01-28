@@ -1,9 +1,11 @@
+"use strict";
+
 const fs = require("fs");
-const url = require("url");
 const path = require("path");
+const url = require("url");
 
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i) {
 		switch (i) {
 			case 0:
 				return ["bundle0.mjs"];
@@ -16,7 +18,7 @@ module.exports = {
 		}
 	},
 	moduleScope(scope, options) {
-		scope.fetch = resource =>
+		scope.fetch = (resource) =>
 			new Promise((resolve, reject) => {
 				const file = /^file:/i.test(resource)
 					? url.fileURLToPath(resource)
@@ -29,7 +31,6 @@ module.exports = {
 					}
 
 					return resolve(
-						// eslint-disable-next-line n/no-unsupported-features/node-builtins
 						new Response(data, {
 							headers: { "Content-Type": "application/wasm" }
 						})

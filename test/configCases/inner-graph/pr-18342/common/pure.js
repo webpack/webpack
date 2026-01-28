@@ -1,5 +1,5 @@
 function pure() {
-	console.log('pureFn');
+	1;
 }
 
 export default pure

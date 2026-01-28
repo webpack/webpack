@@ -1,8 +1,12 @@
-const toml = require("toml");
+"use strict";
+
 const json5 = require("json5");
+const toml = require("toml");
+// @ts-expect-error no types for yamljs
 const yaml = require("yamljs");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	module: {
 		rules: [
 			{
@@ -29,3 +33,5 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;

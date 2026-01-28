@@ -1,4 +1,7 @@
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	output: {
 		publicPath: "dist/"
@@ -20,3 +23,5 @@ module.exports = {
 		topLevelAwait: true
 	}
 };
+
+module.exports = config;

@@ -1,0 +1,3 @@
+function doNothing() {}
+
+doNothing();

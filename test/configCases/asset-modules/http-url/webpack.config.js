@@ -1,3 +1,5 @@
+"use strict";
+
 const {
 	experiments: {
 		schemes: { HttpUriPlugin }
@@ -21,6 +23,11 @@ const base = {
 			},
 			{
 				test: /\.txt$/,
+				dependency: { not: "url" },
+				type: "asset/source"
+			},
+			{
+				test: /LICENSE$/,
 				dependency: { not: "url" },
 				type: "asset/source"
 			}
@@ -93,6 +100,19 @@ module.exports = [
 				allowedUris,
 				upgrade: true,
 				frozen: true
+			})
+		]
+	},
+	{
+		name: "security-userinfo-bypass",
+		...base,
+		entry: "./index.security.js",
+		plugins: [
+			serverPlugin,
+			new HttpUriPlugin({
+				allowedUris,
+				upgrade: false,
+				frozen: false
 			})
 		]
 	}

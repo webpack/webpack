@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Cli should generate the correct cli flags 1`] = `
+exports[`Cli getArguments should generate the correct cli flags 1`] = `
 Object {
   "amd": Object {
     "configs": Array [
@@ -465,6 +465,147 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "devtool-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'devtool' configuration. A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": false,
+        "path": "devtool",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'devtool' configuration. A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "devtool-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Which asset type should receive this devtool value.",
+        "multiple": true,
+        "path": "devtool[].type",
+        "type": "enum",
+        "values": Array [
+          "all",
+          "javascript",
+          "css",
+        ],
+      },
+    ],
+    "description": "Which asset type should receive this devtool value.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "devtool-use": Object {
+    "configs": Array [
+      Object {
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": true,
+        "path": "devtool[].use",
+        "type": "enum",
+        "values": Array [
+          false,
+          "eval",
+        ],
+      },
+      Object {
+        "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+        "multiple": true,
+        "path": "devtool[].use",
+        "type": "string",
+      },
+    ],
+    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "dotenv": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable Dotenv plugin with default options.",
+        "multiple": false,
+        "path": "dotenv",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable Dotenv plugin with default options.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "dotenv-dir": Object {
+    "configs": Array [
+      Object {
+        "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
+        "multiple": false,
+        "path": "dotenv.dir",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
+        "multiple": false,
+        "path": "dotenv.dir",
+        "type": "path",
+      },
+    ],
+    "description": "The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "dotenv-prefix": Object {
+    "configs": Array [
+      Object {
+        "description": "A prefix that environment variables must start with to be exposed.",
+        "multiple": true,
+        "path": "dotenv.prefix[]",
+        "type": "string",
+      },
+    ],
+    "description": "A prefix that environment variables must start with to be exposed.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "dotenv-prefix-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'dotenv.prefix' configuration. Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+        "multiple": false,
+        "path": "dotenv.prefix",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'dotenv.prefix' configuration. Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "dotenv-template": Object {
+    "configs": Array [
+      Object {
+        "description": "A template pattern for .env file names.",
+        "multiple": true,
+        "path": "dotenv.template[]",
+        "type": "string",
+      },
+    ],
+    "description": "A template pattern for .env file names.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "dotenv-template-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'dotenv.template' configuration. Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+        "multiple": false,
+        "path": "dotenv.template",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'dotenv.template' configuration. Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "entry": Object {
     "configs": Array [
       Object {
@@ -649,6 +790,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "experiments.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {
@@ -659,19 +813,6 @@ Object {
       },
     ],
     "description": "Apply defaults of next major version.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-layers": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable module layers.",
-        "multiple": false,
-        "path": "experiments.layers",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable module layers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -825,19 +966,6 @@ Object {
       },
     ],
     "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-top-level-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow using top-level-await in EcmaScript Modules.",
-        "multiple": false,
-        "path": "experiments.topLevelAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow using top-level-await in EcmaScript Modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1033,6 +1161,9 @@ Object {
           "module-import",
           "script",
           "node-commonjs",
+          "asset",
+          "css-import",
+          "css-url",
         ],
       },
     ],
@@ -1482,6 +1613,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-auto-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/auto.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-auto-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1514,6 +1663,45 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-auto-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-auto-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-auto-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-auto-local-ident-name": Object {
     "configs": Array [
@@ -1567,6 +1755,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/global.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1600,6 +1806,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-global-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-global-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-local-ident-name": Object {
     "configs": Array [
       Object {
@@ -1625,6 +1870,24 @@ Object {
     "description": "Configure the generated JS modules that use the ES modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-module-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.generator.css/module.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-module-exports-convention": Object {
     "configs": Array [
@@ -1659,6 +1922,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-module-local-ident-hash-digest": Object {
+    "configs": Array [
+      Object {
+        "description": "Digest types used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashDigest",
+        "type": "string",
+      },
+    ],
+    "description": "Digest types used for the hash.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-css-module-local-ident-hash-digest-length": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of chars which are used for the hash.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashDigestLength",
+        "type": "number",
+      },
+    ],
+    "description": "Number of chars which are used for the hash.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-generator-css-module-local-ident-hash-salt": Object {
+    "configs": Array [
+      Object {
+        "description": "Any string which is added to the hash to salt it.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashSalt",
+        "type": "string",
+      },
+    ],
+    "description": "Any string which is added to the hash to salt it.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-module-local-ident-name": Object {
     "configs": Array [
       Object {
@@ -1671,6 +1973,19 @@ Object {
     "description": "Configure the generated local ident name.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-json-json-parse": Object {
+    "configs": Array [
+      Object {
+        "description": "Use \`JSON.parse\` when the JSON string is longer than 20 characters.",
+        "multiple": false,
+        "path": "module.generator.json.JSONParse",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use \`JSON.parse\` when the JSON string is longer than 20 characters.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-no-parse": Object {
     "configs": Array [
@@ -1717,6 +2032,102 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-auto-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/auto.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/auto.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/auto.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/auto.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/auto.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-css-auto-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/auto.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/auto.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-import": Object {
     "configs": Array [
       Object {
@@ -1753,6 +2164,120 @@ Object {
       },
     ],
     "description": "Enable/disable \`url()\`/\`image-set()\`/\`src()\`/\`image()\` functions handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/global.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/global.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/global.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/global.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/global.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/global.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/global.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1805,6 +2330,102 @@ Object {
       },
     ],
     "description": "Enable/disable \`@import\` at-rules handling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-animation": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@keyframes\`.",
+        "multiple": false,
+        "path": "module.parser.css/module.animation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@keyframes\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@container\` names.",
+        "multiple": false,
+        "path": "module.parser.css/module.container",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@container\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-custom-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of custom identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/module.customIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-dashed-idents": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+        "multiple": false,
+        "path": "module.parser.css/module.dashedIdents",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-export-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how CSS content is exported as default.",
+        "multiple": false,
+        "path": "module.parser.css/module.exportType",
+        "type": "enum",
+        "values": Array [
+          "link",
+          "text",
+          "css-style-sheet",
+        ],
+      },
+    ],
+    "description": "Configure how CSS content is exported as default.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-css-module-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`@function\` names.",
+        "multiple": false,
+        "path": "module.parser.css/module.function",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`@function\` names.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-grid": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of grid identifiers.",
+        "multiple": false,
+        "path": "module.parser.css/module.grid",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of grid identifiers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1963,6 +2584,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-dynamic-import-fetch-priority": Object {
     "configs": Array [
       Object {
@@ -2038,6 +2672,19 @@ Object {
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-auto-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
@@ -2164,15 +2811,24 @@ Object {
   "module-parser-javascript-auto-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/auto.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-import-meta-context": Object {
     "configs": Array [
@@ -2599,6 +3255,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-amd": Object {
     "configs": Array [
       Object {
@@ -2672,6 +3341,19 @@ Object {
     "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-dynamic-dynamic-import-fetch-priority": Object {
     "configs": Array [
@@ -2748,6 +3430,19 @@ Object {
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
@@ -2893,15 +3588,24 @@ Object {
   "module-parser-javascript-dynamic-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-import-meta-context": Object {
     "configs": Array [
@@ -3237,6 +3941,12 @@ Object {
   "module-parser-javascript-dynamic-url": Object {
     "configs": Array [
       Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicUrl",
+        "type": "boolean",
+      },
+      Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.url",
@@ -3252,7 +3962,7 @@ Object {
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of new URL() syntax.",
+    "description": "Enable/disable parsing of dynamic URL. Enable/disable parsing of new URL() syntax.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3401,6 +4111,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-dynamic-import-fetch-priority": Object {
     "configs": Array [
       Object {
@@ -3476,6 +4199,19 @@ Object {
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of dynamic URL.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicUrl",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of dynamic URL.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [
@@ -3602,15 +4338,24 @@ Object {
   "module-parser-javascript-esm-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/esm.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-import-meta-context": Object {
     "configs": Array [
@@ -4104,15 +4849,24 @@ Object {
   "module-parser-javascript-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript.importMeta",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta",
+        "type": "enum",
+        "values": Array [
+          "preserve-unknown",
+        ],
+      },
     ],
-    "description": "Enable/disable evaluating import.meta.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-import-meta-context": Object {
     "configs": Array [
@@ -4481,6 +5235,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-json-exports-depth": Object {
+    "configs": Array [
+      Object {
+        "description": "The depth of json dependency flagged as \`exportInfo\`.",
+        "multiple": false,
+        "path": "module.parser.json.exportsDepth",
+        "type": "number",
+      },
+    ],
+    "description": "The depth of json dependency flagged as \`exportInfo\`.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-parser-json-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Allow named exports for json of object type.",
+        "multiple": false,
+        "path": "module.parser.json.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allow named exports for json of object type.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-rules-compiler": Object {
     "configs": Array [
       Object {
@@ -4611,6 +5391,19 @@ Object {
     "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "module-rules-extract-source-map": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable extracting source map.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/Disable extracting source map.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "module-rules-include": Object {
     "configs": Array [
@@ -6600,6 +7393,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-import-meta-dirname-and-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`import.meta.dirname\` and \`import.meta.filename\`.",
+        "multiple": false,
+        "path": "output.environment.importMetaDirnameAndFilename",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`import.meta.dirname\` and \`import.meta.filename\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-method-shorthand": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports object method shorthand ('{ module() {} }').",
+        "multiple": false,
+        "path": "output.environment.methodShorthand",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports object method shorthand ('{ module() {} }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-module": Object {
     "configs": Array [
       Object {
@@ -6681,13 +7500,13 @@ Object {
   "output-hash-digest": Object {
     "configs": Array [
       Object {
-        "description": "Digest type used for the hash.",
+        "description": "Digest types used for the hash.",
         "multiple": false,
         "path": "output.hashDigest",
         "type": "string",
       },
     ],
-    "description": "Digest type used for the hash.",
+    "description": "Digest types used for the hash.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -8703,6 +9522,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-context-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-context-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.contextModule.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
@@ -8938,6 +9783,15 @@ Object {
         "description": "Sort the assets by that field.",
         "multiple": false,
         "path": "stats.assetsSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Sort the assets by that field.",
+        "multiple": false,
+        "path": "stats.assetsSort",
         "type": "string",
       },
     ],
@@ -9013,15 +9867,1342 @@ Object {
   "stats-children": Object {
     "configs": Array [
       Object {
-        "description": "Add children information.",
-        "multiple": false,
-        "path": "stats.children",
+        "description": "Stats options object or preset name.",
+        "multiple": true,
+        "path": "stats.children[]",
+        "type": "enum",
+        "values": Array [
+          "none",
+          "summary",
+          "errors-only",
+          "errors-warnings",
+          "minimal",
+          "normal",
+          "detailed",
+          "verbose",
+        ],
+      },
+      Object {
+        "description": "Stats options object or preset name.",
+        "multiple": true,
+        "path": "stats.children[]",
         "type": "boolean",
       },
     ],
-    "description": "Add children information.",
+    "description": "Stats options object or preset name.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-all": Object {
+    "configs": Array [
+      Object {
+        "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+        "multiple": true,
+        "path": "stats.children[].all",
+        "type": "boolean",
+      },
+    ],
+    "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add assets information.",
+        "multiple": true,
+        "path": "stats.children[].assets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add assets information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-assets-sort": Object {
+    "configs": Array [
+      Object {
+        "description": "Sort the assets by that field.",
+        "multiple": true,
+        "path": "stats.children[].assetsSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Sort the assets by that field.",
+        "multiple": true,
+        "path": "stats.children[].assetsSort",
+        "type": "string",
+      },
+    ],
+    "description": "Sort the assets by that field.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-assets-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display assets (groups will be collapsed to fit this space).",
+        "multiple": true,
+        "path": "stats.children[].assetsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display assets (groups will be collapsed to fit this space).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-built-at": Object {
+    "configs": Array [
+      Object {
+        "description": "Add built at time information.",
+        "multiple": true,
+        "path": "stats.children[].builtAt",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add built at time information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-cached": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
+        "multiple": true,
+        "path": "stats.children[].cached",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-cached-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Show cached assets (setting this to \`false\` only shows emitted files).",
+        "multiple": true,
+        "path": "stats.children[].cachedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show cached assets (setting this to \`false\` only shows emitted files).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-cached-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about cached (not built) modules.",
+        "multiple": true,
+        "path": "stats.children[].cachedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about cached (not built) modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-group-auxiliary": Object {
+    "configs": Array [
+      Object {
+        "description": "Display auxiliary assets in chunk groups.",
+        "multiple": true,
+        "path": "stats.children[].chunkGroupAuxiliary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display auxiliary assets in chunk groups.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-group-children": Object {
+    "configs": Array [
+      Object {
+        "description": "Display children of chunk groups.",
+        "multiple": true,
+        "path": "stats.children[].chunkGroupChildren",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display children of chunk groups.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-group-max-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Limit of assets displayed in chunk groups.",
+        "multiple": true,
+        "path": "stats.children[].chunkGroupMaxAssets",
+        "type": "number",
+      },
+    ],
+    "description": "Limit of assets displayed in chunk groups.",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-chunk-groups": Object {
+    "configs": Array [
+      Object {
+        "description": "Display all chunk groups with the corresponding bundles.",
+        "multiple": true,
+        "path": "stats.children[].chunkGroups",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display all chunk groups with the corresponding bundles.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add built modules information to chunk information.",
+        "multiple": true,
+        "path": "stats.children[].chunkModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add built modules information to chunk information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+        "multiple": true,
+        "path": "stats.children[].chunkModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-chunk-origins": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the origins of chunks and chunk merging info.",
+        "multiple": true,
+        "path": "stats.children[].chunkOrigins",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the origins of chunks and chunk merging info.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunk-relations": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about parent, children and sibling chunks to chunk information.",
+        "multiple": true,
+        "path": "stats.children[].chunkRelations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about parent, children and sibling chunks to chunk information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Add chunk information.",
+        "multiple": true,
+        "path": "stats.children[].chunks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add chunk information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-chunks-sort": Object {
+    "configs": Array [
+      Object {
+        "description": "Sort the chunks by that field.",
+        "multiple": true,
+        "path": "stats.children[].chunksSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Sort the chunks by that field.",
+        "multiple": true,
+        "path": "stats.children[].chunksSort",
+        "type": "string",
+      },
+    ],
+    "description": "Sort the chunks by that field.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables/Disables colorful output.",
+        "multiple": true,
+        "path": "stats.children[].colors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enables/Disables colorful output.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-colors-bold": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for bold text.",
+        "multiple": true,
+        "path": "stats.children[].colors.bold",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for bold text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors-cyan": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for cyan text.",
+        "multiple": true,
+        "path": "stats.children[].colors.cyan",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for cyan text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors-green": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for green text.",
+        "multiple": true,
+        "path": "stats.children[].colors.green",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for green text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors-magenta": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for magenta text.",
+        "multiple": true,
+        "path": "stats.children[].colors.magenta",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for magenta text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors-red": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for red text.",
+        "multiple": true,
+        "path": "stats.children[].colors.red",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for red text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-colors-yellow": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom color for yellow text.",
+        "multiple": true,
+        "path": "stats.children[].colors.yellow",
+        "type": "string",
+      },
+    ],
+    "description": "Custom color for yellow text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Context directory for request shortening.",
+        "multiple": true,
+        "path": "stats.children[].context",
+        "type": "path",
+      },
+    ],
+    "description": "Context directory for request shortening.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-dependent-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+        "multiple": true,
+        "path": "stats.children[].dependentModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-depth": Object {
+    "configs": Array [
+      Object {
+        "description": "Add module depth in module graph.",
+        "multiple": true,
+        "path": "stats.children[].depth",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add module depth in module graph.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-entrypoints": Object {
+    "configs": Array [
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": true,
+        "path": "stats.children[].entrypoints",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": true,
+        "path": "stats.children[].entrypoints",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display the entry points with the corresponding bundles.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Add --env information.",
+        "multiple": true,
+        "path": "stats.children[].env",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add --env information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-error-cause": Object {
+    "configs": Array [
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": true,
+        "path": "stats.children[].errorCause",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": true,
+        "path": "stats.children[].errorCause",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add cause to errors.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-error-details": Object {
+    "configs": Array [
+      Object {
+        "description": "Add details to errors (like resolving log).",
+        "multiple": true,
+        "path": "stats.children[].errorDetails",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add details to errors (like resolving log).",
+        "multiple": true,
+        "path": "stats.children[].errorDetails",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add details to errors (like resolving log).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-error-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": true,
+        "path": "stats.children[].errorErrors",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": true,
+        "path": "stats.children[].errorErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add nested errors to errors (like in AggregateError).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-error-stack": Object {
+    "configs": Array [
+      Object {
+        "description": "Add internal stack trace to errors.",
+        "multiple": true,
+        "path": "stats.children[].errorStack",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add internal stack trace to errors.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors.",
+        "multiple": true,
+        "path": "stats.children[].errors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-errors-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors count.",
+        "multiple": true,
+        "path": "stats.children[].errorsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors count.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-errors-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display errors (value is in number of lines).",
+        "multiple": true,
+        "path": "stats.children[].errorsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display errors (value is in number of lines).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-exclude-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].excludeAssets",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].excludeAssets",
+        "type": "string",
+      },
+      Object {
+        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.excludeAssets[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.excludeAssets[]",
+        "type": "string",
+      },
+    ],
+    "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-exclude-assets-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'stats.children.excludeAssets' configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "multiple": false,
+        "path": "stats.children.excludeAssets",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'stats.children.excludeAssets' configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-children-exclude-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.children[].excludeModules",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.children[].excludeModules",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.children[].excludeModules",
+        "type": "string",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.children.excludeModules[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.children.excludeModules[]",
+        "type": "string",
+      },
+    ],
+    "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-exclude-modules-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'stats.children.excludeModules' configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": false,
+        "path": "stats.children.excludeModules",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'stats.children.excludeModules' configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-assets-by-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by how their are related to chunks.",
+        "multiple": true,
+        "path": "stats.children[].groupAssetsByChunk",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by how their are related to chunks.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-assets-by-emit-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": true,
+        "path": "stats.children[].groupAssetsByEmitStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-assets-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their extension.",
+        "multiple": true,
+        "path": "stats.children[].groupAssetsByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their extension.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-assets-by-info": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+        "multiple": true,
+        "path": "stats.children[].groupAssetsByInfo",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-assets-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their path.",
+        "multiple": true,
+        "path": "stats.children[].groupAssetsByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their path.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-cache-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their status (cached or built and cacheable).",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByCacheStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their status (cached or built and cacheable).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their extension.",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their extension.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their layer.",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByLayer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their layer.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their path.",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their path.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-modules-by-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their type.",
+        "multiple": true,
+        "path": "stats.children[].groupModulesByType",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their type.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-group-reasons-by-origin": Object {
+    "configs": Array [
+      Object {
+        "description": "Group reasons by their origin module.",
+        "multiple": true,
+        "path": "stats.children[].groupReasonsByOrigin",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group reasons by their origin module.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the hash of the compilation.",
+        "multiple": true,
+        "path": "stats.children[].hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the hash of the compilation.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-ids": Object {
+    "configs": Array [
+      Object {
+        "description": "Add ids.",
+        "multiple": true,
+        "path": "stats.children[].ids",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add ids.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-logging": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify log level of logging output.",
+        "multiple": true,
+        "path": "stats.children[].logging",
+        "type": "enum",
+        "values": Array [
+          "none",
+          "error",
+          "warn",
+          "info",
+          "log",
+          "verbose",
+        ],
+      },
+      Object {
+        "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log).",
+        "multiple": true,
+        "path": "stats.children[].logging",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify log level of logging output. Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-logging-debug": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable debug logging for all loggers.",
+        "multiple": true,
+        "path": "stats.children[].loggingDebug",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].loggingDebug",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].loggingDebug",
+        "type": "string",
+      },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.loggingDebug[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.loggingDebug[]",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/Disable debug logging for all loggers. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-logging-debug-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'stats.children.loggingDebug' configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": false,
+        "path": "stats.children.loggingDebug",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'stats.children.loggingDebug' configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-children-logging-trace": Object {
+    "configs": Array [
+      Object {
+        "description": "Add stack traces to logging output.",
+        "multiple": true,
+        "path": "stats.children[].loggingTrace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add stack traces to logging output.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-module-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets inside modules.",
+        "multiple": true,
+        "path": "stats.children[].moduleAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets inside modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-module-trace": Object {
+    "configs": Array [
+      Object {
+        "description": "Add dependencies and origin of warnings/errors.",
+        "multiple": true,
+        "path": "stats.children[].moduleTrace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add dependencies and origin of warnings/errors.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add built modules information.",
+        "multiple": true,
+        "path": "stats.children[].modules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add built modules information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-modules-sort": Object {
+    "configs": Array [
+      Object {
+        "description": "Sort the modules by that field.",
+        "multiple": true,
+        "path": "stats.children[].modulesSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Sort the modules by that field.",
+        "multiple": true,
+        "path": "stats.children[].modulesSort",
+        "type": "string",
+      },
+    ],
+    "description": "Sort the modules by that field.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+        "multiple": true,
+        "path": "stats.children[].modulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-nested-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about modules nested in other modules (like with module concatenation).",
+        "multiple": true,
+        "path": "stats.children[].nestedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about modules nested in other modules (like with module concatenation).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-nested-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+        "multiple": true,
+        "path": "stats.children[].nestedModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-optimization-bailout": Object {
+    "configs": Array [
+      Object {
+        "description": "Show reasons why optimization bailed out for modules.",
+        "multiple": true,
+        "path": "stats.children[].optimizationBailout",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show reasons why optimization bailed out for modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-orphan-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about orphan modules.",
+        "multiple": true,
+        "path": "stats.children[].orphanModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about orphan modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-output-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Add output path information.",
+        "multiple": true,
+        "path": "stats.children[].outputPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add output path information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-performance": Object {
+    "configs": Array [
+      Object {
+        "description": "Add performance hint flags.",
+        "multiple": true,
+        "path": "stats.children[].performance",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add performance hint flags.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-preset": Object {
+    "configs": Array [
+      Object {
+        "description": "Preset for the default values.",
+        "multiple": true,
+        "path": "stats.children[].preset",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Preset for the default values.",
+        "multiple": true,
+        "path": "stats.children[].preset",
+        "type": "string",
+      },
+    ],
+    "description": "Preset for the default values.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-provided-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Show exports provided by modules.",
+        "multiple": true,
+        "path": "stats.children[].providedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show exports provided by modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Add public path information.",
+        "multiple": true,
+        "path": "stats.children[].publicPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add public path information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-reasons": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about the reasons why modules are included.",
+        "multiple": true,
+        "path": "stats.children[].reasons",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about the reasons why modules are included.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-reasons-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display reasons (groups will be collapsed to fit this space).",
+        "multiple": true,
+        "path": "stats.children[].reasonsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display reasons (groups will be collapsed to fit this space).",
+    "multiple": true,
+    "simpleType": "number",
+  },
+  "stats-children-related-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+        "multiple": true,
+        "path": "stats.children[].relatedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'stats.children' configuration. Add children information.",
+        "multiple": false,
+        "path": "stats.children",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'stats.children' configuration. Add children information.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-children-runtime": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
+        "multiple": true,
+        "path": "stats.children[].runtime",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-runtime-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about runtime modules.",
+        "multiple": true,
+        "path": "stats.children[].runtimeModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about runtime modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-source": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the source code of modules.",
+        "multiple": true,
+        "path": "stats.children[].source",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the source code of modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-timings": Object {
+    "configs": Array [
+      Object {
+        "description": "Add timing information.",
+        "multiple": true,
+        "path": "stats.children[].timings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add timing information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-used-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Show exports used by modules.",
+        "multiple": true,
+        "path": "stats.children[].usedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show exports used by modules.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-version": Object {
+    "configs": Array [
+      Object {
+        "description": "Add webpack version information.",
+        "multiple": true,
+        "path": "stats.children[].version",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add webpack version information.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings.",
+        "multiple": true,
+        "path": "stats.children[].warnings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-warnings-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings count.",
+        "multiple": true,
+        "path": "stats.children[].warningsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings count.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-warnings-filter": Object {
+    "configs": Array [
+      Object {
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].warningsFilter",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children[].warningsFilter",
+        "type": "string",
+      },
+      Object {
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.warningsFilter[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.children.warningsFilter[]",
+        "type": "string",
+      },
+    ],
+    "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "stats-children-warnings-filter-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'stats.children.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "multiple": false,
+        "path": "stats.children.warningsFilter",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'stats.children.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-children-warnings-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display warnings (value is in number of lines).",
+        "multiple": true,
+        "path": "stats.children[].warningsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display warnings (value is in number of lines).",
+    "multiple": true,
+    "simpleType": "number",
   },
   "stats-chunk-group-auxiliary": Object {
     "configs": Array [
@@ -9142,6 +11323,15 @@ Object {
   },
   "stats-chunks-sort": Object {
     "configs": Array [
+      Object {
+        "description": "Sort the chunks by that field.",
+        "multiple": false,
+        "path": "stats.chunksSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
       Object {
         "description": "Sort the chunks by that field.",
         "multiple": false,
@@ -9318,6 +11508,28 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-error-cause": Object {
+    "configs": Array [
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": false,
+        "path": "stats.errorCause",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add cause to errors.",
+        "multiple": false,
+        "path": "stats.errorCause",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add cause to errors.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "stats-error-details": Object {
     "configs": Array [
       Object {
@@ -9337,6 +11549,28 @@ Object {
       },
     ],
     "description": "Add details to errors (like resolving log).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "stats-error-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": false,
+        "path": "stats.errorErrors",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add nested errors to errors (like in AggregateError).",
+        "multiple": false,
+        "path": "stats.errorErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add nested errors to errors (like in AggregateError).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -9763,6 +11997,15 @@ Object {
   },
   "stats-modules-sort": Object {
     "configs": Array [
+      Object {
+        "description": "Sort the modules by that field.",
+        "multiple": false,
+        "path": "stats.modulesSort",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
       Object {
         "description": "Sort the modules by that field.",
         "multiple": false,
@@ -10239,7 +12482,7 @@ Object {
 }
 `;
 
-exports[`Cli should generate the correct cli flags with custom schema 1`] = `
+exports[`Cli getArguments should generate the correct cli flags with custom schema 1`] = `
 Object {
   "with-both-cli-and-negative-description": Object {
     "configs": Array [

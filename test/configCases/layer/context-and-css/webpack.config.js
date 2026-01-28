@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -6,7 +8,6 @@ module.exports = {
 		dark: { import: "./dark.js", layer: "dark" }
 	},
 	experiments: {
-		layers: true,
 		css: true
 	},
 	optimization: {

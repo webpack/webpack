@@ -14,7 +14,10 @@ console.log(pMap4);
 # webpack.config.js
 
 ```javascript
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	// enable debug logging to see network requests!
 	// stats: {
 	// 	loggingDebug: /HttpUriPlugin/
@@ -28,6 +31,8 @@ module.exports = {
 		]
 	}
 };
+
+module.exports = config;
 ```
 
 # Info
@@ -35,7 +40,7 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset output.js 82.6 KiB [emitted] (name: main)
+asset output.js 82.7 KiB [emitted] (name: main)
 runtime modules 670 bytes 3 modules
 modules by path https:// 30 KiB
   modules by path https://jspm.dev/ 16.1 KiB 12 modules
@@ -59,7 +64,7 @@ modules by path https:// 30 KiB
       [used exports unknown]
       harmony side effect evaluation https://cdn.skypack.dev/p-map ./example.js 1:0-50
       harmony import specifier https://cdn.skypack.dev/p-map ./example.js 5:12-17
-    https://cdn.skypack.dev/-/p-map@v5.1.0-7ixXvZxXPKKt9unR9LT0/dist=es2020,mode=imports/optimized/p-map.js 2.29 KiB [built] [code generated]
+    https://cdn.skypack.dev/-/p-map@v5.1.0-7ixXvZxXPKKt9unR9LT0/dist=es2020,mode=imp...(truncated) 2.29 KiB [built] [code generated]
       [exports: default, pMapSkip]
       [used exports unknown]
       harmony side effect evaluation /-/p-map@v5.1.0-7ixXvZxXPKKt9unR9LT0/dist=es2020,mode=imports/optimized/p-map.js https://cdn.skypack.dev/p-map 15:0-97
@@ -76,7 +81,7 @@ modules by path https:// 30 KiB
   [no exports]
   [used exports unknown]
   entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
@@ -88,5 +93,5 @@ orphan modules 30 KiB [orphan] 26 modules
   [no exports]
   [no exports used]
   entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```

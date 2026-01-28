@@ -1,4 +1,7 @@
-var webpack = require("../../../");
+"use strict";
+
+const path = require("path");
+const webpack = require("../../../");
 
 /** @type {import("../../../").Configuration} */
 module.exports = {
@@ -9,7 +12,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			manifest: `${__dirname}/blank-manifest.json`,
+			manifest: path.resolve(__dirname, "./blank-manifest.json"),
 			name: "blank-manifest"
 		})
 	]

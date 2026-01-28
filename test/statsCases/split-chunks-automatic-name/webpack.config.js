@@ -1,3 +1,5 @@
+"use strict";
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -9,6 +11,7 @@ const stats = {
 	entrypoints: true,
 	modules: false
 };
+
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	name: "production",

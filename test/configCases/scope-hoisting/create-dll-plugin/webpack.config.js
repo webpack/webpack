@@ -1,5 +1,8 @@
+"use strict";
+
 const path = require("path");
-var webpack = require("../../../../");
+const webpack = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: ["./index.js"],

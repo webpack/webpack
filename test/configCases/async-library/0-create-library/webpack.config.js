@@ -1,3 +1,5 @@
+"use strict";
+
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	entry: "./a.js",
@@ -12,7 +14,6 @@ module.exports = {
 		minimize: true
 	},
 	experiments: {
-		topLevelAwait: true,
 		outputModule: true
 	}
 };

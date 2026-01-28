@@ -1,0 +1,41 @@
+.something {}
+
+.importName {
+	color: red;
+}
+
+.importName2 {
+	color: red;
+}
+
+.importName3 {
+	color: azure;
+}
+
+.importName4 {
+	color: antiquewhite;
+}
+
+.secondImport {
+	color: green;
+}
+
+.thirdImport {
+	color: blue;
+}
+
+.otherLibImport {
+	color: yellow;
+}
+
+.thirdDep {
+	color: black;
+}
+
+.firstImport {
+	color: red;
+}
+
+.secondImport {
+	color: red;
+}

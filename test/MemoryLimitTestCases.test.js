@@ -1,28 +1,30 @@
 "use strict";
 
 require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const captureStdio = require("./helpers/captureStdio");
 const webpack = require("..");
+const captureStdio = require("./helpers/captureStdio");
 
-const toMiB = bytes => `${Math.round(bytes / 1024 / 1024)}MiB`;
+const toMiB = (bytes) => `${Math.round(bytes / 1024 / 1024)}MiB`;
 const base = path.join(__dirname, "memoryLimitCases");
 const outputBase = path.join(__dirname, "js", "memoryLimit");
 const tests = fs
 	.readdirSync(base)
 	.filter(
-		testName =>
+		(testName) =>
 			fs.existsSync(path.join(base, testName, "index.js")) ||
 			fs.existsSync(path.join(base, testName, "webpack.config.js"))
 	)
-	.filter(testName => {
+	.filter((testName) => {
 		const testDirectory = path.join(base, testName);
 		const filterPath = path.join(testDirectory, "test.filter.js");
 		if (fs.existsSync(filterPath) && !require(filterPath)()) {
 			// eslint-disable-next-line jest/no-disabled-tests, jest/valid-describe-callback
 			describe.skip(testName, () => it("filtered"));
+
 			return false;
 		}
 		return true;
@@ -31,6 +33,7 @@ const tests = fs
 describe("MemoryLimitTestCases", () => {
 	jest.setTimeout(40000);
 	let stderr;
+
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
 		if (global.gc) {
@@ -38,9 +41,11 @@ describe("MemoryLimitTestCases", () => {
 			global.gc();
 		}
 	});
+
 	afterEach(() => {
 		stderr.restore();
 	});
+
 	for (const testName of tests) {
 		let testConfig = {
 			heapSizeLimitBytes: 250 * 1024 * 1024
@@ -55,8 +60,9 @@ describe("MemoryLimitTestCases", () => {
 			// ignored
 		}
 		const size = toMiB(testConfig.heapSizeLimitBytes);
+
 		// eslint-disable-next-line no-loop-func
-		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, done => {
+		it(`should build ${JSON.stringify(testName)} with heap limit of ${size}`, (done) => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
@@ -78,8 +84,9 @@ describe("MemoryLimitTestCases", () => {
 				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
-				if (options.optimization.minimize === undefined)
+				if (options.optimization.minimize === undefined) {
 					options.optimization.minimize = false;
+				}
 			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
@@ -87,29 +94,27 @@ describe("MemoryLimitTestCases", () => {
 			for (const c of compilers) {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function () {
+				c.inputFileSystem.readFile = function readFile() {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
-					// eslint-disable-next-line prefer-spread
-					ifs.readFile.apply(
-						ifs,
-						args.concat([
-							(err, result) => {
-								if (err) return callback(err);
-								if (!/\.(js|json|txt)$/.test(args[0]))
-									return callback(null, result);
-								callback(null, result.toString("utf-8").replace(/\r/g, ""));
+					// eslint-disable-next-line no-useless-call
+					ifs.readFile.apply(ifs, [
+						...args,
+						(err, result) => {
+							if (err) return callback(err);
+							if (!/\.(?:js|json|txt)$/.test(args[0])) {
+								return callback(null, result);
 							}
-						])
-					);
+							callback(null, result.toString("utf8").replace(/\r/g, ""));
+						}
+					]);
 				};
 			}
 			c.run((err, stats) => {
 				if (err) return done(err);
-				if (testName.endsWith("error")) {
-					expect(stats.hasErrors()).toBe(true);
-				} else if (stats.hasErrors()) {
+				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
+				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(
 						new Error(
 							stats.toString({

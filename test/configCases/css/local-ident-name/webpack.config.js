@@ -1,5 +1,8 @@
+"use strict";
+
 const common = {
 	mode: "development",
+	devtool: false,
 	module: {
 		rules: [
 			{
@@ -49,6 +52,15 @@ const common = {
 						resourceQuery: /\?uniqueName-id-contenthash$/,
 						generator: {
 							localIdentName: "[uniqueName]-[id]-[contenthash]"
+						}
+					},
+					{
+						resourceQuery: /\?hash-local-custom$/,
+						generator: {
+							localIdentHashSalt: "salt",
+							localIdentHashDigest: "base26",
+							localIdentHashDigestLength: 16,
+							localIdentName: "[hash]-[local]"
 						}
 					}
 				]

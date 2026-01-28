@@ -1,5 +1,9 @@
+"use strict";
+
 const path = require("path");
 const NormalModule = require("../../../../").NormalModule;
+
+/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -9,6 +13,7 @@ module.exports = {
 			{
 				test: /\.png$/,
 				type: "asset",
+				/** @type {ParserOptionsByModuleTypeKnown['asset']} */
 				parser: {
 					dataUrlCondition: (source, { filename, module }) => {
 						expect(source).toBeInstanceOf(Buffer);
@@ -23,6 +28,7 @@ module.exports = {
 			{
 				test: /\.jpg$/,
 				type: "asset",
+				/** @type {ParserOptionsByModuleTypeKnown['asset']} */
 				parser: {
 					dataUrlCondition: (source, { filename, module }) => {
 						expect(source).toBeInstanceOf(Buffer);

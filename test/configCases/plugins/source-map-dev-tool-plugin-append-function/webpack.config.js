@@ -1,5 +1,7 @@
-const webpack = require("../../../../");
+"use strict";
+
 const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require("../../../../");
 
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
@@ -20,7 +22,7 @@ module.exports = {
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
 			filename: "sourcemaps/[file].map",
-			append: data => "\n//# sourceMappingURL=http://localhost:50505/[file].map"
+			append: () => "\n//# sourceMappingURL=http://localhost:50505/[file].map"
 		})
 	]
 };

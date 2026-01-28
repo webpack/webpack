@@ -3,7 +3,10 @@ This example shows how to use Code Splitting with entrypoint dependOn
 # webpack.config.js
 
 ```javascript
-module.exports = {
+"use strict";
+
+/** @type {import("webpack").Configuration} */
+const config = {
 	entry: {
 		app: { import: "./app.js", dependOn: ["other-vendors"] },
 		page1: { import: "./page1.js", dependOn: ["app", "react-vendors"] },
@@ -19,6 +22,8 @@ module.exports = {
 		chunkRelations: true
 	}
 };
+
+module.exports = config;
 ```
 
 # app.js
@@ -82,6 +87,12 @@ console.log(lodash, isomorphicFetch);
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -204,10 +215,10 @@ console.log(lodash, isomorphicFetch);
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
+/******/ 		
 /******/ 		
 /******/ 				script.src = url;
 /******/ 			}
@@ -353,14 +364,14 @@ console.log(lodash, isomorphicFetch);
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["app"],{
 
-/***/ 6:
+/***/ 6
 /*!****************!*\
   !*** ./app.js ***!
   \****************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ 5);
@@ -373,7 +384,7 @@ __webpack_require__.r(__webpack_exports__);
 console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__WEBPACK_IMPORTED_MODULE_1___default()));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -390,14 +401,14 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["page1"],{
 
-/***/ 7:
+/***/ 7
 /*!******************!*\
   !*** ./page1.js ***!
   \******************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ 5);
@@ -415,7 +426,7 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (react__W
 __webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(__webpack_require__, /*! ./lazy */ 8));
 
 
-/***/ })
+/***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
@@ -546,16 +557,16 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset runtime.js 11.1 KiB [emitted] (name: runtime)
+asset runtime.js 11.4 KiB [emitted] (name: runtime)
 asset other-vendors.js 2.13 KiB [emitted] (name: other-vendors)
-asset page1.js 1.91 KiB [emitted] (name: page1)
-asset app.js 1.44 KiB [emitted] (name: app)
+asset page1.js 1.9 KiB [emitted] (name: page1)
+asset app.js 1.43 KiB [emitted] (name: app)
 asset react-vendors.js 1.33 KiB [emitted] (name: react-vendors)
-asset lazy_js.js 1.11 KiB [emitted]
-Entrypoint app 1.44 KiB = app.js
-Entrypoint page1 1.91 KiB = page1.js
-Entrypoint react-vendors 12.4 KiB = runtime.js 11.1 KiB react-vendors.js 1.33 KiB
-Entrypoint other-vendors 13.3 KiB = runtime.js 11.1 KiB other-vendors.js 2.13 KiB
+asset lazy_js.js 1.1 KiB [emitted]
+Entrypoint app 1.43 KiB = app.js
+Entrypoint page1 1.9 KiB = page1.js
+Entrypoint react-vendors 12.7 KiB = runtime.js 11.4 KiB react-vendors.js 1.33 KiB
+Entrypoint other-vendors 13.5 KiB = runtime.js 11.4 KiB other-vendors.js 2.13 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -606,28 +617,28 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.74 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.72 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.74 KiB 10 modules
-webpack 5.78.0 compiled successfully
+  runtime modules 6.72 KiB 10 modules
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset runtime.js 2.37 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 287 bytes [emitted] [minimized] (name: page1)
-asset other-vendors.js 239 bytes [emitted] [minimized] (name: other-vendors)
-asset app.js 207 bytes [emitted] [minimized] (name: app)
-asset react-vendors.js 200 bytes [emitted] [minimized] (name: react-vendors)
-asset lazy_js.js 159 bytes [emitted] [minimized]
-Entrypoint app 207 bytes = app.js
-Entrypoint page1 287 bytes = page1.js
-Entrypoint react-vendors 2.56 KiB = runtime.js 2.37 KiB react-vendors.js 200 bytes
-Entrypoint other-vendors 2.6 KiB = runtime.js 2.37 KiB other-vendors.js 239 bytes
+asset runtime.js 2.34 KiB [emitted] [minimized] (name: runtime)
+asset page1.js 278 bytes [emitted] [minimized] (name: page1)
+asset other-vendors.js 236 bytes [emitted] [minimized] (name: other-vendors)
+asset react-vendors.js 201 bytes [emitted] [minimized] (name: react-vendors)
+asset app.js 197 bytes [emitted] [minimized] (name: app)
+asset lazy_js.js 157 bytes [emitted] [minimized]
+Entrypoint app 197 bytes = app.js
+Entrypoint page1 278 bytes = page1.js
+Entrypoint react-vendors 2.54 KiB = runtime.js 2.34 KiB react-vendors.js 201 bytes
+Entrypoint other-vendors 2.57 KiB = runtime.js 2.34 KiB other-vendors.js 236 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -677,11 +688,11 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.74 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.72 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.74 KiB 10 modules
-webpack 5.78.0 compiled successfully
+  runtime modules 6.72 KiB 10 modules
+webpack X.X.X compiled successfully
 ```

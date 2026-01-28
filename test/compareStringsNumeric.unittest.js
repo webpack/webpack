@@ -1,9 +1,11 @@
-const { compareStringsNumeric } = require("../lib/util/comparators.js");
+"use strict";
+
+const { compareStringsNumeric } = require("../lib/util/comparators");
 
 /**
  * @param {string} a string
  * @param {string} b string
- * @returns {-1|0|1} compare result
+ * @returns {-1 | 0 | 1} compare result
  */
 const referenceComparer = (a, b) => {
 	const partsA = a.split(/(\d+)/);
@@ -35,6 +37,7 @@ const referenceComparer = (a, b) => {
 };
 
 describe(compareStringsNumeric.name, () => {
+	/** @type {[string, string, number][]} */
 	const testCases = [
 		["", "a", 1],
 		["a", "", -1],
@@ -85,6 +88,7 @@ describe(compareStringsNumeric.name, () => {
 
 	for (const testCase of testCases) {
 		const [a, b, expected] = testCase;
+
 		it(`returns ${expected} when comparing "${a}" to "${b}"`, () => {
 			expect(referenceComparer(a, b)).toBe(expected);
 			expect(compareStringsNumeric(a, b)).toBe(expected);

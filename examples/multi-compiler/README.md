@@ -10,9 +10,13 @@ console.log("Running " + ENV + " build");
 # webpack.config.js
 
 ```javascript
-var path = require("path");
-var webpack = require("../../");
-module.exports = [
+"use strict";
+
+const path = require("path");
+const webpack = require("../../");
+
+/** @type {import("webpack").Configuration[]} */
+const config = [
 	{
 		name: "mobile",
 		// mode: "development" || "production",
@@ -43,19 +47,21 @@ module.exports = [
 		]
 	}
 ];
+
+module.exports = config;
 ```
 
 # dist/desktop.js
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
-if(false) {}
+if(false) // removed by dead control flow
+{}
 console.log("Running " + "desktop" + " build");
 /******/ })()
 ;
@@ -95,6 +101,12 @@ console.log("Running " + "desktop" + " build");
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -115,7 +127,6 @@ console.log("Running " + "desktop" + " build");
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -139,37 +150,37 @@ console.log("Running " + "mobile" + " build");
 
 ```
 mobile:
-  asset mobile.js 1.74 KiB [emitted] (name: main)
+  asset mobile.js 1.97 KiB [emitted] (name: main)
   chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
     > ./example main
     dependent modules 20 bytes [dependent] 1 module
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  mobile (webpack 5.78.0) compiled successfully
+  mobile (webpack X.X.X) compiled successfully
 
 desktop:
-  asset desktop.js 292 bytes [emitted] (name: main)
+  asset desktop.js 294 bytes [emitted] (name: main)
   chunk (runtime: main) desktop.js (main) 94 bytes [entry] [rendered]
     > ./example main
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  desktop (webpack 5.78.0) compiled successfully
+  desktop (webpack X.X.X) compiled successfully
 ```
 
 ## Production mode
 
 ```
 mobile:
-  asset mobile.js 195 bytes [emitted] [minimized] (name: main)
+  asset mobile.js 190 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
     > ./example main
     dependent modules 20 bytes [dependent] 1 module
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  mobile (webpack 5.78.0) compiled successfully
+  mobile (webpack X.X.X) compiled successfully
 
 desktop:
   asset desktop.js 37 bytes [emitted] [minimized] (name: main)
@@ -178,5 +189,5 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  desktop (webpack 5.78.0) compiled successfully
+  desktop (webpack X.X.X) compiled successfully
 ```

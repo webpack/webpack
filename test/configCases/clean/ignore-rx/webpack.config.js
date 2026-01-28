@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const { RawSource } = require("webpack-sources");
@@ -11,10 +13,10 @@ module.exports = {
 		}
 	},
 	plugins: [
-		compiler => {
+		(compiler) => {
 			let once = true;
-			compiler.hooks.thisCompilation.tap("Test", compilation => {
-				compilation.hooks.processAssets.tap("Test", assets => {
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+				compilation.hooks.processAssets.tap("Test", (assets) => {
 					if (once) {
 						const outputPath = compilation.getPath(compiler.outputPath, {});
 						const customDir = path.join(
@@ -34,7 +36,7 @@ module.exports = {
 					assets["this/dir/should/not/be/removed/file.ext"] = new RawSource("");
 				});
 			});
-			compiler.hooks.afterEmit.tap("Test", compilation => {
+			compiler.hooks.afterEmit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
 				expect(readDir(outputPath)).toMatchInlineSnapshot(`
 			Object {

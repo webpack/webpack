@@ -1,3 +1,5 @@
+"use strict";
+
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
@@ -12,7 +14,7 @@ const cont = (base, count) => {
 const mw = new BinaryMiddleware();
 const other = { other: true };
 
-const resolveLazy = item => {
+const resolveLazy = (item) => {
 	if (SerializerMiddleware.isLazy(item)) {
 		const data = item();
 		if (Array.isArray(data)) return { resolvesTo: data.map(resolveLazy) };
@@ -58,17 +60,15 @@ describe("BinaryMiddleware", () => {
 			mw
 		)
 	];
+	itemsWithLazy.push(SerializerMiddleware.createLazy([...itemsWithLazy], mw));
 	itemsWithLazy.push(
-		SerializerMiddleware.createLazy(itemsWithLazy.slice(), mw)
-	);
-	itemsWithLazy.push(
-		SerializerMiddleware.createLazy(itemsWithLazy.slice(), other)
+		SerializerMiddleware.createLazy([...itemsWithLazy], other)
 	);
 
 	items.push(undefined);
 
 	const cases = [
-		...itemsWithLazy.map(item => [item]),
+		...itemsWithLazy.map((item) => [item]),
 		[(true, true)],
 		[false, true],
 		[true, false],
@@ -109,13 +109,15 @@ describe("BinaryMiddleware", () => {
 				for (const append of items) {
 					if (c > 1 && append !== undefined) continue;
 					const data = [prepend, ...caseData, append].filter(
-						x => x !== undefined
+						(x) => x !== undefined
 					);
 					if (data.length * c > 200000) continue;
 					if (data.length === 0) continue;
 					let key = JSON.stringify(data.map(resolveLazy));
-					if (key.length > 100)
+					if (key.length > 100) {
 						key = `${key.slice(0, 50)} ... ${key.slice(-50)}`;
+					}
+
 					it(`should serialize ${c} x ${key} (${data.length}) correctly`, () => {
 						// process.stderr.write(
 						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`

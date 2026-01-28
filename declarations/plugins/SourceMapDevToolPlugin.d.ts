@@ -1,17 +1,17 @@
 /*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
+ * Run `yarn fix:special` to update
  */
 
 /**
- * Include source maps for modules based on their extension (defaults to .js and .css).
+ * One or multiple conditions used to match resource.
  */
 export type Rules = Rule[] | Rule;
 /**
- * Include source maps for modules based on their extension (defaults to .js and .css).
+ * Condition used to match resource (string, RegExp or Function).
  */
-export type Rule = RegExp | string;
+export type Rule = RegExp | string | ((str: string) => boolean);
 
 export interface SourceMapDevToolPluginOptions {
 	/**
@@ -20,10 +20,7 @@ export interface SourceMapDevToolPluginOptions {
 	append?:
 		| (false | null)
 		| string
-		| ((
-				pathData: import("../../lib/Compilation").PathData,
-				assetInfo?: import("../../lib/Compilation").AssetInfo
-		  ) => string);
+		| import("../../lib/TemplatedPathPlugin").TemplatePathFn;
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
 	 */
@@ -39,7 +36,9 @@ export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
 	 */
-	fallbackModuleFilenameTemplate?: string | Function;
+	fallbackModuleFilenameTemplate?:
+		| string
+		| import("../../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
 	 */
@@ -48,6 +47,10 @@ export interface SourceMapDevToolPluginOptions {
 	 * Defines the output filename of the SourceMap (will be inlined if no value is provided).
 	 */
 	filename?: (false | null) | string;
+	/**
+	 * Decide whether to ignore source files that match the specified value in the SourceMap.
+	 */
+	ignoreList?: Rules;
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
@@ -59,7 +62,9 @@ export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.
 	 */
-	moduleFilenameTemplate?: string | Function;
+	moduleFilenameTemplate?:
+		| string
+		| import("../../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
 	 */

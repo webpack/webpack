@@ -1,4 +1,7 @@
+"use strict";
+
 const path = require("path");
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -8,6 +11,7 @@ const stats = {
 	chunkOrigins: true,
 	modules: false
 };
+
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
@@ -91,15 +95,16 @@ module.exports = [
 				minSize: 0, // enforce all
 				chunks: "all",
 				cacheGroups: {
-					libs: module => {
+					libs: (module) => {
 						const name = module.nameForCondition();
 						if (!name) return;
 						const match = /[\\/](xyz|x)\.js/.exec(name);
-						if (match)
+						if (match) {
 							return {
 								name: `libs-${match[1]}`,
 								enforce: true
 							};
+						}
 					},
 					vendors: path.resolve(__dirname, "node_modules")
 				}

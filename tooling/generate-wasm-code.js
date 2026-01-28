@@ -1,5 +1,7 @@
-const path = require("path");
+"use strict";
+
 const fs = require("fs");
+const path = require("path");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -11,15 +13,15 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 	// TODO: fix me after update typescript to v5
 	// eslint-disable-next-line no-warning-comments
 	// @ts-ignore
-	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+	// eslint-disable-next-line import/no-unresolved, n/no-unsupported-features/es-syntax
 	const asc = (await import("assemblyscript/asc")).default;
 
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
-		const content = fs.readFileSync(filePath, "utf-8");
+		const content = fs.readFileSync(filePath, "utf8");
 
 		const regexp =
-			/\n\/\/[\s]*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
+			/\n\/\/\s*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
 
 		const replaces = new Map();
 
@@ -75,11 +77,11 @@ const ${identifier} = new WebAssembly.Module(
 			match = regexp.exec(content);
 		}
 
-		const newContent = content.replace(regexp, match => replaces.get(match));
+		const newContent = content.replace(regexp, (match) => replaces.get(match));
 
 		if (newContent !== content) {
 			if (doWrite) {
-				fs.writeFileSync(filePath, newContent, "utf-8");
+				fs.writeFileSync(filePath, newContent, "utf8");
 				console.error(`${file} updated`);
 			} else {
 				console.error(`${file} need to be updated`);

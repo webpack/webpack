@@ -126,6 +126,12 @@ module.exports = function() {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -152,7 +158,6 @@ module.exports = function() {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -176,7 +181,7 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-asset output.js 3.8 KiB [emitted] (name: main)
+asset output.js 4.03 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
@@ -184,13 +189,13 @@ chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime)
   ./example.js 146 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 833 bytes [emitted] [minimized] (name: main)
+asset output.js 814 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
@@ -198,7 +203,7 @@ chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime)
   ./example.js 146 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack X.X.X compiled successfully
 ```
 
 # Code Splitting

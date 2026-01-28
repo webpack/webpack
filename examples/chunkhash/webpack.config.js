@@ -1,6 +1,9 @@
+"use strict";
+
 const path = require("path");
 
-module.exports = {
+/** @type {import("webpack").Configuration} */
+const config = {
 	// mode: "development" || "production",
 	entry: {
 		main: "./example"
@@ -14,3 +17,5 @@ module.exports = {
 		chunkFilename: "[name].chunkhash.js"
 	}
 };
+
+module.exports = config;

@@ -1,15 +1,16 @@
 "use strict";
-const fs = require("graceful-fs");
+
 const path = require("path");
+const fs = require("graceful-fs");
 
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
 		expected = { message: expected };
 	}
 	if (Array.isArray(expected)) {
-		return expected.every(e => check(e, actual));
+		return expected.every((e) => check(e, actual));
 	}
-	return Object.keys(expected).every(key => {
+	return Object.keys(expected).every((key) => {
 		let value = actual[key];
 		if (typeof value === "object") {
 			value = JSON.stringify(value);
@@ -18,27 +19,28 @@ const check = (expected, actual) => {
 	});
 };
 
-const explain = object => {
+const explain = (object) => {
 	if (object instanceof RegExp) {
 		object = { message: object };
 	}
 	return Object.keys(object)
-		.map(key => {
+		.map((key) => {
 			let value = object[key];
 			if (typeof value === "object" && !(value instanceof RegExp)) {
 				value = JSON.stringify(value);
 			}
 			let msg = `${key} = ${value}`;
-			if (key !== "stack" && key !== "details" && msg.length > 100)
+			if (key !== "stack" && key !== "details" && msg.length > 100) {
 				msg = `${msg.slice(0, 97)}...`;
+			}
 			return msg;
 		})
 		.join("; ");
 };
 
 const diffItems = (actual, expected, kind) => {
-	const tooMuch = actual.slice();
-	const missing = expected.slice();
+	const tooMuch = [...actual];
+	const missing = [...expected];
 	for (let i = 0; i < missing.length; i++) {
 		const current = missing[i];
 		for (let j = 0; j < tooMuch.length; j++) {
@@ -53,11 +55,11 @@ const diffItems = (actual, expected, kind) => {
 	const diff = [];
 	if (missing.length > 0) {
 		diff.push(`The following expected ${kind}s are missing:
-${missing.map(item => `${explain(item)}`).join("\n\n")}`);
+${missing.map((item) => `${explain(item)}`).join("\n\n")}`);
 	}
 	if (tooMuch.length > 0) {
 		diff.push(`The following ${kind}s are unexpected:
-${tooMuch.map(item => `${explain(item)}`).join("\n\n")}`);
+${tooMuch.map((item) => `${explain(item)}`).join("\n\n")}`);
 	}
 	return diff.join("\n\n");
 };
@@ -79,11 +81,13 @@ module.exports = function checkArrayExpectation(
 	}
 	let array = object[`${kind}s`];
 	if (Array.isArray(array) && kind === "warning") {
-		array = array.filter(item => !/from Terser/.test(item));
+		array = array.filter((item) => !/from Terser/.test(item));
 	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
+
 		let expected = require(expectedFilename);
+
 		if (typeof expected === "function") {
 			expected = expected(options);
 		}
@@ -109,14 +113,14 @@ module.exports = function checkArrayExpectation(
 		}
 		for (let i = 0; i < array.length; i++) {
 			if (Array.isArray(expected[i])) {
-				for (let j = 0; j < expected[i].length; j++) {
-					if (!check(expected[i][j], array[i])) {
+				for (const expectedItem of expected[i]) {
+					if (!check(expectedItem, array[i])) {
 						return (
 							done(
 								new Error(
 									`${upperCaseKind} ${i}: ${explain(
 										array[i]
-									)} doesn't match ${explain(expected[i][j])}`
+									)} doesn't match ${explain(expectedItem)}`
 								)
 							),
 							true

@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-	findBundle: function (i, options) {
+	findBundle(i, options) {
 		return [
 			`../weird-names2-out/entry/entry-${options.target}.js`,
 			`../weird-names2-out/entry-${options.target}.js`

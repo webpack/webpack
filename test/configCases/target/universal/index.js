@@ -1,6 +1,14 @@
 import value from "./separate";
 import { test as t } from "external-self";
 
+function isBrowser() {
+	return typeof globalThis.window !== 'undefined' && typeof globalThis.document !== 'undefined';
+}
+
+it("should compile check", () => {
+	expect(isBrowser() ? "web" : "node").toBe(!isBrowser() ? "node" : "web");
+});
+
 it("should compile", () => {
 	expect(value).toBe(42);
 });
@@ -13,6 +21,10 @@ it("should circular depend on itself external", () => {
 it("work with URL", () => {
 	const url = new URL("./file.png", import.meta.url);
 	expect(/[a-f0-9]{20}\.png/.test(url)).toBe(true);
+});
+
+it("work with node.js modules", async () => {
+	expect(typeof (isBrowser() ? URL : (await import("url")).URL)).toBe("function");
 });
 
 function test() {
