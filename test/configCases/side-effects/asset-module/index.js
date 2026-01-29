@@ -11,8 +11,6 @@ it("should not include unused assets", () => {
 		})
 	);
 
-	console.log(__STATS__.modules);
-
 	for (const stat of __STATS__.modules.filter((m) =>
 		m.name.includes("/unused.png")
 	)) {
