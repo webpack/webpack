@@ -44,6 +44,7 @@ const config = {
 		"\\.runtime\\.js$",
 		"<rootDir>/test",
 		"<rootDir>/schemas",
+		"<rootDir>/examples",
 		"<rootDir>/node_modules"
 	],
 	testEnvironment: "./test/patch-node-env.js",

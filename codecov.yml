@@ -23,4 +23,12 @@ coverage:
         flags:
           - unit
           - integration
+ignore:
+  - "**/*.runtime.js"
+  - "schemas/**/*"
+  - "examples/**/*"
+  # TODO webpack 6 remove
+  - "lib/ChunkTemplate.js"
+  - "lib/MainTemplate.js"
+  - "lib/ModuleTemplate.js"
 comment: off
