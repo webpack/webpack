@@ -45,11 +45,7 @@ const config = {
 		"<rootDir>/test",
 		"<rootDir>/schemas",
 		"<rootDir>/examples",
-		"<rootDir>/node_modules",
-		// TODO webpack 6 remove
-		"<rootDir>/lib/ChunkTemplate.js",
-		"<rootDir>/lib/MainTemplate.js",
-		"<rootDir>/lib/ModuleTemplate.js"
+		"<rootDir>/node_modules"
 	],
 	testEnvironment: "./test/patch-node-env.js",
 	coverageReporters: ["json"],
