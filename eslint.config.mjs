@@ -47,7 +47,7 @@ export default defineConfig([
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
-		"!examples/**/webpack.config.js",
+		"!examples/**/webpack.config.{js,cjs,mjs}",
 		"!examples/**/test.filter.js"
 	]),
 	{
