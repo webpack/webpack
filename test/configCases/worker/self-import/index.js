@@ -1,7 +1,7 @@
 const isMain = typeof window !== "undefined";
 
 if (isMain) {
-	it("should allow to import itself", async () => {
+	it("should allow to import itself with import.meta.url directly", async () => {
 		const worker = new Worker(import.meta.url);
 		worker.postMessage("ok");
 		const result = await new Promise(resolve => {
@@ -13,8 +13,44 @@ if (isMain) {
 		await worker.terminate();
 	});
 
-	it("should allow to import itself", async () => {
+	it("should allow to import itself with new URL(import.meta.url)", async () => {
 		const worker = new Worker(new URL(import.meta.url));
+		worker.postMessage("ok");
+		const result = await new Promise(resolve => {
+			worker.onmessage = event => {
+				resolve(event.data);
+			};
+		});
+		expect(result).toBe("data: OK, thanks");
+		await worker.terminate();
+	});
+
+	it("should allow to import itself with new URL(import.meta.url, import.meta.url)", async () => {
+		const worker = new Worker(new URL(import.meta.url, import.meta.url));
+		worker.postMessage("ok");
+		const result = await new Promise(resolve => {
+			worker.onmessage = event => {
+				resolve(event.data);
+			};
+		});
+		expect(result).toBe("data: OK, thanks");
+		await worker.terminate();
+	});
+
+	it("should allow to import itself with new URL relative path and import.meta.url as base", async () => {
+		const worker = new Worker(new URL("./index.js", import.meta.url));
+		worker.postMessage("ok");
+		const result = await new Promise(resolve => {
+			worker.onmessage = event => {
+				resolve(event.data);
+			};
+		});
+		expect(result).toBe("data: OK, thanks");
+		await worker.terminate();
+	});
+
+	it("should allow to import itself with new URL relative path without extension and import.meta.url as base", async () => {
+		const worker = new Worker(new URL("./index", import.meta.url));
 		worker.postMessage("ok");
 		const result = await new Promise(resolve => {
 			worker.onmessage = event => {
