@@ -11585,6 +11585,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	importAttributes?: ImportAttributes;
 	error: null | WebpackError;
 	getResource(): null | string;
 
@@ -11738,6 +11739,11 @@ declare interface NormalModuleCreateData {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * import attributes from the import statement
+	 */
+	importAttributes?: ImportAttributes;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -12087,6 +12093,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
+	importAttributes?: Record<string, unknown>;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
