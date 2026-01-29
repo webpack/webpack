@@ -54,7 +54,7 @@ const hashConfig = {
 const config = (i, hashPrefix) => ({
 	output: {
 		filename: `bundle${i}.[contenthash].js`,
-		chunkFilename: "[name].[contenthash].js",
+		chunkFilename: `[name]${i}.[contenthash].js`,
 		hashDigestLength: 4,
 		...hashConfig
 	},
