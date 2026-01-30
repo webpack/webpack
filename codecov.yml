@@ -1,28 +1,50 @@
 codecov:
   branch: main
+
 coverage:
   precision: 2
   round: down
   range: "70...100"
   status:
     project:
-      default:
+      default: false
+
+      tests:
         flags:
-          - unit
-          - integration
+          - tests
         target: auto
-    patch:
-      default:
+
+      types:
         flags:
-          - unit
-          - integration
+          - types
+        target: auto
+
+    patch:
+      default: false
+
+      tests:
+        flags:
+          - tests
         target: 90%
         base: pr
-    changes:
-      default:
+
+      types:
+        target: 90%
+        base: pr
         flags:
-          - unit
-          - integration
+          - types
+
+    changes:
+      default: false
+
+      tests:
+        flags:
+          - tests
+
+      types:
+        flags:
+          - types
+
 ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
@@ -31,4 +53,5 @@ ignore:
   - "lib/ChunkTemplate.js"
   - "lib/MainTemplate.js"
   - "lib/ModuleTemplate.js"
+
 comment: off
