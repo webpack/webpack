@@ -72,6 +72,29 @@ jobs:
 
       - run: yarn install --production --frozen-lockfile
 
+  types-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn types:cover
+
+      - name: Codecov
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          name: types
+          flags: types
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   basic:
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +143,8 @@ jobs:
       - name: Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
-          flags: unit
+          flags: tests
+          name: unit
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -219,6 +243,7 @@ jobs:
       - name: Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
-          flags: integration
+          flags: tests
+          name: integration
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

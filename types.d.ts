@@ -1335,8 +1335,12 @@ declare interface ChunkChildIdsByOrdersMap {
 declare interface ChunkChildIdsByOrdersMapByData {
 	[index: string]: ChunkChildIdsByOrdersMap;
 }
+declare interface ChunkConditionMap {
+	[index: number]: boolean;
+	[index: string]: boolean;
+}
 declare class ChunkGraph {
-	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
+	constructor(moduleGraph: ModuleGraph, hashFunction?: HashFunction);
 	moduleGraph: ModuleGraph;
 	connectChunkAndModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndModule(chunk: Chunk, module: Module): void;
@@ -1402,7 +1406,7 @@ declare class ChunkGraph {
 	getChunkConditionMap(
 		chunk: Chunk,
 		filterFn: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<ChunkId, boolean>;
+	): ChunkConditionMap;
 	hasModuleInGraph(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -10949,12 +10953,15 @@ declare class ModuleGraphConnection {
 	dependency: null | Dependency;
 	resolvedModule: Module;
 	module: Module;
-	weak: boolean;
+	weak?: boolean;
 	conditional: boolean;
-	condition?: (
-		moduleGraphConnection: ModuleGraphConnection,
-		runtime: RuntimeSpec
-	) => ConnectionState;
+	condition?:
+		| null
+		| false
+		| ((
+				moduleGraphConnection: ModuleGraphConnection,
+				runtime: RuntimeSpec
+		  ) => ConnectionState);
 	explanations?: Set<string>;
 	clone(): ModuleGraphConnection;
 	addCondition(
@@ -17385,7 +17392,7 @@ declare interface SplitChunksSizes {
 declare interface SplitData {
 	id?: string | number;
 	hash?: string;
-	modules: Module[];
+	modules: string[];
 	size: number;
 }
 declare abstract class StackedMap<K, V> {
@@ -18210,6 +18217,9 @@ declare interface StreamOptions {
 	start?: number;
 	signal?: null | AbortSignal;
 }
+declare interface Stringable {
+	toString: () => string;
+}
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	constructor(__0: SyncModuleIdsPluginOptions);
@@ -18270,7 +18280,7 @@ declare interface TargetItemWithoutConnection {
 }
 declare class Template {
 	constructor();
-	static getFunctionContent<T extends Function>(fn: T): string;
+	static getFunctionContent(fn: Stringable): string;
 	static toIdentifier(str: string): string;
 	static toComment(str: string): string;
 	static toNormalComment(str: string): string;
@@ -19634,7 +19644,7 @@ declare namespace exports {
 			export const buffersSerializer: Serializer<any, any, any>;
 			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
-				hashFunction: string | typeof Hash
+				hashFunction: HashFunction
 			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
