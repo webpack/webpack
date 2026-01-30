@@ -3,13 +3,9 @@ codecov:
 
 flags:
   tests:
-    paths:
-      - bin/
-      - lib/
+    carryforward: true
   types:
-    paths:
-      - bin/
-      - lib/
+    carryforward: true
 
 coverage:
   precision: 2
