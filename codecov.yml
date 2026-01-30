@@ -1,6 +1,16 @@
 codecov:
   branch: main
 
+flags:
+  tests:
+    paths:
+      - bin/
+      - lib/
+  types:
+    paths:
+      - bin/
+      - lib/
+
 coverage:
   precision: 2
   round: down
