@@ -7,6 +7,15 @@ flags:
   types:
     carryforward: true
 
+components:
+  - identifier: tests
+    name: Tests Coverage
+    flag: tests
+
+  - identifier: types
+    name: Type Coverage
+    flag: types
+
 coverage:
   precision: 2
   round: down
