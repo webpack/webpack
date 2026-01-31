@@ -275,4 +275,63 @@ describe("ProgressPlugin", () => {
 			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ modules/));
 		});
 	});
+
+	it("should display progress bar when progressBar option is enabled", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: true,
+			progressBarWidth: 20
+		});
+
+		process.stderr.columns = 100;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			// Progress bar should contain filled and empty characters
+			expect(logs).toEqual(expect.stringMatching(/\[[\u2588\u2591]+\]/));
+		});
+	});
+
+	it("should display estimated time when estimatedTime option is enabled", () => {
+		const compiler = createSimpleCompiler({
+			estimatedTime: true
+		});
+
+		process.stderr.columns = 100;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			// ETA should be displayed during build (may show ms, s, or m format)
+			expect(logs).toEqual(expect.stringMatching(/ETA: \d+(?:ms|s|m)/));
+		});
+	});
+
+	it("should display phase timings when phaseTimings option is enabled", () => {
+		const compiler = createSimpleCompiler({
+			phaseTimings: true
+		});
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			// Phase timing info should be displayed
+			expect(logs).toEqual(
+				expect.stringMatching(/Build completed in \d+(?:ms|s|m)/)
+			);
+			expect(logs).toEqual(expect.stringMatching(/Phase breakdown:/));
+		});
+	});
+
+	it("should accept all new progress options without errors", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: true,
+			estimatedTime: true,
+			phaseTimings: true,
+			progressBarWidth: 30
+		});
+
+		process.stderr.columns = 150;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toContain("%");
+			expect(logs).not.toContain("NaN");
+		});
+	});
 });
