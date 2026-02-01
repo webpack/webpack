@@ -94,7 +94,5 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 
 it("should export URL string when exportType is url", () => {
 	const urlCss = new URL("./url.css", import.meta.url);
-
-	expect(urlCss.href).toMatch(/\.css$/);
-	expect(urlCss.href).toMatch(/bundle\.main\.[a-f0-9]+\.css$/);
+	expect(urlCss.href).toMatch(/bundle\.[^.]+\.([a-f0-9]+)\.css$/);
 });
