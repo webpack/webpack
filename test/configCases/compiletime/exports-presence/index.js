@@ -29,15 +29,15 @@ describe("should not add additional warnings/errors", () => {
 		if (a && a.b && a.b.c) {
 			a();
 		}
-
 		if (a.b.c) {
 			a.b.c();
 		}
-	});
 
-	it("different expressions", () => {
 		if (a && a.b.c) {
 		}
+	});
+
+	it("some unsupported expressions", () => {
 		// warning: 42:13(a)
 		if ((() => a())()) {
 		}
@@ -100,7 +100,7 @@ describe("should not add additional warnings/errors", () => {
 		}
 	});
 
-	it("identifier != / !==", () => {
+	it("!= and !== operator", () => {
 		// undefined != false
 		// warning: 106:6(d)
 		if (c != false) {

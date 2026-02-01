@@ -6379,9 +6379,6 @@ declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyI
 		hidden?: Set<string>;
 	};
 }
-declare interface HarmonyGuardsSettings {
-	guards?: AppendOnlyStackedSet<string>;
-}
 declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(
 		request: string,
@@ -6430,6 +6427,9 @@ declare interface HarmonySettings {
 	await: boolean;
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
+}
+declare interface HarmonySpecifierGuards {
+	guards?: AppendOnlyStackedSet<string>;
 }
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
@@ -7488,7 +7488,7 @@ declare class JavascriptParser extends ParserClass {
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings
-		| HarmonyGuardsSettings;
+		| HarmonySpecifierGuards;
 	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -8259,7 +8259,7 @@ declare class JavascriptParser extends ParserClass {
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings
-		| HarmonyGuardsSettings;
+		| HarmonySpecifierGuards;
 	tagVariable(
 		name: string,
 		tag: symbol,
@@ -8270,7 +8270,7 @@ declare class JavascriptParser extends ParserClass {
 			| ImportSettings
 			| CommonJsImportSettings
 			| CompatibilitySettings
-			| HarmonyGuardsSettings,
+			| HarmonySpecifierGuards,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 	defineVariable(name: string): void;
@@ -18272,7 +18272,7 @@ declare interface TagInfo {
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings
-		| HarmonyGuardsSettings;
+		| HarmonySpecifierGuards;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
