@@ -9,6 +9,11 @@ module.exports = {
 				oneOf: [
 					{
 						test: /\.png$/i,
+						resourceQuery: /asset/,
+						type: "asset"
+					},
+					{
+						test: /\.png$/i,
 						resourceQuery: /bytes/,
 						type: "asset/bytes"
 					},
@@ -29,7 +34,7 @@ module.exports = {
 	},
 	optimization: {
 		sideEffects: true,
-		// Disable concat module, for the correct `orphan` value
+		moduleIds: "named",
 		concatenateModules: false
 	}
 };
