@@ -69,7 +69,7 @@ describe("BinaryMiddleware", () => {
 
 	const cases = [
 		...itemsWithLazy.map((item) => [item]),
-		[(true, true)],
+		[true, true],
 		[false, true],
 		[true, false],
 		[false, false],
