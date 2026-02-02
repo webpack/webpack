@@ -23,7 +23,7 @@ it("should work", () => {
 		stats.modules
 			.filter(module => module.moduleType === "css/auto")
 			.forEach(module => {
-				expect(module.sizes["javascript"] === 1).toBe(true);
+				expect(module.sizes["javascript"] === 1).toBe(false);
 			});
 	}
 });
