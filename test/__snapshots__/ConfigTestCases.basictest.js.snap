@@ -14352,9 +14352,9 @@ details {
 `;
 
 exports[`ConfigTestCases css export-type exported tests should export CSS text as default when exportType is text (css/module) 1`] = `
-"/*!*****************************!*\\\\
-  !*** css ./module-text.css ***!
-  \\\\*****************************/
+"/*!************************************************!*\\\\
+  !*** css ./module-text.css (exportType: text) ***!
+  \\\\************************************************/
 .module-text_css-class {
 	color: red;
 	background: white;
@@ -14369,9 +14369,9 @@ exports[`ConfigTestCases css export-type exported tests should export CSS text a
 `;
 
 exports[`ConfigTestCases css export-type exported tests should export CSS text as default when exportType is text (css/module) 2`] = `
-"/*!*****************************!*\\\\
-  !*** css ./module-text.css ***!
-  \\\\*****************************/
+"/*!************************************************!*\\\\
+  !*** css ./module-text.css (exportType: text) ***!
+  \\\\************************************************/
 .module-text_css-class {
 	color: red;
 	background: white;
@@ -14390,9 +14390,9 @@ Object {
   "another": "module-text-no-esm_css-another",
   "default": Object {
     "another": "module-text-no-esm_css-another",
-    "default": "/*!************************************!*\\\\
-  !*** css ./module-text-no-esm.css ***!
-  \\\\************************************/
+    "default": "/*!*******************************************************!*\\\\
+  !*** css ./module-text-no-esm.css (exportType: text) ***!
+  \\\\*******************************************************/
 .module-text-no-esm_css-no-esm-text {
 	color: orange;
 	background: lightgray;
@@ -14415,9 +14415,9 @@ Object {
   "another": "module-text-no-esm_css-another",
   "default": Object {
     "another": "module-text-no-esm_css-another",
-    "default": "/*!************************************!*\\\\
-  !*** css ./module-text-no-esm.css ***!
-  \\\\************************************/
+    "default": "/*!*******************************************************!*\\\\
+  !*** css ./module-text-no-esm.css (exportType: text) ***!
+  \\\\*******************************************************/
 .module-text-no-esm_css-no-esm-text {
 	color: orange;
 	background: lightgray;
@@ -14436,21 +14436,21 @@ Object {
 `;
 
 exports[`ConfigTestCases css export-type exported tests should handle @import with layer, supports, and media queries 1`] = `
-"/*!*********************!*\\\\
-  !*** css ./foo.css ***!
-  \\\\*********************/
+"/*!****************************************!*\\\\
+  !*** css ./foo.css (exportType: text) ***!
+  \\\\****************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo_css_3466-foo {
+			.foo_css_32b6-foo {
 			    color: rebeccapurple;
 			}}
 	}
 }
 
-/*!**********************************!*\\\\
-  !*** css ./auto-text-no-esm.css ***!
-  \\\\**********************************/
+/*!*****************************************************!*\\\\
+  !*** css ./auto-text-no-esm.css (exportType: text) ***!
+  \\\\*****************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
@@ -14467,14 +14467,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!***************************************************!*\\\\
-  !*** css ./imported-layer.css (layer: utilities) ***!
-  \\\\***************************************************/
+/*!**********************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: utilities) (exportType: text) ***!
+  \\\\**********************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer utilities {
-				.imported-layer_css_05f6-imported-layer {
+				.imported-layer_css_9f81-imported-layer {
 					padding: 10px;
 					margin: 5px;
 				}
@@ -14484,14 +14484,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!*********************************************************!*\\\\
-  !*** css ./imported-base.css (supports: display: grid) ***!
-  \\\\*********************************************************/
+/*!****************************************************************************!*\\\\
+  !*** css ./imported-base.css (supports: display: grid) (exportType: text) ***!
+  \\\\****************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@supports (display: grid) {
-				.imported-base_css_f271-imported-base {
+				.imported-base_css_0700-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -14501,14 +14501,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**********************************************************************!*\\\\
-  !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
-  \\\\**********************************************************************/
+/*!*****************************************************************************************!*\\\\
+  !*** css ./imported-base.css (media: screen and (min-width: 768px)) (exportType: text) ***!
+  \\\\*****************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@media screen and (min-width: 768px) {
-				.imported-base_css_7388-imported-base {
+				.imported-base_css_90bc-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -14518,16 +14518,16 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**********************************************************************************************************************!*\\\\
-  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
-  \\\\**********************************************************************************************************************/
+/*!*****************************************************************************************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) (exportType: text) ***!
+  \\\\*****************************************************************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer components {
 				@supports (display: flex) {
 					@media screen and (max-width: 1024px) {
-						.imported-layer_css_af59-imported-layer {
+						.imported-layer_css_b04f-imported-layer {
 							padding: 10px;
 							margin: 5px;
 						}
@@ -14539,34 +14539,34 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**************************************************************************************************************************!*\\\\
-  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
-  \\\\**************************************************************************************************************************/
+/*!*********************************************************************************************************************************************!*\\\\
+  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) (exportType: text) ***!
+  \\\\*********************************************************************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			
 			
-			.module-with-imports_css_f72c-main-class {
+			.module-with-imports_css_5263-main-class {
 				color: purple;
 				display: flex;
 				background-image: url(09a1a1112c577c279435.png);
 			}
 			
 			@layer base {
-				.module-with-imports_css_f72c-base-class {
+				.module-with-imports_css_5263-base-class {
 					font-family: sans-serif;
 				}
 			}
 			
 			@supports (display: grid) {
-				.module-with-imports_css_f72c-grid-class {
+				.module-with-imports_css_5263-grid-class {
 					display: grid;
 				}
 			}
 			
 			@media (min-width: 600px) {
-				.module-with-imports_css_f72c-responsive-class {
+				.module-with-imports_css_5263-responsive-class {
 					width: 100%;
 				}
 			}
@@ -14575,30 +14575,30 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!********************************************!*\\\\
-  !*** css ./parent-module-with-imports.css ***!
-  \\\\********************************************/
+/*!***************************************************************!*\\\\
+  !*** css ./parent-module-with-imports.css (exportType: text) ***!
+  \\\\***************************************************************/
 
 
 "
 `;
 
 exports[`ConfigTestCases css export-type exported tests should handle @import with layer, supports, and media queries 2`] = `
-"/*!*********************!*\\\\
-  !*** css ./foo.css ***!
-  \\\\*********************/
+"/*!****************************************!*\\\\
+  !*** css ./foo.css (exportType: text) ***!
+  \\\\****************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
-			.foo_css_3466-foo {
+			.foo_css_32b6-foo {
 			    color: rebeccapurple;
 			}}
 	}
 }
 
-/*!**********************************!*\\\\
-  !*** css ./auto-text-no-esm.css ***!
-  \\\\**********************************/
+/*!*****************************************************!*\\\\
+  !*** css ./auto-text-no-esm.css (exportType: text) ***!
+  \\\\*****************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
@@ -14615,14 +14615,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!***************************************************!*\\\\
-  !*** css ./imported-layer.css (layer: utilities) ***!
-  \\\\***************************************************/
+/*!**********************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: utilities) (exportType: text) ***!
+  \\\\**********************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer utilities {
-				.imported-layer_css_05f6-imported-layer {
+				.imported-layer_css_9f81-imported-layer {
 					padding: 10px;
 					margin: 5px;
 				}
@@ -14632,14 +14632,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!*********************************************************!*\\\\
-  !*** css ./imported-base.css (supports: display: grid) ***!
-  \\\\*********************************************************/
+/*!****************************************************************************!*\\\\
+  !*** css ./imported-base.css (supports: display: grid) (exportType: text) ***!
+  \\\\****************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@supports (display: grid) {
-				.imported-base_css_f271-imported-base {
+				.imported-base_css_0700-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -14649,14 +14649,14 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**********************************************************************!*\\\\
-  !*** css ./imported-base.css (media: screen and (min-width: 768px)) ***!
-  \\\\**********************************************************************/
+/*!*****************************************************************************************!*\\\\
+  !*** css ./imported-base.css (media: screen and (min-width: 768px)) (exportType: text) ***!
+  \\\\*****************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@media screen and (min-width: 768px) {
-				.imported-base_css_7388-imported-base {
+				.imported-base_css_90bc-imported-base {
 					color: blue;
 					font-size: 14px;
 				}
@@ -14666,16 +14666,16 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**********************************************************************************************************************!*\\\\
-  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) ***!
-  \\\\**********************************************************************************************************************/
+/*!*****************************************************************************************************************************************!*\\\\
+  !*** css ./imported-layer.css (layer: components) (supports: display: flex) (media: screen and (max-width: 1024px)) (exportType: text) ***!
+  \\\\*****************************************************************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			@layer components {
 				@supports (display: flex) {
 					@media screen and (max-width: 1024px) {
-						.imported-layer_css_af59-imported-layer {
+						.imported-layer_css_b04f-imported-layer {
 							padding: 10px;
 							margin: 5px;
 						}
@@ -14687,34 +14687,34 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!**************************************************************************************************************************!*\\\\
-  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) ***!
-  \\\\**************************************************************************************************************************/
+/*!*********************************************************************************************************************************************!*\\\\
+  !*** css ./module-with-imports.css (layer: framework) (supports: display: flex) (media: screen and (min-width: 1024px)) (exportType: text) ***!
+  \\\\*********************************************************************************************************************************************/
 @layer framework {
 	@supports (display: flex) {
 		@media screen and (min-width: 1024px) {
 			
 			
-			.module-with-imports_css_f72c-main-class {
+			.module-with-imports_css_5263-main-class {
 				color: purple;
 				display: flex;
 				background-image: url(09a1a1112c577c279435.png);
 			}
 			
 			@layer base {
-				.module-with-imports_css_f72c-base-class {
+				.module-with-imports_css_5263-base-class {
 					font-family: sans-serif;
 				}
 			}
 			
 			@supports (display: grid) {
-				.module-with-imports_css_f72c-grid-class {
+				.module-with-imports_css_5263-grid-class {
 					display: grid;
 				}
 			}
 			
 			@media (min-width: 600px) {
-				.module-with-imports_css_f72c-responsive-class {
+				.module-with-imports_css_5263-responsive-class {
 					width: 100%;
 				}
 			}
@@ -14723,9 +14723,9 @@ exports[`ConfigTestCases css export-type exported tests should handle @import wi
 	}
 }
 
-/*!********************************************!*\\\\
-  !*** css ./parent-module-with-imports.css ***!
-  \\\\********************************************/
+/*!***************************************************************!*\\\\
+  !*** css ./parent-module-with-imports.css (exportType: text) ***!
+  \\\\***************************************************************/
 
 
 "
@@ -17372,25 +17372,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "_55c20387f9ca7de60138",
-  "btn-info_is-disabled": "_55c20387f9ca7de60138",
-  "color-red": "--_55c20387f9ca7de60138",
+  "btn--info_is-disabled_1": "_8ee4d8b938ce15d40534",
+  "btn-info_is-disabled": "_8ee4d8b938ce15d40534",
+  "color-red": "--_8ee4d8b938ce15d40534",
   "foo": "bar",
-  "foo_bar": "_55c20387f9ca7de60138",
+  "foo_bar": "_8ee4d8b938ce15d40534",
   "my-btn-info_is-disabled": "value",
-  "simple": "_55c20387f9ca7de60138",
+  "simple": "_8ee4d8b938ce15d40534",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "_8ba310cac5c2b6e7ad38-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_8ba310cac5c2b6e7ad38-btn-info_is-disabled",
-  "color-red": "--_8ba310cac5c2b6e7ad38-color-red",
+  "btn--info_is-disabled_1": "f0e5e7b8779254ec04d4-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "f0e5e7b8779254ec04d4-btn-info_is-disabled",
+  "color-red": "--f0e5e7b8779254ec04d4-color-red",
   "foo": "bar",
-  "foo_bar": "_8ba310cac5c2b6e7ad38-foo_bar",
+  "foo_bar": "f0e5e7b8779254ec04d4-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_8ba310cac5c2b6e7ad38-simple",
+  "simple": "f0e5e7b8779254ec04d4-simple",
 }
 `;
 
@@ -17444,13 +17444,13 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "_7c825ffc1074b4ee5893-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_7c825ffc1074b4ee5893-btn-info_is-disabled",
-  "color-red": "--_7c825ffc1074b4ee5893-color-red",
+  "btn--info_is-disabled_1": "d5c602f0c8fdc09fea74-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "d5c602f0c8fdc09fea74-btn-info_is-disabled",
+  "color-red": "--d5c602f0c8fdc09fea74-color-red",
   "foo": "bar",
-  "foo_bar": "_7c825ffc1074b4ee5893-foo_bar",
+  "foo_bar": "d5c602f0c8fdc09fea74-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_7c825ffc1074b4ee5893-simple",
+  "simple": "d5c602f0c8fdc09fea74-simple",
 }
 `;
 
@@ -17468,25 +17468,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "_55c20387f9ca7de60138",
-  "btn-info_is-disabled": "_55c20387f9ca7de60138",
-  "color-red": "--_55c20387f9ca7de60138",
+  "btn--info_is-disabled_1": "_8ee4d8b938ce15d40534",
+  "btn-info_is-disabled": "_8ee4d8b938ce15d40534",
+  "color-red": "--_8ee4d8b938ce15d40534",
   "foo": "bar",
-  "foo_bar": "_55c20387f9ca7de60138",
+  "foo_bar": "_8ee4d8b938ce15d40534",
   "my-btn-info_is-disabled": "value",
-  "simple": "_55c20387f9ca7de60138",
+  "simple": "_8ee4d8b938ce15d40534",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "_8ba310cac5c2b6e7ad38-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_8ba310cac5c2b6e7ad38-btn-info_is-disabled",
-  "color-red": "--_8ba310cac5c2b6e7ad38-color-red",
+  "btn--info_is-disabled_1": "f0e5e7b8779254ec04d4-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "f0e5e7b8779254ec04d4-btn-info_is-disabled",
+  "color-red": "--f0e5e7b8779254ec04d4-color-red",
   "foo": "bar",
-  "foo_bar": "_8ba310cac5c2b6e7ad38-foo_bar",
+  "foo_bar": "f0e5e7b8779254ec04d4-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_8ba310cac5c2b6e7ad38-simple",
+  "simple": "f0e5e7b8779254ec04d4-simple",
 }
 `;
 
@@ -17540,13 +17540,13 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "_7c825ffc1074b4ee5893-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_7c825ffc1074b4ee5893-btn-info_is-disabled",
-  "color-red": "--_7c825ffc1074b4ee5893-color-red",
+  "btn--info_is-disabled_1": "d5c602f0c8fdc09fea74-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "d5c602f0c8fdc09fea74-btn-info_is-disabled",
+  "color-red": "--d5c602f0c8fdc09fea74-color-red",
   "foo": "bar",
-  "foo_bar": "_7c825ffc1074b4ee5893-foo_bar",
+  "foo_bar": "d5c602f0c8fdc09fea74-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_7c825ffc1074b4ee5893-simple",
+  "simple": "d5c602f0c8fdc09fea74-simple",
 }
 `;
 

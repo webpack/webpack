@@ -1,0 +1,7 @@
+@import url("./url-imported.css");
+
+.url-class {
+	background: url("./img.png");
+	color: teal;
+	margin: 10px;
+}

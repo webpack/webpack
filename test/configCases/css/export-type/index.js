@@ -56,13 +56,13 @@ it("should handle ICSS :import with exportType css-style-sheet", () => {
 	expect(typeof icssStylesheetButton).toBe("string");
 	expect(icssStylesheet).toBeInstanceOf(CSSStyleSheet);
 	expect(icssStylesheet.cssRules.length).toBeGreaterThan(0);
-	
+
 	const rules = Array.from(icssStylesheet.cssRules);
 	const buttonRule = rules.find(rule => rule.selectorText && rule.selectorText.includes("sheet-button"));
 	expect(buttonRule).toBeDefined();
 	expect(buttonRule.style["background-color"]).toBe("#007bff");
 	expect(buttonRule.style.color).toBe("white");
-	
+
 	const badgeRule = rules.find(rule => rule.selectorText && rule.selectorText.includes("sheet-badge"));
 	expect(badgeRule).toBeDefined();
 	expect(badgeRule.style["background-color"]).toBe("#6c757d");
@@ -72,7 +72,7 @@ it("should handle ICSS :import with exportType css-style-sheet", () => {
 it("should export CSSStyleSheet when exportType is css-style-sheet (css/auto)", () => {
 	expect(stylesheet).toBeInstanceOf(CSSStyleSheet);
 	expect(stylesheet.cssRules.length).toBeGreaterThan(0);
-	
+
 	const rules = Array.from(stylesheet.cssRules);
 	const stylesheetRule = rules.find(rule => rule.selectorText === ".stylesheet-class");
 	expect(stylesheetRule).toBeDefined();
@@ -84,7 +84,7 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 	expect(typeof moduleStylesheetSecondary).toBe("string");
 	expect(moduleStylesheet).toBeInstanceOf(CSSStyleSheet);
 	expect(moduleStylesheet.cssRules.length).toBeGreaterThan(0);
-	
+
 	const rules = Array.from(moduleStylesheet.cssRules);
 	const moduleRule = rules.find(rule => rule.selectorText && rule.selectorText.includes("module-stylesheet"));
 	expect(moduleRule).toBeDefined();
@@ -92,3 +92,7 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 	expect(moduleRule.style.padding).toBe("20px");
 });
 
+it("should export URL string when exportType is url", () => {
+	const urlCss = new URL("./url.css", import.meta.url);
+	expect(urlCss.href).toMatch(/bundle\.[^.]+\.([a-f0-9]+)\.css$/);
+});
