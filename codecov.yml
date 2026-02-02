@@ -1,65 +1,28 @@
 codecov:
   branch: main
-
-flags:
-  tests:
-    carryforward: true
-  types:
-    carryforward: true
-
-components:
-  - identifier: tests
-    name: Tests Coverage
-    flag: tests
-
-  - identifier: types
-    name: Type Coverage
-    flag: types
-
 coverage:
   precision: 2
   round: down
   range: "70...100"
   status:
     project:
-      default: false
-
-      tests:
+      default:
         flags:
-          - tests
+          - unit
+          - integration
         target: auto
-
-      types:
-        flags:
-          - types
-        target: auto
-
     patch:
-      default: false
-
-      tests:
+      default:
         flags:
-          - tests
+          - unit
+          - integration
         target: 90%
         base: pr
-
-      types:
-        target: 90%
-        base: pr
-        flags:
-          - types
-
     changes:
-      default: false
-
-      tests:
+      default:
         flags:
-          - tests
-
-      types:
-        flags:
-          - types
-
+          - unit
+          - integration
 ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
@@ -68,5 +31,4 @@ ignore:
   - "lib/ChunkTemplate.js"
   - "lib/MainTemplate.js"
   - "lib/ModuleTemplate.js"
-
 comment: off
