@@ -136,7 +136,8 @@ chunk {main} (runtime: main) bundle.js (main) X bytes (javascript) X bytes (runt
   data:text/plain;base64,szsaAAdsadasdfaf.. X bytes {main} [depth 1] [dependent] [built] [code generated]
     [no exports]
     [used exports unknown]
-    harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-81
+    [inactive] harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-82
+    harmony import specifier data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 4:8-13
   webpack/runtime/make namespace object X bytes {main} [code generated]
     [no exports]
     [used exports unknown]
@@ -147,7 +148,8 @@ chunk {main} (runtime: main) bundle.js (main) X bytes (javascript) X bytes (runt
 data:text/plain;base64,szsaAAdsadasdfaf.. X bytes {main} [depth 1] [built] [code generated]
   [no exports]
   [used exports unknown]
-  harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-81
+  [inactive] harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-82
+  harmony import specifier data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 4:8-13
 webpack/runtime/make namespace object X bytes {main} [code generated]
   [no exports]
   [used exports unknown]
