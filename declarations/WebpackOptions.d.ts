@@ -1747,6 +1747,22 @@ export interface ResolveOptions {
 	 */
 	symlinks?: boolean;
 	/**
+	 * TypeScript config for paths mapping. Can be `false` (disabled), `true` (use default `tsconfig.json`), a string path to `tsconfig.json`, or an object with `configFile` and `references` options.
+	 */
+	tsconfig?:
+		| boolean
+		| string
+		| {
+				/**
+				 * A path to the tsconfig file.
+				 */
+				configFile?: string;
+				/**
+				 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.
+				 */
+				references?: "auto" | string;
+		  };
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
 	unsafeCache?:

@@ -4513,6 +4513,38 @@
           "description": "Enable resolving symlinks to the original location.",
           "type": "boolean"
         },
+        "tsconfig": {
+          "description": "TypeScript config for paths mapping. Can be `false` (disabled), `true` (use default `tsconfig.json`), a string path to `tsconfig.json`, or an object with `configFile` and `references` options.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "configFile": {
+                  "description": "A path to the tsconfig file.",
+                  "type": "string"
+                },
+                "references": {
+                  "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+                  "anyOf": [
+                    {
+                      "enum": ["auto"]
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
         "unsafeCache": {
           "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
           "anyOf": [
