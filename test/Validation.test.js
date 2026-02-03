@@ -51,7 +51,7 @@ describe("Validation", () => {
 		});
 	};
 
-	const createTestCaseWithoutError = (name, config, fn) => {
+	const createTestCaseWithoutError = (name, config) => {
 		it(`should success validation for ${name}`, () => {
 			let errored;
 
@@ -656,8 +656,29 @@ describe("Validation", () => {
 		`)
 	);
 
+	createTestCaseOnlyValidate(
+		"resolve invalid",
+		{ resolve: { tsconfig: 10 } },
+		(msg) =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+			 - configuration.resolve.tsconfig should be one of these:
+			   object { alias?, aliasFields?, byDependency?, cache?, cachePredicate?, cacheWithContext?, conditionNames?, descriptionFiles?, enforceExtension?, exportsFields?, extensionAlias?, extensions?, fallback?, fileSystem?, fullySpecified?, importsFields?, mainFields?, mainFiles?, modules?, plugins?, preferAbsolute?, preferRelative?, resolver?, restrictions?, roots?, symlinks?, tsconfig?, unsafeCache?, useSyncFileSystemCalls? }
+			   -> TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.
+			   Details:
+			    * configuration.resolve.tsconfig should be a boolean.
+			    * configuration.resolve.tsconfig should be a string.
+			    * configuration.resolve.tsconfig should be an object:
+			      object { configFile?, references? }"
+		`)
+	);
+
 	createTestCaseWithoutError("experiments", {
 		experiments: { unknown: true }
+	});
+
+	createTestCaseWithoutError("resolve", {
+		resolve: { tsconfig: true }
 	});
 
 	describe("did you mean", () => {

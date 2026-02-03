@@ -124,7 +124,7 @@ import {
 	TypedHookMap
 } from "tapable";
 import { URL } from "url";
-import { Context } from "vm";
+import { Context as ContextImport } from "vm";
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -607,7 +607,7 @@ declare interface BaseResolveRequest {
 	/**
 	 * content
 	 */
-	context?: object;
+	context?: ContextTypes;
 
 	/**
 	 * description file path
@@ -623,6 +623,11 @@ declare interface BaseResolveRequest {
 	 * description file data
 	 */
 	descriptionFileData?: JsonObjectTypes;
+
+	/**
+	 * tsconfig paths map
+	 */
+	tsconfigPathsMap?: null | TsconfigPathsMap;
 
 	/**
 	 * relative path
@@ -3604,6 +3609,7 @@ declare interface ContextTimestampAndHash {
 	resolved?: ResolvedContextTimestampAndHash;
 	symlinks?: Set<string>;
 }
+type ContextTypes = KnownContext & Record<any, any>;
 type CreateReadStreamFSImplementation = FSImplementation & {
 	read: (...args: any[]) => any;
 };
@@ -3894,7 +3900,7 @@ declare abstract class CssParser extends ParserClass {
 		defaultMode?: "global" | "auto" | "pure" | "local";
 	};
 	comments?: CommentCssParser[];
-	magicCommentContext: Context;
+	magicCommentContext: ContextImport;
 	getComments(range: [number, number]): CommentCssParser[];
 	parseCommentOptions(range: [number, number]): {
 		options: null | Record<string, any>;
@@ -7494,7 +7500,7 @@ declare class JavascriptParser extends ParserClass {
 		| CommonJsImportSettings
 		| CompatibilitySettings
 		| HarmonySpecifierGuards;
-	magicCommentContext: Context;
+	magicCommentContext: ContextImport;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
 	): undefined | Set<DestructuringAssignmentProperty>;
@@ -8976,6 +8982,12 @@ declare interface KnownBuildMeta {
 	jsIncompatibleExports?: Record<string, string>;
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
 	exportsSourceByRuntime?: Map<string, string>;
+}
+declare interface KnownContext {
+	/**
+	 * environments
+	 */
+	environments?: string[];
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
@@ -15396,6 +15408,23 @@ declare interface ResolveOptions {
 	symlinks?: boolean;
 
 	/**
+	 * TypeScript config for paths mapping. Can be `false` (disabled), `true` (use default `tsconfig.json`), a string path to `tsconfig.json`, or an object with `configFile` and `references` options.
+	 */
+	tsconfig?:
+		| string
+		| boolean
+		| {
+				/**
+				 * A path to the tsconfig file.
+				 */
+				configFile?: string;
+				/**
+				 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.
+				 */
+				references?: string;
+		  };
+
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
 	unsafeCache?: boolean | { [index: string]: any };
@@ -15540,6 +15569,11 @@ declare interface ResolveOptionsResolverFactoryObject1 {
 	 * prefer absolute
 	 */
 	preferAbsolute: boolean;
+
+	/**
+	 * tsconfig file path or config object
+	 */
+	tsconfig: string | boolean | TsconfigOptions;
 }
 declare interface ResolveOptionsResolverFactoryObject2 {
 	/**
@@ -15685,6 +15719,11 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	 * Prefer to resolve server-relative urls as absolute paths before falling back to resolve in roots
 	 */
 	preferAbsolute?: boolean;
+
+	/**
+	 * TypeScript config file path or config object with configFile and references
+	 */
+	tsconfig?: string | boolean | TsconfigOptions;
 }
 type ResolveOptionsWithDependencyType = ResolveOptions & {
 	dependencyType?: string;
@@ -15741,9 +15780,13 @@ declare abstract class Resolver {
 		[ResolveRequest, ResolveContext],
 		null | ResolveRequest
 	>;
-	resolveSync(context: object, path: string, request: string): string | false;
+	resolveSync(
+		context: ContextTypes,
+		path: string,
+		request: string
+	): string | false;
 	resolve(
-		context: object,
+		context: ContextTypes,
 		path: string,
 		request: string,
 		resolveContext: ResolveContext,
@@ -18354,6 +18397,49 @@ declare interface TrustedTypes {
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
 	policyName?: string;
+}
+declare interface TsconfigOptions {
+	/**
+	 * A relative path to the tsconfig file based on cwd, or an absolute path of tsconfig file
+	 */
+	configFile?: string;
+
+	/**
+	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths
+	 */
+	references?: string[] | "auto";
+}
+declare interface TsconfigPathsData {
+	/**
+	 * tsconfig file data
+	 */
+	alias: AliasOption[];
+
+	/**
+	 * tsconfig file data
+	 */
+	modules: string[];
+}
+declare interface TsconfigPathsMap {
+	/**
+	 * main tsconfig paths data
+	 */
+	main: TsconfigPathsData;
+
+	/**
+	 * main tsconfig base URL (absolute path)
+	 */
+	mainContext: string;
+
+	/**
+	 * referenced tsconfig paths data mapped by baseUrl
+	 */
+	refs: { [index: string]: TsconfigPathsData };
+
+	/**
+	 * file dependencies
+	 */
+	fileDependencies: Set<string>;
 }
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface URL_url extends URL {}
