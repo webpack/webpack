@@ -73,6 +73,10 @@ jobs:
 
       - run: yarn --frozen-lockfile
 
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
       - name: Collect types coverage
         run: yarn types:cover:report
 
