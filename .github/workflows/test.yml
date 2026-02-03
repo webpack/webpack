@@ -57,6 +57,7 @@ jobs:
           yarn validate:types
 
   types-coverage:
+    if: github.repository == 'webpack/webpack' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write
