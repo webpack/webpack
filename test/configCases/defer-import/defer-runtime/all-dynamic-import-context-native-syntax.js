@@ -6,28 +6,48 @@ import {
 const [assertTouched, assertUntouched, reset] = [a, b, c];
 
 it("should defer the module until first use", async () => {
-  const dynamic_default = await import(/* webpackDefer: true */ "./commonjs/dynamic_default.cjs");
-  const dynamic_default_ns = await import(/* webpackDefer: true */ "./commonjs/dynamic_default_ns.cjs");
-  const dynamic_named = await import(/* webpackDefer: true */ "./commonjs/dynamic_named.cjs");
-  const dynamic_named_ns = await import(/* webpackDefer: true */ "./commonjs/dynamic_named_ns.cjs");
-  const dynamic_both = await import(/* webpackDefer: true */ "./commonjs/dynamic_both.cjs");
-  const dynamic_both_ns = await import(/* webpackDefer: true */ "./commonjs/dynamic_both_ns.cjs");
+  let file;
+  file = "dynamic_default.cjs";
+  const dynamic_default = await import.defer("./commonjs/" + file);
+  file = "dynamic_default_ns.cjs";
+  const dynamic_default_ns = await import.defer("./commonjs/" + file);
+  file = "dynamic_named.cjs";
+  const dynamic_named = await import.defer("./commonjs/" + file);
+  file = "dynamic_named_ns.cjs";
+  const dynamic_named_ns = await import.defer("./commonjs/" + file);
+  file = "dynamic_both.cjs";
+  const dynamic_both = await import.defer("./commonjs/" + file);
+  file = "dynamic_both_ns.cjs";
+  const dynamic_both_ns = await import.defer("./commonjs/" + file);
 
-  const flagged_default = await import(/* webpackDefer: true */ "./commonjs/flagged_default.js");
-  const flagged_default_ns = await import(/* webpackDefer: true */ "./commonjs/flagged_default_ns.js");
-  const flagged_named = await import(/* webpackDefer: true */ "./commonjs/flagged_named.js");
-  const flagged_named_ns = await import(/* webpackDefer: true */ "./commonjs/flagged_named_ns.js");
-  const flagged_both = await import(/* webpackDefer: true */ "./commonjs/flagged_both.js");
-  const flagged_both_ns = await import(/* webpackDefer: true */ "./commonjs/flagged_both_ns.js");
+  file = "flagged_default.js";
+  const flagged_default = await import.defer("./commonjs/" + file);
+  file = "flagged_default_ns.js";
+  const flagged_default_ns = await import.defer("./commonjs/" + file);
+  file = "flagged_named.js";
+  const flagged_named = await import.defer("./commonjs/" + file);
+  file = "flagged_named_ns.js";
+  const flagged_named_ns = await import.defer("./commonjs/" + file);
+  file = "flagged_both.js";
+  const flagged_both = await import.defer("./commonjs/" + file);
+  file = "flagged_both_ns.js";
+  const flagged_both_ns = await import.defer("./commonjs/" + file);
 
-  const esm_default = await import(/* webpackDefer: true */ "./esm/esm_default.mjs");
-  const esm_default_ns = await import(/* webpackDefer: true */ "./esm/esm_default_ns.mjs");
-  const esm_named = await import(/* webpackDefer: true */ "./esm/esm_named.mjs");
-  const esm_named_ns = await import(/* webpackDefer: true */ "./esm/esm_named_ns.mjs");
-  const esm_both = await import(/* webpackDefer: true */ "./esm/esm_both.mjs");
-  const esm_both_ns = await import(/* webpackDefer: true */ "./esm/esm_both_ns.mjs");
+  file = "esm_default.mjs";
+  const esm_default = await import.defer("./esm/" + file);
+  file = "esm_default_ns.mjs";
+  const esm_default_ns = await import.defer("./esm/" + file);
+  file = "esm_named.mjs";
+  const esm_named = await import.defer("./esm/" + file);
+  file = "esm_named_ns.mjs";
+  const esm_named_ns = await import.defer("./esm/" + file);
+  file = "esm_both.mjs";
+  const esm_both = await import.defer("./esm/" + file);
+  file = "esm_both_ns.mjs";
+  const esm_both_ns = await import.defer("./esm/" + file);
 
-  const { reexport_ns, reexport_cjs_ns } = await import(/* webpackDefer: true */ "./esm/reexport.mjs");
+  file = "reexport.mjs";
+  const { reexport_ns, reexport_cjs_ns } = await import.defer("./esm/" + file);
 
   reset();
   dynamic_default.default;

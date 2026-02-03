@@ -6,11 +6,11 @@ import {
 const [assertTouched, assertUntouched, reset] = [a, b, c];
 
 it("should defer the module until first use", async () => {
-  const dynamic_default = await import.defer("./commonjs/dynamic_default.cjs");
+  const dynamic_default = await import.defer(/* webpackMode: "eager" */"./commonjs/dynamic_default.cjs");
   const dynamic_default_ns = await import.defer("./commonjs/dynamic_default_ns.cjs");
   const dynamic_named = await import.defer("./commonjs/dynamic_named.cjs");
   const dynamic_named_ns = await import.defer("./commonjs/dynamic_named_ns.cjs");
-  const dynamic_both = await import.defer("./commonjs/dynamic-both.cjs");
+  const dynamic_both = await import.defer("./commonjs/dynamic_both.cjs");
   const dynamic_both_ns = await import.defer("./commonjs/dynamic_both_ns.cjs");
 
   const flagged_default = await import.defer("./commonjs/flagged_default.js");

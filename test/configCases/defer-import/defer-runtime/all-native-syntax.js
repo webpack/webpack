@@ -2,7 +2,7 @@ import defer * as dynamic_default from "./commonjs/dynamic_default.cjs";
 import defer * as dynamic_default_ns from "./commonjs/dynamic_default_ns.cjs";
 import defer * as dynamic_named from "./commonjs/dynamic_named.cjs";
 import defer * as dynamic_named_ns from "./commonjs/dynamic_named_ns.cjs";
-import defer * as dynamic_both from "./commonjs/dynamic-both.cjs";
+import defer * as dynamic_both from "./commonjs/dynamic_both.cjs";
 import defer * as dynamic_both_ns from "./commonjs/dynamic_both_ns.cjs";
 
 import defer * as flagged_default from "./commonjs/flagged_default.js";
