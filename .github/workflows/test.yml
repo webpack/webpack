@@ -75,9 +75,12 @@ jobs:
       - name: Collect types coverage
         run: yarn types:cover:report
 
+      - uses: jwalton/gh-find-current-pr@89ee5799558265a1e0e31fab792ebb4ee91c016b # v1.3.3
+        id: findPr
+
       - uses: Nef10/lcov-reporter-action@1814ba7cc12deff58d1f868c5960d8a8c5b4f040 # v0.3.0
         with:
-          pr-number: ${{ github.event.pull_request.number }}
+          pr-number: ${{ steps.findPr.outputs.number }}
           lcov-file: ./coverage/lcov.info
           title: Types Coverage
           filter-changed-files: true
