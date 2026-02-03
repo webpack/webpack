@@ -8770,7 +8770,7 @@ synckit@^0.11.12, synckit@^0.11.8:
   dependencies:
     "@pkgr/core" "^0.2.9"
 
-tapable@^2.2.0, tapable@^2.2.1, tapable@^2.3.0:
+tapable@^2.2.1, tapable@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.3.0.tgz#7e3ea6d5ca31ba8e078b560f0d83ce9a14aa8be6"
   integrity sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==
@@ -8919,9 +8919,9 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.24.4:
-  version "1.24.4"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/064e6fbbf73858f135b32f842f3e381837100d28"
+tooling@webpack/tooling#v1.24.5:
+  version "1.24.5"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/baa4b404ff24fa5d06143c7d4451ca1430fd2fa0"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.1.0"
