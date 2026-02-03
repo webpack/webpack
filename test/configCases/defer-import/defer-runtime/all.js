@@ -2,7 +2,7 @@ import * as dynamic_default from /* webpackDefer: true */ "./commonjs/dynamic_de
 import * as dynamic_default_ns from /* webpackDefer: true */ "./commonjs/dynamic_default_ns.cjs";
 import * as dynamic_named from /* webpackDefer: true */ "./commonjs/dynamic_named.cjs";
 import * as dynamic_named_ns from /* webpackDefer: true */ "./commonjs/dynamic_named_ns.cjs";
-import * as dynamic_both from /* webpackDefer: true */ "./commonjs/dynamic-both.cjs";
+import * as dynamic_both from /* webpackDefer: true */ "./commonjs/dynamic_both.cjs";
 import * as dynamic_both_ns from /* webpackDefer: true */ "./commonjs/dynamic_both_ns.cjs";
 
 import * as flagged_default from /* webpackDefer: true */ "./commonjs/flagged_default.js";

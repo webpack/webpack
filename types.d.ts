@@ -3555,6 +3555,7 @@ declare interface ContextOptions {
 	referencedExports?: null | string[][];
 	layer?: null | string;
 	attributes?: ImportAttributes;
+	phase?: 0 | 1 | 2;
 }
 declare class ContextReplacementPlugin {
 	constructor(
