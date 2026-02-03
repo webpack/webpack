@@ -57,9 +57,11 @@ const isInstalled = (packageName) => {
 	} while (dir !== (dir = path.dirname(dir)));
 
 	// https://github.com/nodejs/node/blob/v18.9.1/lib/internal/modules/cjs/loader.js#L1274
-	// eslint-disable-next-line no-warning-comments
-	// @ts-ignore
-	for (const internalPath of require("module").globalPaths) {
+	const { globalPaths } =
+		/** @type {typeof import("module") & { globalPaths: string[] }} */
+		(require("module"));
+
+	for (const internalPath of globalPaths) {
 		try {
 			if (fs.statSync(path.join(internalPath, packageName)).isDirectory()) {
 				return true;
@@ -81,6 +83,7 @@ const runCli = (cli) => {
 
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 
+	/** @type {Record<string, EXPECTED_ANY> & { type: string, bin: Record<string, string> }} */
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
