@@ -75,10 +75,13 @@ jobs:
       - name: Collect types coverage
         run: yarn types:cover:report
 
-      - uses: pre-history/lcov-summary-action@fc5fdd03c314965e6e7d9554e992218fd4009364 # v0.7.0
+      - uses: Nef10/lcov-reporter-action@1814ba7cc12deff58d1f868c5960d8a8c5b4f040 # v0.3.0
         with:
-          comment-on-pr: true
+          pr-number: ${{ github.event.pull_request.number }}
           lcov-file: ./coverage/lcov.info
+          title: Types Coverage
+          filter-changed-files: true
+          delete-old-comments: true
 
   validate-legacy-node:
     runs-on: ubuntu-latest
