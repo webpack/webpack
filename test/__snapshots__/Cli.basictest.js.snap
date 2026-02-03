@@ -9260,6 +9260,60 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-tsconfig": Object {
+    "configs": Array [
+      Object {
+        "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+        "multiple": false,
+        "path": "resolveLoader.tsconfig",
+        "type": "boolean",
+      },
+      Object {
+        "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+        "multiple": false,
+        "path": "resolveLoader.tsconfig",
+        "type": "string",
+      },
+    ],
+    "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "resolve-loader-tsconfig-config-file": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to the tsconfig file.",
+        "multiple": false,
+        "path": "resolveLoader.tsconfig.configFile",
+        "type": "string",
+      },
+    ],
+    "description": "A path to the tsconfig file.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "resolve-loader-tsconfig-references": Object {
+    "configs": Array [
+      Object {
+        "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+        "multiple": false,
+        "path": "resolveLoader.tsconfig.references",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+        "multiple": false,
+        "path": "resolveLoader.tsconfig.references",
+        "type": "string",
+      },
+    ],
+    "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "resolve-loader-unsafe-cache": Object {
     "configs": Array [
       Object {
@@ -9460,6 +9514,60 @@ Object {
     "description": "Enable resolving symlinks to the original location.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "resolve-tsconfig": Object {
+    "configs": Array [
+      Object {
+        "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+        "multiple": false,
+        "path": "resolve.tsconfig",
+        "type": "boolean",
+      },
+      Object {
+        "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+        "multiple": false,
+        "path": "resolve.tsconfig",
+        "type": "string",
+      },
+    ],
+    "description": "TypeScript config for paths mapping. Can be \`false\` (disabled), \`true\` (use default \`tsconfig.json\`), a string path to \`tsconfig.json\`, or an object with \`configFile\` and \`references\` options.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "resolve-tsconfig-config-file": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to the tsconfig file.",
+        "multiple": false,
+        "path": "resolve.tsconfig.configFile",
+        "type": "string",
+      },
+    ],
+    "description": "A path to the tsconfig file.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "resolve-tsconfig-references": Object {
+    "configs": Array [
+      Object {
+        "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+        "multiple": false,
+        "path": "resolve.tsconfig.references",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+        "multiple": false,
+        "path": "resolve.tsconfig.references",
+        "type": "string",
+      },
+    ],
+    "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "resolve-unsafe-cache": Object {
     "configs": Array [
