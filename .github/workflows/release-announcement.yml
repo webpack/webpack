@@ -3,6 +3,7 @@ name: Release Announcement
 on:
   release:
     types: [published]
+  workflow_call:
 
 jobs:
   github-releases-to-discord:
