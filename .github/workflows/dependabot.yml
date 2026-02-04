@@ -11,9 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && github.repository == 'webpack/webpack'
     steps:
-      - name: Dependabot metadata
-        id: dependabot-metadata
-        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Use Node.js
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
@@ -31,6 +29,10 @@ jobs:
           git add .
           git diff --quiet && git diff --staged --quiet || git commit -m "chore: dedupe yarn"
           git push
+
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
 
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --squash "${{github.event.pull_request.html_url}}"
