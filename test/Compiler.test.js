@@ -1098,5 +1098,25 @@ describe("Compiler", () => {
 				done();
 			});
 		});
+
+		it("should not cause terser bailout condition", done => {
+			const TerserPlugin = require("terser-webpack-plugin");
+			const terser = new TerserPlugin();
+			compile(
+				"./concat-pessimization-main",
+				{
+					mode: "production",
+					plugins: [terser]
+				},
+				(stats, files) => {
+					try {
+						expect(JSON.stringify(files)).not.toMatch("aaaaaaaaaaaa");
+						done();
+					} catch (err) {
+						done(err);
+					}
+				}
+			);
+		});
 	});
 });
