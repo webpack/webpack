@@ -564,7 +564,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -574,7 +574,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | Rule[] | ((str: string) => boolean);
+	include?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -589,7 +589,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | Rule[] | ((str: string) => boolean);
+	test?: string | RegExp | ((str: string) => boolean) | Rule[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -10013,8 +10013,8 @@ declare interface LogEntry {
 		| "warn"
 		| "info"
 		| "log"
-		| "profile"
 		| "debug"
+		| "profile"
 		| "trace"
 		| "group"
 		| "groupCollapsed"
@@ -10032,8 +10032,8 @@ type LogTypeEnum =
 	| "warn"
 	| "info"
 	| "log"
-	| "profile"
 	| "debug"
+	| "profile"
 	| "trace"
 	| "group"
 	| "groupCollapsed"
@@ -11065,8 +11065,8 @@ declare interface ModuleOptions {
 	noParse?:
 		| string
 		| RegExp
-		| (string | RegExp | ((content: string) => boolean))[]
-		| ((content: string) => boolean);
+		| ((content: string) => boolean)
+		| (string | RegExp | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -11149,8 +11149,8 @@ declare interface ModuleOptionsNormalized {
 	noParse?:
 		| string
 		| RegExp
-		| (string | RegExp | ((content: string) => boolean))[]
-		| ((content: string) => boolean);
+		| ((content: string) => boolean)
+		| (string | RegExp | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -11536,11 +11536,6 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type NoParse =
-	| string
-	| RegExp
-	| (string | RegExp | ((content: string) => boolean))[]
-	| ((content: string) => boolean);
 type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options: NodeEnvironmentPluginOptions);
@@ -11652,14 +11647,17 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
-	applyNoParseRule(rule: Exclude<NoParse, any[]>, content: string): boolean;
+	applyNoParseRule(
+		rule: string | RegExp | ((content: string) => boolean),
+		content: string
+	): boolean;
 	shouldPreventParsing(
 		noParseRule:
 			| undefined
 			| string
 			| RegExp
-			| (string | RegExp | ((content: string) => boolean))[]
-			| ((content: string) => boolean),
+			| ((content: string) => boolean)
+			| (string | RegExp | ((content: string) => boolean))[],
 		request: string
 	): boolean;
 	static getCompilationHooks(
@@ -12379,8 +12377,8 @@ declare interface Optimization {
 		| ""
 		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 
 	/**
@@ -12523,8 +12521,8 @@ declare interface OptimizationNormalized {
 	 */
 	minimizer?: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 
 	/**
@@ -12643,8 +12641,8 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	minimize: NonNullable<undefined | boolean>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 	nodeEnv: NonNullable<undefined | string | false>;
 };
@@ -17310,7 +17308,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -17332,12 +17330,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | Rule[] | ((str: string) => boolean);
+	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | Rule[] | ((str: string) => boolean);
+	include?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -17374,7 +17372,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | Rule[] | ((str: string) => boolean);
+	test?: string | RegExp | ((str: string) => boolean) | Rule[];
 }
 declare class SourceMapSource extends Source {
 	constructor(
@@ -19837,6 +19835,7 @@ declare namespace exports {
 		this: Compiler,
 		compiler: Compiler
 	) => void;
+	export type WebpackPluginInstance = (compiler: Compiler) => void;
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
 		callback: (
@@ -19959,7 +19958,6 @@ declare namespace exports {
 		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
-		WebpackPluginInstance,
 		ChunkGroup,
 		AssetEmittedInfo,
 		Asset,

@@ -73,7 +73,7 @@ export type Entry = EntryDynamic | EntryStatic;
 /**
  * A Function returning an entry object, an entry string, an entry array or a promise to these things.
  */
-export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
+export type EntryDynamic = import("../lib/DynamicEntryPlugin").RawEntryDynamic;
 /**
  * A static entry description.
  */
@@ -265,7 +265,7 @@ export type IgnoreWarnings = (
 			 */
 			module?: RegExp;
 	  }
-	| ((warning: Error, compilation: import("../lib/Compilation")) => boolean)
+	| import("../lib/IgnoreWarningsPlugin").IgnoreFn
 )[];
 /**
  * Filtering values.
@@ -274,7 +274,10 @@ export type FilterTypes = FilterItemTypes[] | FilterItemTypes;
 /**
  * Filtering value, regexp or function.
  */
-export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
+export type FilterItemTypes =
+	| RegExp
+	| string
+	| import("../lib/stats/DefaultStatsFactoryPlugin").FilterItemTypeFn;
 /**
  * Enable production optimizations or development hints.
  */
@@ -293,7 +296,7 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| ((value: string) => boolean)
+	| import("../lib/rules/RuleSetCompiler").RuleSetConditionFn
 	| RuleSetLogicalConditions
 	| RuleSetConditions;
 /**
@@ -312,7 +315,7 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
-	| ((value: string) => boolean)
+	| import("../lib/rules/RuleSetCompiler").RuleSetConditionFn
 	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionsAbsolute;
 /**
@@ -400,9 +403,8 @@ export type RuleSetUseItem =
 /**
  * The function is called on each data and return rule set item.
  */
-export type RuleSetUseFunction = (
-	data: import("../lib/rules/RuleSetCompiler").EffectData
-) => RuleSetUseItem | (Falsy | RuleSetUseItem)[];
+export type RuleSetUseFunction =
+	import("../lib/rules/RuleSetCompiler").RuleSetUseFn;
 /**
  * A list of rules.
  */
@@ -416,10 +418,10 @@ export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
  * Don't parse files matching. It's matched against the full resolved request.
  */
 export type NoParse =
-	| (RegExp | string | ((content: string) => boolean))[]
+	| (RegExp | string | import("../lib/NormalModule").NoParseFn)[]
 	| RegExp
 	| string
-	| ((content: string) => boolean);
+	| import("../lib/NormalModule").NoParseFn;
 /**
  * Specify options for each parser.
  */
@@ -436,10 +438,8 @@ export type Node = false | NodeOptions;
 /**
  * Function acting as plugin.
  */
-export type WebpackPluginFunction = (
-	this: import("../lib/Compiler"),
-	compiler: import("../lib/Compiler")
-) => void;
+export type WebpackPluginFunction =
+	import("../lib/webpack").WebpackPluginFunction;
 /**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
@@ -457,12 +457,8 @@ export type OptimizationRuntimeChunk =
 /**
  * A function returning cache groups.
  */
-export type OptimizationSplitChunksGetCacheGroups = (
-	module: import("../lib/Module")
-) =>
-	| OptimizationSplitChunksCacheGroup
-	| OptimizationSplitChunksCacheGroup[]
-	| void;
+export type OptimizationSplitChunksGetCacheGroups =
+	import("../lib/optimize/SplitChunksPlugin").RawGetCacheGroups;
 /**
  * Size description for limits.
  */
@@ -708,11 +704,7 @@ export type ModuleFilterTypes = ModuleFilterItemTypes[] | ModuleFilterItemTypes;
 export type ModuleFilterItemTypes =
 	| RegExp
 	| string
-	| ((
-			name: string,
-			module: import("../lib/stats/DefaultStatsFactoryPlugin").StatsModule,
-			type: "module" | "chunk" | "root-of-chunk" | "nested"
-	  ) => boolean);
+	| import("../lib/stats/DefaultStatsFactoryPlugin").ModuleFilterItemTypeFn;
 /**
  * Filtering modules.
  */
@@ -723,10 +715,7 @@ export type AssetFilterTypes = AssetFilterItemTypes[] | AssetFilterItemTypes;
 export type AssetFilterItemTypes =
 	| RegExp
 	| string
-	| ((
-			name: string,
-			asset: import("../lib/stats/DefaultStatsFactoryPlugin").StatsAsset
-	  ) => boolean);
+	| import("../lib/stats/DefaultStatsFactoryPlugin").AssetFilterItemFn;
 /**
  * Filtering warnings.
  */
@@ -757,10 +746,8 @@ export type AssetGeneratorDataUrl =
 /**
  * Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.
  */
-export type AssetGeneratorDataUrlFunction = (
-	source: string | Buffer,
-	context: {filename: string; module: import("../lib/Module")}
-) => string;
+export type AssetGeneratorDataUrlFunction =
+	import("../lib/asset/AssetGenerator").DataUrlFunction;
 /**
  * Generator options for asset modules.
  */
@@ -775,10 +762,8 @@ export type AssetModuleOutputPath =
 /**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl.
  */
-export type AssetParserDataUrlFunction = (
-	source: string | Buffer,
-	context: {filename: string; module: import("../lib/Module")}
-) => boolean;
+export type AssetParserDataUrlFunction =
+	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
 /**
  * Configure the generated JS modules that use the ES modules syntax.
  */
@@ -788,7 +773,7 @@ export type CssGeneratorEsModule = boolean;
  */
 export type CssGeneratorExportsConvention =
 	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
-	| ((name: string) => string);
+	| import("../lib/dependencies/CssIcssExportDependency").ExportsConventionFn;
 /**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
  */
@@ -844,7 +829,8 @@ export type DeferImportExperimentOptions = boolean;
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
-export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
+export type EntryDynamicNormalized =
+	import("../lib/DynamicEntryPlugin").EntryDynamic;
 /**
  * The entry point(s) of the compilation.
  */
@@ -874,15 +860,13 @@ export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
 export type HttpUriOptionsAllowedUris = (
 	| RegExp
 	| string
-	| ((uri: string) => boolean)
+	| import("../lib/schemes/HttpUriPlugin").AllowedUriFn
 )[];
 /**
  * Ignore specific warnings.
  */
-export type IgnoreWarningsNormalized = ((
-	warning: Error,
-	compilation: import("../lib/Compilation")
-) => boolean)[];
+export type IgnoreWarningsNormalized =
+	import("../lib/IgnoreWarningsPlugin").IgnoreFn[];
 /**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
@@ -1447,7 +1431,7 @@ export interface ModuleOptions {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | ((module: import("../lib/Module")) => boolean);
+	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
 	/**
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
@@ -1912,7 +1896,7 @@ export interface WebpackPluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: (compiler: import("../lib/Compiler")) => void;
+	apply: import("../lib/webpack").WebpackPluginInstance;
 	[k: string]: any;
 }
 /**
@@ -2075,7 +2059,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module layer.
 	 */
-	layer?: RegExp | string | ((layer: string | null) => boolean);
+	layer?:
+		| RegExp
+		| string
+		| import("../lib/optimize/SplitChunksPlugin").CheckModuleLayerFn;
 	/**
 	 * Maximum number of requests which are accepted for on-demand loading.
 	 */
@@ -2130,14 +2117,14 @@ export interface OptimizationSplitChunksCacheGroup {
 	test?:
 		| RegExp
 		| string
-		| ((
-				module: import("../lib/Module"),
-				context: import("../lib/optimize/SplitChunksPlugin").CacheGroupsContext
-		  ) => boolean);
+		| import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
-	type?: RegExp | string | ((type: string) => boolean);
+	type?:
+		| RegExp
+		| string
+		| import("../lib/optimize/SplitChunksPlugin").CheckModuleTypeFn;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -2470,11 +2457,7 @@ export interface PerformanceOptions {
 	/**
 	 * Filter function to select assets that are checked.
 	 */
-	assetFilter?: (
-		name: import("../lib/Compilation").Asset["name"],
-		source: import("../lib/Compilation").Asset["source"],
-		assetInfo: import("../lib/Compilation").Asset["info"]
-	) => boolean;
+	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all.
 	 */
@@ -3470,10 +3453,8 @@ export interface LazyCompilationDefaultBackendOptions {
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
 	server?:
-		| (
-				| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
-				| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
-		  )
+		| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
+		| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
 		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
 }
 /**
@@ -3526,7 +3507,7 @@ export interface ModuleOptionsNormalized {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | ((module: import("../lib/Module")) => boolean);
+	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
 }
 /**
  * Enables/Disables integrated optimizations.
@@ -4039,7 +4020,7 @@ export interface ExternalItemObjectKnown {
 		| {
 				[k: string]: ExternalItem;
 		  }
-		| ((layer: string | null) => ExternalItem);
+		| import("../lib/ExternalModuleFactoryPlugin").ExternalItemByLayerFn;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

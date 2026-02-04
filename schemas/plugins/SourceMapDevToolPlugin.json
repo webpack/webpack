@@ -13,7 +13,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((str: string) => boolean)"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').MatcherFn"
         }
       ]
     },
@@ -54,7 +54,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../../lib/TemplatedPathPlugin\").TemplatePathFn)"
+          "tsType": "import('../../lib/TemplatedPathPlugin').TemplatePathFn"
         }
       ]
     },

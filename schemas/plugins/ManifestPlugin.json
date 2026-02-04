@@ -78,12 +78,12 @@
     "filter": {
       "description": "Allows filtering the files which make up the manifest.",
       "instanceof": "Function",
-      "tsType": "(item: ManifestItem) => boolean"
+      "tsType": "import('../../lib/ManifestPlugin').Filter"
     },
     "generate": {
       "description": "A function that receives the manifest object, modifies it, and returns the modified manifest.",
       "instanceof": "Function",
-      "tsType": "(manifest: ManifestObject) => ManifestObject"
+      "tsType": "import('../../lib/ManifestPlugin').Generate"
     },
     "prefix": {
       "description": "Specifies a path prefix for all keys in the manifest.",
@@ -92,7 +92,7 @@
     "serialize": {
       "description": "A function that receives the manifest object and returns the manifest string.",
       "instanceof": "Function",
-      "tsType": "(manifest: ManifestObject) => string"
+      "tsType": "import('../../lib/ManifestPlugin').Serialize"
     }
   }
 }

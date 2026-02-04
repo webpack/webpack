@@ -59,7 +59,7 @@
           {
             "description": "Allowed URI filter function.",
             "instanceof": "Function",
-            "tsType": "((uri: string) => boolean)"
+            "tsType": "import('../../../lib/schemes/HttpUriPlugin').AllowedUriFn"
           }
         ]
       }

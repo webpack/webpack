@@ -3,7 +3,7 @@
     "BannerFunction": {
       "description": "The banner as function, it will be wrapped in a comment.",
       "instanceof": "Function",
-      "tsType": "(data: { hash?: string, chunk: import('../../lib/Chunk'), filename: string }) => string"
+      "tsType": "import('../../lib/BannerPlugin').BannerFunction"
     },
     "Rule": {
       "description": "Filtering rule as regex or string.",
@@ -18,7 +18,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((str: string) => boolean)"
+          "tsType": "import('../../lib/ModuleFilenameHelpers').MatcherFn"
         }
       ]
     },

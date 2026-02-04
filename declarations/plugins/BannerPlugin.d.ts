@@ -11,11 +11,7 @@ export type BannerPluginArgument =
 /**
  * The banner as function, it will be wrapped in a comment.
  */
-export type BannerFunction = (data: {
-	hash?: string;
-	chunk: import("../../lib/Chunk");
-	filename: string;
-}) => string;
+export type BannerFunction = import("../../lib/BannerPlugin").BannerFunction;
 /**
  * Filtering rules.
  */
@@ -23,7 +19,10 @@ export type Rules = Rule[] | Rule;
 /**
  * Filtering rule as regex or string.
  */
-export type Rule = RegExp | string | ((str: string) => boolean);
+export type Rule =
+	| RegExp
+	| string
+	| import("../../lib/ModuleFilenameHelpers").MatcherFn;
 
 export interface BannerPluginOptions {
 	/**
