@@ -88,7 +88,6 @@ jobs:
           pr-number: ${{ steps.findPr.outputs.number }}
           lcov-file: ./coverage/lcov.info
           title: Types Coverage
-          filter-changed-files: true
           delete-old-comments: true
 
   validate-legacy-node:
