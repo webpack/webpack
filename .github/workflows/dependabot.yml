@@ -20,7 +20,9 @@ jobs:
           cache: yarn
 
       - name: Dedupe yarn
-        run: yarn fix:yarn
+        run: |
+          yarn --frozen-lockfile
+          yarn fix:yarn
 
       - name: Commit changes
         run: |
