@@ -13,6 +13,7 @@ function findInFolder(folder, depth) {
 		return [folder];
 	} else if (depth > 0) {
 		const files = fs.readdirSync(folder);
+		/** @type {string[]} */
 		const results = [];
 		for (const file of files) {
 			const innerPath = path.join(folder, file);

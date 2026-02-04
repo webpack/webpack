@@ -1904,16 +1904,7 @@ declare interface CleanOptions {
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
-	options: {
-		/**
-		 * Log the assets that should be removed instead of deleting them.
-		 */
-		dry: boolean;
-		/**
-		 * Keep these assets.
-		 */
-		keep?: string | RegExp | ((path: string) => undefined | boolean);
-	};
+	options: CleanOptions & { dry: boolean };
 
 	/**
 	 * Apply the plugin
@@ -1929,6 +1920,16 @@ declare interface CleanPluginCompilationHooks {
 	 */
 	keep: SyncBailHook<[string], boolean | void>;
 }
+declare interface CodeGenMapOverloads {
+	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
+	set: <K extends string>(
+		key: K,
+		value: CodeGenValue<K>
+	) => CodeGenerationResultData;
+	has: <K extends string>(key: K) => boolean;
+	delete: <K extends string>(key: K) => boolean;
+}
+declare interface CodeGenValue<K extends string> {}
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -2007,15 +2008,11 @@ declare interface CodeGenerationResult {
 	 */
 	hash?: string;
 }
-type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
-	Map<"chunkInitFragments", InitFragment<any>[]> &
-	Map<"url", { "css-url": string }> &
-	Map<"filename", string> &
-	Map<"assetInfo", AssetInfo> &
-	Map<"fullContentHash", string> &
-	Map<"url", { javascript: string }> &
-	Map<"share-init", [{ shareScope: string; initStage: number; init: string }]> &
-	Map<string, any>;
+type CodeGenerationResultData = Omit<
+	Map<string, any>,
+	"get" | "set" | "has" | "delete"
+> &
+	CodeGenMapOverloads;
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
@@ -10069,6 +10066,7 @@ declare interface LogEntry {
 		| "info"
 		| "log"
 		| "debug"
+		| "clear"
 		| "profile"
 		| "trace"
 		| "group"
@@ -10076,7 +10074,6 @@ declare interface LogEntry {
 		| "groupEnd"
 		| "profileEnd"
 		| "time"
-		| "clear"
 		| "status";
 	args?: any[];
 	time: number;
@@ -10088,6 +10085,7 @@ type LogTypeEnum =
 	| "info"
 	| "log"
 	| "debug"
+	| "clear"
 	| "profile"
 	| "trace"
 	| "group"
@@ -10095,7 +10093,6 @@ type LogTypeEnum =
 	| "groupEnd"
 	| "profileEnd"
 	| "time"
-	| "clear"
 	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
