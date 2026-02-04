@@ -17,6 +17,8 @@ jobs:
     if: github.repository == 'webpack/webpack'
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -41,5 +43,6 @@ jobs:
 
   trigger-logic:
     needs: release
+    if: needs.release.outputs.published == 'true'
     uses: ./.github/workflows/release-announcement.yml
     secrets: inherit
