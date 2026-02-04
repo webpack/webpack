@@ -459,18 +459,11 @@ declare abstract class AssetSourceGenerator extends Generator {
 declare abstract class AssetSourceParser extends ParserClass {}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
-		groupOptions:
-			| null
-			| string
-			| (RawChunkGroupOptions & { name?: null | string } & {
-					entryOptions?: EntryOptions;
-			  } & { circular?: boolean }),
+		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
 		loc?: null | SyntheticDependencyLocation | RealDependencyLocation,
 		request?: null | string
 	);
-	groupOptions: RawChunkGroupOptions & { name?: null | string } & {
-		entryOptions?: EntryOptions;
-	} & { circular?: boolean };
+	groupOptions: GroupOptionsAsyncDependenciesBlock;
 	loc?: null | SyntheticDependencyLocation | RealDependencyLocation;
 	request?: null | string;
 	chunkName?: null | string;
@@ -571,7 +564,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -581,7 +574,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | Rule[] | ((str: string) => boolean);
+	include?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -596,7 +589,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | Rule[] | ((str: string) => boolean);
+	test?: string | RegExp | ((str: string) => boolean) | Rule[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -1327,7 +1320,7 @@ declare class Chunk {
 	getChildrenOfTypeInOrder(
 		chunkGraph: ChunkGraph,
 		type: string
-	): undefined | { onChunks: Chunk[]; chunks: Set<Chunk> }[];
+	): undefined | ChunkChildOfTypeInOrder[];
 	getChildIdsByOrdersMap(
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
@@ -1345,6 +1338,10 @@ declare interface ChunkChildIdsByOrdersMap {
 }
 declare interface ChunkChildIdsByOrdersMapByData {
 	[index: string]: ChunkChildIdsByOrdersMap;
+}
+declare interface ChunkChildOfTypeInOrder {
+	onChunks: Chunk[];
+	chunks: Set<Chunk>;
 }
 declare interface ChunkConditionMap {
 	[index: number]: boolean;
@@ -3937,8 +3934,8 @@ declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
 	 */
-	constructor(definitions: Record<string, CodeValue>);
-	definitions: Record<string, CodeValue>;
+	constructor(definitions: Definitions);
+	definitions: Definitions;
 
 	/**
 	 * Apply the plugin
@@ -3959,6 +3956,9 @@ declare interface DefinePluginHooks {
 		[Record<string, CodeValue>],
 		Record<string, CodeValue>
 	>;
+}
+declare interface Definitions {
+	[index: string]: CodeValue;
 }
 declare class DelegatedPlugin {
 	constructor(options: Options);
@@ -6296,10 +6296,13 @@ declare interface GotHandler<T> {
 }
 declare interface GroupConfig<T, R> {
 	getKeys: (item: T) => undefined | string[];
-	getOptions?: (name: string, items: T[]) => GroupOptions;
+	getOptions?: (name: string, items: T[]) => GroupOptionsSmartGrouping;
 	createGroup: (key: string, children: T[], items: T[]) => R;
 }
-declare interface GroupOptions {
+type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
+	name?: null | string;
+} & { entryOptions?: EntryOptions } & { circular?: boolean };
+declare interface GroupOptionsSmartGrouping {
 	groupChildren?: boolean;
 	force?: boolean;
 	targetGroupCount?: number;
@@ -6588,6 +6591,7 @@ declare interface HttpUriOptions {
 }
 declare class HttpUriPlugin {
 	constructor(options: HttpUriOptions);
+	options: HttpUriOptions;
 
 	/**
 	 * Apply the plugin
@@ -10009,8 +10013,8 @@ declare interface LogEntry {
 		| "warn"
 		| "info"
 		| "log"
-		| "profile"
 		| "debug"
+		| "profile"
 		| "trace"
 		| "group"
 		| "groupCollapsed"
@@ -10028,8 +10032,8 @@ type LogTypeEnum =
 	| "warn"
 	| "info"
 	| "log"
-	| "profile"
 	| "debug"
+	| "profile"
 	| "trace"
 	| "group"
 	| "groupCollapsed"
@@ -11061,8 +11065,8 @@ declare interface ModuleOptions {
 	noParse?:
 		| string
 		| RegExp
-		| (string | RegExp | ((content: string) => boolean))[]
-		| ((content: string) => boolean);
+		| ((content: string) => boolean)
+		| (string | RegExp | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -11145,8 +11149,8 @@ declare interface ModuleOptionsNormalized {
 	noParse?:
 		| string
 		| RegExp
-		| (string | RegExp | ((content: string) => boolean))[]
-		| ((content: string) => boolean);
+		| ((content: string) => boolean)
+		| (string | RegExp | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -11475,8 +11479,7 @@ declare abstract class MultiWatching {
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: NamedChunkIdsPluginOptions);
-	delimiter: string;
-	context?: string;
+	options: NamedChunkIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -11533,11 +11536,6 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type NoParse =
-	| string
-	| RegExp
-	| (string | RegExp | ((content: string) => boolean))[]
-	| ((content: string) => boolean);
 type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options: NodeEnvironmentPluginOptions);
@@ -11649,14 +11647,17 @@ declare class NormalModule extends Module {
 		associatedObjectForCache?: object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
-	applyNoParseRule(rule: Exclude<NoParse, any[]>, content: string): boolean;
+	applyNoParseRule(
+		rule: string | RegExp | ((content: string) => boolean),
+		content: string
+	): boolean;
 	shouldPreventParsing(
 		noParseRule:
 			| undefined
 			| string
 			| RegExp
-			| (string | RegExp | ((content: string) => boolean))[]
-			| ((content: string) => boolean),
+			| ((content: string) => boolean)
+			| (string | RegExp | ((content: string) => boolean))[],
 		request: string
 	): boolean;
 	static getCompilationHooks(
@@ -12376,8 +12377,8 @@ declare interface Optimization {
 		| ""
 		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 
 	/**
@@ -12520,8 +12521,8 @@ declare interface OptimizationNormalized {
 	 */
 	minimizer?: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 
 	/**
@@ -12640,8 +12641,8 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	minimize: NonNullable<undefined | boolean>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
 		| "..."
+		| WebpackPluginInstance
 	)[];
 	nodeEnv: NonNullable<undefined | string | false>;
 };
@@ -16322,7 +16323,7 @@ declare class RuntimeChunkPlugin {
 		 */
 		name?: (entrypoint: { name: string }) => string;
 	});
-	options: { name: (entrypoint: { name: string }) => string };
+	options: { name: string | ((entrypoint: { name: string }) => string) };
 
 	/**
 	 * Apply the plugin
@@ -17307,7 +17308,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | Rule[] | ((str: string) => boolean);
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -17329,12 +17330,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | Rule[] | ((str: string) => boolean);
+	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | Rule[] | ((str: string) => boolean);
+	include?: string | RegExp | ((str: string) => boolean) | Rule[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -17371,7 +17372,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | Rule[] | ((str: string) => boolean);
+	test?: string | RegExp | ((str: string) => boolean) | Rule[];
 }
 declare class SourceMapSource extends Source {
 	constructor(
@@ -18282,7 +18283,8 @@ declare interface Stringable {
 }
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
-	constructor(__0: SyncModuleIdsPluginOptions);
+	constructor(options: SyncModuleIdsPluginOptions);
+	options: SyncModuleIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -18837,7 +18839,7 @@ declare abstract class WebpackLogger {
 	info(...args: any[]): void;
 	log(...args: any[]): void;
 	debug(...args: any[]): void;
-	assert(assertion: any, ...args: any[]): void;
+	assert(condition: undefined | boolean, ...args: any[]): void;
 	trace(): void;
 	clear(): void;
 	status(...args: any[]): void;
@@ -19833,6 +19835,7 @@ declare namespace exports {
 		this: Compiler,
 		compiler: Compiler
 	) => void;
+	export type WebpackPluginInstance = (compiler: Compiler) => void;
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
 		callback: (
@@ -19955,7 +19958,6 @@ declare namespace exports {
 		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
-		WebpackPluginInstance,
 		ChunkGroup,
 		AssetEmittedInfo,
 		Asset,

@@ -11,7 +11,7 @@ export type HttpUriPluginOptions = HttpUriOptions;
 export type HttpUriOptionsAllowedUris = (
 	| RegExp
 	| string
-	| ((uri: string) => boolean)
+	| import("../../../lib/schemes/HttpUriPlugin").AllowedUriFn
 )[];
 
 /**

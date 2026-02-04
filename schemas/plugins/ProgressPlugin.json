@@ -3,7 +3,7 @@
     "HandlerFunction": {
       "description": "Function that executes for every progress step.",
       "instanceof": "Function",
-      "tsType": "(import(\"../../lib/ProgressPlugin\").HandlerFn)"
+      "tsType": "import('../../lib/ProgressPlugin').HandlerFn"
     },
     "ProgressPluginOptions": {
       "description": "Options object for the ProgressPlugin.",

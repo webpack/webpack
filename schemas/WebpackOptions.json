@@ -34,7 +34,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((name: string, asset: import('../lib/stats/DefaultStatsFactoryPlugin').StatsAsset) => boolean)"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').AssetFilterItemFn"
         }
       ]
     },
@@ -77,7 +77,7 @@
     "AssetGeneratorDataUrlFunction": {
       "description": "Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.",
       "instanceof": "Function",
-      "tsType": "((source: string | Buffer, context: { filename: string, module: import('../lib/Module') }) => string)"
+      "tsType": "import('../lib/asset/AssetGenerator').DataUrlFunction"
     },
     "AssetGeneratorDataUrlOptions": {
       "description": "Options object for data url generation.",
@@ -148,7 +148,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },
@@ -161,14 +161,14 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },
     "AssetParserDataUrlFunction": {
       "description": "Function that executes for module and should return whenever asset should be inlined as DataUrl.",
       "instanceof": "Function",
-      "tsType": "((source: string | Buffer, context: { filename: string, module: import('../lib/Module') }) => boolean)"
+      "tsType": "import(\"../lib/asset/AssetParser\").AssetParserDataUrlFunction"
     },
     "AssetParserDataUrlOptions": {
       "description": "Options object for DataUrl condition.",
@@ -352,7 +352,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import(\"../lib/CleanPlugin\").KeepFn)"
+              "tsType": "import(\"../lib/CleanPlugin\").KeepFn"
             }
           ]
         }
@@ -405,7 +405,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((name: string) => string)"
+          "tsType": "import('../lib/dependencies/CssIcssExportDependency').ExportsConventionFn"
         }
       ]
     },
@@ -858,12 +858,12 @@
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
-      "tsType": "(() => EntryStatic | Promise<EntryStatic>)"
+      "tsType": "import('../lib/DynamicEntryPlugin').RawEntryDynamic"
     },
     "EntryDynamicNormalized": {
       "description": "A Function returning a Promise resolving to a normalized entry.",
       "instanceof": "Function",
-      "tsType": "(() => Promise<EntryStaticNormalized>)"
+      "tsType": "import('../lib/DynamicEntryPlugin').EntryDynamic"
     },
     "EntryFilename": {
       "description": "Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -1234,7 +1234,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "((layer: string | null) => ExternalItem)"
+                  "tsType": "import('../lib/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
                 }
               ]
             }
@@ -1259,12 +1259,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback)"
+      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "(import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise)"
+      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
     },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
@@ -1534,7 +1534,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },
@@ -1554,7 +1554,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').FilterItemTypeFn"
         }
       ]
     },
@@ -1752,7 +1752,7 @@
           {
             "description": "Allowed URI filter function.",
             "instanceof": "Function",
-            "tsType": "((uri: string) => boolean)"
+            "tsType": "import('../lib/schemes/HttpUriPlugin').AllowedUriFn"
           }
         ]
       }
@@ -1792,7 +1792,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
+            "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
           }
         ]
       }
@@ -1803,7 +1803,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "((warning: Error, compilation: import('../lib/Compilation')) => boolean)"
+        "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
       }
     },
     "Iife": {
@@ -1992,7 +1992,7 @@
         "parse": {
           "description": "Function to parser source code.",
           "instanceof": "Function",
-          "tsType": "(import('../lib/javascript/JavascriptParser').ParseFunction)"
+          "tsType": "import('../lib/javascript/JavascriptParser').ParseFunction"
         },
         "reexportExportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",
@@ -2119,7 +2119,7 @@
         "parse": {
           "description": "Function to parser content and return JSON.",
           "instanceof": "Function",
-          "tsType": "(import('../lib/json/JsonParser').ParseFn)"
+          "tsType": "import('../lib/json/JsonParser').ParseFn"
         }
       }
     },
@@ -2186,12 +2186,12 @@
               "type": "object",
               "additionalProperties": true,
               "properties": {},
-              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend\").HttpServerOptions)"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend\").HttpServerOptions"
             },
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "(import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction)"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction"
             }
           ]
         }
@@ -2208,7 +2208,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "(import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd)"
+              "tsType": "import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -2235,7 +2235,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import('../lib/hmr/LazyCompilationPlugin').TestFn)"
+              "tsType": "import('../lib/hmr/LazyCompilationPlugin').TestFn"
             }
           ]
         }
@@ -2448,7 +2448,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((name: string, module: import('../lib/stats/DefaultStatsFactoryPlugin').StatsModule, type: 'module' | 'chunk' | 'root-of-chunk' | 'nested') => boolean)"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').ModuleFilterItemTypeFn"
         }
       ]
     },
@@ -2574,7 +2574,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module')) => boolean)"
+              "tsType": "import(\"../lib/Compilation\").UnsafeCachePredicate"
             }
           ]
         },
@@ -2634,7 +2634,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module')) => boolean)"
+              "tsType": "import('../lib/Compilation').UnsafeCachePredicate"
             }
           ]
         }
@@ -2665,7 +2665,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "((content: string) => boolean)"
+                "tsType": "import(\"../lib/NormalModule\").NoParseFn"
               }
             ]
           },
@@ -2683,7 +2683,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((content: string) => boolean)"
+          "tsType": "import(\"../lib/NormalModule\").NoParseFn"
         }
       ]
     },
@@ -3118,7 +3118,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
             }
           ]
         },
@@ -3144,7 +3144,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
             }
           ]
         },
@@ -3164,7 +3164,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((layer: string | null) => boolean)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckModuleLayerFn"
             }
           ]
         },
@@ -3242,7 +3242,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').GetNameFn"
             }
           ]
         },
@@ -3266,7 +3266,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((module: import('../lib/Module'), context: import('../lib/optimize/SplitChunksPlugin').CacheGroupsContext) => boolean)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckTestFn"
             }
           ]
         },
@@ -3282,7 +3282,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((type: string) => boolean)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckModuleTypeFn"
             }
           ]
         },
@@ -3295,7 +3295,7 @@
     "OptimizationSplitChunksGetCacheGroups": {
       "description": "A function returning cache groups.",
       "instanceof": "Function",
-      "tsType": "((module: import('../lib/Module')) => OptimizationSplitChunksCacheGroup | OptimizationSplitChunksCacheGroup[] | void)"
+      "tsType": "import('../lib/optimize/SplitChunksPlugin').RawGetCacheGroups"
     },
     "OptimizationSplitChunksOptions": {
       "description": "Options object for splitting chunks into smaller chunks.",
@@ -3367,7 +3367,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
             }
           ]
         },
@@ -3377,7 +3377,7 @@
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string",
-            "tsType": "(import(\"../lib/Module\").SourceType)"
+            "tsType": "import(\"../lib/Module\").SourceType"
           },
           "minItems": 1
         },
@@ -3411,7 +3411,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "(import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn)"
+                  "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
                 }
               ]
             },
@@ -3467,7 +3467,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
             }
           ]
         },
@@ -3549,7 +3549,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(import('../lib/optimize/SplitChunksPlugin').GetNameFn)"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin').GetNameFn"
             }
           ]
         },
@@ -4061,7 +4061,7 @@
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",
-          "tsType": "((name: import('../lib/Compilation').Asset['name'], source: import('../lib/Compilation').Asset['source'], assetInfo: import('../lib/Compilation').Asset['info'])  => boolean)"
+          "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
@@ -4145,7 +4145,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../lib/TemplatedPathPlugin\").TemplatePathFn)"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },
@@ -4398,7 +4398,7 @@
         },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
-          "tsType": "(import('../lib/util/fs').InputFileSystem)"
+          "tsType": "import('../lib/util/fs').InputFileSystem"
         },
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
@@ -4482,7 +4482,7 @@
         },
         "resolver": {
           "description": "Custom resolver.",
-          "tsType": "(import('enhanced-resolve').Resolver)"
+          "tsType": "import('enhanced-resolve').Resolver"
         },
         "restrictions": {
           "description": "A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
@@ -4599,7 +4599,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
+          "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetConditionFn"
         },
         {
           "$ref": "#/definitions/RuleSetLogicalConditions"
@@ -4625,7 +4625,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
+          "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetConditionFn"
         },
         {
           "$ref": "#/definitions/RuleSetLogicalConditionsAbsolute"
@@ -5041,7 +5041,7 @@
     "RuleSetUseFunction": {
       "description": "The function is called on each data and return rule set item.",
       "instanceof": "Function",
-      "tsType": "((data: import('../lib/rules/RuleSetCompiler').EffectData) => (RuleSetUseItem | (Falsy | RuleSetUseItem)[]))"
+      "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetUseFn"
     },
     "RuleSetUseItem": {
       "description": "A description of an applied loader.",
@@ -5792,7 +5792,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "(import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn)"
+          "tsType": "import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn"
         }
       ]
     },
@@ -6039,7 +6039,7 @@
     "WebpackPluginFunction": {
       "description": "Function acting as plugin.",
       "instanceof": "Function",
-      "tsType": "(this: import('../lib/Compiler'), compiler: import('../lib/Compiler')) => void"
+      "tsType": "import('../lib/webpack').WebpackPluginFunction"
     },
     "WebpackPluginInstance": {
       "description": "Plugin instance.",
@@ -6049,7 +6049,7 @@
         "apply": {
           "description": "The run point of the plugin, required method.",
           "instanceof": "Function",
-          "tsType": "(compiler: import('../lib/Compiler')) => void"
+          "tsType": "import('../lib/webpack').WebpackPluginInstance"
         }
       },
       "required": ["apply"]
