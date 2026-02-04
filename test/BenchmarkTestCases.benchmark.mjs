@@ -534,7 +534,7 @@ const withCodSpeed = async (bench) => {
 	};
 	const rootCallingFile = getCallingFile();
 
-	if (codspeedRunnerMode === "instrumented") {
+	if (codspeedRunnerMode === "simulation") {
 		const setupBenchRun = () => {
 			setupCore();
 			console.log(
