@@ -15,7 +15,24 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
 
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - name: Dedupe yarn
+        run: yarn fix:yarn
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: dedupe yarn"
+          git push
+
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "${{github.event.pull_request.html_url}}"
+        run: gh pr merge --auto --squash "${{github.event.pull_request.html_url}}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
