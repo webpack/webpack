@@ -9,7 +9,7 @@ permissions:
 jobs:
   dependabot-auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' && github.repository == 'webpack/webpack'
+    if: github.actor == 'dependabot[bot]'
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
@@ -17,35 +17,6 @@ jobs:
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
-
-      - name: Checkout PR branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Use Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
-        with:
-          node-version: lts/*
-          cache: yarn
-
-      - name: Dedupe yarn
-        run: |
-          yarn --frozen-lockfile
-          yarn fix:yarn
-
-      - name: Commit changes
-        run: |
-          git config --local user.name "${{ steps.app-token.outputs.app-slug }}[bot]"
-          git config --local user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
-          git add .
-          if ! git diff --quiet --exit-code || ! git diff --staged --quiet --exit-code; then
-            git commit -m "chore: dedupe yarn"
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          else
-            echo "No changes to commit"
-          fi
 
       - name: Dependabot metadata
         id: dependabot-metadata
