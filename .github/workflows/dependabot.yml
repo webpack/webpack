@@ -11,9 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && github.repository == 'webpack/webpack'
     steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Checkout PR branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Use Node.js
@@ -29,8 +37,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.name "dependabot[bot]"
-          git config --local user.email "49699333+dependabot[bot]@users.noreply.github.com"
+          git config --local user.name "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git config --local user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
           git add .
           if ! git diff --quiet --exit-code || ! git diff --staged --quiet --exit-code; then
             git commit -m "chore: dedupe yarn"
@@ -43,7 +51,7 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ steps.app-token.outputs.token }}"
 
       - name: Enable auto-merge for Dependabot PRs
         if: steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
@@ -53,7 +61,7 @@ jobs:
           else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
           fi
 
-          gh pr comment "$PR_URL" --body "@dependabot squash and merge"
+          gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
