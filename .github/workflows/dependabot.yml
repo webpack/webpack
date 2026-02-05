@@ -48,7 +48,11 @@ jobs:
       - name: Enable auto-merge for Dependabot PRs
         if: steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
         run: |
-          gh pr review --approve "$PR_URL"
+          if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
+          then gh pr review --approve "$PR_URL"
+          else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
+          fi
+
           gh pr comment "$PR_URL" --body "@dependabot squash and merge"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
