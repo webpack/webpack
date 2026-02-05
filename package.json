@@ -32,7 +32,7 @@
     "prepare": "husky",
     "setup": "node ./setup/setup.js",
     "prelint": "yarn setup",
-    "lint": "yarn lint:code && yarn lint:special && yarn lint:types && yarn lint:types-test && yarn lint:types-benchmark && yarn lint:types-module-test && yarn lint:types-hot && yarn lint:yarn && yarn fmt:check && yarn lint:spellcheck",
+    "lint": "yarn lint:code && yarn lint:special && yarn lint:types && yarn lint:types-test && yarn lint:types-benchmark && yarn lint:types-module-test && yarn lint:types-hot && yarn fmt:check && yarn lint:spellcheck",
     "lint:code": "node node_modules/eslint/bin/eslint.js --cache .",
     "lint:special": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
     "lint:types": "tsc",
@@ -40,15 +40,13 @@
     "lint:types-benchmark": "tsc -p tsconfig.types.benchmark.json",
     "lint:types-hot": "tsc -p tsconfig.hot.json",
     "lint:types-module-test": "tsc -p tsconfig.module.test.json",
-    "lint:yarn": "yarn-deduplicate --fail --list -s highest yarn.lock",
     "lint:spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",
     "validate:types": "tsc -p tsconfig.validation.json",
     "fmt": "yarn fmt:base --log-level warn --write",
     "fmt:check": "yarn fmt:base --check",
     "fmt:base": "node node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
-    "fix": "yarn fix:code && yarn fix:yarn && yarn fix:special && yarn fmt",
+    "fix": "yarn fix:code && yarn fix:special && yarn fmt",
     "fix:code": "yarn lint:code --fix",
-    "fix:yarn": "yarn-deduplicate -s highest yarn.lock",
     "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
     "build:examples": "cd examples && node buildAll.js",
     "benchmark": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
@@ -189,8 +187,7 @@
     "webassembly-feature": "1.3.0",
     "webpack-cli": "^6.0.1",
     "xxhashjs": "^0.2.2",
-    "yamljs": "^0.3.0",
-    "yarn-deduplicate": "^6.0.1"
+    "yamljs": "^0.3.0"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
