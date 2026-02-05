@@ -7,12 +7,13 @@ const fs = require("graceful-fs");
 
 jest.setTimeout(60000);
 
+const nodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
 // eslint-disable-next-line no-new-func
 const dynamicImport = new Function("specifier", "return import(specifier)");
 
 /**
  * @param {string} projectDir a project directory
- * @returns {EXPECTED_ANY} webpack options
+ * @returns {EXPECTED_ANY | undefined} webpack options
  */
 async function loadConfiguration(projectDir) {
 	const paths = [
@@ -28,16 +29,23 @@ async function loadConfiguration(projectDir) {
 			continue;
 		}
 
+		if (nodeVersion < 18) {
+			try {
+				options = require(path);
+				return options;
+			} catch (_err) {
+				// Nothing
+			}
+
+			return;
+		}
+
 		try {
 			options = await dynamicImport(path);
 			return options.default;
 		} catch (_err) {
 			try {
 				options = require(path);
-
-				if (options.default) {
-					options = options.default;
-				}
 			} catch (_err) {
 				// Nothing
 			}
