@@ -7,6 +7,54 @@ const fs = require("graceful-fs");
 
 jest.setTimeout(60000);
 
+const nodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
+// eslint-disable-next-line no-new-func
+const dynamicImport = new Function("specifier", "return import(specifier)");
+
+/**
+ * @param {string} projectDir a project directory
+ * @returns {EXPECTED_ANY | undefined} webpack options
+ */
+async function loadConfiguration(projectDir) {
+	const paths = [
+		path.join(projectDir, "webpack.config.js"),
+		path.join(projectDir, "webpack.config.mjs"),
+		path.join(projectDir, "webpack.config.cjs")
+	];
+
+	let options;
+
+	for (const path of paths) {
+		if (!fs.existsSync(path)) {
+			continue;
+		}
+
+		if (nodeVersion < 18) {
+			try {
+				options = require(path);
+				return options;
+			} catch (_err) {
+				// Nothing
+			}
+
+			return;
+		}
+
+		try {
+			options = await dynamicImport(path);
+			return options.default;
+		} catch (_err) {
+			try {
+				options = require(path);
+			} catch (_err) {
+				// Nothing
+			}
+		}
+	}
+
+	return options;
+}
+
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
 
@@ -26,16 +74,16 @@ describe("Examples", () => {
 			continue;
 		}
 
-		it(`should compile ${relativePath}`, (done) => {
-			let options = {};
-			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
-			webpackConfigPath =
-				webpackConfigPath.slice(0, 1).toUpperCase() +
-				webpackConfigPath.slice(1);
-			if (fs.existsSync(webpackConfigPath)) {
-				options = require(webpackConfigPath);
+		it(`should compile ${relativePath}`, async () => {
+			let options = await loadConfiguration(examplePath);
+
+			if (!options) {
+				// Skip ECMA modules examples
+				return;
 			}
+
 			if (typeof options === "function") options = options();
+
 			if (Array.isArray(options)) {
 				for (const [_, item] of options.entries()) {
 					processOptions(item);
@@ -59,21 +107,28 @@ describe("Examples", () => {
 
 			const webpack = require("..");
 
-			webpack(options, (err, stats) => {
-				if (err) return done(err);
-				if (stats.hasErrors()) {
-					return done(
-						new Error(
-							stats.toString({
-								all: false,
-								errors: true,
-								errorDetails: true,
-								errorStacks: true
-							})
-						)
-					);
-				}
-				done();
+			await new Promise((resolve, reject) => {
+				webpack(options, (err, stats) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+					if (stats.hasErrors()) {
+						reject(
+							new Error(
+								stats.toString({
+									all: false,
+									errors: true,
+									errorDetails: true,
+									errorStacks: true
+								})
+							)
+						);
+						return;
+					}
+
+					resolve();
+				});
 			});
 		}, 90000);
 	}

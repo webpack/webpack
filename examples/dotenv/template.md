@@ -1,3 +1,5 @@
+# Dotenv examples
+
 This example demonstrates using the DotenvPlugin via the `dotenv` top-level configuration option.
 
 The DotenvPlugin loads environment variables from `.env` files and exposes them in your application through `process.env`.

@@ -37,6 +37,8 @@ schemas/**/*.check.js
 examples/**/*
 !examples/*
 !examples/**/webpack.config.js
+!examples/**/webpack.config.cjs
+!examples/**/webpack.config.mjs
 !examples/**/test.filter.js
 
 .vscode/**/*.*
