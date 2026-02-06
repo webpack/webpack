@@ -60,6 +60,9 @@ Install with yarn:
 ```bash
 yarn add webpack --dev
 ```
+> Note: This installs webpack as a development dependency.
+> Ensure Node.js is installed before running these commands.
+
 
 ## Introduction
 
