@@ -27,7 +27,17 @@
   <p>
     Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
   </p>
+  
+  <h3>Why use webpack</h3>
+<ul>
+  <li>Bundles application modules into optimized output files.</li>
+  <li>Encourages modular and maintainable code through its module system.</li>
+  <li>Integrates with tools such as Babel, TypeScript, or PostCSS via loaders.</li>
+  <li>Provides a flexible configuration system to support different project needs.</li>
+</ul>
+
 </div>
+
 
 ## Table of Contents
 
@@ -64,7 +74,7 @@ yarn add webpack --dev
 > Ensure Node.js is installed before running these commands.
 
 
-
+ 
 ## Introduction
 
 Webpack is a bundler for modules. The main purpose is to bundle JavaScript
