@@ -3,6 +3,7 @@ import { app } from "virtual:app"
 import json from "virtual:config"
 import { ts } from "virtual:ts"
 import txt from "virtual:txt"
+import Hammer from 'virtual:hammer.svg';
 
 it("should correctly load virtual modules with the js type.", (done) => {
     expect(typeof routes.bar).toBe("function");
@@ -35,4 +36,10 @@ it("should correctly load virtual modules with the asset/source type.", (done) =
 it("should correctly load virtual modules with custom loader.", (done) => {
     expect(ts).toBe("var");
     done()
+});
+
+it("should correctly load virtual modules with the asset/resource type.", (done) => {
+    const fs = __non_webpack_require__("fs");
+    expect(fs.readFileSync(__dirname + "/" + Hammer, "utf-8")).toContain("</svg>");
+    done();
 });
