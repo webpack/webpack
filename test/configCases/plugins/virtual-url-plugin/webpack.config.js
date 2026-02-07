@@ -47,6 +47,12 @@ const config = {
 				source() {
 					return "Hello world";
 				}
+			},
+			"hammer.svg": {
+				type: ".svg",
+				source() {
+					return fs.readFileSync(path.join(__dirname, "./file.svg"));
+				}
 			}
 		})
 	],
@@ -69,6 +75,13 @@ const config = {
 			{
 				test: /\.txt/,
 				type: "asset/source"
+			},
+			{
+				test: /\.svg/,
+				type: "asset/resource",
+				generator: {
+					filename: "[name][ext]"
+				}
 			}
 		]
 	}
