@@ -26,12 +26,12 @@ it("should work", () => {
 			break;
 		}
 		case 2: {
-			expect(stats.assets.length).toBe(4);
+			expect(stats.assets.length).toBe(3);
 
 			const cssEntryInJs = stats.assets.find(
 				a => a.name.endsWith("css-entry.js")
 			);
-			expect(Boolean(cssEntryInJs)).toBe(true);
+			expect(Boolean(cssEntryInJs)).toBe(false);
 
 			const cssEntry = stats.assets.find(
 				a => a.name.endsWith("css-entry.css")
@@ -40,25 +40,6 @@ it("should work", () => {
 			break;
 		}
 		case 3: {
-			expect(stats.assets.length).toBe(5);
-
-			const jsEntry = stats.assets.find(
-				a => a.name.endsWith("js-entry.js")
-			);
-			expect(Boolean(jsEntry)).toBe(true);
-
-			const cssEntryInJs = stats.assets.find(
-				a => a.name.endsWith("css-entry.js")
-			);
-			expect(Boolean(cssEntryInJs)).toBe(true);
-
-			const cssEntry = stats.assets.find(
-				a => a.name.endsWith("css-entry.css")
-			);
-			expect(Boolean(cssEntry)).toBe(true);
-			break;
-		}
-		case 4: {
 			expect(stats.assets.length).toBe(4);
 
 			const jsEntry = stats.assets.find(
@@ -69,7 +50,26 @@ it("should work", () => {
 			const cssEntryInJs = stats.assets.find(
 				a => a.name.endsWith("css-entry.js")
 			);
-			expect(Boolean(cssEntryInJs)).toBe(true);
+			expect(Boolean(cssEntryInJs)).toBe(false);
+
+			const cssEntry = stats.assets.find(
+				a => a.name.endsWith("css-entry.css")
+			);
+			expect(Boolean(cssEntry)).toBe(true);
+			break;
+		}
+		case 4: {
+			expect(stats.assets.length).toBe(3);
+
+			const jsEntry = stats.assets.find(
+				a => a.name.endsWith("js-entry.js")
+			);
+			expect(Boolean(jsEntry)).toBe(true);
+
+			const cssEntryInJs = stats.assets.find(
+				a => a.name.endsWith("css-entry.js")
+			);
+			expect(Boolean(cssEntryInJs)).toBe(false);
 			break;
 		}
 		case 5: {
