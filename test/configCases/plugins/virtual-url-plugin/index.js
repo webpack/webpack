@@ -40,6 +40,9 @@ it("should correctly load virtual modules with custom loader.", (done) => {
 
 it("should correctly load virtual modules with the asset/resource type.", (done) => {
     const fs = __non_webpack_require__("fs");
+    // windows doesn't allow : in file names
+    expect(Hammer).not.toContain(":");
+    expect(Hammer).toContain("__");
     expect(fs.readFileSync(__dirname + "/" + Hammer, "utf-8")).toContain("</svg>");
     done();
 });
