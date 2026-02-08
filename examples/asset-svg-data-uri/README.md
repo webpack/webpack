@@ -89,7 +89,8 @@ module.exports = config;
   !*** ./images/file.svg ***!
   \*************************/
 /*! default exports */
-/*! exports [not provided] [no usage info] */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -202,7 +203,7 @@ function createImageElement(title, src) {
 ## webpack output
 
 ```
-asset output.js 4.07 KiB [emitted] (name: main)
+asset output.js 4.17 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module

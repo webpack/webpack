@@ -151,26 +151,28 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 var map = {
 	"./aPage": [
 		2,
-		"aPage"
+		[
+			"aPage"
+		]
 	],
 	"./bPage": [
 		6,
-		"bPage"
+		[
+			"bPage"
+		]
 	]
 };
 function webpackAsyncContext(req) {
 	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(() => {
-			var e = new Error("Cannot find module '" + req + "'");
-			e.code = 'MODULE_NOT_FOUND';
-			throw e;
-		});
+	var e = new Error("Cannot find module '" + req + "'");
+	e.code = 'MODULE_NOT_FOUND';
+	throw e;
+});
 	}
 
 	var ids = map[req], id = ids[0];
-	return __webpack_require__.e(ids[1]).then(() => {
-		return __webpack_require__.t(id, 7 | 16);
-	});
+	return __webpack_require__.e(ids[1][0]).then(() => (__webpack_require__.t(id, 7 | 16)));
 }
 webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 4;
@@ -594,11 +596,11 @@ webpack X.X.X compiled successfully
 ```
 asset pageA.bundle.js 2.82 KiB [emitted] [minimized] (name: pageA)
 asset pageB.bundle.js 2.82 KiB [emitted] [minimized] (name: pageB)
-asset router_js.bundle.js 531 bytes [emitted] [minimized]
+asset router_js.bundle.js 538 bytes [emitted] [minimized]
 asset aPage.bundle.js 116 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 116 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.45 KiB = router_js.bundle.js 531 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.82 KiB
-Entrypoint pageB 3.45 KiB = router_js.bundle.js 531 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.82 KiB
+Entrypoint pageA 3.46 KiB = router_js.bundle.js 538 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.82 KiB
+Entrypoint pageB 3.46 KiB = router_js.bundle.js 538 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.82 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
