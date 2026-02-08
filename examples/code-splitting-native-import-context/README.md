@@ -50,42 +50,52 @@ export default foo;
 var map = {
 	"./bar": [
 		2,
-		776
+		[
+			776
+		]
 	],
 	"./bar.js": [
 		2,
-		776
+		[
+			776
+		]
 	],
 	"./baz": [
 		3,
-		0
+		[
+			0
+		]
 	],
 	"./baz.js": [
 		3,
-		0
+		[
+			0
+		]
 	],
 	"./foo": [
 		4,
-		717
+		[
+			717
+		]
 	],
 	"./foo.js": [
 		4,
-		717
+		[
+			717
+		]
 	]
 };
 function webpackAsyncContext(req) {
 	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(() => {
-			var e = new Error("Cannot find module '" + req + "'");
-			e.code = 'MODULE_NOT_FOUND';
-			throw e;
-		});
+	var e = new Error("Cannot find module '" + req + "'");
+	e.code = 'MODULE_NOT_FOUND';
+	throw e;
+});
 	}
 
 	var ids = map[req], id = ids[0];
-	return __webpack_require__.e(ids[1]).then(() => {
-		return __webpack_require__(id);
-	});
+	return __webpack_require__.e(ids[1][0]).then(() => (__webpack_require__(id)));
 }
 webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 1;
@@ -405,7 +415,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.38 KiB [emitted] [minimized] (name: main)
+asset output.js 2.4 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 127 bytes [emitted] [minimized]
 asset 776.output.js 127 bytes [emitted] [minimized]
 asset 0.output.js 124 bytes [emitted] [minimized]

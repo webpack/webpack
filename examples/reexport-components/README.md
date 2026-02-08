@@ -201,7 +201,7 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset output.js 11.2 KiB [emitted] (name: main)
+asset output.js 11.3 KiB [emitted] (name: main)
 asset pages_Login_js.output.js 2.79 KiB [emitted]
 asset pages_Dashboard_js.output.js 2.75 KiB [emitted]
 chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
@@ -233,7 +233,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.46 KiB [emitted] [minimized] (name: main)
+asset output.js 2.47 KiB [emitted] [minimized] (name: main)
 asset pages_Dashboard_js.output.js 444 bytes [emitted] [minimized]
 asset pages_Login_js.output.js 438 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]

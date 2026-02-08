@@ -406,7 +406,8 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
   !*** ./raw-to-uint8-array.md ***!
   \*******************************/
 /*! default exports */
-/*! exports [not provided] [no usage info] */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.*, __webpack_require__.tb, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -418,7 +419,8 @@ module.exports = __webpack_require__.tb("IyBFeGFtcGxlIGhlYWRpbmdzCgojIyBTYW1wbGU
   !*** ./raw-to-string.md ***!
   \**************************/
 /*! default exports */
-/*! exports [not provided] [no usage info] */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -660,7 +662,7 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 18.4 KiB [emitted] (name: main)
+asset output.js 18.6 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 1.78 KiB (runtime) [entry] [rendered]
   > ./example.js main

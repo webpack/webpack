@@ -50,34 +50,40 @@ export default foo;
 var map = {
 	"./bar": [
 		3,
-		994
+		[
+			994
+		]
 	],
 	"./bar.js": [
 		3,
-		994
+		[
+			994
+		]
 	],
 	"./baz": [
 		4,
-		792
+		[
+			792
+		]
 	],
 	"./baz.js": [
 		4,
-		792
+		[
+			792
+		]
 	]
 };
 function webpackAsyncContext(req) {
 	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(() => {
-			var e = new Error("Cannot find module '" + req + "'");
-			e.code = 'MODULE_NOT_FOUND';
-			throw e;
-		});
+	var e = new Error("Cannot find module '" + req + "'");
+	e.code = 'MODULE_NOT_FOUND';
+	throw e;
+});
 	}
 
 	var ids = map[req], id = ids[0];
-	return __webpack_require__.e(ids[1]).then(() => {
-		return __webpack_require__(id);
-	});
+	return __webpack_require__.e(ids[1][0]).then(() => (__webpack_require__(id)));
 }
 webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 1;
@@ -397,7 +403,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.41 KiB [emitted] [minimized] (name: main)
+asset output.js 2.42 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 127 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 126 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 126 bytes [emitted] [minimized] (name: chunk-bar-baz2)

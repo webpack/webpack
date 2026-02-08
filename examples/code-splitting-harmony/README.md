@@ -53,34 +53,40 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 var map = {
 	"./1": [
 		4,
-		197
+		[
+			197
+		]
 	],
 	"./1.js": [
 		4,
-		197
+		[
+			197
+		]
 	],
 	"./2": [
 		5,
-		140
+		[
+			140
+		]
 	],
 	"./2.js": [
 		5,
-		140
+		[
+			140
+		]
 	]
 };
 function webpackAsyncContext(req) {
 	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(() => {
-			var e = new Error("Cannot find module '" + req + "'");
-			e.code = 'MODULE_NOT_FOUND';
-			throw e;
-		});
+	var e = new Error("Cannot find module '" + req + "'");
+	e.code = 'MODULE_NOT_FOUND';
+	throw e;
+});
 	}
 
 	var ids = map[req], id = ids[0];
-	return __webpack_require__.e(ids[1]).then(() => {
-		return __webpack_require__.t(id, 7 | 16);
-	});
+	return __webpack_require__.e(ids[1][0]).then(() => (__webpack_require__.t(id, 7 | 16)));
 }
 webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 2;
@@ -404,7 +410,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Unoptimized
 
 ```
-asset output.js 13.8 KiB [emitted] (name: main)
+asset output.js 13.9 KiB [emitted] (name: main)
 asset 140.output.js 284 bytes [emitted]
 asset 197.output.js 284 bytes [emitted]
 asset 414.output.js 276 bytes [emitted]
@@ -441,7 +447,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.87 KiB [emitted] [minimized] (name: main)
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
 asset 140.output.js 66 bytes [emitted] [minimized]
 asset 197.output.js 66 bytes [emitted] [minimized]
 asset 414.output.js 66 bytes [emitted] [minimized]
