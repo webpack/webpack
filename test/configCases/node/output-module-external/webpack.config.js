@@ -5,11 +5,16 @@ const { DefinePlugin } = require("../../../../");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",
+	entry: {
+		require: "./require.js",
+		import: "./import.js"
+	},
 	experiments: {
 		outputModule: true
 	},
 	output: {
-		module: true
+		module: true,
+		filename: "[name].mjs"
 	},
 	plugins: [
 		new DefinePlugin({

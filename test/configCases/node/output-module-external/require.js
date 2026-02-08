@@ -38,50 +38,6 @@ const v8 = require("v8");
 const vm = require("vm");
 const zlib = require("zlib");
 
-const builtinImports = {
-	assert: assertBuiltin,
-	async_hooks: asyncHooks,
-	buffer,
-	child_process: childProcess,
-	cluster,
-	console: consoleBuiltin,
-	constants,
-	crypto,
-	dgram,
-	dns,
-	domain,
-	events,
-	fs,
-	http,
-	http2,
-	https,
-	inspector,
-	module: moduleBuiltin,
-	net,
-	os,
-	path,
-	perf_hooks: perfHooks,
-	process: processBuiltin,
-	punycode,
-	querystring,
-	readline,
-	repl,
-	stream,
-	string_decoder: stringDecoder,
-	sys,
-	timers,
-	tls,
-	trace_events: traceEvents,
-	tty,
-	url,
-	util,
-	v8,
-	vm,
-	zlib
-};
-
-const baseBuiltinCount = Object.keys(builtinImports).length;
-
 // diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
 const diagnosticsChannel =
 	NODE_VERSION >= 14 ? require("diagnostics_channel") : undefined;
@@ -114,28 +70,6 @@ const timersPromises =
 const assertStrict = NODE_VERSION >= 15 ? require("assert/strict") : undefined;
 const fsPromises = NODE_VERSION >= 14 ? require("fs/promises") : undefined;
 
-const optionalBuiltins = [
-	["diagnostics_channel", diagnosticsChannel],
-	["readline/promises", readlinePromises],
-	["stream/consumers", streamConsumers],
-	["stream/promises", streamPromises],
-	["stream/web", streamWeb],
-	["timers/promises", timersPromises],
-	["wasi", wasi],
-	["worker_threads", workerThreads],
-	["inspector/promises", inspectorPromises],
-	["dns/promises", dnsPromises],
-	["path/posix", pathPosix],
-	["path/win32", pathWin32],
-	["util/types", utilTypes],
-	["assert/strict", assertStrict],
-	["fs/promises", fsPromises]
-];
-
-for (const [request, imported] of optionalBuiltins) {
-	if (imported) builtinImports[request] = imported;
-}
-
 const itIfAvailable = (imported) =>
 	imported
 		? (desc, fn) =>
@@ -145,24 +79,6 @@ const itIfAvailable = (imported) =>
 		: () => {
 				// skip
 			};
-
-const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-it("should generate import statement for built-in module in node", () => {
-	const content = fs.readFileSync(__filename, "utf-8");
-
-	expect(Object.keys(builtinImports)).toHaveLength(
-		baseBuiltinCount +
-			optionalBuiltins.filter(([, imported]) => Boolean(imported)).length
-	);
-
-	for (const [request, imported] of Object.entries(builtinImports)) {
-		expect(imported).toBeDefined();
-		expect(content).toMatch(
-			new RegExp(`import[^;]*from\\s+[\"']${escapeRegExp(request)}[\"']`)
-		);
-	}
-});
 
 it("should assert equality", () => {
 	expect(() => assertBuiltin.strictEqual(1, 1)).not.toThrow();
@@ -241,7 +157,10 @@ it("should create domain (domain)", () => {
 
 it("should create event emitter (events)", () => {
 	const emitter = new events.EventEmitter();
+	const emitter2 = new events();
 	expect(emitter).toBeDefined();
+	expect(emitter2).toBeDefined();
+	expect(events.EventEmitter === events).toBe(true)
 });
 
 it("should check if file exists (fs)", () => {
