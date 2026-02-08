@@ -5684,8 +5684,63 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: ExternalsType, externals: Externals);
-	type: ExternalsType;
+	constructor(
+		type:
+			| "import"
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs"
+			| "commonjs2"
+			| "commonjs-module"
+			| "commonjs-static"
+			| "amd"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+			| "promise"
+			| "module-import"
+			| "script"
+			| "node-commonjs"
+			| "asset"
+			| "css-import"
+			| "css-url"
+			| ((dependency: Dependency) => ExternalsType),
+		externals: Externals
+	);
+	type:
+		| "import"
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "commonjs-static"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| "promise"
+		| "module-import"
+		| "script"
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url"
+		| ((dependency: Dependency) => ExternalsType);
 	externals: Externals;
 
 	/**
