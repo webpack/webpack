@@ -186,7 +186,7 @@
     "three": "^0.182.0",
     "tinybench": "^6.0.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.24.5",
+    "tooling": "bjohansebas/tooling-webpack#deprecated-linter",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
