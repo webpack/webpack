@@ -232,8 +232,7 @@ or are automatically applied via regex from your webpack configuration.
 
 ### Performance
 
-Webpack uses async I/O and has multiple caching levels. This makes webpack fast
-and incredibly **fast** on incremental compilations.
+Webpack uses async I/O and has multiple caching levels.This makes webpack fast and incredibly efficient on incremental compilations.
 
 ### Module Formats
 
