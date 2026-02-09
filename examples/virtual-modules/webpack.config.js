@@ -39,6 +39,7 @@ const config = (env = "development") => ({
 				// Re-evaluate this value at each compilation, useful when getting a value from a variable
 				version: true
 			},
+			"hello.ts": "export const hello = 'hello';",
 			"my-json-modules": {
 				type: ".json",
 				source: () => '{"name": "virtual-url-plugin"}'
