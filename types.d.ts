@@ -5304,7 +5304,7 @@ type ExportModeType =
 	| "reexport-undefined"
 	| "normal-reexport"
 	| "dynamic-reexport";
-type ExportPresenceMode = false | 0 | 1 | 2 | 3;
+type ExportPresenceMode = 0 | 1 | 2 | 3;
 declare interface ExportSpec {
 	/**
 	 * the name of the export
