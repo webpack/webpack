@@ -6,12 +6,14 @@ import myAsyncMessage from "virtual:my-async-module";
 import { version } from "virtual:build-info";
 import json from "virtual:my-json-modules";
 import value from "virtual:my-typescript-module";
+import { hello } from "virtual:hello.ts";
 
 console.log(msg); // Output `from virtual module`
 console.log(myAsyncMessage); // Output `async-value`
 console.log(version); // Output value of `1.0.0`
 console.log(json.name); // Output `virtual-url-plugin`
 console.log(value); // Output `value-from-typescript`
+console.log(hello); // Output `hello`
 
 import { routes } from "virtual:routes";
 
@@ -97,6 +99,7 @@ const config = (env = "development") => ({
 				// Re-evaluate this value at each compilation, useful when getting a value from a variable
 				version: true
 			},
+			"hello.ts": "export const hello = 'hello';",
 			"my-json-modules": {
 				type: ".json",
 				source: () => '{"name": "virtual-url-plugin"}'
@@ -173,9 +176,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var virtual_build_info__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! virtual:build-info */ 3);
 /* harmony import */ var virtual_my_json_modules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! virtual:my-json-modules */ 4);
 /* harmony import */ var virtual_my_typescript_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! virtual:my-typescript-module */ 5);
-/* harmony import */ var virtual_routes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! virtual:routes */ 6);
-/* harmony import */ var virtual_code_from_file__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! virtual:code-from-file */ 7);
-/* harmony import */ var my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! my-custom-scheme:my-module */ 8);
+/* harmony import */ var virtual_hello_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! virtual:hello.ts */ 6);
+/* harmony import */ var virtual_routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! virtual:routes */ 7);
+/* harmony import */ var virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! virtual:code-from-file */ 8);
+/* harmony import */ var my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! my-custom-scheme:my-module */ 9);
+
 
 
 
@@ -187,11 +192,12 @@ console.log(virtual_my_async_module__WEBPACK_IMPORTED_MODULE_1__["default"]); //
 console.log(virtual_build_info__WEBPACK_IMPORTED_MODULE_2__.version); // Output value of `1.0.0`
 console.log(virtual_my_json_modules__WEBPACK_IMPORTED_MODULE_3__.name); // Output `virtual-url-plugin`
 console.log(virtual_my_typescript_module__WEBPACK_IMPORTED_MODULE_4__["default"]); // Output `value-from-typescript`
+console.log(virtual_hello_ts__WEBPACK_IMPORTED_MODULE_5__.hello); // Output `hello`
 
 
 
 async function loadRoute(route) {
-	return (await virtual_routes__WEBPACK_IMPORTED_MODULE_5__.routes[route]()).default;
+	return (await virtual_routes__WEBPACK_IMPORTED_MODULE_6__.routes[route]()).default;
 }
 
 console.log(await loadRoute("a")); // Output `a`
@@ -199,12 +205,12 @@ console.log(await loadRoute("b")); // Output `b`
 
 
 
-console.log(virtual_code_from_file__WEBPACK_IMPORTED_MODULE_6__.first); // Output `first`
-console.log(virtual_code_from_file__WEBPACK_IMPORTED_MODULE_6__.second); // Output `second`
+console.log(virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__.first); // Output `first`
+console.log(virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__.second); // Output `second`
 
 
 
-console.log(my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_7__["default"]); // Output `from virtual module with custom scheme`
+console.log(my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__["default"]); // Output `from virtual module with custom scheme`
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
@@ -293,6 +299,24 @@ exports["default"] = value;
 
 /***/ }),
 /* 6 */
+/*!************************!*\
+  !*** virtual:hello.ts ***!
+  \************************/
+/*! flagged exports */
+/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export hello [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports__ */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hello = void 0;
+exports.hello = 'hello';
+
+
+/***/ }),
+/* 7 */
 /*!**********************!*\
   !*** virtual:routes ***!
   \**********************/
@@ -306,11 +330,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   routes: () => (/* binding */ routes)
 /* harmony export */ });
-const routes = {a: () => __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/a.js */ 9)),
-b: () => __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/b.js */ 10))}
+const routes = {a: () => __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/a.js */ 10)),
+b: () => __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/b.js */ 11))}
 
 /***/ }),
-/* 7 */
+/* 8 */
 /*!******************************!*\
   !*** virtual:code-from-file ***!
   \******************************/
@@ -333,7 +357,7 @@ const second = "second";
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /*!**********************************!*\
   !*** my-custom-scheme:my-module ***!
   \**********************************/
@@ -585,14 +609,14 @@ const msg = "from virtual module with custom scheme";
 ## Unoptimized
 
 ```
-asset output.js 16.7 KiB [emitted] (name: main)
+asset output.js 17.4 KiB [emitted] (name: main)
+asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
-asset 1.output.js 802 bytes [emitted]
-chunk (runtime: main) output.js (main) 1.46 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.66 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 514 bytes [dependent] 8 modules
+  dependent modules 640 bytes [dependent] 9 modules
   runtime modules 4.21 KiB 7 modules
-  ./example.js 977 bytes [built] [code generated]
+  ./example.js 1.03 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
@@ -614,7 +638,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.49 KiB [emitted] [minimized] (name: main)
+asset output.js 2.55 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 118 bytes [emitted] [minimized]
 asset 722.output.js 118 bytes [emitted] [minimized]
 chunk (runtime: main) 263.output.js 20 bytes [rendered]
@@ -627,11 +651,11 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 1.46 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.66 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 514 bytes [dependent] 8 modules
+  dependent modules 640 bytes [dependent] 9 modules
   runtime modules 4.21 KiB 7 modules
-  ./example.js 977 bytes [built] [code generated]
+  ./example.js 1.03 KiB [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
