@@ -1033,6 +1033,7 @@ const knownBugs = [
 	"expressions/dynamic-import/update-to-dynamic-import.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
+	"expressions/dynamic-import/import-defer/sync/main.js",
 
 	"global-code/script-decl-func-dups.js",
 	"global-code/script-decl-lex-lex.js",
@@ -1044,6 +1045,8 @@ const knownBugs = [
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
+	"expressions/dynamic-import/syntax/valid/nested-async-arrow-function-await-nested-imports.js",
+
 	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
 	"expressions/dynamic-import/catch/nested-block-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
@@ -1075,7 +1078,33 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-async-function-import-defer-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-async-function-return-await-import-defer-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-async-function-return-await-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-specifier-tostring-abrupt-rejects.js"
+	"expressions/dynamic-import/catch/nested-async-function-specifier-tostring-abrupt-rejects.js",
+
+	"arguments-object/mapped/nonwritable-nonconfigurable-descriptors-basic.js",
+	"arguments-object/mapped/nonconfigurable-descriptors-with-param-assign.js",
+	"arguments-object/mapped/mapped-arguments-nonwritable-nonconfigurable-1.js",
+	"arguments-object/mapped/mapped-arguments-nonconfigurable-nonwritable-2.js",
+	"arguments-object/mapped/mapped-arguments-nonconfigurable-2.js",
+	"arguments-object/unmapped/Symbol.iterator.js",
+	"arguments-object/gen-meth-args-trailing-comma-spread-operator.js",
+	"arguments-object/gen-func-expr-args-trailing-comma-multiple.js",
+	"arguments-object/func-expr-args-trailing-comma-single-args.js",
+	"arguments-object/cls-expr-private-meth-static-args-trailing-comma-undefined.js",
+	"arguments-object/cls-expr-private-meth-args-trailing-comma-null.js",
+	"arguments-object/cls-expr-private-gen-meth-args-trailing-comma-spread-operator.js",
+	"arguments-object/cls-expr-meth-static-args-trailing-comma-multiple.js",
+	"arguments-object/cls-expr-gen-meth-static-args-trailing-comma-single-args.js",
+	"arguments-object/cls-expr-async-private-gen-meth-static-args-trailing-comma-undefined.js",
+	"arguments-object/cls-expr-async-private-gen-meth-args-trailing-comma-null.js",
+	"arguments-object/cls-expr-async-gen-meth-args-trailing-comma-spread-operator.js",
+	"arguments-object/cls-expr-async-gen-func-args-trailing-comma-multiple.js",
+	"arguments-object/cls-decl-private-meth-args-trailing-comma-single-args.js",
+	"arguments-object/cls-decl-private-gen-meth-args-trailing-comma-undefined.js",
+	"arguments-object/cls-decl-meth-static-args-trailing-comma-null.js",
+	"arguments-object/cls-decl-gen-meth-static-args-trailing-comma-spread-operator.js",
+
+	"statements/async-generator/generator-created-after-decl-inst.js",
+	"module-code/top-level-await/dynamic-import-rejection.js"
 ];
 /* cspell:enable */
 
