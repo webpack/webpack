@@ -28,4 +28,13 @@ updates:
     groups:
       dependencies:
         patterns:
-          - "*"
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    labels:
+      - dependencies
+    groups:
+      dependencies:
+        patterns:
