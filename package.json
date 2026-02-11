@@ -53,7 +53,7 @@
     "pretest": "yarn lint",
     "test": "yarn test:base",
     "test:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
-    "test:base:test262": "node --max-old-space-size=8192 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
+    "test:base:test262": "node --max-old-space-size=16384 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
     "test:basic": "yarn test:base --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:basic:deno": "yarn test:base:deno --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:unit": "yarn test:base --testMatch \"<rootDir>/test/*.unittest.js\"",
