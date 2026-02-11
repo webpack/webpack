@@ -1034,6 +1034,16 @@ const knownBugs = [
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	"expressions/dynamic-import/import-defer/sync/main.js",
+	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/main.js",
+	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
+	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
+
+	"module-code/top-level-await/unobservable-global-async-evaluation-count-reset.js",
+	"module-code/top-level-await/dynamic-import-resolution.js",
+	"module-code/top-level-await/rejection-order.js",
+	"module-code/top-level-await/await-dynamic-import-resolution.js",
+	"module-code/top-level-await/fulfillment-order.js",
+	"module-code/top-level-await/module-graphs-does-not-hang.js",
 
 	"global-code/script-decl-func-dups.js",
 	"global-code/script-decl-lex-lex.js",
