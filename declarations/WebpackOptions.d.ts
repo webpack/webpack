@@ -1896,7 +1896,7 @@ export interface WebpackPluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: import("../lib/webpack").WebpackPluginInstance;
+	apply: import("../lib/webpack").WebpackPluginInstanceApplyFunction;
 	[k: string]: any;
 }
 /**

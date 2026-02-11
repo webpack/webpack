@@ -6049,7 +6049,7 @@
         "apply": {
           "description": "The run point of the plugin, required method.",
           "instanceof": "Function",
-          "tsType": "import('../lib/webpack').WebpackPluginInstance"
+          "tsType": "import('../lib/webpack').WebpackPluginInstanceApplyFunction"
         }
       },
       "required": ["apply"]
