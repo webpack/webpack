@@ -12432,8 +12432,8 @@ declare interface Optimization {
 		| ""
 		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
 
 	/**
@@ -12576,8 +12576,8 @@ declare interface OptimizationNormalized {
 	 */
 	minimizer?: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
 
 	/**
@@ -12696,8 +12696,8 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	minimize: NonNullable<undefined | boolean>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
 	nodeEnv: NonNullable<undefined | string | false>;
 };
@@ -19890,7 +19890,6 @@ declare namespace exports {
 		this: Compiler,
 		compiler: Compiler
 	) => void;
-	export type WebpackPluginInstance = (compiler: Compiler) => void;
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
 		callback: (
@@ -20013,6 +20012,7 @@ declare namespace exports {
 		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
+		WebpackPluginInstance,
 		ChunkGroup,
 		AssetEmittedInfo,
 		Asset,
