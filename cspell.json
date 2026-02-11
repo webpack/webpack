@@ -8,6 +8,7 @@
     "amdmodule",
     "analyse",
     "analysed",
+    "argjson",
     "asmjs",
     "assemblyscript",
     "asyncloader",

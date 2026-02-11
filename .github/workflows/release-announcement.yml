@@ -15,25 +15,12 @@ jobs:
       - name: Set Release Context
         run: |
           RELEASE_JSON=$(gh release view --json body,tagName,url,name)
-          BODY=$(echo "$RELEASE_JSON" | jq -r .body)
-          NAME=$(echo "$RELEASE_JSON" | jq -r .name)
-          TAG=$(echo "$RELEASE_JSON" | jq -r .tagName)
-          URL=$(echo "$RELEASE_JSON" | jq -r .url)
 
-          echo "{
-            \"action\": \"published\",
-            \"release\": {
-              \"body\": $(echo "$RELEASE_JSON" | jq .body),
-              \"name\": \"${NAME:-$TAG}\",
-              \"html_url\": \"$URL\"
-            }
-          }" > $HOME/event_payload.json
+          jq --argjson rel "$RELEASE_JSON" '. + {release: $rel}' "$GITHUB_EVENT_PATH" > "$GITHUB_EVENT_PATH.tmp" && mv "$GITHUB_EVENT_PATH.tmp" "$GITHUB_EVENT_PATH"
 
-          echo "--- DEBUG: Generated Event Payload ---"
-          cat $HOME/event_payload.json
-          echo "---------------------------------------"
-
-          echo "GITHUB_EVENT_PATH=$HOME/event_payload.json" >> $GITHUB_ENV
+          echo "--- DEBUG: System Event File Content ($GITHUB_EVENT_PATH) ---"
+          cat "$GITHUB_EVENT_PATH"
+          echo "--------------------------------------------------------"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
