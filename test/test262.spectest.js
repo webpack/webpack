@@ -1081,8 +1081,12 @@ const testFiles = fs
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
 describe("test262", () => {
+	let index = 0;
+
 	beforeEach(() => {
-		if (global.gc) {
+		index++;
+
+		if (index % 500 === 0 && global.gc) {
 			global.gc();
 		}
 	});
