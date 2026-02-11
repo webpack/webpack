@@ -404,8 +404,6 @@ const create262Host = () => {
 	const sandbox = vm.runInNewContext("this");
 	const context = vm.createContext(sandbox);
 
-	vm.runInContext("/* init */", context);
-
 	const host = {
 		global: context,
 		evalScript(code, options = {}) {
@@ -1083,6 +1081,12 @@ const testFiles = fs
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
 describe("test262", () => {
+	beforeEach(() => {
+		if (global.gc) {
+			global.gc();
+		}
+	});
+
 	for (const testFile of testFiles) {
 		const name = path.posix.relative(baseDir, testFile);
 

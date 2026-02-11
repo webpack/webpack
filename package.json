@@ -52,13 +52,12 @@
     "benchmark": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
     "pretest": "yarn lint",
     "test": "yarn test:base",
-    "test:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
-    "test:base:test262": "node --max-old-space-size=16384 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage",
+    "test:base": "node --inspect-brk --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test:basic": "yarn test:base --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:basic:deno": "yarn test:base:deno --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:unit": "yarn test:base --testMatch \"<rootDir>/test/*.unittest.js\"",
     "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
-    "test:test262": "yarn test:base:test262 --testMatch \"<rootDir>/test/*.spectest.js\"",
+    "test:test262": "yarn test:base --testMatch \"<rootDir>/test/*.spectest.js\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
     "report:cover": "nyc report --reporter=lcov  --reporter=text -t coverage",
@@ -74,7 +73,7 @@
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
     "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
-    "cover:test262": "yarn test:base:test262 --testMatch \"<rootDir>/test/*.spectest.js\" --coverage"
+    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/*.spectest.js\" --coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
