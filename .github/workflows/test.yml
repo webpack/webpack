@@ -160,10 +160,6 @@ jobs:
 
   test262:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -195,15 +191,11 @@ jobs:
           ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
 
       - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
-        env:
-          SHARD_INDEX: ${{ matrix.shard }}
-          SHARD_TOTAL: ${{ strategy.job-total }}
 
       - name: Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
-          flags: test262-${{ matrix.shard }}
-          name: test262-shard-${{ matrix.shard }}
+          flags: test262
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
