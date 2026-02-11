@@ -21,14 +21,19 @@ jobs:
           URL=$(echo "$RELEASE_JSON" | jq -r .url)
 
           echo "{
+            \"action\": \"published\",
             \"release\": {
               \"body\": $(echo "$RELEASE_JSON" | jq .body),
               \"name\": \"${NAME:-$TAG}\",
               \"html_url\": \"$URL\"
             }
-          }" > $HOME/mock_event.json
+          }" > $HOME/event_payload.json
 
-          echo "GITHUB_EVENT_PATH=$HOME/mock_event.json" >> $GITHUB_ENV
+          echo "--- DEBUG: Generated Event Payload ---"
+          cat $HOME/event_payload.json
+          echo "---------------------------------------"
+
+          echo "GITHUB_EVENT_PATH=$HOME/event_payload.json" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
