@@ -1273,7 +1273,6 @@ describe("test262", () => {
 					}
 
 					if (meta.negative && meta.negative.phase === "runtime") {
-						console.log("HERE");
 						throw new Error(
 							`Error in test file "${outputFile}" ("${testFile}"), expected runtime error`
 						);
