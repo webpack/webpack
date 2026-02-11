@@ -1111,7 +1111,7 @@ describe("test262", () => {
 			// eslint-disable-next-line jest/no-disabled-tests
 			it.skip(name, () => {});
 
-			return;
+			continue;
 		}
 
 		const outputPath = path.resolve(
