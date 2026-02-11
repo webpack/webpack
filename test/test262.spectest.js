@@ -1123,16 +1123,6 @@ const testFiles = fs
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
 describe("test262", () => {
-	let index = 0;
-
-	beforeEach(() => {
-		index++;
-
-		if (index % 500 === 0 && global.gc) {
-			global.gc();
-		}
-	});
-
 	for (const [i, testFile] of Object.entries(testFiles)) {
 		const name = path.posix.relative(baseDir, testFile);
 
