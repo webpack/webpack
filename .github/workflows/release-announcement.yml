@@ -3,6 +3,7 @@ name: Release Announcement
 on:
   release:
     types: [published]
+  workflow_dispatch:
   workflow_call:
 
 jobs:
