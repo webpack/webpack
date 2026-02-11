@@ -9,6 +9,9 @@ const vm = require("vm");
 const webpack = require("..");
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
+const shardIndex = Number.parseInt(process.env.SHARD_INDEX || "1", 10);
+const shardTotal = Number.parseInt(process.env.SHARD_TOTAL || "1", 10);
+
 const outputFileSystem = needDebug
 	? require("fs")
 	: (() => {
@@ -1091,8 +1094,14 @@ describe("test262", () => {
 		}
 	});
 
-	for (const testFile of testFiles) {
+	for (const [i, testFile] of Object.entries(testFiles)) {
 		const name = path.posix.relative(baseDir, testFile);
+
+		const shouldRun = i % shardTotal === shardIndex - 1;
+
+		if (!shouldRun) {
+			continue;
+		}
 
 		// For debug purposes
 		// if (
@@ -1145,6 +1154,10 @@ describe("test262", () => {
 
 		for (const scenario of scenarios) {
 			it(`${name} ("${scenario}")`, async () => {
+				if (needDebug) {
+					process.stdout.write(`Running ${name} ("${scenario}")\n`);
+				}
+
 				const stats = await compile(testFile, scenario, {
 					output: {
 						path: outputPath,
@@ -1303,7 +1316,11 @@ describe("test262", () => {
 						}
 					);
 				}
-			});
+
+				if (needDebug) {
+					process.stdout.write(`Finished ${name} ("${scenario}")\n`);
+				}
+			}, 60000);
 		}
 	}
 });

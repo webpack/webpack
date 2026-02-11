@@ -194,12 +194,16 @@ jobs:
           path: test/js/test262
           ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
 
-      - run: yarn cover:test262 --ci --cacheDirectory .jest-cache --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+      - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
+        env:
+          SHARD_INDEX: ${{ matrix.shard }}
+          SHARD_TOTAL: ${{ strategy.job-total }}
 
       - name: Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
-          flags: test262
+          flags: test262-${{ matrix.shard }}
+          name: test262-shard-${{ matrix.shard }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
