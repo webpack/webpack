@@ -1,5 +1,11 @@
 # webpack
 
+## 5.105.2
+
+### Patch Changes
+
+- Fixed `WebpackPluginInstance` type regression. (by [@alexander-akait](https://github.com/alexander-akait) in [#20440](https://github.com/webpack/webpack/pull/20440))
+
 ## 5.105.1
 
 ### Patch Changes
