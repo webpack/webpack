@@ -133,7 +133,7 @@
     "date-fns": "^4.0.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-webpack": "^4.9.1",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
