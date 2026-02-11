@@ -11,6 +11,37 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
+      - name: Set Release Context
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        id: set_release_context
+        with:
+          script: |
+            const { stdout } = await exec.getExecOutput('gh release view --json body,tagName,url,name');
+            const releaseData = JSON.parse(stdout);
+            const getContext = () => {
+              const release = context.payload.release || {
+                body: releaseData.body,
+                name: releaseData.name || releaseData.tagName,
+                html_url: releaseData.url
+              };
+
+              return {
+                body: release.body,
+                name: release.name,
+                html_url: release.html_url
+              };
+            };
+
+            const payload = getContext();
+
+            core.setOutput('body', payload.body);
+            core.setOutput('name', payload.name);
+            core.setOutput('html_url', payload.html_url);
+
+            console.log("Emulated Context:", payload);
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: GitHub Releases to Discord
         uses: SethCohen/github-releases-to-discord@b96a33520f8ad5e6dcdecee6f1212bdf88b16550 # v1.19.0
         with:
