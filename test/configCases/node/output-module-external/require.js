@@ -37,6 +37,7 @@ const util = require("util");
 const v8 = require("v8");
 const vm = require("vm");
 const zlib = require("zlib");
+const stream2 = require("./stream");
 
 // diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
 const diagnosticsChannel =
@@ -160,7 +161,7 @@ it("should create event emitter (events)", () => {
 	const emitter2 = new events();
 	expect(emitter).toBeDefined();
 	expect(emitter2).toBeDefined();
-	expect(events.EventEmitter === events).toBe(true)
+	expect(events.EventEmitter).toBe(events)
 });
 
 it("should check if file exists (fs)", () => {
@@ -267,6 +268,7 @@ it("should start repl (repl)", () => {
 
 it("should create readable stream (stream)", () => {
 	const readable = new stream.Readable();
+	expect(stream2).toBe(stream)
 	expect(readable).toBeDefined();
 });
 
