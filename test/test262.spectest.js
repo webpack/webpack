@@ -373,7 +373,7 @@ const getTest262Meta = (content) => {
 	return { features, flags, includes, negative };
 };
 
-const createRequire = (currentDir) =>
+const createRequire = (currentDir, context) =>
 	function require(modulePath) {
 		const resolvedPath = path.resolve(
 			currentDir,
@@ -387,7 +387,7 @@ const createRequire = (currentDir) =>
 
 		const wrapper = vm.runInNewContext(
 			`(function(exports, require, module, __filename, __dirname) { ${code} \n})`,
-			{ console, Error, ReferenceError, TypeError }
+			context
 		);
 
 		wrapper(
@@ -422,22 +422,45 @@ const create262Host = () => {
 	return host;
 };
 
-const runModule = async (context, code, identifier) => {
+const createImportModuleDynamically =
+	(context, testFile, moduleCache) => async (specifier, referencing) => {
+		const identifier = referencing.identifier
+			? path.resolve(path.dirname(referencing.identifier), specifier)
+			: path.resolve(path.dirname(testFile), specifier);
+
+		if (moduleCache.has(identifier)) {
+			return moduleCache.get(identifier);
+		}
+
+		const code = await outputFileSystem.promises.readFile(identifier, "utf8");
+		const module = new vm.SourceTextModule(code, {
+			context,
+			identifier,
+			importModuleDynamically: createImportModuleDynamically(
+				context,
+				testFile,
+				moduleCache
+			)
+		});
+
+		moduleCache.set(identifier, module);
+
+		await module.link(
+			createImportModuleDynamically(context, testFile, moduleCache)
+		);
+
+		return module;
+	};
+
+const runModule = async (context, code, identifier, testFile, moduleCache) => {
 	const module = new vm.SourceTextModule(code, {
 		context,
 		identifier,
-		importModuleDynamically: async (specifier, referencingModule) => {
-			const depIdentifier = path.resolve(
-				path.dirname(referencingModule.identifier),
-				specifier
-			);
-			const depCode = await outputFileSystem.promises.readFile(
-				depIdentifier,
-				"utf8"
-			);
-
-			return runModule(context, depCode, depIdentifier);
-		},
+		importModuleDynamically: createImportModuleDynamically(
+			context,
+			testFile,
+			moduleCache
+		),
 		initializeImportMeta: (meta) => {
 			meta.url = url.pathToFileURL(identifier).toString();
 		}
@@ -449,11 +472,23 @@ const runModule = async (context, code, identifier) => {
 	return module;
 };
 
-const runScript = (context, code, identifier, options = {}) => {
+const runScript = (
+	context,
+	code,
+	identifier,
+	testFile,
+	moduleCache,
+	options = {}
+) => {
 	const script = new vm.Script(code, {
 		filename: identifier,
 		lineOffset: options.lineOffset || 0,
-		columnOffset: options.columnOffset || 0
+		columnOffset: options.columnOffset || 0,
+		importModuleDynamically: createImportModuleDynamically(
+			context,
+			testFile,
+			moduleCache
+		)
 	});
 
 	script.runInContext(context, {
@@ -497,6 +532,10 @@ const knownBugs = [
 	// Bug with `Object.preventExtensions` and classes
 	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
 	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
+	// Bug in `g.prototype` on V8 side
+	"statements/async-generator/generator-created-after-decl-inst.js",
+	// V8 optimization bug
+	"statements/variable/binding-resolution.js",
 
 	// acorn bugs
 	"identifiers/part-unicode-17.0.0-class-escaped.js",
@@ -609,28 +648,15 @@ const knownBugs = [
 	"expressions/dynamic-import/syntax/invalid/nested-while-import-defer-no-new-call-expression.js",
 	"expressions/dynamic-import/syntax/invalid/nested-with-expression-import-defer-no-new-call-expression.js",
 
-	// Do we use `import()` to load modules even if our output is not ECMA modules, when `import()` is supported?
-	"expressions/dynamic-import/usage/nested-arrow-assignment-expression-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-arrow-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-arrow-function-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-arrow-function-return-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-function-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-function-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-function-return-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-gen-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-async-gen-return-await-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-block-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-do-while-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-else-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-function-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-if-braceless-eval-gtbndng-indirect-update.js",
-
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
 	"module-code/namespace/internals/own-property-keys-binding-types.js",
 	"module-code/namespace/internals/own-property-keys-sort.js",
 
 	// Potential improvement for enumerate
 	"module-code/namespace/internals/enumerate-binding-uninit.js",
+
+	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
+	"expressions/class/elements/class-name-static-initializer-default-export.js",
 
 	// `import.source()` is not supported yet
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-import-source-source-text-module.js",
@@ -670,12 +696,6 @@ const knownBugs = [
 	"eval-code/direct/var-env-var-init-global-exstng.js",
 
 	// improve test runner
-	"expressions/dynamic-import/usage/nested-if-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/nested-while-import-then-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/syntax-nested-block-labeled-eval-gtbndng-indirect-update.js",
-	"expressions/dynamic-import/usage/top-level-import-then-eval-gtbndng-indirect-update.js",
-
-	// improve test runner
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--19.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--21.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--3.js",
@@ -687,6 +707,9 @@ const knownBugs = [
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--13.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--15.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--17.js",
+
+	// improve test runner
+	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
 	// investigate
 	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
@@ -785,10 +808,6 @@ const knownBugs = [
 	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
 	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
 
-	"statements/variable/binding-resolution.js",
-
-	"expressions/class/elements/class-name-static-initializer-default-export.js",
-
 	"global-code/decl-func.js",
 	"global-code/script-decl-func-err-non-configurable.js",
 	"global-code/script-decl-func-err-non-extensible.js",
@@ -874,11 +893,9 @@ const knownBugs = [
 	"statements/async-function/evaluation-body.js",
 	"statements/async-function/evaluation-default-that-throws.js",
 
-	"module-code/top-level-await/dynamic-import-of-waiting-module.js",
 	"module-code/top-level-await/module-import-rejection-body.js",
 	"module-code/top-level-await/module-import-rejection-tick.js",
 	"module-code/top-level-await/module-import-rejection.js",
-	"module-code/top-level-await/syntax/await-expr-dyn-import.js",
 
 	"module-code/eval-export-dflt-cls-anon.js",
 	"module-code/eval-export-dflt-expr-cls-anon.js",
@@ -1022,13 +1039,11 @@ const knownBugs = [
 	"expressions/dynamic-import/eval-export-dflt-expr-cls-anon.js",
 	"expressions/dynamic-import/eval-export-dflt-expr-fn-anon.js",
 	"expressions/dynamic-import/eval-export-dflt-expr-gen-anon.js",
-	"expressions/dynamic-import/eval-rqstd-once.js",
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/returns-promise.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
-	"expressions/dynamic-import/update-to-dynamic-import.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	"expressions/dynamic-import/import-defer/sync/main.js",
@@ -1054,8 +1069,7 @@ const knownBugs = [
 
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
-	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
-
+	// We need to wrap `__webpack_require__.o(map, req)` in try/catch
 	"expressions/dynamic-import/catch/nested-block-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-block-import-catch-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-block-labeled-import-defer-specifier-tostring-abrupt-rejects.js",
@@ -1074,10 +1088,8 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/top-level-import-catch-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/assignment-expression/cover-parenthesized-expr.js",
 	"expressions/dynamic-import/assignment-expression/import-meta.js",
-
 	"expressions/dynamic-import/import-attributes/2nd-param-trailing-comma-reject.js",
 	"expressions/dynamic-import/import-attributes/trailing-comma-reject.js",
-
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-import-defer-specifier-tostring-abrupt-rejects.js",
@@ -1087,7 +1099,7 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-async-function-return-await-specifier-tostring-abrupt-rejects.js",
 	"expressions/dynamic-import/catch/nested-async-function-specifier-tostring-abrupt-rejects.js",
 
-	"statements/async-generator/generator-created-after-decl-inst.js",
+	// Looks like a bug in webpack
 	"module-code/top-level-await/dynamic-import-rejection.js"
 ];
 /* cspell:enable */
@@ -1183,6 +1195,11 @@ describe("test262", () => {
 
 				const isAsync = meta.flags.includes("async");
 
+				const moduleCache = new Map();
+				const sandbox = Object.create(null);
+
+				sandbox.$MAX_ITERATIONS = 1;
+
 				let resolve;
 				let reject;
 				let asyncPromise;
@@ -1192,13 +1209,7 @@ describe("test262", () => {
 						resolve = res;
 						reject = rej;
 					});
-				}
 
-				const sandbox = Object.create(null);
-
-				sandbox.$MAX_ITERATIONS = 1;
-
-				if (isAsync) {
 					sandbox.$DONE = (err) => {
 						if (err) reject(err);
 						else resolve();
@@ -1210,22 +1221,25 @@ describe("test262", () => {
 				// For debug
 				sandbox.console = console;
 
-				if (scenario !== "module") {
-					sandbox.require = createRequire(outputPath);
-				}
-
-				let errored = false;
 				const context = vm.createContext(sandbox, {
 					microtaskMode: "afterEvaluate"
 				});
 
+				if (scenario !== "module") {
+					sandbox.require = createRequire(outputPath, context);
+				}
+
+				let errored = false;
+
 				try {
 					if (scenario === "module") {
-						await runModule(context, code, outputFile);
+						await runModule(context, code, outputFile, testFile, moduleCache);
 					} else {
 						const lineOffset = -codeBefore.split("\n").length;
 
-						runScript(context, code, outputFile, { lineOffset });
+						runScript(context, code, outputFile, testFile, moduleCache, {
+							lineOffset
+						});
 					}
 
 					if (isAsync) {
@@ -1268,13 +1282,17 @@ describe("test262", () => {
 					}
 				}
 
-				if (stats.compilation.warnings.length > 0) {
+				const { warnings, errors } = stats.compilation;
+
+				if (
+					warnings.length > 0 &&
+					// Just syntax test
+					name !== "module-code/top-level-await/syntax/await-expr-dyn-import.js"
+				) {
 					throw new Error(
-						`Warning in test file "${outputFile}" ("${testFile}")`,
+						`Warnings in test file "${outputFile}" ("${testFile}")`,
 						{
-							cause: new Error(
-								`Errors:\n\n${stats.compilation.warnings.join("\n")}`
-							)
+							cause: new Error(`Errors:\n\n${warnings.join("\n")}`)
 						}
 					);
 				}
@@ -1283,24 +1301,20 @@ describe("test262", () => {
 					errored &&
 					meta.negative &&
 					meta.negative.phase === "parse" &&
-					stats.compilation.errors.every(
-						(item) => item.name === "ModuleParseError"
-					)
+					errors.every((item) => item.name === "ModuleParseError")
 				) {
 					context.executed = true;
 				} else if (
 					// By spec `THIS_FILE_DOES_NOT_EXIST.js` file doesn't exist
-					stats.compilation.errors.some(
+					errors.some(
 						(item) =>
 							!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
 					)
 				) {
 					throw new Error(
-						`Error in test file "${outputFile}" ("${testFile}")`,
+						`Errors in test file "${outputFile}" ("${testFile}")`,
 						{
-							cause: new Error(
-								`Errors:\n\n${stats.compilation.errors.join("\n")}`
-							)
+							cause: new Error(`Errors:\n\n${errors.join("\n")}`)
 						}
 					);
 				}
@@ -1308,7 +1322,7 @@ describe("test262", () => {
 				if (needDebug) {
 					process.stdout.write(`Finished ${name} ("${scenario}")\n`);
 				}
-			}, 60000);
+			});
 		}
 	}
 });
