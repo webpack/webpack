@@ -23,7 +23,7 @@ const test262HarnessDir = path.resolve(test262Dir, "./harness");
 
 /* cspell:disable */
 const edgeCases = [
-	// eval test cases requires to be in global scope
+	// eval test cases require to be in global scope
 	"eval-code/indirect/non-definable-global-var.js",
 	"eval-code/indirect/this-value-func.js",
 	"eval-code/indirect/this-value-global.js",
@@ -536,6 +536,68 @@ const knownBugs = [
 	"statements/async-generator/generator-created-after-decl-inst.js",
 	// V8 optimization bug
 	"statements/variable/binding-resolution.js",
+	// Different V8 bugs with `with`
+	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.10_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T3.js",
+	"expressions/compound-assignment/S11.13.2_A6.10_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.11_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.1_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.2_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.3_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.4_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.5_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.6_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.7_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.8_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.9_T1.js",
+	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.1_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.2_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.3_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.4_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.5_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.6_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.7_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.8_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.9_T4.js",
+
+	// V8 bugs with `eval` and global `this`
+	"eval-code/direct/var-env-func-init-global-update-configurable.js",
+	"eval-code/direct/var-env-var-init-global-exstng.js",
 
 	// acorn bugs
 	"identifiers/part-unicode-17.0.0-class-escaped.js",
@@ -548,6 +610,9 @@ const knownBugs = [
 	"identifiers/start-unicode-17.0.0.js",
 	"statements/using/syntax/using-for-statement.js",
 	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
+
+	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
+	"expressions/dynamic-import/returns-promise.js",
 
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
@@ -591,13 +656,13 @@ const knownBugs = [
 	"import/import-defer/evaluation-triggers/ignore-symbol-toStringTag-super-property-define.js",
 	"import/import-defer/evaluation-triggers/trigger-exported-string-delete.js",
 	"import/import-defer/evaluation-triggers/trigger-not-exported-string-delete.js",
-	// Bug with defer and evaluation
+	// Bugs with defer and evaluation
 	"import/import-defer/deferred-namespace-object/identity.js",
 	"import/import-defer/deferred-namespace-object/to-string-tag.js",
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
-	// Bug with using the same module require with defer and without - should we generate two modules here?
+	// Bugs with using the same module require with defer and without - should we generate two modules here?
 	"import/import-defer/errors/module-throws/defer-import-after-evaluation.js",
 	"import/import-defer/errors/module-throws/third-party-evaluation-after-defer-import.js",
 	"import/import-defer/errors/module-throws/trigger-evaluation.js",
@@ -657,45 +722,12 @@ const knownBugs = [
 
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
+	"module-code/eval-export-dflt-cls-anon.js",
+	"module-code/eval-export-dflt-expr-cls-anon.js",
+	"module-code/eval-export-dflt-expr-fn-anon.js",
+	"module-code/eval-export-dflt-expr-gen-anon.js",
 
-	// `import.source()` is not supported yet
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-function-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-function-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-do-while-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-do-while-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-import-source-specifier-tostring.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-import-source-source-text-module.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-import-source-specifier-tostring.js",
-
-	// improve test runner
-	"eval-code/direct/var-env-func-init-global-update-configurable.js",
-	"eval-code/direct/var-env-var-init-global-exstng.js",
-
-	// improve test runner
+	// V8 bugs
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--19.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--21.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--3.js",
@@ -708,10 +740,10 @@ const knownBugs = [
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--15.js",
 	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--17.js",
 
-	// improve test runner
+	// improve test runner to keep dynamic import for such case
 	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
-	// investigate
+	// evals, we need to think how tests them in the right way
 	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
 	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
 	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
@@ -831,76 +863,12 @@ const knownBugs = [
 	"expressions/delete/11.4.1-4.a-8-s.js",
 	"expressions/delete/super-property-uninitialized-this.js",
 
-	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.10_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T3.js",
-	"expressions/compound-assignment/S11.13.2_A6.10_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.11_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.1_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.2_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.3_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.4_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.5_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.6_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.7_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.8_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.9_T1.js",
-	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.1_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.2_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.3_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.4_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.5_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.6_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.7_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.8_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.9_T4.js",
-
 	// Not a bug, we need to improve our test runner
 	"statements/async-function/evaluation-body.js",
-	"statements/async-function/evaluation-default-that-throws.js",
 
 	"module-code/top-level-await/module-import-rejection-body.js",
 	"module-code/top-level-await/module-import-rejection-tick.js",
 	"module-code/top-level-await/module-import-rejection.js",
-
-	"module-code/eval-export-dflt-cls-anon.js",
-	"module-code/eval-export-dflt-expr-cls-anon.js",
-	"module-code/eval-export-dflt-expr-fn-anon.js",
-	"module-code/eval-export-dflt-expr-gen-anon.js",
 
 	"module-code/instn-named-bndng-dflt-gen-anon.js",
 	"module-code/instn-named-bndng-dflt-fun-anon.js",
@@ -1042,7 +1010,6 @@ const knownBugs = [
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
-	"expressions/dynamic-import/returns-promise.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
@@ -1067,6 +1034,7 @@ const knownBugs = [
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
+	// Weird test
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
 	// We need to wrap `__webpack_require__.o(map, req)` in try/catch
