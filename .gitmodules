@@ -1,0 +1,3 @@
+[submodule "test/test262-cases"]
+	path = test/test262-cases
+	url = https://github.com/tc39/test262

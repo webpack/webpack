@@ -158,6 +158,48 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  test262:
+    needs: basic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          submodules: true
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: "latest"
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache jest result
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+        with:
+          path: .jest-cache
+          key: jest-test262-${{ env.GITHUB_SHA }}
+          restore-keys: jest-test262-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: tc39/test262
+          path: test/js/test262
+          ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
+
+      - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
+
+      - name: Codecov
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          flags: test262
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   integration:
     needs: basic
     strategy:
