@@ -50,9 +50,24 @@ const config = {
 				}
 			},
 			"hammer.svg": {
+				context: "",
 				type: ".svg",
 				source() {
 					return fs.readFileSync(path.join(__dirname, "./file.svg"));
+				}
+			},
+			"src/components/button.js":
+				"import { trim } from './utils';export const button = trim('button ');",
+			"src/components/table.js": {
+				context: path.join(__dirname, "./src/components"),
+				source() {
+					return "import { trim } from './utils';export const table = trim('table ');";
+				}
+			},
+			"src/components/icon.js": {
+				context: "auto",
+				source() {
+					return "import { trim } from './utils';export const icon = trim('icon ');";
 				}
 			}
 		})
@@ -79,12 +94,15 @@ const config = {
 			},
 			{
 				test: /\.svg/,
-				type: "asset/resource",
-				generator: {
-					filename: "[name][ext]"
-				}
+				type: "asset/resource"
 			}
 		]
+	},
+	output: {
+		assetModuleFilename: ({ filename: _filename }) => {
+			const filename = /** @type {string} */ (_filename);
+			return filename.replace("virtual:", "");
+		}
 	}
 };
 
