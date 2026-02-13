@@ -6,6 +6,8 @@ import txt from "virtual:txt"
 import { hello } from 'virtual:hello.ts';
 import Hammer from 'virtual:hammer.svg';
 import { button } from 'virtual:src/components/button.js';
+import { table } from 'virtual:src/components/table.js';
+import { icon } from 'virtual:src/components/icon.js';
 
 it("should correctly load virtual modules with the js type.", (done) => {
     expect(typeof routes.bar).toBe("function");
@@ -55,5 +57,7 @@ it("should correctly load virtual modules with the asset/resource type.", (done)
 
 it("should correctly load virtual modules with the js type and custom loader.", (done) => {
     expect(button).toBe("button");
+    expect(table).toBe("table");
+    expect(icon).toBe("icon");
     done();
 });

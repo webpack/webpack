@@ -18539,9 +18539,9 @@ type VariableInfoFlagsType = 0 | 1 | 2 | 4;
  */
 declare interface VirtualModule {
 	/**
-	 * The context for the virtual module. Can be a boolean (default: true), a string path, or a function that returns a context path based on the resource.
+	 * The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
 	 */
-	context?: string | boolean | ((resource: string) => string);
+	context?: string;
 
 	/**
 	 * The source function that provides the virtual content.
