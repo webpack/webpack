@@ -28,6 +28,7 @@ updates:
     groups:
       dependencies:
         patterns:
+          - "*"
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
@@ -38,3 +39,4 @@ updates:
     groups:
       dependencies:
         patterns:
+          - "*"

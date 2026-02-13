@@ -12,24 +12,31 @@ const tc = require("./template-common");
 
 const extraArgs = "";
 
-// @ts-expect-error we are touching global
-const targetArgs = global.NO_TARGET_ARGS
+/**
+ * @typedef {object} GlobalObj
+ * @property {boolean=} NO_TARGET_ARGS no target args flag
+ * @property {boolean=} NO_REASONS no stats reasons flag
+ * @property {boolean=} NO_STATS_OPTIONS no stats options flag
+ * @property {boolean=} NO_PUBLIC_PATH no public path flag
+ * @property {boolean=} STATS_COLORS no stats color flag
+ */
+
+const globalObj = /** @type {typeof globalThis & GlobalObj} */ (global);
+
+const targetArgs = globalObj
 	? ""
 	: "--entry ./example.js --output-filename output.js";
-// @ts-expect-error we are touching global
-const displayReasons = global.NO_REASONS
+const displayReasons = globalObj
 	? ""
 	: "--stats-reasons --stats-used-exports --stats-provided-exports";
-// @ts-expect-error we are touching global
-const statsArgs = global.NO_STATS_OPTIONS
+const statsArgs = globalObj
 	? ""
 	: "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
-// @ts-expect-error we are touching global
-const publicPathArgs = global.NO_PUBLIC_PATH
+const publicPathArgs = globalObj.NO_PUBLIC_PATH
 	? ""
 	: '--output-public-path "dist/"';
-// @ts-expect-error we are touching global
-const statsColorsArg = global.STATS_COLORS ? "" : "--no-color";
+const statsColorsArg = globalObj.STATS_COLORS ? "" : "--no-color";
+
 const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(
