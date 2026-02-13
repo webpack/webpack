@@ -4,7 +4,6 @@
 
 Add `context` option support for VirtualUrlPlugin
 
-- Add `context` option to VirtualUrlPlugin virtual module configuration (boolean | string | function)
+- The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
 - Support custom context path for resolving relative imports in virtual modules
-- Allow dynamic context resolution via function based on resource
 - Add examples demonstrating context usage and filename customization
