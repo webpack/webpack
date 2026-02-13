@@ -32,6 +32,16 @@ console.log(second); // Output `second`
 import message from "my-custom-scheme:my-module";
 
 console.log(message); // Output `from virtual module with custom scheme`
+
+// Import virtual module with custom context set in source function
+import { button } from "virtual:src/components/button.js";
+
+console.log(button); // Output `button`
+
+// Import virtual asset (filename will have virtual: scheme removed)
+import logoUrl from "virtual:logo.svg";
+
+console.log(logoUrl); // Output path to logo.svg (without virtual: scheme)
 ```
 
 # routes/a.js
@@ -81,6 +91,15 @@ const config = (env = "development") => ({
 				options: {
 					transpileOnly: true
 				}
+			},
+			{
+				test: /\.(svg|png)$/,
+				type: "asset/resource",
+				generator: {
+					// Remove virtual: scheme from filename
+					filename: (/** @type {{ filename: string }} */ pathData) =>
+						pathData.filename.replace("virtual:", "")
+				}
 			}
 		]
 	},
@@ -113,7 +132,9 @@ const value: string = "value-from-typescript";
 export default value;`
 			},
 			routes: {
-				source(loaderContext) {
+				source(
+					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+				) {
 					// Use `loaderContext.addContextDependency` to monitor the addition or removal of subdirectories in routesPath to trigger the rebuilding of virtual modules.
 					// See more - https://webpack.js.org/api/loaders/#the-loader-context
 					loaderContext.addContextDependency(routesPath);
@@ -128,7 +149,9 @@ export default value;`
 				}
 			},
 			"code-from-file": {
-				async source(loaderContext) {
+				async source(
+					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+				) {
 					const pathToFile = path.resolve(__dirname, "./code.js");
 
 					// Will trigger rebuild on changes in the file
@@ -137,6 +160,13 @@ export default value;`
 					const code = await fs.promises.readFile(pathToFile, "utf8");
 
 					return code;
+				}
+			},
+			"src/components/button.js": "import { trim } from './utils';export const button = trim('button ');",
+			"logo.svg": {
+				type: ".svg",
+				source() {
+					return '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>';
 				}
 			}
 		}),
@@ -180,6 +210,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var virtual_routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! virtual:routes */ 7);
 /* harmony import */ var virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! virtual:code-from-file */ 8);
 /* harmony import */ var my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! my-custom-scheme:my-module */ 9);
+/* harmony import */ var virtual_src_components_button_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! virtual:src/components/button.js */ 10);
+/* harmony import */ var virtual_logo_svg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! virtual:logo.svg */ 12);
 
 
 
@@ -211,6 +243,16 @@ console.log(virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__.second); // Outp
 
 
 console.log(my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__["default"]); // Output `from virtual module with custom scheme`
+
+// Import virtual module with custom context set in source function
+
+
+console.log(virtual_src_components_button_js__WEBPACK_IMPORTED_MODULE_9__.button); // Output `button`
+
+// Import virtual asset (filename will have virtual: scheme removed)
+
+
+console.log(virtual_logo_svg__WEBPACK_IMPORTED_MODULE_10__); // Output path to logo.svg (without virtual: scheme)
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
@@ -330,8 +372,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   routes: () => (/* binding */ routes)
 /* harmony export */ });
-const routes = {a: () => __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/a.js */ 10)),
-b: () => __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/b.js */ 11))}
+const routes = {a: () => __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/a.js */ 13)),
+b: () => __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/b.js */ 14))}
 
 /***/ }),
 /* 8 */
@@ -374,6 +416,54 @@ __webpack_require__.r(__webpack_exports__);
 const msg = "from virtual module with custom scheme";
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (msg);
+
+/***/ }),
+/* 10 */
+/*!****************************************!*\
+  !*** virtual:src/components/button.js ***!
+  \****************************************/
+/*! namespace exports */
+/*! export button [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   button: () => (/* binding */ button)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ 11);
+const button = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.trim)('button ');
+
+/***/ }),
+/* 11 */
+/*!*********************************!*\
+  !*** ./src/components/utils.js ***!
+  \*********************************/
+/*! namespace exports */
+/*! export trim [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   trim: () => (/* binding */ trim)
+/* harmony export */ });
+const trim = (str) => str.trim();
+
+/***/ }),
+/* 12 */
+/*!************************!*\
+  !*** virtual:logo.svg ***!
+  \************************/
+/*! default exports */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "logo.svg";
 
 /***/ })
 /******/ 	]);
@@ -543,6 +633,11 @@ const msg = "from virtual module with custom scheme";
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		__webpack_require__.p = "dist/";
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/require chunk loading */
 /******/ 	(() => {
 /******/ 		// no baseURI
@@ -609,14 +704,15 @@ const msg = "from virtual module with custom scheme";
 ## Unoptimized
 
 ```
-asset output.js 17.4 KiB [emitted] (name: main)
+asset output.js 20.2 KiB [emitted] (name: main)
 asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
-chunk (runtime: main) output.js (main) 1.66 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
+asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
+chunk (runtime: main) output.js (main) 2.15 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 640 bytes [dependent] 9 modules
-  runtime modules 4.21 KiB 7 modules
-  ./example.js 1.03 KiB [built] [code generated]
+  dependent modules 791 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
+  runtime modules 4.24 KiB 8 modules
+  ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
@@ -638,9 +734,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.55 KiB [emitted] [minimized] (name: main)
+asset output.js 2.7 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 118 bytes [emitted] [minimized]
 asset 722.output.js 118 bytes [emitted] [minimized]
+asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
 chunk (runtime: main) 263.output.js 20 bytes [rendered]
   > ./routes/a.js virtual:routes 1:32-55
   ./routes/a.js 20 bytes [built] [code generated]
@@ -651,11 +748,11 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 1.66 KiB (javascript) 4.21 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 2.15 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 640 bytes [dependent] 9 modules
-  runtime modules 4.21 KiB 7 modules
-  ./example.js 1.03 KiB [built] [code generated]
+  dependent modules 791 bytes (javascript) 78 bytes (asset) [dependent] 11 modules
+  runtime modules 4.24 KiB 8 modules
+  ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
