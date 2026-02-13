@@ -4230,6 +4230,9 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+type DevtoolFallbackModuleFilenameTemplate =
+	| string
+	| ((context: ModuleFilenameTemplateContext) => string);
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -5018,9 +5021,7 @@ declare interface EvalDevToolModulePluginOptions {
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions?: string | SourceMapDevToolPluginOptions);
 	sourceMapComment: string;
-	moduleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -17318,17 +17319,13 @@ declare interface SourceLike {
 }
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
-	sourceMapFilename: string | false;
+	sourceMapFilename?: null | string | false;
 	sourceMappingURLComment:
 		| string
 		| false
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	moduleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
-	fallbackModuleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
+	fallbackModuleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
