@@ -4069,7 +4069,7 @@ eslint-config-prettier@^10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-config-webpack@^4.9.1:
+eslint-config-webpack@^4.9.3:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.9.3.tgz#1b9a5b0d312798d3105dbc7ab4c19eb00f67481b"
   integrity sha512-qFWfmgm9rDX5GGWhpqFyNDug2S3b+xfvbeGB2bXbsSkz7KrjfEzRa3VTnM5zlRat5QVXmtChFFy/1PJWpc2ygw==
