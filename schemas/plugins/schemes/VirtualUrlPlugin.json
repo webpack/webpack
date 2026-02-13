@@ -5,6 +5,21 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "context": {
+          "description": "The context for the virtual module. Can be a boolean (default: true), a string path, or a function that returns a context path based on the resource.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((resource: string) => string)"
+            }
+          ]
+        },
         "source": {
           "description": "The source function that provides the virtual content.",
           "instanceof": "Function",

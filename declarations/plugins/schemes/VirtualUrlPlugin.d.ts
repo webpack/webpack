@@ -33,6 +33,10 @@ export interface VirtualUrlOptions {
  */
 export interface VirtualModule {
 	/**
+	 * The context for the virtual module. Can be a boolean (default: true), a string path, or a function that returns a context path based on the resource.
+	 */
+	context?: boolean | string | ((resource: string) => string);
+	/**
 	 * The source function that provides the virtual content.
 	 */
 	source: import("../../../lib/schemes/VirtualUrlPlugin").SourceFn;

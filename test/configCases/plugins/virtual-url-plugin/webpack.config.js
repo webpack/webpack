@@ -54,7 +54,9 @@ const config = {
 				source() {
 					return fs.readFileSync(path.join(__dirname, "./file.svg"));
 				}
-			}
+			},
+			"src/components/button.js":
+				"import { trim } from './utils';export const button = trim('button ');"
 		})
 	],
 	experiments: {
@@ -81,7 +83,7 @@ const config = {
 				test: /\.svg/,
 				type: "asset/resource",
 				generator: {
-					filename: "[name][ext]"
+					filename: (pathData) => pathData.filename.replace("virtual:", "")
 				}
 			}
 		]

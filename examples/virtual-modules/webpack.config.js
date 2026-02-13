@@ -21,6 +21,15 @@ const config = (env = "development") => ({
 				options: {
 					transpileOnly: true
 				}
+			},
+			{
+				test: /\.(svg|png)$/,
+				type: "asset/resource",
+				generator: {
+					// Remove virtual: scheme from filename
+					filename: (/** @type {{ filename: string }} */ pathData) =>
+						pathData.filename.replace("virtual:", "")
+				}
 			}
 		]
 	},
@@ -53,7 +62,9 @@ const value: string = "value-from-typescript";
 export default value;`
 			},
 			routes: {
-				source(loaderContext) {
+				source(
+					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+				) {
 					// Use `loaderContext.addContextDependency` to monitor the addition or removal of subdirectories in routesPath to trigger the rebuilding of virtual modules.
 					// See more - https://webpack.js.org/api/loaders/#the-loader-context
 					loaderContext.addContextDependency(routesPath);
@@ -68,7 +79,9 @@ export default value;`
 				}
 			},
 			"code-from-file": {
-				async source(loaderContext) {
+				async source(
+					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+				) {
 					const pathToFile = path.resolve(__dirname, "./code.js");
 
 					// Will trigger rebuild on changes in the file
@@ -77,6 +90,14 @@ export default value;`
 					const code = await fs.promises.readFile(pathToFile, "utf8");
 
 					return code;
+				}
+			},
+			"src/components/button.js":
+				"import { trim } from './utils';export const button = trim('button ');",
+			"logo.svg": {
+				type: ".svg",
+				source() {
+					return '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>';
 				}
 			}
 		}),
