@@ -1,5 +1,11 @@
 # webpack
 
+## 5.105.3
+
+### Patch Changes
+
+- Added category for CJS reexport dependency to fix issues with ECMA modules. (by [@hai-x](https://github.com/hai-x) in [#20444](https://github.com/webpack/webpack/pull/20444))
+
 ## 5.105.2
 
 ### Patch Changes
