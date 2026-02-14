@@ -26,12 +26,13 @@ it("should work", () => {
 			break;
 		}
 		case 2: {
-			expect(stats.assets.length).toBe(4);
+			// CSS-only entry should NOT generate an empty .js file (#11671)
+			expect(stats.assets.length).toBe(3);
 
 			const cssEntryInJs = stats.assets.find(
 				a => a.name.endsWith("css-entry.js")
 			);
-			expect(Boolean(cssEntryInJs)).toBe(true);
+			expect(Boolean(cssEntryInJs)).toBe(false);
 
 			const cssEntry = stats.assets.find(
 				a => a.name.endsWith("css-entry.css")
@@ -40,7 +41,8 @@ it("should work", () => {
 			break;
 		}
 		case 3: {
-			expect(stats.assets.length).toBe(5);
+			// JS entry keeps .js, CSS-only entry should NOT generate .js (#11671)
+			expect(stats.assets.length).toBe(4);
 
 			const jsEntry = stats.assets.find(
 				a => a.name.endsWith("js-entry.js")
@@ -50,7 +52,7 @@ it("should work", () => {
 			const cssEntryInJs = stats.assets.find(
 				a => a.name.endsWith("css-entry.js")
 			);
-			expect(Boolean(cssEntryInJs)).toBe(true);
+			expect(Boolean(cssEntryInJs)).toBe(false);
 
 			const cssEntry = stats.assets.find(
 				a => a.name.endsWith("css-entry.css")
@@ -59,6 +61,7 @@ it("should work", () => {
 			break;
 		}
 		case 4: {
+			// Node target: CSS entry generates JS (exports class names, no CSS output)
 			expect(stats.assets.length).toBe(4);
 
 			const jsEntry = stats.assets.find(
