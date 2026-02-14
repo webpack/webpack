@@ -209,7 +209,7 @@ it("should load node builtins via dynamic import", async () => {
 	const emitter2 = new events();
 	expect(emitter).toBeDefined();
 	expect(emitter2).toBeDefined();
-	expect(events.EventEmitter === events).toBe(true);
+	expect(events.EventEmitter).toBe(events);
 
 	expect(typeof fs.existsSync).toBe("function");
 
