@@ -83,7 +83,7 @@ jobs:
       - uses: jwalton/gh-find-current-pr@89ee5799558265a1e0e31fab792ebb4ee91c016b # v1.3.3
         id: findPr
 
-      - uses: Nef10/lcov-reporter-action@1814ba7cc12deff58d1f868c5960d8a8c5b4f040 # v0.3.0
+      - uses: Nef10/lcov-reporter-action@797ec1c1e78e3a9a7890c1a104d58b9e05fcef76 # v0.3.0
         with:
           pr-number: ${{ steps.findPr.outputs.number }}
           lcov-file: ./coverage/lcov.info
@@ -179,7 +179,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Cache jest result
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           path: .jest-cache
           key: jest-test262-${{ env.GITHUB_SHA }}
