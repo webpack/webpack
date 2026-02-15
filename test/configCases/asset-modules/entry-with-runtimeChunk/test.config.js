@@ -10,15 +10,9 @@ module.exports = {
 			case 1:
 				return ["test.js", `${i}/app.${ext}`, `${i}/runtime~app.${ext}`];
 			case 2:
-				return ["test.js", `${i}/app.${ext}`, `${i}/runtime~app.${ext}`];
+				return ["test.js"];
 			case 3:
-				return [
-					"test.js",
-					// `${i}/entry1.${ext}`,
-					`${i}/entry2.${ext}`,
-					// `${i}/runtime~entry1.${ext}`,
-					`${i}/runtime~entry2.${ext}`
-				];
+				return ["test.js", `${i}/entry2.${ext}`, `${i}/runtime~entry2.${ext}`];
 			default:
 				break;
 		}
