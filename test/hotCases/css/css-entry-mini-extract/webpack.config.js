@@ -8,13 +8,28 @@ module.exports = {
 	devtool: false,
 	entry: {
 		"css-entry": "./entry.css",
-		test: "./index.js"
+		main: "./index.js"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.css$/,
-				loader: MiniCssPlugin.loader
+				use: [
+					{
+						loader: MiniCssPlugin.loader
+					},
+					{
+						loader: "css-loader",
+						options: {
+							esModule: true,
+							modules: {
+								namedExport: false,
+								localIdentName: "[name]"
+							}
+						}
+					}
+				],
+				sideEffects: true
 			}
 		]
 	},

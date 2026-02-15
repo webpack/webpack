@@ -7,32 +7,35 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: {
-		a: "./a.js",
-		b: { import: "./b.js", dependOn: "a" }
+		main: "./a.js",
+		b: { import: "./b.js", dependOn: "main" }
 	},
 	module: {
 		rules: [
 			{
 				test: /\.css$/,
-				loader: MiniCssPlugin.loader
+				use: [
+					{
+						loader: MiniCssPlugin.loader
+					},
+					{
+						loader: "css-loader",
+						options: {
+							esModule: true,
+							modules: {
+								namedExport: false,
+								localIdentName: "[name]"
+							}
+						}
+					}
+				],
+				sideEffects: true
 			}
 		]
 	},
 	output: {
 		filename: "[name].js",
 		cssChunkFilename: "[name].css"
-	},
-	optimization: {
-		runtimeChunk: "single",
-		splitChunks: {
-			chunks: "all",
-			cacheGroups: {
-				styles: {
-					type: "css/mini-extract",
-					enforce: true
-				}
-			}
-		}
 	},
 	target: "web",
 	node: {
