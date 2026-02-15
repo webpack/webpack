@@ -4069,7 +4069,7 @@ eslint-config-prettier@^10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-config-webpack@^4.9.1:
+eslint-config-webpack@^4.9.3:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.9.3.tgz#1b9a5b0d312798d3105dbc7ab4c19eb00f67481b"
   integrity sha512-qFWfmgm9rDX5GGWhpqFyNDug2S3b+xfvbeGB2bXbsSkz7KrjfEzRa3VTnM5zlRat5QVXmtChFFy/1PJWpc2ygw==
@@ -9183,9 +9183,9 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.24.5:
-  version "1.24.5"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/baa4b404ff24fa5d06143c7d4451ca1430fd2fa0"
+tooling@webpack/tooling#v1.24.6:
+  version "1.24.6"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/8600bb69d78f73d20191a7e1c00bd355bc49ad98"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.1.0"
@@ -9672,10 +9672,10 @@ webpack-merge@^6.0.1:
     flat "^5.0.2"
     wildcard "^2.0.1"
 
-webpack-sources@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.3.3.tgz#d4bf7f9909675d7a070ff14d0ef2a4f3c982c723"
-  integrity sha512-yd1RBzSGanHkitROoPFd6qsrxt+oFhg/129YzheDGqeustzX0vTZJZsSsQjVQC4yzBQ56K55XU8gaNCtIzOnTg==
+webpack-sources@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.3.4.tgz#a338b95eb484ecc75fbb196cbe8a2890618b4891"
+  integrity sha512-7tP1PdV4vF+lYPnkMR0jMY5/la2ub5Fc/8VQrrU+lXkiM6C4TjVfGw7iKfyhnTQOsD+6Q/iKw0eFciziRgD58Q==
 
 whatwg-url@^5.0.0:
   version "5.0.0"

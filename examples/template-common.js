@@ -71,6 +71,11 @@ const replaceBase = (template) => {
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
 		.replace(
 			runtimeModulesRegexp,
+			/**
+			 * @param {string} match match
+			 * @param {string} content content
+			 * @returns {string} new content
+			 */
 			(match, content) =>
 				"```\n\n<details><summary>" +
 				"<code>/* webpack runtime code */</code>" +
