@@ -266,6 +266,42 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+declare interface AllCodeGenerationSchemas {
+	/**
+	 * top level declarations for javascript modules
+	 */
+	topLevelDeclarations: Set<string>;
+
+	/**
+	 * chunk init fragments for javascript modules
+	 */
+	chunkInitFragments: InitFragment<any>[];
+
+	/**
+	 * url for css and javascript modules
+	 */
+	url: { javascript?: string; "css-url"?: string };
+
+	/**
+	 * a filename for asset modules
+	 */
+	filename: string;
+
+	/**
+	 * an asset info for asset modules
+	 */
+	assetInfo: AssetInfo;
+
+	/**
+	 * a full content hash for asset modules
+	 */
+	fullContentHash: string;
+
+	/**
+	 * share-init for modules federation
+	 */
+	"share-init": [{ shareScope: string; initStage: number; init: string }];
+}
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -1629,6 +1665,10 @@ declare abstract class ChunkGroup {
 	getModuleIndex: (module: Module) => undefined | number;
 	getModuleIndex2: (module: Module) => undefined | number;
 }
+declare interface ChunkGroupInfoWithName {
+	name: string;
+	chunkGroup: ChunkGroup;
+}
 type ChunkGroupOptions = RawChunkGroupOptions & { name?: null | string };
 declare interface ChunkHashContext {
 	/**
@@ -1929,7 +1969,16 @@ declare interface CodeGenMapOverloads {
 	has: <K extends string>(key: K) => boolean;
 	delete: <K extends string>(key: K) => boolean;
 }
-declare interface CodeGenValue<K extends string> {}
+type CodeGenValue<K extends string> = K extends
+	| "filename"
+	| "assetInfo"
+	| "share-init"
+	| "topLevelDeclarations"
+	| "chunkInitFragments"
+	| "url"
+	| "fullContentHash"
+	? AllCodeGenerationSchemas[K]
+	: any;
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -3613,7 +3662,11 @@ type CreateWriteStreamFSImplementation = FSImplementation & {
 	write: (...args: any[]) => any;
 	close?: (...args: any[]) => any;
 };
-declare interface CreatedObject<T, F> {}
+type CreatedObject<T, F> = T extends ChunkGroupInfoWithName[]
+	? Record<string, StatsChunkGroup>
+	: T extends (infer V)[]
+		? StatsObject<V, F>[]
+		: StatsObject<T, F>;
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -11459,6 +11512,10 @@ declare abstract class ModuleTemplate {
 declare interface ModuleTemplates {
 	javascript: ModuleTemplate;
 }
+declare interface ModuleTrace {
+	origin: Module;
+	module: Module;
+}
 declare class MultiCompiler {
 	constructor(
 		compilers: Compiler[] | Record<string, Compiler>,
@@ -17429,7 +17486,7 @@ declare class SourceMapSource extends Source {
 		name: string,
 		sourceMap?: string | Buffer | RawSourceMap,
 		originalSource?: string | Buffer,
-		innerSourceMap?: string | Buffer | RawSourceMap,
+		innerSourceMap?: null | string | Buffer | RawSourceMap,
 		removeOriginalSource?: boolean
 	);
 	getArgsAsBuffers(): [
@@ -17787,6 +17844,29 @@ type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
 type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
 	Record<string, any>;
 type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
+type StatsObject<T, F> = T extends Compilation
+	? StatsCompilation
+	: T extends ChunkGroupInfoWithName
+		? StatsChunkGroup
+		: T extends Chunk
+			? StatsChunk
+			: T extends OriginRecord
+				? StatsChunkOrigin
+				: T extends Module
+					? StatsModule
+					: T extends ModuleGraphConnection
+						? StatsModuleReason
+						: T extends Asset
+							? StatsAsset
+							: T extends ModuleTrace
+								? StatsModuleTraceItem
+								: T extends Dependency
+									? StatsModuleTraceDependency
+									: T extends Error
+										? StatsError
+										: T extends ModuleProfile
+											? StatsProfile
+											: F;
 
 /**
  * Stats options object.

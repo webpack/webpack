@@ -109,7 +109,7 @@
     "tapable": "^2.3.0",
     "terser-webpack-plugin": "^5.3.16",
     "watchpack": "^2.5.1",
-    "webpack-sources": "^3.3.3"
+    "webpack-sources": "^3.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
@@ -188,7 +188,7 @@
     "three": "^0.182.0",
     "tinybench": "^6.0.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.24.5",
+    "tooling": "webpack/tooling#v1.24.6",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "unified": "^11.0.5",
