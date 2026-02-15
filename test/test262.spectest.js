@@ -1037,35 +1037,11 @@ const knownBugs = [
 	// Weird test
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
-	// We need to wrap `__webpack_require__.o(map, req)` in try/catch
-	"expressions/dynamic-import/catch/nested-block-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-do-while-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-do-while-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/assignment-expression/cover-parenthesized-expr.js",
+	// We need to handle `import.meta` in `import`
 	"expressions/dynamic-import/assignment-expression/import-meta.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-trailing-comma-reject.js",
-	"expressions/dynamic-import/import-attributes/trailing-comma-reject.js",
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-import-defer-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-specifier-tostring-abrupt-rejects.js",
-	"expressions/dynamic-import/catch/nested-async-function-specifier-tostring-abrupt-rejects.js",
+
+	// Bug in parser
+	"expressions/dynamic-import/assignment-expression/cover-parenthesized-expr.js",
 
 	// Looks like a bug in webpack
 	"module-code/top-level-await/dynamic-import-rejection.js"
