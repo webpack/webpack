@@ -28,8 +28,7 @@ module.exports = {
 							}
 						}
 					}
-				],
-				sideEffects: true
+				]
 			}
 		]
 	},
