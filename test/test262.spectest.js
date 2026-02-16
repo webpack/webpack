@@ -1042,9 +1042,12 @@ const knownBugs = [
 	"module-code/top-level-await/dynamic-import-rejection.js",
 
 	// Need improve our test runner, nested Promise is not catching
+	"module-code/top-level-await/module-import-rejection.js",
+	"module-code/top-level-await/module-import-rejection-body.js",
 	"module-code/top-level-await/await-dynamic-import-rejection.js",
 	"module-code/top-level-await/module-import-rejection-tick.js",
-	"module-code/top-level-await/module-import-resolution.js"
+	"module-code/top-level-await/module-import-resolution.js",
+	"module-code/top-level-await/module-import-unwrapped.js"
 ];
 /* cspell:enable */
 
