@@ -1207,37 +1207,49 @@ describe("test262", () => {
 						await asyncPromise;
 					}
 
-					if (meta.negative && meta.negative.phase === "runtime") {
+					if (meta.negative) {
 						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}"), expected runtime error`
+							`Error in test file "${outputFile}" ("${testFile}"), expected ${
+								meta.negative.phase === "parse"
+									? "parse"
+									: meta.negative.phase === "runtime"
+										? "runtime"
+										: ""
+							} error`
 						);
 					}
 				} catch (err) {
-					errored = true;
+					errored = err;
+				}
 
-					if (
-						meta.negative &&
-						meta.negative.phase === "runtime" &&
-						err.constructor.name === meta.negative.type
-					) {
-						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}")`,
-							{
-								cause: err
-							}
-						);
-					} else if (!knownV8Bugs.includes(name)) {
-						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}")`,
-							{
-								// eslint-disable-next-line preserve-caught-error
-								cause: err instanceof Error ? err : new Error(err)
-							}
-						);
-					}
+				if (errored && knownV8Bugs.includes(name)) {
+					return;
 				}
 
 				const { warnings, errors } = stats.compilation;
+
+				const isExpectedParseError =
+					errored &&
+					meta.negative &&
+					meta.negative.phase === "parse" &&
+					// meta.negative.type === errored.constructor.name &&
+					errors.length > 0 &&
+					errors.every((item) => item.name === "ModuleParseError");
+
+				const isExpectedRuntimeError =
+					errored &&
+					meta.negative &&
+					meta.negative.phase === "runtime" &&
+					errored.constructor.name === meta.negative.type;
+
+				if (errored && !isExpectedParseError && !isExpectedRuntimeError) {
+					throw new Error(
+						`Error in test file "${outputFile}" ("${testFile}")`,
+						{
+							cause: errored instanceof Error ? errored : new Error(errored)
+						}
+					);
+				}
 
 				if (
 					warnings.length > 0 &&
@@ -1252,20 +1264,12 @@ describe("test262", () => {
 					);
 				}
 
-				if (
-					errored &&
-					meta.negative &&
-					meta.negative.phase === "parse" &&
-					errors.every((item) => item.name === "ModuleParseError")
-				) {
-					context.executed = true;
-				} else if (
-					// By spec `THIS_FILE_DOES_NOT_EXIST.js` file doesn't exist
-					errors.some(
-						(item) =>
-							!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
-					)
-				) {
+				const hasUnexpectedErrors = errors.some(
+					(item) =>
+						!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
+				);
+
+				if (!isExpectedParseError && hasUnexpectedErrors) {
 					throw new Error(
 						`Errors in test file "${outputFile}" ("${testFile}")`,
 						{
