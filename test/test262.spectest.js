@@ -22,6 +22,187 @@ const test262Dir = path.resolve(__dirname, "./test262-cases/");
 const test262HarnessDir = path.resolve(test262Dir, "./harness");
 
 /* cspell:disable */
+const knownV8EvalBugs = [
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-named-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-named-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/gen-func-expr-nameless-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-func-expr-nameless-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/async-gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/async-gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
+	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
+	"eval-code/direct/async-gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
+	"eval-code/direct/async-gen-named-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
+	"eval-code/direct/async-gen-named-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js"
+];
+/* cspell:enable */
+
+const knownV8WithBugs = [
+	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.10_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.11_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.1_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.2_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.3_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.4_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.5_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.6_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.7_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.8_T3.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T1.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T2.js",
+	"expressions/compound-assignment/S11.13.2_A5.9_T3.js",
+	"expressions/compound-assignment/S11.13.2_A6.10_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.11_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.1_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.2_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.3_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.4_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.5_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.6_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.7_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.8_T1.js",
+	"expressions/compound-assignment/S11.13.2_A6.9_T1.js",
+	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.1_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.2_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.3_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.4_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.5_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.6_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.7_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.8_T4.js",
+	"expressions/compound-assignment/S11.13.2_A7.9_T4.js"
+];
+
+const knownV8PrefixAndPostfixBugs = [
+	// Optimizations bugs with `--` and `++`
+	"expressions/prefix-decrement/S11.4.5_A6_T3.js",
+	"expressions/prefix-decrement/S11.4.5_A6_T3.js",
+	"expressions/prefix-decrement/S11.4.5_A5_T3.js",
+	"expressions/prefix-decrement/S11.4.5_A5_T2.js",
+	"expressions/prefix-decrement/S11.4.5_A5_T1.js",
+	"expressions/prefix-increment/S11.4.4_A6_T3.js",
+	"expressions/prefix-increment/S11.4.4_A6_T3.js",
+	"expressions/prefix-increment/S11.4.4_A5_T3.js",
+	"expressions/prefix-increment/S11.4.4_A5_T2.js",
+	"expressions/prefix-increment/S11.4.4_A5_T1.js",
+	"expressions/postfix-decrement/S11.3.2_A6_T3.js",
+	"expressions/postfix-decrement/S11.3.2_A5_T3.js",
+	"expressions/postfix-decrement/S11.3.2_A5_T2.js",
+	"expressions/postfix-decrement/S11.3.2_A5_T1.js",
+	"expressions/postfix-increment/S11.3.1_A6_T3.js",
+	"expressions/postfix-increment/S11.3.1_A5_T3.js",
+	"expressions/postfix-increment/S11.3.1_A5_T2.js",
+	"expressions/postfix-increment/S11.3.1_A5_T1.js"
+];
+
+const knownV8Bugs = [
+	...knownV8EvalBugs,
+	...knownV8WithBugs,
+	...knownV8PrefixAndPostfixBugs
+];
+
+/* cspell:disable */
 const edgeCases = [
 	// eval test cases require to be in global scope
 	"eval-code/indirect/non-definable-global-var.js",
@@ -35,6 +216,7 @@ const edgeCases = [
 	"eval-code/direct/this-value-func-strict-source.js",
 	"eval-code/direct/var-env-func-init-global-new.js",
 	"eval-code/direct/var-env-var-init-global-new.js",
+	...knownV8EvalBugs,
 
 	// with and global `this` require to be in global scope
 	"statements/with/S12.10_A1.10_T1.js",
@@ -318,7 +500,16 @@ const compile = async (entry, scenario, options = {}) =>
 									}
 								}
 							]
-			}
+			},
+			externals: [
+				({ context, request }, callback) => {
+					// Ignore empty string in dynamic `import`
+					if (request === "") {
+						return callback(null, "undefined");
+					}
+					callback();
+				}
+			]
 		});
 
 		compiler.outputFileSystem = outputFileSystem;
@@ -401,26 +592,20 @@ const createRequire = (currentDir, context) =>
 		return module.exports;
 	};
 
-const create262Host = () => {
-	const sandbox = vm.runInNewContext("this");
-	const context = vm.createContext(sandbox);
+const create262Host = (context) => ({
+	evalScript(code, options = {}) {
+		return vm.runInContext(code, context, options);
+	},
+	createRealm() {
+		const newSandbox = vm.runInNewContext("this");
+		const newContext = vm.createContext(newSandbox);
+		const newHost = create262Host(newContext);
 
-	const host = {
-		global: context,
-		evalScript(code, options = {}) {
-			return vm.runInContext(code, context, options);
-		},
-		createRealm() {
-			return create262Host();
-		}
-	};
+		newHost.global = newContext;
 
-	context.global = context;
-	context.globalThis = context;
-	context.$262 = host;
-
-	return host;
-};
+		return newHost;
+	}
+});
 
 const createImportModuleDynamically =
 	(context, testFile, moduleCache) => async (specifier, referencing) => {
@@ -472,7 +657,7 @@ const runModule = async (context, code, identifier, testFile, moduleCache) => {
 	return module;
 };
 
-const runScript = (
+const runScript = async (
 	context,
 	code,
 	identifier,
@@ -494,6 +679,10 @@ const runScript = (
 	script.runInContext(context, {
 		displayErrors: true
 	});
+
+	await new Promise((resolve) => {
+		setImmediate(resolve);
+	});
 };
 
 const baseDir = path.posix.resolve(test262Dir, "./test/language/");
@@ -501,25 +690,6 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 /* cspell:disable */
 const knownBugs = [
 	// Node.js problems and bugs
-	// Optimizations bugs with `--` and `++`
-	"expressions/postfix-decrement/S11.3.2_A6_T3.js",
-	"expressions/postfix-decrement/S11.3.2_A5_T3.js",
-	"expressions/postfix-decrement/S11.3.2_A5_T2.js",
-	"expressions/postfix-decrement/S11.3.2_A5_T1.js",
-	"expressions/postfix-increment/S11.3.1_A6_T3.js",
-	"expressions/postfix-increment/S11.3.1_A5_T3.js",
-	"expressions/postfix-increment/S11.3.1_A5_T2.js",
-	"expressions/postfix-increment/S11.3.1_A5_T1.js",
-	"expressions/prefix-decrement/S11.4.5_A6_T3.js",
-	"expressions/prefix-decrement/S11.4.5_A6_T3.js",
-	"expressions/prefix-decrement/S11.4.5_A5_T3.js",
-	"expressions/prefix-decrement/S11.4.5_A5_T2.js",
-	"expressions/prefix-decrement/S11.4.5_A5_T1.js",
-	"expressions/prefix-increment/S11.4.4_A6_T3.js",
-	"expressions/prefix-increment/S11.4.4_A6_T3.js",
-	"expressions/prefix-increment/S11.4.4_A5_T3.js",
-	"expressions/prefix-increment/S11.4.4_A5_T2.js",
-	"expressions/prefix-increment/S11.4.4_A5_T1.js",
 	// Eval and spread
 	"expressions/call/eval-spread.js",
 	// Doesn't work
@@ -536,64 +706,6 @@ const knownBugs = [
 	"statements/async-generator/generator-created-after-decl-inst.js",
 	// V8 optimization bug
 	"statements/variable/binding-resolution.js",
-	// Different V8 bugs with `with`
-	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.10_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.11_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.1_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.2_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.3_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.4_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.5_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.6_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.7_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.8_T3.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T1.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T2.js",
-	"expressions/compound-assignment/S11.13.2_A5.9_T3.js",
-	"expressions/compound-assignment/S11.13.2_A6.10_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.11_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.1_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.2_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.3_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.4_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.5_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.6_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.7_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.8_T1.js",
-	"expressions/compound-assignment/S11.13.2_A6.9_T1.js",
-	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.10_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.11_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.1_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.2_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.3_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.4_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.5_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.6_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.7_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.8_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.9_T4.js",
 
 	// V8 bugs with `eval` and global `this`
 	"eval-code/direct/var-env-func-init-global-update-configurable.js",
@@ -610,6 +722,8 @@ const knownBugs = [
 	"identifiers/start-unicode-17.0.0.js",
 	"statements/using/syntax/using-for-statement.js",
 	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
+	"expressions/dynamic-import/syntax/invalid/nested-with-import-defer-no-new-call-expression.js",
+	"expressions/dynamic-import/syntax/invalid/top-level-import-defer-no-new-call-expression.js",
 
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
@@ -743,95 +857,6 @@ const knownBugs = [
 	// improve test runner to keep dynamic import for such case
 	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
-	// evals, we need to think how tests them in the right way
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-decl-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-named-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-named-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-named-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-nameless-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/gen-func-expr-nameless-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-func-expr-nameless-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/async-gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/async-gen-func-decl-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/async-gen-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments.js",
-	"eval-code/direct/async-gen-named-func-expr-fn-body-cntns-arguments-func-decl-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
-	"eval-code/direct/async-gen-meth-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-meth-fn-body-cntns-arguments-var-bind-declare-arguments.js",
-	"eval-code/direct/async-gen-named-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments-and-assign.js",
-	"eval-code/direct/async-gen-named-func-expr-no-pre-existing-arguments-bindings-are-present-declare-arguments.js",
 	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
 	"eval-code/indirect/var-env-var-init-global-exstng.js",
 
@@ -866,13 +891,10 @@ const knownBugs = [
 	// Not a bug, we need to improve our test runner
 	"statements/async-function/evaluation-body.js",
 
-	"module-code/top-level-await/module-import-rejection-body.js",
-	"module-code/top-level-await/module-import-rejection-tick.js",
-	"module-code/top-level-await/module-import-rejection.js",
-
 	"module-code/instn-named-bndng-dflt-gen-anon.js",
 	"module-code/instn-named-bndng-dflt-fun-anon.js",
 
+	// Do we need to call `Object.setPrototypeOf(__webpack_exports__, null);` for namespace imports and other things
 	"module-code/namespace/internals/get-own-property-str-found-init.js",
 	"module-code/namespace/internals/get-own-property-str-found-uninit.js",
 	"module-code/namespace/internals/get-prototype-of.js",
@@ -888,39 +910,19 @@ const knownBugs = [
 
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
-	"expressions/dynamic-import/syntax/valid/nested-arrow-assignment-expression-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-arrow-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-arrow-function-await-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-arrow-function-return-await-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-function-await-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-function-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-function-return-await-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-async-gen-await-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-block-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-block-labeled-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-do-while-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-braceless-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-else-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-else-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-function-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-function-return-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-braceless-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-if-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-while-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-empty-str-is-valid-assign-expr.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-expression-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-script-code-valid.js",
 	"expressions/dynamic-import/syntax/valid/new-covered-expression-is-valid.js",
-	"expressions/dynamic-import/syntax/valid/top-level-empty-str-is-valid-assign-expr.js",
 	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
+
 	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-no-strict.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-strict.js",
@@ -954,54 +956,53 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-await-eval-script-code-target.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-function-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-function-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-gen-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-gen-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-block-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-block-labeled-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-do-while-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-else-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-function-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-if-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-while-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/top-level-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
 
-	"expressions/dynamic-import/syntax/invalid/nested-with-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/top-level-import-defer-no-new-call-expression.js",
+	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-ambiguous-import.js",
+
+	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
 
 	"expressions/dynamic-import/eval-export-dflt-cls-anon.js",
 	"expressions/dynamic-import/eval-export-dflt-expr-cls-anon.js",
@@ -1025,12 +1026,6 @@ const knownBugs = [
 	"module-code/top-level-await/fulfillment-order.js",
 	"module-code/top-level-await/module-graphs-does-not-hang.js",
 
-	"global-code/script-decl-func-dups.js",
-	"global-code/script-decl-lex-lex.js",
-	"global-code/script-decl-lex-restricted-global.js",
-	"global-code/script-decl-lex-var.js",
-	"global-code/script-decl-lex-var-declared-via-eval.js",
-
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
@@ -1044,7 +1039,15 @@ const knownBugs = [
 	"expressions/dynamic-import/assignment-expression/cover-parenthesized-expr.js",
 
 	// Looks like a bug in webpack
-	"module-code/top-level-await/dynamic-import-rejection.js"
+	"module-code/top-level-await/dynamic-import-rejection.js",
+
+	// Need improve our test runner, nested Promise is not catching
+	"module-code/top-level-await/module-import-rejection.js",
+	"module-code/top-level-await/module-import-rejection-body.js",
+	"module-code/top-level-await/await-dynamic-import-rejection.js",
+	"module-code/top-level-await/module-import-rejection-tick.js",
+	"module-code/top-level-await/module-import-resolution.js",
+	"module-code/top-level-await/module-import-unwrapped.js"
 ];
 /* cspell:enable */
 
@@ -1055,8 +1058,23 @@ const testFiles = fs
 describe("test262", () => {
 	for (const testFile of testFiles) {
 		const name = path.posix.relative(baseDir, testFile);
+		const outputPath = path.resolve(
+			__dirname,
+			"./js/test262-cases",
+			path.join(path.dirname(name), path.basename(name, path.extname(name)))
+		);
+		const outputFile = path.resolve(outputPath, "./main.js");
 		const content = fs.readFileSync(testFile, "utf8");
 		const meta = getTest262Meta(content);
+
+		if (
+			meta.negative &&
+			!["parse", "runtime", "resolution"].includes(meta.negative.phase)
+		) {
+			throw new Error(
+				`Error in test file "${outputFile}" ("${testFile}"), unknown "${meta.negative.phase}" negative phase`
+			);
+		}
 
 		if (
 			// Decorators are not supported
@@ -1075,13 +1093,6 @@ describe("test262", () => {
 
 			continue;
 		}
-
-		const outputPath = path.resolve(
-			__dirname,
-			"./js/test262-cases",
-			path.join(path.dirname(name), path.basename(name, path.extname(name)))
-		);
-		const outputFile = path.resolve(outputPath, "./main.js");
 
 		let scenarios;
 
@@ -1160,14 +1171,14 @@ describe("test262", () => {
 					};
 				}
 
-				sandbox.globalThis = sandbox;
-				sandbox.$262 = create262Host();
-				// For debug
-				sandbox.console = console;
-
 				const context = vm.createContext(sandbox, {
 					microtaskMode: "afterEvaluate"
 				});
+
+				sandbox.globalThis = sandbox;
+				sandbox.$262 = create262Host(context);
+				// For debug
+				sandbox.console = console;
 
 				if (scenario !== "module") {
 					sandbox.require = createRequire(outputPath, context);
@@ -1179,10 +1190,8 @@ describe("test262", () => {
 					if (scenario === "module") {
 						await runModule(context, code, outputFile, testFile, moduleCache);
 					} else {
-						const lineOffset = -codeBefore.split("\n").length;
-
-						runScript(context, code, outputFile, testFile, moduleCache, {
-							lineOffset
+						await runScript(context, code, outputFile, testFile, moduleCache, {
+							lineOffset: -codeBefore.split("\n").length
 						});
 					}
 
@@ -1190,43 +1199,48 @@ describe("test262", () => {
 						await asyncPromise;
 					}
 
-					if (meta.negative && meta.negative.phase === "runtime") {
+					if (meta.negative) {
 						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}"), expected runtime error`
+							`Error in test file "${outputFile}" ("${testFile}"), expected ${
+								meta.negative.phase === "parse"
+									? "parse"
+									: meta.negative.phase === "runtime"
+										? "runtime"
+										: ""
+							} error`
 						);
 					}
 				} catch (err) {
-					errored = true;
+					errored = err;
+				}
 
-					if (meta.negative) {
-						if (
-							!["parse", "runtime", "resolution"].includes(meta.negative.phase)
-						) {
-							throw new Error(
-								`Error in test file "${outputFile}" ("${testFile}"), unknown "${meta.negative.phase}" negative phase`,
-								{
-									cause: err
-								}
-							);
-						}
-
-						if (
-							meta.negative.phase === "runtime" &&
-							err.constructor.name === meta.negative.type
-						) {
-							context.executed = true;
-						}
-					} else {
-						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}")`,
-							{
-								cause: err
-							}
-						);
-					}
+				if (errored && knownV8Bugs.includes(name)) {
+					return;
 				}
 
 				const { warnings, errors } = stats.compilation;
+
+				const isExpectedParseError =
+					errored &&
+					meta.negative &&
+					meta.negative.phase === "parse" &&
+					// meta.negative.type === errored.constructor.name &&
+					errors.every((item) => item.name === "ModuleParseError");
+
+				const isExpectedRuntimeError =
+					errored &&
+					meta.negative &&
+					meta.negative.phase === "runtime" &&
+					errored.constructor.name === meta.negative.type;
+
+				if (errored && !isExpectedParseError && !isExpectedRuntimeError) {
+					throw new Error(
+						`Error in test file "${outputFile}" ("${testFile}")`,
+						{
+							cause: errored instanceof Error ? errored : new Error(errored)
+						}
+					);
+				}
 
 				if (
 					warnings.length > 0 &&
@@ -1241,20 +1255,12 @@ describe("test262", () => {
 					);
 				}
 
-				if (
-					errored &&
-					meta.negative &&
-					meta.negative.phase === "parse" &&
-					errors.every((item) => item.name === "ModuleParseError")
-				) {
-					context.executed = true;
-				} else if (
-					// By spec `THIS_FILE_DOES_NOT_EXIST.js` file doesn't exist
-					errors.some(
-						(item) =>
-							!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
-					)
-				) {
+				const hasUnexpectedErrors = errors.some(
+					(item) =>
+						!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
+				);
+
+				if (!isExpectedParseError && hasUnexpectedErrors) {
 					throw new Error(
 						`Errors in test file "${outputFile}" ("${testFile}")`,
 						{

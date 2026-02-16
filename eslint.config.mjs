@@ -23,6 +23,7 @@ export default defineConfig([
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
+		"test/test262-cases/**/*.*",
 
 		// TODO fix me
 		// This is not exactly typescript
