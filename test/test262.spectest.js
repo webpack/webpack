@@ -593,17 +593,17 @@ const createRequire = (currentDir, context) =>
 	};
 
 const create262Host = (context) => ({
-	global: context,
 	evalScript(code, options = {}) {
 		return vm.runInContext(code, context, options);
 	},
 	createRealm() {
-		// const sandbox = vm.runInNewContext("this");
-		// const context = vm.createContext(sandbox);
-		// context.global = context;
-		// context.globalThis = context;
-		// context.$262 = host;
-		return create262Host(context);
+		const newSandbox = vm.runInNewContext("this");
+		const newContext = vm.createContext(newSandbox);
+		const newHost = create262Host(newContext);
+
+		newHost.global = newContext;
+
+		return newHost;
 	}
 });
 
@@ -641,9 +641,10 @@ const runModule = async (context, code, identifier, testFile, moduleCache) => {
 	let trappedError = null;
 
 	// To catch TLA `reject`s
-	const originalReject = Promise.reject;
-	context.Promise = Promise;
-	context.Promise.reject = (reason) => {
+	const globalPromise = vm.runInContext("Promise", context);
+	const originalReject = globalPromise.reject;
+	context.Promise = globalPromise;
+	context.Promise.reject = function reject(reason) {
 		trappedError = reason;
 		return originalReject.call(this, reason);
 	};
@@ -668,7 +669,7 @@ const runModule = async (context, code, identifier, testFile, moduleCache) => {
 		throw trappedError;
 	}
 
-	context.Promise.reject = originalReject;
+	context.Promise = undefined;
 
 	return module;
 };
@@ -1233,7 +1234,6 @@ describe("test262", () => {
 					meta.negative &&
 					meta.negative.phase === "parse" &&
 					// meta.negative.type === errored.constructor.name &&
-					errors.length > 0 &&
 					errors.every((item) => item.name === "ModuleParseError");
 
 				const isExpectedRuntimeError =
