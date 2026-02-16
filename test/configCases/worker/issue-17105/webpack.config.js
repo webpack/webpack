@@ -1,6 +1,6 @@
 "use strict";
 
-/** @type {import("../../../../").Module} */
+/** @typedef {import("../../../../").Module} Module */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 				vendor: {
 					/**
 					 * @param {Module} mod module
-					 * @returns {boolean} true or false
+					 * @returns {string | boolean | null} result
 					 */
 					test(mod) {
 						return mod.context && mod.context.includes("node_modules");
