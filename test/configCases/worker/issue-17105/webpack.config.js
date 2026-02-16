@@ -12,6 +12,9 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
+	environment: {
+		nodePrefixForCoreModules: false
+	},
 	optimization: {
 		runtimeChunk: { name: "runtime" },
 		splitChunks: {
