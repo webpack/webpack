@@ -10,10 +10,10 @@ module.exports = {
 		"my-worker": "./worker.js"
 	},
 	output: {
-		filename: "[name].js"
-	},
-	environment: {
-		nodePrefixForCoreModules: false
+		filename: "[name].js",
+		environment: {
+			nodePrefixForCoreModules: false
+		}
 	},
 	optimization: {
 		runtimeChunk: { name: "runtime" },
