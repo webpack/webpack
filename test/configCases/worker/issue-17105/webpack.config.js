@@ -1,5 +1,7 @@
 "use strict";
 
+/** @type {import("../../../../").Module} */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",
@@ -15,6 +17,10 @@ module.exports = {
 		splitChunks: {
 			cacheGroups: {
 				vendor: {
+					/**
+					 * @param {Module} mod module
+					 * @returns {boolean} true or false
+					 */
 					test(mod) {
 						return mod.context && mod.context.includes("node_modules");
 					},
