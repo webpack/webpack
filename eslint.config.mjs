@@ -49,7 +49,8 @@ export default defineConfig([
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/**/webpack.config.{js,cjs,mjs}",
-		"!examples/**/test.filter.js"
+		"!examples/**/test.filter.js",
+		"!examples/**/internals/**/*.js"
 	]),
 	{
 		ignores: ["lib/**/*.runtime.js", "hot/*.js"],

@@ -1,20 +1,42 @@
-# example.js
+# Custom javascript parser
+
+## Source code
 
 ```javascript
 _{{example.js}}_
 ```
 
-# increment.js
+## Parsers
+
+### acorn (default)
 
 ```javascript
-_{{increment.js}}_
+_{{internals/acorn-parse.js}}_
 ```
 
-# dist/output.js
+### oxc
+
+Implementation example:
 
 ```javascript
-_{{dist/output.js}}_
+_{{internals/oxc-parse.js}}_
 ```
+
+### meriyah
+
+Implementation example:
+
+```javascript
+_{{internals/meriyah-parse.js}}_
+```
+
+## Configuration example
+
+```javascript
+_{{webpack.config.js}}_
+```
+
+Implementation example:
 
 # Info
 
