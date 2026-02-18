@@ -1090,6 +1090,10 @@
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
+        "skipLoaderOptionsSchemaChecking": {
+          "description": "Skip schema checking of loader options which can be expensive.",
+          "type": "boolean"
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
