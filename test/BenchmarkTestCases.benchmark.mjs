@@ -627,12 +627,14 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeAll?.call(task, "run");
 
-			// Custom warmup
-			// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
-			const samples = [];
+			if (codspeedRunnerMode === "simulation") {
+				// Custom warmup
+				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
+				const samples = [];
 
-			while (samples.length < bench.iterations - 1) {
-				samples.push(await iterationAsync(task, name));
+				while (samples.length < bench.iterations - 1) {
+					samples.push(await iterationAsync(task, name));
+				}
 			}
 
 			await options?.beforeEach?.call(task, "run");
@@ -702,11 +704,13 @@ const withCodSpeed = async (bench) => {
 
 			options?.beforeAll?.call(task, "run");
 
-			// Custom warmup
-			const samples = [];
+			if (codspeedRunnerMode === "simulation") {
+				// Custom warmup
+				const samples = [];
 
-			while (samples.length < bench.iterations - 1) {
-				samples.push(iteration(task, name));
+				while (samples.length < bench.iterations - 1) {
+					samples.push(iteration(task, name));
+				}
 			}
 
 			options?.beforeEach?.call(task, "run");

@@ -569,10 +569,10 @@
     human-id "^4.1.1"
     prettier "^2.7.1"
 
-"@codspeed/core@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.1.0.tgz#142482a13c41cbf2cd1bb6c823d53ff07ee88c8e"
-  integrity sha512-DFO8c7/wd42QbabBdTYR7UsO8g77eHWE9Q4Eyr6yUJSoWhb1qaSoXiqX77RtN3Sbw8RGhhXiwaUC+vVr08+OMg==
+"@codspeed/core@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.2.0.tgz#9eb986a978774717aab4d12ef21f11605b99bd67"
+  integrity sha512-CmDhpWjcOJg2iBOQ/BmBnSBq8qxlM3r4h8uvYDkoUaba+EKRT3T73BZtKuml/48jZMsB+4/FG2UbTBinDWtuvw==
   dependencies:
     axios "^1.4.0"
     find-up "^6.3.0"

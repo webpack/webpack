@@ -52,3 +52,37 @@ jobs:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
+    benchmark-memory:
+      strategy:
+        fail-fast: false
+      runs-on: ubuntu-latest
+      permissions:
+        issues: write
+        pull-requests: write
+      steps:
+        - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+          with:
+            fetch-tags: true
+            fetch-depth: 0
+
+        - name: Use Node.js
+          uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+          with:
+            node-version: lts/*
+            cache: yarn
+
+        - run: yarn --frozen-lockfile
+
+        - run: yarn link --frozen-lockfile || true
+
+        - run: yarn link webpack --frozen-lockfile
+
+        - name: Run benchmarks
+          uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v4.10.6
+          with:
+            run: yarn benchmark --ci
+            mode: "memory"
+            token: ${{ secrets.CODSPEED_TOKEN }}
+          env:
+            LAST_COMMIT: 1
+            NEGATIVE_FILTER: on-schedule
