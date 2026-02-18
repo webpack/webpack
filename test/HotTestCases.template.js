@@ -170,7 +170,7 @@ const describeCases = (config) => {
 									testConfig.moduleScope(runner._moduleScope, options);
 								}
 
-								function __next(callback) {
+								function runCompiler(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									compiler.run((err, stats) => {
 										if (err) return callback(err);
@@ -207,31 +207,23 @@ const describeCases = (config) => {
 									});
 								}
 
-								function _next(callback) {
-									if (
-										options.experiments &&
-										options.experiments.lazyCompilation
-									) {
-										// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
-										// When lazyCompilation is enabled, delay the NEXT compilation by 300ms during HMR
-										// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
-										// have already reached lazyCompilationBackend. This prevents NEXT from triggering
-										// a recompilation while moduleA is still not marked as Activated and still returns
-										// LazyCompilationProxyModule, which would cause a "No update available" error.
-										setTimeout(() => {
-											__next(callback);
-										}, 300);
-										return;
-									}
-									__next(callback);
-								}
-
 								runner.mergeModuleScope({
 									it: _it,
 									beforeEach: _beforeEach,
 									afterEach: _afterEach,
 									STATE: jsonStats,
-									NEXT: _next
+									NEXT: runCompiler,
+									NEXT_DEFERRED: (cb) => {
+										// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
+										// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
+										// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
+										// have already reached lazyCompilationBackend. This prevents NEXT from triggering
+										// a recompilation while moduleA is still not marked as Activated and still returns
+										// LazyCompilationProxyModule, which would cause a "No update available" error.
+										setTimeout(() => {
+											runCompiler(cb);
+										}, 1000);
+									}
 								});
 
 								let promise = Promise.resolve();

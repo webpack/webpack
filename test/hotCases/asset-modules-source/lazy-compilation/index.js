@@ -6,7 +6,7 @@ const getFile = name =>
 
 it("should work", async function (done) {
 	let promise = import("./file.text");
-	NEXT(
+	NEXT_DEFERRED(
 		require("../../update")(done, true, () => {
 			promise.then(() => {
 				expect(getFile("./assets/file.text")).toContain("A");
