@@ -14,7 +14,7 @@ it("should work", async function (done) {
 	})
 
 
-	NEXT(
+	NEXT_DEFERRED(
 		require("../../update")(done, true, () => {
 			promise.then(res => {
 				const links = window.document.getElementsByTagName("link");

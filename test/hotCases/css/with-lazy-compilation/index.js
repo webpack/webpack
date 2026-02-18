@@ -7,7 +7,7 @@ const getFile = name =>
 it("should work", async function (done) {
 	let promise = import("./style.css");
 
-	NEXT(
+	NEXT_DEFERRED(
 		require("../../update")(done, true, () => {
 			promise.then(res => {
 				const links = window.document.getElementsByTagName("link");
