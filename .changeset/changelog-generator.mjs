@@ -123,10 +123,14 @@ const changelogFunctions = {
 
 		let suffix = "";
 		if (links.pull || links.commit || users) {
-			suffix = `(${users ? `by ${users} ` : ""}in ${links.pull || links.commit})`;
+			suffix = `(${users ? `by ${users} ` : ""}in ${
+				links.pull || links.commit
+			})`;
 		}
 
-		return `\n\n- ${firstLine} ${suffix}\n${futureLines.map((l) => `  ${l}`).join("\n")}`;
+		return `\n\n- ${firstLine} ${suffix}\n${futureLines
+			.map((l) => `  ${l}`)
+			.join("\n")}`;
 	}
 };
 

@@ -13761,34 +13761,7 @@ declare interface ParameterizedComparator<TArg extends object, T> {
 }
 declare interface ParseOptions {
 	sourceType: "module" | "script";
-	ecmaVersion?:
-		| 3
-		| 5
-		| 6
-		| 7
-		| 8
-		| 9
-		| 10
-		| 11
-		| 12
-		| 13
-		| 14
-		| 15
-		| 16
-		| 17
-		| 2015
-		| 2016
-		| 2017
-		| 2018
-		| 2019
-		| 2020
-		| 2021
-		| 2022
-		| 2023
-		| 2024
-		| 2025
-		| 2026
-		| "latest";
+	ecmaVersion: ecmaVersion;
 	locations?: boolean;
 	comments?: boolean;
 	ranges?: boolean;
@@ -19366,6 +19339,34 @@ declare interface chunkModuleHashMap {
 	[index: number]: string;
 	[index: string]: string;
 }
+type ecmaVersion =
+	| 3
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 2015
+	| 2016
+	| 2017
+	| 2018
+	| 2019
+	| 2020
+	| 2021
+	| 2022
+	| 2023
+	| 2024
+	| 2025
+	| 2026
+	| "latest";
 declare function exports(
 	options: Configuration,
 	callback: CallbackWebpackFunction_2<Stats, void>

@@ -19,6 +19,7 @@ test/**/*.*
 !test/runner/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
+test/test262-cases/**/*.*
 
 # Ignore some folders
 benchmark/
@@ -34,8 +35,10 @@ declarations/WebpackOptions.d.ts
 schemas/**/*.check.js
 
 # Ignore example fixtures
-examples/**/*
-!examples/*
+examples/**
+!examples/*/
+!examples/**/internals/
+!examples/**/internals/**
 !examples/**/webpack.config.js
 !examples/**/webpack.config.cjs
 !examples/**/webpack.config.mjs
