@@ -483,8 +483,9 @@ const compile = async (entry, scenario, options = {}) =>
 					scenario === "module"
 						? [
 								{
+									// Avoid override `type` when we have `bytes` type, maybe we can improve this too
 									with: {
-										not: "bytes"
+										type: (value) => value !== "bytes"
 									},
 									test: /\.js$/,
 									type: "javascript/esm"
