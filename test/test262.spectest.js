@@ -458,7 +458,7 @@ const compile = async (entry, scenario, options = {}) =>
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
 			mode: "development",
-			target: "node",
+			target: ["node", "web"],
 			devtool: false,
 			stats: "errors-warnings",
 			performance: false,
