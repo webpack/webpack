@@ -483,6 +483,9 @@ const compile = async (entry, scenario, options = {}) =>
 					scenario === "module"
 						? [
 								{
+									with: {
+										not: "bytes"
+									},
 									test: /\.js$/,
 									type: "javascript/esm"
 								}
