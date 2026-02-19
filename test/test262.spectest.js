@@ -458,7 +458,7 @@ const compile = async (entry, scenario, options = {}) =>
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
 			mode: "development",
-			target: ["node", "web"],
+			target: "node",
 			devtool: false,
 			stats: "errors-warnings",
 			performance: false,
@@ -1176,6 +1176,7 @@ describe("test262", () => {
 				});
 
 				sandbox.globalThis = sandbox;
+				sandbox.Buffer = Buffer;
 				sandbox.$262 = create262Host(context);
 				// For debug
 				sandbox.console = console;
