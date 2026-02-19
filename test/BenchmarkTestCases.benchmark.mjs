@@ -534,11 +534,11 @@ const withCodSpeed = async (bench) => {
 	};
 	const rootCallingFile = getCallingFile();
 
-	if (codspeedRunnerMode === "simulation") {
+	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
 		const setupBenchRun = () => {
 			setupCore();
 			console.log(
-				"[CodSpeed] running with @codspeed/tinybench (simulation mode)"
+				`[CodSpeed] running with @codspeed/tinybench (${codspeedRunnerMode} mode)`
 			);
 		};
 		const finalizeBenchRun = () => {
