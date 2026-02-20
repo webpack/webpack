@@ -90,6 +90,53 @@ describe("util/identifier", () => {
 		}
 	});
 
+	describe("makePathsAbsolute", () => {
+		describe("should not absolutify regex patterns", () => {
+			it("should not absolutify regex patterns in context module identifiers", () => {
+				// Issue #16259: Context module identifiers with regex patterns
+				// containing ./ should not have regex patterns made absolute
+				const context = "/project";
+				const identifier = "./src|sync|^\\.\\/.*\\.js$";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				// Only ./src should be made absolute, regex pattern should remain unchanged
+				expect(result).toMatch(
+					/[/\\]project[/\\]src\|sync\|\^\\\.\\\/\.\*\\\.js\$$/
+				);
+			});
+
+			it("should absolutify loader chains separated by !", () => {
+				const context = "/project";
+				const identifier = "./loader!./file.js";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toMatch(
+					/[/\\]project[/\\]loader![/\\]project[/\\]file\.js$/
+				);
+			});
+
+			it("should absolutify paths after pipe separators when not regex", () => {
+				const context = "/project";
+				const identifier = "css/auto|./bar.css";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				// ./bar.css should be made absolute since it's not a regex pattern
+				expect(result).toMatch(/css\/auto\|[/\\]project[/\\]bar\.css$/);
+			});
+
+			it("should handle identifiers without separators", () => {
+				const context = "/project";
+				const identifier = "./src/file.js";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toMatch(/[/\\]project[/\\]src[/\\]file\.js$/);
+			});
+
+			it("should not modify regex patterns with metacharacters", () => {
+				const context = "/project";
+				const identifier = "module-name|sync|^\\.\\/.*$";
+				const result = identifierUtil.makePathsAbsolute(context, identifier);
+				expect(result).toBe("module-name|sync|^\\.\\/.*$");
+			});
+		});
+	});
+
 	describe("parseResourceWithoutFragment", () => {
 		// [input, expectedPath, expectedQuery]
 		/** @type {[string, string, string][]} */
