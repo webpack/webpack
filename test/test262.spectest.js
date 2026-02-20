@@ -483,6 +483,10 @@ const compile = async (entry, scenario, options = {}) =>
 					scenario === "module"
 						? [
 								{
+									// Avoid override `type` when we have `bytes` type, maybe we can improve this too
+									with: {
+										type: (value) => value !== "bytes"
+									},
 									test: /\.js$/,
 									type: "javascript/esm"
 								}
@@ -1176,6 +1180,7 @@ describe("test262", () => {
 				});
 
 				sandbox.globalThis = sandbox;
+				sandbox.Buffer = Buffer;
 				sandbox.$262 = create262Host(context);
 				// For debug
 				sandbox.console = console;
