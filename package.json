@@ -91,7 +91,7 @@
     "@webassemblyjs/ast": "^1.14.1",
     "@webassemblyjs/wasm-edit": "^1.14.1",
     "@webassemblyjs/wasm-parser": "^1.14.1",
-    "acorn": "^8.15.0",
+    "acorn": "^8.16.0",
     "acorn-import-phases": "^1.0.3",
     "browserslist": "^4.28.1",
     "chrome-trace-event": "^1.0.2",
