@@ -188,8 +188,8 @@ class TestRunner {
 			setImmediate,
 			URL,
 			Buffer,
-			TextEncoder,
-			TextDecoder
+			TextEncoder: typeof TextEncoder !== "undefined" ? TextEncoder : undefined,
+			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined
 		};
 		return base;
 	}
