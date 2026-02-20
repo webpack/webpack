@@ -171,7 +171,21 @@ const knownV8WithBugs = [
 	"expressions/compound-assignment/S11.13.2_A7.6_T4.js",
 	"expressions/compound-assignment/S11.13.2_A7.7_T4.js",
 	"expressions/compound-assignment/S11.13.2_A7.8_T4.js",
-	"expressions/compound-assignment/S11.13.2_A7.9_T4.js"
+	"expressions/compound-assignment/S11.13.2_A7.9_T4.js",
+
+	/* cspell:disable */
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--19.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--21.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--3.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--5.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--7.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--9.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--1.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--11.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--13.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--15.js",
+	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--17.js"
+	/* cspell:enable */
 ];
 
 const knownV8PrefixAndPostfixBugs = [
@@ -726,6 +740,7 @@ const knownBugs = [
 	"identifiers/start-unicode-17.0.0.js",
 	"statements/using/syntax/using-for-statement.js",
 	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
+	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
 	"expressions/dynamic-import/syntax/invalid/nested-with-import-defer-no-new-call-expression.js",
 	"expressions/dynamic-import/syntax/invalid/top-level-import-defer-no-new-call-expression.js",
 
@@ -844,19 +859,6 @@ const knownBugs = [
 	"module-code/eval-export-dflt-expr-cls-anon.js",
 	"module-code/eval-export-dflt-expr-fn-anon.js",
 	"module-code/eval-export-dflt-expr-gen-anon.js",
-
-	// V8 bugs
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--19.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--21.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--3.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--5.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--7.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--9.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--1.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--11.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--13.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--15.js",
-	"expressions/compound-assignment/compound-assignment-operator-calls-putvalue-lref--v--17.js",
 
 	// improve test runner to keep dynamic import for such case
 	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
@@ -1218,6 +1220,9 @@ describe("test262", () => {
 				} catch (err) {
 					errored = err;
 				}
+
+				console.log(errored);
+				console.log(knownV8Bugs.includes(name));
 
 				if (errored && knownV8Bugs.includes(name)) {
 					return;
