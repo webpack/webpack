@@ -1,5 +1,5 @@
 "use strict";
 
-const supportsTextDecoder = require("../../../helpers/supportsTextDecoder");
+const supportsTypeBytes = require("../../../helpers/supportsTypeBytes");
 
-module.exports = () => supportsTextDecoder();
+module.exports = () => supportsTypeBytes();
