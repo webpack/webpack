@@ -105,7 +105,8 @@ class TestRunner {
 			cjs: this.createCjsRunner(),
 			esm: this.createEsmRunner(),
 			json: this.createJSONRunner(),
-			raw: this.createRawRunner()
+			raw: this.createRawRunner(),
+			bytes: this.createBytesRunner()
 		};
 	}
 
@@ -186,7 +187,9 @@ class TestRunner {
 			clearTimeout,
 			setImmediate,
 			URL,
-			Buffer
+			Buffer,
+			TextEncoder: typeof TextEncoder !== "undefined" ? TextEncoder : undefined,
+			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined
 		};
 		return base;
 	}
@@ -250,9 +253,10 @@ class TestRunner {
 	 * @param {string} currentDirectory current directory
 	 * @param {string | string[]} module module
 	 * @param {RequireContext=} context context
+	 * @param {Record<string, string>=} importAttributes import attributes
 	 * @returns {EXPECTED_ANY} require result
 	 */
-	require(currentDirectory, module, context = {}) {
+	require(currentDirectory, module, context = {}, importAttributes = {}) {
 		if (this.testConfig.modules && module in this.testConfig.modules) {
 			return this.testConfig.modules[module];
 		}
@@ -272,6 +276,9 @@ class TestRunner {
 			return rawRequire(module.startsWith("node:") ? module.slice(5) : module);
 		}
 		const { modulePath } = moduleInfo;
+		if (importAttributes && importAttributes.type === "bytes") {
+			return this._moduleRunners.bytes(moduleInfo, context);
+		}
 		if (
 			modulePath.endsWith(".mjs") &&
 			this.webpackOptions.experiments &&
@@ -402,7 +409,11 @@ class TestRunner {
 							meta.dirname = path.dirname(identifier);
 						}
 					},
-					importModuleDynamically: async (specifier, module) => {
+					importModuleDynamically: async (
+						specifier,
+						module,
+						importAttributes
+					) => {
 						const normalizedSpecifier = specifier.startsWith("file:")
 							? `./${path.relative(
 									path.dirname(identifier),
@@ -418,10 +429,16 @@ class TestRunner {
 							normalizedSpecifier,
 							{
 								esmReturnStatus: ESModuleStatus.Evaluated
-							}
+							},
+							importAttributes
 						);
 
-						return await asModule(res, module.context);
+						return await asModule(
+							res,
+							module.context,
+							undefined,
+							importAttributes
+						);
 					}
 				});
 				esmCache.set(identifier, instance);
@@ -445,6 +462,7 @@ class TestRunner {
 			const { esmReturnStatus } = context;
 
 			const esm = getModuleInstance(modulePath, content);
+
 			if (esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
 			const link = async () => {
@@ -505,6 +523,10 @@ class TestRunner {
 	 */
 	createRawRunner() {
 		return (moduleInfo) => moduleInfo.content;
+	}
+
+	createBytesRunner() {
+		return (moduleInfo) => new Uint8Array(Buffer.from(moduleInfo.content));
 	}
 
 	/**
