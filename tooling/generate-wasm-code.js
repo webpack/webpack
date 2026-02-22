@@ -10,9 +10,8 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	const ascFile = "assemblyscript/asc";
-	// eslint-disable-next-line n/no-unsupported-features/es-syntax
-	const asc = (await import(ascFile)).default;
+	// eslint-disable-next-line import/no-unresolved, n/no-unsupported-features/es-syntax
+	const asc = (await import("assemblyscript/asc")).default;
 
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);

@@ -34,6 +34,11 @@ declare module "typescript-iterable" {
 	}
 }
 
+declare module "assemblyscript/asc" {
+	const asc: any;
+	export default asc;
+}
+
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
 	export class AST extends Node {
