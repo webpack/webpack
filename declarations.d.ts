@@ -1,3 +1,5 @@
+/// <reference path="./node_modules/assemblyscript/dist/asc.d.ts" />
+
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
@@ -35,7 +37,8 @@ declare module "typescript-iterable" {
 }
 
 declare module "assemblyscript/asc" {
-	const asc: any;
+	export * from "types:assemblyscript/cli/index";
+	import * as asc from "types:assemblyscript/cli/index";
 	export default asc;
 }
 
