@@ -329,7 +329,8 @@
     "behaviour",
     "WHATWG",
     "publicpath",
-    "Uninstantiated"
+    "Uninstantiated",
+    "sccs"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
