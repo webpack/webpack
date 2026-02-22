@@ -1,4 +1,4 @@
-/// <reference path="./node_modules/assemblyscript/dist/asc.d.ts" />
+/// <reference path="./node_modules/assemblyscript/dist/asc.generated.d.ts" />
 
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
