@@ -10,11 +10,9 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	// TODO: fix me after update typescript to v5
-	// eslint-disable-next-line no-warning-comments
-	// @ts-ignore
-	// eslint-disable-next-line import/no-unresolved, n/no-unsupported-features/es-syntax
-	const asc = (await import("assemblyscript/asc")).default;
+	const ascFile = "assemblyscript/asc";
+	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+	const asc = (await import(ascFile)).default;
 
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
