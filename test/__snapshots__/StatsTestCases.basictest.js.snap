@@ -940,6 +940,14 @@ built modules X bytes [built]
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for css-conflicting-order 1`] = `
+"WARNING in chunk css
+Conflicting order between css ./b.css and css ./c.css
+  - css ./b.css before css ./c.css: ./index.js
+  - css ./c.css before css ./b.css: ./index.js
+"
+`;
+
 exports[`StatsTestCases should print correct stats for custom-terser 1`] = `
 "asset bundle.js X bytes [emitted] [minimized] (name: main)
 ./index.js X bytes [built] [code generated]
