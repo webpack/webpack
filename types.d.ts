@@ -11115,7 +11115,6 @@ declare class ModuleGraphConnection {
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
-	active: void;
 	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static addConnectionStates: (
