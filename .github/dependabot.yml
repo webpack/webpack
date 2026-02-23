@@ -12,6 +12,14 @@ updates:
       dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      dependencies-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
         exclude-patterns:
           - "eslint-scope"
           - "json-parse-even-better-errors"
