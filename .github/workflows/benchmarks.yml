@@ -43,7 +43,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v4.10.6
+        uses: CodSpeedHQ/action@2ac572851726409c88c02a307f1ea2632a9ea59b # v4.11.0
         with:
           run: yarn benchmark --ci
           mode: "simulation"
@@ -78,7 +78,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v4.10.6
+        uses: CodSpeedHQ/action@2ac572851726409c88c02a307f1ea2632a9ea59b # v4.11.0
         with:
           run: yarn benchmark --ci
           mode: "memory"
