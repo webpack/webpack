@@ -4,8 +4,8 @@ it("should throw helpful error when module is not found at runtime", function ()
 	expect(helper).toBe("helper");
 
 	// Find the module id for helper.js
-	const moduleId = Object.keys(__webpack_modules__).find(
-		id => id.includes("helper")
+	const moduleId = Object.keys(__webpack_modules__).find((id) =>
+		id.includes("helper")
 	);
 	expect(moduleId).toBeDefined();
 
@@ -24,4 +24,16 @@ it("should throw helpful error when module is not found at runtime", function ()
 	expect(thrownError).toBeDefined();
 	expect(thrownError.message).toMatch(/Cannot find module/);
 	expect(thrownError.code).toBe("MODULE_NOT_FOUND");
+
+	// Ensure the module cache is cleared
+	let thrownError2;
+	try {
+		require("./helper");
+	} catch (e) {
+		thrownError2 = e;
+	}
+
+	expect(thrownError2).toBeDefined();
+	expect(thrownError2.message).toMatch(/Cannot find module/);
+	expect(thrownError2.code).toBe("MODULE_NOT_FOUND");
 });
