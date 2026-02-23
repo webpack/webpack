@@ -1075,6 +1075,10 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
+        "html": {
+          "description": "Enable html entry point support. When enabled, HTML files can be used as entry points and webpack will process script, link, and image references within them.",
+          "type": "boolean"
+        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1115,6 +1119,10 @@
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "html": {
+          "description": "Enable html entry point support. When enabled, HTML files can be used as entry points and webpack will process script, link, and image references within them.",
           "type": "boolean"
         },
         "outputModule": {
@@ -1163,6 +1171,10 @@
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "html": {
+          "description": "Enable html entry point support. When enabled, HTML files can be used as entry points and webpack will process script, link, and image references within them.",
           "type": "boolean"
         },
         "lazyCompilation": {

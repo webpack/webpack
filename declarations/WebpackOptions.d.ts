@@ -3198,6 +3198,10 @@ export interface ExperimentsCommon {
 	 */
 	futureDefaults?: boolean;
 	/**
+	 * Enable html entry point support. When enabled, HTML files can be used as entry points and webpack will process script, link, and image references within them.
+	 */
+	html?: boolean;
+	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
