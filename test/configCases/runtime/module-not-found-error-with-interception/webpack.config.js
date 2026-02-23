@@ -2,13 +2,16 @@
 
 const { RuntimeGlobals, RuntimeModule, Template } = require("../../../../");
 
+/** @typedef {import("../../../../").Compilation} Compilation */
+
 class ReactRefreshRuntimeModule extends RuntimeModule {
 	constructor() {
 		super("react refresh", 5);
 	}
 
 	generate() {
-		const { runtimeTemplate } = this.compilation;
+		const compilation = /** @type {Compilation} */ (this.compilation);
+		const { runtimeTemplate } = compilation;
 		return Template.asString([
 			`if (${RuntimeGlobals.interceptModuleExecution}) {`,
 			Template.indent([
