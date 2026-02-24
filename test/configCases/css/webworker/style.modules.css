@@ -1,0 +1,4 @@
+.header {
+	composes: base from "./base.modules.css";
+	color: red;
+}
