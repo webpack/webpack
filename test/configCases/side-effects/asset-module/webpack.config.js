@@ -36,5 +36,8 @@ module.exports = {
 		sideEffects: true,
 		moduleIds: "named",
 		concatenateModules: false
+	},
+	experiments: {
+		futureDefaults: true
 	}
 };
