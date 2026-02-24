@@ -1,4 +1,4 @@
-// 2 external modules, the external module exportsType is unkown
+// 2 external modules, the external module exportsType is unknown
 // so the exports of current module can only be known at runtime
 export * from 'path'
 
