@@ -6526,7 +6526,18 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		AUTO: ExportPresenceMode;
 		ERROR: ExportPresenceMode;
 		fromUserOption(str: string | false): ExportPresenceMode;
+		/**
+		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
+		 */
+		resolveFromOptions(
+			specificValue: undefined | string | false,
+			options: JavascriptParserOptions
+		): ExportPresenceMode;
 	};
+	static getNonOptionalPart: (
+		members: string[],
+		membersOptionals: boolean[]
+	) => string[];
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
