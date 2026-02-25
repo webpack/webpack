@@ -8,6 +8,10 @@ describe("SizeFormatHelpers", () => {
 			expect(formatSize(0)).toBe("0 bytes");
 		});
 
+		it("should handle negative size", () => {
+			expect(formatSize(-1)).toBe("0 bytes");
+		});
+
 		it("should handle bytes", () => {
 			expect(formatSize(1000)).toBe("1000 bytes");
 		});
