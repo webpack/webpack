@@ -85,7 +85,7 @@
     ]
   },
   "dependencies": {
-    "@types/eslint-scope": "^3.7.7",
+    "@types/eslint-scope": "^9.1.0",
     "@types/estree": "^1.0.8",
     "@types/json-schema": "^7.0.15",
     "@webassemblyjs/ast": "^1.14.1",
@@ -97,7 +97,7 @@
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.19.0",
     "es-module-lexer": "^2.0.0",
-    "eslint-scope": "5.1.1",
+    "eslint-scope": "9.1.1",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.2.11",
