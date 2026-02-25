@@ -3,7 +3,6 @@
 /**
  * Tests that importExportsPresence / reexportExportsPresence correctly override
  * exportsPresence and strictExportPresence via resolveFromOptions.
- *
  * @type {import("../../../../").Configuration}
  */
 module.exports = {
