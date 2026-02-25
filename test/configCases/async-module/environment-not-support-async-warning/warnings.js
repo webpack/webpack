@@ -22,6 +22,13 @@ module.exports = [
 		/"external promise"/
 	],
 	[
+		{
+			moduleName: /external "scriptGlobal@https:\/\/example\.com\/script\.js"/
+		},
+		/The generated code contains 'async\/await'/,
+		/"external script"/
+	],
+	[
 		{ moduleName: /wasm\.wat/ },
 		/The generated code contains 'async\/await'/,
 		/"asyncWebAssembly"/
