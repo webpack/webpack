@@ -45,3 +45,7 @@ examples/**
 !examples/**/test.filter.js
 
 .vscode/**/*.*
+
+# Ignore local working files
+pr.md
+issue.md
