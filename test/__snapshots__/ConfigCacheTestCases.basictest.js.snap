@@ -18,8 +18,6 @@ exports.modules = {
 ;// external \\"fs\\"
 const external_fs_namespaceObject = require(\\"fs\\");
 var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
-;// css ./style.css
-
 // EXTERNAL MODULE: ./dependency.js
 var dependency = __webpack_require__(784);
 ;// ./foo.js
@@ -64,9 +62,8 @@ export const __webpack_esm_modules__ = {
   \\\\****************/
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 125);
-/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dependency.js */ 784);
-/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dependency.js */ 784);
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
 
@@ -76,16 +73,6 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () =>
 
 	expect(source).toMatchSnapshot();
 });
-
-
-/***/ },
-
-/***/ 125
-/*!***********************!*\\\\
-  !*** css ./style.css ***!
-  \\\\***********************/
-() {
-
 
 
 /***/ }
