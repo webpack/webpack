@@ -2,4 +2,4 @@
 
 const [major] = process.versions.node.split(".").map(Number);
 
-module.exports = () => major < 14;
+module.exports = () => major >= 14;
