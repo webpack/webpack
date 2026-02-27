@@ -10647,6 +10647,15 @@ declare class Module extends DependenciesBlock {
 		callback: (err?: WebpackError) => void
 	): void;
 	getSourceTypes(): ReadonlySet<string>;
+
+	/**
+	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
+	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
+	 * added or changed over time by generators and do not need to be handled or detected here.
+	 * Some modules, e.g. RemoteModule, may return non-basic source types like "remote" and "share-init"
+	 * from getSourceTypes(), but their generated output is still JavaScript, i.e. their basic type is JS.
+	 */
+	getSourceBasicTypes(): ReadonlySet<string>;
 	source(
 		dependencyTemplates: DependencyTemplates,
 		runtimeTemplate: RuntimeTemplate,
