@@ -1,5 +1,5 @@
 ---
-"@fake-scope/fake-pkg": minor
+"webpack": patch
 ---
 
-Remove empty needless js output for normal css module
+Remove empty needless js output for normal css module.
