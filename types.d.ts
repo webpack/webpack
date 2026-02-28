@@ -1310,10 +1310,6 @@ declare class Chunk {
 	renderedHash?: string;
 	chunkReason?: string;
 	extraAsync: boolean;
-
-	/**
-	 * @deprecated
-	 */
 	get entryModule(): Module;
 	hasEntryModule(): boolean;
 	addModule(module: Module): boolean;
@@ -1336,10 +1332,6 @@ declare class Chunk {
 		filterFn: (m: Module) => boolean,
 		filterChunkFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): boolean;
-
-	/**
-	 * @deprecated
-	 */
 	getChunkMaps(realHash: boolean): ChunkMaps;
 	hasRuntime(): boolean;
 	canBeInitial(): boolean;
@@ -1554,43 +1546,19 @@ declare class ChunkGraph {
 		withConnections?: boolean
 	): bigint;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
-
-	/**
-	 * @deprecated
-	 */
 	static getChunkGraphForModule(
 		module: Module,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ChunkGraph;
-
-	/**
-	 * @deprecated
-	 */
 	static setChunkGraphForModule(module: Module, chunkGraph: ChunkGraph): void;
-
-	/**
-	 * @deprecated
-	 */
 	static clearChunkGraphForModule(module: Module): void;
-
-	/**
-	 * @deprecated
-	 */
 	static getChunkGraphForChunk(
 		chunk: Chunk,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ChunkGraph;
-
-	/**
-	 * @deprecated
-	 */
 	static setChunkGraphForChunk(chunk: Chunk, chunkGraph: ChunkGraph): void;
-
-	/**
-	 * @deprecated
-	 */
 	static clearChunkGraphForChunk(chunk: Chunk): void;
 }
 declare abstract class ChunkGroup {
@@ -2327,49 +2295,31 @@ declare class Compilation {
 		beforeModuleAssets: SyncHook<[]>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean | void>;
 		beforeChunkAssets: SyncHook<[]>;
-		/**
-		 * @deprecated
-		 */
 		additionalChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		additionalAssets: FakeHook<
 			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
 		>;
-		/**
-		 * @deprecated
-		 */
 		optimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		optimizeAssets: AsyncSeriesHook<
 			[CompilationAssets],
 			ProcessAssetsAdditionalOptions
 		>;
-		/**
-		 * @deprecated
-		 */
 		afterOptimizeAssets: SyncHook<[CompilationAssets]>;
 		processAssets: AsyncSeriesHook<
 			[CompilationAssets],
@@ -2404,9 +2354,6 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		/**
-		 * @deprecated
-		 */
 		get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]>;
 	}>;
 	name?: string;
@@ -2482,10 +2429,6 @@ declare class Compilation {
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
-
-	/**
-	 * @deprecated
-	 */
 	compilationDependencies: { add: (item: string) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
@@ -2633,10 +2576,6 @@ declare class Compilation {
 	 * and first looks to see if any named chunks already exist and reuse that chunk instead.
 	 */
 	addChunk(name?: null | string): Chunk;
-
-	/**
-	 * @deprecated
-	 */
 	assignDepth(module: Module): void;
 	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
@@ -3841,7 +3780,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 }
 
 /**
@@ -3856,7 +3795,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3922,7 +3861,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -4006,7 +3945,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet";
+		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
@@ -4048,7 +3987,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -4150,7 +4089,6 @@ declare class Dependency {
 
 	/**
 	 * Returns the referenced module and export
-	 * @deprecated
 	 */
 	getReference(moduleGraph: ModuleGraph): never;
 
@@ -6533,20 +6471,8 @@ declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyI
 	otherStarExports: null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>;
 	exportPresenceMode: ExportPresenceMode;
 	allStarExports: null | HarmonyStarExportsList;
-
-	/**
-	 * @deprecated
-	 */
 	get id(): void;
-
-	/**
-	 * @deprecated
-	 */
 	getId(): void;
-
-	/**
-	 * @deprecated
-	 */
 	setId(): void;
 	getIds(moduleGraph: ModuleGraph): string[];
 	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
@@ -8259,10 +8185,6 @@ declare class JavascriptParser extends ParserClass {
 		defined: undefined | (() => R),
 		...args: AsArray<T>
 	): undefined | R;
-
-	/**
-	 * @deprecated
-	 */
 	inScope(
 		params: (
 			| string
@@ -8765,7 +8687,6 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
-	 * @deprecated
 	 */
 	strictExportPresence?: boolean;
 
@@ -8968,11 +8889,6 @@ declare class JsonpTemplatePlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-
-	/**
-	 * use JsonpChunkLoadingRuntimeModule.getCompilationHooks instead
-	 * @deprecated
-	 */
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
@@ -10643,10 +10559,6 @@ declare class Module extends DependenciesBlock {
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
-
-	/**
-	 * @deprecated
-	 */
 	id: null | string | number;
 	get hash(): string;
 	get renderedHash(): string;
@@ -10656,10 +10568,6 @@ declare class Module extends DependenciesBlock {
 	depth: null | number;
 	issuer?: null | Module;
 	get usedExports(): null | boolean | SortableSet<string>;
-
-	/**
-	 * @deprecated
-	 */
 	get optimizationBailout(): (
 		| string
 		| ((requestShortener: RequestShortener) => string)
@@ -10710,11 +10618,6 @@ declare class Module extends DependenciesBlock {
 		context: NeedBuildContext,
 		callback: (err?: null | WebpackError, needBuild?: boolean) => void
 	): void;
-
-	/**
-	 * Use needBuild instead
-	 * @deprecated
-	 */
 	needRebuild(
 		fileTimestamps: Map<string, null | number>,
 		contextTimestamps: Map<string, null | number>
@@ -10739,11 +10642,6 @@ declare class Module extends DependenciesBlock {
 	 * from getSourceTypes(), but their generated output is still JavaScript, i.e. their basic type is JS.
 	 */
 	getSourceBasicTypes(): ReadonlySet<string>;
-
-	/**
-	 * Use codeGeneration() instead
-	 * @deprecated
-	 */
 	source(
 		dependencyTemplates: DependencyTemplates,
 		runtimeTemplate: RuntimeTemplate,
@@ -11169,27 +11067,15 @@ declare class ModuleGraph {
 			...((moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R)[]
 		]
 	): R;
-
-	/**
-	 * @deprecated
-	 */
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ModuleGraph;
-
-	/**
-	 * @deprecated
-	 */
 	static setModuleGraphForModule(
 		module: Module,
 		moduleGraph: ModuleGraph
 	): void;
-
-	/**
-	 * @deprecated
-	 */
 	static clearModuleGraphForModule(module: Module): void;
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 }
@@ -11267,19 +11153,16 @@ declare interface ModuleOptions {
 
 	/**
 	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
-	 * @deprecated
 	 */
 	exprContextRecursive?: boolean;
 
 	/**
 	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
-	 * @deprecated
 	 */
 	exprContextRegExp?: boolean | RegExp;
 
 	/**
 	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
-	 * @deprecated
 	 */
 	exprContextRequest?: string;
 
@@ -11309,37 +11192,31 @@ declare interface ModuleOptions {
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
-	 * @deprecated
 	 */
 	strictExportPresence?: boolean;
 
 	/**
 	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
-	 * @deprecated
 	 */
 	strictThisContextOnImports?: boolean;
 
 	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
-	 * @deprecated
 	 */
 	unknownContextCritical?: boolean;
 
 	/**
 	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
-	 * @deprecated
 	 */
 	unknownContextRecursive?: boolean;
 
 	/**
 	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
-	 * @deprecated
 	 */
 	unknownContextRegExp?: boolean | RegExp;
 
 	/**
 	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
-	 * @deprecated
 	 */
 	unknownContextRequest?: string;
 
@@ -11350,19 +11227,16 @@ declare interface ModuleOptions {
 
 	/**
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
-	 * @deprecated
 	 */
 	wrappedContextCritical?: boolean;
 
 	/**
 	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
-	 * @deprecated
 	 */
 	wrappedContextRecursive?: boolean;
 
 	/**
 	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
-	 * @deprecated
 	 */
 	wrappedContextRegExp?: RegExp;
 }
@@ -11435,10 +11309,6 @@ declare abstract class ModuleProfile {
 	additionalFactoryTimes?: { start: number; end: number }[];
 	additionalFactories: number;
 	additionalFactoriesParallelismFactor: number;
-
-	/**
-	 * @deprecated
-	 */
 	additionalIntegration: number;
 	markFactoryStart(): void;
 	markFactoryEnd(): void;
@@ -11681,11 +11551,6 @@ declare class MultiCompiler {
 	validateDependencies(
 		callback: CallbackWebpackFunction_2<MultiStats, void>
 	): boolean;
-
-	/**
-	 * This method should have been private
-	 * @deprecated
-	 */
 	runWithDependencies(
 		compilers: Compiler[],
 		fn: (
@@ -12655,13 +12520,11 @@ declare interface Optimization {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
 	/**
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 * @deprecated
 	 */
 	noEmitOnErrors?: boolean;
 
@@ -12801,13 +12664,11 @@ declare interface OptimizationNormalized {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
 	/**
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 * @deprecated
 	 */
 	noEmitOnErrors?: boolean;
 
@@ -13521,7 +13382,6 @@ declare interface Output {
 
 	/**
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
-	 * @deprecated
 	 */
 	strictModuleExceptionHandling?: boolean;
 
@@ -13830,7 +13690,6 @@ declare interface OutputNormalized {
 
 	/**
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
-	 * @deprecated
 	 */
 	strictModuleExceptionHandling?: boolean;
 
@@ -18058,7 +17917,6 @@ declare interface StatsOptions {
 
 	/**
 	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
-	 * @deprecated
 	 */
 	cached?: boolean;
 
@@ -18444,7 +18302,6 @@ declare interface StatsOptions {
 
 	/**
 	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
-	 * @deprecated
 	 */
 	runtime?: boolean;
 
@@ -19698,6 +19555,7 @@ declare namespace exports {
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
+		export let cssInjectStyle: "__webpack_require__.is";
 		export let cssMergeStyleSheets: "__webpack_require__.mcs";
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";

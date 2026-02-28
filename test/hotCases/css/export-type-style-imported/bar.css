@@ -1,0 +1,7 @@
+.bar-v1 {
+	color: bar;
+}
+---
+.bar-v2 {
+	color: bar-updated;
+}
