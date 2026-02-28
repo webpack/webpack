@@ -969,6 +969,28 @@ DEBUG LOG from webpack.DefinePlugin
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for define-plugin-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated] [1 error]
+
+ERROR in ./index.js
+Module parse failed: DefinePlugin: Error evaluating value for key \\"BROKEN_VALUE\\"
+Value: (( invalid { syntax
+Unexpected token (1:12)
+
+Hint: If you're trying to define a string value, wrap it in JSON.stringify():
+  new webpack.DefinePlugin({ \\"BROKEN_VALUE\\": JSON.stringify(yourValue) })
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+Error: DefinePlugin: Error evaluating value for key \\"BROKEN_VALUE\\"
+Value: (( invalid { syntax
+Unexpected token (1:12)
+
+Hint: If you're trying to define a string value, wrap it in JSON.stringify():
+  new webpack.DefinePlugin({ \\"BROKEN_VALUE\\": JSON.stringify(yourValue) })
+
+webpack x.x.x compiled with 1 error in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for details-error 1`] = `
 "0 errors 0 warnings:
   asset 0.js X KiB [emitted] (name: main)
@@ -1193,8 +1215,6 @@ exports[`StatsTestCases should print correct stats for error-stack-enabled-error
 
 ERROR in Test error with stack
 Error: Test error with stack
-    at Test.js:1:1
-    at compile.js:2:2
 
 webpack x.x.x compiled with 1 error in X ms"
 `;
