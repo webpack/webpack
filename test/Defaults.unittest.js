@@ -3341,6 +3341,25 @@ describe("snapshots", () => {
 			+   "target": "node14",
 		`)
 	);
+
+	test(
+		"hotUpdateGlobal function",
+		{
+			output: {
+				hotUpdateGlobal: ({ chunk }) => `__myUpdateGlobal_${chunk.id}`
+			}
+		},
+		(e) => {
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": [Function hotUpdateGlobal],
+		`);
+		}
+	);
 });
 
 describe("Targets", () => {
