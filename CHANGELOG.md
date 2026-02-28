@@ -1,5 +1,19 @@
 # webpack
 
+## 5.105.4
+
+### Patch Changes
+
+- Add `Module.getSourceBasicTypes` to distinguish basic source types and clarify how modules with non-basic source types like `remote` still produce JavaScript output. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20546](https://github.com/webpack/webpack/pull/20546))
+
+- Handle `createRequire` in expressions. (by [@alexander-akait](https://github.com/alexander-akait) in [#20549](https://github.com/webpack/webpack/pull/20549))
+
+- Fixed types for multi stats. (by [@alexander-akait](https://github.com/alexander-akait) in [#20556](https://github.com/webpack/webpack/pull/20556))
+
+- Remove empty needless js output for normal css module. (by [@JSerFeng](https://github.com/JSerFeng) in [#20162](https://github.com/webpack/webpack/pull/20162))
+
+- Update `enhanced-resolve` to support new features for `tsconfig.json`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20555](https://github.com/webpack/webpack/pull/20555))
+
 ## 5.105.3
 
 ### Patch Changes
