@@ -18522,6 +18522,11 @@ declare interface TsconfigOptions {
 	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths
 	 */
 	references?: string[] | "auto";
+
+	/**
+	 * Override baseUrl from tsconfig.json. If provided, this value will be used instead of the baseUrl in the tsconfig file
+	 */
+	baseUrl?: string;
 }
 declare interface TsconfigPathsData {
 	/**
