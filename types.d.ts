@@ -13730,7 +13730,11 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
 	>;
 	hotUpdateChunkFilename: string;
-	hotUpdateGlobal: string;
+	hotUpdateGlobal: NonNullable<
+		| undefined
+		| string
+		| ((__0: { chunk: Chunk; contentHashType: string }) => string)
+	>;
 	assetModuleFilename: NonNullable<
 		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
 	>;

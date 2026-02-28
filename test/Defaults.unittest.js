@@ -3349,7 +3349,7 @@ describe("snapshots", () => {
 				hotUpdateGlobal: ({ chunk }) => `__myUpdateGlobal_${chunk.id}`
 			}
 		},
-		e => {
+		(e) => {
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received

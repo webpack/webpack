@@ -1,3 +1,6 @@
+"use strict";
+
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		main: "./main.js",
