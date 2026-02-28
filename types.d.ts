@@ -3770,7 +3770,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -3836,7 +3836,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -3920,7 +3920,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet";
+		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
@@ -3962,7 +3962,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
@@ -9093,7 +9093,7 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -19510,6 +19510,7 @@ declare namespace exports {
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
+		export let cssInjectStyle: "__webpack_require__.is";
 		export let cssMergeStyleSheets: "__webpack_require__.mcs";
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";

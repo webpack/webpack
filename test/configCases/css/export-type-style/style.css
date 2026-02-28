@@ -1,0 +1,7 @@
+@import url(./style-imported.css);
+.style-class {
+	color: red;
+	background-color: blue;
+	padding: 10px;
+}
+

@@ -134,6 +134,19 @@ class FakeElement {
 		this._href = undefined;
 		this.parentNode = undefined;
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
+		this._textContent = "";
+	}
+
+	get nodeName() {
+		return this._type.toUpperCase();
+	}
+
+	get textContent() {
+		return this._textContent;
+	}
+
+	set textContent(value) {
+		this._textContent = value || "";
 	}
 
 	_attach(node) {
