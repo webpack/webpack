@@ -16,6 +16,12 @@
   "author": "Tobias Koppers @sokra",
   "main": "lib/index.js",
   "types": "types.d.ts",
+  "exports": {
+  ".": {
+    "types": "./types.d.ts",
+    "default": "./lib/index.js"
+  }
+},
   "bin": {
     "webpack": "bin/webpack.js"
   },
