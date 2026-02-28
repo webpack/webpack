@@ -1285,7 +1285,6 @@ declare interface CallbackWebpackFunction_2<T, R = void> {
 	(err: null | Error, result?: T): R;
 }
 type Cell<T> = undefined | T;
-type ChildrenStatsOptions = undefined | string | boolean | StatsOptions;
 declare class Chunk {
 	constructor(name?: null | string, backCompat?: boolean);
 	id: null | string | number;
@@ -11583,12 +11582,33 @@ declare abstract class MultiStats {
 	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(options?: string | boolean | MultiStatsOptions): StatsCompilation;
-	toString(options?: string | boolean | MultiStatsOptions): string;
+	toJson(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): StatsCompilation;
+	toString(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): string;
 }
-type MultiStatsOptions = Omit<StatsOptions, "children"> & {
-	children?: string | boolean | StatsOptions | ChildrenStatsOptions[];
-};
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
@@ -12274,43 +12294,43 @@ declare interface NormalizedModules {
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
+		| "context"
+		| "chunkGroups"
+		| "requestShortener"
+		| "chunksSort"
+		| "modulesSort"
+		| "chunkModulesSort"
+		| "nestedModulesSort"
 		| "assetsSort"
-		| "assetsSpace"
+		| "ids"
 		| "cachedAssets"
+		| "groupAssetsByEmitStatus"
+		| "groupAssetsByPath"
+		| "groupAssetsByExtension"
+		| "assetsSpace"
+		| "excludeAssets"
+		| "excludeModules"
+		| "warningsFilter"
 		| "cachedModules"
+		| "orphanModules"
+		| "dependentModules"
+		| "runtimeModules"
+		| "groupModulesByCacheStatus"
+		| "groupModulesByLayer"
+		| "groupModulesByAttributes"
+		| "groupModulesByPath"
+		| "groupModulesByExtension"
+		| "groupModulesByType"
+		| "entrypoints"
 		| "chunkGroupAuxiliary"
 		| "chunkGroupChildren"
 		| "chunkGroupMaxAssets"
-		| "chunkGroups"
+		| "modulesSpace"
 		| "chunkModulesSpace"
-		| "chunksSort"
-		| "context"
-		| "dependentModules"
-		| "entrypoints"
-		| "excludeAssets"
-		| "excludeModules"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByExtension"
-		| "groupAssetsByPath"
-		| "groupModulesByAttributes"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByExtension"
-		| "groupModulesByLayer"
-		| "groupModulesByPath"
-		| "groupModulesByType"
-		| "ids"
+		| "nestedModulesSpace"
 		| "logging"
 		| "loggingDebug"
 		| "loggingTrace"
-		| "modulesSort"
-		| "modulesSpace"
-		| "nestedModulesSpace"
-		| "orphanModules"
-		| "runtimeModules"
-		| "warningsFilter"
-		| "requestShortener"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
 		| "_env"
 	> &
 	Record<string, any>;
@@ -14145,7 +14165,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "modules" | "entries" | "dependencies";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -14210,7 +14230,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "modules" | "entries" | "dependencies";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -17768,8 +17788,32 @@ declare class Stats {
 	get endTime(): number;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
-	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
-	toString(options?: string | boolean | StatsOptions): string;
+	toJson(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): StatsCompilation;
+	toString(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): string;
 }
 type StatsAsset = KnownStatsAsset & Record<string, any>;
 type StatsChunk = KnownStatsChunk & Record<string, any>;
@@ -20115,7 +20159,7 @@ declare namespace exports {
 		MultiCompilerOptions,
 		MultiConfiguration,
 		MultiStats,
-		MultiStatsOptions,
+		StatsOptions as MultiStatsOptions,
 		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
