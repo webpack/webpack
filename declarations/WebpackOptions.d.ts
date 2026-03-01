@@ -2333,7 +2333,6 @@ export interface Output {
 	 */
 	strictModuleErrorHandling?: StrictModuleErrorHandling;
 	/**
-	 * @deprecated
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
@@ -3809,7 +3808,6 @@ export interface OutputNormalized {
 	 */
 	strictModuleErrorHandling?: StrictModuleErrorHandling;
 	/**
-	 * @deprecated
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;

@@ -13323,6 +13323,10 @@ declare interface Output {
 	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
 	 */
 	strictModuleErrorHandling?: boolean;
+
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
+	 */
 	strictModuleExceptionHandling?: boolean;
 
 	/**
@@ -13627,6 +13631,10 @@ declare interface OutputNormalized {
 	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
 	 */
 	strictModuleErrorHandling?: boolean;
+
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
+	 */
 	strictModuleExceptionHandling?: boolean;
 
 	/**
