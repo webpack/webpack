@@ -30,6 +30,12 @@ module.exports = {
 					importExportsPresence: "warn",
 					reexportExportsPresence: false
 				}
+			},
+			{
+				test: /module/,
+				parser: {
+					importExportsPresence: "warn"
+				}
 			}
 		]
 	}
