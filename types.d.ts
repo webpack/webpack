@@ -103,10 +103,7 @@ import {
 } from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions } from "net";
-import {
-	ValidationErrorConfiguration,
-	validate as validateFunction
-} from "schema-utils";
+import { ExtendedSchema, ValidationErrorConfiguration } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
 	AsArray,
@@ -2848,6 +2845,16 @@ declare class Compiler {
 		afterPlugins: SyncHook<[Compiler]>;
 		afterResolvers: SyncHook<[Compiler]>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean | void>;
+		validate: AsyncSeriesHook<
+			[
+				(
+					value: object | object[],
+					schema: Schema,
+					options?: ValidationErrorConfiguration,
+					check?: (value?: any) => boolean
+				) => void
+			]
+		>;
 	}>;
 	webpack: typeof exports;
 	name?: string;
@@ -2947,6 +2954,16 @@ declare class Compiler {
 	};
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
+
+	/**
+	 * Schema validation function with optional pre-compiled check
+	 */
+	validate(
+		value: object | object[],
+		schema: Schema,
+		options?: ValidationErrorConfiguration,
+		check?: (value?: any) => boolean
+	): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
@@ -3318,6 +3335,11 @@ declare interface Configuration {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -11548,6 +11570,7 @@ declare class MultiCompiler {
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
+		validate: MultiHook<AsyncSeriesHook<[Compiler]>>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
@@ -12224,7 +12247,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
 	getOptions(): OptionsType;
-	getOptions(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+	getOptions(schema: Schema): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): WebpackLogger;
@@ -16964,6 +16987,10 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+type Schema =
+	| (JSONSchema4 & ExtendedSchema)
+	| (JSONSchema6 & ExtendedSchema)
+	| (JSONSchema7 & ExtendedSchema);
 
 /**
  * Helper function for joining two ranges into a single range. This is useful
@@ -19257,6 +19284,11 @@ declare interface WebpackOptionsNormalized {
 	target?: string | false | string[];
 
 	/**
+	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
+	 */
+	validate?: boolean;
+
+	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
 	watch?: boolean;
@@ -19451,8 +19483,8 @@ declare namespace exports {
 		configuration: Configuration | MultiConfiguration
 	) => void;
 	export const validateSchema: (
-		schema: Parameters<typeof validateFunction>[0],
-		options: Parameters<typeof validateFunction>[1],
+		schema: Schema,
+		options: object | object[],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
