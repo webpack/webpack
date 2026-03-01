@@ -1,8 +1,4 @@
-import asset from "./unused.png?asset";
-import bytes from "./unused.png?bytes";
-import inlined from "./unused.png?inline";
-import source from "./unused.png?source";
-import resource from "./used.png";
+import { resource } from "./module";
 
 it("should not include unused assets", () => {
 	expect(resource).toMatch(/\.png/);
