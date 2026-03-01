@@ -956,6 +956,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+        "multiple": false,
+        "path": "experiments.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-sync-web-assembly": Object {
     "configs": Array [
       Object {
@@ -3007,6 +3020,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-strict-export-presence": Object {
     "configs": Array [
       Object {
@@ -3841,6 +3867,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-strict-export-presence": Object {
     "configs": Array [
       Object {
@@ -4534,6 +4573,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-strict-export-presence": Object {
     "configs": Array [
       Object {
@@ -5042,6 +5094,19 @@ Object {
       },
     ],
     "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+        "multiple": false,
+        "path": "module.parser.javascript.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5576,6 +5641,44 @@ Object {
         "description": "Logical NOT.",
         "multiple": true,
         "path": "module.rules[].mimetype.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-phase": Object {
+    "configs": Array [
+      Object {
+        "description": "Match the import phase of the dependency.",
+        "multiple": true,
+        "path": "module.rules[].phase",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match the import phase of the dependency.",
+        "multiple": true,
+        "path": "module.rules[].phase",
+        "type": "string",
+      },
+    ],
+    "description": "Match the import phase of the dependency.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-phase-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].phase.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].phase.not",
         "type": "string",
       },
     ],

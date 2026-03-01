@@ -4622,6 +4622,7 @@ declare interface EffectData {
 	compiler?: string;
 	issuer: string;
 	issuerLayer: string;
+	phase?: string;
 }
 declare interface EffectUse {
 	type: EffectUseType;
@@ -5207,6 +5208,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 
@@ -5233,6 +5239,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -6817,7 +6828,7 @@ declare interface ImportDependencyMeta {
 	externalType?: "import" | "module";
 }
 type ImportExpressionJavascriptParser = ImportExpressionImport & {
-	phase?: "defer";
+	phase?: "source" | "defer";
 };
 declare interface ImportModuleOptions {
 	/**
@@ -8695,6 +8706,11 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
 	 */
 	requireJs?: boolean;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 */
+	sourceImport?: boolean;
 
 	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
@@ -11768,6 +11784,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	sourcePhase: boolean;
 	error: null | WebpackError;
 	getResource(): null | string;
 
@@ -11924,6 +11941,11 @@ declare interface NormalModuleCreateData {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * whether this module is imported at source phase
+	 */
+	sourcePhase?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -16216,6 +16238,16 @@ declare interface RuleSetRule {
 	parser?: { [index: string]: any };
 
 	/**
+	 * Match the import phase of the dependency.
+	 */
+	phase?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
+
+	/**
 	 * Match the real resource path of the module.
 	 */
 	realResource?:
@@ -19565,6 +19597,7 @@ declare namespace exports {
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";
 		export let compatGetDefaultExport: "__webpack_require__.n";
+		export let compileWasm: "__webpack_require__.vs";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
