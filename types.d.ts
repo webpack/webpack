@@ -6269,9 +6269,6 @@ declare class Generator {
 		[index: string]: undefined | Generator;
 	}): ByTypeGenerator;
 }
-declare interface GeneratorOptions {
-	[index: string]: any;
-}
 type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
 
@@ -9473,8 +9470,8 @@ declare interface KnownUnsafeCacheData {
 	 * resolve options
 	 */
 	resolveOptions?: ResolveOptions;
-	parserOptions?: ParserOptions;
-	generatorOptions?: GeneratorOptions;
+	parserOptions?: any;
+	generatorOptions?: any;
 }
 declare interface LStatFs {
 	(
@@ -11760,9 +11757,9 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser?: ParserClass;
-	parserOptions?: ParserOptions;
+	parserOptions: any;
 	generator?: Generator;
-	generatorOptions?: GeneratorOptions;
+	generatorOptions: any;
 	resource: string;
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
@@ -11903,7 +11900,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the options of the parser used
 	 */
-	parserOptions?: ParserOptions;
+	parserOptions?: any;
 
 	/**
 	 * the generator used
@@ -11913,7 +11910,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the options of the generator used
 	 */
-	generatorOptions?: GeneratorOptions;
+	generatorOptions?: any;
 
 	/**
 	 * options used for resolving requests from this module
@@ -12001,7 +11998,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
-				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
+				Record<string, SyncBailHook<[any], ParserClass>>
 		>;
 		parser: TypedHookMap<
 			Record<
@@ -12055,7 +12052,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
-				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
+				Record<string, SyncBailHook<[ParserClass, any], void>>
 		>;
 		createGenerator: TypedHookMap<
 			Record<
@@ -12109,7 +12106,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
-				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
+				Record<string, SyncBailHook<[any], Generator>>
 		>;
 		generator: TypedHookMap<
 			Record<
@@ -12169,7 +12166,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
 				> &
-				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
+				Record<string, SyncBailHook<[Generator, any], void>>
 		>;
 		createModuleClass: HookMap<
 			SyncBailHook<
@@ -12185,8 +12182,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptions, ParserClass>>;
-	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
+	parserCache: Map<string, WeakMap<any, ParserClass>>;
+	generatorCache: Map<string, WeakMap<any, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
 		contextInfo: ModuleFactoryCreateDataContextInfo,
@@ -12208,10 +12205,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext: ResolveContext,
 		callback: CallbackWebpackFunction_1<LoaderItem[]>
 	): void;
-	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
-	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
-	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
-	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	getParser(type: string, parserOptions?: any): ParserClass;
+	createParser(type: string, parserOptions?: any): ParserClass;
+	getGenerator(type: string, generatorOptions?: any): Generator;
+	createGenerator(type: string, generatorOptions?: any): Generator;
 	getResolver(
 		type: string,
 		resolveOptions?: ResolveOptionsWithDependencyType
@@ -13855,9 +13852,6 @@ declare class ParserClass {
 		source: string | Buffer | PreparsedAst,
 		state: ParserState
 	): ParserState;
-}
-declare interface ParserOptions {
-	[index: string]: any;
 }
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
