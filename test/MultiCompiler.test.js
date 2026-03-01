@@ -631,4 +631,62 @@ describe("MultiCompiler", () => {
 			compiler.close(done);
 		});
 	});
+
+	describe("validate hook", () => {
+		it("should call validate hook when listening on MultiCompiler directly", (done) => {
+			const compiler = webpack([
+				{
+					name: "a",
+					validate: true,
+					context: path.join(__dirname, "fixtures"),
+					entry: "./a.js"
+				},
+				{
+					name: "b",
+					validate: true,
+					context: path.join(__dirname, "fixtures"),
+					entry: "./b.js"
+				}
+			]);
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
+
+			compiler.hooks.validate.tap("TestPlugin", () => {
+				throw new Error("Validation failed");
+			});
+
+			compiler.run((err) => {
+				expect(err.message).toBe("Validation failed");
+				compiler.close(done);
+			});
+		});
+
+		it("should call validate hook only once when run twice with single compiler config", (done) => {
+			const compiler = webpack([
+				{
+					name: "a",
+					validate: true,
+					context: path.join(__dirname, "fixtures"),
+					entry: "./a.js"
+				}
+			]);
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
+
+			let validateCallCount = 0;
+
+			compiler.hooks.validate.tap("TestPlugin", () => {
+				validateCallCount++;
+			});
+
+			compiler.run((err) => {
+				if (err) return done(err);
+
+				// Run again - validate should not be called again
+				compiler.run((err) => {
+					if (err) return done(err);
+					expect(validateCallCount).toBe(1);
+					compiler.close(done);
+				});
+			});
+		});
+	});
 });

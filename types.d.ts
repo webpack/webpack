@@ -11570,18 +11570,7 @@ declare class MultiCompiler {
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
-		validate: MultiHook<
-			AsyncSeriesHook<
-				[
-					(
-						value: object | object[],
-						schema: Schema,
-						options?: ValidationErrorConfiguration,
-						check?: (value?: any) => boolean
-					) => void
-				]
-			>
-		>;
+		validate: MultiHook<AsyncSeriesHook<[Compiler]>>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
@@ -11611,6 +11600,16 @@ declare class MultiCompiler {
 	): undefined | MultiWatching;
 	run(callback: CallbackWebpackFunction_2<MultiStats, void>): void;
 	purgeInputFileSystem(): void;
+
+	/**
+	 * Schema validation function with optional pre-compiled check
+	 */
+	validate(
+		value: object | object[],
+		schema: Schema,
+		options?: ValidationErrorConfiguration,
+		check?: (value?: any) => boolean
+	): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare interface MultiCompilerOptions {
