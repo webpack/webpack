@@ -2016,7 +2016,8 @@
         },
         "strictExportPresence": {
           "description": "Deprecated in favor of \"exportsPresence\". Emit errors instead of warnings when imported names don't exist in imported module.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "strictThisContextOnImports": {
           "description": "Handle the this context correctly according to the spec for namespace objects.",
@@ -2499,7 +2500,8 @@
         },
         "exprContextRecursive": {
           "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "exprContextRegExp": {
           "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
@@ -2511,11 +2513,13 @@
             {
               "type": "boolean"
             }
-          ]
+          ],
+          "deprecated": true
         },
         "exprContextRequest": {
           "description": "Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.",
-          "type": "string"
+          "type": "string",
+          "deprecated": true
         },
         "generator": {
           "$ref": "#/definitions/GeneratorOptionsByModuleType"
@@ -2536,19 +2540,23 @@
         },
         "strictExportPresence": {
           "description": "Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "strictThisContextOnImports": {
           "description": "Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "unknownContextCritical": {
           "description": "Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "unknownContextRecursive": {
           "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "unknownContextRegExp": {
           "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
@@ -2560,11 +2568,13 @@
             {
               "type": "boolean"
             }
-          ]
+          ],
+          "deprecated": true
         },
         "unknownContextRequest": {
           "description": "Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.",
-          "type": "string"
+          "type": "string",
+          "deprecated": true
         },
         "unsafeCache": {
           "description": "Cache the resolving of module requests.",
@@ -2580,16 +2590,19 @@
         },
         "wrappedContextCritical": {
           "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "wrappedContextRecursive": {
           "description": "Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "wrappedContextRegExp": {
           "description": "Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.",
           "instanceof": "RegExp",
-          "tsType": "RegExp"
+          "tsType": "RegExp",
+          "deprecated": true
         }
       }
     },
@@ -2806,14 +2819,23 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
-          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
+          "enum": [
+            "natural",
+            "named",
+            "hashed",
+            "deterministic",
+            "size",
+            false
+          ],
+          "deprecated": true
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
           "type": "boolean",
           "cli": {
             "exclude": true
-          }
+          },
+          "deprecated": true
         },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value.",
@@ -2970,14 +2992,23 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
-          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
+          "enum": [
+            "natural",
+            "named",
+            "hashed",
+            "deterministic",
+            "size",
+            false
+          ],
+          "deprecated": true
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
           "type": "boolean",
           "cli": {
             "exclude": true
-          }
+          },
+          "deprecated": true
         },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value.",
@@ -5266,7 +5297,8 @@
         },
         "cached": {
           "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "cachedAssets": {
           "description": "Show cached assets (setting this to `false` only shows emitted files).",
@@ -5655,7 +5687,8 @@
         },
         "runtime": {
           "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "runtimeModules": {
           "description": "Add information about runtime modules.",
@@ -5728,7 +5761,8 @@
     },
     "StrictModuleExceptionHandling": {
       "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
-      "type": "boolean"
+      "type": "boolean",
+      "deprecated": true
     },
     "Target": {
       "description": "Environment to build for. An array of environments to build for all of them when possible.",
