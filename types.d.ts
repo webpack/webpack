@@ -11600,16 +11600,6 @@ declare class MultiCompiler {
 	): undefined | MultiWatching;
 	run(callback: CallbackWebpackFunction_2<MultiStats, void>): void;
 	purgeInputFileSystem(): void;
-
-	/**
-	 * Schema validation function with optional pre-compiled check
-	 */
-	validate(
-		value: object | object[],
-		schema: Schema,
-		options?: ValidationErrorConfiguration,
-		check?: (value?: any) => boolean
-	): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
 declare interface MultiCompilerOptions {
