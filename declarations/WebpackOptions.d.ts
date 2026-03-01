@@ -1377,14 +1377,17 @@ export interface ModuleOptions {
 	 */
 	exprContextCritical?: boolean;
 	/**
+	 * @deprecated
 	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
 	 */
 	exprContextRecursive?: boolean;
 	/**
+	 * @deprecated
 	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
 	 */
 	exprContextRegExp?: RegExp | boolean;
 	/**
+	 * @deprecated
 	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
 	 */
 	exprContextRequest?: string;
@@ -1405,26 +1408,32 @@ export interface ModuleOptions {
 	 */
 	rules?: RuleSetRules;
 	/**
+	 * @deprecated
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
 	 */
 	strictExportPresence?: boolean;
 	/**
+	 * @deprecated
 	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
 	 */
 	strictThisContextOnImports?: boolean;
 	/**
+	 * @deprecated
 	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
 	 */
 	unknownContextCritical?: boolean;
 	/**
+	 * @deprecated
 	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
 	 */
 	unknownContextRecursive?: boolean;
 	/**
+	 * @deprecated
 	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
 	 */
 	unknownContextRegExp?: RegExp | boolean;
 	/**
+	 * @deprecated
 	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
 	 */
 	unknownContextRequest?: string;
@@ -1433,14 +1442,17 @@ export interface ModuleOptions {
 	 */
 	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
 	/**
+	 * @deprecated
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
 	wrappedContextCritical?: boolean;
 	/**
+	 * @deprecated
 	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
 	 */
 	wrappedContextRecursive?: boolean;
 	/**
+	 * @deprecated
 	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
 	 */
 	wrappedContextRegExp?: RegExp;
@@ -1841,10 +1853,12 @@ export interface Optimization {
 	 */
 	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
+	 * @deprecated
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
 	/**
+	 * @deprecated
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
 	 */
 	noEmitOnErrors?: boolean;
@@ -2319,6 +2333,7 @@ export interface Output {
 	 */
 	strictModuleErrorHandling?: StrictModuleErrorHandling;
 	/**
+	 * @deprecated
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
@@ -2578,6 +2593,7 @@ export interface StatsOptions {
 	 */
 	builtAt?: boolean;
 	/**
+	 * @deprecated
 	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
 	 */
 	cached?: boolean;
@@ -2861,6 +2877,7 @@ export interface StatsOptions {
 	 */
 	relatedAssets?: boolean;
 	/**
+	 * @deprecated
 	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
 	 */
 	runtime?: boolean;
@@ -3356,6 +3373,7 @@ export interface JavascriptParserOptions {
 	 */
 	requireJs?: boolean;
 	/**
+	 * @deprecated
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
@@ -3568,10 +3586,12 @@ export interface OptimizationNormalized {
 	 */
 	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
+	 * @deprecated
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
 	/**
+	 * @deprecated
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
 	 */
 	noEmitOnErrors?: boolean;
@@ -3789,6 +3809,7 @@ export interface OutputNormalized {
 	 */
 	strictModuleErrorHandling?: StrictModuleErrorHandling;
 	/**
+	 * @deprecated
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
