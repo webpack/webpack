@@ -311,6 +311,7 @@ declare abstract class AppendOnlyStackedSet<T> {
 	has(el: T): boolean;
 	clear(): void;
 	createChild(): AppendOnlyStackedSet<T>;
+	[Symbol.iterator](): Iterator<T>;
 }
 declare interface Argument {
 	description?: string;
