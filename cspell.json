@@ -8,6 +8,7 @@
     "amdmodule",
     "analyse",
     "analysed",
+    "argjson",
     "asmjs",
     "assemblyscript",
     "asyncloader",
@@ -100,6 +101,7 @@
     "functype",
     "gcov",
     "gibibytes",
+    "gitsubmodule",
     "gitattributes",
     "gitter",
     "global's",
@@ -244,6 +246,7 @@
     "somepath",
     "sourcemap",
     "sourcemapped",
+    "spectest",
     "splitted",
     "stylesheet",
     "stringable",
@@ -268,6 +271,7 @@
     "timestamping",
     "tmpl",
     "toplevel",
+    "tonumber",
     "traceur",
     "transpile",
     "transpiled",
@@ -325,7 +329,8 @@
     "behaviour",
     "WHATWG",
     "publicpath",
-    "Uninstantiated"
+    "Uninstantiated",
+    "sccs"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

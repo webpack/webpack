@@ -17,7 +17,7 @@ it("should work", () => {
 		stats.modules
 			.filter(module => module.moduleType === "css/auto")
 			.forEach(module => {
-				expect(module.sizes["javascript"]).toBe(module.identifier.includes('a1.css') ? undefined : 1);
+				expect(module.sizes["javascript"]).toBe(module.identifier.includes('main.css') || module.identifier.includes('a1.css') ? undefined : 1);
 			});
 	} else if (__STATS_I__ === 2) {
 		stats.modules

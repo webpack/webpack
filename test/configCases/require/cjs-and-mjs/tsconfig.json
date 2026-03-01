@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmitOnError": true,
+    "rootDir": "./",
+    "strict": true
+  },
+  "includes": ["./**/*.mts", "./**/*.cts"]
+}

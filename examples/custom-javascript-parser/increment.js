@@ -1,4 +1,4 @@
-import { add } from './math';
+import { add } from "./math";
 export function increment(val) {
-    return add(val, 1);
-};
+	return add(val, 1);
+}

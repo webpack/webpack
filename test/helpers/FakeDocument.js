@@ -49,6 +49,67 @@ class FakeDocument {
 		return this._elementsByTagName.get(name) || [];
 	}
 
+	querySelectorAll(selector) {
+		// Simple selector support for common cases
+		// Tag selector: "link", "script", etc.
+		if (/^[a-zA-Z][a-zA-Z0-9-]*$/.test(selector)) {
+			return this.getElementsByTagName(selector);
+		}
+		// Class selector: ".class"
+		if (selector.startsWith(".")) {
+			const className = selector.slice(1);
+			const allElements = [];
+			for (const elements of this._elementsByTagName.values()) {
+				for (const element of elements) {
+					if (element.getAttribute("class") === className) {
+						allElements.push(element);
+					}
+				}
+			}
+			return allElements;
+		}
+		// ID selector: "#id"
+		if (selector.startsWith("#")) {
+			const id = selector.slice(1);
+			for (const elements of this._elementsByTagName.values()) {
+				for (const element of elements) {
+					if (element.getAttribute("id") === id) {
+						return [element];
+					}
+				}
+			}
+			return [];
+		}
+		// Attribute selector: "[attr]", "[attr=value]"
+		if (selector.startsWith("[") && selector.endsWith("]")) {
+			const attrSelector = selector.slice(1, -1);
+			const allElements = [];
+			if (attrSelector.includes("=")) {
+				const [attr, value] = attrSelector
+					.split("=")
+					.map((s) => s.trim().replace(/^["']|["']$/g, ""));
+				for (const elements of this._elementsByTagName.values()) {
+					for (const element of elements) {
+						if (element.getAttribute(attr) === value) {
+							allElements.push(element);
+						}
+					}
+				}
+			} else {
+				for (const elements of this._elementsByTagName.values()) {
+					for (const element of elements) {
+						if (element.getAttribute(attrSelector) !== undefined) {
+							allElements.push(element);
+						}
+					}
+				}
+			}
+			return allElements;
+		}
+		// Default: return empty array for unsupported selectors
+		return [];
+	}
+
 	getComputedStyle(element) {
 		const style = { getPropertyValue };
 		const links = this.getElementsByTagName("link");
@@ -83,8 +144,11 @@ class FakeElement {
 
 	_load(node) {
 		if (node._type === "link") {
-			setTimeout(() => {
-				if (node.onload) node.onload({ type: "load", target: node });
+			const timer = setTimeout(() => {
+				clearTimeout(timer);
+				const loadEvent = { type: "load", target: node };
+				if (node.onload) node.onload(loadEvent);
+				node._dispatchEvent(loadEvent);
 			}, 100);
 		} else if (node._type === "script" && this._document.onScript) {
 			Promise.resolve().then(() => {
@@ -183,6 +247,81 @@ class FakeElement {
 
 	set rel(value) {
 		this._attributes.rel = value;
+	}
+
+	addEventListener(event, handler) {
+		if (!this._eventListeners) {
+			this._eventListeners = new Map();
+		}
+		if (!this._eventListeners.has(event)) {
+			this._eventListeners.set(event, []);
+		}
+		this._eventListeners.get(event).push(handler);
+	}
+
+	removeEventListener(event, handler) {
+		if (!this._eventListeners) return;
+		const handlers = this._eventListeners.get(event);
+		if (!handlers) return;
+		const index = handlers.indexOf(handler);
+		if (index >= 0) {
+			handlers.splice(index, 1);
+		}
+	}
+
+	_dispatchEvent(event) {
+		if (!this._eventListeners) return;
+		const handlers = this._eventListeners.get(event.type);
+		if (handlers) {
+			for (const handler of handlers) {
+				handler(event);
+			}
+		}
+	}
+
+	cloneNode(deep = false) {
+		const cloned = new FakeElement(
+			this._document,
+			this._type,
+			this._document._basePath
+		);
+
+		// Copy attributes
+		cloned._attributes = { ...this._attributes };
+
+		// Copy src and href
+		cloned._src = this._src;
+		cloned._href = this._href;
+
+		// For link elements, create a new sheet with the same href
+		if (this._type === "link" && this.sheet) {
+			cloned.sheet = new FakeSheet(cloned, this._document._basePath);
+			if (this._href) {
+				cloned.href = this._href;
+			}
+		}
+
+		// Copy event handlers if they exist
+		if (this.onload) {
+			cloned.onload = this.onload;
+		}
+		// Copy event listeners
+		if (this._eventListeners) {
+			cloned._eventListeners = new Map();
+			for (const [event, handlers] of this._eventListeners.entries()) {
+				cloned._eventListeners.set(event, [...handlers]);
+			}
+		}
+
+		// Deep clone children if requested
+		if (deep) {
+			for (const child of this._children) {
+				const clonedChild = child.cloneNode(true);
+				cloned.appendChild(clonedChild);
+			}
+		}
+
+		return cloned;
 	}
 }
 

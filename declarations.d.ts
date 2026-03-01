@@ -1,3 +1,5 @@
+/// <reference types="assemblyscript/dist/asc.generated" />
+
 type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
@@ -32,6 +34,12 @@ declare module "typescript-iterable" {
 	> {
 		[Symbol.iterator](): SetIterator<T>;
 	}
+}
+
+declare module "assemblyscript/asc" {
+	export * from "types:assemblyscript/cli/index";
+	import * as asc from "types:assemblyscript/cli/index";
+	export default asc;
 }
 
 // There are no typings for @webassemblyjs/ast

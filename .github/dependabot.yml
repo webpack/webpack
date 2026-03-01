@@ -12,6 +12,14 @@ updates:
       dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      dependencies-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
         exclude-patterns:
           - "eslint-scope"
           - "json-parse-even-better-errors"
@@ -19,6 +27,17 @@ updates:
           - "rimraf"
           - "mime-types"
   - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    labels:
+      - dependencies
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
       interval: "weekly"

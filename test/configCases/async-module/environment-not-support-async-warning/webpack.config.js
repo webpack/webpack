@@ -21,7 +21,8 @@ module.exports = {
 	externals: {
 		"external-module": ["module module.js", "request"],
 		"external-import": ["import import.js", "request"],
-		"external-promise": "promise Promise.resolve('promise.js')"
+		"external-promise": "promise Promise.resolve('promise.js')",
+		"external-script": "script scriptGlobal@https://example.com/script.js"
 	},
 	experiments: {
 		asyncWebAssembly: true

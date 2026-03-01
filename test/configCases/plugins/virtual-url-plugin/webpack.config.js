@@ -36,6 +36,7 @@ const config = {
 					export const ts = 'const';`;
 				}
 			},
+			"hello.ts": "export const hello = 'hello';",
 			style: {
 				type: ".css",
 				source() {

@@ -3,6 +3,8 @@ import { app } from "virtual:app"
 import json from "virtual:config"
 import { ts } from "virtual:ts"
 import txt from "virtual:txt"
+import { hello } from 'virtual:hello.ts';
+
 import Hammer from 'virtual:hammer.svg';
 
 it("should correctly load virtual modules with the js type.", (done) => {
@@ -30,6 +32,11 @@ it("should correctly load virtual modules with the css type.", (done) => {
 
 it("should correctly load virtual modules with the asset/source type.", (done) => {
     expect(txt).toBe("Hello world");
+    done();
+});
+
+it("should correctly load virtual modules without explicit type when virtual id has file extension.", (done) => {
+    expect(hello).toBe("hello");
     done();
 });
 

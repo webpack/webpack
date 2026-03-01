@@ -12,13 +12,34 @@ const LINKER = () => {};
  * @param {vm.SourceTextModule | vm.Module | EXPECTED_ANY} something module or object
  * @param {EXPECTED_ANY} context context
  * @param {{ esmReturnStatus?: boolean }=} options options
- * @returns {Promise<vm.SourceTextModule>} module
+ * @param {Record<string, string>=} importAttributes import attributes
+ * @returns {Promise<vm.SourceTextModule> | Promise<vm.SyntheticModule>} module
  */
-module.exports = async (something, context, options = {}) => {
+module.exports = async (
+	something,
+	context,
+	options = {},
+	importAttributes = {}
+) => {
 	if (
 		something instanceof (vm.Module || /* node.js 10 */ vm.SourceTextModule)
 	) {
 		return something;
+	}
+
+	if (importAttributes && importAttributes.type === "bytes") {
+		const byteModule = new vm.SyntheticModule(
+			["default"],
+			function evaluateCallback() {
+				this.setExport("default", something);
+			},
+			{ context }
+		);
+
+		await byteModule.link(() => {});
+		await byteModule.evaluate();
+
+		return byteModule;
 	}
 
 	context[SYNTHETIC_MODULES_STORE] = context[SYNTHETIC_MODULES_STORE] || [];

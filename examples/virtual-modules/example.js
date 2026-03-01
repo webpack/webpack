@@ -3,12 +3,14 @@ import myAsyncMessage from "virtual:my-async-module";
 import { version } from "virtual:build-info";
 import json from "virtual:my-json-modules";
 import value from "virtual:my-typescript-module";
+import { hello } from "virtual:hello.ts";
 
 console.log(msg); // Output `from virtual module`
 console.log(myAsyncMessage); // Output `async-value`
 console.log(version); // Output value of `1.0.0`
 console.log(json.name); // Output `virtual-url-plugin`
 console.log(value); // Output `value-from-typescript`
+console.log(hello); // Output `hello`
 
 import { routes } from "virtual:routes";
 

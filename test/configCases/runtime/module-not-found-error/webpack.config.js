@@ -4,6 +4,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		pathinfo: true
+		pathinfo: true,
+		strictModuleErrorHandling: false
 	}
 };

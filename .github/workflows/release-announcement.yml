@@ -3,6 +3,7 @@ name: Release Announcement
 on:
   release:
     types: [published]
+  workflow_dispatch:
   workflow_call:
 
 jobs:
@@ -12,12 +13,41 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: GitHub Releases to Discord
-        uses: SethCohen/github-releases-to-discord@b96a33520f8ad5e6dcdecee6f1212bdf88b16550 # v1.19.0
-        with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          color: "2105893"
-          username: "webpack Release Changelog"
-          avatar_url: "https://github.com/webpack/media/blob/90b54d02fa1cfc8aa864a8322202f74ac000f5d2/logo/icon.png"
-          content: "||<@&1450591255485743204>||"
-          footer_title: "Changelog"
-          reduce_headings: true
+        shell: bash
+        run: |
+          RELEASE_JSON=$(gh release view --json body,tagName,url,name)
+
+          RAW_NAME=$(echo "$RELEASE_JSON" | jq -r '.name // .tagName // ""')
+          RAW_BODY=$(echo "$RELEASE_JSON" | jq -r '.body // ""')
+          HTML_URL=$(echo "$RELEASE_JSON" | jq -r '.url // ""')
+          RAW_AVATAR_URL="https://github.com/webpack/media/blob/90b54d02fa1cfc8aa864a8322202f74ac000f5d2/logo/icon.png"
+
+          PAYLOAD=$(jq -n \
+            --arg name "$RAW_NAME" \
+            --arg avatar_url "$RAW_AVATAR_URL" \
+            --arg url "$HTML_URL" \
+            --arg body "$RAW_BODY" \
+            --arg color "2105893" \
+            --arg footer_text "Changelog" \
+            --arg timestamp "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+          '{
+            username: "webpack Release Changelog",
+            avatar_url: $avatar_url,
+            content: "||<@&1450591255485743204>||",
+            embeds: [{
+              title: ($name | .[0:256]),
+              url: $url,
+              color: ($color | tonumber),
+              description: ($body | .[0:4096]),
+              footer: {
+                text: ($footer_text | .[0:2048])
+              },
+              timestamp: $timestamp
+            }]
+          }')
+
+          curl -X POST -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               "${{ secrets.DISCORD_WEBHOOK }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

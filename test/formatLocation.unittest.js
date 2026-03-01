@@ -71,6 +71,16 @@ describe("formatLocation", () => {
 				end: /f/
 			},
 			result: ""
+		},
+		{
+			name: "name with index",
+			loc: { name: "foo", index: 3 },
+			result: "foo[3]"
+		},
+		{
+			name: "name only",
+			loc: { name: "bar" },
+			result: "bar"
 		}
 	];
 	for (const testCase of testCases) {

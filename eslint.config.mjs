@@ -23,6 +23,7 @@ export default defineConfig([
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
+		"test/test262-cases/**/*.*",
 
 		// TODO fix me
 		// This is not exactly typescript
@@ -48,7 +49,8 @@ export default defineConfig([
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/**/webpack.config.{js,cjs,mjs}",
-		"!examples/**/test.filter.js"
+		"!examples/**/test.filter.js",
+		"!examples/**/internals/**/*.js"
 	]),
 	{
 		ignores: ["lib/**/*.runtime.js", "hot/*.js"],

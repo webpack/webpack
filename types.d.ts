@@ -266,6 +266,42 @@ type AliasOptionNewRequest = string | false | string[];
 declare interface AliasOptions {
 	[index: string]: AliasOptionNewRequest;
 }
+declare interface AllCodeGenerationSchemas {
+	/**
+	 * top level declarations for javascript modules
+	 */
+	topLevelDeclarations: Set<string>;
+
+	/**
+	 * chunk init fragments for javascript modules
+	 */
+	chunkInitFragments: InitFragment<any>[];
+
+	/**
+	 * url for css and javascript modules
+	 */
+	url: { javascript?: string; "css-url"?: string };
+
+	/**
+	 * a filename for asset modules
+	 */
+	filename: string;
+
+	/**
+	 * an asset info for asset modules
+	 */
+	assetInfo: AssetInfo;
+
+	/**
+	 * a full content hash for asset modules
+	 */
+	fullContentHash: string;
+
+	/**
+	 * share-init for modules federation
+	 */
+	"share-init": [{ shareScope: string; initStage: number; init: string }];
+}
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -1249,7 +1285,6 @@ declare interface CallbackWebpackFunction_2<T, R = void> {
 	(err: null | Error, result?: T): R;
 }
 type Cell<T> = undefined | T;
-type ChildrenStatsOptions = undefined | string | boolean | StatsOptions;
 declare class Chunk {
 	constructor(name?: null | string, backCompat?: boolean);
 	id: null | string | number;
@@ -1295,10 +1330,6 @@ declare class Chunk {
 		filterFn: (m: Module) => boolean,
 		filterChunkFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): boolean;
-
-	/**
-	 * @deprecated
-	 */
 	getChunkMaps(realHash: boolean): ChunkMaps;
 	hasRuntime(): boolean;
 	canBeInitial(): boolean;
@@ -1912,16 +1943,7 @@ declare interface CleanOptions {
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
-	options: {
-		/**
-		 * Log the assets that should be removed instead of deleting them.
-		 */
-		dry: boolean;
-		/**
-		 * Keep these assets.
-		 */
-		keep?: string | RegExp | ((path: string) => undefined | boolean);
-	};
+	options: CleanOptions & { dry: boolean };
 
 	/**
 	 * Apply the plugin
@@ -1937,6 +1959,25 @@ declare interface CleanPluginCompilationHooks {
 	 */
 	keep: SyncBailHook<[string], boolean | void>;
 }
+declare interface CodeGenMapOverloads {
+	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
+	set: <K extends string>(
+		key: K,
+		value: CodeGenValue<K>
+	) => CodeGenerationResultData;
+	has: <K extends string>(key: K) => boolean;
+	delete: <K extends string>(key: K) => boolean;
+}
+type CodeGenValue<K extends string> = K extends
+	| "filename"
+	| "assetInfo"
+	| "share-init"
+	| "topLevelDeclarations"
+	| "chunkInitFragments"
+	| "url"
+	| "fullContentHash"
+	? AllCodeGenerationSchemas[K]
+	: any;
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -2015,15 +2056,11 @@ declare interface CodeGenerationResult {
 	 */
 	hash?: string;
 }
-type CodeGenerationResultData = Map<"topLevelDeclarations", Set<string>> &
-	Map<"chunkInitFragments", InitFragment<any>[]> &
-	Map<"url", { "css-url": string }> &
-	Map<"filename", string> &
-	Map<"assetInfo", AssetInfo> &
-	Map<"fullContentHash", string> &
-	Map<"url", { javascript: string }> &
-	Map<"share-init", [{ shareScope: string; initStage: number; init: string }]> &
-	Map<string, any>;
+type CodeGenerationResultData = Omit<
+	Map<string, any>,
+	"get" | "set" | "has" | "delete"
+> &
+	CodeGenMapOverloads;
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
@@ -2256,49 +2293,31 @@ declare class Compilation {
 		beforeModuleAssets: SyncHook<[]>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean | void>;
 		beforeChunkAssets: SyncHook<[]>;
-		/**
-		 * @deprecated
-		 */
 		additionalChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		additionalAssets: FakeHook<
 			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
 		>;
-		/**
-		 * @deprecated
-		 */
 		optimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
 				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
-		/**
-		 * @deprecated
-		 */
 		optimizeAssets: AsyncSeriesHook<
 			[CompilationAssets],
 			ProcessAssetsAdditionalOptions
 		>;
-		/**
-		 * @deprecated
-		 */
 		afterOptimizeAssets: SyncHook<[CompilationAssets]>;
 		processAssets: AsyncSeriesHook<
 			[CompilationAssets],
@@ -2555,10 +2574,6 @@ declare class Compilation {
 	 * and first looks to see if any named chunks already exist and reuse that chunk instead.
 	 */
 	addChunk(name?: null | string): Chunk;
-
-	/**
-	 * @deprecated
-	 */
 	assignDepth(module: Module): void;
 	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
@@ -4048,7 +4063,6 @@ declare class Dependency {
 
 	/**
 	 * Returns the referenced module and export
-	 * @deprecated
 	 */
 	getReference(moduleGraph: ModuleGraph): never;
 
@@ -4268,6 +4282,9 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+type DevtoolFallbackModuleFilenameTemplate =
+	| string
+	| ((context: ModuleFilenameTemplateContext) => string);
 type DevtoolModuleFilenameTemplate =
 	| string
 	| ((context: ModuleFilenameTemplateContext) => string);
@@ -5056,9 +5073,7 @@ declare interface EvalDevToolModulePluginOptions {
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions?: string | SourceMapDevToolPluginOptions);
 	sourceMapComment: string;
-	moduleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -5339,7 +5354,7 @@ type ExportModeType =
 	| "reexport-undefined"
 	| "normal-reexport"
 	| "dynamic-reexport";
-type ExportPresenceMode = false | 0 | 1 | 2 | 3;
+type ExportPresenceMode = 0 | 1 | 2 | 3;
 declare interface ExportSpec {
 	/**
 	 * the name of the export
@@ -5719,8 +5734,63 @@ type Externals =
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	| ExternalItem[];
 declare class ExternalsPlugin {
-	constructor(type: ExternalsType, externals: Externals);
-	type: ExternalsType;
+	constructor(
+		type:
+			| "import"
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs"
+			| "commonjs2"
+			| "commonjs-module"
+			| "commonjs-static"
+			| "amd"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+			| "promise"
+			| "module-import"
+			| "script"
+			| "node-commonjs"
+			| "asset"
+			| "css-import"
+			| "css-url"
+			| ((dependency: Dependency) => ExternalsType),
+		externals: Externals
+	);
+	type:
+		| "import"
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "commonjs-static"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| "promise"
+		| "module-import"
+		| "script"
+		| "node-commonjs"
+		| "asset"
+		| "css-import"
+		| "css-url"
+		| ((dependency: Dependency) => ExternalsType);
 	externals: Externals;
 
 	/**
@@ -6455,7 +6525,18 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		AUTO: ExportPresenceMode;
 		ERROR: ExportPresenceMode;
 		fromUserOption(str: string | false): ExportPresenceMode;
+		/**
+		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
+		 */
+		resolveFromOptions(
+			specificValue: undefined | string | false,
+			options: JavascriptParserOptions
+		): ExportPresenceMode;
 	};
+	static getNonOptionalPart: (
+		members: string[],
+		membersOptionals: boolean[]
+	) => string[];
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
@@ -8115,10 +8196,6 @@ declare class JavascriptParser extends ParserClass {
 		defined: undefined | (() => R),
 		...args: AsArray<T>
 	): undefined | R;
-
-	/**
-	 * @deprecated
-	 */
 	inScope(
 		params: (
 			| string
@@ -8618,11 +8695,6 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
 	 */
 	requireJs?: boolean;
-
-	/**
-	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
-	 * @deprecated
-	 */
 	strictExportPresence?: boolean;
 
 	/**
@@ -8824,11 +8896,6 @@ declare class JsonpTemplatePlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-
-	/**
-	 * use JsonpChunkLoadingRuntimeModule.getCompilationHooks instead
-	 * @deprecated
-	 */
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
@@ -10059,6 +10126,7 @@ declare interface LogEntry {
 		| "info"
 		| "log"
 		| "debug"
+		| "clear"
 		| "profile"
 		| "trace"
 		| "group"
@@ -10066,7 +10134,6 @@ declare interface LogEntry {
 		| "groupEnd"
 		| "profileEnd"
 		| "time"
-		| "clear"
 		| "status";
 	args?: any[];
 	time: number;
@@ -10078,6 +10145,7 @@ type LogTypeEnum =
 	| "info"
 	| "log"
 	| "debug"
+	| "clear"
 	| "profile"
 	| "trace"
 	| "group"
@@ -10085,7 +10153,6 @@ type LogTypeEnum =
 	| "groupEnd"
 	| "profileEnd"
 	| "time"
-	| "clear"
 	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
@@ -10510,10 +10577,6 @@ declare class Module extends DependenciesBlock {
 	depth: null | number;
 	issuer?: null | Module;
 	get usedExports(): null | boolean | SortableSet<string>;
-
-	/**
-	 * @deprecated
-	 */
 	get optimizationBailout(): (
 		| string
 		| ((requestShortener: RequestShortener) => string)
@@ -10564,11 +10627,6 @@ declare class Module extends DependenciesBlock {
 		context: NeedBuildContext,
 		callback: (err?: null | WebpackError, needBuild?: boolean) => void
 	): void;
-
-	/**
-	 * Use needBuild instead
-	 * @deprecated
-	 */
 	needRebuild(
 		fileTimestamps: Map<string, null | number>,
 		contextTimestamps: Map<string, null | number>
@@ -10586,9 +10644,13 @@ declare class Module extends DependenciesBlock {
 	getSourceTypes(): ReadonlySet<string>;
 
 	/**
-	 * Use codeGeneration() instead
-	 * @deprecated
+	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
+	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
+	 * added or changed over time by generators and do not need to be handled or detected here.
+	 * Some modules, e.g. RemoteModule, may return non-basic source types like "remote" and "share-init"
+	 * from getSourceTypes(), but their generated output is still JavaScript, i.e. their basic type is JS.
 	 */
+	getSourceBasicTypes(): ReadonlySet<string>;
 	source(
 		dependencyTemplates: DependencyTemplates,
 		runtimeTemplate: RuntimeTemplate,
@@ -11068,7 +11130,6 @@ declare class ModuleGraphConnection {
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
-	active: void;
 	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static addConnectionStates: (
@@ -11097,23 +11158,8 @@ declare interface ModuleOptions {
 	 * Enable warnings for full dynamic dependencies.
 	 */
 	exprContextCritical?: boolean;
-
-	/**
-	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
-	 * @deprecated
-	 */
 	exprContextRecursive?: boolean;
-
-	/**
-	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
-	 * @deprecated
-	 */
 	exprContextRegExp?: boolean | RegExp;
-
-	/**
-	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
-	 * @deprecated
-	 */
 	exprContextRequest?: string;
 
 	/**
@@ -11139,64 +11185,19 @@ declare interface ModuleOptions {
 	 * An array of rules applied for modules.
 	 */
 	rules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
-
-	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
-	 * @deprecated
-	 */
 	strictExportPresence?: boolean;
-
-	/**
-	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
-	 * @deprecated
-	 */
 	strictThisContextOnImports?: boolean;
-
-	/**
-	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
-	 * @deprecated
-	 */
 	unknownContextCritical?: boolean;
-
-	/**
-	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
-	 * @deprecated
-	 */
 	unknownContextRecursive?: boolean;
-
-	/**
-	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
-	 * @deprecated
-	 */
 	unknownContextRegExp?: boolean | RegExp;
-
-	/**
-	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
-	 * @deprecated
-	 */
 	unknownContextRequest?: string;
 
 	/**
 	 * Cache the resolving of module requests.
 	 */
 	unsafeCache?: boolean | ((module: Module) => boolean);
-
-	/**
-	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
-	 * @deprecated
-	 */
 	wrappedContextCritical?: boolean;
-
-	/**
-	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
-	 * @deprecated
-	 */
 	wrappedContextRecursive?: boolean;
-
-	/**
-	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
-	 * @deprecated
-	 */
 	wrappedContextRegExp?: RegExp;
 }
 
@@ -11268,10 +11269,6 @@ declare abstract class ModuleProfile {
 	additionalFactoryTimes?: { start: number; end: number }[];
 	additionalFactories: number;
 	additionalFactoriesParallelismFactor: number;
-
-	/**
-	 * @deprecated
-	 */
 	additionalIntegration: number;
 	markFactoryStart(): void;
 	markFactoryEnd(): void;
@@ -11514,11 +11511,6 @@ declare class MultiCompiler {
 	validateDependencies(
 		callback: CallbackWebpackFunction_2<MultiStats, void>
 	): boolean;
-
-	/**
-	 * This method should have been private
-	 * @deprecated
-	 */
 	runWithDependencies(
 		compilers: Compiler[],
 		fn: (
@@ -11547,12 +11539,33 @@ declare abstract class MultiStats {
 	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(options?: string | boolean | MultiStatsOptions): StatsCompilation;
-	toString(options?: string | boolean | MultiStatsOptions): string;
+	toJson(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): StatsCompilation;
+	toString(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): string;
 }
-type MultiStatsOptions = Omit<StatsOptions, "children"> & {
-	children?: string | boolean | StatsOptions | ChildrenStatsOptions[];
-};
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
@@ -12238,43 +12251,43 @@ declare interface NormalizedModules {
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
+		| "context"
+		| "chunkGroups"
+		| "requestShortener"
+		| "chunksSort"
+		| "modulesSort"
+		| "chunkModulesSort"
+		| "nestedModulesSort"
 		| "assetsSort"
-		| "assetsSpace"
+		| "ids"
 		| "cachedAssets"
+		| "groupAssetsByEmitStatus"
+		| "groupAssetsByPath"
+		| "groupAssetsByExtension"
+		| "assetsSpace"
+		| "excludeAssets"
+		| "excludeModules"
+		| "warningsFilter"
 		| "cachedModules"
+		| "orphanModules"
+		| "dependentModules"
+		| "runtimeModules"
+		| "groupModulesByCacheStatus"
+		| "groupModulesByLayer"
+		| "groupModulesByAttributes"
+		| "groupModulesByPath"
+		| "groupModulesByExtension"
+		| "groupModulesByType"
+		| "entrypoints"
 		| "chunkGroupAuxiliary"
 		| "chunkGroupChildren"
 		| "chunkGroupMaxAssets"
-		| "chunkGroups"
+		| "modulesSpace"
 		| "chunkModulesSpace"
-		| "chunksSort"
-		| "context"
-		| "dependentModules"
-		| "entrypoints"
-		| "excludeAssets"
-		| "excludeModules"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByExtension"
-		| "groupAssetsByPath"
-		| "groupModulesByAttributes"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByExtension"
-		| "groupModulesByLayer"
-		| "groupModulesByPath"
-		| "groupModulesByType"
-		| "ids"
+		| "nestedModulesSpace"
 		| "logging"
 		| "loggingDebug"
 		| "loggingTrace"
-		| "modulesSort"
-		| "modulesSpace"
-		| "nestedModulesSpace"
-		| "orphanModules"
-		| "runtimeModules"
-		| "warningsFilter"
-		| "requestShortener"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
 		| "_env"
 	> &
 	Record<string, any>;
@@ -12461,20 +12474,10 @@ declare interface Optimization {
 		| ""
 		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
-
-	/**
-	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
-	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
-
-	/**
-	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 * @deprecated
-	 */
 	noEmitOnErrors?: boolean;
 
 	/**
@@ -12607,20 +12610,10 @@ declare interface OptimizationNormalized {
 	 */
 	minimizer?: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
-
-	/**
-	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
-	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
-
-	/**
-	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 * @deprecated
-	 */
 	noEmitOnErrors?: boolean;
 
 	/**
@@ -12729,8 +12722,8 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	minimize: NonNullable<undefined | boolean>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
-		| "..."
 		| WebpackPluginInstance
+		| "..."
 	)[];
 	nodeEnv: NonNullable<undefined | string | false>;
 };
@@ -13330,11 +13323,6 @@ declare interface Output {
 	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
 	 */
 	strictModuleErrorHandling?: boolean;
-
-	/**
-	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
-	 * @deprecated
-	 */
 	strictModuleExceptionHandling?: boolean;
 
 	/**
@@ -13639,11 +13627,6 @@ declare interface OutputNormalized {
 	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
 	 */
 	strictModuleErrorHandling?: boolean;
-
-	/**
-	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
-	 * @deprecated
-	 */
 	strictModuleExceptionHandling?: boolean;
 
 	/**
@@ -13741,34 +13724,7 @@ declare interface ParameterizedComparator<TArg extends object, T> {
 }
 declare interface ParseOptions {
 	sourceType: "module" | "script";
-	ecmaVersion?:
-		| 3
-		| 5
-		| 6
-		| 7
-		| 8
-		| 9
-		| 10
-		| 11
-		| 12
-		| 13
-		| 14
-		| 15
-		| 16
-		| 17
-		| 2015
-		| 2016
-		| 2017
-		| 2018
-		| 2019
-		| 2020
-		| 2021
-		| 2022
-		| 2023
-		| 2024
-		| 2025
-		| 2026
-		| "latest";
+	ecmaVersion: ecmaVersion;
 	locations?: boolean;
 	comments?: boolean;
 	ranges?: boolean;
@@ -14142,7 +14098,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "modules" | "entries" | "dependencies";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -14207,7 +14163,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "modules" | "entries" | "dependencies";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -17356,17 +17312,13 @@ declare interface SourceLike {
 }
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
-	sourceMapFilename: string | false;
+	sourceMapFilename?: null | string | false;
 	sourceMappingURLComment:
 		| string
 		| false
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	moduleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
-	fallbackModuleFilenameTemplate:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
+	fallbackModuleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
 
@@ -17470,7 +17422,7 @@ declare class SourceMapSource extends Source {
 		name: string,
 		sourceMap?: string | Buffer | RawSourceMap,
 		originalSource?: string | Buffer,
-		innerSourceMap?: string | Buffer | RawSourceMap,
+		innerSourceMap?: null | string | Buffer | RawSourceMap,
 		removeOriginalSource?: boolean
 	);
 	getArgsAsBuffers(): [
@@ -17769,8 +17721,32 @@ declare class Stats {
 	get endTime(): number;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
-	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
-	toString(options?: string | boolean | StatsOptions): string;
+	toJson(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): StatsCompilation;
+	toString(
+		options?:
+			| boolean
+			| StatsOptions
+			| "none"
+			| "summary"
+			| "errors-only"
+			| "errors-warnings"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+	): string;
 }
 type StatsAsset = KnownStatsAsset & Record<string, any>;
 type StatsChunk = KnownStatsChunk & Record<string, any>;
@@ -17880,11 +17856,6 @@ declare interface StatsOptions {
 	 * Add built at time information.
 	 */
 	builtAt?: boolean;
-
-	/**
-	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
-	 * @deprecated
-	 */
 	cached?: boolean;
 
 	/**
@@ -18266,11 +18237,6 @@ declare interface StatsOptions {
 	 * Add information about assets that are related to other assets (like SourceMaps for assets).
 	 */
 	relatedAssets?: boolean;
-
-	/**
-	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
-	 * @deprecated
-	 */
 	runtime?: boolean;
 
 	/**
@@ -18525,6 +18491,11 @@ declare interface TsconfigOptions {
 	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths
 	 */
 	references?: string[] | "auto";
+
+	/**
+	 * Override baseUrl from tsconfig.json. If provided, this value will be used instead of the baseUrl in the tsconfig file
+	 */
+	baseUrl?: string;
 }
 declare interface TsconfigPathsData {
 	/**
@@ -19352,6 +19323,34 @@ declare interface chunkModuleHashMap {
 	[index: number]: string;
 	[index: string]: string;
 }
+type ecmaVersion =
+	| 3
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 2015
+	| 2016
+	| 2017
+	| 2018
+	| 2019
+	| 2020
+	| 2021
+	| 2022
+	| 2023
+	| 2024
+	| 2025
+	| 2026
+	| "latest";
 declare function exports(
 	options: Configuration,
 	callback: CallbackWebpackFunction_2<Stats, void>
@@ -19950,7 +19949,6 @@ declare namespace exports {
 		this: Compiler,
 		compiler: Compiler
 	) => void;
-	export type WebpackPluginInstance = (compiler: Compiler) => void;
 	export type ExternalItemFunctionCallback = (
 		data: ExternalItemFunctionData,
 		callback: (
@@ -20073,6 +20071,7 @@ declare namespace exports {
 		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
+		WebpackPluginInstance,
 		ChunkGroup,
 		AssetEmittedInfo,
 		Asset,
@@ -20085,7 +20084,7 @@ declare namespace exports {
 		MultiCompilerOptions,
 		MultiConfiguration,
 		MultiStats,
-		MultiStatsOptions,
+		StatsOptions as MultiStatsOptions,
 		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
