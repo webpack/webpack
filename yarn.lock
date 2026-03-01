@@ -9380,7 +9380,7 @@ toml@^3.0.0:
 
 tooling@bjohansebas/tooling-webpack#deprecated-schema:
   version "1.24.6"
-  resolved "https://codeload.github.com/bjohansebas/tooling-webpack/tar.gz/e6d74d58ecaf10b2659774b4087472c49f313fdf"
+  resolved "https://codeload.github.com/bjohansebas/tooling-webpack/tar.gz/c157d56e1be4c2f813d030f434e1a1e6550da878"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.1.0"
