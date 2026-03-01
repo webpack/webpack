@@ -5,6 +5,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "context": {
+          "description": "The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.",
+          "type": "string"
+        },
         "source": {
           "description": "The source function that provides the virtual content.",
           "instanceof": "Function",

@@ -9856,13 +9856,8 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
-type LoaderContextDeclarationsIndex<OptionsType> =
-	NormalModuleLoaderContext<OptionsType> &
-		LoaderRunnerLoaderContext<OptionsType> &
-		LoaderPluginLoaderContext &
-		HotModuleReplacementPluginLoaderContext;
-type LoaderContextVirtualUrlPlugin<T> = NormalModuleLoaderContext<T> &
-	LoaderRunnerLoaderContext<T> &
+type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
+	LoaderRunnerLoaderContext<OptionsType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 type LoaderDefinition<
@@ -12298,7 +12293,7 @@ declare abstract class NormalReexportItem {
 	hidden: boolean;
 }
 declare interface NormalizedModules {
-	[index: string]: VirtualModuleConfig;
+	[index: string]: VirtualModule;
 }
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
@@ -18653,32 +18648,41 @@ declare class VariableInfo {
 	isTagged(): boolean;
 }
 type VariableInfoFlagsType = 0 | 1 | 2 | 4;
-declare interface VirtualModuleConfig {
+
+/**
+ * A virtual module definition.
+ */
+declare interface VirtualModule {
 	/**
-	 * the module type
+	 * The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
+	 */
+	context?: string;
+
+	/**
+	 * The source function that provides the virtual content.
+	 */
+	source: (
+		loaderContext: LoaderContext<any>
+	) => string | Buffer | Promise<string | Buffer>;
+
+	/**
+	 * The module type.
 	 */
 	type?: string;
 
 	/**
-	 * the source function
-	 */
-	source: (
-		loaderContext: LoaderContextVirtualUrlPlugin<any>
-	) => string | Buffer | Promise<string | Buffer>;
-
-	/**
-	 * optional version function or value
+	 * Optional version function or value for cache invalidation.
 	 */
 	version?: string | true | (() => string);
 }
-type VirtualModuleInput =
+type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextVirtualUrlPlugin<any>
+			loaderContext: LoaderContext<any>
 	  ) => string | Buffer | Promise<string | Buffer>)
-	| VirtualModuleConfig;
+	| VirtualModule;
 declare interface VirtualModules {
-	[index: string]: VirtualModuleInput;
+	[index: string]: VirtualModuleContent;
 }
 declare class VirtualUrlPlugin {
 	constructor(modules: VirtualModules, scheme?: string);
@@ -18689,7 +18693,7 @@ declare class VirtualUrlPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	findVirtualModuleConfigById(id: string): VirtualModuleConfig;
+	findVirtualModuleConfigById(id: string): VirtualModule;
 
 	/**
 	 * Get the cache version for a given version value
@@ -20205,7 +20209,7 @@ declare namespace exports {
 		LoaderDefinitionFunction,
 		PitchLoaderDefinitionFunction,
 		RawLoaderDefinitionFunction,
-		LoaderContextDeclarationsIndex as LoaderContext
+		LoaderContext
 	};
 }
 declare const idsSymbolCommonJsExportRequireDependency: unique symbol;

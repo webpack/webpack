@@ -33,6 +33,10 @@ export interface VirtualUrlOptions {
  */
 export interface VirtualModule {
 	/**
+	 * The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
+	 */
+	context?: string;
+	/**
 	 * The source function that provides the virtual content.
 	 */
 	source: import("../../../lib/schemes/VirtualUrlPlugin").SourceFn;
