@@ -14,7 +14,7 @@ export interface LimitChunkCountPluginOptions {
 	 */
 	entryChunkMultiplicator?: number;
 	/**
-	 * Limit the maximum number of chunks using a value greater greater than or equal to 1.
+	 * Limit the maximum number of chunks using a value greater than or equal to 1.
 	 */
 	maxChunks: number;
 }
