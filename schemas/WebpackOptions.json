@@ -5736,7 +5736,7 @@
         {
           "type": "array",
           "items": {
-            "description": "Environment to build for.",
+            "description": "Specific environment, runtime, or syntax.",
             "type": "string",
             "minLength": 1
           },
