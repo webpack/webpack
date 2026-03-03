@@ -103,7 +103,11 @@ import {
 } from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions } from "net";
-import { ExtendedSchema, ValidationErrorConfiguration } from "schema-utils";
+import {
+	ExtendedSchema,
+	ValidationErrorConfiguration,
+	validate as validateFunction
+} from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
 	AsArray,
@@ -1940,7 +1944,7 @@ declare interface CleanOptions {
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
-	options: CleanOptions & { dry: boolean };
+	options: CleanOptions;
 
 	/**
 	 * Apply the plugin
@@ -2840,21 +2844,12 @@ declare class Compiler {
 			[string, string, undefined | any[]],
 			true | void
 		>;
+		validate: SyncHook<[]>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
 		afterPlugins: SyncHook<[Compiler]>;
 		afterResolvers: SyncHook<[Compiler]>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean | void>;
-		validate: AsyncSeriesHook<
-			[
-				(
-					value: object | object[],
-					schema: Schema,
-					options?: ValidationErrorConfiguration,
-					check?: (value?: any) => boolean
-				) => void
-			]
-		>;
 	}>;
 	webpack: typeof exports;
 	name?: string;
@@ -2958,11 +2953,15 @@ declare class Compiler {
 	/**
 	 * Schema validation function with optional pre-compiled check
 	 */
-	validate(
-		value: object | object[],
-		schema: Schema,
+	validate<T extends Parameters<typeof validateFunction>[1] = object>(
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		value: T,
 		options?: ValidationErrorConfiguration,
-		check?: (value?: any) => boolean
+		check?: (value: T) => boolean
 	): void;
 }
 declare class ConcatSource extends Source {
@@ -11570,7 +11569,6 @@ declare class MultiCompiler {
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
-		validate: MultiHook<AsyncSeriesHook<[Compiler]>>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
@@ -12247,7 +12245,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
 	getOptions(): OptionsType;
-	getOptions(schema: Schema): OptionsType;
+	getOptions(schema: Parameters<typeof validateFunction>[0]): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): WebpackLogger;
@@ -16987,10 +16985,6 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
-type Schema =
-	| (JSONSchema4 & ExtendedSchema)
-	| (JSONSchema6 & ExtendedSchema)
-	| (JSONSchema7 & ExtendedSchema);
 
 /**
  * Helper function for joining two ranges into a single range. This is useful
@@ -19483,8 +19477,8 @@ declare namespace exports {
 		configuration: Configuration | MultiConfiguration
 	) => void;
 	export const validateSchema: (
-		schema: Schema,
-		options: object | object[],
+		schema: Parameters<typeof validateFunction>[0],
+		options: Parameters<typeof validateFunction>[1],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
