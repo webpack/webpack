@@ -12443,7 +12443,7 @@ Object {
   "target": Object {
     "configs": Array [
       Object {
-        "description": "Environment to build for.",
+        "description": "Specific environment, runtime, or syntax.",
         "multiple": true,
         "path": "target[]",
         "type": "string",
@@ -12458,7 +12458,7 @@ Object {
         ],
       },
     ],
-    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "description": "Specific environment, runtime, or syntax. Environment to build for. An array of environments to build for all of them when possible.",
     "multiple": true,
     "simpleType": "string",
   },
