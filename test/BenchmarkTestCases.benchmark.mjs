@@ -46,7 +46,7 @@ const checkV8Flags = () => {
 
 checkV8Flags();
 
-const LAST_COMMIT = typeof process.env.LAST_COMMIT === "undefined";
+const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 
 /**
