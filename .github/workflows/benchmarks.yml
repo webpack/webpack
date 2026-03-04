@@ -86,7 +86,7 @@ jobs:
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@2ac572851726409c88c02a307f1ea2632a9ea59b # v4.11.0
         with:
-          run: yarn benchmark:memory --ci
+          run: yarn benchmark --ci
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
