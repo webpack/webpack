@@ -184,7 +184,7 @@ describe("NormalModule", () => {
 				normalModule.useSimpleSourceMap = false;
 			});
 
-			it("returns a SourceMapSource", () => {
+			it("returns a RawSource", () => {
 				expect(
 					normalModule.createSourceForAsset("/", name, content, sourceMap)
 				).toBeInstanceOf(RawSource);
@@ -196,7 +196,7 @@ describe("NormalModule", () => {
 				sourceMap = () => {};
 			});
 
-			it("returns a SourceMapSource", () => {
+			it("returns a RawSource", () => {
 				expect(
 					normalModule.createSourceForAsset("/", name, content, sourceMap)
 				).toBeInstanceOf(RawSource);
