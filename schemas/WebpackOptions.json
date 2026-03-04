@@ -5776,6 +5776,10 @@
       "type": "string",
       "minLength": 1
     },
+    "Validate": {
+      "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
+      "type": "boolean"
+    },
     "WarningFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -6010,6 +6014,9 @@
         "target": {
           "$ref": "#/definitions/Target"
         },
+        "validate": {
+          "$ref": "#/definitions/Validate"
+        },
         "watch": {
           "$ref": "#/definitions/Watch"
         },
@@ -6168,6 +6175,9 @@
     },
     "target": {
       "$ref": "#/definitions/Target"
+    },
+    "validate": {
+      "$ref": "#/definitions/Validate"
     },
     "watch": {
       "$ref": "#/definitions/Watch"
