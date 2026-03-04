@@ -1,6 +1,6 @@
 "use strict";
 
-const propertyAccess = require("../lib/util/propertyAccess");
+const { propertyAccess } = require("../lib/util/property");
 
 describe("propertyAccess", () => {
 	it("brackets but does not quote numbers", () => {
