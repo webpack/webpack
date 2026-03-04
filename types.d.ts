@@ -920,9 +920,9 @@ declare abstract class BasicEvaluatedExpression {
 	setTemplateString(
 		quasis: BasicEvaluatedExpression[],
 		parts: BasicEvaluatedExpression[],
-		kind: "raw" | "cooked"
+		kind: "cooked" | "raw"
 	): BasicEvaluatedExpression;
-	templateStringKind?: "raw" | "cooked";
+	templateStringKind?: "cooked" | "raw";
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
 
@@ -3377,6 +3377,7 @@ declare interface Constructor {
 }
 declare class ConsumeSharedPlugin {
 	constructor(options: ConsumeSharedPluginOptions);
+	options: ConsumeSharedPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3454,6 +3455,7 @@ declare interface ConsumesObject {
 type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
+	options: ContainerPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3493,6 +3495,7 @@ declare interface ContainerPluginOptions {
 }
 declare class ContainerReferencePlugin {
 	constructor(options: ContainerReferencePluginOptions);
+	options: ContainerReferencePluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -4365,29 +4368,7 @@ declare interface Disposable {
 }
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
-	options: {
-		entryOnly: boolean;
-		/**
-		 * Context of requests in the manifest file (defaults to the webpack context).
-		 */
-		context?: string;
-		/**
-		 * If true, manifest json file (output) will be formatted.
-		 */
-		format?: boolean;
-		/**
-		 * Name of the exposed dll function (external name, use value of 'output.library').
-		 */
-		name?: string;
-		/**
-		 * Absolute path to the manifest json file (output).
-		 */
-		path: string;
-		/**
-		 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
-		 */
-		type?: string;
-	};
+	options: DllPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -4579,20 +4560,7 @@ declare interface DllReferencePluginOptionsManifest {
 }
 declare class DotenvPlugin {
 	constructor(options?: DotenvPluginOptions);
-	options: {
-		/**
-		 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
-		 */
-		dir?: string | false;
-		/**
-		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
-		 */
-		prefix?: string | string[];
-		/**
-		 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
-		 */
-		template?: string[];
-	};
+	options: DotenvPluginOptions;
 	apply(compiler: Compiler): void;
 }
 
@@ -6629,9 +6597,7 @@ declare interface HashableObject {
 }
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
-	options: Required<Omit<HashedModuleIdsPluginOptions, "context">> & {
-		context?: string;
-	};
+	options: HashedModuleIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -10374,9 +10340,8 @@ declare interface ManifestObject {
 	entrypoints: Record<string, ManifestEntrypoint>;
 }
 declare class ManifestPlugin {
-	constructor(options: ManifestPluginOptions);
-	options: ManifestPluginOptions &
-		Required<Omit<ManifestPluginOptions, "filter" | "generate">>;
+	constructor(options?: ManifestPluginOptions);
+	options: ManifestPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -10844,6 +10809,7 @@ declare interface ModuleFactoryResult {
 }
 declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
+	options: ModuleFederationPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -14171,7 +14137,7 @@ declare class Profiler {
 }
 declare class ProfilingPlugin {
 	constructor(options?: ProfilingPluginOptions);
-	outputPath: string;
+	options: ProfilingPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -14187,28 +14153,21 @@ declare interface ProfilingPluginOptions {
 }
 declare class ProgressPlugin {
 	constructor(options?: ProgressPluginArgument);
-	profile?: null | boolean;
+	options: ProgressPluginOptions;
+	profile: null | boolean;
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
-	modulesCount?: number;
-	dependenciesCount?: number;
-	showEntries?: boolean;
-	showModules?: boolean;
-	showDependencies?: boolean;
-	showActiveModules?: boolean;
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	modulesCount: number;
+	dependenciesCount: number;
+	showEntries: boolean;
+	showModules: boolean;
+	showDependencies: boolean;
+	showActiveModules: boolean;
+	percentBy: null | "entries" | "modules" | "dependencies";
 	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
 	): undefined | ((p: number, ...args: string[]) => void);
-	static defaultOptions: {
-		profile: boolean;
-		modulesCount: number;
-		dependenciesCount: number;
-		modules: boolean;
-		dependencies: boolean;
-		activeModules: boolean;
-		entries: boolean;
-	};
+	static defaultOptions: Required<Omit<ProgressPluginOptions, "handler">>;
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger
@@ -14278,6 +14237,7 @@ declare class ProvidePlugin {
 }
 declare class ProvideSharedPlugin {
 	constructor(options: ProvideSharedPluginOptions);
+	options: ProvideSharedPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -18755,7 +18715,7 @@ declare interface WatchFileSystem {
 }
 declare class WatchIgnorePlugin {
 	constructor(options: WatchIgnorePluginOptions);
-	paths: (string | RegExp)[];
+	options: WatchIgnorePluginOptions;
 
 	/**
 	 * Apply the plugin
