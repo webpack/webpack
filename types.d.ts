@@ -3780,6 +3780,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
+	exportType?: "link" | "text" | "css-style-sheet";
 }
 
 /**
@@ -9080,7 +9081,6 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
