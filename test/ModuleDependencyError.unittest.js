@@ -38,7 +38,7 @@ describe("ModuleDependencyError", () => {
 
 		it("has a details property", () => {
 			expect(env.moduleDependencyError.details).toMatch(
-				path.join("test", "ModuleDependencyError.unittest.js:")
+				`${path.join("test", "ModuleDependencyError.unittest.js")}:`
 			);
 		});
 
