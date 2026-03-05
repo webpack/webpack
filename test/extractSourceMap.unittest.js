@@ -1,6 +1,6 @@
 "use strict";
 
-const { getSourceMappingURL } = require("../lib/util/extractSourceMap");
+const { getSourceMappingURL } = require("../lib/util/extract");
 
 describe("getSourceMappingURL", () => {
 	const cases = [

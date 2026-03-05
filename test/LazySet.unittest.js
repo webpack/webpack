@@ -1,6 +1,6 @@
 "use strict";
 
-const LazySet = require("../lib/util/LazySet");
+const { LazySet } = require("../lib/util/Lazy");
 
 describe("LazySet", () => {
 	it("addAll", () => {

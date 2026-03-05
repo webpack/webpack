@@ -1,6 +1,6 @@
 "use strict";
 
-const ArrayHelpers = require("../lib/util/ArrayHelpers");
+const { ArrayHelpers } = require("../lib/util/Array");
 
 describe("ArrayHelpers", () => {
 	it("groupBy should partition into two arrays", () => {

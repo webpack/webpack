@@ -1,6 +1,6 @@
 "use strict";
 
-const extractUrlAndGlobal = require("../lib/util/extractUrlAndGlobal");
+const { extractUrlAndGlobal } = require("../lib/util/extract");
 
 describe("extractUrlAndGlobal", () => {
 	it("should return jQuery", () => {
