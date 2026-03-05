@@ -42,6 +42,12 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - name: Check Memory Status
+        run: >
+          node -e 'const os=require("os");
+          const toGb=b=>(b/1024**3).toFixed(2)+" GB";
+          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
+
       - name: Run benchmarks
         uses: CodSpeedHQ/action@2ac572851726409c88c02a307f1ea2632a9ea59b # v4.11.0
         with:
@@ -77,7 +83,7 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      - name: Run benchmarks
+      - name: Run memory benchmarks
         uses: CodSpeedHQ/action@2ac572851726409c88c02a307f1ea2632a9ea59b # v4.11.0
         with:
           run: yarn benchmark --ci

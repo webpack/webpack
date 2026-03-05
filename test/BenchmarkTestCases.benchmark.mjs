@@ -32,7 +32,9 @@ const git = simpleGit(rootPath);
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
 const checkV8Flags = () => {
-	const requiredFlags = getV8Flags();
+	const requiredFlags = getV8Flags().filter(
+		(flag) => !flag.startsWith("--max-old-space-size")
+	);
 	const actualFlags = process.execArgv;
 	const missingFlags = requiredFlags.filter(
 		(flag) => !actualFlags.includes(flag)
