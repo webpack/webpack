@@ -45,7 +45,6 @@ const getChangedFiles = async () => {
 	const files = new Set();
 	const baseRef = process.env.GITHUB_BASE_REF;
 
-	console.log("baseRef:", baseRef);
 	// GitHub Actions base diff
 	if (baseRef) {
 		for (const file of await gitDiff([`origin/${baseRef}...HEAD`])) {
