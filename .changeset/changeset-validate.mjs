@@ -45,20 +45,21 @@ const getChangedFiles = async () => {
 	const files = new Set();
 	const baseRef = process.env.GITHUB_BASE_REF;
 
-	// For github action
+	console.log("baseRef:", baseRef);
+	// GitHub Actions base diff
 	if (baseRef) {
-		for (const file of await gitDiff(`origin/${baseRef}...HEAD`)) {
+		for (const file of await gitDiff([`origin/${baseRef}...HEAD`])) {
 			if (isChangeset(file)) files.add(file);
 		}
 	}
-	// For local
+	// Local working tree changes
 	else {
 		const _files = [
-			// For unstaged
+			// Unstaged changes
 			...(await gitDiff()),
-			// For staged but uncommit
+			// Staged but uncommitted changes
 			...(await gitDiff(["--cached"])),
-			// For not added
+			// Untracked files
 			...(await git.status()).not_added
 		];
 		for (const file of _files) {
