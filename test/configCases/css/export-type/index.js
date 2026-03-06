@@ -8,6 +8,7 @@ import stylesheet from "./stylesheet.css";
 import moduleStylesheet, { secondary as moduleStylesheetSecondary } from "./module-stylesheet.css";
 import icssText, { button as icssTextButton } from "./icss-text.modules.css";
 import icssStylesheet, { "sheet-button" as icssStylesheetButton } from "./icss-stylesheet.modules.css";
+import fooStylesheet from "./foo.css" with { type: "css" };
 
 it("should export CSS text as default when exportType is text (css/module)", () => {
 	expect(typeof moduleText).toBe("string");
@@ -92,3 +93,7 @@ it("should export CSSStyleSheet when exportType is css-style-sheet (css/module)"
 	expect(moduleRule.style.padding).toBe("20px");
 });
 
+
+it("should export CSSStyleSheet when imported with { type: 'css' } even with existing exportType text instance", () => {
+	expect(fooStylesheet).toBeInstanceOf(CSSStyleSheet);
+});
