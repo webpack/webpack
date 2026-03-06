@@ -8765,6 +8765,7 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
+	 * @deprecated
 	 */
 	strictExportPresence?: boolean;
 
@@ -11266,16 +11267,19 @@ declare interface ModuleOptions {
 
 	/**
 	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
+	 * @deprecated
 	 */
 	exprContextRecursive?: boolean;
 
 	/**
 	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
+	 * @deprecated
 	 */
 	exprContextRegExp?: boolean | RegExp;
 
 	/**
 	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
+	 * @deprecated
 	 */
 	exprContextRequest?: string;
 
@@ -11305,31 +11309,37 @@ declare interface ModuleOptions {
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
+	 * @deprecated
 	 */
 	strictExportPresence?: boolean;
 
 	/**
 	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
+	 * @deprecated
 	 */
 	strictThisContextOnImports?: boolean;
 
 	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
+	 * @deprecated
 	 */
 	unknownContextCritical?: boolean;
 
 	/**
 	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
+	 * @deprecated
 	 */
 	unknownContextRecursive?: boolean;
 
 	/**
 	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
+	 * @deprecated
 	 */
 	unknownContextRegExp?: boolean | RegExp;
 
 	/**
 	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
+	 * @deprecated
 	 */
 	unknownContextRequest?: string;
 
@@ -11340,16 +11350,19 @@ declare interface ModuleOptions {
 
 	/**
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
+	 * @deprecated
 	 */
 	wrappedContextCritical?: boolean;
 
 	/**
 	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
+	 * @deprecated
 	 */
 	wrappedContextRecursive?: boolean;
 
 	/**
 	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
+	 * @deprecated
 	 */
 	wrappedContextRegExp?: RegExp;
 }
@@ -12642,11 +12655,13 @@ declare interface Optimization {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
+	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
 	/**
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
+	 * @deprecated
 	 */
 	noEmitOnErrors?: boolean;
 
@@ -12786,11 +12801,13 @@ declare interface OptimizationNormalized {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
+	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
 	/**
 	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
+	 * @deprecated
 	 */
 	noEmitOnErrors?: boolean;
 
@@ -13504,6 +13521,7 @@ declare interface Output {
 
 	/**
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
+	 * @deprecated
 	 */
 	strictModuleExceptionHandling?: boolean;
 
@@ -13812,6 +13830,7 @@ declare interface OutputNormalized {
 
 	/**
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
+	 * @deprecated
 	 */
 	strictModuleExceptionHandling?: boolean;
 
@@ -18039,6 +18058,7 @@ declare interface StatsOptions {
 
 	/**
 	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
+	 * @deprecated
 	 */
 	cached?: boolean;
 
@@ -18424,6 +18444,7 @@ declare interface StatsOptions {
 
 	/**
 	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
+	 * @deprecated
 	 */
 	runtime?: boolean;
 
