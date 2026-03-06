@@ -12443,7 +12443,7 @@ Object {
   "target": Object {
     "configs": Array [
       Object {
-        "description": "Environment to build for.",
+        "description": "Specific environment, runtime, or syntax.",
         "multiple": true,
         "path": "target[]",
         "type": "string",
@@ -12458,7 +12458,7 @@ Object {
         ],
       },
     ],
-    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "description": "Specific environment, runtime, or syntax. Environment to build for. An array of environments to build for all of them when possible.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -12472,6 +12472,19 @@ Object {
       },
     ],
     "description": "Clear all items provided in 'target' configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "validate": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
+        "multiple": false,
+        "path": "validate",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
     "multiple": false,
     "simpleType": "boolean",
   },

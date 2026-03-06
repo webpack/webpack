@@ -5770,7 +5770,7 @@
         {
           "type": "array",
           "items": {
-            "description": "Environment to build for.",
+            "description": "Specific environment, runtime, or syntax.",
             "type": "string",
             "minLength": 1
           },
@@ -5809,6 +5809,10 @@
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
       "type": "string",
       "minLength": 1
+    },
+    "Validate": {
+      "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",
+      "type": "boolean"
     },
     "WarningFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
@@ -6044,6 +6048,9 @@
         "target": {
           "$ref": "#/definitions/Target"
         },
+        "validate": {
+          "$ref": "#/definitions/Validate"
+        },
         "watch": {
           "$ref": "#/definitions/Watch"
         },
@@ -6202,6 +6209,9 @@
     },
     "target": {
       "$ref": "#/definitions/Target"
+    },
+    "validate": {
+      "$ref": "#/definitions/Validate"
     },
     "watch": {
       "$ref": "#/definitions/Watch"

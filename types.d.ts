@@ -104,6 +104,7 @@ import {
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions } from "net";
 import {
+	ExtendedSchema,
 	ValidationErrorConfiguration,
 	validate as validateFunction
 } from "schema-utils";
@@ -311,6 +312,7 @@ declare abstract class AppendOnlyStackedSet<T> {
 	has(el: T): boolean;
 	clear(): void;
 	createChild(): AppendOnlyStackedSet<T>;
+	[Symbol.iterator](): Iterator<T>;
 }
 declare interface Argument {
 	description?: string;
@@ -919,9 +921,9 @@ declare abstract class BasicEvaluatedExpression {
 	setTemplateString(
 		quasis: BasicEvaluatedExpression[],
 		parts: BasicEvaluatedExpression[],
-		kind: "raw" | "cooked"
+		kind: "cooked" | "raw"
 	): BasicEvaluatedExpression;
-	templateStringKind?: "raw" | "cooked";
+	templateStringKind?: "cooked" | "raw";
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
 
@@ -1308,6 +1310,10 @@ declare class Chunk {
 	renderedHash?: string;
 	chunkReason?: string;
 	extraAsync: boolean;
+
+	/**
+	 * @deprecated
+	 */
 	get entryModule(): Module;
 	hasEntryModule(): boolean;
 	addModule(module: Module): boolean;
@@ -1548,19 +1554,43 @@ declare class ChunkGraph {
 		withConnections?: boolean
 	): bigint;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
+
+	/**
+	 * @deprecated
+	 */
 	static getChunkGraphForModule(
 		module: Module,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ChunkGraph;
+
+	/**
+	 * @deprecated
+	 */
 	static setChunkGraphForModule(module: Module, chunkGraph: ChunkGraph): void;
+
+	/**
+	 * @deprecated
+	 */
 	static clearChunkGraphForModule(module: Module): void;
+
+	/**
+	 * @deprecated
+	 */
 	static getChunkGraphForChunk(
 		chunk: Chunk,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ChunkGraph;
+
+	/**
+	 * @deprecated
+	 */
 	static setChunkGraphForChunk(chunk: Chunk, chunkGraph: ChunkGraph): void;
+
+	/**
+	 * @deprecated
+	 */
 	static clearChunkGraphForChunk(chunk: Chunk): void;
 }
 declare abstract class ChunkGroup {
@@ -1947,7 +1977,7 @@ declare interface CleanOptions {
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
-	options: CleanOptions & { dry: boolean };
+	options: CleanOptions;
 
 	/**
 	 * Apply the plugin
@@ -2374,6 +2404,9 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
+		/**
+		 * @deprecated
+		 */
 		get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]>;
 	}>;
 	name?: string;
@@ -2449,6 +2482,10 @@ declare class Compilation {
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
+
+	/**
+	 * @deprecated
+	 */
 	compilationDependencies: { add: (item: string) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
@@ -2869,6 +2906,7 @@ declare class Compiler {
 			[string, string, undefined | any[]],
 			true | void
 		>;
+		validate: SyncHook<[]>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
 		afterPlugins: SyncHook<[Compiler]>;
@@ -2973,6 +3011,20 @@ declare class Compiler {
 	};
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
 	close(callback: (err: null | Error, result?: void) => void): void;
+
+	/**
+	 * Schema validation function with optional pre-compiled check
+	 */
+	validate<T extends Parameters<typeof validateFunction>[1] = object>(
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		value: T,
+		options?: ValidationErrorConfiguration,
+		check?: (value: T) => boolean
+	): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
@@ -3346,6 +3398,11 @@ declare interface Configuration {
 	target?: string | false | string[];
 
 	/**
+	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
+	 */
+	validate?: boolean;
+
+	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
 	watch?: boolean;
@@ -3382,6 +3439,7 @@ declare interface Constructor {
 }
 declare class ConsumeSharedPlugin {
 	constructor(options: ConsumeSharedPluginOptions);
+	options: ConsumeSharedPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3459,6 +3517,7 @@ declare interface ConsumesObject {
 type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
+	options: ContainerPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3498,6 +3557,7 @@ declare interface ContainerPluginOptions {
 }
 declare class ContainerReferencePlugin {
 	constructor(options: ContainerReferencePluginOptions);
+	options: ContainerReferencePluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3781,6 +3841,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
+	exportType?: "link" | "text" | "css-style-sheet";
 }
 
 /**
@@ -4371,29 +4432,7 @@ declare interface Disposable {
 }
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
-	options: {
-		entryOnly: boolean;
-		/**
-		 * Context of requests in the manifest file (defaults to the webpack context).
-		 */
-		context?: string;
-		/**
-		 * If true, manifest json file (output) will be formatted.
-		 */
-		format?: boolean;
-		/**
-		 * Name of the exposed dll function (external name, use value of 'output.library').
-		 */
-		name?: string;
-		/**
-		 * Absolute path to the manifest json file (output).
-		 */
-		path: string;
-		/**
-		 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
-		 */
-		type?: string;
-	};
+	options: DllPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -4585,20 +4624,7 @@ declare interface DllReferencePluginOptionsManifest {
 }
 declare class DotenvPlugin {
 	constructor(options?: DotenvPluginOptions);
-	options: {
-		/**
-		 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
-		 */
-		dir?: string | false;
-		/**
-		 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
-		 */
-		prefix?: string | string[];
-		/**
-		 * Template patterns for .env file names. Use [mode] as placeholder for the webpack mode. Defaults to ['.env', '.env.local', '.env.[mode]', '.env.[mode].local'].
-		 */
-		template?: string[];
-	};
+	options: DotenvPluginOptions;
 	apply(compiler: Compiler): void;
 }
 
@@ -6507,8 +6533,20 @@ declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyI
 	otherStarExports: null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>;
 	exportPresenceMode: ExportPresenceMode;
 	allStarExports: null | HarmonyStarExportsList;
+
+	/**
+	 * @deprecated
+	 */
 	get id(): void;
+
+	/**
+	 * @deprecated
+	 */
 	getId(): void;
+
+	/**
+	 * @deprecated
+	 */
 	setId(): void;
 	getIds(moduleGraph: ModuleGraph): string[];
 	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
@@ -6635,9 +6673,7 @@ declare interface HashableObject {
 }
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
-	options: Required<Omit<HashedModuleIdsPluginOptions, "context">> & {
-		context?: string;
-	};
+	options: HashedModuleIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -9129,7 +9165,6 @@ declare interface KnownBuildInfo {
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
-	exportType?: "link" | "text" | "css-style-sheet";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -9853,7 +9888,7 @@ declare interface LimitChunkCountPluginOptions {
 	entryChunkMultiplicator?: number;
 
 	/**
-	 * Limit the maximum number of chunks using a value greater greater than or equal to 1.
+	 * Limit the maximum number of chunks using a value greater than or equal to 1.
 	 */
 	maxChunks: number;
 }
@@ -10390,9 +10425,8 @@ declare interface ManifestObject {
 	entrypoints: Record<string, ManifestEntrypoint>;
 }
 declare class ManifestPlugin {
-	constructor(options: ManifestPluginOptions);
-	options: ManifestPluginOptions &
-		Required<Omit<ManifestPluginOptions, "filter" | "generate">>;
+	constructor(options?: ManifestPluginOptions);
+	options: ManifestPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -10609,6 +10643,10 @@ declare class Module extends DependenciesBlock {
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
+
+	/**
+	 * @deprecated
+	 */
 	id: null | string | number;
 	get hash(): string;
 	get renderedHash(): string;
@@ -10874,6 +10912,7 @@ declare interface ModuleFactoryResult {
 }
 declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
+	options: ModuleFederationPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -11130,15 +11169,27 @@ declare class ModuleGraph {
 			...((moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R)[]
 		]
 	): R;
+
+	/**
+	 * @deprecated
+	 */
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ModuleGraph;
+
+	/**
+	 * @deprecated
+	 */
 	static setModuleGraphForModule(
 		module: Module,
 		moduleGraph: ModuleGraph
 	): void;
+
+	/**
+	 * @deprecated
+	 */
 	static clearModuleGraphForModule(module: Module): void;
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 }
@@ -14228,7 +14279,7 @@ declare class Profiler {
 }
 declare class ProfilingPlugin {
 	constructor(options?: ProfilingPluginOptions);
-	outputPath: string;
+	options: ProfilingPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -14244,28 +14295,21 @@ declare interface ProfilingPluginOptions {
 }
 declare class ProgressPlugin {
 	constructor(options?: ProgressPluginArgument);
-	profile?: null | boolean;
+	options: ProgressPluginOptions;
+	profile: null | boolean;
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
-	modulesCount?: number;
-	dependenciesCount?: number;
-	showEntries?: boolean;
-	showModules?: boolean;
-	showDependencies?: boolean;
-	showActiveModules?: boolean;
-	percentBy?: null | "entries" | "modules" | "dependencies";
+	modulesCount: number;
+	dependenciesCount: number;
+	showEntries: boolean;
+	showModules: boolean;
+	showDependencies: boolean;
+	showActiveModules: boolean;
+	percentBy: null | "entries" | "modules" | "dependencies";
 	apply(compiler: MultiCompiler | Compiler): void;
 	static getReporter(
 		compiler: Compiler
 	): undefined | ((p: number, ...args: string[]) => void);
-	static defaultOptions: {
-		profile: boolean;
-		modulesCount: number;
-		dependenciesCount: number;
-		modules: boolean;
-		dependencies: boolean;
-		activeModules: boolean;
-		entries: boolean;
-	};
+	static defaultOptions: Required<Omit<ProgressPluginOptions, "handler">>;
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger
@@ -14335,6 +14379,7 @@ declare class ProvidePlugin {
 }
 declare class ProvideSharedPlugin {
 	constructor(options: ProvideSharedPluginOptions);
+	options: ProvideSharedPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -18814,7 +18859,7 @@ declare interface WatchFileSystem {
 }
 declare class WatchIgnorePlugin {
 	constructor(options: WatchIgnorePluginOptions);
-	paths: (string | RegExp)[];
+	options: WatchIgnorePluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -19335,6 +19380,11 @@ declare interface WebpackOptionsNormalized {
 	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: string | false | string[];
+
+	/**
+	 * Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.
+	 */
+	validate?: boolean;
 
 	/**
 	 * Enter watch mode, which rebuilds on file change.

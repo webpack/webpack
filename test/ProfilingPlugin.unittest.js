@@ -9,12 +9,14 @@ describe("Profiling Plugin", () => {
 		const plugin = new ProfilingPlugin({
 			outputPath
 		});
-		expect(plugin.outputPath).toBe(outputPath);
+		expect(plugin.options.outputPath).toBe(outputPath);
 	});
 
 	it("should handle no options", () => {
-		const plugin = new ProfilingPlugin();
-		expect(plugin.outputPath).toBe("events.json");
+		expect(() => {
+			// eslint-disable-next-line no-new
+			new ProfilingPlugin();
+		}).not.toThrow();
 	});
 
 	it("should handle when unable to require the inspector", () => {

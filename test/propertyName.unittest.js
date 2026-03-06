@@ -1,6 +1,6 @@
 "use strict";
 
-const { propertyName } = require("../lib/util/propertyName");
+const { propertyName } = require("../lib/util/property");
 
 describe("propertyName", () => {
 	it("quotes special cases", () => {

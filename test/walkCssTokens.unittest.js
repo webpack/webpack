@@ -5,10 +5,24 @@ const path = require("path");
 const walkCssTokens = require("../lib/css/walkCssTokens");
 
 describe("walkCssTokens", () => {
-	const test = (name, content, fn) => {
-		it(`should parse ${name}`, () => {
+	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
+	const tests = fs
+		.readdirSync(casesPath)
+		.filter((test) => /\.css/.test(test))
+		.map((item) => [
+			item,
+			fs.readFileSync(path.resolve(casesPath, item), "utf8")
+		]);
+
+	for (const [name, code] of tests) {
+		it(`should parse and print "${name}"`, () => {
 			const results = [];
-			walkCssTokens(content, 0, {
+
+			walkCssTokens(code, 0, {
+				whitespace: (input, s, e) => {
+					results.push(["whitespace", input.slice(s, e)]);
+					return e;
+				},
 				comment: (input, s, e) => {
 					results.push(["comment", input.slice(s, e)]);
 					return e;
@@ -18,19 +32,27 @@ describe("walkCssTokens", () => {
 					return e;
 				},
 				leftCurlyBracket: (input, s, e) => {
-					results.push(["leftCurlyBracket", input.slice(s, e)]);
+					results.push(["left-curly-bracket", input.slice(s, e)]);
 					return e;
 				},
 				rightCurlyBracket: (input, s, e) => {
-					results.push(["rightCurlyBracket", input.slice(s, e)]);
+					results.push(["right-curly-bracket", input.slice(s, e)]);
 					return e;
 				},
 				leftParenthesis: (input, s, e) => {
-					results.push(["leftParenthesis", input.slice(s, e)]);
+					results.push(["left-parenthesis", input.slice(s, e)]);
 					return e;
 				},
 				rightParenthesis: (input, s, e) => {
-					results.push(["rightParenthesis", input.slice(s, e)]);
+					results.push(["right-parenthesis", input.slice(s, e)]);
+					return e;
+				},
+				leftSquareBracket: (input, s, e) => {
+					results.push(["left-square-bracket", input.slice(s, e)]);
+					return e;
+				},
+				rightSquareBracket: (input, s, e) => {
+					results.push(["right-square-bracket", input.slice(s, e)]);
 					return e;
 				},
 				semicolon: (input, s, e) => {
@@ -42,7 +64,7 @@ describe("walkCssTokens", () => {
 					return e;
 				},
 				atKeyword: (input, s, e) => {
-					results.push(["atKeyword", input.slice(s, e)]);
+					results.push(["at-keyword", input.slice(s, e)]);
 					return e;
 				},
 				colon: (input, s, e) => {
@@ -51,6 +73,18 @@ describe("walkCssTokens", () => {
 				},
 				delim: (input, s, e) => {
 					results.push(["delim", input.slice(s, e)]);
+					return e;
+				},
+				number: (input, s, e) => {
+					results.push(["number", input.slice(s, e)]);
+					return e;
+				},
+				percentage: (input, s, e) => {
+					results.push(["percentage", input.slice(s, e)]);
+					return e;
+				},
+				dimension: (input, s, e) => {
+					results.push(["dimension", input.slice(s, e)]);
 					return e;
 				},
 				identifier: (input, s, e) => {
@@ -68,22 +102,29 @@ describe("walkCssTokens", () => {
 				function: (input, s, e) => {
 					results.push(["function", input.slice(s, e)]);
 					return e;
+				},
+				cdo: (input, s, e) => {
+					results.push(["cdo", input.slice(s, e)]);
+					return e;
+				},
+				cdc: (input, s, e) => {
+					results.push(["cdc", input.slice(s, e)]);
+					return e;
+				},
+				badStringToken: (input, s, e) => {
+					results.push(["bad-string-token", input.slice(s, e)]);
+					return e;
+				},
+				badUrlToken: (input, s, e) => {
+					results.push(["bad-url-token", input.slice(s, e)]);
+					return e;
 				}
 			});
-			fn(expect(results));
+
+			expect(
+				results.filter((item) => item[0] !== "whitespace")
+			).toMatchSnapshot();
+			expect(results.map((item) => item[1]).join("")).toBe(code);
 		});
-	};
-
-	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
-	const tests = fs
-		.readdirSync(casesPath)
-		.filter((test) => /\.css/.test(test))
-		.map((item) => [
-			item,
-			fs.readFileSync(path.resolve(casesPath, item), "utf8")
-		]);
-
-	for (const [name, code] of tests) {
-		test(name, code, (e) => e.toMatchSnapshot());
 	}
 });

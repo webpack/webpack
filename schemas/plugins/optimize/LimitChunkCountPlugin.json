@@ -12,7 +12,7 @@
       "type": "number"
     },
     "maxChunks": {
-      "description": "Limit the maximum number of chunks using a value greater greater than or equal to 1.",
+      "description": "Limit the maximum number of chunks using a value greater than or equal to 1.",
       "type": "number",
       "minimum": 1
     }
