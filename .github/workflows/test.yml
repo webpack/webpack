@@ -56,6 +56,11 @@ jobs:
           yarn --frozen-lockfile
           yarn validate:types
 
+      - name: Validate changeset format
+        if: github.event_name == 'pull_request'
+        run: |
+          yarn validate:changeset
+
   types-coverage:
     if: github.repository == 'webpack/webpack' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
