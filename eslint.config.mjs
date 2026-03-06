@@ -216,7 +216,6 @@ export default defineConfig([
 			"import/no-unresolved": "off"
 		}
 	},
-
 	{
 		files: ["examples/**/*.js"],
 		rules: {
@@ -229,6 +228,16 @@ export default defineConfig([
 
 			"import/extensions": "off",
 			"import/no-unresolved": "off"
+		}
+	},
+	{
+		files: [".changeset/**/*.mjs"],
+		languageOptions: {
+			ecmaVersion: 2025
+		},
+		rules: {
+			"no-console": "off",
+			"n/no-unsupported-features/node-builtins": "off"
 		}
 	}
 ]);

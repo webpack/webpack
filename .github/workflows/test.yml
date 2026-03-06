@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -55,6 +57,11 @@ jobs:
           yarn upgrade typescript@5.0 @types/node@20
           yarn --frozen-lockfile
           yarn validate:types
+
+      - name: Validate changeset format
+        if: github.event_name == 'pull_request'
+        run: |
+          yarn validate:changeset
 
   types-coverage:
     if: github.repository == 'webpack/webpack' && github.event.pull_request.head.repo.full_name == github.repository
