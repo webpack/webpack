@@ -16,7 +16,10 @@ module.exports = {
 			},
 			{
 				test: /stylesheet\.css$/,
-				type: "css/module"
+				type: "css/module",
+				parser: {
+					exportType: "css-style-sheet"
+				}
 			}
 		]
 	},
