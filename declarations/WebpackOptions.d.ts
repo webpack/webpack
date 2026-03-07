@@ -583,6 +583,14 @@ export type HotUpdateGlobal = string;
  */
 export type HotUpdateMainFilename = string;
 /**
+ * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type HtmlChunkFilename = FilenameTemplate;
+/**
+ * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type HtmlFilename = FilenameTemplate;
+/**
  * Wrap javascript code into IIFE's to avoid leaking into global scope.
  */
 export type Iife = boolean;
@@ -2281,6 +2289,14 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?: HtmlChunkFilename;
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?: HtmlFilename;
+	/**
 	 * Ignore warnings in the browser.
 	 */
 	ignoreBrowserWarnings?: boolean;
@@ -3223,6 +3239,10 @@ export interface ExperimentsCommon {
 	 */
 	futureDefaults?: boolean;
 	/**
+	 * Enable html support.
+	 */
+	html?: boolean;
+	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
@@ -3764,6 +3784,14 @@ export interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
+	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?: HtmlChunkFilename;
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?: HtmlFilename;
 	/**
 	 * Ignore warnings in the browser.
 	 */
