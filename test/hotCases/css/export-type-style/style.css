@@ -1,0 +1,13 @@
+@import "./del.css";
+
+.style-class {
+	color: red;
+	background-color: blue;
+	padding: 10px;
+}
+---
+.style-class {
+	color: green;
+	background-color: yellow;
+	padding: 20px;
+}
