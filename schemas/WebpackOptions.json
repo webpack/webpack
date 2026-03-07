@@ -1982,6 +1982,10 @@
           "description": "Enable/disable evaluating import.meta.webpackContext.",
           "type": "boolean"
         },
+        "importMetaResolve": {
+          "description": "Enable/disable evaluating import.meta.resolve().",
+          "type": "boolean"
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },

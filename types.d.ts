@@ -8724,6 +8724,11 @@ declare interface JavascriptParserOptions {
 	importMetaContext?: boolean;
 
 	/**
+	 * Enable/disable evaluating import.meta.resolve().
+	 */
+	importMetaResolve?: boolean;
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;
