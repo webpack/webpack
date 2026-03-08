@@ -1,5 +1,7 @@
 "use strict";
 
+const webpack = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 /**
  * Create a webpack configuration for a given target.
@@ -30,7 +32,12 @@ function createConfig(target, concatenateModules) {
 		},
 		experiments: {
 			css: true
-		}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				"process.env.BROWSER": JSON.stringify(target === "web")
+			})
+		]
 	};
 }
 
