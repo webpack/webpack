@@ -1,0 +1,6 @@
+@import url(./style-imported.css);
+
+.module-class {
+	color: green;
+	font-size: 14px;
+}
