@@ -316,7 +316,7 @@ describe("Cli", () => {
 		`)
 		);
 
-		// cspell:ignore filsystem
+		// cspell:ignore filsystem dontMock
 		test(
 			"errors",
 			{
@@ -422,6 +422,81 @@ describe("Cli", () => {
 			]
 		`)
 		);
+	});
+
+	describe("bin/webpack.js", () => {
+		const flushPromises = () =>
+			new Promise((resolve) => {
+				setImmediate(resolve);
+			});
+		const originalExitCode = process.exitCode;
+
+		beforeEach(() => {
+			jest.resetModules();
+			process.exitCode = undefined;
+		});
+
+		afterEach(() => {
+			jest.dontMock("child_process");
+			jest.dontMock("graceful-fs");
+			jest.dontMock("readline");
+			jest.restoreAllMocks();
+			process.exitCode = originalExitCode;
+		});
+
+		it("should show a helpful message when webpack-cli auto-install fails", async () => {
+			const stderr = jest.spyOn(console, "error").mockImplementation(() => {});
+			const stdout = jest.spyOn(console, "log").mockImplementation(() => {});
+
+			jest.doMock("graceful-fs", () => ({
+				statSync: jest.fn(() => {
+					throw new Error("not installed");
+				}),
+				existsSync: jest.fn((file) => file.endsWith("yarn.lock"))
+			}));
+			jest.doMock("readline", () => ({
+				createInterface: jest.fn(() => ({
+					question: (question, callback) => callback("yes"),
+					close: jest.fn()
+				}))
+			}));
+			jest.doMock("child_process", () => ({
+				spawn: jest.fn(() => {
+					const { EventEmitter } = require("events");
+
+					const emitter = new EventEmitter();
+
+					process.nextTick(() => {
+						emitter.emit("exit", 1, null);
+					});
+
+					return emitter;
+				})
+			}));
+
+			jest.isolateModules(() => {
+				require("../bin/webpack");
+			});
+
+			await flushPromises();
+			await flushPromises();
+
+			expect(stdout).toHaveBeenCalledWith(
+				"Installing 'webpack-cli' (running 'yarn add -D webpack-cli')..."
+			);
+
+			const stderrOutput = stderr.mock.calls
+				.map((args) => args.join(" "))
+				.join("\n");
+
+			expect(stderrOutput).toContain(
+				"Failed to install 'webpack-cli'. Please install it manually using:\n  yarn add -D webpack-cli"
+			);
+			expect(stderrOutput).toContain(
+				'Command "yarn add -D webpack-cli" failed with exit code 1.'
+			);
+			expect(process.exitCode).toBe(1);
+		});
 	});
 
 	describe("isColorSupported", () => {

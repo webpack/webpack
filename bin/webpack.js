@@ -20,11 +20,25 @@ const runCommand = (command, args) => {
 			reject(error);
 		});
 
-		executedCommand.on("exit", (code) => {
+		executedCommand.on("exit", (code, signal) => {
 			if (code === 0) {
 				resolve();
 			} else {
-				reject();
+				const details =
+					code !== null ? `exit code ${code}` : `signal ${signal}`;
+				const error =
+					/** @type {Error & { command?: string, args?: string[], exitCode?: number | null, signal?: NodeJS.Signals | null }} */ (
+						new Error(
+							`Command "${command} ${args.join(" ")}" failed with ${details}.`
+						)
+					);
+
+				error.command = command;
+				error.args = args;
+				error.exitCode = code;
+				error.signal = signal;
+
+				reject(error);
 			}
 		});
 	});
@@ -187,7 +201,19 @@ if (!cli.installed) {
 				runCli(cli);
 			})
 			.catch((err) => {
-				console.error(err);
+				console.error(
+					`Failed to install '${cli.package}'. ` +
+						`Please install it manually using:\n  ${packageManager} ${installOptions.join(
+							" "
+						)} ${cli.package}\n`
+				);
+
+				if (err instanceof Error) {
+					console.error(err.message);
+				} else if (err) {
+					console.error(err);
+				}
+
 				process.exitCode = 1;
 			});
 	});
