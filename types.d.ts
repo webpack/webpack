@@ -3830,6 +3830,11 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface CssLoadingRuntimeModulePluginHooks {
@@ -5710,6 +5715,11 @@ declare class ExternalModule extends Module {
 	static getExternalModuleNodeCommonjsInitFragment: (
 		runtimeTemplate: RuntimeTemplate
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface ExternalModuleInfo {
@@ -6450,6 +6460,11 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface GotHandler<T> {
@@ -8959,6 +8974,11 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface JsonpCompilationPluginHooks {
@@ -9924,6 +9944,11 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 
@@ -10794,6 +10819,11 @@ declare class Module extends DependenciesBlock {
 	get errors(): any;
 	get warnings(): any;
 	used: any;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
@@ -10821,6 +10851,11 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare class ModuleConcatenationPlugin {
@@ -11943,6 +11978,11 @@ declare class NormalModule extends Module {
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
 	static deserialize(context: ObjectDeserializerContext): NormalModule;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface NormalModuleCompilationHooks {
@@ -16618,6 +16658,11 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+
+	/**
+	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated
+	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface RuntimeRequirementsContext {
