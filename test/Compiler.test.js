@@ -568,6 +568,39 @@ describe("Compiler", () => {
 		});
 	});
 
+	it("should set idle state once when run finishes", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		let idle = compiler.idle;
+		let idleWriteCount = 0;
+		Object.defineProperty(compiler, "idle", {
+			configurable: true,
+			enumerable: true,
+			get() {
+				return idle;
+			},
+			set(value) {
+				idleWriteCount++;
+				idle = value;
+			}
+		});
+		compiler.run((err, _stats) => {
+			if (err) return done(err);
+			expect(idleWriteCount).toBe(1);
+			done();
+		});
+	});
+
 	it("should watch again correctly after first compilation", (done) => {
 		const webpack = require("..");
 
