@@ -5705,10 +5705,14 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
+	static getCompilationHooks(compilation: Compilation): ExternalModuleHooks;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
 		runtimeTemplate: RuntimeTemplate
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
+}
+declare interface ExternalModuleHooks {
+	chunkCondition: SyncBailHook<[Chunk, Compilation], boolean>;
 }
 declare interface ExternalModuleInfo {
 	type: "external";
