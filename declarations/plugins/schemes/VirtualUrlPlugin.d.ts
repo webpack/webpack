@@ -18,6 +18,10 @@ export type VirtualModuleContent =
  */
 export interface VirtualUrlOptions {
 	/**
+	 * The default context for virtual modules. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
+	 */
+	context?: string;
+	/**
 	 * The virtual modules configuration.
 	 */
 	modules: {

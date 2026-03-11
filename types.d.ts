@@ -18863,9 +18863,34 @@ type VirtualModuleContent =
 declare interface VirtualModules {
 	[index: string]: VirtualModuleContent;
 }
+
+/**
+ * Options for building virtual resources.
+ */
+declare interface VirtualUrlOptions {
+	/**
+	 * The default context for virtual modules. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
+	 */
+	context?: string;
+
+	/**
+	 * The virtual modules configuration.
+	 */
+	modules: { [index: string]: VirtualModuleContent };
+
+	/**
+	 * The URL scheme to use for virtual resources.
+	 */
+	scheme?: string;
+}
 declare class VirtualUrlPlugin {
-	constructor(modules: VirtualModules, scheme?: string);
+	constructor(
+		modules: VirtualModules,
+		schemeOrOptions?: string | Omit<VirtualUrlOptions, "modules">
+	);
+	options: VirtualUrlOptions;
 	scheme: string;
+	context?: string;
 	modules: NormalizedModules;
 
 	/**

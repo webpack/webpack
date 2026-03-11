@@ -57,6 +57,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "context": {
+          "description": "The default context for virtual modules. A string path. Defaults to 'auto', which will try to resolve the context from the module id.",
+          "type": "string"
+        },
         "modules": {
           "description": "The virtual modules configuration.",
           "type": "object",
