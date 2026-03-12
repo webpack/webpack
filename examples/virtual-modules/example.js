@@ -29,3 +29,13 @@ console.log(second); // Output `second`
 import message from "my-custom-scheme:my-module";
 
 console.log(message); // Output `from virtual module with custom scheme`
+
+// Import virtual module with custom context set in source function
+import { button } from "virtual:src/components/button.js";
+
+console.log(button); // Output `button`
+
+// Import virtual asset (filename will have virtual: scheme removed)
+import logoUrl from "virtual:logo.svg";
+
+console.log(logoUrl); // Output path to logo.svg (without virtual: scheme)
