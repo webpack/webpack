@@ -1,3 +1,5 @@
+This example demonstrates how Webpack performs tree shaking for CommonJS modules.
+
 # example.js
 
 ```javascript
