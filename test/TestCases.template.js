@@ -432,27 +432,23 @@ const describeCases = (config) => {
 						);
 
 						it(`${testName} should load the compiled tests`, (done) => {
-							const runner = new TestRunner({
-								target: options.target,
+							const { results } = TestRunner.runBundles({
+								optionsArr: [options],
 								outputDirectory,
-								testMeta: {
-									category: category.name,
-									name: testName
-								},
 								testConfig,
-								webpackOptions: options
+								category,
+								testName,
+								setupRunner: (runner) => {
+									runner.mergeModuleScope({
+										it: _it
+									});
+									if (testConfig.moduleScope) {
+										testConfig.moduleScope(runner._moduleScope, options);
+									}
+									runner.require.webpackTestSuiteRequire = true;
+								},
+								getBundlePaths: (_i, opts) => opts.output.filename
 							});
-							runner.mergeModuleScope({
-								it: _it
-							});
-							if (testConfig.moduleScope) {
-								testConfig.moduleScope(runner._moduleScope, options);
-							}
-							runner.require.webpackTestSuiteRequire = true;
-							const results = [];
-							results.push(
-								runner.require(outputDirectory, `./${options.output.filename}`)
-							);
 							Promise.all(results).then(() => {
 								if (getNumberOfTests() === 0) {
 									return done(new Error("No tests exported by test case"));

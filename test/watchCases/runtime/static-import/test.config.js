@@ -1,5 +1,7 @@
 "use strict";
 
 module.exports = {
-	bundlePath: ["./runtime~main.js", "./main.js"]
+	findBundle() {
+		return ["./runtime~main.js", "./main.js"];
+	}
 };

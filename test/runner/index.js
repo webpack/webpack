@@ -5,6 +5,10 @@ const { Module } = require("module");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
+const {
+	getTargetProperties,
+	getTargetsProperties
+} = require("../../lib/config/target");
 
 const {
 	ESModuleStatus,
@@ -95,6 +99,99 @@ class TestRunner {
 		this._moduleScope = this.createBaseModuleScope();
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
+	}
+
+	/**
+	 * @param {string | string[] | false} target target
+	 * @param {EXPECTED_ANY} webpackOptions webpack options
+	 * @returns {boolean} whether target is universal
+	 */
+	static isUniversalTarget(target, webpackOptions) {
+		const outputModule = webpackOptions.output && webpackOptions.output.module;
+
+		const targetProperties =
+			target === false
+				? /** @type {false} */ (false)
+				: typeof target === "string"
+					? getTargetProperties(
+							target,
+							/** @type {Context} */ (webpackOptions.context)
+						)
+					: getTargetsProperties(
+							/** @type {string[]} */ (target),
+							/** @type {Context} */ (webpackOptions.context)
+						);
+		return (
+			outputModule &&
+			targetProperties.node === null &&
+			targetProperties.web === null
+		);
+	}
+
+	/**
+	 * @param {object} options run options
+	 * @param {EXPECTED_ANY[]} options.optionsArr webpack options array
+	 * @param {string} options.outputDirectory output directory
+	 * @param {EXPECTED_ANY} options.testConfig test config
+	 * @param {{ name: string }} options.category test category
+	 * @param {string} options.testName test name
+	 * @param {(runner: TestRunner, i: number, options: EXPECTED_ANY) => void} options.setupRunner configure runner
+	 * @param {(i: number, options: EXPECTED_ANY, runner: TestRunner) => string | string[] | null | undefined} options.getBundlePaths resolve bundle paths
+	 * @returns {{ filesCount: number, results: EXPECTED_ANY[] }} files count and results
+	 */
+	static runBundles({
+		optionsArr,
+		outputDirectory,
+		testConfig,
+		category,
+		testName,
+		setupRunner,
+		getBundlePaths
+	}) {
+		let filesCount = 0;
+		const results = [];
+		for (let i = 0; i < optionsArr.length; i++) {
+			const options = optionsArr[i];
+			let targets = [options.target];
+			let found = false;
+			if (TestRunner.isUniversalTarget(options.target, options)) {
+				targets = targets.flat();
+			}
+			for (const target of targets) {
+				const runner = new TestRunner({
+					target,
+					outputDirectory,
+					testMeta: {
+						category: category.name,
+						name: testName,
+						round: i
+					},
+					testConfig,
+					webpackOptions: options
+				});
+				setupRunner(runner, i, options);
+				const bundlePaths = getBundlePaths(i, options, runner);
+				if (bundlePaths) {
+					const paths = Array.isArray(bundlePaths)
+						? bundlePaths
+						: [bundlePaths];
+					for (const p of paths) {
+						const normalized = path.isAbsolute(p)
+							? p
+							: p.startsWith("./")
+								? p
+								: `./${p}`;
+						results.push(runner.require(outputDirectory, normalized));
+					}
+
+					if (!found) {
+						found = true;
+						filesCount++;
+					}
+				}
+			}
+		}
+		return { filesCount, results };
 	}
 
 	/**

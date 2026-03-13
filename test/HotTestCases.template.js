@@ -152,24 +152,6 @@ const describeCases = (config) => {
 									return;
 								}
 
-								const runner = new TestRunner({
-									target: options.target,
-									outputDirectory,
-									testMeta: {
-										category: category.name,
-										name: testName
-									},
-									testConfig: {
-										...testConfig,
-										evaluateScriptOnAttached: true
-									},
-									webpackOptions: options
-								});
-
-								if (testConfig.moduleScope) {
-									testConfig.moduleScope(runner._moduleScope, options);
-								}
-
 								function runCompiler(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									compiler.run((err, stats) => {
@@ -207,55 +189,59 @@ const describeCases = (config) => {
 									});
 								}
 
-								runner.mergeModuleScope({
-									it: _it,
-									beforeEach: _beforeEach,
-									afterEach: _afterEach,
-									STATE: jsonStats,
-									NEXT: runCompiler,
-									NEXT_DEFERRED: (cb) => {
-										// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
-										// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
-										// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
-										// have already reached lazyCompilationBackend. This prevents NEXT from triggering
-										// a recompilation while moduleA is still not marked as Activated and still returns
-										// LazyCompilationProxyModule, which would cause a "No update available" error.
-										setTimeout(() => {
-											runCompiler(cb);
-										}, 1000);
+								const info = stats.toJson({ all: false, entrypoints: true });
+								const { results } = TestRunner.runBundles({
+									optionsArr: [options],
+									outputDirectory,
+									testConfig: {
+										...testConfig,
+										evaluateScriptOnAttached: true
+									},
+									category,
+									testName,
+									setupRunner: (runner) => {
+										if (testConfig.moduleScope) {
+											testConfig.moduleScope(runner._moduleScope, options);
+										}
+										runner.mergeModuleScope({
+											it: _it,
+											beforeEach: _beforeEach,
+											afterEach: _afterEach,
+											STATE: jsonStats,
+											NEXT: runCompiler,
+											NEXT_DEFERRED: (cb) => {
+												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
+												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
+												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
+												// have already reached lazyCompilationBackend. This prevents NEXT from triggering
+												// a recompilation while moduleA is still not marked as Activated and still returns
+												// LazyCompilationProxyModule, which would cause a "No update available" error.
+												setTimeout(() => {
+													runCompiler(cb);
+												}, 1000);
+											}
+										});
+									},
+									getBundlePaths: (_i, _options, runner) => {
+										if (config.target === "web") {
+											const jsPaths = [];
+											for (const file of info.entrypoints.main.assets) {
+												if (file.name.endsWith(".css")) {
+													const link =
+														runner._moduleScope.document.createElement("link");
+													link.href = file.name;
+													runner._moduleScope.document.head.appendChild(link);
+												} else {
+													jsPaths.push(file.name);
+												}
+											}
+											return jsPaths;
+										}
+										const assets = info.entrypoints.main.assets;
+										return [assets[assets.length - 1].name];
 									}
 								});
-
-								let promise = Promise.resolve();
-								const info = stats.toJson({ all: false, entrypoints: true });
-								if (config.target === "web") {
-									for (const file of info.entrypoints.main.assets) {
-										if (file.name.endsWith(".css")) {
-											const link =
-												runner._moduleScope.document.createElement("link");
-											link.href = file.name;
-											runner._moduleScope.document.head.appendChild(link);
-										} else {
-											const result = runner.require(
-												outputDirectory,
-												`./${file.name}`
-											);
-											if (typeof result === "object" && "then" in result) {
-												promise = promise.then(() => result);
-											}
-										}
-									}
-								} else {
-									const assets = info.entrypoints.main.assets;
-									const result = runner.require(
-										outputDirectory,
-										`./${assets[assets.length - 1].name}`
-									);
-									if (typeof result === "object" && "then" in result) {
-										promise = promise.then(() => result);
-									}
-								}
-								promise.then(
+								Promise.all(results).then(
 									() => {
 										if (getNumberOfTests() < 1) {
 											return done(new Error("No tests exported by test case"));

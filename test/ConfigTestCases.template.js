@@ -422,27 +422,15 @@ const describeCases = (config) => {
 									return;
 								}
 
-								let filesCount = 0;
-
 								if (testConfig.noTests) return process.nextTick(done);
 								if (testConfig.beforeExecute) testConfig.beforeExecute();
-								const results = [];
-								for (let i = 0; i < optionsArr.length; i++) {
-									const options = optionsArr[i];
-									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
-									if (bundlePath) {
-										filesCount++;
-										const runner = new TestRunner({
-											target: options.target,
-											outputDirectory,
-											testMeta: {
-												category: category.name,
-												name: testName,
-												round: i
-											},
-											testConfig,
-											webpackOptions: options
-										});
+								const { filesCount, results } = TestRunner.runBundles({
+									optionsArr,
+									outputDirectory,
+									testConfig,
+									category,
+									testName,
+									setupRunner: (runner, i) => {
 										runner.mergeModuleScope({
 											it: _it,
 											beforeEach: _beforeEach,
@@ -451,19 +439,14 @@ const describeCases = (config) => {
 											__STATS_I__: i
 										});
 										if (testConfig.moduleScope) {
-											testConfig.moduleScope(runner._moduleScope, options);
+											testConfig.moduleScope(
+												runner._moduleScope,
+												optionsArr[i]
+											);
 										}
-										if (Array.isArray(bundlePath)) {
-											for (const bundlePathItem of bundlePath) {
-												results.push(
-													runner.require(outputDirectory, `./${bundlePathItem}`)
-												);
-											}
-										} else {
-											results.push(runner.require(outputDirectory, bundlePath));
-										}
-									}
-								}
+									},
+									getBundlePaths: (i) => testConfig.findBundle(i, optionsArr[i])
+								});
 								// give a free pass to compilation that generated an error
 								if (
 									!jsonStats.errors.length &&

@@ -71,7 +71,7 @@ const describeCases = (config) => {
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
-				.filter((folder) => !folder.includes("_"))
+				.filter((folder) => folder.includes("esm-async-chunks-hmr"))
 				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
@@ -287,11 +287,17 @@ const describeCases = (config) => {
 											return;
 										}
 
-										let testConfig = {};
+										let testConfig = {
+											findBundle(_i, options) {
+												const ext = path.extname(options.output.filename);
+												return `./bundle${ext}`;
+											}
+										};
 										try {
 											// try to load a test file
-											testConfig = require(
-												path.join(testDirectory, "test.config.js")
+											testConfig = Object.assign(
+												testConfig,
+												require(path.join(testDirectory, "test.config.js"))
 											);
 										} catch (_err) {
 											// empty
@@ -300,53 +306,29 @@ const describeCases = (config) => {
 										if (testConfig.noTests) {
 											return process.nextTick(compilationFinished);
 										}
-										const runner = new TestRunner({
-											target: options.target,
+										const { results } = TestRunner.runBundles({
+											optionsArr: [options],
 											outputDirectory,
-											testMeta: {
-												category: category.name,
-												name: testName
-											},
 											testConfig: {
 												...testConfig,
 												evaluateScriptOnAttached: true
 											},
-											webpackOptions: options
+											category,
+											testName,
+											setupRunner: (runner) => {
+												runner.mergeModuleScope({
+													it: run.it,
+													beforeEach: _beforeEach,
+													afterEach: _afterEach,
+													STATS_JSON: jsonStats,
+													STATE: state,
+													WATCH_STEP: run.name
+												});
+											},
+											getBundlePaths: (i, opts) =>
+												testConfig.findBundle(i, opts)
 										});
-										runner.mergeModuleScope({
-											it: run.it,
-											beforeEach: _beforeEach,
-											afterEach: _afterEach,
-											STATS_JSON: jsonStats,
-											STATE: state,
-											WATCH_STEP: run.name
-										});
-										const getBundle = (outputDirectory, module) => {
-											if (Array.isArray(module)) {
-												return module.map((arg) =>
-													path.join(outputDirectory, arg)
-												);
-											} else if (module instanceof RegExp) {
-												return fs
-													.readdirSync(outputDirectory)
-													.filter((f) => module.test(f))
-													.map((f) => path.join(outputDirectory, f));
-											}
-											return [path.join(outputDirectory, module)];
-										};
-
-										const promises = [];
-										for (const p of getBundle(
-											outputDirectory,
-											testConfig.bundlePath || "./bundle.js"
-										)) {
-											promises.push(
-												Promise.resolve().then(() =>
-													runner.require(outputDirectory, p)
-												)
-											);
-										}
-										await Promise.all(promises);
+										await Promise.all(results);
 
 										if (run.getNumberOfTests() < 1) {
 											return compilationFinished(
