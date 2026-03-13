@@ -1,22 +1,13 @@
 it("Should place externals into its own chunks when externalsType is module", function (done) {
 	var fs = require("fs");
-	var path = require("path");
-	var source = fs.readFileSync(__filename, "utf-8");
-	var source2 = fs.readFileSync(
-		path.resolve(__dirname, "./async.mjs"),
-		"utf-8"
-	);
 
-	// external
-	expect(source2).toMatch(/import(.*)from\s*["']fs["']\s*/);
-	// external2
-	expect(source2).toMatch(/import(.*)from\s*["']node:fs["']\s*/);
-	// external3
-	expect(source).toMatch(/import\(\s*["']fs["']\s*\)/);
-	expect(source).not.toMatch(/import(.*)from\s*["']fs["']\s*/);
-	expect(source).not.toMatch(/import(.*)from\s*["']node:fs["']\s*/);
+	expect(__webpack_modules__["external"]).toBeUndefined();
+	expect(__webpack_modules__["external2"]).toBeUndefined();
+	expect(__webpack_modules__["external3"]).toBeDefined();
 
 	import(/* webpackChunkName: 'async' */ "./chunk").then((ns) => {
+		expect(__webpack_modules__["external"]).toBeDefined();
+		expect(__webpack_modules__["external2"]).toBeDefined();
 		expect(ns.readFileSync).toBe(fs.readFileSync);
 		expect(ns.readFile).toBe(fs.readFile);
 

@@ -11,5 +11,9 @@ module.exports = {
 	experiments: {
 		outputModule: true
 	},
-	output: { chunkFilename: "[name].mjs" }
+	output: { chunkFilename: "[name].mjs" },
+	optimization: {
+		moduleIds: "named",
+		concatenateModules: false
+	}
 };
