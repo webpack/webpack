@@ -3,7 +3,13 @@ import path from "path";
 import "./foo.css";
 
 const readFile = (filename) => {
-	return fs.readFileSync(path.join(__dirname, filename), "utf-8");
+	let dirname;
+	if (typeof window !== "undefined") {
+		dirname = __STATS__.outputPath;
+	} else {
+		dirname = __dirname;
+	}
+	return fs.readFileSync(path.join(dirname, filename), "utf-8");
 };
 
 const getSourceMap = (filename) => {
@@ -13,7 +19,7 @@ const getSourceMap = (filename) => {
 it("should compile successfully and have individual css sourcemap", async () => {
 	let map = getSourceMap("bundle0.css.map");
 	// hidden
-	expect(readFile("bundle0.css")).not.toMatch(/\/\/ sourceMappingURL=/)
+	expect(readFile("bundle0.css")).not.toMatch(/\/\/ sourceMappingURL=/);
 	// nosources
 	expect(map).not.toHaveProperty("sourcesContent");
 	// cheap
@@ -22,5 +28,5 @@ it("should compile successfully and have individual css sourcemap", async () => 
 	map = getSourceMap("bundle0.mjs.map");
 	expect(map).toHaveProperty("sourcesContent");
 	expect(map.mappings).toContain(",");
-	expect(readFile("bundle0.mjs")).toMatch(/\/\/\# sourceMappingURL=/)
+	expect(readFile("bundle0.mjs")).toMatch(/\/\/\# sourceMappingURL=/);
 });

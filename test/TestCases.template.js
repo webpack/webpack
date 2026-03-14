@@ -438,7 +438,7 @@ const describeCases = (config) => {
 								testConfig,
 								category,
 								testName,
-								setupRunner: (runner) => {
+								setupRunner: ({ runner }) => {
 									runner.mergeModuleScope({
 										it: _it
 									});

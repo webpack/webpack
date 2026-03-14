@@ -1,12 +1,8 @@
 "use strict";
 
 module.exports = {
-	moduleScope(scope, options) {
-		if (options.name.includes("node")) {
-			delete scope.window;
-			delete scope.document;
-			delete scope.self;
-		} else {
+	moduleScope(scope, options, target) {
+		if (target === "web") {
 			const link = scope.window.document.createElement("link");
 			link.rel = "stylesheet";
 			link.href = "main.css";

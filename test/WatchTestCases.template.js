@@ -71,7 +71,7 @@ const describeCases = (config) => {
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
-				.filter((folder) => folder.includes("esm-async-chunks-hmr"))
+				.filter((folder) => !folder.includes("_"))
 				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
@@ -315,7 +315,7 @@ const describeCases = (config) => {
 											},
 											category,
 											testName,
-											setupRunner: (runner) => {
+											setupRunner: ({ runner }) => {
 												runner.mergeModuleScope({
 													it: run.it,
 													beforeEach: _beforeEach,

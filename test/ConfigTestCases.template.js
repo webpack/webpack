@@ -430,18 +430,19 @@ const describeCases = (config) => {
 									testConfig,
 									category,
 									testName,
-									setupRunner: (runner, i) => {
+									setupRunner: ({ runner, index, target }) => {
 										runner.mergeModuleScope({
 											it: _it,
 											beforeEach: _beforeEach,
 											afterEach: _afterEach,
 											__STATS__: jsonStats,
-											__STATS_I__: i
+											__STATS_I__: index
 										});
 										if (testConfig.moduleScope) {
 											testConfig.moduleScope(
 												runner._moduleScope,
-												optionsArr[i]
+												optionsArr[index],
+												target
 											);
 										}
 									},

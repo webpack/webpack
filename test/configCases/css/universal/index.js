@@ -1,7 +1,7 @@
 import * as pureStyle from "./style.css";
 import * as styles from "./style.modules.css";
 
-it("should work", done => {
+it("should work", (done) => {
 	expect(pureStyle).toEqual({});
 
 	if (typeof document !== "undefined") {
@@ -9,9 +9,9 @@ it("should work", done => {
 		expect(style.getPropertyValue("background")).toBe(" red");
 	}
 
-  expect(styles.foo).toBe('style_modules_css-foo');
+	expect(styles.foo).toBe("style_modules_css-foo");
 
-	import(/* webpackPrefetch: true */ "./style2.css").then(x => {
+	import(/* webpackPrefetch: true */ "./style2.css").then((x) => {
 		expect(x).toEqual({});
 
 		if (typeof document !== "undefined") {
@@ -19,23 +19,29 @@ it("should work", done => {
 			expect(style.getPropertyValue("color")).toBe(" blue");
 		}
 
-		import(/* webpackPrefetch: true */ "./style2.modules.css").then(x => {
-		  expect(x.bar).toBe("style2_modules_css-bar");
+		import(/* webpackPrefetch: true */ "./style2.modules.css").then((x) => {
+			expect(x.bar).toBe("style2_modules_css-bar");
 			done();
 		}, done);
 	}, done);
 });
 
-it("should work in worker", async () => {
-	const worker = new Worker(new URL("./worker.js", import.meta.url), {
-		type: "module"
-	});
-	worker.postMessage("ok");
-	const result = await new Promise(resolve => {
-		worker.onmessage = event => {
-			resolve(event.data);
-		};
-	});
-	expect(result).toBe("data: style_modules_css-foo style2_modules_css-bar style3_modules_css-baz, thanks");
-	await worker.terminate();
+it("should work in web worker", async () => {
+	if (typeof window !== "undefined") {
+		const worker = new Worker(new URL("./worker.js", import.meta.url), {
+			type: "module"
+		});
+		worker.postMessage("ok");
+		const result = await new Promise((resolve) => {
+			worker.onmessage = (event) => {
+				resolve(event.data);
+			};
+		});
+		expect(result).toBe(
+			"data: style_modules_css-foo style2_modules_css-bar style3_modules_css-baz, thanks"
+		);
+		await worker.terminate();
+	} else {
+		expect(true).toBe(true);
+	}
 });

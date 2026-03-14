@@ -2,7 +2,7 @@ import value from "./separate";
 import { test as t } from "external-self";
 
 function isBrowser() {
-	return typeof globalThis.window !== 'undefined' && typeof globalThis.document !== 'undefined';
+	return typeof window !== "undefined"
 }
 
 it("should compile check", () => {

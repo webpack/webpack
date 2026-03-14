@@ -89,8 +89,10 @@ class TestRunner {
 		this.testMeta = testMeta || {};
 		/** @type {EXPECTED_ANY} */
 		this.webpackOptions = webpackOptions || {};
+		/** @type {import("../../lib/config/target").TargetProperties | false} */
+		this._targetProperties = this._resolveTargetProperties();
 		/** @type {boolean} */
-		this._runInNewContext = this.isTargetWeb();
+		this._runInNewContext = this.hasWebTarget();
 		/** @type {EXPECTED_ANY} */
 		this._globalContext = this.createBaseGlobalContext();
 		/** @type {EXPECTED_ANY} */
@@ -102,12 +104,14 @@ class TestRunner {
 	}
 
 	/**
-	 * @param {string | string[] | false} target target
 	 * @param {EXPECTED_ANY} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
-	static isUniversalTarget(target, webpackOptions) {
-		const outputModule = webpackOptions.output && webpackOptions.output.module;
+	static isUniversalTarget(webpackOptions) {
+		const outputModule =
+			(webpackOptions.output && webpackOptions.output.module) ||
+			(webpackOptions.experiments && webpackOptions.experiments.outputModule);
+		const target = webpackOptions.target;
 
 		const targetProperties =
 			target === false
@@ -135,7 +139,7 @@ class TestRunner {
 	 * @param {EXPECTED_ANY} options.testConfig test config
 	 * @param {{ name: string }} options.category test category
 	 * @param {string} options.testName test name
-	 * @param {(runner: TestRunner, i: number, options: EXPECTED_ANY) => void} options.setupRunner configure runner
+	 * @param {(options: { runner: TestRunner, index: number, target: string }) => void} options.setupRunner configure runner
 	 * @param {(i: number, options: EXPECTED_ANY, runner: TestRunner) => string | string[] | null | undefined} options.getBundlePaths resolve bundle paths
 	 * @returns {{ filesCount: number, results: EXPECTED_ANY[] }} files count and results
 	 */
@@ -154,9 +158,10 @@ class TestRunner {
 			const options = optionsArr[i];
 			let targets = [options.target];
 			let found = false;
-			if (TestRunner.isUniversalTarget(options.target, options)) {
-				targets = targets.flat();
+			if (TestRunner.isUniversalTarget(options)) {
+				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
 			}
+
 			for (const target of targets) {
 				const runner = new TestRunner({
 					target,
@@ -169,7 +174,11 @@ class TestRunner {
 					testConfig,
 					webpackOptions: options
 				});
-				setupRunner(runner, i, options);
+				setupRunner({
+					runner,
+					index: i,
+					target
+				});
 				const bundlePaths = getBundlePaths(i, options, runner);
 				if (bundlePaths) {
 					const paths = Array.isArray(bundlePaths)
@@ -232,14 +241,36 @@ class TestRunner {
 	}
 
 	/**
+	 * @returns {import("../../lib/config/target").TargetProperties | false} target properties
+	 */
+	_resolveTargetProperties() {
+		const target = this.target;
+		const context = /** @type {string} */ (this.webpackOptions.context);
+
+		if (target === false) return false;
+
+		return typeof target === "string"
+			? getTargetProperties(target, context)
+			: getTargetsProperties(/** @type {string[]} */ (target), context);
+	}
+
+	/**
 	 * @returns {boolean} whether target is web
 	 */
-	isTargetWeb() {
+	hasWebTarget() {
 		return (
-			this.target === "web" ||
-			this.target === "webworker" ||
-			(Array.isArray(this.target) &&
-				(this.target.includes("web") || this.target.includes("webworker")))
+			this._targetProperties !== false &&
+			(this._targetProperties.web === true ||
+				this._targetProperties.webworker === true)
+		);
+	}
+
+	/**
+	 * @returns {boolean} whether target is node
+	 */
+	hasNodeTarget() {
+		return (
+			this._targetProperties !== false && this._targetProperties.node === true
 		);
 	}
 
@@ -247,7 +278,7 @@ class TestRunner {
 	 * @returns {boolean} whether env is jsdom
 	 */
 	jsDom() {
-		return this.testConfig.env === "jsdom" || this.isTargetWeb();
+		return this.testConfig.env === "jsdom" || this.hasWebTarget();
 	}
 
 	/**
@@ -265,8 +296,8 @@ class TestRunner {
 				return m;
 			}
 		};
+		Object.assign(base, this._globalContext);
 		if (this.jsDom()) {
-			Object.assign(base, this._globalContext);
 			base.window = this._globalContext;
 			base.self = this._globalContext;
 		}
@@ -426,15 +457,21 @@ class TestRunner {
 			};
 			// Call again because some tests rely on `scope.module`
 			if (this.testConfig.moduleScope) {
-				this.testConfig.moduleScope(moduleScope, this.webpackOptions);
+				this.testConfig.moduleScope(
+					moduleScope,
+					this.webpackOptions,
+					this.target
+				);
 			}
+
+			const args = Object.keys(moduleScope);
+			const argValues = args.map((arg) => moduleScope[arg]);
+
 			if (!this._runInNewContext) {
 				_content = `Object.assign(global, _globalAssign); ${content}`;
 			}
-			const args = Object.keys(moduleScope);
-			const argValues = args.map((arg) => moduleScope[arg]);
 			const code = `(function(${args.join(", ")}) {${_content}\n})`;
-			const document = this._moduleScope.document;
+
 			const fn = this._runInNewContext
 				? vm.runInNewContext(code, this._globalContext, modulePath)
 				: vm.runInThisContext(code, modulePath);
@@ -446,21 +483,36 @@ class TestRunner {
 					...argValues
 				);
 			};
-			if (document) {
-				const CurrentScript = require("../helpers/CurrentScript");
 
-				const oldCurrentScript = document.currentScript;
-				document.currentScript = new CurrentScript(subPath);
-				try {
-					call();
-				} finally {
-					document.currentScript = oldCurrentScript;
-				}
+			if (this.hasWebTarget()) {
+				this.withDocumentCurrentScript(call, subPath);
 			} else {
 				call();
 			}
 			return mod.exports;
 		};
+	}
+
+	/**
+	 * Run the code with document.currentScript
+	 * @param {() => void} fn fn
+	 * @param {string} current currentScript
+	 */
+	withDocumentCurrentScript(fn, current) {
+		const document = this._moduleScope.document;
+		if (document) {
+			const CurrentScript = require("../helpers/CurrentScript");
+
+			const oldCurrentScript = document.currentScript;
+			document.currentScript = new CurrentScript(current);
+			try {
+				fn();
+			} finally {
+				document.currentScript = oldCurrentScript;
+			}
+		} else {
+			fn();
+		}
 	}
 
 	/**
@@ -501,7 +553,7 @@ class TestRunner {
 					initializeImportMeta: (meta, _module) => {
 						meta.url = pathToFileURL(identifier).href;
 
-						if (this.target === "node" || this.target.includes("node")) {
+						if (this.hasNodeTarget()) {
 							meta.filename = identifier;
 							meta.dirname = path.dirname(identifier);
 						}

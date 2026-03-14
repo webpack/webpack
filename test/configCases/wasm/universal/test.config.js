@@ -4,12 +4,8 @@ const fs = require("fs");
 const url = require("url");
 
 module.exports = {
-	moduleScope(scope, options) {
-		if (options.name.includes("node")) {
-			delete scope.window;
-			delete scope.document;
-			delete scope.self;
-		} else {
+	moduleScope(scope, options, target) {
+		if (target === "web") {
 			scope.fetch = (resource) =>
 				new Promise((resolve, reject) => {
 					fs.readFile(url.fileURLToPath(resource), (err, data) => {

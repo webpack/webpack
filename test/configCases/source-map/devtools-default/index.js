@@ -3,7 +3,13 @@ import path from "path";
 import "./foo.css";
 
 const readFile = (filename) => {
-	return fs.readFileSync(path.join(__dirname, filename), "utf-8");
+	let dirname;
+	if (typeof window !== "undefined") {
+		dirname = __STATS__.outputPath;
+	} else {
+		dirname = __dirname;
+	}
+	return fs.readFileSync(path.join(dirname, filename), "utf-8");
 };
 
 const getSourceMap = (filename) => {

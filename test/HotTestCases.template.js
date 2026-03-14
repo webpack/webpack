@@ -199,7 +199,7 @@ const describeCases = (config) => {
 									},
 									category,
 									testName,
-									setupRunner: (runner) => {
+									setupRunner: ({ runner }) => {
 										if (testConfig.moduleScope) {
 											testConfig.moduleScope(runner._moduleScope, options);
 										}
