@@ -5,6 +5,7 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
+const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -18,7 +19,7 @@ categories = categories.map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
-		.filter((folder) => !folder.includes("_"))
+		.filter((folder) => !folder.startsWith("_"))
 }));
 
 const createLogger = (appendTarget) => ({
@@ -87,7 +88,14 @@ const describeCases = (config) => {
 							category.name,
 							testName
 						);
-						let testConfig = {};
+						let testConfig = {
+							findBundle(_, options) {
+								const ext = path.extname(
+									parseResource(options.output.filename).path
+								);
+								return `./bundle${ext}`;
+							}
+						};
 						const testConfigPath = path.join(testDirectory, "test.config.js");
 						if (fs.existsSync(testConfigPath)) {
 							testConfig = require(testConfigPath);
@@ -447,7 +455,8 @@ const describeCases = (config) => {
 									}
 									runner.require.webpackTestSuiteRequire = true;
 								},
-								getBundlePaths: (_i, opts) => opts.output.filename
+								getBundlePaths: (i, options) =>
+									testConfig.findBundle(i, options)
 							});
 							Promise.all(results).then(() => {
 								if (getNumberOfTests() === 0) {

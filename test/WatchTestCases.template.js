@@ -8,6 +8,7 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
+const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -71,7 +72,7 @@ const describeCases = (config) => {
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
-				.filter((folder) => !folder.includes("_"))
+				.filter((folder) => !folder.startsWith("_"))
 				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
@@ -288,8 +289,10 @@ const describeCases = (config) => {
 										}
 
 										let testConfig = {
-											findBundle(_i, options) {
-												const ext = path.extname(options.output.filename);
+											findBundle(_, options) {
+												const ext = path.extname(
+													parseResource(options.output.filename).path
+												);
 												return `./bundle${ext}`;
 											}
 										};
@@ -307,7 +310,7 @@ const describeCases = (config) => {
 											return process.nextTick(compilationFinished);
 										}
 										const { results } = TestRunner.runBundles({
-											optionsArr: [options],
+											optionsArr: Array.isArray(options) ? options : [options],
 											outputDirectory,
 											testConfig: {
 												...testConfig,
@@ -325,8 +328,8 @@ const describeCases = (config) => {
 													WATCH_STEP: run.name
 												});
 											},
-											getBundlePaths: (i, opts) =>
-												testConfig.findBundle(i, opts)
+											getBundlePaths: (i, options) =>
+												testConfig.findBundle(i, options)
 										});
 										await Promise.all(results);
 

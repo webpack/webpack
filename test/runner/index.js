@@ -50,6 +50,7 @@ const [major] = getNodeVersion();
 
 /**
  * @typedef {object} ModuleInfo
+ * @property {string} origin
  * @property {string} subPath
  * @property {string} modulePath
  * @property {string} content
@@ -66,6 +67,8 @@ const [major] = getNodeVersion();
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css
  */
 
 class TestRunner {
@@ -212,7 +215,8 @@ class TestRunner {
 			esm: this.createEsmRunner(),
 			json: this.createJSONRunner(),
 			raw: this.createRawRunner(),
-			bytes: this.createBytesRunner()
+			bytes: this.createBytesRunner(),
+			css: this.createCssRunner()
 		};
 	}
 
@@ -346,6 +350,7 @@ class TestRunner {
 	_resolveModule(currentDirectory, module) {
 		if (Array.isArray(module)) {
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: path.join(currentDirectory, ".array-require.js"),
 				content: `module.exports = (${module
@@ -355,6 +360,7 @@ class TestRunner {
 		}
 		if (isRelativePath(module)) {
 			return {
+				origin: module,
 				subPath: getSubPath(module),
 				modulePath: path.join(currentDirectory, module),
 				content: fs.readFileSync(path.join(currentDirectory, module), "utf8")
@@ -362,6 +368,7 @@ class TestRunner {
 		}
 		if (path.isAbsolute(module)) {
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: module,
 				content: fs.readFileSync(module, "utf8")
@@ -370,6 +377,7 @@ class TestRunner {
 		if (module.startsWith("https://test.")) {
 			const realPath = urlToPath(module, currentDirectory);
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: realPath,
 				content: fs.readFileSync(realPath, "utf8")
@@ -417,8 +425,8 @@ class TestRunner {
 		if (modulePath.endsWith(".json")) {
 			return this._moduleRunners.json(moduleInfo, context);
 		}
-		if (["css"].includes(modulePath.split(".").pop())) {
-			return this._moduleRunners.raw(moduleInfo, context);
+		if (modulePath.endsWith(".css")) {
+			return this._moduleRunners.css(moduleInfo, context);
 		}
 		return this._moduleRunners.cjs(moduleInfo, context);
 	}
@@ -676,6 +684,18 @@ class TestRunner {
 
 	createBytesRunner() {
 		return (moduleInfo) => new Uint8Array(Buffer.from(moduleInfo.content));
+	}
+
+	createCssRunner() {
+		return (moduleInfo) => {
+			if (this.hasWebTarget()) {
+				const link = this._moduleScope.document.createElement("link");
+				link.href = moduleInfo.origin;
+				this._moduleScope.document.head.appendChild(link);
+			}
+
+			return moduleInfo.content;
+		};
 	}
 
 	/**

@@ -189,7 +189,7 @@ const describeCases = (config) => {
 									});
 								}
 
-								const info = stats.toJson({ all: false, entrypoints: true });
+								const _stats = stats.toJson({ all: false, entrypoints: true });
 								const { results } = TestRunner.runBundles({
 									optionsArr: [options],
 									outputDirectory,
@@ -223,22 +223,13 @@ const describeCases = (config) => {
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
+										const bundles = _stats.entrypoints.main.assets.map(
+											(i) => i.name
+										);
 										if (config.target === "web") {
-											const jsPaths = [];
-											for (const file of info.entrypoints.main.assets) {
-												if (file.name.endsWith(".css")) {
-													const link =
-														runner._moduleScope.document.createElement("link");
-													link.href = file.name;
-													runner._moduleScope.document.head.appendChild(link);
-												} else {
-													jsPaths.push(file.name);
-												}
-											}
-											return jsPaths;
+											return bundles;
 										}
-										const assets = info.entrypoints.main.assets;
-										return [assets[assets.length - 1].name];
+										return [bundles[bundles.length - 1]];
 									}
 								});
 								Promise.all(results).then(

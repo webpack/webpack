@@ -446,7 +446,8 @@ const describeCases = (config) => {
 											);
 										}
 									},
-									getBundlePaths: (i) => testConfig.findBundle(i, optionsArr[i])
+									getBundlePaths: (i, options) =>
+										testConfig.findBundle(i, options)
 								});
 								// give a free pass to compilation that generated an error
 								if (
