@@ -9,40 +9,32 @@ webpack is a JavaScript module bundler.
 ## Key Directories
 
 - `lib/` — Main source code
-- `lib/optimize/` — Optimization plugins (tree shaking, chunk splitting, etc.)
-- `lib/serialization/` — Cache serialization
-- `lib/schemes/` — URI scheme plugins (HttpUri, DataUri, Virtual)
+- `lib/javascript/` — JavaScript modules parsing and generation
+- `lib/css/` — CSS modules parsing and generation
 - `schemas/` — JSON schemas for webpack options
 - `types.d.ts` — Auto-generated type definitions (do not edit manually)
-- `tooling/` — Build tooling scripts
 - `test/` — All tests
+- `examples/` — Usage examples for webpack features and configuration options
 - `.changeset/` — Changeset files for releases
 
 All available commands are defined in `package.json` scripts. Refer to `package.json` for the latest definitions.
 
 ## Development Workflow
 
-### 1. Making Changes to `lib/`
+### 1. Modifying Schemas or Types (if needed)
 
-After modifying source code in `lib/`:
+If your change involves modifying or adding webpack configuration options:
 
-```bash
-yarn fix:code      # ESLint autofix
-yarn fmt           # Prettier format
-# Or combined:
-yarn fix           # runs fix:code + fix:special + fmt
-```
-
-### 2. Modifying Schemas or Types
-
-If your change affects module exports, options, or type definitions:
-
-1. Edit the relevant schema file in `schemas/` (e.g., `schemas/WebpackOptions.json`, `schemas/plugins/`)
+1. Edit `schemas/WebpackOptions.json` (or relevant schema file in `schemas/plugins/`)
 2. Run `yarn fix:special` to regenerate:
    - `types.d.ts` (compiled from JSDoc + schemas)
    - Precompiled schema validators
    - Runtime code
-3. Other files can then reference the updated types via JSDoc `@typedef {import("...")}` imports
+3. Now `lib/` code can reference the updated types via JSDoc `@typedef {import("...")}` imports
+
+### 2. Making Changes to `lib/`
+
+Modify source code in `lib/` as needed. If step 1 was performed, the latest type definitions are already available.
 
 ### 3. Adding a Changeset
 
@@ -59,7 +51,18 @@ Description of the change.
 
 Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes.
 
-### 4. Writing Tests
+### 4. Linting and Formatting
+
+Run linting and formatting **after** adding the changeset:
+
+```bash
+yarn fix:code      # ESLint autofix
+yarn fmt           # Prettier format
+```
+
+If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
+
+### 5. Writing Tests
 
 Test files live in `test/` with naming conventions:
 
@@ -78,13 +81,15 @@ Test files live in `test/` with naming conventions:
 
 For unit tests, use Jest directly. Example: `test/FileSystemInfo.unittest.js` uses `memfs` for filesystem mocking.
 
-### 5. Running Tests
+### 6. Running Tests
+
+Only run tests when test files are modified or explicitly requested.
 
 **Choose test command based on modified directory:**
 
 | Modified directory/file | Command                                                                  |
 | ----------------------- | ------------------------------------------------------------------------ |
-| `test/*.unittest.js`    | `yarn test:unit`                                                         |
+| `test/*.unittest.js`    | `yarn test:base -- --testPathPattern="<filename>"`                       |
 | `test/cases/`           | `yarn test:basic`                                                        |
 | `test/configCases/`     | `yarn test:basic -- --testPathPattern="ConfigTestCases"`                 |
 | `test/statsCases/`      | `yarn test:basic -- --testPathPattern="StatsTestCases"`                  |
@@ -104,3 +109,7 @@ yarn test:base -- --testNamePattern="pattern"          # Run specific test name
 ```
 
 Tests require `--expose-gc --max-old-space-size=4096 --experimental-vm-modules` (already configured in scripts).
+
+### 7. Updating Examples (if needed)
+
+If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. This step is typically done after running tests.
