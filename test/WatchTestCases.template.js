@@ -72,7 +72,7 @@ const describeCases = (config) => {
 			name: cat,
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
-				.filter((folder) => !folder.startsWith("_"))
+				.filter((folder) => !folder.includes("_"))
 				.filter((testName) => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");

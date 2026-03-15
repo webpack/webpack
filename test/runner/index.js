@@ -682,10 +682,16 @@ class TestRunner {
 		return (moduleInfo) => moduleInfo.content;
 	}
 
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes runner
+	 */
 	createBytesRunner() {
 		return (moduleInfo) => new Uint8Array(Buffer.from(moduleInfo.content));
 	}
 
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css runner
+	 */
 	createCssRunner() {
 		return (moduleInfo) => {
 			if (this.hasWebTarget()) {
