@@ -58,15 +58,21 @@ Only run tests when test files are modified or explicitly requested.
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file | Command                                                  |
-| ----------------------- | -------------------------------------------------------- |
-| `test/*.unittest.js`    | `yarn test:base -- --testPathPattern="<filename>"`       |
-| `test/cases/`           | `yarn test:basic`                                        |
-| `test/configCases/`     | `yarn test:basic -- --testPathPattern="ConfigTestCases"` |
-| `test/statsCases/`      | `yarn test:basic -- --testPathPattern="StatsTestCases"`  |
-| `test/watchCases/`      | `yarn test:base -- --testPathPattern="WatchTestCases"`   |
-| `test/hotCases/`        | `yarn test:base -- --testPathPattern="HotTestCases"`     |
-| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                    |
+| Modified directory/file | Command                                                   |
+| ----------------------- | --------------------------------------------------------- |
+| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`       |
+| `test/cases/`           | `yarn test:basic`                                         |
+| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"` |
+| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`  |
+| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`   |
+| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`     |
+| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                     |
+
+You can add `--testNamePattern="<case-name>"` to run only specific test cases for faster validation. Multiple patterns can be combined with `|`. For example, if you only modified `test/configCases/css/basic/`:
+
+```bash
+yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic"
+```
 
 ### 5. Adding a Changeset
 
