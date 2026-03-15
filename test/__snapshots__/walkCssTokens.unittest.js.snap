@@ -13961,12 +13961,8 @@ Array [
     ":",
   ],
   Array [
-    "delim",
-    "-",
-  ],
-  Array [
     "number",
-    ".1",
+    "-.1",
   ],
   Array [
     "semicolon",
@@ -13981,12 +13977,8 @@ Array [
     ":",
   ],
   Array [
-    "delim",
-    "+",
-  ],
-  Array [
     "number",
-    ".1",
+    "+.1",
   ],
   Array [
     "semicolon",
@@ -14321,12 +14313,8 @@ Array [
     ":",
   ],
   Array [
-    "delim",
-    "-",
-  ],
-  Array [
     "number",
-    ".2",
+    "-.2",
   ],
   Array [
     "semicolon",
@@ -14341,12 +14329,8 @@ Array [
     ":",
   ],
   Array [
-    "delim",
-    "+",
-  ],
-  Array [
     "number",
-    ".2",
+    "+.2",
   ],
   Array [
     "semicolon",
