@@ -4,20 +4,17 @@
 
 ## Project Overview
 
-webpack is a JavaScript module bundler.
-
-## Key Directories
+webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 - `lib/` — Main source code
 - `lib/javascript/` — JavaScript modules parsing and generation
 - `lib/css/` — CSS modules parsing and generation
 - `schemas/` — JSON schemas for webpack options
-- `types.d.ts` — Auto-generated type definitions (do not edit manually)
 - `test/` — All tests
 - `examples/` — Usage examples for webpack features and configuration options
 - `.changeset/` — Changeset files for releases
-
-All available commands are defined in `package.json` scripts. Refer to `package.json` for the latest definitions.
+- `types.d.ts` — Auto-generated type definitions (do not edit manually)
+- `package.json` — All available commands (defined in `scripts`)
 
 ## Development Workflow
 
@@ -36,7 +33,42 @@ If your change involves modifying or adding webpack configuration options:
 
 Modify source code in `lib/` as needed. If step 1 was performed, the latest type definitions are already available.
 
-### 3. Adding a Changeset
+### 3. Writing Tests
+
+Test files live in `test/` with naming conventions:
+
+- `*.unittest.js` — Unit tests
+- `*.basictest.js` — Basic integration tests
+- `*.test.js` — Full integration tests
+- `*.longtest.js` — Long-running tests
+
+**Test case directories:**
+
+- `test/cases/` — Compilation test cases (each subdirectory is a test case with `index.js` + optional `webpack.config.js`)
+- `test/configCases/` — Config-driven test cases (each has `webpack.config.js` + test files)
+- `test/statsCases/` — Stats output snapshot tests
+- `test/watchCases/` — Watch mode test cases (file change detection, incremental rebuild)
+- `test/hotCases/` — HMR (Hot Module Replacement) test cases
+- `test/benchmarkCases/` — Performance benchmark cases (each has `index.js` + `webpack.config.mjs` + optional `options.mjs` with `setup()`)
+- `test/*.unittest.js` — Unit tests using Jest directly (e.g., `test/FileSystemInfo.unittest.js` uses `memfs` for filesystem mocking)
+
+### 4. Running Tests
+
+Only run tests when test files are modified or explicitly requested.
+
+**Choose test command based on modified directory:**
+
+| Modified directory/file | Command                                                  |
+| ----------------------- | -------------------------------------------------------- |
+| `test/*.unittest.js`    | `yarn test:base -- --testPathPattern="<filename>"`       |
+| `test/cases/`           | `yarn test:basic`                                        |
+| `test/configCases/`     | `yarn test:basic -- --testPathPattern="ConfigTestCases"` |
+| `test/statsCases/`      | `yarn test:basic -- --testPathPattern="StatsTestCases"`  |
+| `test/watchCases/`      | `yarn test:base -- --testPathPattern="WatchTestCases"`   |
+| `test/hotCases/`        | `yarn test:base -- --testPathPattern="HotTestCases"`     |
+| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                    |
+
+### 5. Adding a Changeset
 
 Every user-facing change needs a changeset file:
 
@@ -51,9 +83,13 @@ Description of the change.
 
 Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes.
 
-### 4. Linting and Formatting
+### 6. Updating Examples (if needed)
 
-Run linting and formatting **after** adding the changeset:
+If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. Run `yarn build:examples` to ensure the examples build successfully.
+
+### 7. Linting and Formatting
+
+Run linting and formatting as the final step:
 
 ```bash
 yarn fix:code      # ESLint autofix
@@ -61,55 +97,3 @@ yarn fmt           # Prettier format
 ```
 
 If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
-
-### 5. Writing Tests
-
-Test files live in `test/` with naming conventions:
-
-- `*.unittest.js` — Unit tests (`yarn test:unit`)
-- `*.basictest.js` — Basic integration tests (`yarn test:basic`)
-- `*.test.js` — Full integration tests
-- `*.longtest.js` — Long-running tests
-
-**Test case directories:**
-
-- `test/cases/` — Compilation test cases (each subdirectory is a test case with `index.js` + optional `webpack.config.js`)
-- `test/configCases/` — Config-driven test cases (each has `webpack.config.js` + test files)
-- `test/statsCases/` — Stats output snapshot tests
-- `test/watchCases/` — Watch mode test cases (file change detection, incremental rebuild)
-- `test/hotCases/` — HMR (Hot Module Replacement) test cases
-
-For unit tests, use Jest directly. Example: `test/FileSystemInfo.unittest.js` uses `memfs` for filesystem mocking.
-
-### 6. Running Tests
-
-Only run tests when test files are modified or explicitly requested.
-
-**Choose test command based on modified directory:**
-
-| Modified directory/file | Command                                                                  |
-| ----------------------- | ------------------------------------------------------------------------ |
-| `test/*.unittest.js`    | `yarn test:base -- --testPathPattern="<filename>"`                       |
-| `test/cases/`           | `yarn test:basic`                                                        |
-| `test/configCases/`     | `yarn test:basic -- --testPathPattern="ConfigTestCases"`                 |
-| `test/statsCases/`      | `yarn test:basic -- --testPathPattern="StatsTestCases"`                  |
-| `test/watchCases/`      | `yarn test:base -- --testPathPattern="WatchTestCases"`                   |
-| `test/hotCases/`        | `yarn test:base -- --testPathPattern="HotTestCases"`                     |
-| `lib/` (general)        | `yarn test:basic` for quick check, then `yarn test:integration` for full |
-| `schemas/`              | `yarn fix:special` then `yarn lint:types`                                |
-
-**Common commands:**
-
-```bash
-yarn test:unit                           # Unit tests only
-yarn test:basic                          # Basic tests only
-yarn test:integration                    # All integration tests
-yarn test:base -- --testPathPattern="FileSystemInfo"  # Run specific test file
-yarn test:base -- --testNamePattern="pattern"          # Run specific test name
-```
-
-Tests require `--expose-gc --max-old-space-size=4096 --experimental-vm-modules` (already configured in scripts).
-
-### 7. Updating Examples (if needed)
-
-If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. This step is typically done after running tests.
