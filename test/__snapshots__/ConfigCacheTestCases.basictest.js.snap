@@ -1,5 +1,102 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigCacheTestCases chunks-order cjs exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
+"\\"use strict\\";
+(() => {
+var exports = {};
+exports.id = \\"foo\\";
+exports.ids = [\\"foo\\"];
+exports.modules = {
+
+/***/ 552
+/*!****************************!*\\\\
+  !*** ./foo.js + 2 modules ***!
+  \\\\****************************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+
+;// external \\"fs\\"
+const external_fs_namespaceObject = require(\\"fs\\");
+var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
+// EXTERNAL MODULE: ./dependency.js
+var dependency = __webpack_require__(784);
+;// ./foo.js
+
+
+
+
+it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
+	const source = external_fs_default().readFileSync(__filename, \\"utf-8\\");
+
+	expect(source).toMatchSnapshot();
+});
+
+/***/ }
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
+var __webpack_export_target__ = exports;
+for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \\"__esModule\\", { value: true });
+
+})();
+//# sourceMappingURL=foo.js.map"
+`;
+
+exports[`ConfigCacheTestCases chunks-order module exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"node:url\\";
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+export const __webpack_esm_id__ = \\"foo\\";
+export const __webpack_esm_ids__ = [\\"foo\\"];
+export const __webpack_esm_modules__ = {
+
+/***/ 353
+/*!****************!*\\\\
+  !*** ./foo.js ***!
+  \\\\****************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dependency.js */ 784);
+/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () => {
+	const fs = await eval(\`import(\\"fs\\")\`)
+	const source = fs.readFileSync(__webpack_filename__, \\"utf-8\\");
+
+	expect(source).toMatchSnapshot();
+});
+
+
+/***/ }
+
+};
+;
+
+// load runtime
+import { __webpack_require__ } from \\"./runtime~nested-shared.mjs\\";
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+
+import * as __webpack_chunk_1__ from \\"./shared.mjs\\";
+__webpack_require__.C(__webpack_chunk_1__);
+import * as __webpack_chunk_2__ from \\"./nested-shared.mjs\\";
+__webpack_require__.C(__webpack_chunk_2__);
+import * as __webpack_chunk_3__ from \\"./commons-dependency_js.mjs\\";
+__webpack_require__.C(__webpack_chunk_3__);
+import * as __webpack_chunk_4__ from \\"./foo.mjs\\";
+__webpack_require__.C(__webpack_chunk_4__);
+var __webpack_exports__ = __webpack_exec__(353);
+
+//# sourceMappingURL=foo.mjs.map"
+`;
+
 exports[`ConfigCacheTestCases css build-http exported tests should work with URLs in CSS 1`] = `
 Array [
   "/*!*******************************************************************************************************************!*\\\\
@@ -26357,4 +26454,75 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
 /******/ 
 "
+`;
+
+exports[`ConfigCacheTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
+    expect(\\"aaa\\").toBe(\\"aaa\\");
+});
+
+it(\\"should work import.meta.env with DotenvPlugin\\", () => {
+    expect(\\"https://api.example.com\\").toBe(\\"https://api.example.com\\");
+});
+
+it(\\"import.meta.env behaves like process.env\\", async (done) => {
+    try {
+        const importMetaEnv = {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"};
+        importMetaEnv;
+        const processEnv = process.env;
+        processEnv;
+        const UNKNOWN_PROPERTY = undefined;
+        UNKNOWN_PROPERTY;
+        const UNKNOWN_PROPERTY_2 = process.env.UNKNOWN_PROPERTY_2;
+        UNKNOWN_PROPERTY_2;
+        \\"object\\";
+        typeof process.env;
+
+        const { env } = ({env: {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"},});
+        env;
+    } catch (_e) {
+        // ignore
+    }
+    const fs = await eval(\\"import('fs')\\");
+    expect(fs.readFileSync(__webpack_filename__, \\"utf-8\\")).toMatchSnapshot();
+    done();
+});
+"
+`;
+
+exports[`ConfigCacheTestCases source-map extract-source-map-css exported tests should compile 1`] = `
+Array [
+  "/*!*********************!*\\\\
+  !*** css ./app.css ***!
+  \\\\*********************/
+* {
+	box-sizing: border-box; }
+  
+  .row {
+	display: flex;
+	margin-right: -15px;
+	margin-left: -15px; }
+  
+  .col-inner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	height: 50px;
+	background: coral; }
+  
+  .col-s3 {
+	flex: 0 1 25%;
+	padding: 0 15px; }
+  
+  
+  
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
 `;
