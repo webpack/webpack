@@ -26,7 +26,8 @@ jobs:
             pkg:npm/abbrev,
             pkg:npm/@pkgjs/parseargs,
             pkg:npm/@apidevtools/json-schema-ref-parser,
-            pkg:npm/cookie-signature
+            pkg:npm/cookie-signature,
+            pkg:npm/ansis
           allow-licenses: |
             0BSD,
             AFL-1.1,
