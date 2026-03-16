@@ -1,5 +1,7 @@
 "use strict";
 
 module.exports = [
-	[/Conflicting order between css \.\/b\.css and css \.\/c\.css/]
+	[
+		/Conflicting order between css \.\/b\.css and css \.\/c\.css\ncaused by chunk groups css, css/
+	]
 ];
