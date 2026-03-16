@@ -186,7 +186,7 @@ const describeCases = (config) => {
 									},
 									{
 										test: /\.pug/,
-										loader: "pug-loader"
+										loader: "@webdiscus/pug-loader"
 									},
 									{
 										test: /\.wat$/i,

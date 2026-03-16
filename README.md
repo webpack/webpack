@@ -164,18 +164,15 @@ or are automatically applied via regex from your webpack configuration.
 |                                                                                         Name                                                                                         |     Status      |   Install Size   | Description                                                                             |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
 |     <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"></a>      |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
-|        <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>         |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
-|      <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>       |   ![pug3-npm]   |   ![pug3-size]   | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
+|      <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>       |   ![pug-npm]    |   ![pug-size]    | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
 |    <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/markdown/markdown-original.svg"></a>    |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
 |                      <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                       | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
 | <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/handlebars/handlebars-original.svg"></a> |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
 [html-size]: https://packagephobia.com/badge?p=html-loader
-[pug-npm]: https://img.shields.io/npm/v/pug-loader.svg
-[pug-size]: https://packagephobia.com/badge?p=pug-loader
-[pug3-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
-[pug3-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
+[pug-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
+[pug-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
 [jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
