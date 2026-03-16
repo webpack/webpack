@@ -422,6 +422,29 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
+.my-app-at-rule-value_module_css-color {
+	color: /*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+
+
+
+:root { --my-app-at-rule-value_module_css-color: /*
+	multiline
+	comment
+*/; }
+
+
+
 
 /*!*********************************************!*\\\\
   !*** css ./var-function-export.modules.css ***!
@@ -3215,6 +3238,29 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
+.color {
+	color: /*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+}
+
+
+
+.foo { color: blue; }
+
+
+
+:root { --color: /*
+	multiline
+	comment
+*/; }
+
+
+
 
 /*!*************************************!*\\\\
   !*** css ./var-function.module.css ***!
@@ -5878,6 +5924,29 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 .foo { color: red; }
+
+
+
+.color {
+	color: /*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+}
+
+
+
+.foo { color: blue; }
+
+
+
+:root { --color: /*
+	multiline
+	comment
+*/; }
 
 
 
@@ -8553,6 +8622,29 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 .BCixt8 { color: red; }
+
+
+
+.nSXNVB {
+	color: /*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+}
+
+
+
+.BCixt8 { color: blue; }
+
+
+
+:root { --nSXNVB: /*
+	multiline
+	comment
+*/; }
 
 
 
@@ -11507,6 +11599,29 @@ exports[`ConfigTestCases css css-modules exported tests should allow to disable 
 
 
 .my-app-at-rule-value_module_css-foo { color: red; }
+
+
+
+.my-app-at-rule-value_module_css-color {
+	color: /*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+}
+
+
+
+.my-app-at-rule-value_module_css-foo { color: blue; }
+
+
+
+:root { --my-app-at-rule-value_module_css-color: /*
+	multiline
+	comment
+*/; }
 
 
 
@@ -19517,7 +19632,7 @@ html {
 
 /* error-comma-in-local */
 .postcss-modules-scope_modules_css-className { color: red; }
-.postcss-modules-scope_modules_css-exportName19, .postcss-modules-scope_modules_css-exportName20) {
+.postcss-modules-scope_modules_css-exportName19, .postcss-modules-scope_modules_css-exportName20 {
 	composes: className;
 }
 
@@ -20521,6 +20636,43 @@ colorValue-v3 {
 @value/* test */(/* test */blue-v1/* test */as/* test */my-name-q/* test */)/* test */from/* test */\\"./colors.module.css\\"/* test */;
 
 .foo { color: my-name-q; }
+
+@value/*
+	multiline
+	comment
+*/multiline-v1/*
+	multiline
+	comment
+*/:/*
+	multiline
+	comment
+*/red/*
+	multiline
+	comment
+*/;
+
+.color {
+	color: multiline-v1;
+}
+
+@value /*
+	multiline comment
+*/ red-v3 /*
+	multiline comment
+*/ from /*
+	multiline comment
+*/ \\"./colors.module.css\\" /*
+	multiline comment
+*/;
+
+.foo { color: red-v3; }
+
+@value multiline-empty: /*
+	multiline
+	comment
+*/;
+
+:root { --color:multiline-empty; }
 
 @value;
 @value test;
