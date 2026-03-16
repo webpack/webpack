@@ -81,9 +81,9 @@ Many Webpack tests simulate small projects that are compiled during the test run
 For example, a configuration test may look like:
 
 test/configCases/entry/simple/
-  index.js
-  webpack.config.js
-  expected.txt
+index.js
+webpack.config.js
+expected.txt
 
 Explanation:
 
