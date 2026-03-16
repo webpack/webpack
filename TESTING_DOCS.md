@@ -74,6 +74,25 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
 
+## Example Test Case Structure
+
+Many Webpack tests simulate small projects that are compiled during the test run.
+
+For example, a configuration test may look like:
+
+test/configCases/entry/simple/
+  index.js
+  webpack.config.js
+  expected.txt
+
+Explanation:
+
+- index.js – entry file for the test project
+- webpack.config.js – configuration used by webpack
+- expected.txt – expected output or snapshot comparison
+
+During the test run, webpack compiles this project and compares the result with the expected output to ensure behavior remains consistent.
+
 ## Testing Framework
 
 - **Jest** is used for running tests.
