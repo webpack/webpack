@@ -8,6 +8,7 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
+const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -287,11 +288,19 @@ const describeCases = (config) => {
 											return;
 										}
 
-										let testConfig = {};
+										let testConfig = {
+											findBundle(_, options) {
+												const ext = path.extname(
+													parseResource(options.output.filename).path
+												);
+												return `./bundle${ext}`;
+											}
+										};
 										try {
 											// try to load a test file
-											testConfig = require(
-												path.join(testDirectory, "test.config.js")
+											testConfig = Object.assign(
+												testConfig,
+												require(path.join(testDirectory, "test.config.js"))
 											);
 										} catch (_err) {
 											// empty
@@ -300,53 +309,29 @@ const describeCases = (config) => {
 										if (testConfig.noTests) {
 											return process.nextTick(compilationFinished);
 										}
-										const runner = new TestRunner({
-											target: options.target,
+										const { results } = TestRunner.runBundles({
+											optionsArr: Array.isArray(options) ? options : [options],
 											outputDirectory,
-											testMeta: {
-												category: category.name,
-												name: testName
-											},
 											testConfig: {
 												...testConfig,
 												evaluateScriptOnAttached: true
 											},
-											webpackOptions: options
+											category,
+											testName,
+											setupRunner: ({ runner }) => {
+												runner.mergeModuleScope({
+													it: run.it,
+													beforeEach: _beforeEach,
+													afterEach: _afterEach,
+													STATS_JSON: jsonStats,
+													STATE: state,
+													WATCH_STEP: run.name
+												});
+											},
+											getBundlePaths: (i, options) =>
+												testConfig.findBundle(i, options)
 										});
-										runner.mergeModuleScope({
-											it: run.it,
-											beforeEach: _beforeEach,
-											afterEach: _afterEach,
-											STATS_JSON: jsonStats,
-											STATE: state,
-											WATCH_STEP: run.name
-										});
-										const getBundle = (outputDirectory, module) => {
-											if (Array.isArray(module)) {
-												return module.map((arg) =>
-													path.join(outputDirectory, arg)
-												);
-											} else if (module instanceof RegExp) {
-												return fs
-													.readdirSync(outputDirectory)
-													.filter((f) => module.test(f))
-													.map((f) => path.join(outputDirectory, f));
-											}
-											return [path.join(outputDirectory, module)];
-										};
-
-										const promises = [];
-										for (const p of getBundle(
-											outputDirectory,
-											testConfig.bundlePath || "./bundle.js"
-										)) {
-											promises.push(
-												Promise.resolve().then(() =>
-													runner.require(outputDirectory, p)
-												)
-											);
-										}
-										await Promise.all(promises);
+										await Promise.all(results);
 
 										if (run.getNumberOfTests() < 1) {
 											return compilationFinished(

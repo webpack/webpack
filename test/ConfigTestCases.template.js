@@ -422,48 +422,33 @@ const describeCases = (config) => {
 									return;
 								}
 
-								let filesCount = 0;
-
 								if (testConfig.noTests) return process.nextTick(done);
 								if (testConfig.beforeExecute) testConfig.beforeExecute();
-								const results = [];
-								for (let i = 0; i < optionsArr.length; i++) {
-									const options = optionsArr[i];
-									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
-									if (bundlePath) {
-										filesCount++;
-										const runner = new TestRunner({
-											target: options.target,
-											outputDirectory,
-											testMeta: {
-												category: category.name,
-												name: testName,
-												round: i
-											},
-											testConfig,
-											webpackOptions: options
-										});
+								const { filesCount, results } = TestRunner.runBundles({
+									optionsArr,
+									outputDirectory,
+									testConfig,
+									category,
+									testName,
+									setupRunner: ({ runner, index, target }) => {
 										runner.mergeModuleScope({
 											it: _it,
 											beforeEach: _beforeEach,
 											afterEach: _afterEach,
 											__STATS__: jsonStats,
-											__STATS_I__: i
+											__STATS_I__: index
 										});
 										if (testConfig.moduleScope) {
-											testConfig.moduleScope(runner._moduleScope, options);
+											testConfig.moduleScope(
+												runner._moduleScope,
+												optionsArr[index],
+												target
+											);
 										}
-										if (Array.isArray(bundlePath)) {
-											for (const bundlePathItem of bundlePath) {
-												results.push(
-													runner.require(outputDirectory, `./${bundlePathItem}`)
-												);
-											}
-										} else {
-											results.push(runner.require(outputDirectory, bundlePath));
-										}
-									}
-								}
+									},
+									getBundlePaths: (i, options) =>
+										testConfig.findBundle(i, options)
+								});
 								// give a free pass to compilation that generated an error
 								if (
 									!jsonStats.errors.length &&

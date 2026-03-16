@@ -5,6 +5,10 @@ const { Module } = require("module");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const vm = require("vm");
+const {
+	getTargetProperties,
+	getTargetsProperties
+} = require("../../lib/config/target");
 
 const {
 	ESModuleStatus,
@@ -46,6 +50,7 @@ const [major] = getNodeVersion();
 
 /**
  * @typedef {object} ModuleInfo
+ * @property {string} origin
  * @property {string} subPath
  * @property {string} modulePath
  * @property {string} content
@@ -62,6 +67,8 @@ const [major] = getNodeVersion();
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json
  * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css
  */
 
 class TestRunner {
@@ -85,8 +92,10 @@ class TestRunner {
 		this.testMeta = testMeta || {};
 		/** @type {EXPECTED_ANY} */
 		this.webpackOptions = webpackOptions || {};
+		/** @type {import("../../lib/config/target").TargetProperties | false} */
+		this._targetProperties = this._resolveTargetProperties();
 		/** @type {boolean} */
-		this._runInNewContext = this.isTargetWeb();
+		this._runInNewContext = this.hasWebTarget();
 		/** @type {EXPECTED_ANY} */
 		this._globalContext = this.createBaseGlobalContext();
 		/** @type {EXPECTED_ANY} */
@@ -98,6 +107,106 @@ class TestRunner {
 	}
 
 	/**
+	 * @param {EXPECTED_ANY} webpackOptions webpack options
+	 * @returns {boolean} whether target is universal
+	 */
+	static isUniversalTarget(webpackOptions) {
+		const outputModule =
+			(webpackOptions.output && webpackOptions.output.module) ||
+			(webpackOptions.experiments && webpackOptions.experiments.outputModule);
+		const target = webpackOptions.target;
+
+		const targetProperties =
+			target === false
+				? /** @type {false} */ (false)
+				: typeof target === "string"
+					? getTargetProperties(
+							target,
+							/** @type {Context} */ (webpackOptions.context)
+						)
+					: getTargetsProperties(
+							/** @type {string[]} */ (target),
+							/** @type {Context} */ (webpackOptions.context)
+						);
+		return (
+			outputModule &&
+			targetProperties.node === null &&
+			targetProperties.web === null
+		);
+	}
+
+	/**
+	 * @param {object} options run options
+	 * @param {EXPECTED_ANY[]} options.optionsArr webpack options array
+	 * @param {string} options.outputDirectory output directory
+	 * @param {EXPECTED_ANY} options.testConfig test config
+	 * @param {{ name: string }} options.category test category
+	 * @param {string} options.testName test name
+	 * @param {(options: { runner: TestRunner, index: number, target: string }) => void} options.setupRunner configure runner
+	 * @param {(i: number, options: EXPECTED_ANY, runner: TestRunner) => string | string[] | null | undefined} options.getBundlePaths resolve bundle paths
+	 * @returns {{ filesCount: number, results: EXPECTED_ANY[] }} files count and results
+	 */
+	static runBundles({
+		optionsArr,
+		outputDirectory,
+		testConfig,
+		category,
+		testName,
+		setupRunner,
+		getBundlePaths
+	}) {
+		let filesCount = 0;
+		const results = [];
+		for (let i = 0; i < optionsArr.length; i++) {
+			const options = optionsArr[i];
+			let targets = [options.target];
+			let found = false;
+			if (TestRunner.isUniversalTarget(options)) {
+				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
+			}
+
+			for (const target of targets) {
+				const runner = new TestRunner({
+					target,
+					outputDirectory,
+					testMeta: {
+						category: category.name,
+						name: testName,
+						round: i
+					},
+					testConfig,
+					webpackOptions: options
+				});
+				setupRunner({
+					runner,
+					index: i,
+					target
+				});
+				const bundlePaths = getBundlePaths(i, options, runner);
+				if (bundlePaths) {
+					const paths = Array.isArray(bundlePaths)
+						? bundlePaths
+						: [bundlePaths];
+					for (const p of paths) {
+						const normalized = path.isAbsolute(p)
+							? p
+							: p.startsWith("./")
+								? p
+								: `./${p}`;
+						results.push(runner.require(outputDirectory, normalized));
+					}
+
+					if (!found) {
+						found = true;
+						filesCount++;
+					}
+				}
+			}
+		}
+		return { filesCount, results };
+	}
+
+	/**
 	 * @returns {ModuleRunner} module runners
 	 */
 	createModuleRunners() {
@@ -106,7 +215,8 @@ class TestRunner {
 			esm: this.createEsmRunner(),
 			json: this.createJSONRunner(),
 			raw: this.createRawRunner(),
-			bytes: this.createBytesRunner()
+			bytes: this.createBytesRunner(),
+			css: this.createCssRunner()
 		};
 	}
 
@@ -135,14 +245,36 @@ class TestRunner {
 	}
 
 	/**
+	 * @returns {import("../../lib/config/target").TargetProperties | false} target properties
+	 */
+	_resolveTargetProperties() {
+		const target = this.target;
+		const context = /** @type {string} */ (this.webpackOptions.context);
+
+		if (target === false) return false;
+
+		return typeof target === "string"
+			? getTargetProperties(target, context)
+			: getTargetsProperties(/** @type {string[]} */ (target), context);
+	}
+
+	/**
 	 * @returns {boolean} whether target is web
 	 */
-	isTargetWeb() {
+	hasWebTarget() {
 		return (
-			this.target === "web" ||
-			this.target === "webworker" ||
-			(Array.isArray(this.target) &&
-				(this.target.includes("web") || this.target.includes("webworker")))
+			this._targetProperties !== false &&
+			(this._targetProperties.web === true ||
+				this._targetProperties.webworker === true)
+		);
+	}
+
+	/**
+	 * @returns {boolean} whether target is node
+	 */
+	hasNodeTarget() {
+		return (
+			this._targetProperties !== false && this._targetProperties.node === true
 		);
 	}
 
@@ -150,7 +282,7 @@ class TestRunner {
 	 * @returns {boolean} whether env is jsdom
 	 */
 	jsDom() {
-		return this.testConfig.env === "jsdom" || this.isTargetWeb();
+		return this.testConfig.env === "jsdom" || this.hasWebTarget();
 	}
 
 	/**
@@ -168,8 +300,8 @@ class TestRunner {
 				return m;
 			}
 		};
+		Object.assign(base, this._globalContext);
 		if (this.jsDom()) {
-			Object.assign(base, this._globalContext);
 			base.window = this._globalContext;
 			base.self = this._globalContext;
 		}
@@ -218,6 +350,7 @@ class TestRunner {
 	_resolveModule(currentDirectory, module) {
 		if (Array.isArray(module)) {
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: path.join(currentDirectory, ".array-require.js"),
 				content: `module.exports = (${module
@@ -227,6 +360,7 @@ class TestRunner {
 		}
 		if (isRelativePath(module)) {
 			return {
+				origin: module,
 				subPath: getSubPath(module),
 				modulePath: path.join(currentDirectory, module),
 				content: fs.readFileSync(path.join(currentDirectory, module), "utf8")
@@ -234,6 +368,7 @@ class TestRunner {
 		}
 		if (path.isAbsolute(module)) {
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: module,
 				content: fs.readFileSync(module, "utf8")
@@ -242,6 +377,7 @@ class TestRunner {
 		if (module.startsWith("https://test.")) {
 			const realPath = urlToPath(module, currentDirectory);
 			return {
+				origin: module,
 				subPath: "",
 				modulePath: realPath,
 				content: fs.readFileSync(realPath, "utf8")
@@ -289,8 +425,8 @@ class TestRunner {
 		if (modulePath.endsWith(".json")) {
 			return this._moduleRunners.json(moduleInfo, context);
 		}
-		if (["css"].includes(modulePath.split(".").pop())) {
-			return this._moduleRunners.raw(moduleInfo, context);
+		if (modulePath.endsWith(".css")) {
+			return this._moduleRunners.css(moduleInfo, context);
 		}
 		return this._moduleRunners.cjs(moduleInfo, context);
 	}
@@ -329,15 +465,21 @@ class TestRunner {
 			};
 			// Call again because some tests rely on `scope.module`
 			if (this.testConfig.moduleScope) {
-				this.testConfig.moduleScope(moduleScope, this.webpackOptions);
+				this.testConfig.moduleScope(
+					moduleScope,
+					this.webpackOptions,
+					this.target
+				);
 			}
+
+			const args = Object.keys(moduleScope);
+			const argValues = args.map((arg) => moduleScope[arg]);
+
 			if (!this._runInNewContext) {
 				_content = `Object.assign(global, _globalAssign); ${content}`;
 			}
-			const args = Object.keys(moduleScope);
-			const argValues = args.map((arg) => moduleScope[arg]);
 			const code = `(function(${args.join(", ")}) {${_content}\n})`;
-			const document = this._moduleScope.document;
+
 			const fn = this._runInNewContext
 				? vm.runInNewContext(code, this._globalContext, modulePath)
 				: vm.runInThisContext(code, modulePath);
@@ -349,21 +491,36 @@ class TestRunner {
 					...argValues
 				);
 			};
-			if (document) {
-				const CurrentScript = require("../helpers/CurrentScript");
 
-				const oldCurrentScript = document.currentScript;
-				document.currentScript = new CurrentScript(subPath);
-				try {
-					call();
-				} finally {
-					document.currentScript = oldCurrentScript;
-				}
+			if (this.hasWebTarget()) {
+				this.withDocumentCurrentScript(call, subPath);
 			} else {
 				call();
 			}
 			return mod.exports;
 		};
+	}
+
+	/**
+	 * Run the code with document.currentScript
+	 * @param {() => void} fn fn
+	 * @param {string} current currentScript
+	 */
+	withDocumentCurrentScript(fn, current) {
+		const document = this._moduleScope.document;
+		if (document) {
+			const CurrentScript = require("../helpers/CurrentScript");
+
+			const oldCurrentScript = document.currentScript;
+			document.currentScript = new CurrentScript(current);
+			try {
+				fn();
+			} finally {
+				document.currentScript = oldCurrentScript;
+			}
+		} else {
+			fn();
+		}
 	}
 
 	/**
@@ -404,7 +561,7 @@ class TestRunner {
 					initializeImportMeta: (meta, _module) => {
 						meta.url = pathToFileURL(identifier).href;
 
-						if (this.target === "node" || this.target.includes("node")) {
+						if (this.hasNodeTarget()) {
 							meta.filename = identifier;
 							meta.dirname = path.dirname(identifier);
 						}
@@ -525,8 +682,26 @@ class TestRunner {
 		return (moduleInfo) => moduleInfo.content;
 	}
 
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes runner
+	 */
 	createBytesRunner() {
 		return (moduleInfo) => new Uint8Array(Buffer.from(moduleInfo.content));
+	}
+
+	/**
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css runner
+	 */
+	createCssRunner() {
+		return (moduleInfo) => {
+			if (this.hasWebTarget()) {
+				const link = this._moduleScope.document.createElement("link");
+				link.href = moduleInfo.origin;
+				this._moduleScope.document.head.appendChild(link);
+			}
+
+			return moduleInfo.content;
+		};
 	}
 
 	/**
