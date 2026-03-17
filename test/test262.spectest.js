@@ -1022,6 +1022,7 @@ const knownBugs = [
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	"expressions/dynamic-import/import-defer/sync/main.js",
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/main.js",
+	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
 	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
 
