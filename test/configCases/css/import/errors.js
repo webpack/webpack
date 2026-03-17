@@ -1,8 +1,14 @@
 "use strict";
 
-module.exports = [
+const isMainBranches = Boolean(
+	JSON.parse(process.env.USE_MAIN_BRANCHES || "0")
+);
+
+module.exports = () => [
 	/Can't resolve 'non-exported-css'/,
 	/Can't resolve '\.\/directory'/,
-	/Can't resolve 'condition-names-subpath\/non-valid\.css'/,
+	isMainBranches
+		? /Package path \.\/non-valid\.css is exported from package (.+), but no valid target file was found/
+		: /Can't resolve 'condition-names-subpath\/non-valid\.css'/,
 	/Can't resolve '\.\/no-extension-in-request'/
 ];
