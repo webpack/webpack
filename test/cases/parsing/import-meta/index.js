@@ -44,8 +44,35 @@ it("should return undefined for unknown property", () => {
 	expect(() => import.meta.other.other.other).toThrow();
 });
 
-it("should add warning on direct import.meta usage", () => {
-	expect(Object.keys(import.meta)).toHaveLength(0);
+it("should preserve properties when import.meta is assigned to a variable", () => {
+	const meta = import.meta;
+	expect(meta.url).toBe(url);
+	expect(meta.webpack).toBe(webpackVersion);
+	expect(typeof meta.main).toBe("boolean");
+	expect(typeof meta.env).toBe("object");
+});
+
+it("should preserve properties when import.meta is returned from a function", () => {
+	function getMeta() {
+		return import.meta;
+	}
+	const meta = getMeta();
+	expect(meta.url).toBe(url);
+	expect(meta.webpack).toBe(webpackVersion);
+});
+
+it("should preserve properties when import.meta is passed as an argument", () => {
+	function readUrl(meta) {
+		return meta.url;
+	}
+	expect(readUrl(import.meta)).toBe(url);
+});
+
+it("should return the same object for import.meta", () => {
+	expect(import.meta).toBe(import.meta);
+	const a = import.meta;
+	const b = import.meta;
+	expect(a).toBe(b);
 });
 
 it("should support destructuring assignment", async () => {

@@ -29,6 +29,13 @@ it("should keep import.meta.UNKNOWN_PROPERTY", () => {
 	}
 });
 
+it("should preserve runtime properties when import.meta is used as standalone expression", () => {
+	const meta = import.meta;
+	expect(meta.UNKNOWN_PROPERTY).toBe("HELLO");
+	expect(meta.url).toBeTypeOf("string");
+	expect(meta.webpack).toBeTypeOf("number");
+});
+
 it("should support destructuring assignment", async () => {
 	let version, url2, c, unknown;
 	({ webpack: version } =
