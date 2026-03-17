@@ -817,13 +817,15 @@ const knownBugs = [
 	"module-code/ambiguous-export-bindings/omitted-from-namespace.js",
 	// Bug when you export `valueOf` and use `Number`
 	"expressions/dynamic-import/custom-primitive.js",
-	// Bug with using `var a = import.meta;`, ideally we need to hoist this and using the same object in any usage
-	"expressions/import.meta/same-object-returned.js",
-	// Potential improvement to keep `import.meta` as is
-	"expressions/import.meta/syntax/goal-module-nested-function.js",
-	"expressions/import.meta/syntax/goal-module.js",
+	// `import.meta` in script context should throw SyntaxError
 	"expressions/import.meta/syntax/goal-script.js",
-	"expressions/import.meta/import-meta-is-an-ordinary-object.js",
+	// `with { type: 'text' }` import-text tests: test262 runner rule forces .js to javascript/esm, overriding asset/source
+	"import/import-attributes/text-empty.js",
+	"import/import-attributes/text-javascript.js",
+	"import/import-attributes/text-self.js",
+	"import/import-attributes/text-string.js",
+	"import/import-attributes/text-via-namespace.js",
+	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
 	"expressions/import.meta/distinct-for-each-module.js",
 	// We should throw `SyntaxError` here instead `Can't resolve`
 	"expressions/dynamic-import/syntax/invalid/nested-arrow-assignment-expression-import-defer-no-new-call-expression.js",

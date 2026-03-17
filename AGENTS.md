@@ -53,7 +53,6 @@ Test files live in `test/` with naming conventions:
 - `test/hotCases/` — HMR (Hot Module Replacement) test cases
 - `test/benchmarkCases/` — Performance benchmark cases (each has `index.js` + `webpack.config.mjs` + optional `options.mjs` with `setup()`)
 - `test/*.unittest.js` — Unit tests using Jest directly (e.g., `test/FileSystemInfo.unittest.js` uses `memfs` for filesystem mocking)
-- `test/test262-cases/` — ECMAScript test262 conformance cases (git submodule, init with `git submodule update --init test/test262-cases`; test runner: `test/test262.spectest.js`)
 
 ### 4. Running Tests
 
@@ -61,16 +60,15 @@ Only run tests when test files are modified or explicitly requested.
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file | Command                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`                                   |
-| `test/cases/`           | `yarn test:basic`                                                                     |
-| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"`                             |
-| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`                              |
-| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`                               |
-| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`                                 |
-| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                                                 |
-| `test/test262-cases/`   | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first) |
+| Modified directory/file | Command                                                   |
+| ----------------------- | --------------------------------------------------------- |
+| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`       |
+| `test/cases/`           | `yarn test:basic`                                         |
+| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"` |
+| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`  |
+| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`   |
+| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`     |
+| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                     |
 
 You can add `--testNamePattern="<case-name>"` to run only specific test cases for faster validation. Multiple patterns can be combined with `|`. For example, if you only modified `test/configCases/css/basic/`:
 
@@ -91,7 +89,7 @@ Every user-facing change needs a changeset file:
 Description of the change.
 ```
 
-Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc. — the change type is already indicated by `patch`/`minor`/`major`.
+Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes.
 
 ### 6. Updating Examples (if needed)
 
