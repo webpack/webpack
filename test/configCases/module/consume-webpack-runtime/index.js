@@ -3,6 +3,7 @@ import defaultUse from './runtime-export-default'
 import { __webpack_require__ as namedDeclUse } from './runtime-export-decl'
 import { __webpack_require__ as objectRequire, __webpack_exports__ as objectExport } from './runtime-single-require-and-export'
 import defaultUseNested from './runtime-multiple-nested'
+import "./runtime-arrow-scope";
 
 it("should compile and run", () => {
 	expect(namedUse()).toBe(42);
@@ -17,7 +18,7 @@ it("should compile and run", () => {
 	{
 		const content = fs.readFileSync(path.resolve(__dirname, './bundle0.js'), 'utf-8');
 		const NESTED_RE = /__nested_webpack_require_([^_]+)__/g;
-		expect(content.match(NESTED_RE).length).toBe(13);
+		expect(content.match(NESTED_RE).length).toBe(17);
 	}
 
 	{
@@ -29,7 +30,7 @@ it("should compile and run", () => {
 	{
 		const content = fs.readFileSync(path.resolve(__dirname, './bundle1.js'), 'utf-8');
 		const NESTED_RE = /__nested_webpack_require_([^_]+)__/g;
-		expect(content.match(NESTED_RE).length).toBe(15);
+		expect(content.match(NESTED_RE).length).toBe(19);
 	}
 
 	{
@@ -41,7 +42,7 @@ it("should compile and run", () => {
 	{
 		const content = fs.readFileSync(path.resolve(__dirname, './bundle2.js'), 'utf-8');
 		const NESTED_RE = /__nested_webpack_require_([^_]+)__/g;
-		expect(content.match(NESTED_RE).length).toBe(13);
+		expect(content.match(NESTED_RE).length).toBe(17);
 	}
 
 	{
@@ -53,7 +54,7 @@ it("should compile and run", () => {
 	{
 		const content = fs.readFileSync(path.resolve(__dirname, './bundle3.js'), 'utf-8');
 		const NESTED_RE = /__nested_webpack_require_([^_]+)__/g;
-		expect(content.match(NESTED_RE).length).toBe(15);
+		expect(content.match(NESTED_RE).length).toBe(19);
 	}
 
 	{
