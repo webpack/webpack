@@ -1221,9 +1221,6 @@ describe("test262", () => {
 					errored = err;
 				}
 
-				console.log(errored);
-				console.log(knownV8Bugs.includes(name));
-
 				if (errored && knownV8Bugs.includes(name)) {
 					return;
 				}
