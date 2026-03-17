@@ -30,7 +30,7 @@ it("should keep import.meta.UNKNOWN_PROPERTY", () => {
 });
 
 it("should preserve runtime properties when import.meta is used as standalone expression", () => {
-	const meta = import.meta;
+	const meta = (() => import.meta)();
 	expect(meta.UNKNOWN_PROPERTY).toBe("HELLO");
 	expect(meta.url).toBeTypeOf("string");
 	expect(meta.webpack).toBeTypeOf("number");
