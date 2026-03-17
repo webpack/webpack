@@ -819,6 +819,8 @@ const knownBugs = [
 	"expressions/dynamic-import/custom-primitive.js",
 	// `import.meta` in script context should throw SyntaxError
 	"expressions/import.meta/syntax/goal-script.js",
+	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
+	"expressions/import.meta/distinct-for-each-module.js",
 	// We should throw `SyntaxError` here instead `Can't resolve`
 	"expressions/dynamic-import/syntax/invalid/nested-arrow-assignment-expression-import-defer-no-new-call-expression.js",
 	"expressions/dynamic-import/syntax/invalid/nested-arrow-import-defer-no-new-call-expression.js",
