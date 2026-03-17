@@ -1,8 +1,6 @@
 "use strict";
 
-const isMainBranches = Boolean(
-	JSON.parse(process.env.USE_MAIN_BRANCHES || "0")
-);
+const isMainBranches = Boolean(JSON.parse(process.env.MAIN_BRANCHES || "0"));
 
 module.exports = () => [
 	/Can't resolve 'non-exported-css'/,
