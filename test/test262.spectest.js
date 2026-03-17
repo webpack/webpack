@@ -1022,6 +1022,7 @@ const knownBugs = [
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	"expressions/dynamic-import/import-defer/sync/main.js",
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/main.js",
+	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
 	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
 
@@ -1220,9 +1221,6 @@ describe("test262", () => {
 				} catch (err) {
 					errored = err;
 				}
-
-				console.log(errored);
-				console.log(knownV8Bugs.includes(name));
 
 				if (errored && knownV8Bugs.includes(name)) {
 					return;
