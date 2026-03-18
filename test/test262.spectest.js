@@ -497,9 +497,9 @@ const compile = async (entry, scenario, options = {}) =>
 					scenario === "module"
 						? [
 								{
-									// Avoid override `type` when we have `bytes` type, maybe we can improve this too
+									// Avoid override `type` when we have `bytes` or `text` type
 									with: {
-										type: (value) => value !== "bytes"
+										type: (value) => value !== "bytes" && value !== "text"
 									},
 									test: /\.js$/,
 									type: "javascript/esm"
@@ -827,6 +827,12 @@ const knownBugs = [
 	"import/import-attributes/text-via-namespace.js",
 	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
 	"expressions/import.meta/distinct-for-each-module.js",
+	// `with { type: 'text' }` import-text: webpack compiles correctly but vm.SourceTextModule execution times out
+	"import/import-attributes/text-empty.js",
+	"import/import-attributes/text-javascript.js",
+	"import/import-attributes/text-self.js",
+	"import/import-attributes/text-string.js",
+	"import/import-attributes/text-via-namespace.js",
 	// We should throw `SyntaxError` here instead `Can't resolve`
 	"expressions/dynamic-import/syntax/invalid/nested-arrow-assignment-expression-import-defer-no-new-call-expression.js",
 	"expressions/dynamic-import/syntax/invalid/nested-arrow-import-defer-no-new-call-expression.js",
