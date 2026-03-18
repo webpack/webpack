@@ -48,7 +48,6 @@ const git = simpleGit(rootPath);
 
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
-
 const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 /**

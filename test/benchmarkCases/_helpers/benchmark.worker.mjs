@@ -15,6 +15,7 @@ import { Bench, hrtimeNow } from "tinybench";
 
 /** @typedef {import("tinybench").Task} TinybenchTask */
 /** @typedef {import("tinybench").Fn} Fn */
+/** @typedef {import("tinybench").FnOptions} FnOptions */
 /** @typedef {import("tinybench").TaskResult} TinybenchTaskResult */
 /** @typedef {import("tinybench").Statistics} TinybenchStatistics */
 /** @typedef {import("tinybench").Bench} TinybenchBench */
@@ -196,7 +197,8 @@ function getCallingFile() {
 	// return path.relative(gitDir, callingFile);
 }
 
-/** @typedef {Map<string, string>} URIMap */
+/** @typedef {{ uri: string, fn: Fn, options: FnOptions | undefined }} TaskMeta */
+/** @typedef {Map<string, TaskMeta>} URIMap */
 
 /** @type {WeakMap<Bench, URIMap>} */
 const taskUriMap = new WeakMap();
@@ -223,12 +225,12 @@ function getOrCreateUriMap(bench) {
  */
 function getTaskUri(bench, taskName, rootCallingFile) {
 	const uriMap = taskUriMap.get(bench);
-	return uriMap?.get(taskName) || `${rootCallingFile}::${taskName}`;
+	return uriMap?.get(taskName)?.uri || `${rootCallingFile}::${taskName}`;
 }
 
 /**
- * @param {TinybenchBench} bench bench
- * @returns {Promise<TinybenchBench>} modifier bench
+ * @param {Bench} bench bench
+ * @returns {Promise<Bench>} modifier bench
  */
 const withCodSpeed = async (bench) => {
 	const codspeedRunnerMode = getCodspeedRunnerMode();
@@ -239,23 +241,23 @@ const withCodSpeed = async (bench) => {
 
 	const rawAdd = bench.add;
 	const uriMap = getOrCreateUriMap(bench);
-	bench.add = (name, fn, opts) => {
+	bench.add = (name, fn, options) => {
 		const callingFile = getCallingFile();
 		let uri = callingFile;
 		if (bench.name !== undefined) {
 			uri += `::${bench.name}`;
 		}
 		uri += `::${name}`;
-		uriMap.set(name, uri);
-		return rawAdd.bind(bench)(name, fn, opts);
+		uriMap.set(name, { uri, fn, options });
+		return rawAdd.bind(bench)(name, fn, options);
 	};
 	const rootCallingFile = getCallingFile();
 
-	if (codspeedRunnerMode === "instrumented") {
+	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
 		const setupBenchRun = () => {
 			setupCore();
 			console.log(
-				"[CodSpeed] running with @codspeed/tinybench (instrumented mode)"
+				`[CodSpeed] running with @codspeed/tinybench (${codspeedRunnerMode} mode)`
 			);
 		};
 		const finalizeBenchRun = () => {
@@ -264,6 +266,11 @@ const withCodSpeed = async (bench) => {
 			return bench.tasks;
 		};
 
+		/**
+		 * @param {Fn} fn function
+		 * @param {boolean} isAsync true if async function, otherwise false
+		 * @returns {() => void} function wrapped in codspeed root frame
+		 */
 		const wrapFunctionWithFrame = (fn, isAsync) => {
 			if (isAsync) {
 				return async function __codspeed_root_frame__() {
@@ -289,21 +296,23 @@ const withCodSpeed = async (bench) => {
 
 		/**
 		 * @param {Task} task task
+		 * @param {string} name task name
 		 * @returns {Promise<[number, number] | void>} start and end time
 		 */
-		const iterationAsync = async (task) => {
-			// @ts-expect-error no public API
-			const { fn, fnOpts } = task;
+		const iterationAsync = async (task, name) => {
+			const { fn, options } =
+				/** @type {TaskMeta} */
+				(uriMap.get(name));
 
 			try {
-				await fnOpts.beforeEach?.call(task, "run");
-				const start = bench.opts.now();
+				await options?.beforeEach?.call(task, "run");
+				const start = bench.now();
 				await fn();
-				const end = bench.opts.now() - start || 0;
-				await fnOpts.afterEach?.call(this, "run");
+				const end = bench.now() - start || 0;
+				await options?.afterEach?.call(task, "run");
 				return [start, end];
 			} catch (err) {
-				if (bench.opts.throws) {
+				if (bench.throws) {
 					throw err;
 				}
 			}
@@ -324,57 +333,63 @@ const withCodSpeed = async (bench) => {
 
 		/**
 		 * @param {Task} task task
+		 * @param {string} name task name
 		 * @param {string} uri URI
 		 */
-		const runTaskAsync = async (task, uri) => {
-			// @ts-expect-error no public API
-			const { fnOpts, fn } = task;
+		const runTaskAsync = async (task, name, uri) => {
+			const { fn, options } =
+				/** @type {TaskMeta} */
+				(uriMap.get(name));
 
 			// Custom setup
-			await bench.opts.setup?.(task, "run");
+			await bench.setup?.(task, "run");
 
-			await fnOpts?.beforeAll?.call(task, "run");
+			await options?.beforeAll?.call(task, "run");
 
-			// Custom warmup
-			// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
-			const samples = [];
+			if (codspeedRunnerMode === "simulation") {
+				// Custom warmup
+				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
+				const samples = [];
 
-			while (samples.length < bench.opts.iterations - 1) {
-				samples.push(await iterationAsync(task));
+				while (samples.length < bench.iterations - 1) {
+					samples.push(await iterationAsync(task, name));
+				}
 			}
 
-			await fnOpts?.beforeEach?.call(task, "run");
+			await options?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
 			global.gc?.();
 			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
 			await mongoMeasurement.stop(uri);
-			await fnOpts?.afterEach?.call(task, "run");
+			await options?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			await fnOpts?.afterAll?.call(task, "run");
+			await options?.afterAll?.call(task, "run");
 
 			// Custom teardown
-			await bench.opts.teardown?.(task, "run");
+			await bench.teardown?.(task, "run");
 
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
 
 		/**
 		 * @param {Task} task task
+		 * @param {string} name task
 		 * @returns {[number, number] | undefined} start and end time
 		 */
-		const iteration = (task) => {
-			// @ts-expect-error no public API
-			const { fn, fnOpts } = task;
+		const iteration = (task, name) => {
+			const { fn, options } =
+				/** @type {TaskMeta} */
+				(uriMap.get(name));
 
 			try {
-				fnOpts.beforeEach?.call(task, "run");
-				const start = bench.opts.now();
+				options?.beforeEach?.call(task, "run");
+				const start = bench.now();
 				fn();
-				const end = bench.opts.now() - start || 0;
-				fnOpts.afterEach?.call(this, "run");
+				const end = bench.now() - start || 0;
+				options?.afterEach?.call(task, "run");
 				return [start, end];
 			} catch (err) {
-				if (bench.opts.throws) {
+				if (bench.throws) {
 					throw err;
 				}
 			}
@@ -395,34 +410,38 @@ const withCodSpeed = async (bench) => {
 
 		/**
 		 * @param {Task} task task
+		 * @param {string} name task name
 		 * @param {string} uri URI
 		 */
-		const runTaskSync = (task, uri) => {
-			// @ts-expect-error no public API
-			const { fnOpts, fn } = task;
+		const runTaskSync = (task, name, uri) => {
+			const { fn, options } =
+				/** @type {TaskMeta} */
+				(uriMap.get(name));
 
 			// Custom setup
-			bench.opts.setup?.(task, "run");
+			bench.setup?.(task, "run");
 
-			fnOpts?.beforeAll?.call(task, "run");
+			options?.beforeAll?.call(task, "run");
 
-			// Custom warmup
-			const samples = [];
+			if (codspeedRunnerMode === "simulation") {
+				// Custom warmup
+				const samples = [];
 
-			while (samples.length < bench.opts.iterations - 1) {
-				samples.push(iteration(task));
+				while (samples.length < bench.iterations - 1) {
+					samples.push(iteration(task, name));
+				}
 			}
 
-			fnOpts?.beforeEach?.call(task, "run");
+			options?.beforeEach?.call(task, "run");
 
 			wrapWithInstrumentHooks(wrapFunctionWithFrame(fn, false), uri);
 
-			fnOpts?.afterEach?.call(task, "run");
+			options?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			fnOpts?.afterAll?.call(task, "run");
+			options?.afterAll?.call(task, "run");
 
 			// Custom teardown
-			bench.opts.teardown?.(task, "run");
+			bench.teardown?.(task, "run");
 
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
@@ -440,9 +459,8 @@ const withCodSpeed = async (bench) => {
 			setupBenchRun();
 
 			for (const task of bench.tasks) {
-				// @ts-expect-error no public API
-				const uri = getTaskUri(task.bench, task.name, rootCallingFile);
-				await runTaskAsync(task, uri);
+				const uri = getTaskUri(bench, task.name, rootCallingFile);
+				await runTaskAsync(task, task.name, uri);
 			}
 
 			return finalizeAsyncRun();
@@ -452,9 +470,8 @@ const withCodSpeed = async (bench) => {
 			setupBenchRun();
 
 			for (const task of bench.tasks) {
-				// @ts-expect-error no public API
-				const uri = getTaskUri(task.bench, task.name, rootCallingFile);
-				runTaskSync(task, uri);
+				const uri = getTaskUri(bench, task.name, rootCallingFile);
+				runTaskSync(task, task.name, uri);
 			}
 
 			return finalizeSyncRun();
@@ -471,6 +488,10 @@ const withCodSpeed = async (bench) => {
  * @returns {number} distribution
  */
 function tDistribution(n) {
+	if (n === 0) {
+		return 1;
+	}
+
 	// two-sided, 90%
 	// https://en.wikipedia.org/wiki/Student%27s_t-distribution
 	if (n <= 30) {
@@ -521,7 +542,7 @@ function buildWebpackConfig(
 			? path.resolve(
 					testDirectory,
 					config.entry
-						? /\.(c|m)?js$/.test(config.entry)
+						? /\.(?:c|m)?js$/.test(config.entry)
 							? config.entry
 							: `${config.entry}.js`
 						: "./index.js"
@@ -595,7 +616,7 @@ function runBuild(webpack, webpackConfig) {
  */
 async function runWatch(webpack, webpackConfig, callback) {
 	const compiler = webpack(webpackConfig);
-	return /** @type {Watching} */ compiler.watch({}, callback);
+	return /** @type {Watching} */ (compiler.watch({}, callback));
 }
 
 async function addBuildBench({
@@ -622,7 +643,8 @@ async function addBuildBench({
 			},
 			beforeAll() {
 				/** @type {Task} */
-				(this).collectBy = `${benchmarkName}, scenario '${scenario}'`;
+				(this).collectBy =
+					`${benchmarkName}, scenario '${JSON.stringify(scenario)}'`;
 			}
 		}
 	);
@@ -903,13 +925,17 @@ export async function run({ task, casesPath, baseOutputPath }) {
 			throw new Error("Can't find a task");
 		}
 
-		const runs = task.runs;
-		const nSqrt = Math.sqrt(runs);
-		const z = tDistribution(runs - 1);
-
 		if (!task.result) {
 			throw new Error("Can't find a task result");
 		}
+
+		if (task.result.state !== "completed") {
+			throw new Error(`Task is not completed, state is ${task.result.state}`);
+		}
+
+		const runs = task.runs;
+		const nSqrt = Math.sqrt(runs);
+		const z = tDistribution(runs - 1);
 
 		const { latency } = task.result;
 		const minConfidence = latency.mean - (z * latency.sd) / nSqrt;
