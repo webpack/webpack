@@ -17809,6 +17809,11 @@ declare interface StartupRenderContext {
 	 * the inlined entry module is wrapped in an IIFE
 	 */
 	inlinedInIIFE?: boolean;
+
+	/**
+	 * whether the top-level exports declaration needs to be generated
+	 */
+	needExportsDeclaration: boolean;
 }
 declare interface StatFs {
 	(
