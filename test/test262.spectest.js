@@ -819,6 +819,8 @@ const knownBugs = [
 	"expressions/dynamic-import/custom-primitive.js",
 	// `import.meta` in script context should throw SyntaxError
 	"expressions/import.meta/syntax/goal-script.js",
+	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
+	"import/import-attributes/text-via-namespace.js",
 	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
 	"expressions/import.meta/distinct-for-each-module.js",
 	// We should throw `SyntaxError` here instead `Can't resolve`
