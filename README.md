@@ -47,7 +47,7 @@
   - [Backers](#backers)
 - [Special Thanks](#special-thanks-to)
 
-## Install
+## [Install](#table-of-contents)
 
 Install with npm:
 
@@ -61,7 +61,7 @@ Install with yarn:
 yarn add webpack --dev
 ```
 
-## Introduction
+## [Introduction](#table-of-contents)
 
 Webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -89,7 +89,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
-## Concepts
+## [Concepts](#table-of-contents)
 
 ### [Plugins](https://webpack.js.org/plugins/)
 
@@ -263,7 +263,7 @@ If you're working on webpack itself, or building advanced plugins or integration
 
 [tapable-tracer-npm]: https://img.shields.io/npm/v/tapable-tracer.svg
 
-## Contributing
+## [Contributing](#table-of-contents)
 
 **We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](https://github.com/webpack) or [webpack-contrib organization](https://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
@@ -286,7 +286,7 @@ To get started have a look at our [documentation on contributing](https://github
 
 If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
 
-## Support
+## [Support](#table-of-contents)
 
 We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
@@ -294,7 +294,7 @@ If you're just getting started, take a look at [our new docs and concepts page](
 
 If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on GitHub.
 
-## Current project members
+## [Current project members](#table-of-contents)
 
 For information about the governance of the webpack project, see [GOVERNANCE.md](./GOVERNANCE.md).
 
@@ -315,7 +315,7 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
 
 This webpack repository is maintained by the [`Core Working Group`](./WORKING_GROUP.md).
 
-## Sponsoring
+## [Sponsoring](#table-of-contents)
 
 Most of the core team members, webpack contributors and contributors in the ecosystem do this open source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
 
@@ -629,7 +629,7 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 <a href="https://opencollective.com/webpack/backer/99/website?requireActive=false" target="_blank"><img width="30" src="https://opencollective.com/webpack/backer/99/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/100/website?requireActive=false" target="_blank"><img width="30" src="https://opencollective.com/webpack/backer/100/avatar.svg?requireActive=false"></a>
 
-## Special Thanks to
+## [Special Thanks to](#table-of-contents)
 
 <p>(In chronological order)</p>
 
