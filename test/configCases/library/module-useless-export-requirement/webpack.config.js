@@ -1,5 +1,8 @@
 "use strict";
 
+/** @typedef {import("../../../../").Configuration} Configuration */
+
+/** @type {Configuration} */
 const common = {
 	mode: "production",
 	output: {
@@ -15,6 +18,7 @@ const common = {
 	}
 };
 
+/** @type {Configuration[]} */
 const configs = [
 	{
 		name: "entry1",
@@ -33,27 +37,32 @@ const configs = [
 	}
 ];
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = configs.reduce((result, { name, entry, optimization }) => {
-	result.push({
-		...common,
-		optimization: {
-			...optimization,
-			concatenateModules: true
-		},
-		entry: {
-			[`${name}-concat`]: entry
-		}
-	});
-	result.push({
-		...common,
-		optimization: {
-			...optimization,
-			concatenateModules: false
-		},
-		entry: {
-			[`${name}-no-concat`]: entry
-		}
-	});
-	return result;
-}, []);
+module.exports = configs.reduce(
+	/** @type {(result: Configuration[], config: typeof configs[number]) => Configuration[]} */ (
+		result,
+		{ name, entry, optimization }
+	) => {
+		result.push({
+			...common,
+			optimization: {
+				...optimization,
+				concatenateModules: true
+			},
+			entry: {
+				[`${name}-concat`]: entry
+			}
+		});
+		result.push({
+			...common,
+			optimization: {
+				...optimization,
+				concatenateModules: false
+			},
+			entry: {
+				[`${name}-no-concat`]: entry
+			}
+		});
+		return result;
+	},
+	[]
+);
