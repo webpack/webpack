@@ -1,0 +1,385 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should compile 1`] = `
+"import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals0_a__ } from \\"externals0\\";
+import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals1_a__ } from \\"externals1\\";
+import { default as __WEBPACK_EXTERNAL_MODULE_externals2_default__ } from \\"externals2\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals3__ from \\"externals3\\";
+import \\"externals4\\";
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+/*!*****************************!*\\\\
+  !*** ./test.js + 6 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+const external_externals3_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals3__;
+;// external \\"externals4\\"
+
+;// ./lib.js
+
+
+const { HomeLayout = 123 } = {};
+console.log({ HomeLayout });
+{
+    const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+    console.log({ HomeLayout });
+}
+(() => {
+    {
+        const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+        console.log({ HomeLayout });
+    }
+})()
+
+{
+    const { external_externals3_namespaceObject = \\"111\\" } = {}
+            console.log({ external_externals3_namespaceObject });
+}
+
+
+;// ./test.js
+// re export
+
+
+// named import
+;
+
+
+// default import
+
+
+// namespace import
+
+
+// side effect only import
+
+
+
+
+{
+    const HomeLayout_0 = 'HomeLayout_0';
+    HomeLayout_0;
+}
+__WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__;
+__WEBPACK_EXTERNAL_MODULE_externals0_a__;
+__WEBPACK_EXTERNAL_MODULE_externals1_a__;
+__WEBPACK_EXTERNAL_MODULE_externals2_default__;
+external_externals3_namespaceObject;
+export { HomeLayout, __WEBPACK_EXTERNAL_MODULE_externals0_a__ as a };
+"
+`;
+
+exports[`ConfigCacheTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should compile 2`] = `
+"import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals0_a__ } from \\"externals0\\";
+import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals1_a__ } from \\"externals1\\";
+import { default as __WEBPACK_EXTERNAL_MODULE_externals2_default__ } from \\"externals2\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals3__ from \\"externals3\\";
+import \\"externals4\\";
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+/*!*****************************!*\\\\
+  !*** ./test.js + 6 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+const external_externals3_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals3__;
+;// external \\"externals4\\"
+
+;// ./lib.js
+
+
+const { HomeLayout = 123 } = {};
+console.log({ HomeLayout });
+{
+    const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+    console.log({ HomeLayout });
+}
+(() => {
+    {
+        const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+        console.log({ HomeLayout });
+    }
+})()
+
+{
+    const { external_externals3_namespaceObject = \\"111\\" } = {}
+            console.log({ external_externals3_namespaceObject });
+}
+
+
+;// ./test.js
+// re export
+
+
+// named import
+;
+
+
+// default import
+
+
+// namespace import
+
+
+// side effect only import
+
+
+
+
+{
+    const HomeLayout_0 = 'HomeLayout_0';
+    HomeLayout_0;
+}
+__WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__;
+__WEBPACK_EXTERNAL_MODULE_externals0_a__;
+__WEBPACK_EXTERNAL_MODULE_externals1_a__;
+__WEBPACK_EXTERNAL_MODULE_externals2_default__;
+external_externals3_namespaceObject;
+export { HomeLayout, __WEBPACK_EXTERNAL_MODULE_externals0_a__ as a };
+"
+`;
+
+exports[`ConfigCacheTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should pre-compile to fill disk cache (1st) 1`] = `
+"import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals0_a__ } from \\"externals0\\";
+import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals1_a__ } from \\"externals1\\";
+import { default as __WEBPACK_EXTERNAL_MODULE_externals2_default__ } from \\"externals2\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals3__ from \\"externals3\\";
+import \\"externals4\\";
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+/*!*****************************!*\\\\
+  !*** ./test.js + 6 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+const external_externals3_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals3__;
+;// external \\"externals4\\"
+
+;// ./lib.js
+
+
+const { HomeLayout = 123 } = {};
+console.log({ HomeLayout });
+{
+    const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+    console.log({ HomeLayout });
+}
+(() => {
+    {
+        const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+        console.log({ HomeLayout });
+    }
+})()
+
+{
+    const { external_externals3_namespaceObject = \\"111\\" } = {}
+            console.log({ external_externals3_namespaceObject });
+}
+
+
+;// ./test.js
+// re export
+
+
+// named import
+;
+
+
+// default import
+
+
+// namespace import
+
+
+// side effect only import
+
+
+
+
+{
+    const HomeLayout_0 = 'HomeLayout_0';
+    HomeLayout_0;
+}
+__WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__;
+__WEBPACK_EXTERNAL_MODULE_externals0_a__;
+__WEBPACK_EXTERNAL_MODULE_externals1_a__;
+__WEBPACK_EXTERNAL_MODULE_externals2_default__;
+external_externals3_namespaceObject;
+export { HomeLayout, __WEBPACK_EXTERNAL_MODULE_externals0_a__ as a };
+"
+`;
+
+exports[`ConfigCacheTestCases library concatenate-modules-named-import-externals concatenate-modules-named-import-externals should pre-compile to fill disk cache (2nd) 1`] = `
+"import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals0_a__ } from \\"externals0\\";
+import { HomeLayout as __WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__, a as __WEBPACK_EXTERNAL_MODULE_externals1_a__ } from \\"externals1\\";
+import { default as __WEBPACK_EXTERNAL_MODULE_externals2_default__ } from \\"externals2\\";
+import * as __WEBPACK_EXTERNAL_MODULE_externals3__ from \\"externals3\\";
+import \\"externals4\\";
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+/*!*****************************!*\\\\
+  !*** ./test.js + 6 modules ***!
+  \\\\*****************************/
+
+;// external \\"externals0\\"
+
+;// external \\"externals1\\"
+
+;// external \\"externals2\\"
+
+;// external \\"externals3\\"
+const external_externals3_namespaceObject = __WEBPACK_EXTERNAL_MODULE_externals3__;
+;// external \\"externals4\\"
+
+;// ./lib.js
+
+
+const { HomeLayout = 123 } = {};
+console.log({ HomeLayout });
+{
+    const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+    console.log({ HomeLayout });
+}
+(() => {
+    {
+        const { HomeLayout = __WEBPACK_EXTERNAL_MODULE_externals0_HomeLayout__ } = {};
+        console.log({ HomeLayout });
+    }
+})()
+
+{
+    const { external_externals3_namespaceObject = \\"111\\" } = {}
+            console.log({ external_externals3_namespaceObject });
+}
+
+
+;// ./test.js
+// re export
+
+
+// named import
+;
+
+
+// default import
+
+
+// namespace import
+
+
+// side effect only import
+
+
+
+
+{
+    const HomeLayout_0 = 'HomeLayout_0';
+    HomeLayout_0;
+}
+__WEBPACK_EXTERNAL_MODULE_externals1_HomeLayout__;
+__WEBPACK_EXTERNAL_MODULE_externals0_a__;
+__WEBPACK_EXTERNAL_MODULE_externals1_a__;
+__WEBPACK_EXTERNAL_MODULE_externals2_default__;
+external_externals3_namespaceObject;
+export { HomeLayout, __WEBPACK_EXTERNAL_MODULE_externals0_a__ as a };
+"
+`;

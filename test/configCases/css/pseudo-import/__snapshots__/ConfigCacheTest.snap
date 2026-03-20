@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css pseudo-import exported tests should compile 1`] = `
+Array [
+  "/*!********************************!*\\\\
+  !*** css ./export.modules.css ***!
+  \\\\********************************/
+
+/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./after.modules.css ***!
+  \\\\*******************************/
+
+/*!******************************!*\\\\
+  !*** css ./vars.modules.css ***!
+  \\\\******************************/
+
+/*!**********************************!*\\\\
+  !*** css ./reexport.modules.css ***!
+  \\\\**********************************/
+
+.reexport_modules_css_5b81-className {
+	color: red;
+	display: block;
+}
+
+
+/*!********************************!*\\\\
+  !*** css ./vars-1.modules.css ***!
+  \\\\********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+
+
+.style_modules_css-class {
+	color: red;
+	background: red;
+}
+
+
+.style_modules_css-class {background: red}
+
+.style_modules_css-class {
+	color: red;
+	color: red;
+	color: red;
+	color: red;
+}
+
+
+.style_modules_css-class {
+	color: red;
+}
+
+
+.style_modules_css-class {
+	color: red;
+}
+
+
+.style_modules_css-class {color: red}
+
+
+.style_modules_css-class {
+	color:    red, red, func()   ;
+}
+
+.style_modules_css-nest {
+	:import(\\"./export.modules.css\\") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+  "/*!********************************!*\\\\
+  !*** css ./export.modules.css ***!
+  \\\\********************************/
+
+/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./after.modules.css ***!
+  \\\\*******************************/
+
+/*!******************************!*\\\\
+  !*** css ./vars.modules.css ***!
+  \\\\******************************/
+
+/*!**********************************!*\\\\
+  !*** css ./reexport.modules.css ***!
+  \\\\**********************************/
+
+.reexport_modules_css_5b81-className {
+	color: red;
+	display: block;
+}
+
+
+/*!********************************!*\\\\
+  !*** css ./vars-1.modules.css ***!
+  \\\\********************************/
+
+/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+
+
+.style_modules_css-class {
+	color: red;
+	background: red;
+}
+
+
+.style_modules_css-class {background: red}
+
+.style_modules_css-class {
+	color: red;
+	color: red;
+	color: red;
+	color: red;
+}
+
+
+.style_modules_css-class {
+	color: red;
+}
+
+
+.style_modules_css-class {
+	color: red;
+}
+
+
+.style_modules_css-class {color: red}
+
+
+.style_modules_css-class {
+	color:    red, red, func()   ;
+}
+
+.style_modules_css-nest {
+	:import(\\"./export.modules.css\\") {
+		unknown: unknown;
+	}
+
+	:export {
+		unknown: unknown;
+	}
+
+	unknown: unknown;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;

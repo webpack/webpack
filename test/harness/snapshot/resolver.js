@@ -7,7 +7,11 @@ const path = require("path");
  * @type {Record<string, string>}
  */
 const suiteNameToTestFile = {
-	ConfigTest: path.resolve(__dirname, "../../ConfigTestCases.basictest.js")
+	ConfigTest: path.resolve(__dirname, "../../ConfigTestCases.basictest.js"),
+	ConfigCacheTest: path.resolve(
+		__dirname,
+		"../../ConfigCacheTestCases.basictest.js"
+	)
 };
 
 const SNAPSHOT_EXTENSION = ".snap";
