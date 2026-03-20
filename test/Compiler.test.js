@@ -207,6 +207,25 @@ describe("Compiler", () => {
 		});
 	});
 
+	it("compiles top-level await to es5", done => {
+		compile(
+			"./topLevelAwait1",
+			{
+				target: ["web", "es5"],
+				experiments: {
+					topLevelAwait: true
+				}
+			},
+			(stats, files) => {
+				expect(Object.keys(files)).toEqual(["/main.js"]);
+				const bundle = files["/main.js"];
+				expect(bundle).not.toContain("await");
+				expect(bundle).not.toContain("async");
+				done();
+			}
+		);
+	});
+
 	describe("methods", () => {
 		let compiler;
 
