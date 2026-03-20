@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["./bundle0.mjs", "./bundle1.mjs", "./bundle2.mjs"];
+	findBundle(_i, options) {
+		return `./${Object.keys(options.entry)[0]}.mjs`;
 	}
 };
