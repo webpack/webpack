@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css build-http exported tests should work with URLs in CSS 1`] = `
+Array [
+  "/*!*******************************************************************************************************************!*\\\\
+  !*** css https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/import/print.css ***!
+  \\\\*******************************************************************************************************************/
+body {
+	background: black;
+}
+
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+
+div {
+	background: url(09a1a1112c577c279435.png)
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;
