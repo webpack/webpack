@@ -9211,9 +9211,9 @@ declare interface KnownBuildMeta {
 	exportsSourceByRuntime?: Map<string, string>;
 
 	/**
-	 * skip __webpack_require__.r() when creating namespace objects (no __esModule)
+	 * namespace object should not include __esModule property
 	 */
-	skipMakeNamespaceObject?: boolean;
+	namespaceWithoutEsModule?: boolean;
 }
 declare interface KnownContext {
 	/**
