@@ -13,6 +13,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write # Required for OIDC authentication with CodSpeed
 
 jobs:
   benchmark:
@@ -53,7 +54,6 @@ jobs:
         with:
           run: yarn benchmark --ci
           mode: "simulation"
-          token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
