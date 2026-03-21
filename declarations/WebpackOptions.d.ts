@@ -3021,6 +3021,15 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
+ * Parser options for asset/source modules.
+ */
+export interface AssetSourceParserOptions {
+	/**
+	 * The export type of the module. 'namespace' for spec-compliant behavior (only 'default' export, no __esModule), 'default' for legacy behavior.
+	 */
+	exportsType?: "namespace" | "default";
+}
+/**
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {
@@ -4154,9 +4163,9 @@ export interface ParserOptionsByModuleTypeKnown {
 	 */
 	"asset/resource"?: EmptyParserOptions;
 	/**
-	 * No parser options are supported for this module type.
+	 * Parser options for asset/source modules.
 	 */
-	"asset/source"?: EmptyParserOptions;
+	"asset/source"?: AssetSourceParserOptions;
 	/**
 	 * Parser options for css modules.
 	 */

@@ -223,6 +223,17 @@
         }
       }
     },
+    "AssetSourceParserOptions": {
+      "description": "Parser options for asset/source modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsType": {
+          "description": "The export type of the module. 'namespace' for spec-compliant behavior (only 'default' export, no __esModule), 'default' for legacy behavior.",
+          "enum": ["namespace", "default"]
+        }
+      }
+    },
     "AuxiliaryComment": {
       "description": "Add a comment in the UMD wrapper.",
       "anyOf": [
@@ -4026,7 +4037,7 @@
           "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/source": {
-          "$ref": "#/definitions/EmptyParserOptions"
+          "$ref": "#/definitions/AssetSourceParserOptions"
         },
         "css": {
           "$ref": "#/definitions/CssParserOptions"
