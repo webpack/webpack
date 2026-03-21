@@ -16,7 +16,7 @@ test/**/*.*
 !test/**/infrastructure-log.js
 !test/*.md
 !test/helpers/*.*
-!test/runner/**/*.*
+!test/harness/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
 test/test262-cases/**/*.*

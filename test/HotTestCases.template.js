@@ -6,8 +6,8 @@ const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs

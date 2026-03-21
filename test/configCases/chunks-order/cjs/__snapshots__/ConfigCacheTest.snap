@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases chunks-order cjs exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
+"\\"use strict\\";
+(() => {
+var exports = {};
+exports.id = \\"foo\\";
+exports.ids = [\\"foo\\"];
+exports.modules = {
+
+/***/ 552
+/*!****************************!*\\\\
+  !*** ./foo.js + 2 modules ***!
+  \\\\****************************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+
+;// external \\"fs\\"
+const external_fs_namespaceObject = require(\\"fs\\");
+var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
+// EXTERNAL MODULE: ./dependency.js
+var dependency = __webpack_require__(784);
+;// ./foo.js
+
+
+
+
+it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
+	const source = external_fs_default().readFileSync(__filename, \\"utf-8\\");
+
+	expect(source).toMatchSnapshot();
+});
+
+/***/ }
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
+var __webpack_export_target__ = exports;
+for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \\"__esModule\\", { value: true });
+
+})();
+//# sourceMappingURL=foo.js.map"
+`;

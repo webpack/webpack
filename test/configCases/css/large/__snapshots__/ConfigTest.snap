@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css large exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "placeholder": "my-app-tailwind_module_css-placeholder-gray-700",
+}
+`;
+
+exports[`ConfigTestCases css large exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "placeholder": "Xk90he",
+}
+`;

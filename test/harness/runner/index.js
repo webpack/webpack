@@ -8,7 +8,7 @@ const vm = require("vm");
 const {
 	getTargetProperties,
 	getTargetsProperties
-} = require("../../lib/config/target");
+} = require("../../../lib/config/target");
 
 const {
 	ESModuleStatus,
@@ -92,7 +92,7 @@ class TestRunner {
 		this.testMeta = testMeta || {};
 		/** @type {EXPECTED_ANY} */
 		this.webpackOptions = webpackOptions || {};
-		/** @type {import("../../lib/config/target").TargetProperties | false} */
+		/** @type {import("../../../lib/config/target").TargetProperties | false} */
 		this._targetProperties = this._resolveTargetProperties();
 		/** @type {boolean} */
 		this._runInNewContext = this.hasWebTarget();
@@ -245,7 +245,7 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {import("../../lib/config/target").TargetProperties | false} target properties
+	 * @returns {import("../../../lib/config/target").TargetProperties | false} target properties
 	 */
 	_resolveTargetProperties() {
 		const target = this.target;
@@ -509,7 +509,7 @@ class TestRunner {
 	withDocumentCurrentScript(fn, current) {
 		const document = this._moduleScope.document;
 		if (document) {
-			const CurrentScript = require("../helpers/CurrentScript");
+			const CurrentScript = require("../../helpers/CurrentScript");
 
 			const oldCurrentScript = document.currentScript;
 			document.currentScript = new CurrentScript(current);
@@ -711,9 +711,9 @@ class TestRunner {
 		if (this.jsDom()) {
 			const outputDirectory = this.outputDirectory;
 
-			const FakeDocument = require("../helpers/FakeDocument");
-			const createFakeWorker = require("../helpers/createFakeWorker");
-			const EventSource = require("../helpers/EventSourceForNode");
+			const FakeDocument = require("../../helpers/FakeDocument");
+			const createFakeWorker = require("../../helpers/createFakeWorker");
+			const EventSource = require("../../helpers/EventSourceForNode");
 
 			const document = new FakeDocument(outputDirectory);
 			if (this.testConfig.evaluateScriptOnAttached) {

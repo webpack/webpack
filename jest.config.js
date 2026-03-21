@@ -48,7 +48,8 @@ const config = {
 		"<rootDir>/examples",
 		"<rootDir>/node_modules"
 	],
-	testEnvironment: "./test/patch-node-env.js",
+	testEnvironment: "./test/harness/patch-node-env.js",
+	snapshotResolver: "./test/harness/snapshot/resolver.js",
 	coverageReporters: ["json"],
 	snapshotFormat: {
 		escapeString: true,

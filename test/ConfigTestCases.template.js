@@ -10,12 +10,13 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const { TestRunner } = require("./harness/runner");
+const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 const prepareOptions = require("./helpers/prepareOptions");
-const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map((cat) => ({
@@ -81,6 +82,8 @@ const describeCases = (config) => {
 						let options;
 						let optionsArr;
 						let testConfig;
+
+						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
 						beforeAll(() => {
 							options = prepareOptions(
