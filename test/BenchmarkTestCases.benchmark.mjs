@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { getV8Flags } from "@codspeed/core";
+import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
 import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
 
@@ -269,12 +269,16 @@ class BenchmarkRunner {
 	 * @returns {number} number of workers
 	 */
 	createWorkerPool() {
-		const numWorkers = Math.max(
-			1,
-			typeof os.availableParallelism === "function"
-				? os.availableParallelism() - 1
-				: os.cpus().length - 1
-		);
+		const codspeedRunnerMode = getCodspeedRunnerMode();
+		const numWorkers =
+			codspeedRunnerMode === "memory"
+				? 1
+				: Math.max(
+						1,
+						typeof os.availableParallelism === "function"
+							? os.availableParallelism() - 1
+							: os.cpus().length - 1
+					);
 
 		this.workerPool = new Worker(
 			path.resolve(__dirname, "harness/benchmark/worker.mjs"),
