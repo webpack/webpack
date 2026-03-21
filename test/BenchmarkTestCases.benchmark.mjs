@@ -279,6 +279,7 @@ class BenchmarkRunner {
 		this.workerPool = new Worker(
 			path.resolve(__dirname, "harness/benchmark/worker.mjs"),
 			{
+				enableWorkerThreads: true,
 				exposedMethods: ["run"],
 				numWorkers,
 				forkOptions: { silent: false, execArgv: getV8Flags() }
