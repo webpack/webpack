@@ -28,14 +28,22 @@ const changelogFunctions = {
 		const changesetLink = `- Updated dependencies [${(
 			await Promise.all(
 				changesets.map(async (cs) => {
-					if (cs.commit) {
-						const { links } = await getInfo({
-							repo: options.repo,
-							commit: cs.commit
-						});
-						return links.commit;
-					}
-				})
+	if (cs.commit) {
+		try {
+			const { links } = await getInfo({
+				repo: options.repo,
+				commit: cs.commit
+			});
+			return links.commit;
+		} catch (error) {
+			console.warn(`Failed to fetch commit info for ${cs.commit}`);
+			return null;
+		}
+	} else {
+		console.warn("Missing commit in changeset");
+		return null;
+	}
+})
 			)
 		)
 			.filter(Boolean)
