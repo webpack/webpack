@@ -9209,6 +9209,11 @@ declare interface KnownBuildMeta {
 	jsIncompatibleExports?: Record<string, string>;
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
 	exportsSourceByRuntime?: Map<string, string>;
+
+	/**
+	 * skip __webpack_require__.r() when creating namespace objects (no __esModule)
+	 */
+	skipMakeNamespaceObject?: boolean;
 }
 declare interface KnownContext {
 	/**
