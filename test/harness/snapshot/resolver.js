@@ -18,7 +18,11 @@ const SNAPSHOT_EXTENSION = ".snap";
 
 module.exports = {
 	// Example test path, used for preflight consistency check of the implementation above
-	testPathForConsistencyCheck: "some/__tests__/example.test.js",
+	testPathForConsistencyCheck: path.join(
+		"some",
+		"__tests__",
+		"example.test.js"
+	),
 
 	/**
 	 * Resolves from test to snapshot path
