@@ -494,16 +494,13 @@ declare abstract class AssetSourceGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetSourceParser extends ParserClass {}
-
-/**
- * Parser options for asset/source modules.
- */
-declare interface AssetSourceParserOptions {
-	/**
-	 * The export type of the module. 'namespace' for spec-compliant behavior (only 'default' export, no __esModule), 'default' for legacy behavior.
-	 */
-	exportsType?: "namespace" | "default";
+declare abstract class AssetSourceParser extends ParserClass {
+	options: {
+		/**
+		 * whether output.module is enabled
+		 */
+		outputModule: boolean;
+	};
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
@@ -9202,7 +9199,7 @@ declare interface KnownBuildInfo {
 	topLevelDeclarations?: Set<string>;
 }
 declare interface KnownBuildMeta {
-	exportsType?: "namespace" | "default" | "dynamic" | "flagged";
+	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
@@ -14073,9 +14070,9 @@ declare interface ParserOptionsByModuleTypeKnown {
 	"asset/resource"?: EmptyParserOptions;
 
 	/**
-	 * Parser options for asset/source modules.
+	 * No parser options are supported for this module type.
 	 */
-	"asset/source"?: AssetSourceParserOptions;
+	"asset/source"?: EmptyParserOptions;
 
 	/**
 	 * Parser options for css modules.
