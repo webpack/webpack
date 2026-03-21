@@ -636,15 +636,14 @@ async function addBuildBench({
 		},
 		{
 			beforeEach(mode) {
-				console.time(`Time (${mode} mode): ${benchmarkName}`);
+				console.time(`Time (${mode} mode): ${taskName}`);
 			},
 			afterEach(mode) {
-				console.timeEnd(`Time (${mode} mode): ${benchmarkName}`);
+				console.timeEnd(`Time (${mode} mode): ${taskName}`);
 			},
 			beforeAll() {
 				/** @type {Task} */
-				(this).collectBy =
-					`${benchmarkName}, scenario '${JSON.stringify(scenario)}'`;
+				(this).collectBy = taskName;
 			}
 		}
 	);
@@ -732,14 +731,13 @@ async function addWatchBench({
 		},
 		{
 			beforeEach(mode) {
-				console.time(`Time (${mode} mode): ${benchmarkName}`);
+				console.time(`Time (${mode} mode): ${taskName}`);
 			},
 			afterEach(mode) {
-				console.timeEnd(`Time (${mode} mode): ${benchmarkName}`);
+				console.timeEnd(`Time (${mode} mode): ${taskName}`);
 			},
 			async beforeAll() {
-				/** @type {Task} */ (this).collectBy =
-					`${benchmarkName}, scenario '${JSON.stringify(scenario)}'`;
+				/** @type {Task} */ (this).collectBy = taskName;
 
 				/** @type {((value?: void) => void)} */
 				let resolve;
@@ -896,9 +894,9 @@ export async function run({ task, casesPath, baseOutputPath }) {
 		const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 		const stringifiedScenario = JSON.stringify(scenario);
-		const taskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-		const fullTaskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
-
+		const baseTaskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}'`;
+		const fullTaskName = `${baseTaskName} ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
+		const taskName = LAST_COMMIT ? baseTaskName : fullTaskName;
 		console.log(`Register: ${fullTaskName}`);
 
 		const webpack = (

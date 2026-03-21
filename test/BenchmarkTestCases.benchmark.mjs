@@ -1,5 +1,5 @@
-import fs from "fs";
-import fsp from "fs/promises";
+import { constants } from "fs";
+import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -29,18 +29,8 @@ import { simpleGit } from "simple-git";
  * @property {string} id task id (includes benchmark name and scenario name)
  * @property {string} benchmark benchmark name
  * @property {Scenario} scenario scenario
- * @property {Baseline} baseline baseline
+ * @property {Baseline[]} baselines baselines
  */
-
-/** @typedef {import("tinybench").Task} TinybenchTask */
-/** @typedef {import("tinybench").Fn} Fn */
-/** @typedef {import("tinybench").FnOptions} FnOptions */
-/** @typedef {import("../types.d.ts")} Webpack */
-/** @typedef {import("../types.d.ts").Configuration} Configuration */
-/** @typedef {import("../types.d.ts").Stats} Stats */
-/** @typedef {import("../types.d.ts").Watching} Watching */
-
-/** @typedef {TinybenchTask & { collectBy?: string }} Task */
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
@@ -49,6 +39,21 @@ const git = simpleGit(rootPath);
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
 const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
+
+const checkV8Flags = () => {
+	const requiredFlags = getV8Flags().filter(
+		(flag) => !flag.startsWith("--max-old-space-size")
+	);
+	const actualFlags = process.execArgv;
+	const missingFlags = requiredFlags.filter(
+		(flag) => !actualFlags.includes(flag)
+	);
+	if (missingFlags.length > 0) {
+		throw new Error(`Missing required flags: ${missingFlags.join(", ")}`);
+	}
+};
+
+checkV8Flags();
 
 /**
  * @param {[string, string, string, string | undefined]} revList rev list
@@ -154,7 +159,6 @@ async function getBaselineRevs() {
 }
 
 /**
- * Splits array into N chunks
  * @template T
  * @param {T[]} array Input array
  * @param {number} n Number of chunks
@@ -191,23 +195,24 @@ class BenchmarkRunner {
 			}
 		];
 		/** @type {string} */
-		this.output = path.join(__dirname, "./js");
-		/** @type {string} */
-		this.baselinesPath = path.join(this.output, "benchmark-baselines");
-		/** @type {string} */
-		this.baseOutputPath = path.join(this.output, "benchmark");
-		/** @type {string} */
 		this.casesPath = path.join(__dirname, "benchmarkCases");
+		/** @type {string} */
+		this.baseOutputPath = path.join(__dirname, "js", "benchmark");
+
+		/** @type {Worker | undefined} */
+		this.workerPool = undefined;
 	}
 
 	/**
-	 * Initializes benchmark
-	 * @returns {Promise<Baseline[]>} Baselines
+	 * Initialize baselines by checking out the required git revisions.
+	 * @returns {Promise<Baseline[]>} baselines
 	 */
 	async initialize() {
+		const baselinesPath = path.join(__dirname, "js", "benchmark-baselines");
 		const baselineRevisions = await getBaselineRevs();
+
 		try {
-			await fsp.mkdir(this.baselinesPath, { recursive: true });
+			await fs.mkdir(baselinesPath, { recursive: true });
 		} catch (_err) {} // eslint-disable-line no-empty
 
 		/** @type {Baseline[]} */
@@ -215,28 +220,24 @@ class BenchmarkRunner {
 
 		for (const baselineInfo of baselineRevisions) {
 			const baselineRevision = baselineInfo.rev;
-
 			const baselinePath =
 				baselineRevision === undefined
 					? path.resolve(__dirname, "../")
-					: path.resolve(this.baselinesPath, baselineRevision);
+					: path.resolve(baselinesPath, baselineRevision);
 
 			try {
-				await fsp.access(
-					path.resolve(baselinePath, ".git"),
-					fsp.constants.R_OK
-				);
+				await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
 			} catch (err) {
 				if (!baselineRevision) {
 					throw new Error("No baseline revision", { cause: err });
 				}
 
 				try {
-					await fsp.mkdir(baselinePath);
+					await fs.mkdir(baselinePath);
 				} catch (_err) {} // eslint-disable-line no-empty
 
 				const gitIndex = path.resolve(rootPath, ".git/index");
-				const index = await fsp.readFile(gitIndex);
+				const index = await fs.readFile(gitIndex);
 				const prevHead = await git.raw(["rev-list", "-n", "1", "HEAD"]);
 
 				await simpleGit(baselinePath).raw([
@@ -248,7 +249,7 @@ class BenchmarkRunner {
 				]);
 
 				await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
-				await fsp.writeFile(gitIndex, index);
+				await fs.writeFile(gitIndex, index);
 			} finally {
 				baselines.push({
 					name: baselineInfo.name,
@@ -257,64 +258,78 @@ class BenchmarkRunner {
 				});
 			}
 		}
-		await fsp.rm(this.baseOutputPath, { recursive: true, force: true });
+
+		await fs.rm(this.baseOutputPath, { recursive: true, force: true });
 
 		return baselines;
 	}
 
-	async createWorkerPool() {
-		const cpus = Math.max(1, os.availableParallelism() - 1);
+	/**
+	 * Create the jest-worker pool with V8 flags forwarded to child processes.
+	 * @returns {number} number of workers
+	 */
+	createWorkerPool() {
+		const numWorkers = Math.max(
+			1,
+			typeof os.availableParallelism === "function"
+				? os.availableParallelism() - 1
+				: os.cpus().length - 1
+		);
 
 		this.workerPool = new Worker(
-			path.join(this.casesPath, "_helpers", "/benchmark.worker.mjs"),
+			path.resolve(__dirname, "harness/benchmark/worker.mjs"),
 			{
 				exposedMethods: ["run"],
-				numWorkers: cpus,
+				numWorkers,
 				forkOptions: { silent: false, execArgv: getV8Flags() }
 			}
 		);
+
+		return numWorkers;
 	}
 
 	/**
-	 * @param {{BenchmarkTask[]}} benchmarkTasks all benchmark tasks
+	 * Run setup for each benchmark case (e.g. generate test files).
+	 * @param {BenchmarkTask[]} benchmarkTasks all benchmark tasks
 	 * @returns {Promise<void>}
 	 */
-	async prepareBenchmarkTask(benchmarkTasks) {
+	async prepareBenchmarkTasks(benchmarkTasks) {
+		/** @type {Set<string>} */
+		const prepared = new Set();
+
 		for (const task of benchmarkTasks) {
 			const { benchmark } = task;
-			const dir = path.join(this.casesPath, benchmark);
-			const optionsPath = path.resolve(dir, "options.mjs");
+			if (prepared.has(benchmark)) continue;
+			prepared.add(benchmark);
 
-			/** @type {{ setup?: () => Promise<void> }} */
-			let options = {};
-			if (optionsPath && fs.existsSync(optionsPath)) {
-				options = await import(`${pathToFileURL(optionsPath)}`);
-			}
-			if (typeof options.setup !== "undefined") {
-				await options.setup();
+			const testDirectory = path.join(this.casesPath, benchmark);
+			const optionsPath = path.resolve(testDirectory, "options.mjs");
+
+			try {
+				const options = await import(`${pathToFileURL(optionsPath)}`);
+				if (typeof options.setup !== "undefined") {
+					await options.setup();
+				}
+			} catch (_err) {
+				// Ignore - no options file
 			}
 		}
 	}
 
 	/**
-	 * Create benchmark tasks
+	 * Create benchmark tasks from the cartesian product of benchmarks × scenarios.
+	 * Each task includes all baselines so the worker can run HEAD vs BASE in one go.
 	 * @param {string[]} benchmarks all benchmarks
 	 * @param {Scenario[]} scenarios all scenarios
 	 * @param {Baseline[]} baselines all baselines
 	 * @returns {BenchmarkTask[]} benchmark tasks
 	 */
 	createBenchmarkTasks(benchmarks, scenarios, baselines) {
+		/** @type {BenchmarkTask[]} */
 		const benchmarkTasks = [];
 
-		for (let benchIndex = 0; benchIndex < benchmarks.length; benchIndex++) {
-			for (
-				let scenarioIndex = 0;
-				scenarioIndex < scenarios.length;
-				scenarioIndex++
-			) {
-				const benchmark = benchmarks[benchIndex];
-				const scenario = scenarios[scenarioIndex];
-
+		for (const benchmark of benchmarks) {
+			for (const scenario of scenarios) {
 				benchmarkTasks.push({
 					id: `${benchmark}-${scenario.name}`,
 					benchmark,
@@ -328,38 +343,47 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Process benchmark results
+	 * Process benchmark results: group by collectBy and compare HEAD vs BASE.
 	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
 	 */
 	processResults(benchmarkResults) {
 		/** @type {Map<string, Result[]>} */
 		const statsByTests = new Map();
+
 		for (const benchmarkResult of benchmarkResults) {
-			for (const results of benchmarkResult.results) {
-				const collectBy = results.collectBy;
+			for (const result of benchmarkResult.results) {
+				const collectBy = result.collectBy;
 				const allStats = statsByTests.get(collectBy);
 
 				if (!allStats) {
-					statsByTests.set(collectBy, [results]);
+					statsByTests.set(collectBy, [result]);
 					continue;
 				}
-				allStats.push(results);
 
-				const firstStats = allStats[0];
-				const secondStats = allStats[1];
+				allStats.push(result);
 
-				console.log(
-					`Result: ${firstStats.text} is ${Math.round(
-						(secondStats.mean / firstStats.mean) * 100 - 100
-					)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
-				);
+				if (allStats.length >= 2) {
+					const firstStats = allStats[0];
+					const secondStats = allStats[1];
+
+					console.log(
+						`Result: ${firstStats.text} is ${Math.round(
+							(secondStats.mean / firstStats.mean) * 100 - 100
+						)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
+					);
+				}
 			}
 		}
 	}
 
+	/**
+	 * Main entry point: initialize baselines, discover benchmarks,
+	 * create worker pool, dispatch tasks, and process results.
+	 */
 	async run() {
 		const baselines = await this.initialize();
-		await this.createWorkerPool();
+		const numWorkers = this.createWorkerPool();
+
 		const FILTER =
 			typeof process.env.FILTER !== "undefined"
 				? new RegExp(process.env.FILTER)
@@ -371,7 +395,7 @@ class BenchmarkRunner {
 				: undefined;
 
 		/** @type {string[]} */
-		const allBenchmarkCases = (await fsp.readdir(this.casesPath))
+		const allBenchmarks = (await fs.readdir(this.casesPath))
 			.filter(
 				(item) =>
 					!item.includes("_") &&
@@ -381,20 +405,15 @@ class BenchmarkRunner {
 			.sort((a, b) => a.localeCompare(b));
 
 		/** @type {string[]} */
-		const benchmarkCases = allBenchmarkCases.filter(
-			(item) => !item.includes("-long")
-		);
-
+		const benchmarks = allBenchmarks.filter((item) => !item.includes("-long"));
 		/** @type {string[]} */
-		const longRunningBenchmarkCases = allBenchmarkCases.filter((item) =>
+		const longBenchmarks = allBenchmarks.filter((item) =>
 			item.includes("-long")
 		);
-		const i = Math.floor(
-			benchmarkCases.length / longRunningBenchmarkCases.length
-		);
+		const spacing = Math.floor(benchmarks.length / longBenchmarks.length);
 
-		for (const [index, value] of longRunningBenchmarkCases.entries()) {
-			benchmarkCases.splice(index * i, 0, value);
+		for (const [index, value] of longBenchmarks.entries()) {
+			benchmarks.splice(index * spacing, 0, value);
 		}
 
 		const shard =
@@ -414,7 +433,7 @@ class BenchmarkRunner {
 			);
 		}
 
-		const countOfBenchmarks = benchmarkCases.length;
+		const countOfBenchmarks = benchmarks.length;
 
 		if (countOfBenchmarks < shard[1]) {
 			throw new Error(
@@ -422,23 +441,27 @@ class BenchmarkRunner {
 			);
 		}
 
-		const currentShardBenchmarkCases = splitToNChunks(benchmarkCases, shard[1])[
+		const shardedBenchmarks = splitToNChunks(benchmarks, shard[1])[
 			shard[0] - 1
 		];
 
 		const benchmarkTasks = this.createBenchmarkTasks(
-			currentShardBenchmarkCases,
+			shardedBenchmarks,
 			this.scenarios,
 			baselines
 		);
 
-		await this.prepareBenchmarkTask(benchmarkTasks);
+		await this.prepareBenchmarkTasks(benchmarkTasks);
+
+		console.log(
+			`\nRunning ${benchmarkTasks.length} benchmark tasks across ${numWorkers} workers\n`
+		);
 
 		try {
 			/** @type {BenchmarkResult[]} */
 			const benchmarkResults = await Promise.all(
 				benchmarkTasks.map((task) =>
-					this.workerPool.run({
+					/** @type {Worker} */ (this.workerPool).run({
 						task,
 						casesPath: this.casesPath,
 						baseOutputPath: this.baseOutputPath
@@ -448,9 +471,9 @@ class BenchmarkRunner {
 
 			this.processResults(benchmarkResults);
 		} finally {
-			await this.workerPool.end();
+			await /** @type {Worker} */ (this.workerPool).end();
 		}
 	}
 }
 
-new BenchmarkRunner().run();
+await new BenchmarkRunner().run();
