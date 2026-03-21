@@ -494,14 +494,7 @@ declare abstract class AssetSourceGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetSourceParser extends ParserClass {
-	options: {
-		/**
-		 * whether output.module is enabled
-		 */
-		outputModule: boolean;
-	};
-}
+declare abstract class AssetSourceParser extends ParserClass {}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
