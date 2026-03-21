@@ -260,6 +260,9 @@ describe("snapshots", () => {
 		        "type": "json",
 		      },
 		      Object {
+		        "parser": Object {
+		          "exportsType": "namespace",
+		        },
 		        "type": "asset/source",
 		        "with": Object {
 		          "type": "text",

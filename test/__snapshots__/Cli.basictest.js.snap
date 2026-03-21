@@ -2035,6 +2035,23 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-asset-source-exports-type": Object {
+    "configs": Array [
+      Object {
+        "description": "The export type of the module. 'namespace' for spec-compliant behavior (only 'default' export, no __esModule), 'default' for legacy behavior.",
+        "multiple": false,
+        "path": "module.parser.asset/source.exportsType",
+        "type": "enum",
+        "values": Array [
+          "namespace",
+          "default",
+        ],
+      },
+    ],
+    "description": "The export type of the module. 'namespace' for spec-compliant behavior (only 'default' export, no __esModule), 'default' for legacy behavior.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-animation": Object {
     "configs": Array [
       Object {
