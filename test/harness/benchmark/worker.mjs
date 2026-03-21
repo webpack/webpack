@@ -362,12 +362,9 @@ const withCodSpeed = async (bench) => {
 			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
 			await mongoMeasurement.stop(uri);
 			await options?.afterEach?.call(task, "run");
-			console.log(`[Codspeed] ✔ Measured ${uri}`);
 			await options?.afterAll?.call(task, "run");
-
 			// Custom teardown
 			await bench.teardown?.(task, "run");
-
 			logTaskCompletion(uri, taskCompletionMessage());
 		};
 
