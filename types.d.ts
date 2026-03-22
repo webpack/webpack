@@ -5263,6 +5263,11 @@ declare interface ExperimentsExtra {
 	deferImport?: boolean;
 
 	/**
+	 * Enable html support.
+	 */
+	html?: boolean;
+
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
@@ -5287,6 +5292,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
 	deferImport?: boolean;
+
+	/**
+	 * Enable html support.
+	 */
+	html?: boolean;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
