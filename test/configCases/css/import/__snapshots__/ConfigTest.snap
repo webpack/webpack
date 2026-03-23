@@ -133,7 +133,7 @@ p {
 .link {
   color: #428bca;
 }
-/*# sourceMappingURL=file.css.map */
+
 /*!**********************************!*\\\\
   !*** css ./with-less-import.css ***!
   \\\\**********************************/
@@ -183,7 +183,7 @@ p {
 .conditional-names {
   color: #428bca;
 }
-/*# sourceMappingURL=default.css.map */
+
 /*!**********************************************************************!*\\\\
   !*** css ./node_modules/condition-names-custom-name/custom-name.css ***!
   \\\\**********************************************************************/
