@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css css-loader exported tests should work 1`] = `
+Object {
+  "default": "classes_module_css-default",
+  "module": "classes_module_css-module",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 2`] = `
+Object {
+  "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
+  "class-1": "composes-multiple_module_css-class-1",
+  "class-2": "composes-multiple_module_css-class-2",
+  "class-other": "composes-multiple_module_css-class-other composes-multiple_module_css-other-class composes-multiple_module_css-class-1",
+  "other-class": "composes-multiple_module_css-other-class",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 3`] = `
+Object {
+  "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 4`] = `
+Object {
+  "class-a": "scope-at-rule_module_css-class-a",
+  "class-b": "scope-at-rule_module_css-class-b",
+  "dark-scheme": "scope-at-rule_module_css-dark-scheme",
+  "light-scheme": "scope-at-rule_module_css-light-scheme",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 5`] = `
+Object {
+  "a": "nesting_module_css-a",
+  "b": "nesting_module_css-b nesting_module_css-a",
+  "bar": "nesting_module_css-bar nesting_module_css-foo",
+  "baz": "nesting_module_css-baz",
+  "foo": "nesting_module_css-foo",
+  "n": "nesting_module_css-n nesting_module_css-a",
+  "notice": "nesting_module_css-notice",
+  "notice-heading": "nesting_module_css-notice-heading",
+  "success": "nesting_module_css-success",
+  "success-heading": "nesting_module_css-success-heading",
+  "warning": "nesting_module_css-warning",
+  "warning-heading": "nesting_module_css-warning-heading",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 6`] = `
+Object {
+  "one": "prefer-relative_module_css-one package_one_css-imported-relative",
+  "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 7`] = `
+Array [
+  "/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+/* Tests from css-loader */
+
+/* should work with the \`default\` class and with named export */
+.classes_module_css-default {
+	background: red
+}
+
+
+/* should work with the \`module\` class and with named export */
+.classes_module_css-module {
+	background: red
+}
+
+/*!***********************!*\\\\
+  !*** css ./alias.css ***!
+  \\\\***********************/
+.alias_css-imported-alias {
+  display: table;
+}
+
+/*!*************************!*\\\\
+  !*** css ./alias-1.css ***!
+  \\\\*************************/
+.alias-1_css-imported-alias-2 {
+  background: red;
+}
+
+.alias-1_css-imported-alias-3 {
+  background: red;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./composes-multiple.module.css ***!
+  \\\\******************************************/
+.composes-multiple_module_css-other-class {
+	color: red;
+}
+
+.composes-multiple_module_css-class-1 {
+	color: blue;
+}
+
+.composes-multiple_module_css-class-2 {
+	color: blue;
+}
+
+.global-class {
+	padding: 10px;
+}
+
+.global-class-1 {
+	padding: 10px;
+}
+
+.global-class-2 {
+	padding: 10px;
+}
+
+.composes-multiple_module_css-class {
+	color: gainsboro;
+}
+
+.composes-multiple_module_css-class-other {
+	}
+
+
+/*!****************************************!*\\\\
+  !*** css ./composes-global.module.css ***!
+  \\\\****************************************/
+.global-class {
+	color: red;
+}
+
+.other-global-class {
+	color: red;
+}
+
+.composes-global_module_css-otherClassName {
+	color: blue;
+}
+
+/*!**************************************!*\\\\
+  !*** css ./scope-at-rule.module.css ***!
+  \\\\**************************************/
+@scope (.scope-at-rule_module_css-light-scheme) {
+	:scope {
+		background-color: plum;
+	}
+
+	.scope-at-rule_module_css-class-a {
+		color: darkmagenta;
+	}
+}
+
+@scope (.scope-at-rule_module_css-dark-scheme) {
+	:scope {
+		background-color: darkmagenta;
+		color: antiquewhite;
+	}
+
+	.scope-at-rule_module_css-class-b {
+		color: plum;
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/*!********************************!*\\\\
+  !*** css ./nesting.module.css ***!
+  \\\\********************************/
+.nesting_module_css-notice {
+	width: 90%;
+	justify-content: center;
+	border-radius: 1rem;
+	border: black solid 2px;
+	background-color: #ffc107;
+	color: black;
+	padding: 1rem;
+
+	.nesting_module_css-notice-heading:before {
+		/* equivalent to \`.notice .notice-heading:before\` */
+		content: \\"ℹ︎ \\";
+	}
+
+	&.nesting_module_css-warning {
+		/* equivalent to \`.notice.warning\` */
+		background-color: #d81b60;
+		border-color: #d81b60;
+		color: white;
+		.nesting_module_css-warning-heading:before {
+			/* equivalent to \`.notice.warning .warning-heading:before\` */
+			content: \\"! \\";
+		}
+	}
+
+	&.nesting_module_css-success {
+		/* equivalent to \`.notice.success\` */
+		background-color: #004d40;
+		border-color: #004d40;
+		color: white;
+
+		.nesting_module_css-success-heading:before {
+			/* equivalent to \`.notice.success .success-heading:before\` */
+			content: \\"✓ \\";
+		}
+	}
+}
+
+.nesting_module_css-foo {
+	color: red;
+}
+
+.nesting_module_css-bar {
+	&.nesting_module_css-baz {
+		color: blue;
+	}
+}
+
+.nesting_module_css-foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		& {
+			grid-auto-flow: column;
+		}
+	}
+}
+
+@media (orientation: landscape) {
+	.nesting_module_css-a {
+		color: red;
+	}
+}
+
+@media (orientation: landscape) {
+	@media (orientation: landscape) {
+		.nesting_module_css-b {
+			color: red;
+			}
+	}
+}
+
+.nesting_module_css-n {
+	@media (orientation: landscape) {
+		color: red;
+	}
+}
+
+/*!*****************************!*\\\\
+  !*** css ./package/one.css ***!
+  \\\\*****************************/
+.package_one_css-imported-relative {
+    display: block;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./node_modules/package/two.css ***!
+  \\\\******************************************/
+.node_modules_package_two_css-imported-relative {
+    display: inline;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./prefer-relative.module.css ***!
+  \\\\****************************************/
+.prefer-relative_module_css-one {
+	color: yellow;
+	}
+
+.prefer-relative_module_css-two {
+	color: yellow;
+	}
+
+",
+]
+`;

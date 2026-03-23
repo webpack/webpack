@@ -1,0 +1,13 @@
+:global(.global-class) {
+	color: red;
+}
+
+:global(.other-global-class) {
+	color: red;
+}
+
+.otherClassName {
+	composes: global-class from global;
+	composes: other-global-class from global;
+	color: blue;
+}
