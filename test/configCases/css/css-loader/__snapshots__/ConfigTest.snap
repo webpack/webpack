@@ -404,6 +404,13 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
+Object {
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -1442,6 +1449,42 @@ Array [
 
 .order_module_css-simple-other {
 	display: inline;
+	}
+
+
+/*!************************!*\\\\
+  !*** css ./button.css ***!
+  \\\\************************/
+.button_css-button {
+  border: none;
+  padding: 7px 15px;
+  cursor: pointer;
+}
+
+/*!********************************!*\\\\
+  !*** css ./primary-button.css ***!
+  \\\\********************************/
+.primary-button_css-primaryButton {
+  background-color: blue;
+  color: white;
+}
+
+/*!**********************************!*\\\\
+  !*** css ./secondary-button.css ***!
+  \\\\**********************************/
+.secondary-button_css-secondaryButton
+{
+  background-color:#555;
+  color:white;
+}
+
+/*!******************************!*\\\\
+  !*** css ./dedup.module.css ***!
+  \\\\******************************/
+.dedup_module_css-nextButton {
+	}
+
+.dedup_module_css-backButton {
 	}
 
 
