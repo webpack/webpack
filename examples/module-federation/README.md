@@ -293,6 +293,10 @@ export default App;
 					transform: rotate(360deg);
 				}
 			}
+			<div class="header">
+              <input class="search-input">
+              <button class="dark-mode-toggle"></button>
+            </div>
 		</style>
 	</head>
 	<body>
