@@ -397,6 +397,13 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
+Object {
+  "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
+  "simple-other": "order_module_css-simple-other order-1_css-order-1",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -1403,6 +1410,40 @@ Array [
 .foo\\\\\\\\bar\\\\\\\\baz--nRgTR7 {
   background: hotpink;
 }
+
+/*!*************************!*\\\\
+  !*** css ./order-1.css ***!
+  \\\\*************************/
+.order-1_css-order-1 {
+  color: red;
+}
+
+.order-1_css-order-1-1 {
+  color: aliceblue;
+}
+
+/*!*************************!*\\\\
+  !*** css ./order-2.css ***!
+  \\\\*************************/
+.order-2_css-order-2 {
+  color: blue;
+}
+
+.order-2_css-order-2-2 {
+  color: azure;
+}
+
+/*!******************************!*\\\\
+  !*** css ./order.module.css ***!
+  \\\\******************************/
+.order_module_css-simple {
+	display: block;
+	}
+
+.order_module_css-simple-other {
+	display: inline;
+	}
+
 
 ",
 ]

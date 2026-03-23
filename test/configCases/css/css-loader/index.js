@@ -13,6 +13,7 @@ import * as styles12 from "./local-Ident-name.module.css?local-ident-name-2";
 import * as styles13 from "./local-Ident-name.module.css?local-ident-name-3";
 import * as styles14 from "./local-Ident-name.module.css?local-ident-name-4";
 import * as styles15 from "./local-Ident-name.module.css?local-ident-name-5";
+import * as styles16 from "./order.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -38,5 +39,6 @@ it("should work", () => {
 	expect(styles13).toMatchSnapshot();
 	expect(styles14).toMatchSnapshot();
 	expect(styles15).toMatchSnapshot();
+	expect(styles16).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });
