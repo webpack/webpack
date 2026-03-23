@@ -7,6 +7,7 @@ import * as styles6 from "./prefer-relative.module.css";
 import * as styles7 from "./animation-name.module.css";
 import * as styles8 from "./at-sign-in-package-name.module.css";
 import * as styles9 from "./resolving-from-node_modules.module.css";
+import * as styles10 from "./local-Ident-name.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -26,5 +27,6 @@ it("should work", () => {
 	expect(styles7).toMatchSnapshot();
 	expect(styles8).toMatchSnapshot();
 	expect(styles9).toMatchSnapshot();
+	expect(styles10).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });
