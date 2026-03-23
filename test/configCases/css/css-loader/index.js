@@ -5,6 +5,7 @@ import * as styles4 from "./scope-at-rule.module.css";
 import * as styles5 from "./nesting.module.css";
 import * as styles6 from "./prefer-relative.module.css";
 import * as styles7 from "./animation-name.module.css";
+import * as styles8 from "./at-sign-in-package-name.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -22,5 +23,6 @@ it("should work", () => {
 	expect(styles5).toMatchSnapshot();
 	expect(styles6).toMatchSnapshot();
 	expect(styles7).toMatchSnapshot();
+	expect(styles8).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

@@ -66,6 +66,12 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 8`] = `
+Object {
+  "myClass": "at-sign-in-package-name_module_css-myClass",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 9`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -309,6 +315,28 @@ Array [
 	100% {
 		background: red;
 	}
+}
+
+/*!********************************************************!*\\\\
+  !*** css ./node_modules/@foo/package/style.module.css ***!
+  \\\\********************************************************/
+.node_modules_\\\\@foo_package_style_module_css-class {
+	color: red;
+}
+
+/*!*******************************************************!*\\\\
+  !*** css ./node_modules/foo/package/style.module.css ***!
+  \\\\*******************************************************/
+.node_modules_foo_package_style_module_css-class {
+	color: red;
+}
+
+/*!************************************************!*\\\\
+  !*** css ./at-sign-in-package-name.module.css ***!
+  \\\\************************************************/
+
+.at-sign-in-package-name_module_css-myClass {
+	color: red;
 }
 
 ",
