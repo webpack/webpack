@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css css-order-concatenate-modules exported tests keep consistent css order 1`] = `".a {    color: red;}.b{    color: green;}.c{    color: black;}"`;

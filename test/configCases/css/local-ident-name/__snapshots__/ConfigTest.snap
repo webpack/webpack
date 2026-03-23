@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 1`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
+  "color-red": "--style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "style_module_css-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
+Object {
+  "btn--info_is-disabled_1": "_8ee4d8b938ce15d40534",
+  "btn-info_is-disabled": "_8ee4d8b938ce15d40534",
+  "color-red": "--_8ee4d8b938ce15d40534",
+  "foo": "bar",
+  "foo_bar": "_8ee4d8b938ce15d40534",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_8ee4d8b938ce15d40534",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
+Object {
+  "btn--info_is-disabled_1": "f0e5e7b8779254ec04d4-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "f0e5e7b8779254ec04d4-btn-info_is-disabled",
+  "color-red": "--f0e5e7b8779254ec04d4-color-red",
+  "foo": "bar",
+  "foo_bar": "f0e5e7b8779254ec04d4-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "f0e5e7b8779254ec04d4-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 4`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 5`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
+  "color-red": "--./style.module.css?q#f__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?q#f__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?q#f__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
+Object {
+  "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "foo": "bar",
+  "foo_bar": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
+Object {
+  "btn--info_is-disabled_1": "d5c602f0c8fdc09fea74-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "d5c602f0c8fdc09fea74-btn-info_is-disabled",
+  "color-red": "--d5c602f0c8fdc09fea74-color-red",
+  "foo": "bar",
+  "foo_bar": "d5c602f0c8fdc09fea74-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d5c602f0c8fdc09fea74-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 9`] = `
+Object {
+  "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
+  "color-red": "--style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "style_module_css-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
+Object {
+  "btn--info_is-disabled_1": "_8ee4d8b938ce15d40534",
+  "btn-info_is-disabled": "_8ee4d8b938ce15d40534",
+  "color-red": "--_8ee4d8b938ce15d40534",
+  "foo": "bar",
+  "foo_bar": "_8ee4d8b938ce15d40534",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_8ee4d8b938ce15d40534",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
+Object {
+  "btn--info_is-disabled_1": "f0e5e7b8779254ec04d4-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "f0e5e7b8779254ec04d4-btn-info_is-disabled",
+  "color-red": "--f0e5e7b8779254ec04d4-color-red",
+  "foo": "bar",
+  "foo_bar": "f0e5e7b8779254ec04d4-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "f0e5e7b8779254ec04d4-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
+  "color-red": "--./style.module.css?q#f__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?q#f__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?q#f__simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+Object {
+  "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "color-red": "---style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "foo": "bar",
+  "foo_bar": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
+Object {
+  "btn--info_is-disabled_1": "d5c602f0c8fdc09fea74-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "d5c602f0c8fdc09fea74-btn-info_is-disabled",
+  "color-red": "--d5c602f0c8fdc09fea74-color-red",
+  "foo": "bar",
+  "foo_bar": "d5c602f0c8fdc09fea74-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d5c602f0c8fdc09fea74-simple",
+}
+`;
