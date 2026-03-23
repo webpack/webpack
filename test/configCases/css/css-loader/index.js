@@ -9,6 +9,10 @@ import * as styles8 from "./at-sign-in-package-name.module.css";
 import * as styles9 from "./resolving-from-node_modules.module.css";
 import * as styles10 from "./local-Ident-name.module.css";
 import * as styles11 from "./local-Ident-name.module.css?local-ident-name-1";
+import * as styles12 from "./local-Ident-name.module.css?local-ident-name-2";
+import * as styles13 from "./local-Ident-name.module.css?local-ident-name-3";
+import * as styles14 from "./local-Ident-name.module.css?local-ident-name-4";
+import * as styles15 from "./local-Ident-name.module.css?local-ident-name-5";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -30,5 +34,9 @@ it("should work", () => {
 	expect(styles9).toMatchSnapshot();
 	expect(styles10).toMatchSnapshot();
 	expect(styles11).toMatchSnapshot();
+	expect(styles12).toMatchSnapshot();
+	expect(styles13).toMatchSnapshot();
+	expect(styles14).toMatchSnapshot();
+	expect(styles15).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

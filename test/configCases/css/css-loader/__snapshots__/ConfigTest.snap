@@ -185,6 +185,218 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 12`] = `
+Object {
+  "#": "_-1#",
+  "##": "_-1##",
+  "#.#.#": "_-1#.#.#",
+  "#fake-id": "_-1#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_-1-a-b-c-",
+  "-a0-34a___f": "_-1-a0-34a___f",
+  ".": "_-1.",
+  "123": "_-1123",
+  "1a2b3c": "_-11a2b3c",
+  ":)": "_-1:)",
+  ":\`(": "_-1:\`(",
+  ":hover": "_-1:hover",
+  ":hover:focus:active": "_-1:hover:focus:active",
+  "<><<<>><>": "_-1<><<<>><>",
+  "<p>": "_-1<p>",
+  "?": "_-1?",
+  "@": "_-1@",
+  "B&W?": "_-1B&W?",
+  "[attr=value]": "_-1[attr=value]",
+  "_": "_-1_",
+  "_test": "_-1_test",
+  "className": "_-1className",
+  "f!o!o": "_-1f!o!o",
+  "f'o'o": "_-1f'o'o",
+  "f*o*o": "_-1f*o*o",
+  "f+o+o": "_-1f+o+o",
+  "f/o/o": "_-1f/o/o",
+  "f\\\\o\\\\o": "_-1f\\\\o\\\\o",
+  "foo.bar": "_-1foo.bar",
+  "foo/bar": "_-1foo/bar",
+  "foo/bar/baz": "_-1foo/bar/baz",
+  "foo\\\\bar": "_-1foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_-1foo\\\\bar\\\\baz",
+  "f~o~o": "_-1f~o~o",
+  "m_x_@": "_-1m_x_@",
+  "someId": "_-1someId",
+  "subClass": "_-1subClass",
+  "test": "_-1test",
+  "{}": "_-1{}",
+  "©": "_-1©",
+  "“‘’”": "_-1“‘’”",
+  "⌘⌥": "_-1⌘⌥",
+  "☺☃": "_-1☺☃",
+  "♥": "_-1♥",
+  "𝄞♪♩♫♬": "_-1𝄞♪♩♫♬",
+  "💩": "_-1💩",
+  "😍": "_-1😍",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 13`] = `
+Object {
+  "#": "_--#",
+  "##": "_--##",
+  "#.#.#": "_--#.#.#",
+  "#fake-id": "_--#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_---a-b-c-",
+  "-a0-34a___f": "_---a0-34a___f",
+  ".": "_--.",
+  "123": "_--123",
+  "1a2b3c": "_--1a2b3c",
+  ":)": "_--:)",
+  ":\`(": "_--:\`(",
+  ":hover": "_--:hover",
+  ":hover:focus:active": "_--:hover:focus:active",
+  "<><<<>><>": "_--<><<<>><>",
+  "<p>": "_--<p>",
+  "?": "_--?",
+  "@": "_--@",
+  "B&W?": "_--B&W?",
+  "[attr=value]": "_--[attr=value]",
+  "_": "_--_",
+  "_test": "_--_test",
+  "className": "_--className",
+  "f!o!o": "_--f!o!o",
+  "f'o'o": "_--f'o'o",
+  "f*o*o": "_--f*o*o",
+  "f+o+o": "_--f+o+o",
+  "f/o/o": "_--f/o/o",
+  "f\\\\o\\\\o": "_--f\\\\o\\\\o",
+  "foo.bar": "_--foo.bar",
+  "foo/bar": "_--foo/bar",
+  "foo/bar/baz": "_--foo/bar/baz",
+  "foo\\\\bar": "_--foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_--foo\\\\bar\\\\baz",
+  "f~o~o": "_--f~o~o",
+  "m_x_@": "_--m_x_@",
+  "someId": "_--someId",
+  "subClass": "_--subClass",
+  "test": "_--test",
+  "{}": "_--{}",
+  "©": "_--©",
+  "“‘’”": "_--“‘’”",
+  "⌘⌥": "_--⌘⌥",
+  "☺☃": "_--☺☃",
+  "♥": "_--♥",
+  "𝄞♪♩♫♬": "_--𝄞♪♩♫♬",
+  "💩": "_--💩",
+  "😍": "_--😍",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 14`] = `
+Object {
+  "#": "__#",
+  "##": "__##",
+  "#.#.#": "__#.#.#",
+  "#fake-id": "__#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "__-a-b-c-",
+  "-a0-34a___f": "__-a0-34a___f",
+  ".": "__.",
+  "123": "__123",
+  "1a2b3c": "__1a2b3c",
+  ":)": "__:)",
+  ":\`(": "__:\`(",
+  ":hover": "__:hover",
+  ":hover:focus:active": "__:hover:focus:active",
+  "<><<<>><>": "__<><<<>><>",
+  "<p>": "__<p>",
+  "?": "__?",
+  "@": "__@",
+  "B&W?": "__B&W?",
+  "[attr=value]": "__[attr=value]",
+  "_": "___",
+  "_test": "___test",
+  "className": "__className",
+  "f!o!o": "__f!o!o",
+  "f'o'o": "__f'o'o",
+  "f*o*o": "__f*o*o",
+  "f+o+o": "__f+o+o",
+  "f/o/o": "__f/o/o",
+  "f\\\\o\\\\o": "__f\\\\o\\\\o",
+  "foo.bar": "__foo.bar",
+  "foo/bar": "__foo/bar",
+  "foo/bar/baz": "__foo/bar/baz",
+  "foo\\\\bar": "__foo\\\\bar",
+  "foo\\\\bar\\\\baz": "__foo\\\\bar\\\\baz",
+  "f~o~o": "__f~o~o",
+  "m_x_@": "__m_x_@",
+  "someId": "__someId",
+  "subClass": "__subClass",
+  "test": "__test",
+  "{}": "__{}",
+  "©": "__©",
+  "“‘’”": "__“‘’”",
+  "⌘⌥": "__⌘⌥",
+  "☺☃": "__☺☃",
+  "♥": "__♥",
+  "𝄞♪♩♫♬": "__𝄞♪♩♫♬",
+  "💩": "__💩",
+  "😍": "__😍",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 15`] = `
+Object {
+  "#": "#--tlFV0b",
+  "##": "##--7vA-7E",
+  "#.#.#": "#.#.#--1Hd875",
+  "#fake-id": "#fake-id--ez7Dik",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
+  "-a-b-c-": "-a-b-c---jfQ3Qn",
+  "-a0-34a___f": "-a0-34a___f--OWXZy-",
+  ".": ".--ZtQPX0",
+  "123": "_123--j0sSmE",
+  "1a2b3c": "_1a2b3c--AMCMZb",
+  ":)": ":)--u1ngqY",
+  ":\`(": ":\`(--hgmvDX",
+  ":hover": ":hover--8XNA4p",
+  ":hover:focus:active": ":hover:focus:active--EpwJWE",
+  "<><<<>><>": "<><<<>><>--8jXRVC",
+  "<p>": "<p>--MHaC0-",
+  "?": "?--9Y6SkK",
+  "@": "@--Sc9iGx",
+  "B&W?": "B&W?--D7HZ-H",
+  "[attr=value]": "[attr=value]--ZTV_uO",
+  "_": "_--NFJ6vs",
+  "_test": "_test--Kfd_4M",
+  "className": "className--b9RUK8",
+  "f!o!o": "f!o!o--QQGZu2",
+  "f'o'o": "f'o'o--00bSFC",
+  "f*o*o": "f*o*o--kom_Jq",
+  "f+o+o": "f+o+o--J4WAkM",
+  "f/o/o": "f/o/o--3vNZZM",
+  "f\\\\o\\\\o": "f\\\\o\\\\o--wNzTj3",
+  "foo.bar": "foo.bar--pYS5El",
+  "foo/bar": "foo/bar--9GWp9d",
+  "foo/bar/baz": "foo/bar/baz--MRJglc",
+  "foo\\\\bar": "foo\\\\bar--CCzsTj",
+  "foo\\\\bar\\\\baz": "foo\\\\bar\\\\baz--nRgTR7",
+  "f~o~o": "f~o~o--26zzb-",
+  "m_x_@": "m_x_@--kG1v1e",
+  "someId": "someId--TlAET9",
+  "subClass": "subClass--sglK-1",
+  "test": "test--mowWgR",
+  "{}": "{}--Tr49RL",
+  "©": "©--sWiP9l",
+  "“‘’”": "“‘’”--M3gyy-",
+  "⌘⌥": "⌘⌥--oDuNAW",
+  "☺☃": "☺☃--pbZo-2",
+  "♥": "♥--e6nEYm",
+  "𝄞♪♩♫♬": "𝄞♪♩♫♬--vrTCd6",
+  "💩": "💩--1Txu-k",
+  "😍": "😍--rPyRbM",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -717,6 +929,478 @@ Array [
 }
 
 .local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--FlFA- {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-2 ***!
+  \\\\************************************************************/
+._-1test {
+  background: red;
+}
+
+._-1_test {
+  background: blue;
+}
+
+._-1className {
+  background: red;
+}
+
+#_-1someId {
+  background: green;
+}
+
+._-1className ._-1subClass {
+  color: green;
+}
+
+#_-1someId ._-1subClass {
+  color: blue;
+}
+
+._-1-a0-34a___f {
+  color: red;
+}
+
+._-1m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+._-1B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._-1\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._-11a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_-1\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_-1-a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_-1© {
+  color: black;
+}
+
+._-1♥ { background: lime; }
+._-1© { background: lime; }
+._-1😍 { background: lime; }
+._-1“‘’” { background: lime; }
+._-1☺☃ { background: lime; }
+._-1⌘⌥ { background: lime; }
+._-1𝄞♪♩♫♬ { background: lime; }
+._-1💩 { background: lime; }
+._-1\\\\? { background: lime; }
+._-1\\\\@ { background: lime; }
+._-1\\\\. { background: lime; }
+._-1\\\\:\\\\) { background: lime; }
+._-1\\\\:\\\\\`\\\\( { background: lime; }
+._-1123 { background: lime; }
+._-11a2b3c { background: lime; }
+._-1\\\\<p\\\\> { background: lime; }
+._-1\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._-1\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._-1\\\\# { background: lime; }
+._-1\\\\#\\\\# { background: lime; }
+._-1\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._-1_ { background: lime; }
+._-1\\\\{\\\\} { background: lime; }
+._-1\\\\#fake-id { background: lime; }
+._-1foo\\\\.bar { background: lime; }
+._-1\\\\:hover { background: lime; }
+._-1\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._-1\\\\[attr\\\\=value\\\\] { background: lime; }
+._-1f\\\\/o\\\\/o { background: lime; }
+._-1f\\\\\\\\o\\\\\\\\o { background: lime; }
+._-1f\\\\*o\\\\*o { background: lime; }
+._-1f\\\\!o\\\\!o { background: lime; }
+._-1f\\\\'o\\\\'o { background: lime; }
+._-1f\\\\~o\\\\~o { background: lime; }
+._-1f\\\\+o\\\\+o { background: lime; }
+
+._-1foo\\\\/bar {
+  background: hotpink;
+}
+
+._-1foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+._-1foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+._-1foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-3 ***!
+  \\\\************************************************************/
+._--test {
+  background: red;
+}
+
+._--_test {
+  background: blue;
+}
+
+._--className {
+  background: red;
+}
+
+#_--someId {
+  background: green;
+}
+
+._--className ._--subClass {
+  color: green;
+}
+
+#_--someId ._--subClass {
+  color: blue;
+}
+
+._---a0-34a___f {
+  color: red;
+}
+
+._--m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+._--B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._--\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._--1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_--\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_---a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_--© {
+  color: black;
+}
+
+._--♥ { background: lime; }
+._--© { background: lime; }
+._--😍 { background: lime; }
+._--“‘’” { background: lime; }
+._--☺☃ { background: lime; }
+._--⌘⌥ { background: lime; }
+._--𝄞♪♩♫♬ { background: lime; }
+._--💩 { background: lime; }
+._--\\\\? { background: lime; }
+._--\\\\@ { background: lime; }
+._--\\\\. { background: lime; }
+._--\\\\:\\\\) { background: lime; }
+._--\\\\:\\\\\`\\\\( { background: lime; }
+._--123 { background: lime; }
+._--1a2b3c { background: lime; }
+._--\\\\<p\\\\> { background: lime; }
+._--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._--\\\\# { background: lime; }
+._--\\\\#\\\\# { background: lime; }
+._--\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._--_ { background: lime; }
+._--\\\\{\\\\} { background: lime; }
+._--\\\\#fake-id { background: lime; }
+._--foo\\\\.bar { background: lime; }
+._--\\\\:hover { background: lime; }
+._--\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._--\\\\[attr\\\\=value\\\\] { background: lime; }
+._--f\\\\/o\\\\/o { background: lime; }
+._--f\\\\\\\\o\\\\\\\\o { background: lime; }
+._--f\\\\*o\\\\*o { background: lime; }
+._--f\\\\!o\\\\!o { background: lime; }
+._--f\\\\'o\\\\'o { background: lime; }
+._--f\\\\~o\\\\~o { background: lime; }
+._--f\\\\+o\\\\+o { background: lime; }
+
+._--foo\\\\/bar {
+  background: hotpink;
+}
+
+._--foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+._--foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+._--foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-4 ***!
+  \\\\************************************************************/
+.__test {
+  background: red;
+}
+
+.___test {
+  background: blue;
+}
+
+.__className {
+  background: red;
+}
+
+#__someId {
+  background: green;
+}
+
+.__className .__subClass {
+  color: green;
+}
+
+#__someId .__subClass {
+  color: blue;
+}
+
+.__-a0-34a___f {
+  color: red;
+}
+
+.__m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.__B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.__\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.__1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#__\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#__-a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#__© {
+  color: black;
+}
+
+.__♥ { background: lime; }
+.__© { background: lime; }
+.__😍 { background: lime; }
+.__“‘’” { background: lime; }
+.__☺☃ { background: lime; }
+.__⌘⌥ { background: lime; }
+.__𝄞♪♩♫♬ { background: lime; }
+.__💩 { background: lime; }
+.__\\\\? { background: lime; }
+.__\\\\@ { background: lime; }
+.__\\\\. { background: lime; }
+.__\\\\:\\\\) { background: lime; }
+.__\\\\:\\\\\`\\\\( { background: lime; }
+.__123 { background: lime; }
+.__1a2b3c { background: lime; }
+.__\\\\<p\\\\> { background: lime; }
+.__\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.__\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.__\\\\# { background: lime; }
+.__\\\\#\\\\# { background: lime; }
+.__\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.___ { background: lime; }
+.__\\\\{\\\\} { background: lime; }
+.__\\\\#fake-id { background: lime; }
+.__foo\\\\.bar { background: lime; }
+.__\\\\:hover { background: lime; }
+.__\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.__\\\\[attr\\\\=value\\\\] { background: lime; }
+.__f\\\\/o\\\\/o { background: lime; }
+.__f\\\\\\\\o\\\\\\\\o { background: lime; }
+.__f\\\\*o\\\\*o { background: lime; }
+.__f\\\\!o\\\\!o { background: lime; }
+.__f\\\\'o\\\\'o { background: lime; }
+.__f\\\\~o\\\\~o { background: lime; }
+.__f\\\\+o\\\\+o { background: lime; }
+
+.__foo\\\\/bar {
+  background: hotpink;
+}
+
+.__foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+.__foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+.__foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-5 ***!
+  \\\\************************************************************/
+.test--mowWgR {
+  background: red;
+}
+
+._test--Kfd_4M {
+  background: blue;
+}
+
+.className--b9RUK8 {
+  background: red;
+}
+
+#someId--TlAET9 {
+  background: green;
+}
+
+.className--b9RUK8 .subClass--sglK-1 {
+  color: green;
+}
+
+#someId--TlAET9 .subClass--sglK-1 {
+  color: blue;
+}
+
+.-a0-34a___f--OWXZy- {
+  color: red;
+}
+
+.m_x_\\\\@--kG1v1e {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.B\\\\&W\\\\?--D7HZ-H {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.\\\\:\\\\\`\\\\(--hgmvDX {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._1a2b3c--AMCMZb {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#\\\\#fake-id--ez7Dik {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#-a-b-c---jfQ3Qn {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#©--sWiP9l {
+  color: black;
+}
+
+.♥--e6nEYm { background: lime; }
+.©--sWiP9l { background: lime; }
+.😍--rPyRbM { background: lime; }
+.“‘’”--M3gyy- { background: lime; }
+.☺☃--pbZo-2 { background: lime; }
+.⌘⌥--oDuNAW { background: lime; }
+.𝄞♪♩♫♬--vrTCd6 { background: lime; }
+.💩--1Txu-k { background: lime; }
+.\\\\?--9Y6SkK { background: lime; }
+.\\\\@--Sc9iGx { background: lime; }
+.\\\\.--ZtQPX0 { background: lime; }
+.\\\\:\\\\)--u1ngqY { background: lime; }
+.\\\\:\\\\\`\\\\(--hgmvDX { background: lime; }
+._123--j0sSmE { background: lime; }
+._1a2b3c--AMCMZb { background: lime; }
+.\\\\<p\\\\>--MHaC0- { background: lime; }
+.\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--8jXRVC { background: lime; }
+.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--OsAmD3 { background: lime; }
+.\\\\#--tlFV0b { background: lime; }
+.\\\\#\\\\#--7vA-7E { background: lime; }
+.\\\\#\\\\.\\\\#\\\\.\\\\#--1Hd875 { background: lime; }
+._--NFJ6vs { background: lime; }
+.\\\\{\\\\}--Tr49RL { background: lime; }
+.\\\\#fake-id--ez7Dik { background: lime; }
+.foo\\\\.bar--pYS5El { background: lime; }
+.\\\\:hover--8XNA4p { background: lime; }
+.\\\\:hover\\\\:focus\\\\:active--EpwJWE { background: lime; }
+.\\\\[attr\\\\=value\\\\]--ZTV_uO { background: lime; }
+.f\\\\/o\\\\/o--3vNZZM { background: lime; }
+.f\\\\\\\\o\\\\\\\\o--wNzTj3 { background: lime; }
+.f\\\\*o\\\\*o--kom_Jq { background: lime; }
+.f\\\\!o\\\\!o--QQGZu2 { background: lime; }
+.f\\\\'o\\\\'o--00bSFC { background: lime; }
+.f\\\\~o\\\\~o--26zzb- { background: lime; }
+.f\\\\+o\\\\+o--J4WAkM { background: lime; }
+
+.foo\\\\/bar--9GWp9d {
+  background: hotpink;
+}
+
+.foo\\\\\\\\bar--CCzsTj {
+  background: hotpink;
+}
+
+.foo\\\\/bar\\\\/baz--MRJglc {
+  background: hotpink;
+}
+
+.foo\\\\\\\\bar\\\\\\\\baz--nRgTR7 {
   background: hotpink;
 }
 

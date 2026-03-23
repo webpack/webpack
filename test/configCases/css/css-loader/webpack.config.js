@@ -16,6 +16,34 @@ module.exports = {
 					localIdentHashDigest: "base64url",
 					localIdentHashDigestLength: 5
 				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-2$/,
+				generator: {
+					localIdentName: "-1[local]"
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-3$/,
+				generator: {
+					localIdentName: "--[local]"
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-4$/,
+				generator: {
+					localIdentName: "__[local]"
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-5$/,
+				generator: {
+					localIdentName: "[local]--[fullhash]"
+				}
 			}
 		]
 	},
