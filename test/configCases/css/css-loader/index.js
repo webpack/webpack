@@ -4,6 +4,7 @@ import * as styles3 from "./composes-global.module.css";
 import * as styles4 from "./scope-at-rule.module.css";
 import * as styles5 from "./nesting.module.css";
 import * as styles6 from "./prefer-relative.module.css";
+import * as styles7 from "./animation-name.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -20,5 +21,6 @@ it("should work", () => {
 	expect(styles4).toMatchSnapshot();
 	expect(styles5).toMatchSnapshot();
 	expect(styles6).toMatchSnapshot();
+	expect(styles7).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

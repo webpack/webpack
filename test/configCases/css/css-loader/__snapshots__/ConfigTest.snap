@@ -57,6 +57,15 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 7`] = `
+Object {
+  "a": "animation-name_module_css-a",
+  "animationName": "animation-name_module_css-animationName",
+  "b": "animation-name_module_css-b",
+  "c": "animation-name_module_css-c",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 8`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -277,6 +286,30 @@ Array [
 .prefer-relative_module_css-two {
 	color: yellow;
 	}
+
+/*!***************************************!*\\\\
+  !*** css ./animation-name.module.css ***!
+  \\\\***************************************/
+.animation-name_module_css-a {
+	animation: 3s animation-name_module_css-animationName;
+}
+
+.animation-name_module_css-b {
+	animation: animation-name_module_css-animationName 3s;
+}
+
+.animation-name_module_css-c {
+	animation-name: animation-name_module_css-animationName;
+}
+
+@keyframes animation-name_module_css-animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
 
 ",
 ]
