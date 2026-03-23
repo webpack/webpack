@@ -9,6 +9,7 @@ module.exports = {
 			`style_module_css_dashes.bundle${i}.js`,
 			`style_module_css_dashes-only.bundle${i}.js`,
 			`style_module_css_upper.bundle${i}.js`,
+			`style_module_css_upper-no-named-exports.bundle${i}.js`,
 			`bundle${i}.js`
 		];
 	}
