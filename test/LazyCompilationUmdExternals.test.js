@@ -55,6 +55,39 @@ const loadScript = (runner, filename) => {
 	vm.runInNewContext(source, runner._globalContext, filename);
 };
 
+/**
+ * Polls for a lazy chunk file to appear in the output directory.
+ * Replaces the flaky setTimeout(finish, 1000) approach from review nit.
+ * @param {string} outputDir output directory
+ * @param {number} maxWaitMs maximum wait time in milliseconds
+ * @returns {Promise<string>} resolves with the lazy chunk filepath
+ */
+const waitForLazyChunk = (outputDir, maxWaitMs = 10000) => {
+	const start = Date.now();
+	return new Promise((resolve, reject) => {
+		const check = () => {
+			try {
+				const files = fs.readdirSync(outputDir);
+				const chunkFile = files.find((f) => f.includes(".chunk."));
+				if (chunkFile) {
+					resolve(path.join(outputDir, chunkFile));
+				} else if (Date.now() - start > maxWaitMs) {
+					reject(
+						new Error(
+							`Timed out waiting for lazy chunk file after ${maxWaitMs}ms`
+						)
+					);
+				} else {
+					setTimeout(check, 50);
+				}
+			} catch {
+				setTimeout(check, 50);
+			}
+		};
+		check();
+	});
+};
+
 describe("LazyCompilation UMD externals", () => {
 	/** @type {import("../types").Compiler | undefined} */
 	let compiler;
@@ -151,10 +184,11 @@ describe("LazyCompilation UMD externals", () => {
 
 		loadScript(runner, path.join(outputDirectory, "bundle.js"));
 
-		const promise = runner._globalContext.loadLazyModule();
-		await new Promise((resolve) => {
-			setTimeout(resolve, 1000);
-		});
+		const lazyPromise = runner._globalContext.loadLazyModule();
+
+		// Poll for the lazy chunk file instead of setTimeout to avoid flakiness on slow CI
+		await waitForLazyChunk(outputDirectory);
+		const result = await lazyPromise;
 
 		fakeUpdateLoaderOptions.updateIndex++;
 		stats = await runCompiler(compiler);
@@ -164,7 +198,6 @@ describe("LazyCompilation UMD externals", () => {
 		const updatedModules = await runner._globalContext.applyUpdate();
 		expect(updatedModules).toBeTruthy();
 
-		const result = await promise;
 		expect(result).toHaveProperty("default", "external value");
 	});
 });
