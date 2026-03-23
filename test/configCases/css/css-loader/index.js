@@ -6,6 +6,7 @@ import * as styles5 from "./nesting.module.css";
 import * as styles6 from "./prefer-relative.module.css";
 import * as styles7 from "./animation-name.module.css";
 import * as styles8 from "./at-sign-in-package-name.module.css";
+import * as styles9 from "./resolving-from-node_modules.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -24,5 +25,6 @@ it("should work", () => {
 	expect(styles6).toMatchSnapshot();
 	expect(styles7).toMatchSnapshot();
 	expect(styles8).toMatchSnapshot();
+	expect(styles9).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

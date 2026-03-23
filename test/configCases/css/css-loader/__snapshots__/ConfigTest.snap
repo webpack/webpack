@@ -72,6 +72,13 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 9`] = `
+Object {
+  "color-grey": "gray",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 10`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -337,6 +344,38 @@ Array [
 
 .at-sign-in-package-name_module_css-myClass {
 	color: red;
+}
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/color.css ***!
+  \\\\**************************************************/
+
+
+/*!*******************************************************!*\\\\
+  !*** css ./node_modules/@otherlocalpackage/style.css ***!
+  \\\\*******************************************************/
+.node_modules_\\\\@otherlocalpackage_style_css-type-heading2 {
+  display: flex;
+}
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/style.css ***!
+  \\\\**************************************************/
+.node_modules_\\\\@localpackage_style_css-type-heading {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+/*!****************************************************!*\\\\
+  !*** css ./resolving-from-node_modules.module.css ***!
+  \\\\****************************************************/
+
+
+.resolving-from-node_modules_module_css-copyright {
+  color: gray;
+  margin: 0;
+  padding: 0;
 }
 
 ",
