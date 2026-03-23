@@ -132,6 +132,59 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 11`] = `
+Object {
+  "#": "local-Ident-name.module--#--0fms6",
+  "##": "local-Ident-name.module--##--4MjQ_",
+  "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
+  "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
+  ".": "local-Ident-name.module--.--Bix0N",
+  "123": "local-Ident-name.module--123--PvTN4",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--xSd9R",
+  ":)": "local-Ident-name.module--:)--kXjo5",
+  ":\`(": "local-Ident-name.module--:\`(--YZqyU",
+  ":hover": "local-Ident-name.module--:hover--QXnD_",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0eQHC",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--q0Tti",
+  "<p>": "local-Ident-name.module--<p>--RCYv0",
+  "?": "local-Ident-name.module--?--tcA6P",
+  "@": "local-Ident-name.module--@--IjjsD",
+  "B&W?": "local-Ident-name.module--B&W?--9Uv5j",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--bHMhi",
+  "_": "local-Ident-name.module--_--wWsEV",
+  "_test": "local-Ident-name.module--_test--c_lQ7",
+  "className": "local-Ident-name.module--className--QdX5M",
+  "f!o!o": "local-Ident-name.module--f!o!o--U5evv",
+  "f'o'o": "local-Ident-name.module--f'o'o--5azUC",
+  "f*o*o": "local-Ident-name.module--f*o*o--1OZxX",
+  "f+o+o": "local-Ident-name.module--f+o+o--r42Md",
+  "f/o/o": "local-Ident-name.module--f/o/o--gpPiW",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gu2u7",
+  "foo.bar": "local-Ident-name.module--foo.bar--EDSRu",
+  "foo/bar": "local-Ident-name.module--foo/bar--ARBA4",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p2TDV",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--vSOik",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--FlFA-",
+  "f~o~o": "local-Ident-name.module--f~o~o--6JU27",
+  "m_x_@": "local-Ident-name.module--m_x_@--wXBtR",
+  "someId": "local-Ident-name.module--someId--fs0tG",
+  "subClass": "local-Ident-name.module--subClass--EEiow",
+  "test": "local-Ident-name.module--test--n138O",
+  "{}": "local-Ident-name.module--{}--yOiSk",
+  "©": "local-Ident-name.module--©--ABrkO",
+  "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
+  "☺☃": "local-Ident-name.module--☺☃--_YUxr",
+  "♥": "local-Ident-name.module--♥--zQEWH",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--16ySy",
+  "💩": "local-Ident-name.module--💩--fhsK2",
+  "😍": "local-Ident-name.module--😍--rYTiW",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 12`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -546,6 +599,124 @@ Array [
 }
 
 .local-Ident-name_module_css-foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-1 ***!
+  \\\\************************************************************/
+.local-Ident-name\\\\.module--test--n138O {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--c_lQ7 {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--QdX5M {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--fs0tG {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--QdX5M .local-Ident-name\\\\.module--subClass--EEiow {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--fs0tG .local-Ident-name\\\\.module--subClass--EEiow {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--rWQCS {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--wXBtR {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--9Uv5j {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--YZqyU {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--xSd9R {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--stuV6 {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---BVuZu {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--ABrkO {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--zQEWH { background: lime; }
+.local-Ident-name\\\\.module--©--ABrkO { background: lime; }
+.local-Ident-name\\\\.module--😍--rYTiW { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--Viviw { background: lime; }
+.local-Ident-name\\\\.module--☺☃--_YUxr { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--tU2QX { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--16ySy { background: lime; }
+.local-Ident-name\\\\.module--💩--fhsK2 { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--tcA6P { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--IjjsD { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--Bix0N { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--kXjo5 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--YZqyU { background: lime; }
+.local-Ident-name\\\\.module--123--PvTN4 { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--xSd9R { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--RCYv0 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--q0Tti { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--GNmAU { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--0fms6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--4MjQ_ { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--4Z5kr { background: lime; }
+.local-Ident-name\\\\.module--_--wWsEV { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--yOiSk { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--stuV6 { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--EDSRu { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--QXnD_ { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--0eQHC { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--bHMhi { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--gpPiW { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--gu2u7 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--1OZxX { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--U5evv { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--5azUC { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--6JU27 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--r42Md { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--ARBA4 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--vSOik {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--p2TDV {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--FlFA- {
   background: hotpink;
 }
 
