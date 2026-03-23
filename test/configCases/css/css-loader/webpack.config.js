@@ -44,6 +44,13 @@ module.exports = {
 				generator: {
 					localIdentName: "[local]--[fullhash]"
 				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-6$/,
+				generator: {
+					localIdentName: "😀- -[local]"
+				}
 			}
 		]
 	},

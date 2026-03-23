@@ -398,19 +398,72 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
 Object {
+  "#": "😀- -#",
+  "##": "😀- -##",
+  "#.#.#": "😀- -#.#.#",
+  "#fake-id": "😀- -#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "😀- --a-b-c-",
+  "-a0-34a___f": "😀- --a0-34a___f",
+  ".": "😀- -.",
+  "123": "😀- -123",
+  "1a2b3c": "😀- -1a2b3c",
+  ":)": "😀- -:)",
+  ":\`(": "😀- -:\`(",
+  ":hover": "😀- -:hover",
+  ":hover:focus:active": "😀- -:hover:focus:active",
+  "<><<<>><>": "😀- -<><<<>><>",
+  "<p>": "😀- -<p>",
+  "?": "😀- -?",
+  "@": "😀- -@",
+  "B&W?": "😀- -B&W?",
+  "[attr=value]": "😀- -[attr=value]",
+  "_": "😀- -_",
+  "_test": "😀- -_test",
+  "className": "😀- -className",
+  "f!o!o": "😀- -f!o!o",
+  "f'o'o": "😀- -f'o'o",
+  "f*o*o": "😀- -f*o*o",
+  "f+o+o": "😀- -f+o+o",
+  "f/o/o": "😀- -f/o/o",
+  "f\\\\o\\\\o": "😀- -f\\\\o\\\\o",
+  "foo.bar": "😀- -foo.bar",
+  "foo/bar": "😀- -foo/bar",
+  "foo/bar/baz": "😀- -foo/bar/baz",
+  "foo\\\\bar": "😀- -foo\\\\bar",
+  "foo\\\\bar\\\\baz": "😀- -foo\\\\bar\\\\baz",
+  "f~o~o": "😀- -f~o~o",
+  "m_x_@": "😀- -m_x_@",
+  "someId": "😀- -someId",
+  "subClass": "😀- -subClass",
+  "test": "😀- -test",
+  "{}": "😀- -{}",
+  "©": "😀- -©",
+  "“‘’”": "😀- -“‘’”",
+  "⌘⌥": "😀- -⌘⌥",
+  "☺☃": "😀- -☺☃",
+  "♥": "😀- -♥",
+  "𝄞♪♩♫♬": "😀- -𝄞♪♩♫♬",
+  "💩": "😀- -💩",
+  "😍": "😀- -😍",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
+Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 19`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -1418,6 +1471,124 @@ Array [
   background: hotpink;
 }
 
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-6 ***!
+  \\\\************************************************************/
+.😀-\\\\ -test {
+  background: red;
+}
+
+.😀-\\\\ -_test {
+  background: blue;
+}
+
+.😀-\\\\ -className {
+  background: red;
+}
+
+#😀-\\\\ -someId {
+  background: green;
+}
+
+.😀-\\\\ -className .😀-\\\\ -subClass {
+  color: green;
+}
+
+#😀-\\\\ -someId .😀-\\\\ -subClass {
+  color: blue;
+}
+
+.😀-\\\\ --a0-34a___f {
+  color: red;
+}
+
+.😀-\\\\ -m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.😀-\\\\ -B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.😀-\\\\ -\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.😀-\\\\ -1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#😀-\\\\ -\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#😀-\\\\ --a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#😀-\\\\ -© {
+  color: black;
+}
+
+.😀-\\\\ -♥ { background: lime; }
+.😀-\\\\ -© { background: lime; }
+.😀-\\\\ -😍 { background: lime; }
+.😀-\\\\ -“‘’” { background: lime; }
+.😀-\\\\ -☺☃ { background: lime; }
+.😀-\\\\ -⌘⌥ { background: lime; }
+.😀-\\\\ -𝄞♪♩♫♬ { background: lime; }
+.😀-\\\\ -💩 { background: lime; }
+.😀-\\\\ -\\\\? { background: lime; }
+.😀-\\\\ -\\\\@ { background: lime; }
+.😀-\\\\ -\\\\. { background: lime; }
+.😀-\\\\ -\\\\:\\\\) { background: lime; }
+.😀-\\\\ -\\\\:\\\\\`\\\\( { background: lime; }
+.😀-\\\\ -123 { background: lime; }
+.😀-\\\\ -1a2b3c { background: lime; }
+.😀-\\\\ -\\\\<p\\\\> { background: lime; }
+.😀-\\\\ -\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.😀-\\\\ -\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.😀-\\\\ -\\\\# { background: lime; }
+.😀-\\\\ -\\\\#\\\\# { background: lime; }
+.😀-\\\\ -\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.😀-\\\\ -_ { background: lime; }
+.😀-\\\\ -\\\\{\\\\} { background: lime; }
+.😀-\\\\ -\\\\#fake-id { background: lime; }
+.😀-\\\\ -foo\\\\.bar { background: lime; }
+.😀-\\\\ -\\\\:hover { background: lime; }
+.😀-\\\\ -\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.😀-\\\\ -\\\\[attr\\\\=value\\\\] { background: lime; }
+.😀-\\\\ -f\\\\/o\\\\/o { background: lime; }
+.😀-\\\\ -f\\\\\\\\o\\\\\\\\o { background: lime; }
+.😀-\\\\ -f\\\\*o\\\\*o { background: lime; }
+.😀-\\\\ -f\\\\!o\\\\!o { background: lime; }
+.😀-\\\\ -f\\\\'o\\\\'o { background: lime; }
+.😀-\\\\ -f\\\\~o\\\\~o { background: lime; }
+.😀-\\\\ -f\\\\+o\\\\+o { background: lime; }
+
+.😀-\\\\ -foo\\\\/bar {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
 /*!*************************!*\\\\
   !*** css ./order-1.css ***!
   \\\\*************************/
@@ -1474,8 +1645,8 @@ Array [
   \\\\**********************************/
 .secondary-button_css-secondaryButton
 {
-  background-color:#555;
-  color:white;
+  background-color: #555;
+  color: white;
 }
 
 /*!******************************!*\\\\
