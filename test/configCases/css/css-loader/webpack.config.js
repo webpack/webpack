@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @typedef {import("../../../../").PathData} PathData */
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -80,6 +82,10 @@ module.exports = {
 				test: /.css$/,
 				resourceQuery: /\?local-ident-name-9$/,
 				generator: {
+					/**
+					 * @param {PathData} pathData path data
+					 * @returns {string} local ident name
+					 */
 					localIdentName: (pathData) =>
 						`prefix-${pathData.filename}---${pathData.local}---${pathData.hash}-postfix`
 				}
