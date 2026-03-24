@@ -464,6 +464,12 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 19`] = `
+Object {
+  "bar": "composes-from-less_module_css-bar foo_less-foo",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 20`] = `
 Array [
   "/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
@@ -1658,6 +1664,19 @@ Array [
 .dedup_module_css-backButton {
 	}
 
+
+/*!**********************!*\\\\
+  !*** css ./foo.less ***!
+  \\\\**********************/
+.foo_less-foo {
+  color: red;
+}
+
+/*!*******************************************!*\\\\
+  !*** css ./composes-from-less.module.css ***!
+  \\\\*******************************************/
+.composes-from-less_module_css-bar {
+	}
 
 ",
 ]

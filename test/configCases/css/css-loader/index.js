@@ -16,6 +16,7 @@ import * as styles15 from "./local-Ident-name.module.css?local-ident-name-5";
 import * as styles16 from "./local-Ident-name.module.css?local-ident-name-6";
 import * as styles17 from "./order.module.css";
 import * as styles18 from "./dedup.module.css";
+import * as styles19 from "./composes-from-less.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -44,5 +45,6 @@ it("should work", () => {
 	expect(styles16).toMatchSnapshot();
 	expect(styles17).toMatchSnapshot();
 	expect(styles18).toMatchSnapshot();
+	expect(styles19).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

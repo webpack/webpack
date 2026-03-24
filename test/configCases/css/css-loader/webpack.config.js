@@ -8,6 +8,10 @@ module.exports = {
 	module: {
 		rules: [
 			{
+				test: /\.less$/,
+				use: ["./remove-source-map-url-loader", "less-loader"]
+			},
+			{
 				test: /.css$/,
 				resourceQuery: /\?local-ident-name-1$/,
 				generator: {
