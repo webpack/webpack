@@ -668,6 +668,14 @@ Object {
 `;
 
 exports[`ConfigTestCases css css-loader exported tests should work 24`] = `
+Object {
+  "bar": "#fff",
+  "className": "tilde_module_css-className",
+  "foo": "#000",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 25`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
@@ -2378,6 +2386,28 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   \\\\*******************************************/
 .composes-from-less_module_css-bar {
 	}
+
+/*!*****************************************!*\\\\
+  !*** css ./node_modules/test/index.css ***!
+  \\\\*****************************************/
+
+
+
+.node_modules_test_index_css-class {
+	color: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./tilde.module.css ***!
+  \\\\******************************/
+
+
+
+.tilde_module_css-className {
+	color: #000;
+	background: #fff;
+}
+
 
 ",
 ]

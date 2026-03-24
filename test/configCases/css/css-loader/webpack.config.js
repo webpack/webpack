@@ -1,5 +1,7 @@
 "use strict";
 
+const path = require("path");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -83,6 +85,12 @@ module.exports = {
 				}
 			}
 		]
+	},
+	resolve: {
+		alias: {
+			// Migration example
+			"~test": path.resolve(__dirname, "node_modules/test")
+		}
 	},
 	experiments: {
 		css: true
