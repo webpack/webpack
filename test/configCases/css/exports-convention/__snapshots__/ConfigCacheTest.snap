@@ -339,3 +339,55 @@ Object {
   "SIMPLE": "lZQwR-",
 }
 `;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 1`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-BTN-INFO_IS-DISABLED",
+  "CLASS": "style_module_css_upper-no-named-exports-CLASS",
+  "DEFAULT": "style_module_css_upper-no-named-exports-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "style_module_css_upper-no-named-exports-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "style_module_css_upper-no-named-exports-SIMPLE",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 2`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "qyQTB8",
+  "BTN-INFO_IS-DISABLED": "emVwWp",
+  "CLASS": "lBiVDX",
+  "DEFAULT": "_781BMr",
+  "FOO": "bar",
+  "FOO_BAR": "jzFqhs",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "j11jPT",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 3`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "style_module_css_upper-no-named-exports-BTN--INFO_IS-DISABLED_1",
+  "BTN-INFO_IS-DISABLED": "style_module_css_upper-no-named-exports-BTN-INFO_IS-DISABLED",
+  "CLASS": "style_module_css_upper-no-named-exports-CLASS",
+  "DEFAULT": "style_module_css_upper-no-named-exports-DEFAULT",
+  "FOO": "bar",
+  "FOO_BAR": "style_module_css_upper-no-named-exports-FOO_BAR",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "style_module_css_upper-no-named-exports-SIMPLE",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name: upper-and-no-named-export 4`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "qyQTB8",
+  "BTN-INFO_IS-DISABLED": "emVwWp",
+  "CLASS": "lBiVDX",
+  "DEFAULT": "_781BMr",
+  "FOO": "bar",
+  "FOO_BAR": "jzFqhs",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "j11jPT",
+}
+`;

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases css css-loader exported tests should work 1`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 1`] = `
 Object {
   "@bounce": "basic_module_css-@bounce",
   "a": "basic_module_css-a",
@@ -39,14 +39,14 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 2`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 2`] = `
 Object {
   "default": "classes_module_css_0c83-default",
   "module": "classes_module_css_0c83-module",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 3`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 3`] = `
 Object {
   "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
   "class-1": "composes-multiple_module_css-class-1",
@@ -56,13 +56,13 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 4`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 4`] = `
 Object {
   "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 5`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 5`] = `
 Object {
   "class-a": "scope-at-rule_module_css-class-a",
   "class-b": "scope-at-rule_module_css-class-b",
@@ -71,7 +71,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 6`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 6`] = `
 Object {
   "a": "nesting_module_css-a",
   "b": "nesting_module_css-b nesting_module_css-a",
@@ -88,14 +88,14 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 7`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 7`] = `
 Object {
   "one": "prefer-relative_module_css-one package_one_css-imported-relative",
   "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 8`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 8`] = `
 Object {
   "a": "animation-name_module_css-a",
   "animationName": "animation-name_module_css-animationName",
@@ -104,20 +104,20 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 9`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 9`] = `
 Object {
   "myClass": "at-sign-in-package-name_module_css-myClass",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 10`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 10`] = `
 Object {
   "color-grey": "gray",
   "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 11`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 11`] = `
 Object {
   "#": "local-Ident-name_module_css-#",
   "##": "local-Ident-name_module_css-##",
@@ -170,7 +170,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 12`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 12`] = `
 Object {
   "#": "local-Ident-name.module--#--0fms6",
   "##": "local-Ident-name.module--##--4MjQ_",
@@ -223,7 +223,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 13`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 13`] = `
 Object {
   "#": "_-1#",
   "##": "_-1##",
@@ -276,7 +276,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 14`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 14`] = `
 Object {
   "#": "_--#",
   "##": "_--##",
@@ -329,7 +329,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 15`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 15`] = `
 Object {
   "#": "__#",
   "##": "__##",
@@ -382,7 +382,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 16`] = `
 Object {
   "#": "#--tlFV0b",
   "##": "##--7vA-7E",
@@ -435,7 +435,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 17`] = `
 Object {
   "#": "😀- -#",
   "##": "😀- -##",
@@ -488,7 +488,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 18`] = `
 Object {
   "#": "local-Ident-name.module--#--CUiuWNpacN",
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
@@ -541,7 +541,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 19`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 19`] = `
 Object {
   "#": "local-Ident-name.module--#--H4xWOk",
   "##": "local-Ident-name.module--##--qmWu4j",
@@ -594,7 +594,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 20`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 20`] = `
 Object {
   "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
@@ -647,27 +647,27 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 21`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 21`] = `
 Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 22`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 23`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 23`] = `
 Object {
   "bar": "composes-from-less_module_css-bar foo_less-foo",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 24`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 24`] = `
 Object {
   "bar": "#fff",
   "className": "tilde_module_css-className",
@@ -675,7 +675,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 25`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 25`] = `
 Object {
   "_test": "_right_value",
   "_test1": "1",
@@ -691,7 +691,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 26`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should work 26`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
