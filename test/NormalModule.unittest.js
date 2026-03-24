@@ -383,8 +383,34 @@ describe("NormalModule", () => {
 		});
 
 		describe("_createLoaderContext", () => {
-			it("should include _importAttributes in the loader context", () => {
-				const importAttributes = { type: "json" };
+			const createMockCompilation = () => ({
+				runtimeTemplate: {
+					requestShortener: {
+						shorten: jest.fn().mockReturnValue("shorten")
+					}
+				},
+				getLogger: jest.fn(),
+				compiler: {
+					root: "root"
+				}
+			});
+
+			const createMockResolver = () => ({
+				resolve: jest.fn(),
+				withOptions: jest.fn().mockReturnThis()
+			});
+
+			const createMockOptions = () => ({
+				context: "context",
+				output: {
+					hashFunction: "md5",
+					hashDigest: "hex",
+					hashDigestLength: 20,
+					hashSalt: "salt"
+				}
+			});
+
+			const createLoaderContextTestSetup = importAttributes => {
 				const normalModule = new NormalModule({
 					type: "javascript/auto",
 					request: "request",
@@ -395,199 +421,46 @@ describe("NormalModule", () => {
 					parser: null,
 					generator: null,
 					resolveOptions: {},
-					importAttributes
+					...(importAttributes !== undefined && { importAttributes })
 				});
-				const resolver = {
-					resolve: jest.fn(),
-					withOptions: jest.fn().mockReturnThis()
-				};
-				const compilation = {
-					runtimeTemplate: {
-						requestShortener: {
-							shorten: jest.fn().mockReturnValue("shorten")
-						}
-					},
-					getLogger: jest.fn(),
-					compiler: {
-						root: "root"
-					}
-				};
+
+				const resolver = createMockResolver();
+				const options = createMockOptions();
+				const compilation = createMockCompilation();
 				const fs = {};
 				const hooks = {
 					loader: {
 						call: jest.fn()
 					}
 				};
-				const loaderContext = normalModule._createLoaderContext(
+
+				return normalModule._createLoaderContext(
 					resolver,
-					{
-						context: "context",
-						output: {
-							hashFunction: "md5",
-							hashDigest: "hex",
-							hashDigestLength: 20,
-							hashSalt: "salt"
-						}
-					},
+					options,
 					compilation,
 					fs,
 					hooks
 				);
+			};
+
+			it("should include _importAttributes in the loader context", () => {
+				const importAttributes = { type: "json" };
+				const loaderContext = createLoaderContextTestSetup(importAttributes);
 				expect(loaderContext._importAttributes).toEqual(importAttributes);
 			});
 
 			it("should include undefined _importAttributes if not provided", () => {
-				const normalModule = new NormalModule({
-					type: "javascript/auto",
-					request: "request",
-					userRequest: "userRequest",
-					rawRequest: "rawRequest",
-					loaders: [],
-					resource: "resource",
-					parser: null,
-					generator: null,
-					resolveOptions: {}
-				});
-				const resolver = {
-					resolve: jest.fn(),
-					withOptions: jest.fn().mockReturnThis()
-				};
-				const compilation = {
-					runtimeTemplate: {
-						requestShortener: {
-							shorten: jest.fn().mockReturnValue("shorten")
-						}
-					},
-					getLogger: jest.fn(),
-					compiler: {
-						root: "root"
-					}
-				};
-				const fs = {};
-				const hooks = {
-					loader: {
-						call: jest.fn()
-					}
-				};
-				const loaderContext = normalModule._createLoaderContext(
-					resolver,
-					{
-						context: "context",
-						output: {
-							hashFunction: "md5",
-							hashDigest: "hex",
-							hashDigestLength: 20,
-							hashSalt: "salt"
-						}
-					},
-					compilation,
-					fs,
-					hooks
-				);
+				const loaderContext = createLoaderContextTestSetup(undefined);
 				expect(loaderContext._importAttributes).toBeUndefined();
 			});
 
 			it("should include null _importAttributes if null", () => {
-				const normalModule = new NormalModule({
-					type: "javascript/auto",
-					request: "request",
-					userRequest: "userRequest",
-					rawRequest: "rawRequest",
-					loaders: [],
-					resource: "resource",
-					parser: null,
-					generator: null,
-					resolveOptions: {},
-					importAttributes: null
-				});
-				const resolver = {
-					resolve: jest.fn(),
-					withOptions: jest.fn().mockReturnThis()
-				};
-				const compilation = {
-					runtimeTemplate: {
-						requestShortener: {
-							shorten: jest.fn().mockReturnValue("shorten")
-						}
-					},
-					getLogger: jest.fn(),
-					compiler: {
-						root: "root"
-					}
-				};
-				const fs = {};
-				const hooks = {
-					loader: {
-						call: jest.fn()
-					}
-				};
-				const loaderContext = normalModule._createLoaderContext(
-					resolver,
-					{
-						context: "context",
-						output: {
-							hashFunction: "md5",
-							hashDigest: "hex",
-							hashDigestLength: 20,
-							hashSalt: "salt"
-						}
-					},
-					compilation,
-					fs,
-					hooks
-				);
+				const loaderContext = createLoaderContextTestSetup(null);
 				expect(loaderContext._importAttributes).toBeNull();
 			});
 
 			it("should include empty _importAttributes if empty", () => {
-				const normalModule = new NormalModule({
-					type: "javascript/auto",
-					request: "request",
-					userRequest: "userRequest",
-					rawRequest: "rawRequest",
-					loaders: [],
-					resource: "resource",
-					parser: null,
-					generator: null,
-					resolveOptions: {},
-					importAttributes: {}
-				});
-				const resolver = {
-					resolve: jest.fn(),
-					withOptions: jest.fn().mockReturnThis()
-				};
-				const compilation = {
-					runtimeTemplate: {
-						requestShortener: {
-							shorten: jest.fn().mockReturnValue("shorten")
-						}
-					},
-					getLogger: jest.fn(),
-					compiler: {
-						root: "root"
-					}
-				};
-				const fs = {};
-				const hooks = {
-					loader: {
-						call: jest.fn()
-					}
-				};
-				const loaderContext = normalModule._createLoaderContext(
-					resolver,
-					{
-						context: "context",
-						output: {
-							hashFunction: "md5",
-							hashDigest: "hex",
-							hashDigestLength: 20,
-							hashSalt: "salt"
-						}
-					},
-					compilation,
-					fs,
-					hooks
-				);
+				const loaderContext = createLoaderContextTestSetup({});
 				expect(loaderContext._importAttributes).toEqual({});
 			});
 		});
