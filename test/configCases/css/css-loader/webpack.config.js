@@ -73,6 +73,14 @@ module.exports = {
 					localIdentHashFunction: "xxhash64",
 					localIdentHashDigestLength: 6
 				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-9$/,
+				generator: {
+					localIdentName: (pathData) =>
+						`prefix-${pathData.filename}---${pathData.local}---${pathData.hash}-postfix`
+				}
 			}
 		]
 	},

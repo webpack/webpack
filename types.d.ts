@@ -3903,7 +3903,9 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure the generated local ident name.
 	 */
-	localIdentName?: string;
+	localIdentName?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 
 /**
@@ -14147,6 +14149,7 @@ declare interface PathData {
 	contentHashWithLength?: (length: number) => string;
 	noChunkHash?: boolean;
 	url?: string;
+	local?: string;
 	prepareId?: (id: string | number) => string | number;
 }
 type PathLikeFs = string | Buffer | URL;

@@ -17,9 +17,10 @@ import * as styles15 from "./local-Ident-name.module.css?local-ident-name-5";
 import * as styles16 from "./local-Ident-name.module.css?local-ident-name-6";
 import * as styles17 from "./local-Ident-name.module.css?local-ident-name-7";
 import * as styles18 from "./local-Ident-name.module.css?local-ident-name-8";
-import * as styles19 from "./order.module.css";
-import * as styles20 from "./dedup.module.css";
-import * as styles21 from "./composes-from-less.module.css";
+import * as styles19 from "./local-Ident-name.module.css?local-ident-name-9";
+import * as styles20 from "./order.module.css";
+import * as styles21 from "./dedup.module.css";
+import * as styles22 from "./composes-from-less.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -52,5 +53,6 @@ it("should work", () => {
 	expect(styles19).toMatchSnapshot();
 	expect(styles20).toMatchSnapshot();
 	expect(styles21).toMatchSnapshot();
+	expect(styles22).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

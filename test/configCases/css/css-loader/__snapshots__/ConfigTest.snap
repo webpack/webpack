@@ -596,25 +596,78 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should work 20`] = `
 Object {
+  "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
+  "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
+  "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
+  "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
+  "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
+  "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
+  ".": "prefix-./local-Ident-name.module.css?local-ident-name-9---.---XxpCFm-postfix",
+  "123": "prefix-./local-Ident-name.module.css?local-ident-name-9---123---29k572-postfix",
+  "1a2b3c": "prefix-./local-Ident-name.module.css?local-ident-name-9---1a2b3c---8RwOZv-postfix",
+  ":)": "prefix-./local-Ident-name.module.css?local-ident-name-9---:)---tpNOM_-postfix",
+  ":\`(": "prefix-./local-Ident-name.module.css?local-ident-name-9---:\`(---w0y-3T-postfix",
+  ":hover": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover---p-SVOd-postfix",
+  ":hover:focus:active": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover:focus:active---7ppzcn-postfix",
+  "<><<<>><>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<><<<>><>---DV-Ytr-postfix",
+  "<p>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<p>---T4r2DZ-postfix",
+  "?": "prefix-./local-Ident-name.module.css?local-ident-name-9---?---8rRplk-postfix",
+  "@": "prefix-./local-Ident-name.module.css?local-ident-name-9---@---LKRCz--postfix",
+  "B&W?": "prefix-./local-Ident-name.module.css?local-ident-name-9---B&W?---pAfmJZ-postfix",
+  "[attr=value]": "prefix-./local-Ident-name.module.css?local-ident-name-9---[attr=value]---uMrr4n-postfix",
+  "_": "prefix-./local-Ident-name.module.css?local-ident-name-9---_---UdFsE6-postfix",
+  "_test": "prefix-./local-Ident-name.module.css?local-ident-name-9---_test---RdGpUF-postfix",
+  "className": "prefix-./local-Ident-name.module.css?local-ident-name-9---className---Rbuqv6-postfix",
+  "f!o!o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f!o!o---XqT8S3-postfix",
+  "f'o'o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f'o'o---BxXL6g-postfix",
+  "f*o*o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f*o*o---fF4DcX-postfix",
+  "f+o+o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f+o+o---F93mpm-postfix",
+  "f/o/o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f/o/o---kXNiKY-postfix",
+  "f\\\\o\\\\o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f\\\\o\\\\o---fLLGuT-postfix",
+  "foo.bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo.bar---d2rdEE-postfix",
+  "foo/bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar---uZ8i8d-postfix",
+  "foo/bar/baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar/baz---zWw2aH-postfix",
+  "foo\\\\bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar---pozdkJ-postfix",
+  "foo\\\\bar\\\\baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar\\\\baz---C9LnZz-postfix",
+  "f~o~o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f~o~o---SPRjm3-postfix",
+  "m_x_@": "prefix-./local-Ident-name.module.css?local-ident-name-9---m_x_@---0FTqJc-postfix",
+  "someId": "prefix-./local-Ident-name.module.css?local-ident-name-9---someId---rz34Z--postfix",
+  "subClass": "prefix-./local-Ident-name.module.css?local-ident-name-9---subClass---KZbh3P-postfix",
+  "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
+  "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
+  "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
+  "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
+  "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
+  "♥": "prefix-./local-Ident-name.module.css?local-ident-name-9---♥---J7fhlX-postfix",
+  "𝄞♪♩♫♬": "prefix-./local-Ident-name.module.css?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix",
+  "💩": "prefix-./local-Ident-name.module.css?local-ident-name-9---💩---Y7HlBo-postfix",
+  "😍": "prefix-./local-Ident-name.module.css?local-ident-name-9---😍---JD7n4W-postfix",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 21`] = `
+Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 21`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 23`] = `
 Object {
   "bar": "composes-from-less_module_css-bar foo_less-foo",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 23`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 24`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
@@ -2122,6 +2175,124 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 }
 
 .local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--aiT34M {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-9 ***!
+  \\\\************************************************************/
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---test---PboabM-postfix {
+  background: red;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---_test---RdGpUF-postfix {
+  background: blue;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---className---Rbuqv6-postfix {
+  background: red;
+}
+
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---someId---rz34Z--postfix {
+  background: green;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---className---Rbuqv6-postfix .prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---subClass---KZbh3P-postfix {
+  color: green;
+}
+
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---someId---rz34Z--postfix .prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---subClass---KZbh3P-postfix {
+  color: blue;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9----a0-34a___f---VQNZfx-postfix {
+  color: red;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---m_x_\\\\@---0FTqJc-postfix {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---B\\\\&W\\\\?---pAfmJZ-postfix {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\\`\\\\(---w0y-3T-postfix {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---1a2b3c---8RwOZv-postfix {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id---0ySTTy-postfix {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9----a-b-c----hDXrIM-postfix {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©---l15bLc-postfix {
+  color: black;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---♥---J7fhlX-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©---l15bLc-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---😍---JD7n4W-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---“‘’”---Jk8q45-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---☺☃---PSP-1Q-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---⌘⌥---WgMb99-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---💩---Y7HlBo-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\?---8rRplk-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\@---LKRCz--postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\.---XxpCFm-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\)---tpNOM_-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\\`\\\\(---w0y-3T-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---123---29k572-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---1a2b3c---8RwOZv-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\<p\\\\>---T4r2DZ-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>---DV-Ytr-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.---I2RCq8-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#---qicdNs-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#\\\\#---7LLFg7-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#\\\\.\\\\#\\\\.\\\\#---tkYIvY-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---_---UdFsE6-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\{\\\\}---cEk0mR-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id---0ySTTy-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\.bar---d2rdEE-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:hover---p-SVOd-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:hover\\\\:focus\\\\:active---7ppzcn-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\[attr\\\\=value\\\\]---uMrr4n-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\/o\\\\/o---kXNiKY-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\\\\\o\\\\\\\\o---fLLGuT-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\*o\\\\*o---fF4DcX-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\!o\\\\!o---XqT8S3-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\'o\\\\'o---BxXL6g-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\~o\\\\~o---SPRjm3-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\+o\\\\+o---F93mpm-postfix { background: lime; }
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\/bar---uZ8i8d-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\\\\\bar---pozdkJ-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\/bar\\\\/baz---zWw2aH-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\\\\\bar\\\\\\\\baz---C9LnZz-postfix {
   background: hotpink;
 }
 

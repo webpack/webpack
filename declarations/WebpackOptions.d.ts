@@ -785,7 +785,9 @@ export type CssGeneratorExportsOnly = boolean;
 /**
  * Configure the generated local ident name.
  */
-export type CssGeneratorLocalIdentName = string;
+export type CssGeneratorLocalIdentName =
+	| string
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * Configure how CSS content is exported as default.
  */
