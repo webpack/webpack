@@ -2,12 +2,51 @@
 
 exports[`ConfigTestCases css css-loader exported tests should work 1`] = `
 Object {
+  "@bounce": "basic_module_css-@bounce",
+  "a": "basic_module_css-a",
+  "abc": "basic_module_css-abc",
+  "b": "basic_module_css-b",
+  "bar-1": "basic_module_css-bar-1",
+  "bounce": "basic_module_css-bounce",
+  "bounce2": "basic_module_css-bounce2",
+  "bounce3": "basic_module_css-bounce3",
+  "bounce4": "basic_module_css-bounce4",
+  "c": "basic_module_css-c",
+  "c1": "basic_module_css-c1",
+  "c2": "basic_module_css-c2 basic_module_css-c1",
+  "c3": "basic_module_css-c3",
+  "c4": "basic_module_css-c4",
+  "c5": "basic_module_css-c5",
+  "c6": "basic_module_css-c6",
+  "c7": "basic_module_css-c7",
+  "c8": "basic_module_css-c8",
+  "class-1": "basic_module_css-class-1",
+  "class-10": "basic_module_css-class-10",
+  "className": "basic_module_css-className",
+  "container": "basic_module_css-container",
+  "d": "basic_module_css-d",
+  "def": "basic_module_css-def basic_module_css-abc",
+  "fade-in": "basic_module_css-fade-in",
+  "ghi": "basic_module_css-ghi",
+  "id": "basic_module_css-id",
+  "jkl": "basic_module_css-jkl",
+  "q": "basic_module_css-q",
+  "slide-right": "basic_module_css-slide-right",
+  "someId": "basic_module_css-someId",
+  "subClass": "basic_module_css-subClass",
+  "x": "basic_module_css-x",
+  "y": "basic_module_css-y",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 2`] = `
+Object {
   "default": "classes_module_css-default",
   "module": "classes_module_css-module",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 2`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 3`] = `
 Object {
   "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
   "class-1": "composes-multiple_module_css-class-1",
@@ -17,13 +56,13 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 3`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 4`] = `
 Object {
   "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 4`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 5`] = `
 Object {
   "class-a": "scope-at-rule_module_css-class-a",
   "class-b": "scope-at-rule_module_css-class-b",
@@ -32,7 +71,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 5`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 6`] = `
 Object {
   "a": "nesting_module_css-a",
   "b": "nesting_module_css-b nesting_module_css-a",
@@ -49,14 +88,14 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 6`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 7`] = `
 Object {
   "one": "prefer-relative_module_css-one package_one_css-imported-relative",
   "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 7`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 8`] = `
 Object {
   "a": "animation-name_module_css-a",
   "animationName": "animation-name_module_css-animationName",
@@ -65,20 +104,20 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 8`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 9`] = `
 Object {
   "myClass": "at-sign-in-package-name_module_css-myClass",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 9`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 10`] = `
 Object {
   "color-grey": "gray",
   "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 10`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 11`] = `
 Object {
   "#": "local-Ident-name_module_css-#",
   "##": "local-Ident-name_module_css-##",
@@ -131,7 +170,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 11`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 12`] = `
 Object {
   "#": "local-Ident-name.module--#--0fms6",
   "##": "local-Ident-name.module--##--4MjQ_",
@@ -184,7 +223,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 12`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 13`] = `
 Object {
   "#": "_-1#",
   "##": "_-1##",
@@ -237,7 +276,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 13`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 14`] = `
 Object {
   "#": "_--#",
   "##": "_--##",
@@ -290,7 +329,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 14`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 15`] = `
 Object {
   "#": "__#",
   "##": "__##",
@@ -343,7 +382,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 15`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
 Object {
   "#": "#--tlFV0b",
   "##": "##--7vA-7E",
@@ -396,7 +435,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 16`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
 Object {
   "#": "😀- -#",
   "##": "😀- -##",
@@ -449,29 +488,178 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 17`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
 Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 18`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 19`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 19`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 20`] = `
 Object {
   "bar": "composes-from-less_module_css-bar foo_less-foo",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 20`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 21`] = `
 Array [
-  "/*!********************************!*\\\\
+  "/*!******************************!*\\\\
+  !*** css ./basic.module.css ***!
+  \\\\******************************/
+.basic_module_css-class-1, .basic_module_css-class-10 .basic_module_css-bar-1 {
+	color: green;
+}
+
+
+@keyframes basic_module_css-slide-right {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+a {
+	animation: basic_module_css-slide-right 300ms forwards ease-out, basic_module_css-fade-in 300ms forwards ease-out;
+}
+
+.basic_module_css-c1/*.c2*/.basic_module_css-c3 { background: red; }
+
+.basic_module_css-c1 { a: 1; }
+.basic_module_css-c2 { b: 1; }
+
+.basic_module_css-a {
+	color: green;
+}
+
+@keyframes basic_module_css-bounce {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes basic_module_css-bounce2 {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+.basic_module_css-bounce {
+	animation-name: basic_module_css-bounce;
+	animation: basic_module_css-bounce2 1s ease;
+}
+
+.basic_module_css-bounce2 {
+	color: green;
+	animation: basic_module_css-bounce 1s ease;
+	animation-name: basic_module_css-bounce2;
+}
+
+.basic_module_css-bounce3 {
+	animation: basic_module_css-bounce 1s ease, basic_module_css-bounce2
+}
+
+.basic_module_css-bounce4 {
+	animation: basic_module_css-bounce 1s ease, basic_module_css-bounce2;
+}
+
+.basic_module_css-b {
+	color: green;
+}
+
+@-webkit-keyframes basic_module_css-\\\\@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+@keyframes basic_module_css-\\\\@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+.basic_module_css-container {
+	-webkit-animation: basic_module_css-\\\\@bounce 1s infinite;
+	animation: basic_module_css-\\\\@bounce 1s infinite;
+}
+
+.basic_module_css-abc .basic_module_css-def {
+	color: red;
+}
+
+.basic_module_css-ghi .basic_module_css-jkl {
+	color: blue;
+}
+
+.basic_module_css-className { background: red; }
+#basic_module_css-someId { background: green; }
+.basic_module_css-className .basic_module_css-subClass { color: green; }
+#basic_module_css-someId .basic_module_css-subClass { color: blue; }
+
+.basic_module_css-abc {
+	color: red;
+}
+.basic_module_css-def {
+	background: green;
+}
+
+.basic_module_css-c1[data-attr=\\".c2)]'\\"]:not(.basic_module_css-c3):not(.basic_module_css-c4) {
+	background: red;
+}
+
+.basic_module_css-c1 .basic_module_css-c2 .basic_module_css-c3 .c4 .basic_module_css-c5, .basic_module_css-c6 .basic_module_css-c7 { background: red; }
+.basic_module_css-c8 { background: red; }
+
+.basic_module_css-a .basic_module_css-b, .basic_module_css-c .basic_module_css-d, #basic_module_css-id {
+	color: green;
+	font-size: 1.5pt;
+}
+a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
+	color: green;
+	font-size: 1.5pt;
+}
+@keyframes basic_module_css-q {
+	2.5% {color: green;}
+}
+
+/*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
 /* Tests from css-loader */

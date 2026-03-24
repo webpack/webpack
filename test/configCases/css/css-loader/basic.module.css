@@ -1,0 +1,146 @@
+.class-1, .class-10 .bar-1 {
+	color: green;
+}
+
+
+@keyframes slide-right {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+a {
+	animation: slide-right 300ms forwards ease-out, fade-in 300ms forwards ease-out;
+}
+
+:local(.c1/*.c2*/.c3) { background: red; }
+
+:local(.c1) { a: 1; }
+:local(.c2) { composes: c1; b: 1; }
+
+.a {
+	color: green;
+}
+
+@keyframes bounce {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes bounce2 {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+.bounce {
+	animation-name: bounce;
+	animation: bounce2 1s ease;
+}
+
+.bounce2 {
+	color: green;
+	animation: bounce 1s ease;
+	animation-name: bounce2;
+}
+
+.bounce3 {
+	animation: bounce 1s ease, bounce2
+}
+
+.bounce4 {
+	animation: bounce 1s ease, bounce2;
+}
+
+.b {
+	color: green;
+}
+
+@-webkit-keyframes \@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+@keyframes \@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+.container {
+	-webkit-animation: \@bounce 1s infinite;
+	animation: \@bounce 1s infinite;
+}
+
+.abc :local(.def) {
+	color: red;
+}
+
+:local .ghi .jkl {
+	color: blue;
+}
+
+:local(.className) { background: red; }
+:local(#someId) { background: green; }
+:local(.className .subClass) { color: green; }
+:local(#someId .subClass) { color: blue; }
+
+:local(.abc) {
+	color: red;
+}
+:local(.def) {
+	composes: abc;
+	background: green;
+}
+
+:local(.c1[data-attr=".c2)]'"]:not(.c3):not(.c4)) {
+	background: red;
+}
+
+.c1 :local .c2 .c3 :global .c4 :local .c5, .c6 :local .c7 { background: red; }
+.c8 { background: red; }
+
+.a .b, .c .d, #id {
+	color: green;
+	font-size: 1.5pt;
+}
+a[href="#b.c"].x.y {
+	color: green;
+	font-size: 1.5pt;
+}
+@keyframes q {
+	2.5% {color: green;}
+}

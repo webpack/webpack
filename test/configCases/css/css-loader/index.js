@@ -1,3 +1,4 @@
+import * as basic from "./basic.module.css";
 import * as styles from "./classes.module.css";
 import * as styles1 from "./composes-multiple.module.css";
 import * as styles3 from "./composes-global.module.css";
@@ -27,6 +28,7 @@ it("should work", () => {
 		css.push(link.sheet.css);
 	}
 
+	expect(basic).toMatchSnapshot();
 	expect(styles).toMatchSnapshot();
 	expect(styles1).toMatchSnapshot();
 	expect(styles3).toMatchSnapshot();
