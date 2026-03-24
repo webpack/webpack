@@ -1,0 +1,44 @@
+:export {
+	_test: _test;
+	_test: _right_value;
+}
+
+:export {
+	_test_other: _test;
+}
+
+:export {
+	_test_other: _right_value;
+}
+
+:export {}
+
+:import("./classes.module.css") {}
+
+:export {
+	_the_same_name: _the_same_name
+}
+
+:export {
+	constructor: constructor;
+	toString: toString;
+}
+
+:import("./classes.module.css") {
+	IMPORTED_NAME: module;
+}
+
+.className {
+	color: IMPORTED_NAME;
+}
+
+:export {
+	reexport: IMPORTED_NAME
+}
+
+:export {
+	_test1: 1;
+	_test2: 'string';
+	_test3: 1px 2px 3px;
+	_test4: 1px 2px 3px, 1px 2px 3px;
+}

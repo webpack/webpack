@@ -3891,6 +3891,11 @@ declare interface CssModuleGeneratorOptions {
 	localIdentHashDigestLength?: number;
 
 	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	localIdentHashFunction?: string | typeof Hash;
+
+	/**
 	 * Any string which is added to the hash to salt it.
 	 */
 	localIdentHashSalt?: string;
@@ -3898,7 +3903,9 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure the generated local ident name.
 	 */
-	localIdentName?: string;
+	localIdentName?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 
 /**
@@ -14142,6 +14149,7 @@ declare interface PathData {
 	contentHashWithLength?: (length: number) => string;
 	noChunkHash?: boolean;
 	url?: string;
+	local?: string;
 	prepareId?: (id: string | number) => string | number;
 }
 type PathLikeFs = string | Buffer | URL;

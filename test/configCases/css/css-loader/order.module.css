@@ -1,0 +1,13 @@
+.simple {
+	display: block;
+	composes: order-1 from './order-1.css';
+	composes: order-2 from './order-2.css';
+	composes: order-1-1 from './order-1.css';
+	composes: order-2-2 from './order-2.css';
+}
+
+.simple-other {
+	display: inline;
+	composes: order-1 from './order-1.css';
+}
+

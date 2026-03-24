@@ -1,0 +1,8 @@
+@value foo from '~test';
+@value bar from 'test';
+
+.className {
+	color: foo;
+	background: bar;
+}
+

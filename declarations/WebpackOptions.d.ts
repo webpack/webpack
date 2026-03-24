@@ -785,7 +785,9 @@ export type CssGeneratorExportsOnly = boolean;
 /**
  * Configure the generated local ident name.
  */
-export type CssGeneratorLocalIdentName = string;
+export type CssGeneratorLocalIdentName =
+	| string
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * Configure how CSS content is exported as default.
  */
@@ -3061,6 +3063,10 @@ export interface CssModuleGeneratorOptions {
 	 * Number of chars which are used for the hash.
 	 */
 	localIdentHashDigestLength?: HashDigestLength;
+	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	localIdentHashFunction?: HashFunction;
 	/**
 	 * Any string which is added to the hash to salt it.
 	 */

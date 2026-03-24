@@ -1,0 +1,2463 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 1`] = `
+Object {
+  "@bounce": "basic_module_css-@bounce",
+  "a": "basic_module_css-a",
+  "abc": "basic_module_css-abc",
+  "b": "basic_module_css-b",
+  "bar-1": "basic_module_css-bar-1",
+  "bounce": "basic_module_css-bounce",
+  "bounce2": "basic_module_css-bounce2",
+  "bounce3": "basic_module_css-bounce3",
+  "bounce4": "basic_module_css-bounce4",
+  "c": "basic_module_css-c",
+  "c1": "basic_module_css-c1",
+  "c2": "basic_module_css-c2 basic_module_css-c1",
+  "c3": "basic_module_css-c3",
+  "c4": "basic_module_css-c4",
+  "c5": "basic_module_css-c5",
+  "c6": "basic_module_css-c6",
+  "c7": "basic_module_css-c7",
+  "c8": "basic_module_css-c8",
+  "class-1": "basic_module_css-class-1",
+  "class-10": "basic_module_css-class-10",
+  "className": "basic_module_css-className",
+  "container": "basic_module_css-container",
+  "d": "basic_module_css-d",
+  "def": "basic_module_css-def basic_module_css-abc",
+  "fade-in": "basic_module_css-fade-in",
+  "ghi": "basic_module_css-ghi",
+  "id": "basic_module_css-id",
+  "jkl": "basic_module_css-jkl",
+  "q": "basic_module_css-q",
+  "slide-right": "basic_module_css-slide-right",
+  "someId": "basic_module_css-someId",
+  "subClass": "basic_module_css-subClass",
+  "x": "basic_module_css-x",
+  "y": "basic_module_css-y",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 2`] = `
+Object {
+  "default": "classes_module_css_0c83-default",
+  "module": "classes_module_css_0c83-module",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 3`] = `
+Object {
+  "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
+  "class-1": "composes-multiple_module_css-class-1",
+  "class-2": "composes-multiple_module_css-class-2",
+  "class-other": "composes-multiple_module_css-class-other composes-multiple_module_css-other-class composes-multiple_module_css-class-1",
+  "other-class": "composes-multiple_module_css-other-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 4`] = `
+Object {
+  "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 5`] = `
+Object {
+  "class-a": "scope-at-rule_module_css-class-a",
+  "class-b": "scope-at-rule_module_css-class-b",
+  "dark-scheme": "scope-at-rule_module_css-dark-scheme",
+  "light-scheme": "scope-at-rule_module_css-light-scheme",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 6`] = `
+Object {
+  "a": "nesting_module_css-a",
+  "b": "nesting_module_css-b nesting_module_css-a",
+  "bar": "nesting_module_css-bar nesting_module_css-foo",
+  "baz": "nesting_module_css-baz",
+  "foo": "nesting_module_css-foo",
+  "n": "nesting_module_css-n nesting_module_css-a",
+  "notice": "nesting_module_css-notice",
+  "notice-heading": "nesting_module_css-notice-heading",
+  "success": "nesting_module_css-success",
+  "success-heading": "nesting_module_css-success-heading",
+  "warning": "nesting_module_css-warning",
+  "warning-heading": "nesting_module_css-warning-heading",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 7`] = `
+Object {
+  "one": "prefer-relative_module_css-one package_one_css-imported-relative",
+  "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 8`] = `
+Object {
+  "a": "animation-name_module_css-a",
+  "animationName": "animation-name_module_css-animationName",
+  "b": "animation-name_module_css-b",
+  "c": "animation-name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 9`] = `
+Object {
+  "myClass": "at-sign-in-package-name_module_css-myClass",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 10`] = `
+Object {
+  "color-grey": "gray",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 11`] = `
+Object {
+  "#": "local-Ident-name_module_css-#",
+  "##": "local-Ident-name_module_css-##",
+  "#.#.#": "local-Ident-name_module_css-#.#.#",
+  "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
+  "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
+  ".": "local-Ident-name_module_css-.",
+  "123": "local-Ident-name_module_css-123",
+  "1a2b3c": "local-Ident-name_module_css-1a2b3c",
+  ":)": "local-Ident-name_module_css-:)",
+  ":\`(": "local-Ident-name_module_css-:\`(",
+  ":hover": "local-Ident-name_module_css-:hover",
+  ":hover:focus:active": "local-Ident-name_module_css-:hover:focus:active",
+  "<><<<>><>": "local-Ident-name_module_css-<><<<>><>",
+  "<p>": "local-Ident-name_module_css-<p>",
+  "?": "local-Ident-name_module_css-?",
+  "@": "local-Ident-name_module_css-@",
+  "B&W?": "local-Ident-name_module_css-B&W?",
+  "[attr=value]": "local-Ident-name_module_css-[attr=value]",
+  "_": "local-Ident-name_module_css-_",
+  "_test": "local-Ident-name_module_css-_test",
+  "className": "local-Ident-name_module_css-className",
+  "f!o!o": "local-Ident-name_module_css-f!o!o",
+  "f'o'o": "local-Ident-name_module_css-f'o'o",
+  "f*o*o": "local-Ident-name_module_css-f*o*o",
+  "f+o+o": "local-Ident-name_module_css-f+o+o",
+  "f/o/o": "local-Ident-name_module_css-f/o/o",
+  "f\\\\o\\\\o": "local-Ident-name_module_css-f\\\\o\\\\o",
+  "foo.bar": "local-Ident-name_module_css-foo.bar",
+  "foo/bar": "local-Ident-name_module_css-foo/bar",
+  "foo/bar/baz": "local-Ident-name_module_css-foo/bar/baz",
+  "foo\\\\bar": "local-Ident-name_module_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "local-Ident-name_module_css-foo\\\\bar\\\\baz",
+  "f~o~o": "local-Ident-name_module_css-f~o~o",
+  "m_x_@": "local-Ident-name_module_css-m_x_@",
+  "someId": "local-Ident-name_module_css-someId",
+  "subClass": "local-Ident-name_module_css-subClass",
+  "test": "local-Ident-name_module_css-test",
+  "{}": "local-Ident-name_module_css-{}",
+  "©": "local-Ident-name_module_css-©",
+  "“‘’”": "local-Ident-name_module_css-“‘’”",
+  "⌘⌥": "local-Ident-name_module_css-⌘⌥",
+  "☺☃": "local-Ident-name_module_css-☺☃",
+  "♥": "local-Ident-name_module_css-♥",
+  "𝄞♪♩♫♬": "local-Ident-name_module_css-𝄞♪♩♫♬",
+  "💩": "local-Ident-name_module_css-💩",
+  "😍": "local-Ident-name_module_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 12`] = `
+Object {
+  "#": "local-Ident-name.module--#--0fms6",
+  "##": "local-Ident-name.module--##--4MjQ_",
+  "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
+  "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
+  ".": "local-Ident-name.module--.--Bix0N",
+  "123": "local-Ident-name.module--123--PvTN4",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--xSd9R",
+  ":)": "local-Ident-name.module--:)--kXjo5",
+  ":\`(": "local-Ident-name.module--:\`(--YZqyU",
+  ":hover": "local-Ident-name.module--:hover--QXnD_",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0eQHC",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--q0Tti",
+  "<p>": "local-Ident-name.module--<p>--RCYv0",
+  "?": "local-Ident-name.module--?--tcA6P",
+  "@": "local-Ident-name.module--@--IjjsD",
+  "B&W?": "local-Ident-name.module--B&W?--9Uv5j",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--bHMhi",
+  "_": "local-Ident-name.module--_--wWsEV",
+  "_test": "local-Ident-name.module--_test--c_lQ7",
+  "className": "local-Ident-name.module--className--QdX5M",
+  "f!o!o": "local-Ident-name.module--f!o!o--U5evv",
+  "f'o'o": "local-Ident-name.module--f'o'o--5azUC",
+  "f*o*o": "local-Ident-name.module--f*o*o--1OZxX",
+  "f+o+o": "local-Ident-name.module--f+o+o--r42Md",
+  "f/o/o": "local-Ident-name.module--f/o/o--gpPiW",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gu2u7",
+  "foo.bar": "local-Ident-name.module--foo.bar--EDSRu",
+  "foo/bar": "local-Ident-name.module--foo/bar--ARBA4",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p2TDV",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--vSOik",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--FlFA-",
+  "f~o~o": "local-Ident-name.module--f~o~o--6JU27",
+  "m_x_@": "local-Ident-name.module--m_x_@--wXBtR",
+  "someId": "local-Ident-name.module--someId--fs0tG",
+  "subClass": "local-Ident-name.module--subClass--EEiow",
+  "test": "local-Ident-name.module--test--n138O",
+  "{}": "local-Ident-name.module--{}--yOiSk",
+  "©": "local-Ident-name.module--©--ABrkO",
+  "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
+  "☺☃": "local-Ident-name.module--☺☃--_YUxr",
+  "♥": "local-Ident-name.module--♥--zQEWH",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--16ySy",
+  "💩": "local-Ident-name.module--💩--fhsK2",
+  "😍": "local-Ident-name.module--😍--rYTiW",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 13`] = `
+Object {
+  "#": "_-1#",
+  "##": "_-1##",
+  "#.#.#": "_-1#.#.#",
+  "#fake-id": "_-1#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_-1-a-b-c-",
+  "-a0-34a___f": "_-1-a0-34a___f",
+  ".": "_-1.",
+  "123": "_-1123",
+  "1a2b3c": "_-11a2b3c",
+  ":)": "_-1:)",
+  ":\`(": "_-1:\`(",
+  ":hover": "_-1:hover",
+  ":hover:focus:active": "_-1:hover:focus:active",
+  "<><<<>><>": "_-1<><<<>><>",
+  "<p>": "_-1<p>",
+  "?": "_-1?",
+  "@": "_-1@",
+  "B&W?": "_-1B&W?",
+  "[attr=value]": "_-1[attr=value]",
+  "_": "_-1_",
+  "_test": "_-1_test",
+  "className": "_-1className",
+  "f!o!o": "_-1f!o!o",
+  "f'o'o": "_-1f'o'o",
+  "f*o*o": "_-1f*o*o",
+  "f+o+o": "_-1f+o+o",
+  "f/o/o": "_-1f/o/o",
+  "f\\\\o\\\\o": "_-1f\\\\o\\\\o",
+  "foo.bar": "_-1foo.bar",
+  "foo/bar": "_-1foo/bar",
+  "foo/bar/baz": "_-1foo/bar/baz",
+  "foo\\\\bar": "_-1foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_-1foo\\\\bar\\\\baz",
+  "f~o~o": "_-1f~o~o",
+  "m_x_@": "_-1m_x_@",
+  "someId": "_-1someId",
+  "subClass": "_-1subClass",
+  "test": "_-1test",
+  "{}": "_-1{}",
+  "©": "_-1©",
+  "“‘’”": "_-1“‘’”",
+  "⌘⌥": "_-1⌘⌥",
+  "☺☃": "_-1☺☃",
+  "♥": "_-1♥",
+  "𝄞♪♩♫♬": "_-1𝄞♪♩♫♬",
+  "💩": "_-1💩",
+  "😍": "_-1😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 14`] = `
+Object {
+  "#": "_--#",
+  "##": "_--##",
+  "#.#.#": "_--#.#.#",
+  "#fake-id": "_--#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_---a-b-c-",
+  "-a0-34a___f": "_---a0-34a___f",
+  ".": "_--.",
+  "123": "_--123",
+  "1a2b3c": "_--1a2b3c",
+  ":)": "_--:)",
+  ":\`(": "_--:\`(",
+  ":hover": "_--:hover",
+  ":hover:focus:active": "_--:hover:focus:active",
+  "<><<<>><>": "_--<><<<>><>",
+  "<p>": "_--<p>",
+  "?": "_--?",
+  "@": "_--@",
+  "B&W?": "_--B&W?",
+  "[attr=value]": "_--[attr=value]",
+  "_": "_--_",
+  "_test": "_--_test",
+  "className": "_--className",
+  "f!o!o": "_--f!o!o",
+  "f'o'o": "_--f'o'o",
+  "f*o*o": "_--f*o*o",
+  "f+o+o": "_--f+o+o",
+  "f/o/o": "_--f/o/o",
+  "f\\\\o\\\\o": "_--f\\\\o\\\\o",
+  "foo.bar": "_--foo.bar",
+  "foo/bar": "_--foo/bar",
+  "foo/bar/baz": "_--foo/bar/baz",
+  "foo\\\\bar": "_--foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_--foo\\\\bar\\\\baz",
+  "f~o~o": "_--f~o~o",
+  "m_x_@": "_--m_x_@",
+  "someId": "_--someId",
+  "subClass": "_--subClass",
+  "test": "_--test",
+  "{}": "_--{}",
+  "©": "_--©",
+  "“‘’”": "_--“‘’”",
+  "⌘⌥": "_--⌘⌥",
+  "☺☃": "_--☺☃",
+  "♥": "_--♥",
+  "𝄞♪♩♫♬": "_--𝄞♪♩♫♬",
+  "💩": "_--💩",
+  "😍": "_--😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 15`] = `
+Object {
+  "#": "__#",
+  "##": "__##",
+  "#.#.#": "__#.#.#",
+  "#fake-id": "__#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "__-a-b-c-",
+  "-a0-34a___f": "__-a0-34a___f",
+  ".": "__.",
+  "123": "__123",
+  "1a2b3c": "__1a2b3c",
+  ":)": "__:)",
+  ":\`(": "__:\`(",
+  ":hover": "__:hover",
+  ":hover:focus:active": "__:hover:focus:active",
+  "<><<<>><>": "__<><<<>><>",
+  "<p>": "__<p>",
+  "?": "__?",
+  "@": "__@",
+  "B&W?": "__B&W?",
+  "[attr=value]": "__[attr=value]",
+  "_": "___",
+  "_test": "___test",
+  "className": "__className",
+  "f!o!o": "__f!o!o",
+  "f'o'o": "__f'o'o",
+  "f*o*o": "__f*o*o",
+  "f+o+o": "__f+o+o",
+  "f/o/o": "__f/o/o",
+  "f\\\\o\\\\o": "__f\\\\o\\\\o",
+  "foo.bar": "__foo.bar",
+  "foo/bar": "__foo/bar",
+  "foo/bar/baz": "__foo/bar/baz",
+  "foo\\\\bar": "__foo\\\\bar",
+  "foo\\\\bar\\\\baz": "__foo\\\\bar\\\\baz",
+  "f~o~o": "__f~o~o",
+  "m_x_@": "__m_x_@",
+  "someId": "__someId",
+  "subClass": "__subClass",
+  "test": "__test",
+  "{}": "__{}",
+  "©": "__©",
+  "“‘’”": "__“‘’”",
+  "⌘⌥": "__⌘⌥",
+  "☺☃": "__☺☃",
+  "♥": "__♥",
+  "𝄞♪♩♫♬": "__𝄞♪♩♫♬",
+  "💩": "__💩",
+  "😍": "__😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 16`] = `
+Object {
+  "#": "#--tlFV0b",
+  "##": "##--7vA-7E",
+  "#.#.#": "#.#.#--1Hd875",
+  "#fake-id": "#fake-id--ez7Dik",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
+  "-a-b-c-": "-a-b-c---jfQ3Qn",
+  "-a0-34a___f": "-a0-34a___f--OWXZy-",
+  ".": ".--ZtQPX0",
+  "123": "_123--j0sSmE",
+  "1a2b3c": "_1a2b3c--AMCMZb",
+  ":)": ":)--u1ngqY",
+  ":\`(": ":\`(--hgmvDX",
+  ":hover": ":hover--8XNA4p",
+  ":hover:focus:active": ":hover:focus:active--EpwJWE",
+  "<><<<>><>": "<><<<>><>--8jXRVC",
+  "<p>": "<p>--MHaC0-",
+  "?": "?--9Y6SkK",
+  "@": "@--Sc9iGx",
+  "B&W?": "B&W?--D7HZ-H",
+  "[attr=value]": "[attr=value]--ZTV_uO",
+  "_": "_--NFJ6vs",
+  "_test": "_test--Kfd_4M",
+  "className": "className--b9RUK8",
+  "f!o!o": "f!o!o--QQGZu2",
+  "f'o'o": "f'o'o--00bSFC",
+  "f*o*o": "f*o*o--kom_Jq",
+  "f+o+o": "f+o+o--J4WAkM",
+  "f/o/o": "f/o/o--3vNZZM",
+  "f\\\\o\\\\o": "f\\\\o\\\\o--wNzTj3",
+  "foo.bar": "foo.bar--pYS5El",
+  "foo/bar": "foo/bar--9GWp9d",
+  "foo/bar/baz": "foo/bar/baz--MRJglc",
+  "foo\\\\bar": "foo\\\\bar--CCzsTj",
+  "foo\\\\bar\\\\baz": "foo\\\\bar\\\\baz--nRgTR7",
+  "f~o~o": "f~o~o--26zzb-",
+  "m_x_@": "m_x_@--kG1v1e",
+  "someId": "someId--TlAET9",
+  "subClass": "subClass--sglK-1",
+  "test": "test--mowWgR",
+  "{}": "{}--Tr49RL",
+  "©": "©--sWiP9l",
+  "“‘’”": "“‘’”--M3gyy-",
+  "⌘⌥": "⌘⌥--oDuNAW",
+  "☺☃": "☺☃--pbZo-2",
+  "♥": "♥--e6nEYm",
+  "𝄞♪♩♫♬": "𝄞♪♩♫♬--vrTCd6",
+  "💩": "💩--1Txu-k",
+  "😍": "😍--rPyRbM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 17`] = `
+Object {
+  "#": "😀- -#",
+  "##": "😀- -##",
+  "#.#.#": "😀- -#.#.#",
+  "#fake-id": "😀- -#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "😀- --a-b-c-",
+  "-a0-34a___f": "😀- --a0-34a___f",
+  ".": "😀- -.",
+  "123": "😀- -123",
+  "1a2b3c": "😀- -1a2b3c",
+  ":)": "😀- -:)",
+  ":\`(": "😀- -:\`(",
+  ":hover": "😀- -:hover",
+  ":hover:focus:active": "😀- -:hover:focus:active",
+  "<><<<>><>": "😀- -<><<<>><>",
+  "<p>": "😀- -<p>",
+  "?": "😀- -?",
+  "@": "😀- -@",
+  "B&W?": "😀- -B&W?",
+  "[attr=value]": "😀- -[attr=value]",
+  "_": "😀- -_",
+  "_test": "😀- -_test",
+  "className": "😀- -className",
+  "f!o!o": "😀- -f!o!o",
+  "f'o'o": "😀- -f'o'o",
+  "f*o*o": "😀- -f*o*o",
+  "f+o+o": "😀- -f+o+o",
+  "f/o/o": "😀- -f/o/o",
+  "f\\\\o\\\\o": "😀- -f\\\\o\\\\o",
+  "foo.bar": "😀- -foo.bar",
+  "foo/bar": "😀- -foo/bar",
+  "foo/bar/baz": "😀- -foo/bar/baz",
+  "foo\\\\bar": "😀- -foo\\\\bar",
+  "foo\\\\bar\\\\baz": "😀- -foo\\\\bar\\\\baz",
+  "f~o~o": "😀- -f~o~o",
+  "m_x_@": "😀- -m_x_@",
+  "someId": "😀- -someId",
+  "subClass": "😀- -subClass",
+  "test": "😀- -test",
+  "{}": "😀- -{}",
+  "©": "😀- -©",
+  "“‘’”": "😀- -“‘’”",
+  "⌘⌥": "😀- -⌘⌥",
+  "☺☃": "😀- -☺☃",
+  "♥": "😀- -♥",
+  "𝄞♪♩♫♬": "😀- -𝄞♪♩♫♬",
+  "💩": "😀- -💩",
+  "😍": "😀- -😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 18`] = `
+Object {
+  "#": "local-Ident-name.module--#--CUiuWNpacN",
+  "##": "local-Ident-name.module--##--CU4LyzXr4m",
+  "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
+  "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
+  ".": "local-Ident-name.module--.--TYgwrPPlce",
+  "123": "local-Ident-name.module--123--dRCMetfS4k",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--27Ol2f1A5B",
+  ":)": "local-Ident-name.module--:)--8IGwE2kP5T",
+  ":\`(": "local-Ident-name.module--:\`(--XFoJZOBwb2",
+  ":hover": "local-Ident-name.module--:hover--gj5dKEVBLV",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--MF6oOllQUU",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--efv0wrKauZ",
+  "<p>": "local-Ident-name.module--<p>--VleHaJt0jW",
+  "?": "local-Ident-name.module--?--iQGuBSRyn5",
+  "@": "local-Ident-name.module--@--rXUc81UfOs",
+  "B&W?": "local-Ident-name.module--B&W?--2nDwDstWPk",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--pVXs1yvO-c",
+  "_": "local-Ident-name.module--_--O587A_Y16h",
+  "_test": "local-Ident-name.module--_test--jkChnYaYBV",
+  "className": "local-Ident-name.module--className--HP09CfTnX1",
+  "f!o!o": "local-Ident-name.module--f!o!o--piVwcUXcCA",
+  "f'o'o": "local-Ident-name.module--f'o'o--_4GqKKgPVD",
+  "f*o*o": "local-Ident-name.module--f*o*o--i7809YiNmT",
+  "f+o+o": "local-Ident-name.module--f+o+o--22BN9FvSaj",
+  "f/o/o": "local-Ident-name.module--f/o/o--IfM4TmY7KJ",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--smRz6NSna2",
+  "foo.bar": "local-Ident-name.module--foo.bar--ekmt08iOcx",
+  "foo/bar": "local-Ident-name.module--foo/bar--pmM_pDdiuz",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--OHGMWfcvMx",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--37QAOKIbi2",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--zz8kivuxZ6",
+  "f~o~o": "local-Ident-name.module--f~o~o--zcYow3hnn9",
+  "m_x_@": "local-Ident-name.module--m_x_@--hTokNmWv2C",
+  "someId": "local-Ident-name.module--someId--MLaknB8z97",
+  "subClass": "local-Ident-name.module--subClass--4o6O5CPJI6",
+  "test": "local-Ident-name.module--test--6y2MZL2dRW",
+  "{}": "local-Ident-name.module--{}--KmrFboxFIk",
+  "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
+  "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
+  "♥": "local-Ident-name.module--♥--44uxusx5VU",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--BSgrxZWBoa",
+  "💩": "local-Ident-name.module--💩--IYSuXUnVFH",
+  "😍": "local-Ident-name.module--😍--ZFvdqtu3qG",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 19`] = `
+Object {
+  "#": "local-Ident-name.module--#--H4xWOk",
+  "##": "local-Ident-name.module--##--qmWu4j",
+  "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
+  "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
+  ".": "local-Ident-name.module--.--v7SGE3",
+  "123": "local-Ident-name.module--123--FPfb_a",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--Prq2-n",
+  ":)": "local-Ident-name.module--:)--stxQmr",
+  ":\`(": "local-Ident-name.module--:\`(--PKfNRg",
+  ":hover": "local-Ident-name.module--:hover--7J6Ovy",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--N6KkcF",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--bH0ZRJ",
+  "<p>": "local-Ident-name.module--<p>--Lzbt_f",
+  "?": "local-Ident-name.module--?--cFxilG",
+  "@": "local-Ident-name.module--@--RJiOrO",
+  "B&W?": "local-Ident-name.module--B&W?--Cx7Xfj",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--_X7r6s",
+  "_": "local-Ident-name.module--_--jZA8cH",
+  "_test": "local-Ident-name.module--_test--IFXC8J",
+  "className": "local-Ident-name.module--className--Gf2qKu",
+  "f!o!o": "local-Ident-name.module--f!o!o--IQSVKY",
+  "f'o'o": "local-Ident-name.module--f'o'o--Jke6Ar",
+  "f*o*o": "local-Ident-name.module--f*o*o--US0RYV",
+  "f+o+o": "local-Ident-name.module--f+o+o--JZ_ZYM",
+  "f/o/o": "local-Ident-name.module--f/o/o--TnGHtD",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--zZG-0O",
+  "foo.bar": "local-Ident-name.module--foo.bar--_-hir3",
+  "foo/bar": "local-Ident-name.module--foo/bar--LMZK6C",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--44CiTQ",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--qVBL0b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--aiT34M",
+  "f~o~o": "local-Ident-name.module--f~o~o--wi3S5B",
+  "m_x_@": "local-Ident-name.module--m_x_@--j3M2wy",
+  "someId": "local-Ident-name.module--someId--hSsSyu",
+  "subClass": "local-Ident-name.module--subClass--rJLSP7",
+  "test": "local-Ident-name.module--test--_SesvC",
+  "{}": "local-Ident-name.module--{}--rC8he6",
+  "©": "local-Ident-name.module--©--if7zkU",
+  "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
+  "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
+  "♥": "local-Ident-name.module--♥--Wquu8v",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--qoKZGt",
+  "💩": "local-Ident-name.module--💩--Wmv5n7",
+  "😍": "local-Ident-name.module--😍--vXWvMf",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 20`] = `
+Object {
+  "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
+  "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
+  "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
+  "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
+  "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
+  "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
+  ".": "prefix-./local-Ident-name.module.css?local-ident-name-9---.---XxpCFm-postfix",
+  "123": "prefix-./local-Ident-name.module.css?local-ident-name-9---123---29k572-postfix",
+  "1a2b3c": "prefix-./local-Ident-name.module.css?local-ident-name-9---1a2b3c---8RwOZv-postfix",
+  ":)": "prefix-./local-Ident-name.module.css?local-ident-name-9---:)---tpNOM_-postfix",
+  ":\`(": "prefix-./local-Ident-name.module.css?local-ident-name-9---:\`(---w0y-3T-postfix",
+  ":hover": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover---p-SVOd-postfix",
+  ":hover:focus:active": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover:focus:active---7ppzcn-postfix",
+  "<><<<>><>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<><<<>><>---DV-Ytr-postfix",
+  "<p>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<p>---T4r2DZ-postfix",
+  "?": "prefix-./local-Ident-name.module.css?local-ident-name-9---?---8rRplk-postfix",
+  "@": "prefix-./local-Ident-name.module.css?local-ident-name-9---@---LKRCz--postfix",
+  "B&W?": "prefix-./local-Ident-name.module.css?local-ident-name-9---B&W?---pAfmJZ-postfix",
+  "[attr=value]": "prefix-./local-Ident-name.module.css?local-ident-name-9---[attr=value]---uMrr4n-postfix",
+  "_": "prefix-./local-Ident-name.module.css?local-ident-name-9---_---UdFsE6-postfix",
+  "_test": "prefix-./local-Ident-name.module.css?local-ident-name-9---_test---RdGpUF-postfix",
+  "className": "prefix-./local-Ident-name.module.css?local-ident-name-9---className---Rbuqv6-postfix",
+  "f!o!o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f!o!o---XqT8S3-postfix",
+  "f'o'o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f'o'o---BxXL6g-postfix",
+  "f*o*o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f*o*o---fF4DcX-postfix",
+  "f+o+o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f+o+o---F93mpm-postfix",
+  "f/o/o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f/o/o---kXNiKY-postfix",
+  "f\\\\o\\\\o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f\\\\o\\\\o---fLLGuT-postfix",
+  "foo.bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo.bar---d2rdEE-postfix",
+  "foo/bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar---uZ8i8d-postfix",
+  "foo/bar/baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar/baz---zWw2aH-postfix",
+  "foo\\\\bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar---pozdkJ-postfix",
+  "foo\\\\bar\\\\baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar\\\\baz---C9LnZz-postfix",
+  "f~o~o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f~o~o---SPRjm3-postfix",
+  "m_x_@": "prefix-./local-Ident-name.module.css?local-ident-name-9---m_x_@---0FTqJc-postfix",
+  "someId": "prefix-./local-Ident-name.module.css?local-ident-name-9---someId---rz34Z--postfix",
+  "subClass": "prefix-./local-Ident-name.module.css?local-ident-name-9---subClass---KZbh3P-postfix",
+  "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
+  "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
+  "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
+  "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
+  "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
+  "♥": "prefix-./local-Ident-name.module.css?local-ident-name-9---♥---J7fhlX-postfix",
+  "𝄞♪♩♫♬": "prefix-./local-Ident-name.module.css?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix",
+  "💩": "prefix-./local-Ident-name.module.css?local-ident-name-9---💩---Y7HlBo-postfix",
+  "😍": "prefix-./local-Ident-name.module.css?local-ident-name-9---😍---JD7n4W-postfix",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 21`] = `
+Object {
+  "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
+  "simple-other": "order_module_css-simple-other order-1_css-order-1",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 22`] = `
+Object {
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 23`] = `
+Object {
+  "bar": "composes-from-less_module_css-bar foo_less-foo",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 24`] = `
+Object {
+  "bar": "#fff",
+  "className": "tilde_module_css-className",
+  "foo": "#000",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 25`] = `
+Object {
+  "_test": "_right_value",
+  "_test1": "1",
+  "_test2": "'string'",
+  "_test3": "1px 2px 3px",
+  "_test4": "1px 2px 3px, 1px 2px 3px",
+  "_test_other": "_right_value",
+  "_the_same_name": "_the_same_name",
+  "className": "icss_module_css-className",
+  "constructor": "constructor",
+  "reexport": "classes_module_css_884d-module",
+  "toString": "toString",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 26`] = `
+Array [
+  "/*!******************************!*\\\\
+  !*** css ./basic.module.css ***!
+  \\\\******************************/
+.basic_module_css-class-1, .basic_module_css-class-10 .basic_module_css-bar-1 {
+	color: green;
+}
+
+
+@keyframes basic_module_css-slide-right {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+a {
+	animation: basic_module_css-slide-right 300ms forwards ease-out, basic_module_css-fade-in 300ms forwards ease-out;
+}
+
+.basic_module_css-c1/*.c2*/.basic_module_css-c3 { background: red; }
+
+.basic_module_css-c1 { a: 1; }
+.basic_module_css-c2 { b: 1; }
+
+.basic_module_css-a {
+	color: green;
+}
+
+@keyframes basic_module_css-bounce {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes basic_module_css-bounce2 {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}
+
+.basic_module_css-bounce {
+	animation-name: basic_module_css-bounce;
+	animation: basic_module_css-bounce2 1s ease;
+}
+
+.basic_module_css-bounce2 {
+	color: green;
+	animation: basic_module_css-bounce 1s ease;
+	animation-name: basic_module_css-bounce2;
+}
+
+.basic_module_css-bounce3 {
+	animation: basic_module_css-bounce 1s ease, basic_module_css-bounce2
+}
+
+.basic_module_css-bounce4 {
+	animation: basic_module_css-bounce 1s ease, basic_module_css-bounce2;
+}
+
+.basic_module_css-b {
+	color: green;
+}
+
+@-webkit-keyframes basic_module_css-\\\\@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+@keyframes basic_module_css-\\\\@bounce {
+	0%, 100% {
+		transform: translateY(-25%);
+		-webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+		animation-timing-function: cubic-bezier(0.8,0,1,1);
+	}
+
+	50% {
+		transform: none;
+		-webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+		animation-timing-function: cubic-bezier(0,0,0.2,1);
+	}
+}
+
+.basic_module_css-container {
+	-webkit-animation: basic_module_css-\\\\@bounce 1s infinite;
+	animation: basic_module_css-\\\\@bounce 1s infinite;
+}
+
+.basic_module_css-abc .basic_module_css-def {
+	color: red;
+}
+
+.basic_module_css-ghi .basic_module_css-jkl {
+	color: blue;
+}
+
+.basic_module_css-className { background: red; }
+#basic_module_css-someId { background: green; }
+.basic_module_css-className .basic_module_css-subClass { color: green; }
+#basic_module_css-someId .basic_module_css-subClass { color: blue; }
+
+.basic_module_css-abc {
+	color: red;
+}
+.basic_module_css-def {
+	background: green;
+}
+
+.basic_module_css-c1[data-attr=\\".c2)]'\\"]:not(.basic_module_css-c3):not(.basic_module_css-c4) {
+	background: red;
+}
+
+.basic_module_css-c1 .basic_module_css-c2 .basic_module_css-c3 .c4 .basic_module_css-c5, .basic_module_css-c6 .basic_module_css-c7 { background: red; }
+.basic_module_css-c8 { background: red; }
+
+.basic_module_css-a .basic_module_css-b, .basic_module_css-c .basic_module_css-d, #basic_module_css-id {
+	color: green;
+	font-size: 1.5pt;
+}
+a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
+	color: green;
+	font-size: 1.5pt;
+}
+@keyframes basic_module_css-q {
+	2.5% {color: green;}
+}
+
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+/* Tests from css-loader */
+
+/* should work with the \`default\` class and with named export */
+.classes_module_css_0c83-default {
+	background: red
+}
+
+
+/* should work with the \`module\` class and with named export */
+.classes_module_css_0c83-module {
+	background: red
+}
+
+/*!***********************!*\\\\
+  !*** css ./alias.css ***!
+  \\\\***********************/
+.alias_css-imported-alias {
+  display: table;
+}
+
+/*!*************************!*\\\\
+  !*** css ./alias-1.css ***!
+  \\\\*************************/
+.alias-1_css-imported-alias-2 {
+  background: red;
+}
+
+.alias-1_css-imported-alias-3 {
+  background: red;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./composes-multiple.module.css ***!
+  \\\\******************************************/
+.composes-multiple_module_css-other-class {
+	color: red;
+}
+
+.composes-multiple_module_css-class-1 {
+	color: blue;
+}
+
+.composes-multiple_module_css-class-2 {
+	color: blue;
+}
+
+.global-class {
+	padding: 10px;
+}
+
+.global-class-1 {
+	padding: 10px;
+}
+
+.global-class-2 {
+	padding: 10px;
+}
+
+.composes-multiple_module_css-class {
+	color: gainsboro;
+}
+
+.composes-multiple_module_css-class-other {
+	}
+
+
+/*!****************************************!*\\\\
+  !*** css ./composes-global.module.css ***!
+  \\\\****************************************/
+.global-class {
+	color: red;
+}
+
+.other-global-class {
+	color: red;
+}
+
+.composes-global_module_css-otherClassName {
+	color: blue;
+}
+
+/*!**************************************!*\\\\
+  !*** css ./scope-at-rule.module.css ***!
+  \\\\**************************************/
+@scope (.scope-at-rule_module_css-light-scheme) {
+	:scope {
+		background-color: plum;
+	}
+
+	.scope-at-rule_module_css-class-a {
+		color: darkmagenta;
+	}
+}
+
+@scope (.scope-at-rule_module_css-dark-scheme) {
+	:scope {
+		background-color: darkmagenta;
+		color: antiquewhite;
+	}
+
+	.scope-at-rule_module_css-class-b {
+		color: plum;
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/*!********************************!*\\\\
+  !*** css ./nesting.module.css ***!
+  \\\\********************************/
+.nesting_module_css-notice {
+	width: 90%;
+	justify-content: center;
+	border-radius: 1rem;
+	border: black solid 2px;
+	background-color: #ffc107;
+	color: black;
+	padding: 1rem;
+
+	.nesting_module_css-notice-heading:before {
+		/* equivalent to \`.notice .notice-heading:before\` */
+		content: \\"ℹ︎ \\";
+	}
+
+	&.nesting_module_css-warning {
+		/* equivalent to \`.notice.warning\` */
+		background-color: #d81b60;
+		border-color: #d81b60;
+		color: white;
+		.nesting_module_css-warning-heading:before {
+			/* equivalent to \`.notice.warning .warning-heading:before\` */
+			content: \\"! \\";
+		}
+	}
+
+	&.nesting_module_css-success {
+		/* equivalent to \`.notice.success\` */
+		background-color: #004d40;
+		border-color: #004d40;
+		color: white;
+
+		.nesting_module_css-success-heading:before {
+			/* equivalent to \`.notice.success .success-heading:before\` */
+			content: \\"✓ \\";
+		}
+	}
+}
+
+.nesting_module_css-foo {
+	color: red;
+}
+
+.nesting_module_css-bar {
+	&.nesting_module_css-baz {
+		color: blue;
+	}
+}
+
+.nesting_module_css-foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		& {
+			grid-auto-flow: column;
+		}
+	}
+}
+
+@media (orientation: landscape) {
+	.nesting_module_css-a {
+		color: red;
+	}
+}
+
+@media (orientation: landscape) {
+	@media (orientation: landscape) {
+		.nesting_module_css-b {
+			color: red;
+			}
+	}
+}
+
+.nesting_module_css-n {
+	@media (orientation: landscape) {
+		color: red;
+	}
+}
+
+/*!*****************************!*\\\\
+  !*** css ./package/one.css ***!
+  \\\\*****************************/
+.package_one_css-imported-relative {
+    display: block;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./node_modules/package/two.css ***!
+  \\\\******************************************/
+.node_modules_package_two_css-imported-relative {
+    display: inline;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./prefer-relative.module.css ***!
+  \\\\****************************************/
+.prefer-relative_module_css-one {
+	color: yellow;
+	}
+
+.prefer-relative_module_css-two {
+	color: yellow;
+	}
+
+/*!***************************************!*\\\\
+  !*** css ./animation-name.module.css ***!
+  \\\\***************************************/
+.animation-name_module_css-a {
+	animation: 3s animation-name_module_css-animationName;
+}
+
+.animation-name_module_css-b {
+	animation: animation-name_module_css-animationName 3s;
+}
+
+.animation-name_module_css-c {
+	animation-name: animation-name_module_css-animationName;
+}
+
+@keyframes animation-name_module_css-animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+/*!********************************************************!*\\\\
+  !*** css ./node_modules/@foo/package/style.module.css ***!
+  \\\\********************************************************/
+.node_modules_\\\\@foo_package_style_module_css-class {
+	color: red;
+}
+
+/*!*******************************************************!*\\\\
+  !*** css ./node_modules/foo/package/style.module.css ***!
+  \\\\*******************************************************/
+.node_modules_foo_package_style_module_css-class {
+	color: red;
+}
+
+/*!************************************************!*\\\\
+  !*** css ./at-sign-in-package-name.module.css ***!
+  \\\\************************************************/
+
+.at-sign-in-package-name_module_css-myClass {
+	color: red;
+}
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/color.css ***!
+  \\\\**************************************************/
+
+
+/*!*******************************************************!*\\\\
+  !*** css ./node_modules/@otherlocalpackage/style.css ***!
+  \\\\*******************************************************/
+.node_modules_\\\\@otherlocalpackage_style_css-type-heading2 {
+  display: flex;
+}
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/style.css ***!
+  \\\\**************************************************/
+.node_modules_\\\\@localpackage_style_css-type-heading {
+  color: red;
+  margin: 0;
+  padding: 0;
+}
+
+/*!****************************************************!*\\\\
+  !*** css ./resolving-from-node_modules.module.css ***!
+  \\\\****************************************************/
+
+
+.resolving-from-node_modules_module_css-copyright {
+  color: gray;
+  margin: 0;
+  padding: 0;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./local-Ident-name.module.css ***!
+  \\\\*****************************************/
+.local-Ident-name_module_css-test {
+  background: red;
+}
+
+.local-Ident-name_module_css-_test {
+  background: blue;
+}
+
+.local-Ident-name_module_css-className {
+  background: red;
+}
+
+#local-Ident-name_module_css-someId {
+  background: green;
+}
+
+.local-Ident-name_module_css-className .local-Ident-name_module_css-subClass {
+  color: green;
+}
+
+#local-Ident-name_module_css-someId .local-Ident-name_module_css-subClass {
+  color: blue;
+}
+
+.local-Ident-name_module_css--a0-34a___f {
+  color: red;
+}
+
+.local-Ident-name_module_css-m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name_module_css-B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name_module_css-\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name_module_css-1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name_module_css-\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name_module_css--a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name_module_css-© {
+  color: black;
+}
+
+.local-Ident-name_module_css-♥ { background: lime; }
+.local-Ident-name_module_css-© { background: lime; }
+.local-Ident-name_module_css-😍 { background: lime; }
+.local-Ident-name_module_css-“‘’” { background: lime; }
+.local-Ident-name_module_css-☺☃ { background: lime; }
+.local-Ident-name_module_css-⌘⌥ { background: lime; }
+.local-Ident-name_module_css-𝄞♪♩♫♬ { background: lime; }
+.local-Ident-name_module_css-💩 { background: lime; }
+.local-Ident-name_module_css-\\\\? { background: lime; }
+.local-Ident-name_module_css-\\\\@ { background: lime; }
+.local-Ident-name_module_css-\\\\. { background: lime; }
+.local-Ident-name_module_css-\\\\:\\\\) { background: lime; }
+.local-Ident-name_module_css-\\\\:\\\\\`\\\\( { background: lime; }
+.local-Ident-name_module_css-123 { background: lime; }
+.local-Ident-name_module_css-1a2b3c { background: lime; }
+.local-Ident-name_module_css-\\\\<p\\\\> { background: lime; }
+.local-Ident-name_module_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.local-Ident-name_module_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.local-Ident-name_module_css-\\\\# { background: lime; }
+.local-Ident-name_module_css-\\\\#\\\\# { background: lime; }
+.local-Ident-name_module_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.local-Ident-name_module_css-_ { background: lime; }
+.local-Ident-name_module_css-\\\\{\\\\} { background: lime; }
+.local-Ident-name_module_css-\\\\#fake-id { background: lime; }
+.local-Ident-name_module_css-foo\\\\.bar { background: lime; }
+.local-Ident-name_module_css-\\\\:hover { background: lime; }
+.local-Ident-name_module_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.local-Ident-name_module_css-\\\\[attr\\\\=value\\\\] { background: lime; }
+.local-Ident-name_module_css-f\\\\/o\\\\/o { background: lime; }
+.local-Ident-name_module_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+.local-Ident-name_module_css-f\\\\*o\\\\*o { background: lime; }
+.local-Ident-name_module_css-f\\\\!o\\\\!o { background: lime; }
+.local-Ident-name_module_css-f\\\\'o\\\\'o { background: lime; }
+.local-Ident-name_module_css-f\\\\~o\\\\~o { background: lime; }
+.local-Ident-name_module_css-f\\\\+o\\\\+o { background: lime; }
+
+.local-Ident-name_module_css-foo\\\\/bar {
+  background: hotpink;
+}
+
+.local-Ident-name_module_css-foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+.local-Ident-name_module_css-foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+.local-Ident-name_module_css-foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-1 ***!
+  \\\\************************************************************/
+.local-Ident-name\\\\.module--test--n138O {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--c_lQ7 {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--QdX5M {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--fs0tG {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--QdX5M .local-Ident-name\\\\.module--subClass--EEiow {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--fs0tG .local-Ident-name\\\\.module--subClass--EEiow {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--rWQCS {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--wXBtR {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--9Uv5j {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--YZqyU {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--xSd9R {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--stuV6 {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---BVuZu {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--ABrkO {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--zQEWH { background: lime; }
+.local-Ident-name\\\\.module--©--ABrkO { background: lime; }
+.local-Ident-name\\\\.module--😍--rYTiW { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--Viviw { background: lime; }
+.local-Ident-name\\\\.module--☺☃--_YUxr { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--tU2QX { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--16ySy { background: lime; }
+.local-Ident-name\\\\.module--💩--fhsK2 { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--tcA6P { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--IjjsD { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--Bix0N { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--kXjo5 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--YZqyU { background: lime; }
+.local-Ident-name\\\\.module--123--PvTN4 { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--xSd9R { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--RCYv0 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--q0Tti { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--GNmAU { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--0fms6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--4MjQ_ { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--4Z5kr { background: lime; }
+.local-Ident-name\\\\.module--_--wWsEV { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--yOiSk { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--stuV6 { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--EDSRu { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--QXnD_ { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--0eQHC { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--bHMhi { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--gpPiW { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--gu2u7 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--1OZxX { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--U5evv { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--5azUC { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--6JU27 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--r42Md { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--ARBA4 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--vSOik {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--p2TDV {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--FlFA- {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-2 ***!
+  \\\\************************************************************/
+._-1test {
+  background: red;
+}
+
+._-1_test {
+  background: blue;
+}
+
+._-1className {
+  background: red;
+}
+
+#_-1someId {
+  background: green;
+}
+
+._-1className ._-1subClass {
+  color: green;
+}
+
+#_-1someId ._-1subClass {
+  color: blue;
+}
+
+._-1-a0-34a___f {
+  color: red;
+}
+
+._-1m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+._-1B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._-1\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._-11a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_-1\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_-1-a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_-1© {
+  color: black;
+}
+
+._-1♥ { background: lime; }
+._-1© { background: lime; }
+._-1😍 { background: lime; }
+._-1“‘’” { background: lime; }
+._-1☺☃ { background: lime; }
+._-1⌘⌥ { background: lime; }
+._-1𝄞♪♩♫♬ { background: lime; }
+._-1💩 { background: lime; }
+._-1\\\\? { background: lime; }
+._-1\\\\@ { background: lime; }
+._-1\\\\. { background: lime; }
+._-1\\\\:\\\\) { background: lime; }
+._-1\\\\:\\\\\`\\\\( { background: lime; }
+._-1123 { background: lime; }
+._-11a2b3c { background: lime; }
+._-1\\\\<p\\\\> { background: lime; }
+._-1\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._-1\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._-1\\\\# { background: lime; }
+._-1\\\\#\\\\# { background: lime; }
+._-1\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._-1_ { background: lime; }
+._-1\\\\{\\\\} { background: lime; }
+._-1\\\\#fake-id { background: lime; }
+._-1foo\\\\.bar { background: lime; }
+._-1\\\\:hover { background: lime; }
+._-1\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._-1\\\\[attr\\\\=value\\\\] { background: lime; }
+._-1f\\\\/o\\\\/o { background: lime; }
+._-1f\\\\\\\\o\\\\\\\\o { background: lime; }
+._-1f\\\\*o\\\\*o { background: lime; }
+._-1f\\\\!o\\\\!o { background: lime; }
+._-1f\\\\'o\\\\'o { background: lime; }
+._-1f\\\\~o\\\\~o { background: lime; }
+._-1f\\\\+o\\\\+o { background: lime; }
+
+._-1foo\\\\/bar {
+  background: hotpink;
+}
+
+._-1foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+._-1foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+._-1foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-3 ***!
+  \\\\************************************************************/
+._--test {
+  background: red;
+}
+
+._--_test {
+  background: blue;
+}
+
+._--className {
+  background: red;
+}
+
+#_--someId {
+  background: green;
+}
+
+._--className ._--subClass {
+  color: green;
+}
+
+#_--someId ._--subClass {
+  color: blue;
+}
+
+._---a0-34a___f {
+  color: red;
+}
+
+._--m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+._--B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+._--\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._--1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#_--\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#_---a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#_--© {
+  color: black;
+}
+
+._--♥ { background: lime; }
+._--© { background: lime; }
+._--😍 { background: lime; }
+._--“‘’” { background: lime; }
+._--☺☃ { background: lime; }
+._--⌘⌥ { background: lime; }
+._--𝄞♪♩♫♬ { background: lime; }
+._--💩 { background: lime; }
+._--\\\\? { background: lime; }
+._--\\\\@ { background: lime; }
+._--\\\\. { background: lime; }
+._--\\\\:\\\\) { background: lime; }
+._--\\\\:\\\\\`\\\\( { background: lime; }
+._--123 { background: lime; }
+._--1a2b3c { background: lime; }
+._--\\\\<p\\\\> { background: lime; }
+._--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+._--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+._--\\\\# { background: lime; }
+._--\\\\#\\\\# { background: lime; }
+._--\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+._--_ { background: lime; }
+._--\\\\{\\\\} { background: lime; }
+._--\\\\#fake-id { background: lime; }
+._--foo\\\\.bar { background: lime; }
+._--\\\\:hover { background: lime; }
+._--\\\\:hover\\\\:focus\\\\:active { background: lime; }
+._--\\\\[attr\\\\=value\\\\] { background: lime; }
+._--f\\\\/o\\\\/o { background: lime; }
+._--f\\\\\\\\o\\\\\\\\o { background: lime; }
+._--f\\\\*o\\\\*o { background: lime; }
+._--f\\\\!o\\\\!o { background: lime; }
+._--f\\\\'o\\\\'o { background: lime; }
+._--f\\\\~o\\\\~o { background: lime; }
+._--f\\\\+o\\\\+o { background: lime; }
+
+._--foo\\\\/bar {
+  background: hotpink;
+}
+
+._--foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+._--foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+._--foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-4 ***!
+  \\\\************************************************************/
+.__test {
+  background: red;
+}
+
+.___test {
+  background: blue;
+}
+
+.__className {
+  background: red;
+}
+
+#__someId {
+  background: green;
+}
+
+.__className .__subClass {
+  color: green;
+}
+
+#__someId .__subClass {
+  color: blue;
+}
+
+.__-a0-34a___f {
+  color: red;
+}
+
+.__m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.__B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.__\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.__1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#__\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#__-a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#__© {
+  color: black;
+}
+
+.__♥ { background: lime; }
+.__© { background: lime; }
+.__😍 { background: lime; }
+.__“‘’” { background: lime; }
+.__☺☃ { background: lime; }
+.__⌘⌥ { background: lime; }
+.__𝄞♪♩♫♬ { background: lime; }
+.__💩 { background: lime; }
+.__\\\\? { background: lime; }
+.__\\\\@ { background: lime; }
+.__\\\\. { background: lime; }
+.__\\\\:\\\\) { background: lime; }
+.__\\\\:\\\\\`\\\\( { background: lime; }
+.__123 { background: lime; }
+.__1a2b3c { background: lime; }
+.__\\\\<p\\\\> { background: lime; }
+.__\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.__\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.__\\\\# { background: lime; }
+.__\\\\#\\\\# { background: lime; }
+.__\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.___ { background: lime; }
+.__\\\\{\\\\} { background: lime; }
+.__\\\\#fake-id { background: lime; }
+.__foo\\\\.bar { background: lime; }
+.__\\\\:hover { background: lime; }
+.__\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.__\\\\[attr\\\\=value\\\\] { background: lime; }
+.__f\\\\/o\\\\/o { background: lime; }
+.__f\\\\\\\\o\\\\\\\\o { background: lime; }
+.__f\\\\*o\\\\*o { background: lime; }
+.__f\\\\!o\\\\!o { background: lime; }
+.__f\\\\'o\\\\'o { background: lime; }
+.__f\\\\~o\\\\~o { background: lime; }
+.__f\\\\+o\\\\+o { background: lime; }
+
+.__foo\\\\/bar {
+  background: hotpink;
+}
+
+.__foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+.__foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+.__foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-5 ***!
+  \\\\************************************************************/
+.test--mowWgR {
+  background: red;
+}
+
+._test--Kfd_4M {
+  background: blue;
+}
+
+.className--b9RUK8 {
+  background: red;
+}
+
+#someId--TlAET9 {
+  background: green;
+}
+
+.className--b9RUK8 .subClass--sglK-1 {
+  color: green;
+}
+
+#someId--TlAET9 .subClass--sglK-1 {
+  color: blue;
+}
+
+.-a0-34a___f--OWXZy- {
+  color: red;
+}
+
+.m_x_\\\\@--kG1v1e {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.B\\\\&W\\\\?--D7HZ-H {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.\\\\:\\\\\`\\\\(--hgmvDX {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+._1a2b3c--AMCMZb {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#\\\\#fake-id--ez7Dik {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#-a-b-c---jfQ3Qn {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#©--sWiP9l {
+  color: black;
+}
+
+.♥--e6nEYm { background: lime; }
+.©--sWiP9l { background: lime; }
+.😍--rPyRbM { background: lime; }
+.“‘’”--M3gyy- { background: lime; }
+.☺☃--pbZo-2 { background: lime; }
+.⌘⌥--oDuNAW { background: lime; }
+.𝄞♪♩♫♬--vrTCd6 { background: lime; }
+.💩--1Txu-k { background: lime; }
+.\\\\?--9Y6SkK { background: lime; }
+.\\\\@--Sc9iGx { background: lime; }
+.\\\\.--ZtQPX0 { background: lime; }
+.\\\\:\\\\)--u1ngqY { background: lime; }
+.\\\\:\\\\\`\\\\(--hgmvDX { background: lime; }
+._123--j0sSmE { background: lime; }
+._1a2b3c--AMCMZb { background: lime; }
+.\\\\<p\\\\>--MHaC0- { background: lime; }
+.\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--8jXRVC { background: lime; }
+.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--OsAmD3 { background: lime; }
+.\\\\#--tlFV0b { background: lime; }
+.\\\\#\\\\#--7vA-7E { background: lime; }
+.\\\\#\\\\.\\\\#\\\\.\\\\#--1Hd875 { background: lime; }
+._--NFJ6vs { background: lime; }
+.\\\\{\\\\}--Tr49RL { background: lime; }
+.\\\\#fake-id--ez7Dik { background: lime; }
+.foo\\\\.bar--pYS5El { background: lime; }
+.\\\\:hover--8XNA4p { background: lime; }
+.\\\\:hover\\\\:focus\\\\:active--EpwJWE { background: lime; }
+.\\\\[attr\\\\=value\\\\]--ZTV_uO { background: lime; }
+.f\\\\/o\\\\/o--3vNZZM { background: lime; }
+.f\\\\\\\\o\\\\\\\\o--wNzTj3 { background: lime; }
+.f\\\\*o\\\\*o--kom_Jq { background: lime; }
+.f\\\\!o\\\\!o--QQGZu2 { background: lime; }
+.f\\\\'o\\\\'o--00bSFC { background: lime; }
+.f\\\\~o\\\\~o--26zzb- { background: lime; }
+.f\\\\+o\\\\+o--J4WAkM { background: lime; }
+
+.foo\\\\/bar--9GWp9d {
+  background: hotpink;
+}
+
+.foo\\\\\\\\bar--CCzsTj {
+  background: hotpink;
+}
+
+.foo\\\\/bar\\\\/baz--MRJglc {
+  background: hotpink;
+}
+
+.foo\\\\\\\\bar\\\\\\\\baz--nRgTR7 {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-6 ***!
+  \\\\************************************************************/
+.😀-\\\\ -test {
+  background: red;
+}
+
+.😀-\\\\ -_test {
+  background: blue;
+}
+
+.😀-\\\\ -className {
+  background: red;
+}
+
+#😀-\\\\ -someId {
+  background: green;
+}
+
+.😀-\\\\ -className .😀-\\\\ -subClass {
+  color: green;
+}
+
+#😀-\\\\ -someId .😀-\\\\ -subClass {
+  color: blue;
+}
+
+.😀-\\\\ --a0-34a___f {
+  color: red;
+}
+
+.😀-\\\\ -m_x_\\\\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.😀-\\\\ -B\\\\&W\\\\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.😀-\\\\ -\\\\:\\\\\`\\\\( {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.😀-\\\\ -1a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#😀-\\\\ -\\\\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#😀-\\\\ --a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#😀-\\\\ -© {
+  color: black;
+}
+
+.😀-\\\\ -♥ { background: lime; }
+.😀-\\\\ -© { background: lime; }
+.😀-\\\\ -😍 { background: lime; }
+.😀-\\\\ -“‘’” { background: lime; }
+.😀-\\\\ -☺☃ { background: lime; }
+.😀-\\\\ -⌘⌥ { background: lime; }
+.😀-\\\\ -𝄞♪♩♫♬ { background: lime; }
+.😀-\\\\ -💩 { background: lime; }
+.😀-\\\\ -\\\\? { background: lime; }
+.😀-\\\\ -\\\\@ { background: lime; }
+.😀-\\\\ -\\\\. { background: lime; }
+.😀-\\\\ -\\\\:\\\\) { background: lime; }
+.😀-\\\\ -\\\\:\\\\\`\\\\( { background: lime; }
+.😀-\\\\ -123 { background: lime; }
+.😀-\\\\ -1a2b3c { background: lime; }
+.😀-\\\\ -\\\\<p\\\\> { background: lime; }
+.😀-\\\\ -\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.😀-\\\\ -\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.😀-\\\\ -\\\\# { background: lime; }
+.😀-\\\\ -\\\\#\\\\# { background: lime; }
+.😀-\\\\ -\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.😀-\\\\ -_ { background: lime; }
+.😀-\\\\ -\\\\{\\\\} { background: lime; }
+.😀-\\\\ -\\\\#fake-id { background: lime; }
+.😀-\\\\ -foo\\\\.bar { background: lime; }
+.😀-\\\\ -\\\\:hover { background: lime; }
+.😀-\\\\ -\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.😀-\\\\ -\\\\[attr\\\\=value\\\\] { background: lime; }
+.😀-\\\\ -f\\\\/o\\\\/o { background: lime; }
+.😀-\\\\ -f\\\\\\\\o\\\\\\\\o { background: lime; }
+.😀-\\\\ -f\\\\*o\\\\*o { background: lime; }
+.😀-\\\\ -f\\\\!o\\\\!o { background: lime; }
+.😀-\\\\ -f\\\\'o\\\\'o { background: lime; }
+.😀-\\\\ -f\\\\~o\\\\~o { background: lime; }
+.😀-\\\\ -f\\\\+o\\\\+o { background: lime; }
+
+.😀-\\\\ -foo\\\\/bar {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\\\\\bar {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\/bar\\\\/baz {
+  background: hotpink;
+}
+
+.😀-\\\\ -foo\\\\\\\\bar\\\\\\\\baz {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-7 ***!
+  \\\\************************************************************/
+.local-Ident-name\\\\.module--test--6y2MZL2dRW {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--jkChnYaYBV {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--HP09CfTnX1 {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--MLaknB8z97 {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--HP09CfTnX1 .local-Ident-name\\\\.module--subClass--4o6O5CPJI6 {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--MLaknB8z97 .local-Ident-name\\\\.module--subClass--4o6O5CPJI6 {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--8SmkpM38MT {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--hTokNmWv2C {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--2nDwDstWPk {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--XFoJZOBwb2 {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--27Ol2f1A5B {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--aoLUns9FUw {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---spF-wFF3ki {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--8qkLiWtfe0 {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--44uxusx5VU { background: lime; }
+.local-Ident-name\\\\.module--©--8qkLiWtfe0 { background: lime; }
+.local-Ident-name\\\\.module--😍--ZFvdqtu3qG { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--o0Ra2DG0ZC { background: lime; }
+.local-Ident-name\\\\.module--☺☃--DnbMOfd6eV { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--S6bOlCWVBp { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--BSgrxZWBoa { background: lime; }
+.local-Ident-name\\\\.module--💩--IYSuXUnVFH { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--iQGuBSRyn5 { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--rXUc81UfOs { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--TYgwrPPlce { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--8IGwE2kP5T { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--XFoJZOBwb2 { background: lime; }
+.local-Ident-name\\\\.module--123--dRCMetfS4k { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--27Ol2f1A5B { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--VleHaJt0jW { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--efv0wrKauZ { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--SjgB1SBFzx { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--CUiuWNpacN { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--CU4LyzXr4m { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#---k23lpEMg- { background: lime; }
+.local-Ident-name\\\\.module--_--O587A_Y16h { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--KmrFboxFIk { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--aoLUns9FUw { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--ekmt08iOcx { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--gj5dKEVBLV { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--MF6oOllQUU { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--pVXs1yvO-c { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--IfM4TmY7KJ { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--smRz6NSna2 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--i7809YiNmT { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--piVwcUXcCA { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--_4GqKKgPVD { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--zcYow3hnn9 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--22BN9FvSaj { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--pmM_pDdiuz {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--37QAOKIbi2 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--OHGMWfcvMx {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--zz8kivuxZ6 {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-8 ***!
+  \\\\************************************************************/
+.local-Ident-name\\\\.module--test--_SesvC {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--IFXC8J {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--Gf2qKu {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--hSsSyu {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--Gf2qKu .local-Ident-name\\\\.module--subClass--rJLSP7 {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--hSsSyu .local-Ident-name\\\\.module--subClass--rJLSP7 {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--j4G6AV {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--j3M2wy {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--Cx7Xfj {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--PKfNRg {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--Prq2-n {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--Tf_LXF {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---baJWIK {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--if7zkU {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--Wquu8v { background: lime; }
+.local-Ident-name\\\\.module--©--if7zkU { background: lime; }
+.local-Ident-name\\\\.module--😍--vXWvMf { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--zEDyfZ { background: lime; }
+.local-Ident-name\\\\.module--☺☃--DzDnMo { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--VM04KP { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--qoKZGt { background: lime; }
+.local-Ident-name\\\\.module--💩--Wmv5n7 { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--cFxilG { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--RJiOrO { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--v7SGE3 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--stxQmr { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--PKfNRg { background: lime; }
+.local-Ident-name\\\\.module--123--FPfb_a { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--Prq2-n { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--Lzbt_f { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--bH0ZRJ { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--G9OqS6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--H4xWOk { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--qmWu4j { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--jTAz29 { background: lime; }
+.local-Ident-name\\\\.module--_--jZA8cH { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--rC8he6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--Tf_LXF { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--_-hir3 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--7J6Ovy { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--N6KkcF { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--_X7r6s { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--TnGHtD { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--zZG-0O { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--US0RYV { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--IQSVKY { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--Jke6Ar { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--wi3S5B { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--JZ_ZYM { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--LMZK6C {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--qVBL0b {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--44CiTQ {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--aiT34M {
+  background: hotpink;
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-9 ***!
+  \\\\************************************************************/
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---test---PboabM-postfix {
+  background: red;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---_test---RdGpUF-postfix {
+  background: blue;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---className---Rbuqv6-postfix {
+  background: red;
+}
+
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---someId---rz34Z--postfix {
+  background: green;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---className---Rbuqv6-postfix .prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---subClass---KZbh3P-postfix {
+  color: green;
+}
+
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---someId---rz34Z--postfix .prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---subClass---KZbh3P-postfix {
+  color: blue;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9----a0-34a___f---VQNZfx-postfix {
+  color: red;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---m_x_\\\\@---0FTqJc-postfix {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---B\\\\&W\\\\?---pAfmJZ-postfix {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\\`\\\\(---w0y-3T-postfix {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---1a2b3c---8RwOZv-postfix {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id---0ySTTy-postfix {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9----a-b-c----hDXrIM-postfix {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©---l15bLc-postfix {
+  color: black;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---♥---J7fhlX-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©---l15bLc-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---😍---JD7n4W-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---“‘’”---Jk8q45-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---☺☃---PSP-1Q-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---⌘⌥---WgMb99-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---💩---Y7HlBo-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\?---8rRplk-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\@---LKRCz--postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\.---XxpCFm-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\)---tpNOM_-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:\\\\\`\\\\(---w0y-3T-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---123---29k572-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---1a2b3c---8RwOZv-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\<p\\\\>---T4r2DZ-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>---DV-Ytr-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.---I2RCq8-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#---qicdNs-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#\\\\#---7LLFg7-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#\\\\.\\\\#\\\\.\\\\#---tkYIvY-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---_---UdFsE6-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\{\\\\}---cEk0mR-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id---0ySTTy-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\.bar---d2rdEE-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:hover---p-SVOd-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\:hover\\\\:focus\\\\:active---7ppzcn-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\[attr\\\\=value\\\\]---uMrr4n-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\/o\\\\/o---kXNiKY-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\\\\\o\\\\\\\\o---fLLGuT-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\*o\\\\*o---fF4DcX-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\!o\\\\!o---XqT8S3-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\'o\\\\'o---BxXL6g-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\~o\\\\~o---SPRjm3-postfix { background: lime; }
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---f\\\\+o\\\\+o---F93mpm-postfix { background: lime; }
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\/bar---uZ8i8d-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\\\\\bar---pozdkJ-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\/bar\\\\/baz---zWw2aH-postfix {
+  background: hotpink;
+}
+
+.prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---foo\\\\\\\\bar\\\\\\\\baz---C9LnZz-postfix {
+  background: hotpink;
+}
+
+/*!*************************!*\\\\
+  !*** css ./order-1.css ***!
+  \\\\*************************/
+.order-1_css-order-1 {
+  color: red;
+}
+
+.order-1_css-order-1-1 {
+  color: aliceblue;
+}
+
+/*!*************************!*\\\\
+  !*** css ./order-2.css ***!
+  \\\\*************************/
+.order-2_css-order-2 {
+  color: blue;
+}
+
+.order-2_css-order-2-2 {
+  color: azure;
+}
+
+/*!******************************!*\\\\
+  !*** css ./order.module.css ***!
+  \\\\******************************/
+.order_module_css-simple {
+	display: block;
+	}
+
+.order_module_css-simple-other {
+	display: inline;
+	}
+
+
+/*!************************!*\\\\
+  !*** css ./button.css ***!
+  \\\\************************/
+.button_css-button {
+  border: none;
+  padding: 7px 15px;
+  cursor: pointer;
+}
+
+/*!********************************!*\\\\
+  !*** css ./primary-button.css ***!
+  \\\\********************************/
+.primary-button_css-primaryButton {
+  background-color: blue;
+  color: white;
+}
+
+/*!**********************************!*\\\\
+  !*** css ./secondary-button.css ***!
+  \\\\**********************************/
+.secondary-button_css-secondaryButton
+{
+  background-color: #555;
+  color: white;
+}
+
+/*!******************************!*\\\\
+  !*** css ./dedup.module.css ***!
+  \\\\******************************/
+.dedup_module_css-nextButton {
+	}
+
+.dedup_module_css-backButton {
+	}
+
+
+/*!**********************!*\\\\
+  !*** css ./foo.less ***!
+  \\\\**********************/
+.foo_less-foo {
+  color: red;
+}
+
+/*!*******************************************!*\\\\
+  !*** css ./composes-from-less.module.css ***!
+  \\\\*******************************************/
+.composes-from-less_module_css-bar {
+	}
+
+/*!*****************************************!*\\\\
+  !*** css ./node_modules/test/index.css ***!
+  \\\\*****************************************/
+
+
+
+.node_modules_test_index_css-class {
+	color: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./tilde.module.css ***!
+  \\\\******************************/
+
+
+
+.tilde_module_css-className {
+	color: #000;
+	background: #fff;
+}
+
+
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+/* Tests from css-loader */
+
+/* should work with the \`default\` class and with named export */
+.classes_module_css_884d-default {
+	background: red
+}
+
+
+/* should work with the \`module\` class and with named export */
+.classes_module_css_884d-module {
+	background: red
+}
+
+/*!*****************************!*\\\\
+  !*** css ./icss.module.css ***!
+  \\\\*****************************/
+
+
+
+
+
+
+
+
+.icss_module_css-className {
+	color: classes_module_css_884d-module;
+}
+
+
+
+",
+]
+`;

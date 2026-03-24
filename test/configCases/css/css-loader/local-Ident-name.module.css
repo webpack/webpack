@@ -1,0 +1,114 @@
+.test {
+  background: red;
+}
+
+._test {
+  background: blue;
+}
+
+.className {
+  background: red;
+}
+
+#someId {
+  background: green;
+}
+
+.className .subClass {
+  color: green;
+}
+
+#someId .subClass {
+  color: blue;
+}
+
+.-a0-34a___f {
+  color: red;
+}
+
+.m_x_\@ {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.B\&W\? {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=":`(" */
+.\3A \`\( {
+  color: aqua;
+}
+
+/* matches elements with class="1a2b3c" */
+.\31 a2b3c {
+  color: aliceblue;
+}
+
+/* matches the element with id="#fake-id" */
+#\#fake-id {
+  color: antiquewhite;
+}
+
+/* matches the element with id="-a-b-c-" */
+#-a-b-c- {
+  color: azure;
+}
+
+/* matches the element with id="©" */
+#© {
+  color: black;
+}
+
+.♥ { background: lime; }
+.© { background: lime; }
+.😍 { background: lime; }
+.“‘’” { background: lime; }
+.☺☃ { background: lime; }
+.⌘⌥ { background: lime; }
+.𝄞♪♩♫♬ { background: lime; }
+.💩 { background: lime; }
+.\? { background: lime; }
+.\@ { background: lime; }
+.\. { background: lime; }
+.\3A \) { background: lime; }
+.\3A \`\( { background: lime; }
+.\31 23 { background: lime; }
+.\31 a2b3c { background: lime; }
+.\<p\> { background: lime; }
+.\<\>\<\<\<\>\>\<\> { background: lime; }
+.\+\+\+\+\+\+\+\+\+\+\[\>\+\+\+\+\+\+\+\>\+\+\+\+\+\+\+\+\+\+\>\+\+\+\>\+\<\<\<\<\-\]\>\+\+\.\>\+\.\+\+\+\+\+\+\+\.\.\+\+\+\.\>\+\+\.\<\<\+\+\+\+\+\+\+\+\+\+\+\+\+\+\+\.\>\.\+\+\+\.\-\-\-\-\-\-\.\-\-\-\-\-\-\-\-\.\>\+\.\>\. { background: lime; }
+.\# { background: lime; }
+.\#\# { background: lime; }
+.\#\.\#\.\# { background: lime; }
+.\_ { background: lime; }
+.\{\} { background: lime; }
+.\#fake\-id { background: lime; }
+.foo\.bar { background: lime; }
+.\3A hover { background: lime; }
+.\3A hover\3A focus\3A active { background: lime; }
+.\[attr\=value\] { background: lime; }
+.f\/o\/o { background: lime; }
+.f\\o\\o { background: lime; }
+.f\*o\*o { background: lime; }
+.f\!o\!o { background: lime; }
+.f\'o\'o { background: lime; }
+.f\~o\~o { background: lime; }
+.f\+o\+o { background: lime; }
+
+.foo\/bar {
+  background: hotpink;
+}
+
+.foo\\bar {
+  background: hotpink;
+}
+
+.foo\/bar\/baz {
+  background: hotpink;
+}
+
+.foo\\bar\\baz {
+  background: hotpink;
+}

@@ -1,0 +1,20 @@
+.a {
+	animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}

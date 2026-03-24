@@ -1,0 +1,12 @@
+/* Tests from css-loader */
+
+/* should work with the `default` class and with named export */
+.default {
+	background: red
+}
+
+
+/* should work with the `module` class and with named export */
+.module {
+	background: red
+}
