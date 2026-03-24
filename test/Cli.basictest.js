@@ -280,6 +280,108 @@ describe("Cli", () => {
 		);
 
 		test(
+			"numbers decimal and scientific notation strings",
+			{
+				"watch-options-aggregate-timeout": ".25",
+				"watch-options-poll": "1e2",
+				"output-chunk-load-timeout": "5.",
+				parallelism: "1e+2",
+				"performance-max-asset-size": "1.5e3",
+				"performance-max-entrypoint-size": "2e-1",
+				"stats-assets-space": "10E+1",
+				"stats-errors-space": "+.5"
+			},
+			{},
+			(e) =>
+				e.toMatchInlineSnapshot(`
+			Object {
+			  "output": Object {
+			    "chunkLoadTimeout": 5,
+			  },
+			  "parallelism": 100,
+			  "performance": Object {
+			    "maxAssetSize": 1500,
+			    "maxEntrypointSize": 0.2,
+			  },
+			  "stats": Object {
+			    "assetsSpace": 100,
+			    "errorsSpace": 0.5,
+			  },
+			  "watchOptions": Object {
+			    "aggregateTimeout": 0.25,
+			    "poll": 100,
+			  },
+			}
+		`)
+		);
+
+		test(
+			"invalid number strings (decimal and exponent edge cases)",
+			{
+				parallelism: "1e",
+				"performance-max-asset-size": "e10",
+				"performance-max-entrypoint-size": "1e2.5",
+				"stats-assets-space": "1.2.3",
+				"output-chunk-load-timeout": "7e-",
+				"stats-warnings-space": "++1"
+			},
+			{},
+			(e) =>
+				e.toMatchInlineSnapshot(`
+			Array [
+			  Object {
+			    "argument": "parallelism",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "parallelism",
+			    "type": "invalid-value",
+			    "value": "1e",
+			  },
+			  Object {
+			    "argument": "performance-max-asset-size",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "performance.maxAssetSize",
+			    "type": "invalid-value",
+			    "value": "e10",
+			  },
+			  Object {
+			    "argument": "performance-max-entrypoint-size",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "performance.maxEntrypointSize",
+			    "type": "invalid-value",
+			    "value": "1e2.5",
+			  },
+			  Object {
+			    "argument": "stats-assets-space",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "stats.assetsSpace",
+			    "type": "invalid-value",
+			    "value": "1.2.3",
+			  },
+			  Object {
+			    "argument": "output-chunk-load-timeout",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "output.chunkLoadTimeout",
+			    "type": "invalid-value",
+			    "value": "7e-",
+			  },
+			  Object {
+			    "argument": "stats-warnings-space",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "stats.warningsSpace",
+			    "type": "invalid-value",
+			    "value": "++1",
+			  },
+			]
+		`)
+		);
+
+		test(
 			"booleans and enums",
 			{
 				"optimization-used-exports": true,
