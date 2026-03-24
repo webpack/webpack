@@ -381,5 +381,215 @@ describe("NormalModule", () => {
 				});
 			});
 		});
+
+		describe("_createLoaderContext", () => {
+			it("should include _importAttributes in the loader context", () => {
+				const importAttributes = { type: "json" };
+				const normalModule = new NormalModule({
+					type: "javascript/auto",
+					request: "request",
+					userRequest: "userRequest",
+					rawRequest: "rawRequest",
+					loaders: [],
+					resource: "resource",
+					parser: null,
+					generator: null,
+					resolveOptions: {},
+					importAttributes
+				});
+				const resolver = {
+					resolve: jest.fn(),
+					withOptions: jest.fn().mockReturnThis()
+				};
+				const compilation = {
+					runtimeTemplate: {
+						requestShortener: {
+							shorten: jest.fn().mockReturnValue("shorten")
+						}
+					},
+					getLogger: jest.fn(),
+					compiler: {
+						root: "root"
+					}
+				};
+				const fs = {};
+				const hooks = {
+					loader: {
+						call: jest.fn()
+					}
+				};
+				const loaderContext = normalModule._createLoaderContext(
+					resolver,
+					{
+						context: "context",
+						output: {
+							hashFunction: "md5",
+							hashDigest: "hex",
+							hashDigestLength: 20,
+							hashSalt: "salt"
+						}
+					},
+					compilation,
+					fs,
+					hooks
+				);
+				expect(loaderContext._importAttributes).toEqual(importAttributes);
+			});
+
+			it("should include undefined _importAttributes if not provided", () => {
+				const normalModule = new NormalModule({
+					type: "javascript/auto",
+					request: "request",
+					userRequest: "userRequest",
+					rawRequest: "rawRequest",
+					loaders: [],
+					resource: "resource",
+					parser: null,
+					generator: null,
+					resolveOptions: {}
+				});
+				const resolver = {
+					resolve: jest.fn(),
+					withOptions: jest.fn().mockReturnThis()
+				};
+				const compilation = {
+					runtimeTemplate: {
+						requestShortener: {
+							shorten: jest.fn().mockReturnValue("shorten")
+						}
+					},
+					getLogger: jest.fn(),
+					compiler: {
+						root: "root"
+					}
+				};
+				const fs = {};
+				const hooks = {
+					loader: {
+						call: jest.fn()
+					}
+				};
+				const loaderContext = normalModule._createLoaderContext(
+					resolver,
+					{
+						context: "context",
+						output: {
+							hashFunction: "md5",
+							hashDigest: "hex",
+							hashDigestLength: 20,
+							hashSalt: "salt"
+						}
+					},
+					compilation,
+					fs,
+					hooks
+				);
+				expect(loaderContext._importAttributes).toBeUndefined();
+			});
+
+			it("should include null _importAttributes if null", () => {
+				const normalModule = new NormalModule({
+					type: "javascript/auto",
+					request: "request",
+					userRequest: "userRequest",
+					rawRequest: "rawRequest",
+					loaders: [],
+					resource: "resource",
+					parser: null,
+					generator: null,
+					resolveOptions: {},
+					importAttributes: null
+				});
+				const resolver = {
+					resolve: jest.fn(),
+					withOptions: jest.fn().mockReturnThis()
+				};
+				const compilation = {
+					runtimeTemplate: {
+						requestShortener: {
+							shorten: jest.fn().mockReturnValue("shorten")
+						}
+					},
+					getLogger: jest.fn(),
+					compiler: {
+						root: "root"
+					}
+				};
+				const fs = {};
+				const hooks = {
+					loader: {
+						call: jest.fn()
+					}
+				};
+				const loaderContext = normalModule._createLoaderContext(
+					resolver,
+					{
+						context: "context",
+						output: {
+							hashFunction: "md5",
+							hashDigest: "hex",
+							hashDigestLength: 20,
+							hashSalt: "salt"
+						}
+					},
+					compilation,
+					fs,
+					hooks
+				);
+				expect(loaderContext._importAttributes).toBeNull();
+			});
+
+			it("should include empty _importAttributes if empty", () => {
+				const normalModule = new NormalModule({
+					type: "javascript/auto",
+					request: "request",
+					userRequest: "userRequest",
+					rawRequest: "rawRequest",
+					loaders: [],
+					resource: "resource",
+					parser: null,
+					generator: null,
+					resolveOptions: {},
+					importAttributes: {}
+				});
+				const resolver = {
+					resolve: jest.fn(),
+					withOptions: jest.fn().mockReturnThis()
+				};
+				const compilation = {
+					runtimeTemplate: {
+						requestShortener: {
+							shorten: jest.fn().mockReturnValue("shorten")
+						}
+					},
+					getLogger: jest.fn(),
+					compiler: {
+						root: "root"
+					}
+				};
+				const fs = {};
+				const hooks = {
+					loader: {
+						call: jest.fn()
+					}
+				};
+				const loaderContext = normalModule._createLoaderContext(
+					resolver,
+					{
+						context: "context",
+						output: {
+							hashFunction: "md5",
+							hashDigest: "hex",
+							hashDigestLength: 20,
+							hashSalt: "salt"
+						}
+					},
+					compilation,
+					fs,
+					hooks
+				);
+				expect(loaderContext._importAttributes).toEqual({});
+			});
+		});
 	});
 });
