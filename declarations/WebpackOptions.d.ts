@@ -3062,6 +3062,10 @@ export interface CssModuleGeneratorOptions {
 	 */
 	localIdentHashDigestLength?: HashDigestLength;
 	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	localIdentHashFunction?: HashFunction;
+	/**
 	 * Any string which is added to the hash to salt it.
 	 */
 	localIdentHashSalt?: HashSalt;

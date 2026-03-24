@@ -3891,6 +3891,11 @@ declare interface CssModuleGeneratorOptions {
 	localIdentHashDigestLength?: number;
 
 	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	localIdentHashFunction?: string | typeof Hash;
+
+	/**
 	 * Any string which is added to the hash to salt it.
 	 */
 	localIdentHashSalt?: string;
@@ -18790,6 +18795,11 @@ declare interface TsconfigPathsMap {
 	 * referenced tsconfig paths data mapped by baseUrl
 	 */
 	refs: { [index: string]: TsconfigPathsData };
+
+	/**
+	 * all contexts (main + refs) for quick lookup
+	 */
+	allContexts: { [index: string]: TsconfigPathsData };
 
 	/**
 	 * file dependencies

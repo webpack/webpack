@@ -453,6 +453,9 @@
         "localIdentHashDigestLength": {
           "$ref": "#/definitions/HashDigestLength"
         },
+        "localIdentHashFunction": {
+          "$ref": "#/definitions/HashFunction"
+        },
         "localIdentHashSalt": {
           "$ref": "#/definitions/HashSalt"
         },

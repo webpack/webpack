@@ -55,6 +55,24 @@ module.exports = {
 				generator: {
 					localIdentName: "😀- -[local]"
 				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-7$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashFunction: "sha256",
+					localIdentHashDigestLength: 10
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-8$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashFunction: "xxhash64",
+					localIdentHashDigestLength: 6
+				}
 			}
 		]
 	},
