@@ -300,7 +300,7 @@ describe("snapshots", () => {
 		        "importMeta": true,
 		        "strictExportPresence": undefined,
 		        "strictThisContextOnImports": false,
-		        "typescript": false,
+		        "typescript": undefined,
 		        "unknownContextCritical": true,
 		        "unknownContextRecursive": true,
 		        "unknownContextRegExp": false,
@@ -2420,7 +2420,7 @@ describe("snapshots", () => {
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
-			+             "application/application",
+			+             "application/typescript",
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2482,6 +2482,9 @@ describe("snapshots", () => {
 			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
 			@@ ... @@
 			-     "unsafeCache": false,
 			+     "unsafeCache": [Function anonymous],
@@ -2573,6 +2576,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
+			@@ ... @@
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			+       ],
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
 			@@ ... @@
 			+     "tsconfig": true,
 			@@ ... @@
@@ -3067,7 +3085,7 @@ describe("snapshots", () => {
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
-			+             "application/application",
+			+             "application/typescript",
 			+           ],
 			+         },
 			+         "resolve": Object {
@@ -3116,7 +3134,7 @@ describe("snapshots", () => {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			+       },
+			@@ ... @@
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3124,7 +3142,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3143,6 +3161,9 @@ describe("snapshots", () => {
 			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
@@ -3228,6 +3249,22 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+     ],
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			@@ ... @@
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
+			@@ ... @@
 			+     "tsconfig": true,
 			@@ ... @@
 			-       "<cwd>/node_modules/",
@@ -3303,25 +3340,25 @@ describe("snapshots", () => {
 			+           },
 			@@ ... @@
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
 			+       Object {
-			@@ ... @@
-			+         "test": /\\.mts$/i,
-			@@ ... @@
-			+         "descriptionData": Object {
-			+           "type": "module",
-			+         },
 			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
 			+               "fullySpecified": true,
-			+             },
+			@@ ... @@
 			+           },
 			+         },
-			+         "test": /\\.ts$/i,
+			+         "test": /\\.mts$/i,
 			+         "type": "javascript/esm",
 			+       },
 			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			@@ ... @@
+			+         "test": /\\.ts$/i,
+			@@ ... @@
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
 			+       },
@@ -3336,7 +3373,7 @@ describe("snapshots", () => {
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
-			+             "application/application",
+			+             "application/typescript",
 			+           ],
 			+         },
 			+         "resolve": Object {
@@ -3351,6 +3388,9 @@ describe("snapshots", () => {
 			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
@@ -3384,6 +3424,22 @@ describe("snapshots", () => {
 			+           ".ts",
 			@@ ... @@
 			+           ".ts",
+			@@ ... @@
+			+     ],
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			@@ ... @@
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
 			@@ ... @@
 			+     "tsconfig": true,
 			@@ ... @@
