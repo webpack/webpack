@@ -382,4 +382,87 @@ describe("NormalModule", () => {
 			});
 		});
 	});
+
+	describe("_createLoaderContext", () => {
+		const createMockCompilation = () => ({
+			runtimeTemplate: {
+				requestShortener: {
+					shorten: jest.fn().mockReturnValue("shorten")
+				}
+			},
+			getLogger: jest.fn(),
+			compiler: {
+				root: "root"
+			}
+		});
+
+		const createMockResolver = () => ({
+			resolve: jest.fn(),
+			withOptions: jest.fn().mockReturnThis()
+		});
+
+		const createMockOptions = () => ({
+			context: "context",
+			output: {
+				hashFunction: "md5",
+				hashDigest: "hex",
+				hashDigestLength: 20,
+				hashSalt: "salt"
+			}
+		});
+
+		const createLoaderContextTestSetup = importAttributes => {
+			const normalModule = new NormalModule({
+				type: "javascript/auto",
+				request: "request",
+				userRequest: "userRequest",
+				rawRequest: "rawRequest",
+				loaders: [],
+				resource: "resource",
+				parser: null,
+				generator: null,
+				resolveOptions: {},
+				...(importAttributes !== undefined && { importAttributes })
+			});
+
+			const resolver = createMockResolver();
+			const options = createMockOptions();
+			const compilation = createMockCompilation();
+			const fs = {};
+			const hooks = {
+				loader: {
+					call: jest.fn()
+				}
+			};
+
+			return normalModule._createLoaderContext(
+				resolver,
+				options,
+				compilation,
+				fs,
+				hooks
+			);
+		};
+
+		it("should include _importAttributes in the loader context", () => {
+			const importAttributes = { type: "json" };
+			const loaderContext = createLoaderContextTestSetup(importAttributes);
+			expect(loaderContext._importAttributes).toEqual(importAttributes);
+		});
+
+		it("should include undefined _importAttributes if not provided", () => {
+			const loaderContext = createLoaderContextTestSetup(undefined);
+			expect(loaderContext._importAttributes).toBeUndefined();
+		});
+
+		it("should include null _importAttributes if null", () => {
+			const loaderContext = createLoaderContextTestSetup(null);
+			expect(loaderContext._importAttributes).toBeNull();
+		});
+
+		it("should include empty _importAttributes if empty", () => {
+			const loaderContext = createLoaderContextTestSetup({});
+			expect(loaderContext._importAttributes).toEqual({});
+		});
+	});
 });
