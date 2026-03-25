@@ -1104,6 +1104,10 @@
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
+        },
+        "typescript": {
+          "description": "Enable typescript support.",
+          "type": "boolean"
         }
       }
     },

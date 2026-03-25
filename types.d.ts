@@ -5273,6 +5273,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 

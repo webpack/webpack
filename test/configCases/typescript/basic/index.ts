@@ -37,6 +37,6 @@ it("source maps should work", function() {
 	const map = JSON.parse(sourceMap);
 	const sourceIndex = map.sources.findIndex((item) => /index\.ts/.test(item));
 
-	expect(sourceIndex).not.toBe(0);
+	expect(sourceIndex).not.toBe(-1);
 	expect(map.sourcesContent[sourceIndex]).toContain("enum UserRole {");
 });
