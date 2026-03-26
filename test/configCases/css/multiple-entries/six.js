@@ -1,0 +1,1 @@
+import "./six-b.css";

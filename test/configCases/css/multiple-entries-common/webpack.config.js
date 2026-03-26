@@ -4,14 +4,8 @@
 module.exports = {
 	target: "web",
 	entry: {
-		basic: "./basic.js",
-		one: "./one.css",
-		two: "./two.css",
-		three: "./three.css",
-		four: "./four.css",
-		five: "./five.css",
-		common: "./commonjs.js",
-		six: { import: "./six.js", dependOn: "common" }
+		one: "./one.js",
+		two: "./two.js"
 	},
 	output: {
 		filename: "[name].js",

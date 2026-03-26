@@ -1,29 +1,23 @@
 "use strict";
 
-let once = false;
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
-	moduleScope(scope) {
-		if (once) {
-			return;
-		}
-
-		const link1 = scope.window.document.createElement("link");
-		link1.rel = "stylesheet";
-		link1.href = "one.css";
-		scope.window.document.head.appendChild(link1);
-		const link2 = scope.window.document.createElement("link");
-		link2.rel = "stylesheet";
-		link2.href = "two.css";
-		scope.window.document.head.appendChild(link2);
-		once = true;
-	},
 	findBundle() {
-		return [
-			"async-one_js-c_css-d_css.chunk.js",
-			"one.js",
-			"async-two_js-c_css-d_css.chunk.js",
-			"two.js"
-		];
+		return ["basic.js"];
+	},
+	afterExecute(options) {
+		const files = fs
+			.readdirSync(options.output.path)
+			.filter((item) => !/stats/.test(item));
+
+		expect(files).toMatchSnapshot();
+
+		for (const file of files.filter((item) => /\.css/.test(item))) {
+			expect(
+				fs.readFileSync(path.join(options.output.path, file), "utf8")
+			).toMatchSnapshot(file);
+		}
 	}
 };

@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css multiple-entries-common exported tests should work: async 1`] = `
+"/*!*******************!*\\\\
+  !*** css ./c.css ***!
+  \\\\*******************/
+body {
+  background: blue;
+}
+
+/*!*******************!*\\\\
+  !*** css ./d.css ***!
+  \\\\*******************/
+body {
+  background: yellow;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css multiple-entries-common exported tests should work: async 2`] = `
+"/*!*******************!*\\\\
+  !*** css ./d.css ***!
+  \\\\*******************/
+body {
+  background: yellow;
+}
+
+/*!*******************!*\\\\
+  !*** css ./c.css ***!
+  \\\\*******************/
+body {
+  background: blue;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css multiple-entries-common exported tests should work: initial 1`] = `
+"/*!*******************!*\\\\
+  !*** css ./a.css ***!
+  \\\\*******************/
+body {
+  background: red;
+}
+
+/*!*******************!*\\\\
+  !*** css ./b.css ***!
+  \\\\*******************/
+body {
+  background: green;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css multiple-entries-common exported tests should work: initial 2`] = `
+"/*!*******************!*\\\\
+  !*** css ./b.css ***!
+  \\\\*******************/
+body {
+  background: green;
+}
+
+/*!*******************!*\\\\
+  !*** css ./a.css ***!
+  \\\\*******************/
+body {
+  background: red;
+}
+
+"
+`;
