@@ -91,7 +91,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different layers 1`] = `
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different layer at-rules 1`] = `
 "/*!***************************************************!*\\\\
   !*** css ./layer-at-rule-other.css (layer: base) ***!
   \\\\***************************************************/
@@ -298,6 +298,39 @@ Array [
 
 ",
 ]
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different supports at-rules 1`] = `
+"/*!************************************************************************!*\\\\
+  !*** css ./supports-at-rule-nested-more.css (supports: display: grid) ***!
+  \\\\************************************************************************/
+@supports (display: flex) {
+	@supports (display: grid) {
+		.bottom {
+			background: blue;
+		}
+	}
+}
+
+/*!*******************************************************************!*\\\\
+  !*** css ./supports-at-rule-nested.css (supports: display: flex) ***!
+  \\\\*******************************************************************/
+@supports (display: flex) {
+	
+	.middle {
+		background: green;
+	}
+}
+
+/*!**********************************!*\\\\
+  !*** css ./supports-at-rule.css ***!
+  \\\\**********************************/
+
+.top {
+	background: red;
+}
+
+"
 `;
 
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with fonts 1`] = `

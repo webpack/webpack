@@ -23,7 +23,7 @@ it("should work with different media at-rules", async () => {
 	expect(links.find((item) => /media-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
 });
 
-it("should work with different layers", async () => {
+it("should work with different layer at-rules", async () => {
 	await import("./layer-at-rule.js");
 
 	const links = [...document.getElementsByTagName("link")];
@@ -31,6 +31,13 @@ it("should work with different layers", async () => {
 	expect(links.find((item) => /layer-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
 });
 
+it("should work with different supports at-rules", async () => {
+	await import("./supports-at-rule.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /supports-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
+});
 
 it("should work with fonts", async () => {
 	await import("./fonts.css");
