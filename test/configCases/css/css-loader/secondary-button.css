@@ -1,0 +1,6 @@
+.secondaryButton
+{
+  composes: button from './button.css';
+  background-color: #555;
+  color: white;
+}

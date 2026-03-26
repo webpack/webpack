@@ -2,6 +2,7 @@
 
 const webpack = require("../../../../");
 
+/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
 /** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
 const common = {
@@ -46,6 +47,17 @@ const common = {
 					},
 					{
 						resourceQuery: /\?upper$/,
+						/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
+						generator: {
+							exportsConvention: (name) => name.toUpperCase()
+						}
+					},
+					{
+						resourceQuery: /\?upper-no-named-exports$/,
+						/** @type {ParserOptionsByModuleTypeKnown["css/module"]} */
+						parser: {
+							namedExports: false
+						},
 						/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 						generator: {
 							exportsConvention: (name) => name.toUpperCase()

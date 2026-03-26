@@ -3891,6 +3891,11 @@ declare interface CssModuleGeneratorOptions {
 	localIdentHashDigestLength?: number;
 
 	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	localIdentHashFunction?: string | typeof Hash;
+
+	/**
 	 * Any string which is added to the hash to salt it.
 	 */
 	localIdentHashSalt?: string;
@@ -3898,7 +3903,9 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure the generated local ident name.
 	 */
-	localIdentName?: string;
+	localIdentName?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 
 /**
@@ -14142,6 +14149,7 @@ declare interface PathData {
 	contentHashWithLength?: (length: number) => string;
 	noChunkHash?: boolean;
 	url?: string;
+	local?: string;
 	prepareId?: (id: string | number) => string | number;
 }
 type PathLikeFs = string | Buffer | URL;
@@ -17803,12 +17811,17 @@ declare interface StartupRenderContext {
 	/**
 	 * inlined
 	 */
-	inlined: boolean;
+	inlined?: boolean;
 
 	/**
 	 * the inlined entry module is wrapped in an IIFE
 	 */
 	inlinedInIIFE?: boolean;
+
+	/**
+	 * whether the top-level exports declaration needs to be generated
+	 */
+	needExportsDeclaration?: boolean;
 }
 declare interface StatFs {
 	(
@@ -18785,6 +18798,11 @@ declare interface TsconfigPathsMap {
 	 * referenced tsconfig paths data mapped by baseUrl
 	 */
 	refs: { [index: string]: TsconfigPathsData };
+
+	/**
+	 * all contexts (main + refs) for quick lookup
+	 */
+	allContexts: { [index: string]: TsconfigPathsData };
 
 	/**
 	 * file dependencies

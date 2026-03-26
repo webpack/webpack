@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases module import-meta-env exported tests import.meta.env behaves like process.env 1`] = `
+"import {fileURLToPath as __webpack_fileURLToPath__} from \\"url\\";
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+it(\\"should work import.meta.env with EnvironmentPlugin\\", () => {
+    expect(\\"aaa\\").toBe(\\"aaa\\");
+});
+
+it(\\"should work import.meta.env with DotenvPlugin\\", () => {
+    expect(\\"https://api.example.com\\").toBe(\\"https://api.example.com\\");
+});
+
+it(\\"import.meta.env behaves like process.env\\", async (done) => {
+    try {
+        const importMetaEnv = {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"};
+        importMetaEnv;
+        const processEnv = process.env;
+        processEnv;
+        const UNKNOWN_PROPERTY = undefined;
+        UNKNOWN_PROPERTY;
+        const UNKNOWN_PROPERTY_2 = process.env.UNKNOWN_PROPERTY_2;
+        UNKNOWN_PROPERTY_2;
+        \\"object\\";
+        typeof process.env;
+
+        const { env } = ({env: {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"},});
+        env;
+    } catch (_e) {
+        // ignore
+    }
+    const fs = await eval(\\"import('fs')\\");
+    expect(fs.readFileSync(__webpack_filename__, \\"utf-8\\")).toMatchSnapshot();
+    done();
+});
+"
+`;

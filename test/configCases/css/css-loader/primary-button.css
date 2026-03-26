@@ -1,0 +1,5 @@
+.primaryButton {
+  composes: button from './button.css';
+  background-color: blue;
+  color: white;
+}

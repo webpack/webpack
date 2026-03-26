@@ -30,7 +30,7 @@ module.exports = [
 				},
 				{
 					test: /\.less$/,
-					loader: "less-loader",
+					use: ["./remove-source-map-url-loader", "less-loader"],
 					type: "css/global"
 				}
 			]

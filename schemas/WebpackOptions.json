@@ -415,7 +415,15 @@
     },
     "CssGeneratorLocalIdentName": {
       "description": "Configure the generated local ident name.",
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+        }
+      ]
     },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
@@ -452,6 +460,9 @@
         },
         "localIdentHashDigestLength": {
           "$ref": "#/definitions/HashDigestLength"
+        },
+        "localIdentHashFunction": {
+          "$ref": "#/definitions/HashFunction"
         },
         "localIdentHashSalt": {
           "$ref": "#/definitions/HashSalt"

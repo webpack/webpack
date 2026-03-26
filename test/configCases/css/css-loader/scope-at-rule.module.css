@@ -1,0 +1,26 @@
+@scope (.light-scheme) {
+	:scope {
+		background-color: plum;
+	}
+
+	.class-a {
+		color: darkmagenta;
+	}
+}
+
+@scope (.dark-scheme) {
+	:scope {
+		background-color: darkmagenta;
+		color: antiquewhite;
+	}
+
+	.class-b {
+		color: plum;
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}

@@ -30,21 +30,21 @@ jobs:
       - run: yarn --frozen-lockfile
 
       - name: Cache prettier result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: ./node_modules/.cache/prettier/.prettier-cache
           key: lint-prettier-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/.prettierrc.js') }}
           restore-keys: lint-prettier-
 
       - name: Cache eslint result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .eslintcache
           key: lint-eslint-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/eslint.config.mjs') }}
           restore-keys: lint-eslint-
 
       - name: Cache cspell result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .cspellcache
           key: lint-cspell-${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/cspell.json') }}
@@ -150,7 +150,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Cache jest result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
@@ -159,7 +159,7 @@ jobs:
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
 
       - name: Codecov
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
         with:
           flags: unit
         env:
@@ -186,7 +186,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Cache jest result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .jest-cache
           key: jest-test262-${{ env.GITHUB_SHA }}
@@ -201,7 +201,7 @@ jobs:
       - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
 
       - name: Codecov
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
         with:
           flags: test262
         env:
@@ -262,12 +262,12 @@ jobs:
 
       # Install old `jest` version and deps for legacy node versions
       - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 memfs@4.14.0 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 less@4.5.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 memfs@4.14.0 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
 
       - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
           yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
 
@@ -289,7 +289,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Cache jest result
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
@@ -302,7 +302,7 @@ jobs:
       - run: yarn report:cover:merge
 
       - name: Codecov
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
         with:
           flags: integration
         env:

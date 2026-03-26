@@ -1,5 +1,8 @@
 "use strict";
 
+const { toMatchSnapshot } = require("jest-snapshot");
+const { getActiveSnapshotState } = require("./harness/snapshot");
+
 expect.extend({
 	toBeTypeOf(received, expected) {
 		const objType = typeof received;
@@ -39,6 +42,17 @@ expect.extend({
 					`  ${this.utils.printReceived(received)}`;
 
 		return { message, pass };
+	},
+	toMatchSnapshot(...args) {
+		const snapshotState = getActiveSnapshotState();
+
+		if (!snapshotState) {
+			return toMatchSnapshot.apply(this, args);
+		}
+
+		const snapshotContext = Object.create(this);
+		snapshotContext.snapshotState = snapshotState;
+		return toMatchSnapshot.apply(snapshotContext, args);
 	}
 });
 

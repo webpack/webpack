@@ -1,0 +1,39 @@
+.other-class {
+	color: red;
+}
+
+.class-1 {
+	color: blue;
+}
+
+.class-2 {
+	color: blue;
+}
+
+:global(.global-class) {
+	padding: 10px;
+}
+
+:global(.global-class-1) {
+	padding: 10px;
+}
+
+:global(.global-class-2) {
+	padding: 10px;
+}
+
+.class {
+	composes:
+		other-class,
+		class-1 class-2,
+		imported-alias from './alias.css',
+		imported-alias-2 imported-alias-3 from './alias-1.css',
+		global-class from global,
+		global-class-1 global-class-2 from global;
+	color: gainsboro;
+}
+
+.class-other {
+	composes: other-class class-1;
+}
+

@@ -1691,6 +1691,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-generator-css-auto-local-ident-hash-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Algorithm used for generation the hash (see node.js crypto package).",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentHashFunction",
+        "type": "string",
+      },
+    ],
+    "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-auto-local-ident-hash-salt": Object {
     "configs": Array [
       Object {
@@ -1834,6 +1847,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-generator-css-global-local-ident-hash-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Algorithm used for generation the hash (see node.js crypto package).",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentHashFunction",
+        "type": "string",
+      },
+    ],
+    "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-local-ident-hash-salt": Object {
     "configs": Array [
       Object {
@@ -1950,6 +1976,19 @@ Object {
     "description": "Number of chars which are used for the hash.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "module-generator-css-module-local-ident-hash-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Algorithm used for generation the hash (see node.js crypto package).",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentHashFunction",
+        "type": "string",
+      },
+    ],
+    "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-module-local-ident-hash-salt": Object {
     "configs": Array [

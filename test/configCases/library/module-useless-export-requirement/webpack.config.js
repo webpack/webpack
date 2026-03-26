@@ -1,6 +1,10 @@
 "use strict";
 
+/** @typedef {import("../../../../").Configuration} Configuration */
+
+/** @type {Configuration} */
 const common = {
+	mode: "production",
 	output: {
 		module: true,
 		filename: "[name].mjs",
@@ -14,28 +18,51 @@ const common = {
 	}
 };
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
+/** @type {Configuration[]} */
+const configs = [
 	{
-		...common,
-		entry: {
-			bundle0: "./entry1.js"
-		}
+		name: "entry1",
+		entry: "./entry1.js"
 	},
 	{
-		...common,
-		entry: {
-			bundle1: "./entry2.js"
-		}
+		name: "entry2",
+		entry: "./entry2.js"
 	},
 	{
-		...common,
+		name: "entry3",
+		entry: "./entry3.js",
 		optimization: {
-			concatenateModules: false,
 			avoidEntryIife: false
-		},
-		entry: {
-			bundle2: "./entry3.js"
 		}
 	}
 ];
+
+module.exports = configs.reduce(
+	/** @type {(result: EXPECTED_ANY, config: EXPECTED_ANY) => Configuration[]} */ (
+		result,
+		{ name, entry, optimization }
+	) => {
+		result.push({
+			...common,
+			optimization: {
+				...optimization,
+				concatenateModules: true
+			},
+			entry: {
+				[`${name}-concat`]: entry
+			}
+		});
+		result.push({
+			...common,
+			optimization: {
+				...optimization,
+				concatenateModules: false
+			},
+			entry: {
+				[`${name}-no-concat`]: entry
+			}
+		});
+		return result;
+	},
+	[]
+);

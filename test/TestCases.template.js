@@ -7,11 +7,11 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const { TestRunner } = require("./harness/runner");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
-const { TestRunner } = require("./runner");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
