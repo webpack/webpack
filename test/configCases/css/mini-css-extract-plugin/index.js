@@ -31,3 +31,21 @@ it("should work with fonts", async () => {
 
 	expect(links.find((item) => /fonts/.test(item.href)).sheet.css).toMatchSnapshot();
 });
+
+it("should work with css modules", async () => {
+	const styles = await import("./style.module.css");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /style_module_css/.test(item.href)).sheet.css).toMatchSnapshot();
+	expect(styles).toMatchSnapshot();
+});
+
+it("should work with css modules when named export false", async () => {
+	const styles = await import("./style.module.css");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /style_module_css/.test(item.href)).sheet.css).toMatchSnapshot();
+	expect(styles).toMatchSnapshot();
+});

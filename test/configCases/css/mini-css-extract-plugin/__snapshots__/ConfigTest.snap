@@ -12,6 +12,33 @@ body {
 "
 `;
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with css modules 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+.E3ncvS {
+	background: red;
+}
+
+.bHJbOX {
+	color: green;
+}
+
+.PPFDk2 {
+	color: blue;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with css modules 2`] = `
+Object {
+  "a-class": "E3ncvS",
+  "b__class": "bHJbOX",
+  "cClass": "PPFDk2",
+}
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different media at-rules 1`] = `
 "/*!*********************************!*\\\\
   !*** css ./media-at-rule-a.css ***!
