@@ -4,8 +4,8 @@ import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
+import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
-import { WorkerPool } from "./harness/benchmark/WorkerPool.mjs";
 
 /** @typedef {import("./benchmarkCases/_helpers/benchmark.worker.mjs").BenchmarkResult} BenchmarkResult */
 /** @typedef {import("./benchmarkCases/_helpers/benchmark.worker.mjs").Result} Result */
@@ -199,7 +199,7 @@ class BenchmarkRunner {
 		/** @type {string} */
 		this.baseOutputPath = path.join(__dirname, "js", "benchmark");
 
-		/** @type {WorkerPool | undefined} */
+		/** @type {Worker | undefined} */
 		this.workerPool = undefined;
 	}
 
@@ -280,9 +280,11 @@ class BenchmarkRunner {
 							: os.cpus().length - 1
 					);
 
-		this.workerPool = new WorkerPool(
-			path.resolve(__dirname, "harness/benchmark/worker.mjs"),
+		this.workerPool = new Worker(
+			path.resolve(__dirname, "harness/benchmark/job.mjs"),
 			{
+				computeWorkerKey: (_, { task }) => task.scenario.name,
+				exposedMethods: ["run"],
 				numWorkers,
 				forkOptions: { silent: false, execArgv: getV8Flags() }
 			}
@@ -464,7 +466,7 @@ class BenchmarkRunner {
 			/** @type {BenchmarkResult[]} */
 			const benchmarkResults = await Promise.all(
 				benchmarkTasks.map((task) =>
-					/** @type {WorkerPool} */ (this.workerPool).run({
+					/** @type {Worker} */ (this.workerPool).run({
 						task,
 						casesPath: this.casesPath,
 						baseOutputPath: this.baseOutputPath
@@ -474,7 +476,7 @@ class BenchmarkRunner {
 
 			this.processResults(benchmarkResults);
 		} finally {
-			await /** @type {WorkerPool} */ (this.workerPool).end();
+			await /** @type {Worker} */ (this.workerPool).end();
 		}
 	}
 }
