@@ -1,5 +1,30 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work nested CSS modules 1`] = `
+"/*!**************************!*\\\\
+  !*** css ./nested-a.css ***!
+  \\\\**************************/
+.class-a {
+  background: red;
+}
+
+/*!**********************************!*\\\\
+  !*** css ./nested-component.css ***!
+  \\\\**********************************/
+.class-b {
+  background: blue;
+}
+
+/*!**************************!*\\\\
+  !*** css ./nested-b.css ***!
+  \\\\**************************/
+.class-c {
+  background: red;
+}
+
+"
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with asset modules 1`] = `
 "/*!*******************************!*\\\\
   !*** css ./asset-modules.css ***!
@@ -32,6 +57,33 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 `;
 
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with css modules 2`] = `
+Object {
+  "a-class": "E3ncvS",
+  "b__class": "bHJbOX",
+  "cClass": "PPFDk2",
+}
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with css modules when named export false 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+.E3ncvS {
+	background: red;
+}
+
+.bHJbOX {
+	color: green;
+}
+
+.PPFDk2 {
+	color: blue;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with css modules when named export false 2`] = `
 Object {
   "a-class": "E3ncvS",
   "b__class": "bHJbOX",

@@ -8,6 +8,7 @@ module.exports = {
 			"media-at-rule_css.chunk.js",
 			"fonts_css.chunk.js",
 			"style_module_css.chunk.js",
+			"nested_js-nested-a_css-nested-b_css-nested-component_css.chunk.js",
 			"bundle0.js"
 		];
 	}

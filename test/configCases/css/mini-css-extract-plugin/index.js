@@ -49,3 +49,11 @@ it("should work with css modules when named export false", async () => {
 	expect(links.find((item) => /style_module_css/.test(item.href)).sheet.css).toMatchSnapshot();
 	expect(styles).toMatchSnapshot();
 });
+
+it("should work nested CSS modules", async () => {
+	await import("./nested.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /nested/.test(item.href)).sheet.css).toMatchSnapshot();
+});
