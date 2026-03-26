@@ -208,6 +208,17 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 "
 `;
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with match resource 1`] = `
+"/*!****************************************!*\\\\
+  !*** css ./virtual.css!=!./source.txt ***!
+  \\\\****************************************/
+body {
+  background-image: url(c89332e66f09d6bf27f1.svg);
+}
+
+"
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with multiple @charset at-rules 1`] = `
 "/*!***********************************************!*\\\\
   !*** external \\"http://some/path/to/css1.css\\" ***!

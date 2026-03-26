@@ -57,3 +57,11 @@ it("should work nested CSS modules", async () => {
 
 	expect(links.find((item) => /nested/.test(item.href)).sheet.css).toMatchSnapshot();
 });
+
+it("should work with match resource", async () => {
+	await import("./match-resource-url.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /match-resource-url/.test(item.href)).sheet.css).toMatchSnapshot();
+});

@@ -9,6 +9,7 @@ module.exports = {
 			"fonts_css.chunk.js",
 			"style_module_css.chunk.js",
 			"nested_js-nested-a_css-nested-b_css-nested-component_css.chunk.js",
+			"match-resource-url_js-virtual_css_source_txt.chunk.js",
 			"bundle0.js"
 		];
 	}
