@@ -463,18 +463,43 @@ class BenchmarkRunner {
 		);
 
 		try {
-			/** @type {BenchmarkResult[]} */
-			const benchmarkResults = await Promise.all(
+			const settledResults = await Promise.allSettled(
 				benchmarkTasks.map((task) =>
-					/** @type {Worker} */ (this.workerPool).run({
-						task,
-						casesPath: this.casesPath,
-						baseOutputPath: this.baseOutputPath
-					})
+					/** @type {Worker} */ (this.workerPool)
+						.run({
+							task,
+							casesPath: this.casesPath,
+							baseOutputPath: this.baseOutputPath
+						})
+						.catch((err) => {
+							console.error(`Task "${task.id}" failed: ${err.message}`);
+							throw err;
+						})
 				)
 			);
 
-			this.processResults(benchmarkResults);
+			/** @type {BenchmarkResult[]} */
+			const benchmarkResults = [];
+			/** @type {string[]} */
+			const failedTasks = [];
+
+			for (const [index, result] of settledResults.entries()) {
+				if (result.status === "fulfilled") {
+					benchmarkResults.push(result.value);
+				} else {
+					failedTasks.push(benchmarkTasks[index].id);
+				}
+			}
+
+			if (benchmarkResults.length > 0) {
+				this.processResults(benchmarkResults);
+			}
+
+			if (failedTasks.length > 0) {
+				throw new Error(
+					`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`
+				);
+			}
 		} finally {
 			await /** @type {Worker} */ (this.workerPool).end();
 		}
