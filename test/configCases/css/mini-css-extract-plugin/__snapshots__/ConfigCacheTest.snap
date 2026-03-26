@@ -91,6 +91,83 @@ Object {
 }
 `;
 
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different layers 1`] = `
+"/*!***************************************************!*\\\\
+  !*** css ./layer-at-rule-other.css (layer: base) ***!
+  \\\\***************************************************/
+@layer framework {
+	@layer base {
+		.bottom {
+		  background: blue;
+		}
+	}
+}
+
+/*!********************************************************!*\\\\
+  !*** css ./layer-at-rule-named.css (layer: framework) ***!
+  \\\\********************************************************/
+@layer framework {
+	
+	@layer base {
+	  .middle {
+	    background: green;
+	  }
+	}
+}
+
+/*!***************************************!*\\\\
+  !*** css ./layer-at-rule-unnamed.css ***!
+  \\\\***************************************/
+@layer {
+	.color {
+	  color: red;
+	}
+}
+
+/*!************************************************************************************************************************!*\\\\
+  !*** css ./layer-at-rule-other-too.css (layer: base) (supports: display: grid) (media: screen and (min-width: 900px)) ***!
+  \\\\************************************************************************************************************************/
+@layer default {
+	@supports (display: flex) {
+		@media (prefers-color-scheme: dark) {
+			@layer base {
+				@supports (display: grid) {
+					@media screen and (min-width: 900px) {
+						.foo {
+							color: red;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/*!********************************************************************************************************************************************!*\\\\
+  !*** css ./layer-at-rule-name-and-supports-and-media.css (layer: default) (supports: display: flex) (media: (prefers-color-scheme: dark)) ***!
+  \\\\********************************************************************************************************************************************/
+@layer default {
+	@supports (display: flex) {
+		@media (prefers-color-scheme: dark) {
+			
+			.bar {
+			  color: blue;
+			}
+		}
+	}
+}
+
+/*!*******************************!*\\\\
+  !*** css ./layer-at-rule.css ***!
+  \\\\*******************************/
+
+.top {
+	background: red;
+}
+
+"
+`;
+
 exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different media at-rules 1`] = `
 "/*!*********************************!*\\\\
   !*** css ./media-at-rule-a.css ***!

@@ -23,6 +23,15 @@ it("should work with different media at-rules", async () => {
 	expect(links.find((item) => /media-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
 });
 
+it("should work with different layers", async () => {
+	await import("./layer-at-rule.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /layer-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
+});
+
+
 it("should work with fonts", async () => {
 	await import("./fonts.css");
 
