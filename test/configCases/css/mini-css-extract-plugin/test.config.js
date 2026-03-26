@@ -12,6 +12,9 @@ module.exports = {
 			"match-resource-url_js-virtual_css_source_txt.chunk.js",
 			"shared-import-c_css.chunk.js",
 			"shared-import_js.chunk.js",
+			"async-different-order-one_js.chunk.js",
+			"async-different-order-two_js.chunk.js",
+			"async-different-order_js.chunk.js",
 			"bundle0.js"
 		];
 	}

@@ -188,6 +188,41 @@ div {
 "
 `;
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different order of CSS modules in async chunks 1`] = `
+Array [
+  "/*!*****************************************!*\\\\
+  !*** css ./async-different-order-1.css ***!
+  \\\\*****************************************/
+.a {
+	color: red;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./async-different-order-2.css ***!
+  \\\\*****************************************/
+.b {
+	color: red;
+}
+
+",
+  "/*!*****************************************!*\\\\
+  !*** css ./async-different-order-2.css ***!
+  \\\\*****************************************/
+.b {
+	color: red;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./async-different-order-1.css ***!
+  \\\\*****************************************/
+.a {
+	color: red;
+}
+
+",
+]
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with fonts 1`] = `
 "/*!***********************!*\\\\
   !*** css ./fonts.css ***!
