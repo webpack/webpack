@@ -299,3 +299,43 @@ body {
 
 "
 `;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with shared \`@import\` 1`] = `
+Array [
+  "/*!**************************************!*\\\\
+  !*** css ./shared-import-shared.css ***!
+  \\\\**************************************/
+.shared {
+	color: green;
+	background-color: green;
+	border: 1px solid green;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./shared-import-a.css ***!
+  \\\\*********************************/
+
+.shared {
+  color: red;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./shared-import-b.css ***!
+  \\\\*********************************/
+
+.shared {
+  background-color: red;
+}
+
+",
+  "/*!*********************************!*\\\\
+  !*** css ./shared-import-c.css ***!
+  \\\\*********************************/
+
+.shared {
+  border: 1px solid red;
+}
+
+",
+]
+`;

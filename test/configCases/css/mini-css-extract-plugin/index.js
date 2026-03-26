@@ -23,7 +23,6 @@ it("should work with different media at-rules", async () => {
 	expect(links.find((item) => /media-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
 });
 
-
 it("should work with fonts", async () => {
 	await import("./fonts.css");
 
@@ -64,4 +63,12 @@ it("should work with match resource", async () => {
 	const links = [...document.getElementsByTagName("link")];
 
 	expect(links.find((item) => /match-resource-url/.test(item.href)).sheet.css).toMatchSnapshot();
+});
+
+it("should work with shared `@import`", async () => {
+	await import("./shared-import.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.filter((item) => /shared-import/.test(item.href)).map((item) => item.sheet.css)).toMatchSnapshot();
 });
