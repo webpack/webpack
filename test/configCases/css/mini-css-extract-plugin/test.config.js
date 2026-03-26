@@ -17,6 +17,9 @@ module.exports = {
 			"async-different-order-one_js.chunk.js",
 			"async-different-order-two_js.chunk.js",
 			"async-different-order_js.chunk.js",
+			"composes-async-1.chunk.js",
+			"composes-async-2.chunk.js",
+			"composes-async_js.chunk.js",
 			"bundle0.js"
 		];
 	}

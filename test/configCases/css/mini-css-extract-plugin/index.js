@@ -96,3 +96,7 @@ it("should work with different order of CSS modules in async chunks", async () =
 
 	expect(links.filter((item) => /async-different-order/.test(item.href)).map((item) => item.sheet.css)).toMatchSnapshot();
 });
+
+it("should work with composes in async chunks", async () => {
+	await import("./composes-async.js");
+});

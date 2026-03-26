@@ -1,5 +1,45 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work css modules and composes 1`] = `
+Object {
+  "base": "mjFmCE q1JB1w",
+}
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work css modules and composes 2`] = `
+Object {
+  "composed": "q1JB1w",
+}
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work css modules and composes 3`] = `
+Array [
+  "/*!******************************************!*\\\\
+  !*** css ./composes-async-2.modules.css ***!
+  \\\\******************************************/
+.q1JB1w {
+  background: green;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./composes-async-1.modules.css ***!
+  \\\\******************************************/
+.mjFmCE {
+  background: blue;
+}
+
+",
+  "/*!******************************************!*\\\\
+  !*** css ./composes-async-2.modules.css ***!
+  \\\\******************************************/
+.q1JB1w {
+  background: green;
+}
+
+",
+]
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work nested CSS modules 1`] = `
 "/*!**************************!*\\\\
   !*** css ./nested-a.css ***!
