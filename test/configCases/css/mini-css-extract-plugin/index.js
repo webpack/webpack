@@ -22,3 +22,12 @@ it("should work with different media at-rules", async () => {
 
 	expect(links.find((item) => /media-at-rule/.test(item.href)).sheet.css).toMatchSnapshot();
 });
+
+
+it("should work with fonts", async () => {
+	await import("./fonts.css");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /fonts/.test(item.href)).sheet.css).toMatchSnapshot();
+});

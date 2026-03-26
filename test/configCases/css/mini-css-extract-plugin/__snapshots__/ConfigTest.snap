@@ -109,6 +109,26 @@ div {
 "
 `;
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with fonts 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./fonts.css ***!
+  \\\\***********************/
+@font-face {
+  font-family: \\"Roboto\\";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src:
+    local(\\"Roboto Light\\"),
+    local(\\"Roboto-Light\\"),
+    url(815babffe97b00a1f30b.woff2) format(\\"woff2\\"),
+    url(d4c409dfe110747b1763.woff) format(\\"woff\\"),
+    url(a0de923c946d4ccb38b0.ttf) format(\\"truetype\\");
+}
+
+"
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with multiple @charset at-rules 1`] = `
 "/*!***********************************************!*\\\\
   !*** external \\"http://some/path/to/css1.css\\" ***!
