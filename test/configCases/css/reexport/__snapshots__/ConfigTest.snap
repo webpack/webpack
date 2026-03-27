@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./reset.module.css ***!
+  \\\\******************************/
+.reset_module_css-reset-display {
+	display: unset;
+}
+
+/*!************************************!*\\\\
+  !*** css ./atoms-extra.module.css ***!
+  \\\\************************************/
+.atoms-extra_module_css-transition {
+	transition: transform 0.2s ease;
+}
+
+.atoms-extra_module_css-cursor {
+	cursor: pointer;
+}
+
+/*!******************************!*\\\\
+  !*** css ./atoms.module.css ***!
+  \\\\******************************/
+.atoms_module_css-display-flex {
+	display: flex;
+}
+
+.atoms_module_css-align-center {
+	align-items: center;
+}
+
+.atoms_module_css-padding-box {
+	padding: 16px;
+}
+
+.atoms_module_css-interactive {
+	will-change: transform;
+}
+
+.atoms_module_css-interactive:hover {
+	transform: scale(1.02);
+}
+
+/*!*******************************!*\\\\
+  !*** css ./button.module.css ***!
+  \\\\*******************************/
+.button_module_css-base {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+.styles_module_css-button-color-red {
+	color: red;
+}
+
+.button-global-font-size {
+	font-size: 14px;
+}
+
+.styles_module_css-button-complex {
+	background: blue;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
+Object {
+  "button-color-red": "styles_module_css-button-color-red",
+  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box reset_module_css-reset-display atoms-extra_module_css-cursor",
+}
+`;

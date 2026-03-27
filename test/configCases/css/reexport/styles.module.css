@@ -1,0 +1,12 @@
+.button-color-red {
+	color: red;
+}
+
+:global(.button-global-font-size) {
+	font-size: 14px;
+}
+
+.button-complex {
+	composes: button-color-red, button-global-font-size from global, base from "./button.module.css";
+	background: blue;
+}
