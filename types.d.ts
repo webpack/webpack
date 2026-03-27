@@ -5273,6 +5273,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 
@@ -5299,6 +5304,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -7197,7 +7207,10 @@ declare class JavascriptModulesPlugin {
 declare class JavascriptParser extends ParserClass {
 	constructor(
 		sourceType?: "module" | "auto" | "script",
-		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+		options?: {
+			parse?: (code: string, options: ParseOptions) => ParseResult;
+			typescript?: boolean;
+		}
 	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -7638,7 +7651,10 @@ declare class JavascriptParser extends ParserClass {
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
-	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
+	options: {
+		parse?: (code: string, options: ParseOptions) => ParseResult;
+		typescript?: boolean;
+	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
@@ -8807,6 +8823,11 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
 	 */
 	system?: boolean;
+
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 
 	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way.

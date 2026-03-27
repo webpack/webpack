@@ -3092,6 +3092,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-typescript": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable typescript support.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.typescript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable typescript support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-unknown-context-critical": Object {
     "configs": Array [
       Object {
@@ -3926,6 +3939,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-typescript": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable typescript support.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.typescript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable typescript support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-unknown-context-critical": Object {
     "configs": Array [
       Object {
@@ -4619,6 +4645,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-typescript": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable typescript support.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.typescript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable typescript support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-unknown-context-critical": Object {
     "configs": Array [
       Object {
@@ -5127,6 +5166,19 @@ Object {
       },
     ],
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-typescript": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable typescript support.",
+        "multiple": false,
+        "path": "module.parser.javascript.typescript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable typescript support.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -3400,6 +3400,10 @@ export interface JavascriptParserOptions {
 	 */
 	system?: boolean;
 	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
+	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way.
 	 */
 	unknownContextCritical?: boolean;
@@ -4025,6 +4029,10 @@ export interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 	[k: string]: any;
 }
 /**
@@ -4047,6 +4055,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Enable typescript support.
+	 */
+	typescript?: boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
