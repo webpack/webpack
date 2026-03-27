@@ -2317,6 +2317,12 @@ declare class Compilation {
 		afterModuleHash: SyncHook<[]>;
 		beforeCodeGeneration: SyncHook<[]>;
 		afterCodeGeneration: SyncHook<[]>;
+		processContent: HookMap<
+			AsyncSeriesWaterfallHook<
+				[[string, undefined | RawSourceMap], string],
+				[string, undefined | RawSourceMap]
+			>
+		>;
 		beforeRuntimeRequirements: SyncHook<[]>;
 		afterRuntimeRequirements: SyncHook<[]>;
 		beforeHash: SyncHook<[]>;
@@ -6335,7 +6341,10 @@ declare class Generator {
 	constructor();
 	getTypes(module: NormalModule): ReadonlySet<string>;
 	getSize(module: NormalModule, type?: string): number;
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	generate(
+		module: NormalModule,
+		__1: GenerateContext
+	): null | Source | Promise<null | Source>;
 	getConcatenationBailoutReason(
 		module: NormalModule,
 		context: ConcatenationBailoutReasonContext
@@ -10792,7 +10801,9 @@ declare class Module extends DependenciesBlock {
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
-	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
+	codeGeneration(
+		context: CodeGenerationContext
+	): CodeGenerationResult | Promise<CodeGenerationResult>;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
 	hasChunkCondition(): boolean;
 
