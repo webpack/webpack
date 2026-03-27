@@ -1,0 +1,4 @@
+:local .base {
+  composes: composed from "./composes-async-2.modules.css";
+  background: blue;
+}

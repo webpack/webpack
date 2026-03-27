@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile 1`] = `
+Array [
+  "basic.js",
+  "common.css",
+  "common.js",
+  "five.css",
+  "four.css",
+  "one.css",
+  "six.css",
+  "six.js",
+  "three.css",
+  "two.css",
+]
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: common.css 1`] = `
+"/*!************************!*\\\\
+  !*** css ./common.css ***!
+  \\\\************************/
+.class-a {
+	background: red;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: five.css 1`] = `
+"/*!**************************************************!*\\\\
+  !*** external \\"https://some/other/external/css\\" ***!
+  \\\\**************************************************/
+@import url(\\"https://some/other/external/css\\");
+/*!********************************************!*\\\\
+  !*** external \\"https://some/external/css\\" ***!
+  \\\\********************************************/
+@import url(\\"https://some/external/css\\");
+/*!************************!*\\\\
+  !*** css ./five-a.css ***!
+  \\\\************************/
+
+.a {
+	color: yellow;
+}
+
+/*!************************!*\\\\
+  !*** css ./five-b.css ***!
+  \\\\************************/
+
+.b {
+	color: yellow;
+}
+
+/*!**********************!*\\\\
+  !*** css ./five.css ***!
+  \\\\**********************/
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: four.css 1`] = `
+"/*!*********************************************************************************************!*\\\\
+  !*** external \\"https://fonts.googleapis.com/css2?family=Manrope:wght@500;800&display=swap\\" ***!
+  \\\\*********************************************************************************************/
+@import url(\\"https://fonts.googleapis.com/css2?family=Manrope:wght@500;800&display=swap\\");
+/*!**********************!*\\\\
+  !*** css ./four.css ***!
+  \\\\**********************/
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: one.css 1`] = `
+"/*!*********************!*\\\\
+  !*** css ./one.css ***!
+  \\\\*********************/
+.class-1 {
+	color: red;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: six.css 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./six-b.css ***!
+  \\\\***********************/
+.class-b {
+	background: blue;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: three.css 1`] = `
+"/*!************************************************************!*\\\\
+  !*** css ./dark.css (media: (prefers-color-scheme: dark)) ***!
+  \\\\************************************************************/
+@media (prefers-color-scheme: dark) {
+	body {
+		background: black;
+	}
+}
+
+/*!***********************!*\\\\
+  !*** css ./three.css ***!
+  \\\\***********************/
+
+"
+`;
+
+exports[`ConfigTestCases css multiple-entries multiple-entries should compile: two.css 1`] = `
+"/*!*********************!*\\\\
+  !*** css ./two.css ***!
+  \\\\*********************/
+.class-2 {
+	color: blue;
+}
+
+"
+`;

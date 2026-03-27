@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src:
+    local("Roboto Light"),
+    local("Roboto-Light"),
+    url("fonts/roboto-v18-latin-300.woff2") format("woff2"),
+    url("fonts/roboto-v18-latin-300.woff") format("woff"),
+    url("fonts/roboto-v18-latin-300.ttf") format("truetype");
+}

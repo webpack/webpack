@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases split-chunks css-enforce exported tests should work and enforce create vendor CSS chunk 1`] = `
+Array [
+  "/*!*********************************************!*\\\\
+  !*** css ./node_modules/package/styles.css ***!
+  \\\\*********************************************/
+body {
+  background: green;
+}
+
+",
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+body {
+  background: red;
+}
+
+",
+  "/*!*********************************************!*\\\\
+  !*** css ./node_modules/package/styles.css ***!
+  \\\\*********************************************/
+body {
+  background: green;
+}
+
+",
+]
+`;

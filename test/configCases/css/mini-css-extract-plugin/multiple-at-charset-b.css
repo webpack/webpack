@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+@import url(http://some/path/to/css1.css);
+@import url(http://some/path/to/css2.css) screen and (max-width: 1024px);
+@import url(http://some/path/to/css3.css) supports(display: grid) screen and (max-width: 400px);
+@import url(http://some/path/to/css4.css) supports(display: grid);
+@import url(http://some/path/to/css5.css) layer;
+@import url(http://some/path/to/css6.css) layer(layer-name) supports(display: grid) screen and (max-width: 1024px);
+@import url(http://some/path/to/css7.css) layer(layer-name) screen and (max-width: 1024px);
+
+
+@import "./multiple-at-charset-ba.css";
+@import "./multiple-at-charset-bb.css";
+
+body {
+	background: yellow;
+}

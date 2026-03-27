@@ -1,0 +1,7 @@
+@import url("./layer-at-rule-other.css") layer(base);
+
+@layer base {
+  .middle {
+    background: green;
+  }
+}

@@ -1,0 +1,526 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work css modules and composes 1`] = `
+Object {
+  "base": "mjFmCE q1JB1w",
+}
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work css modules and composes 2`] = `
+Object {
+  "composed": "q1JB1w",
+}
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work css modules and composes 3`] = `
+Array [
+  "/*!******************************************!*\\\\
+  !*** css ./composes-async-2.modules.css ***!
+  \\\\******************************************/
+.q1JB1w {
+  background: green;
+}
+
+/*!******************************************!*\\\\
+  !*** css ./composes-async-1.modules.css ***!
+  \\\\******************************************/
+.mjFmCE {
+  background: blue;
+}
+
+",
+  "/*!******************************************!*\\\\
+  !*** css ./composes-async-2.modules.css ***!
+  \\\\******************************************/
+.q1JB1w {
+  background: green;
+}
+
+",
+]
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work nested CSS modules 1`] = `
+"/*!**************************!*\\\\
+  !*** css ./nested-a.css ***!
+  \\\\**************************/
+.class-a {
+  background: red;
+}
+
+/*!**********************************!*\\\\
+  !*** css ./nested-component.css ***!
+  \\\\**********************************/
+.class-b {
+  background: blue;
+}
+
+/*!**************************!*\\\\
+  !*** css ./nested-b.css ***!
+  \\\\**************************/
+.class-c {
+  background: red;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with asset modules 1`] = `
+"/*!*******************************!*\\\\
+  !*** css ./asset-modules.css ***!
+  \\\\*******************************/
+body {
+	background: red;
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with css modules 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+.E3ncvS {
+	background: red;
+}
+
+.bHJbOX {
+	color: green;
+}
+
+.PPFDk2 {
+	color: blue;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with css modules 2`] = `
+Object {
+  "a-class": "E3ncvS",
+  "b__class": "bHJbOX",
+  "cClass": "PPFDk2",
+}
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with css modules when named export false 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+.E3ncvS {
+	background: red;
+}
+
+.bHJbOX {
+	color: green;
+}
+
+.PPFDk2 {
+	color: blue;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with css modules when named export false 2`] = `
+Object {
+  "a-class": "E3ncvS",
+  "b__class": "bHJbOX",
+  "cClass": "PPFDk2",
+}
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different layer at-rules 1`] = `
+"/*!***************************************************!*\\\\
+  !*** css ./layer-at-rule-other.css (layer: base) ***!
+  \\\\***************************************************/
+@layer framework {
+	@layer base {
+		.bottom {
+		  background: blue;
+		}
+	}
+}
+
+/*!********************************************************!*\\\\
+  !*** css ./layer-at-rule-named.css (layer: framework) ***!
+  \\\\********************************************************/
+@layer framework {
+	
+	@layer base {
+	  .middle {
+	    background: green;
+	  }
+	}
+}
+
+/*!***************************************!*\\\\
+  !*** css ./layer-at-rule-unnamed.css ***!
+  \\\\***************************************/
+@layer {
+	.color {
+	  color: red;
+	}
+}
+
+/*!************************************************************************************************************************!*\\\\
+  !*** css ./layer-at-rule-other-too.css (layer: base) (supports: display: grid) (media: screen and (min-width: 900px)) ***!
+  \\\\************************************************************************************************************************/
+@layer default {
+	@supports (display: flex) {
+		@media (prefers-color-scheme: dark) {
+			@layer base {
+				@supports (display: grid) {
+					@media screen and (min-width: 900px) {
+						.foo {
+							color: red;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/*!********************************************************************************************************************************************!*\\\\
+  !*** css ./layer-at-rule-name-and-supports-and-media.css (layer: default) (supports: display: flex) (media: (prefers-color-scheme: dark)) ***!
+  \\\\********************************************************************************************************************************************/
+@layer default {
+	@supports (display: flex) {
+		@media (prefers-color-scheme: dark) {
+			
+			.bar {
+			  color: blue;
+			}
+		}
+	}
+}
+
+/*!*******************************!*\\\\
+  !*** css ./layer-at-rule.css ***!
+  \\\\*******************************/
+
+.top {
+	background: red;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different media at-rules 1`] = `
+"/*!*********************************!*\\\\
+  !*** css ./media-at-rule-a.css ***!
+  \\\\*********************************/
+body {
+  font-size: 24px;
+}
+
+/*!******************************************************************************!*\\\\
+  !*** css ./media-at-rule-b.css (media: screen and (orientation: landscape)) ***!
+  \\\\******************************************************************************/
+@media screen and (orientation: landscape) {
+	body {
+	  font-size: 32px;
+	}
+}
+
+/*!***********************************************************!*\\\\
+  !*** css ./media-at-rule-c.css (supports: display: flex) ***!
+  \\\\***********************************************************/
+@supports (display: flex) {
+	body {
+	  font-size: 64px;
+	}
+}
+
+/*!**************************************************************************************************!*\\\\
+  !*** css ./media-at-rule-d.css (supports: display: flex) (media: screen and (min-width: 400px)) ***!
+  \\\\**************************************************************************************************/
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		body {
+		  font-size: 128px;
+		}
+	}
+}
+
+/*!**************************************************************************************************************************!*\\\\
+  !*** css ./media-at-rule-e.css (supports: display   :    flex) (media: screen    and    (   min-width   :    400px   )) ***!
+  \\\\**************************************************************************************************************************/
+@supports (display   :    flex) {
+	@media screen    and    (   min-width   :    400px   ) {
+		body {
+		  font-size: 256px;
+		}
+	}
+}
+
+/*!*****************************************************************!*\\\\
+  !*** css ./media-at-rule-f.css (supports: not (display: flex)) ***!
+  \\\\*****************************************************************/
+@supports (not (display: flex)) {
+	body {
+	  font-size: 512px;
+	}
+}
+
+/*!*****************************************************************!*\\\\
+  !*** css ./media-at-rule-g.css (supports: NOT (DISPLAY: FLEX)) ***!
+  \\\\*****************************************************************/
+@supports (NOT (DISPLAY: FLEX)) {
+	body {
+	  font-size: 1024px;
+	}
+}
+
+/*!*******************************!*\\\\
+  !*** css ./media-at-rule.css ***!
+  \\\\*******************************/
+
+div {
+  color: blue;
+}
+
+@media {
+  div {
+    color: red;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  article {
+    padding: 1rem 3rem;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    article {
+      display: flex;
+    }
+  }
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different order of CSS modules in async chunks 1`] = `
+Array [
+  "/*!*****************************************!*\\\\
+  !*** css ./async-different-order-1.css ***!
+  \\\\*****************************************/
+.a {
+	color: red;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./async-different-order-2.css ***!
+  \\\\*****************************************/
+.b {
+	color: red;
+}
+
+",
+  "/*!*****************************************!*\\\\
+  !*** css ./async-different-order-2.css ***!
+  \\\\*****************************************/
+.b {
+	color: red;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./async-different-order-1.css ***!
+  \\\\*****************************************/
+.a {
+	color: red;
+}
+
+",
+]
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with different supports at-rules 1`] = `
+"/*!************************************************************************!*\\\\
+  !*** css ./supports-at-rule-nested-more.css (supports: display: grid) ***!
+  \\\\************************************************************************/
+@supports (display: flex) {
+	@supports (display: grid) {
+		.bottom {
+			background: blue;
+		}
+	}
+}
+
+/*!*******************************************************************!*\\\\
+  !*** css ./supports-at-rule-nested.css (supports: display: flex) ***!
+  \\\\*******************************************************************/
+@supports (display: flex) {
+	
+	.middle {
+		background: green;
+	}
+}
+
+/*!**********************************!*\\\\
+  !*** css ./supports-at-rule.css ***!
+  \\\\**********************************/
+
+.top {
+	background: red;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with fonts 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./fonts.css ***!
+  \\\\***********************/
+@font-face {
+  font-family: \\"Roboto\\";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src:
+    local(\\"Roboto Light\\"),
+    local(\\"Roboto-Light\\"),
+    url(815babffe97b00a1f30b.woff2) format(\\"woff2\\"),
+    url(d4c409dfe110747b1763.woff) format(\\"woff\\"),
+    url(a0de923c946d4ccb38b0.ttf) format(\\"truetype\\");
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with match resource 1`] = `
+"/*!****************************************!*\\\\
+  !*** css ./virtual.css!=!./source.txt ***!
+  \\\\****************************************/
+body {
+  background-image: url(c89332e66f09d6bf27f1.svg);
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with multiple @charset at-rules 1`] = `
+"/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css1.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css1.css\\");
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css2.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css2.css\\") screen and (max-width: 1024px);
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css3.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css3.css\\") supports(display: grid) screen and (max-width: 400px);
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css4.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css4.css\\") supports(display: grid);
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css5.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css5.css\\") layer();
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css6.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css6.css\\") layer(layer-name) supports(display: grid) screen and (max-width: 1024px);
+/*!***********************************************!*\\\\
+  !*** external \\"http://some/path/to/css7.css\\" ***!
+  \\\\***********************************************/
+@import url(\\"http://some/path/to/css7.css\\") layer(layer-name) screen and (max-width: 1024px);
+/*!****************************************!*\\\\
+  !*** css ./multiple-at-charset-aa.css ***!
+  \\\\****************************************/
+@charset \\"utf-8\\";
+
+.aa {
+	background: green;
+}
+
+/*!***************************************!*\\\\
+  !*** css ./multiple-at-charset-a.css ***!
+  \\\\***************************************/
+@charset \\"utf-8\\";
+
+
+body {
+	background: red;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./multiple-at-charset-ba.css ***!
+  \\\\****************************************/
+@charset \\"utf-8\\";
+
+.ba {
+	background: green;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./multiple-at-charset-bb.css ***!
+  \\\\****************************************/
+@charset \\"utf-8\\";
+
+.bb {
+	background: green;
+}
+
+/*!***************************************!*\\\\
+  !*** css ./multiple-at-charset-b.css ***!
+  \\\\***************************************/
+@charset \\"utf-8\\";
+
+
+
+
+body {
+	background: yellow;
+}
+
+"
+`;
+
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with shared \`@import\` 1`] = `
+Array [
+  "/*!**************************************!*\\\\
+  !*** css ./shared-import-shared.css ***!
+  \\\\**************************************/
+.shared {
+	color: green;
+	background-color: green;
+	border: 1px solid green;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./shared-import-a.css ***!
+  \\\\*********************************/
+
+.shared {
+  color: red;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./shared-import-b.css ***!
+  \\\\*********************************/
+
+.shared {
+  background-color: red;
+}
+
+",
+  "/*!*********************************!*\\\\
+  !*** css ./shared-import-c.css ***!
+  \\\\*********************************/
+
+.shared {
+  border: 1px solid red;
+}
+
+",
+]
+`;

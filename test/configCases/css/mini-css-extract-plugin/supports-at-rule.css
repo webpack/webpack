@@ -1,0 +1,5 @@
+@import url("./supports-at-rule-nested.css") supports(display: flex);
+
+.top {
+	background: red;
+}

@@ -1,0 +1,1 @@
+import "./nested-component.css";
