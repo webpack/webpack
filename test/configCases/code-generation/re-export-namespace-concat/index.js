@@ -60,18 +60,18 @@ it("should use/preserve accessor form for import object and namespaces", functio
 	expectSourceToContain(source, 'const z3 = module1.obj1["pots"];');
 	expectSourceToContain(source, 'const z4 = module1.obj1["subs"]();');
 
-	expectSourceToContain(source, 'const a = module2/* m_1.obj1 */.a.obj1["flip"].flap;');
-	expectSourceToContain(source, 'const b = module2/* m_1.obj1 */.a.obj1.zip["zap"];');
-	expectSourceToContain(source, 'const c = module2/* m_1.obj1 */.a.obj1["ding"].dong();');
-	expectSourceToContain(source, 'const d = module2/* m_1.obj1 */.a.obj1.sing["song"]();');
+	expectSourceToContain(source, 'const a = module1.obj1["flip"].flap;');
+	expectSourceToContain(source, 'const b = module1.obj1.zip["zap"];');
+	expectSourceToContain(source, 'const c = module1.obj1["ding"].dong();');
+	expectSourceToContain(source, 'const d = module1.obj1.sing["song"]();');
 
-	expectSourceToContain(source, 'const aa = module3/* m_2.m_1.obj1 */.a.a.obj1["zoom"];');
+	expectSourceToContain(source, 'const aa = module1.obj1["zoom"];');
 
 	expectSourceToContain(source, 'const bb = module1.obj1.up.down?.left.right;');
 
 	expectSourceToContain(source, 'const ww = (__webpack_require__(/*! ./module1 */ 602).obj1)["bing"]?.bang;');
 	expectSourceToContain(source, 'const xx = (__webpack_require__(/*! ./module1 */ 602).obj1)["pip"].pop();');
-	expectSourceToContain(source, 'const yy = (__webpack_require__(/*! ./module3 */ 144)/* .m_2.m_1.obj1 */ .a.a.obj1)["tip"].top();');
+	expectSourceToContain(source, 'const yy = (__webpack_require__(/*! ./module3 */ 818)/* .m_2.m_1.obj1 */ .a.a.obj1)["tip"].top();');
 
 	expectSourceToContain(source, 'data_namespaceObject.a.a["unknownProperty"].depth = "deep";');
 
