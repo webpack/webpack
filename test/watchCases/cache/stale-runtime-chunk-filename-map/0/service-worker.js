@@ -1,10 +1,8 @@
 import "./shared.js";
 
 it("should update the runtime chunk filename map on rebuild", () => {
-	const currentChunkFile = Array.isArray(STATS_JSON.assetsByChunkName.js)
-		? STATS_JSON.assetsByChunkName.js[0]
-		: STATS_JSON.assetsByChunkName.js;
-	const serviceWorkerSource = readOutputFile("service-worker.js");
+	const currentChunkFile = STATS_JSON.assetsByChunkName.js[0];
+	const serviceWorkerSource = getServiceWorkerSource();
 
 	expect(currentChunkFile).toBeTruthy();
 

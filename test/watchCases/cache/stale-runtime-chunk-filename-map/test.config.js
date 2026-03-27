@@ -8,7 +8,10 @@ module.exports = {
 		return "./service-worker.js";
 	},
 	moduleScope(scope, options) {
-		scope.readOutputFile = (filename) =>
-			fs.readFileSync(path.join(options.output.path, filename), "utf8");
+		scope.getServiceWorkerSource = () =>
+			fs.readFileSync(
+				path.join(options.output.path, "service-worker.js"),
+				"utf8"
+			);
 	}
 };
