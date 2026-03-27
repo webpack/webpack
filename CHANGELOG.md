@@ -1,5 +1,53 @@
 # webpack
 
+## 5.106.0
+
+### Minor Changes
+
+- Add `exportType: "style"` for CSS modules to inject styles into DOM via HTMLStyleElement, similar to style-loader functionality. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20579](https://github.com/webpack/webpack/pull/20579))
+
+- Add `context` option support for VirtualUrlPlugin (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20449](https://github.com/webpack/webpack/pull/20449))
+  - The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
+  - Support custom context path for resolving relative imports in virtual modules
+  - Add examples demonstrating context usage and filename customization
+
+- Generate different `CssModule` instances for different `exportType` values. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20590](https://github.com/webpack/webpack/pull/20590))
+
+- Added the `localIdentHashFunction` option to configure the hash function to be used for hashing. (by [@alexander-akait](https://github.com/alexander-akait) in [#20694](https://github.com/webpack/webpack/pull/20694))
+  Additionally, the `localIdentName` option can now be a function.
+
+- Added support for destructuring assignment `require` in cjs, allowing for tree shaking. (by [@ahabhgk](https://github.com/ahabhgk) in [#20548](https://github.com/webpack/webpack/pull/20548))
+
+- Added the `validate` option to enable/disable validation in webpack/plugins/loaders, also implemented API to make it inside plugins. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20275](https://github.com/webpack/webpack/pull/20275))
+
+### Patch Changes
+
+- Add a static getSourceBasicTypes method to the Module class to prevent errors across multiple versions. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20614](https://github.com/webpack/webpack/pull/20614))
+
+- Included fragment groups in the conflicting order warning for CSS. (by [@aryanraj45](https://github.com/aryanraj45) in [#20660](https://github.com/webpack/webpack/pull/20660))
+
+- Avoid rendering unused top-level `__webpack_exports__` declaration when output ECMA module library. (by [@hai-x](https://github.com/hai-x) in [#20669](https://github.com/webpack/webpack/pull/20669))
+
+- Allow external modules place in async chunks when output ECMA module. (by [@hai-x](https://github.com/hai-x) in [#20662](https://github.com/webpack/webpack/pull/20662))
+
+- Implement `deprecate` flag in schema for better TypeScript support to show which options are already deprecated by the configuration (by [@bjohansebas](https://github.com/bjohansebas) in [#20432](https://github.com/webpack/webpack/pull/20432))
+
+- Fix multiple bugs and optimizations in CSS modules: correct third code point position in walkCssTokens number detection, fix multiline CSS comment regex, fix swapped :import/:export error message, fix comma callback incorrectly popping balanced stack, fix cache comparison missing array length check, fix match.index mutation side effect, move publicPathAutoRegex to module scope, precompute merged callbacks in consumeUntil, simplify redundant ternary in CssGenerator, fix typo GRID_TEMPLATE_ARES, remove duplicate grid-column-start, and merge duplicate getCompilationHooks calls. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20648](https://github.com/webpack/webpack/pull/20648))
+
+- Correct url() path resolution and preserve source maps for non-link CSS export types (style, text, css-style-sheet) (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20717](https://github.com/webpack/webpack/pull/20717))
+
+- Emit error when proxy server returns non-200 status code in HttpUriPlugin instead of silently failing. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20646](https://github.com/webpack/webpack/pull/20646))
+
+- `import.meta` as standalone expression now returns a complete object with known properties (`url`, `webpack`, `main`, `env`) instead of an empty object `({})`, and hoists it as a module-level variable to ensure `import.meta === import.meta` identity. In `preserve-unknown` mode (ESM output), the hoisted object merges runtime `import.meta` properties via `Object.assign`. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20658](https://github.com/webpack/webpack/pull/20658))
+
+- Fix incorrect condition in FileSystemInfo that always evaluated to false, preventing trailing slash removal from directory paths during build dependency resolution. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20649](https://github.com/webpack/webpack/pull/20649))
+
+- fix: VirtualUrlPlugin absolute path virtual module IDs getting concatenated with compiler context (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20656](https://github.com/webpack/webpack/pull/20656))
+
+  When a virtual module ID is an absolute path (e.g. `virtual:C:/project/user.js`), the auto-derived context was incorrectly joined with `compiler.context`, producing a concatenated path like `C:\cwd\C:\project`. Now absolute-path contexts are used directly.
+
+- Fix `CompatibilityPlugin` to correctly rename `__webpack_require__` when it appears as an arrow function parameter (e.g. `(__webpack_module, __webpack_exports, __webpack_require__) => { ... }`). (by [@hai-x](https://github.com/hai-x) in [#20661](https://github.com/webpack/webpack/pull/20661))
+
 ## 5.105.4
 
 ### Patch Changes
