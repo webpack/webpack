@@ -1,5 +1,7 @@
 "use strict";
 
+/** @typedef {import("../../../../").PathData} PathData */
+
 const publicPaths = [
 	"auto",
 	"/",
@@ -16,6 +18,10 @@ const publicPaths = [
 	"../static/",
 	"./static/",
 	// TODO BUG
+	/**
+	 * @param {PathData} pathData path data
+	 * @returns {string} public path
+	 */
 	(pathData) => `https://webpack.js.org/${pathData.hash}/`
 ];
 
