@@ -1,10 +1,9 @@
-async function load1() {
-	import("./async-different-order-one.js");
+function load1() {
+	return import("./async-different-order-one.js");
 }
 
-async function load2() {
-	import("./async-different-order-two.js");
+function load2() {
+	return import("./async-different-order-two.js");
 }
 
-load1().catch(() => {});
-load2().catch(() => {});
+Promise.all([load1(), load2()]).catch(() => {});
