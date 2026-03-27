@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-fix: correct url() path resolution and preserve source maps for non-link CSS export types (style, text, css-style-sheet)
+Correct url() path resolution and preserve source maps for non-link CSS export types (style, text, css-style-sheet)
