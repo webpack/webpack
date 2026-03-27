@@ -1315,23 +1315,95 @@ declare class Chunk {
 	 * @deprecated
 	 */
 	get entryModule(): Module;
+
+	/**
+	 * @deprecated
+	 */
 	hasEntryModule(): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	addModule(module: Module): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	removeModule(module: Module): void;
+
+	/**
+	 * @deprecated
+	 */
 	getNumberOfModules(): number;
+
+	/**
+	 * @deprecated
+	 */
 	get modulesIterable(): Iterable<Module>;
+
+	/**
+	 * @deprecated
+	 */
 	compareTo(otherChunk: Chunk): 0 | 1 | -1;
+
+	/**
+	 * @deprecated
+	 */
 	containsModule(module: Module): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	getModules(): Module[];
+
+	/**
+	 * @deprecated
+	 */
 	remove(): void;
+
+	/**
+	 * @deprecated
+	 */
 	moveModule(module: Module, otherChunk: Chunk): void;
+
+	/**
+	 * @deprecated
+	 */
 	integrate(otherChunk: Chunk): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	canBeIntegrated(otherChunk: Chunk): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	isEmpty(): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	modulesSize(): number;
+
+	/**
+	 * @deprecated
+	 */
 	size(options?: ChunkSizeOptions): number;
+
+	/**
+	 * @deprecated
+	 */
 	integratedSize(otherChunk: Chunk, options: ChunkSizeOptions): number;
+
+	/**
+	 * @deprecated
+	 */
 	getChunkModuleMaps(filterFn: (m: Module) => boolean): ChunkModuleMaps;
+
+	/**
+	 * @deprecated
+	 */
 	hasModuleInGraph(
 		filterFn: (m: Module) => boolean,
 		filterChunkFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
@@ -2638,7 +2710,7 @@ declare class Compilation {
 	 * @deprecated
 	 */
 	assignDepth(module: Module): void;
-	assignDepths(modules: Set<Module>): void;
+	assignDepths(modules: Module[] | Set<Module>): void;
 	getDependencyReferencedExports(
 		dependency: Dependency,
 		runtime: RuntimeSpec
@@ -10682,15 +10754,53 @@ declare class Module extends DependenciesBlock {
 
 	/**
 	 * @deprecated
+	 * @deprecated
 	 */
 	id: null | string | number;
+
+	/**
+	 * @deprecated
+	 */
 	get hash(): string;
+
+	/**
+	 * @deprecated
+	 */
 	get renderedHash(): string;
+
+	/**
+	 * @deprecated
+	 * @deprecated
+	 */
 	profile?: ModuleProfile;
+
+	/**
+	 * @deprecated
+	 * @deprecated
+	 */
 	index: null | number;
+
+	/**
+	 * @deprecated
+	 * @deprecated
+	 */
 	index2: null | number;
+
+	/**
+	 * @deprecated
+	 * @deprecated
+	 */
 	depth: null | number;
+
+	/**
+	 * @deprecated
+	 * @deprecated
+	 */
 	issuer?: null | Module;
+
+	/**
+	 * @deprecated
+	 */
 	get usedExports(): null | boolean | SortableSet<string>;
 
 	/**
@@ -10700,14 +10810,50 @@ declare class Module extends DependenciesBlock {
 		| string
 		| ((requestShortener: RequestShortener) => string)
 	)[];
+
+	/**
+	 * @deprecated
+	 */
 	get optional(): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	addChunk(chunk: Chunk): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	removeChunk(chunk: Chunk): void;
+
+	/**
+	 * @deprecated
+	 */
 	isInChunk(chunk: Chunk): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	isEntryModule(): boolean;
+
+	/**
+	 * @deprecated
+	 */
 	getChunks(): Chunk[];
+
+	/**
+	 * @deprecated
+	 */
 	getNumberOfChunks(): number;
+
+	/**
+	 * @deprecated
+	 */
 	get chunksIterable(): Iterable<Chunk>;
+
+	/**
+	 * @deprecated
+	 */
 	isProvided(exportName: string): null | boolean;
 	get exportsArgument(): string;
 	get moduleArgument(): string;
@@ -11310,6 +11456,7 @@ declare interface ModuleOptions {
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
+	 * @deprecated
 	 */
 	exprContextCritical?: boolean;
 
@@ -12709,7 +12856,6 @@ declare interface Optimization {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
@@ -12855,7 +13001,6 @@ declare interface OptimizationNormalized {
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
-	 * @deprecated
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
