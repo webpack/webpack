@@ -26,10 +26,11 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {import("../../../types.d.ts").Stats} Stats */
 /** @typedef {import("../../../types.d.ts").Watching} Watching */
 /** @typedef {import("../../../test/BenchmarkTestCases.benchmark.mjs").Scenario} Scenario */
+/** @typedef {import("../../../test/BenchmarkTestCases.benchmark.mjs").Baseline} Baseline */
 
 /**
  * @typedef {object} TResult
- * @property {string} collectBy benchmark name and scenario name
+ * @property {string=} collectBy benchmark name and scenario name
  * @property {string} text benchmark result text
  * @property {number} minConfidence min confidence
  * @property {number} maxConfidence max confidence
@@ -46,8 +47,14 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {Result[]} results benchmark Result
  */
 
+/**
+ * @typedef {object} BenchmarkWorkerMethods
+ * @property {typeof run} run
+ */
+
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 
+/** @type {string} */
 let _baseOutputPath;
 
 /**
@@ -608,14 +615,23 @@ function runBuild(webpack, webpackConfig) {
 /**
  * @param {Webpack} webpack webpack
  * @param {Configuration} webpackConfig configuration
- * @param {EXPECTED_ANY} callback callback
- * @returns {Promise<void>} watching
+ * @param {(err: Error | null, stats?: Stats) => void} callback callback
+ * @returns {Promise<Watching>} watching
  */
 async function runWatch(webpack, webpackConfig, callback) {
 	const compiler = webpack(webpackConfig);
 	return /** @type {Watching} */ (compiler.watch({}, callback));
 }
 
+/**
+ * @param {object} options options
+ * @param {Bench} options.benchInstance bench instance
+ * @param {string} options.benchmarkName benchmark name
+ * @param {string} options.taskName task name
+ * @param {Webpack} options.webpack webpack
+ * @param {Configuration} options.webpackConfig webpack config
+ * @param {Scenario} options.scenario scenario
+ */
 async function addBuildBench({
 	benchInstance,
 	benchmarkName,
@@ -646,6 +662,15 @@ async function addBuildBench({
 	);
 }
 
+/**
+ * @param {object} options options
+ * @param {Bench} options.benchInstance bench instance
+ * @param {string} options.benchmarkName benchmark name
+ * @param {string} options.taskName task name
+ * @param {Webpack} options.webpack webpack
+ * @param {Configuration} options.webpackConfig webpack config
+ * @param {Scenario} options.scenario scenario
+ */
 async function addWatchBench({
 	benchInstance,
 	benchmarkName,
@@ -654,11 +679,11 @@ async function addWatchBench({
 	webpackConfig,
 	scenario
 }) {
-	const entry = path.resolve(webpackConfig.entry);
-	if (!entry) {
+	if (typeof webpackConfig.entry !== "string") {
 		throw new Error(`No entry for "${benchmarkName}" bench.`);
 	}
 
+	const entry = path.resolve(webpackConfig.entry);
 	const originalEntryContent = await fs.readFile(entry, "utf8");
 
 	/** @type {Watching | undefined} */
@@ -839,6 +864,13 @@ async function addWatchBench({
 	);
 }
 
+/**
+ * @param {object} options options
+ * @param {import("../../BenchmarkTestCases.benchmark.mjs").BenchmarkTask} options.task benchmark task
+ * @param {string} options.casesPath cases path
+ * @param {string} options.baseOutputPath base output path
+ * @returns {Promise<BenchmarkResult>} benchmark result
+ */
 export async function run({ task, casesPath, baseOutputPath }) {
 	console.log(`Worker ${process.pid}: Running ${task.id}`);
 
@@ -869,7 +901,7 @@ export async function run({ task, casesPath, baseOutputPath }) {
 		})
 	);
 
-	/** @type {BenchmarkResult[]} */
+	/** @type {Result[]} */
 	const benchResults = [];
 
 	const realConfig = (
@@ -897,7 +929,9 @@ export async function run({ task, casesPath, baseOutputPath }) {
 		console.log(`Register: ${fullTaskName}`);
 
 		const webpack = (
-			await import(pathToFileURL(path.resolve(baseline.path, "./lib/index.js")))
+			await import(
+				`${pathToFileURL(path.resolve(baseline.path, "./lib/index.js"))}`
+			)
 		).default;
 
 		const params = {

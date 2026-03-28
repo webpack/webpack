@@ -14,7 +14,7 @@
   },
   "include": [
     "test/*.benchmark.mjs",
-    "test/benchmarkCases/_helpers/**/*.mjs",
+    "test/harness/benchmark/**/*.mjs",
     "test/benchmarkCases/**/webpack.config.mjs",
     "test/benchmarkCases/**/options.mjs"
   ]

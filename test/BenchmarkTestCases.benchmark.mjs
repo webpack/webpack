@@ -7,8 +7,10 @@ import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
 import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
 
-/** @typedef {import("./benchmarkCases/_helpers/benchmark.worker.mjs").BenchmarkResult} BenchmarkResult */
-/** @typedef {import("./benchmarkCases/_helpers/benchmark.worker.mjs").Result} Result */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkResult} BenchmarkResult */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").Result} Result */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkWorkerMethods} BenchmarkWorkerMethods */
+/** @typedef {import("jest-worker").JestWorkerFarm<BenchmarkWorkerMethods>} BenchmarkWorker */
 
 /**
  * @typedef {object} Baseline
@@ -199,7 +201,7 @@ class BenchmarkRunner {
 		/** @type {string} */
 		this.baseOutputPath = path.join(__dirname, "js", "benchmark");
 
-		/** @type {Worker | undefined} */
+		/** @type {BenchmarkWorker | undefined} */
 		this.workerPool = undefined;
 	}
 
@@ -276,14 +278,19 @@ class BenchmarkRunner {
 				: os.cpus().length - 1
 		);
 
-		this.workerPool = new Worker(
-			path.resolve(__dirname, "harness/benchmark/benchmark.worker.mjs"),
-			{
-				computeWorkerKey: (_, { task }) => task.scenario.name,
-				exposedMethods: ["run"],
-				numWorkers,
-				forkOptions: { silent: false, execArgv: getV8Flags() }
-			}
+		this.workerPool = /** @type {BenchmarkWorker} */ (
+			new Worker(
+				path.resolve(__dirname, "harness/benchmark/benchmark.worker.mjs"),
+				{
+					computeWorkerKey: (_arg1, arg2) => {
+						const { task } = /** @type {{ task: BenchmarkTask }} */ (arg2);
+						return task.scenario.name;
+					},
+					exposedMethods: ["run"],
+					numWorkers,
+					forkOptions: { silent: false, execArgv: getV8Flags() }
+				}
+			)
 		);
 
 		return numWorkers;
@@ -354,6 +361,10 @@ class BenchmarkRunner {
 		for (const benchmarkResult of benchmarkResults) {
 			for (const result of benchmarkResult.results) {
 				const collectBy = result.collectBy;
+				if (!collectBy) {
+					continue;
+				}
+
 				const allStats = statsByTests.get(collectBy);
 
 				if (!allStats) {
@@ -484,7 +495,9 @@ class BenchmarkRunner {
 				});
 				benchmarkResults.push(result);
 			} catch (err) {
-				console.error(`Task "${task.id}" failed: ${err.message}`);
+				if (err instanceof Error) {
+					console.error(`Task "${task.id}" failed: ${err.message}`);
+				}
 				failedTasks.push(task.id);
 			}
 		}
@@ -506,6 +519,11 @@ class BenchmarkRunner {
 	 */
 	async runInWorkers(benchmarkTasks) {
 		const numWorkers = this.createWorkerPool();
+		const workerPool = this.workerPool;
+
+		if (!workerPool) {
+			throw new Error("Worker pool is not initialized");
+		}
 
 		console.log(
 			`\nRunning ${benchmarkTasks.length} benchmark tasks across ${numWorkers} workers\n`
@@ -514,14 +532,16 @@ class BenchmarkRunner {
 		try {
 			const settledResults = await Promise.allSettled(
 				benchmarkTasks.map((task) =>
-					/** @type {Worker} */ (this.workerPool)
+					workerPool
 						.run({
 							task,
 							casesPath: this.casesPath,
 							baseOutputPath: this.baseOutputPath
 						})
 						.catch((err) => {
-							console.error(`Task "${task.id}" failed: ${err.message}`);
+							if (err instanceof Error) {
+								console.error(`Task "${task.id}" failed: ${err.message}`);
+							}
 							throw err;
 						})
 				)
