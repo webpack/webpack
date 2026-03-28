@@ -59,17 +59,22 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Type-checking tests, likely for TypeScript integration.
 - **Usage**: Ensures proper type definitions and compliance.
 
-### 12. `watchCases/`
+### 12. `test262-cases/`
+
+- **Purpose**: ECMAScript test262 conformance test cases.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/test262.spectest.js`.
+
+### 13. `watchCases/`
 
 - **Purpose**: Tests for Webpack’s watch mode functionality.
 - **Usage**: Ensures file changes trigger correct rebuild behavior.
 
-### 13. `*.unittest.js`
+### 14. `*.unittest.js`
 
 - **Purpose**: Contains unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
 
-### 14. `BannerPlugin.test.js`
+### 15. `BannerPlugin.test.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
