@@ -64,10 +64,10 @@ yarn add webpack --dev
 ## Introduction
 
 Webpack is a bundler for modules. The main purpose is to bundle JavaScript
-files for usage in a browser, yet it is also capable of transforming, bundling,
+files for use in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
-**TL;DR**
+**TL;DR**: Key features of Webpack include:
 
 - Bundles [ES Modules](https://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](https://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 - Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
