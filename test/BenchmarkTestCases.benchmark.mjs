@@ -269,19 +269,15 @@ class BenchmarkRunner {
 	 * @returns {number} number of workers
 	 */
 	createWorkerPool() {
-		const codspeedRunnerMode = getCodspeedRunnerMode();
-		const numWorkers =
-			codspeedRunnerMode === "memory"
-				? 1
-				: Math.max(
-						1,
-						typeof os.availableParallelism === "function"
-							? os.availableParallelism() - 1
-							: os.cpus().length - 1
-					);
+		const numWorkers = Math.max(
+			1,
+			typeof os.availableParallelism === "function"
+				? os.availableParallelism() - 1
+				: os.cpus().length - 1
+		);
 
 		this.workerPool = new Worker(
-			path.resolve(__dirname, "harness/benchmark/job.mjs"),
+			path.resolve(__dirname, "harness/benchmark/benchmark.worker.mjs"),
 			{
 				computeWorkerKey: (_, { task }) => task.scenario.name,
 				exposedMethods: ["run"],
@@ -387,7 +383,6 @@ class BenchmarkRunner {
 	 */
 	async run() {
 		const baselines = await this.initialize();
-		const numWorkers = this.createWorkerPool();
 
 		const FILTER =
 			typeof process.env.FILTER !== "undefined"
@@ -457,6 +452,60 @@ class BenchmarkRunner {
 		);
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
+
+		await (getCodspeedRunnerMode() === "memory"
+			? this.runInMainThread(benchmarkTasks)
+			: this.runInWorkers(benchmarkTasks));
+	}
+
+	/**
+	 * Run benchmark tasks sequentially in the main thread (memory mode)
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 */
+	async runInMainThread(benchmarkTasks) {
+		console.log(
+			`\nRunning ${benchmarkTasks.length} benchmark tasks in single thread (memory mode)\n`
+		);
+
+		const { run: runBenchmark } =
+			await import("./harness/benchmark/benchmark.worker.mjs");
+
+		/** @type {BenchmarkResult[]} */
+		const benchmarkResults = [];
+		/** @type {string[]} */
+		const failedTasks = [];
+
+		for (const task of benchmarkTasks) {
+			try {
+				const result = await runBenchmark({
+					task,
+					casesPath: this.casesPath,
+					baseOutputPath: this.baseOutputPath
+				});
+				benchmarkResults.push(result);
+			} catch (err) {
+				console.error(`Task "${task.id}" failed: ${err.message}`);
+				failedTasks.push(task.id);
+			}
+		}
+
+		if (benchmarkResults.length > 0) {
+			this.processResults(benchmarkResults);
+		}
+
+		if (failedTasks.length > 0) {
+			throw new Error(
+				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`
+			);
+		}
+	}
+
+	/**
+	 * Run benchmark tasks in parallel using a worker pool
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 */
+	async runInWorkers(benchmarkTasks) {
+		const numWorkers = this.createWorkerPool();
 
 		console.log(
 			`\nRunning ${benchmarkTasks.length} benchmark tasks across ${numWorkers} workers\n`
