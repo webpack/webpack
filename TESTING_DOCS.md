@@ -102,16 +102,35 @@ During the test run, webpack compiles this project and compares the result with 
 
 ## How to Run Tests
 
-To execute all tests, use the following command:
+To execute all tests:
 
 ```sh
 yarn test
 ```
 
-For running specific tests:
+**Choose test command based on modified directory:**
+
+| Modified directory/file | Command                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------- |
+| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`                                   |
+| `test/cases/`           | `yarn test:basic`                                                                     |
+| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"`                             |
+| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`                              |
+| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`                               |
+| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`                                 |
+| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                                                 |
+| `test/test262-cases/`   | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first) |
+
+**Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 
 ```sh
-yarn test:base cases/userLogic.test.js
+yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic"
+```
+
+Multiple patterns can be combined with `|`:
+
+```sh
+yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic|css url"
 ```
 
 ## Contribution Guide
