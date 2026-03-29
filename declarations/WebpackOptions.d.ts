@@ -4018,6 +4018,11 @@ export interface ExperimentsExtra {
 	 */
 	css?: boolean;
 	/**
+	 * Enable HTML entry point support. When an .html file is used as a webpack entry,
+	 * webpack discovers JS/CSS/asset dependencies and emits the HTML with updated output URLs.
+	 */
+	html?: boolean;
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
 	deferImport?: boolean;
@@ -4039,6 +4044,11 @@ export interface ExperimentsNormalizedExtra {
 	 * Enable css support.
 	 */
 	css?: boolean;
+	/**
+	 * Enable HTML entry point support. When an .html file is used as a webpack entry,
+	 * webpack discovers JS/CSS/asset dependencies and emits the HTML with updated output URLs.
+	 */
+	html?: boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
