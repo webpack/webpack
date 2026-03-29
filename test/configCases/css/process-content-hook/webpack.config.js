@@ -4,13 +4,20 @@ const webpack = require("../../../../");
 
 class MyCssMinimizerPlugin {
 	apply(compiler) {
+		const { matchObject } = compiler.webpack.ModuleFilenameHelpers;
+
 		compiler.hooks.compilation.tap("MyCssMinimizerPlugin", (compilation) => {
-			compilation.hooks.processContent
-				.for("css")
-				.tapPromise("MyCssMinimizerPlugin", async ([content, sourceMap]) => [
-					content.replace(/rgba\(255,\s*0,\s*0,\s*1\)/g, "red"),
-					sourceMap
-				]);
+			compilation.hooks.processContent.tapPromise(
+				"MyCssMinimizerPlugin",
+				async ([content, sourceMap], name) => {
+					if (matchObject({ test: /\.css$/ }, name)) {
+						return [
+							content.replace(/rgba\(255,\s*0,\s*0,\s*1\)/g, "red"),
+							sourceMap
+						];
+					}
+				}
+			);
 		});
 	}
 }
