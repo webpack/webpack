@@ -1086,6 +1086,10 @@
           "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
+        "html": {
+          "description": "Enable HTML entry point support. When an .html file is used as a webpack entry, webpack discovers JS/CSS/asset dependencies from the HTML and emits the HTML with updated output URLs.",
+          "type": "boolean"
+        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1174,6 +1178,10 @@
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "html": {
+          "description": "Enable HTML entry point support. When an .html file is used as a webpack entry, webpack discovers JS/CSS/asset dependencies from the HTML and emits the HTML with updated output URLs.",
           "type": "boolean"
         },
         "lazyCompilation": {

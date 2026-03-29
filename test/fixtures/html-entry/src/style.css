@@ -1,0 +1,10 @@
+/* src/style.css — used as a <link href> dependency */
+body {
+	font-family: sans-serif;
+	background: #f0f0f0;
+	color: #333;
+}
+
+h1 {
+	color: royalblue;
+}
