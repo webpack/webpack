@@ -3,22 +3,38 @@
 const webpack = require("../../../../");
 
 class MyCssMinimizerPlugin {
+	/**
+	 * @param {import("../../../../").Compiler} compiler the compiler
+	 */
 	apply(compiler) {
 		const { matchObject } = compiler.webpack.ModuleFilenameHelpers;
 
-		compiler.hooks.compilation.tap("MyCssMinimizerPlugin", (compilation) => {
-			compilation.hooks.processContent.tapPromise(
-				"MyCssMinimizerPlugin",
-				async ([content, sourceMap], name) => {
-					if (matchObject({ test: /\.css$/ }, name)) {
-						return [
-							content.replace(/rgba\(255,\s*0,\s*0,\s*1\)/g, "red"),
+		compiler.hooks.compilation.tap(
+			"MyCssMinimizerPlugin",
+			(/** @type {import("../../../../").Compilation} */ compilation) => {
+				compilation.hooks.processContent.tapPromise(
+					"MyCssMinimizerPlugin",
+					async (
+						/** @type {[string | Buffer, import("webpack-sources").RawSourceMap | undefined]} */ [
+							content,
 							sourceMap
-						];
+						],
+						/** @type {string} */ name
+					) => {
+						if (matchObject({ test: /\.css$/ }, name)) {
+							return [
+								/** @type {string} */ (content).replace(
+									/rgba\(255,\s*0,\s*0,\s*1\)/g,
+									"red"
+								),
+								sourceMap
+							];
+						}
+						return [content, sourceMap];
 					}
-				}
-			);
-		});
+				);
+			}
+		);
 	}
 }
 
