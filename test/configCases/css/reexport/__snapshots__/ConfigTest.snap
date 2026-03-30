@@ -1,7 +1,46 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases css reexport exported tests should work with asset modules 1`] = `
-"/*!***********************************************************!*\\\\
+"/*!************************************!*\\\\
+  !*** css ./colors-more.module.css ***!
+  \\\\************************************/
+
+
+/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+/*!******************************!*\\\\
+  !*** css ./theme.module.css ***!
+  \\\\******************************/
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./value-at-rule.module.css ***!
+  \\\\**************************************/
+
+
+
+/* TODO bug */
+/*@value error: danger from colors;*/
+
+.value-at-rule_module_css-button {
+	background-color: #3498db;
+	color: white;
+}
+
+.value-at-rule_module_css-button-error {
+	background-color: #e74c3c;
+	border: 2px solid darkred;
+}
+
+/*!***********************************************************!*\\\\
   !*** css ./pseudo-import-and-export-deep-more.module.css ***!
   \\\\***********************************************************/
 
@@ -67,6 +106,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
   \\\\*******************************/
+
 
 .styles_module_css-button-color-red {
 	color: red;

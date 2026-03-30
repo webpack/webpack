@@ -1,0 +1,15 @@
+@value primary from "./theme.module.css";
+@value error from "./theme.module.css";
+
+/* TODO bug */
+/*@value error: danger from colors;*/
+
+.button {
+	background-color: primary;
+	color: white;
+}
+
+.button-error {
+	background-color: error;
+	border: 2px solid darkred;
+}
