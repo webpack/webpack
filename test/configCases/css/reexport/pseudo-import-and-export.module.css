@@ -1,0 +1,10 @@
+:import("./pseudo-import-and-export-deep.module.css") {
+	__REXPORT2__: export2;
+	__REXPORT3__: export3;
+}
+
+:export {
+	export1: "export1";
+	export2: __REXPORT2__;
+	export3: __REXPORT3__;
+}

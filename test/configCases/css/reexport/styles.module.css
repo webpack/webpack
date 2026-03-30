@@ -1,3 +1,9 @@
+:import("./pseudo-import-and-export.module.css") {
+	__REEXPORT1__: export1;
+	__REEXPORT2__: export2;
+	__REEXPORT3__: export3;
+}
+
 .button-color-red {
 	color: red;
 }
@@ -9,4 +15,11 @@
 .button-complex {
 	composes: button-color-red, button-global-font-size from global, base from "./button.module.css";
 	background: blue;
+}
+
+:export {
+	export: "export";
+	export1: __REEXPORT1__;
+	export2: __REEXPORT2__;
+	export3: __REEXPORT3__;
 }
