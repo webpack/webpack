@@ -92,7 +92,7 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
 		snapshotContext = activateSnapshotState(caseDir, suiteName);
 	});
 
-	afterAll(() => {
+	after all(() => {
 		if (!snapshotContext) {
 			return;
 		}

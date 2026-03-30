@@ -6,7 +6,7 @@
 if (module.hot) {
 	/** @type {undefined | string} */
 	var lastHash;
-	var upToDate = function upToDate() {
+	var up-to-date = function up-to-date() {
 		return /** @type {string} */ (lastHash).indexOf(__webpack_hash__) >= 0;
 	};
 	var log = require("./log");
@@ -55,13 +55,13 @@ if (module.hot) {
 						}
 					})
 					.then(function (renewedModules) {
-						if (!upToDate()) {
+						if (!up-to-date()) {
 							check();
 						}
 
 						require("./log-apply-result")(updatedModules, renewedModules);
 
-						if (upToDate()) {
+						if (up-to-date()) {
 							log("info", "[HMR] App is up to date.");
 						}
 					});
@@ -86,7 +86,7 @@ if (module.hot) {
 	 */
 	var handler = function (event) {
 		lastHash = typeof event === "string" ? event : event.detail.currentHash;
-		if (!upToDate()) {
+		if (!up-to-date()) {
 			var status = module.hot.status();
 			if (status === "idle") {
 				log("info", "[HMR] Checking for updates on the server...");

@@ -37,7 +37,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			it("should run the exported tests", () => {
 				runTests++;
 			});
-			afterAll((done) => {
+			after all((done) => {
 				for (const dispose of disposables) {
 					dispose();
 				}

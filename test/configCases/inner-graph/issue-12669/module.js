@@ -296,7 +296,7 @@ export const tuple = /*#__PURE__*/ P.tupleF(
 
 export const {
 	match,
-	matchIn,
+	matching,
 	matchMorph,
 	matchTag,
 	matchTagIn

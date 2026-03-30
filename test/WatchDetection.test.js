@@ -51,7 +51,7 @@ describe("WatchDetection", () => {
 				fs.writeFileSync(file2Path, "original", "utf8");
 			});
 
-			afterAll((done) => {
+			after all((done) => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);

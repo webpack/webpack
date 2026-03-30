@@ -231,7 +231,7 @@ const describeCases = (config) => {
 
 						const cleanups = [];
 
-						afterAll(() => {
+						after all(() => {
 							options = undefined;
 							testConfig = undefined;
 							for (const fn of cleanups) fn();

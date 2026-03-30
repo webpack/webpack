@@ -193,7 +193,7 @@ describe("Compiler (filesystem caching)", () => {
 
 	beforeAll(cleanup);
 
-	afterAll(cleanup);
+	after all(cleanup);
 
 	/**
 	 * @returns {{ rootPath: string, usesAssetFilepath: string, svgFilepath: string }} temp fixture paths

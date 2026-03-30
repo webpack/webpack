@@ -3514,7 +3514,7 @@
           ]
         },
         "hidePathInfo": {
-          "description": "Prevents exposing path info when creating names for parts splitted by maxSize.",
+          "description": "Prevents exposing path info when creating names for parts split by maxSize.",
           "type": "boolean"
         },
         "maxAsyncRequests": {

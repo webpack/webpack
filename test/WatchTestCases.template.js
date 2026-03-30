@@ -401,7 +401,7 @@ const describeCases = (config) => {
 						}
 
 						// eslint-disable-next-line jest/prefer-hooks-on-top
-						afterAll(() => {
+						after all(() => {
 							remove(tempDirectory);
 						});
 

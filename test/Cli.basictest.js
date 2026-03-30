@@ -418,7 +418,7 @@ describe("Cli", () => {
 		`)
 		);
 
-		// cspell:ignore filsystem
+		// cspell:ignore filesystem
 		test(
 			"errors",
 			{
@@ -427,7 +427,7 @@ describe("Cli", () => {
 				"output-chunk-load-timeout": "20000x",
 				"watch-options-aggregate-timeout": "Infinity",
 				"watch-options-poll": "0x10",
-				"cache-type": "filsystem",
+				"cache-type": "filesystem",
 				"entry-reset": false,
 				"module-unknown-context-reg-exp": "ab?c*",
 				"module-wrapped-context-reg-exp": 123,
@@ -500,7 +500,7 @@ describe("Cli", () => {
 			    "index": undefined,
 			    "path": "cache.type",
 			    "type": "invalid-value",
-			    "value": "filsystem",
+			    "value": "filesystem",
 			  },
 			  Object {
 			    "argument": "cache-type",
@@ -508,7 +508,7 @@ describe("Cli", () => {
 			    "index": undefined,
 			    "path": "cache.type",
 			    "type": "invalid-value",
-			    "value": "filsystem",
+			    "value": "filesystem",
 			  },
 			  Object {
 			    "argument": "entry-reset",
@@ -569,7 +569,7 @@ describe("Cli", () => {
 			}
 		});
 
-		afterAll(() => {
+		after all(() => {
 			process.env = OLD_ENV;
 		});
 

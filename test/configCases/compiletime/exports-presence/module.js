@@ -53,7 +53,7 @@ describe("should not add additional warnings/errors", () => {
 		!!("a" in ns) ? ns.a() : 0;
 	});
 
-	it("unsupport experssions", () => {
+	it("unsupported expressions", () => {
 		// warning: 58:6-10(a)
 		if (ns.a) {
 			// ↑_____ `ns.a` is direct usage, not a guard

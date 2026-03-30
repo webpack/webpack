@@ -101,7 +101,7 @@ describe("Compiler (caching)", () => {
 
 	beforeAll(cleanup);
 
-	afterAll(cleanup);
+	after all(cleanup);
 
 	/**
 	 * @returns {{ rootPath: string, aFilepath: string, cFilepath: string }} temp fixture paths

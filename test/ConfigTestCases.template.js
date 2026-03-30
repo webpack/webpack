@@ -174,7 +174,7 @@ const describeCases = (config) => {
 							rimraf.sync(cacheDirectory);
 						});
 
-						afterAll(() => {
+						after all(() => {
 							// cleanup
 							options = undefined;
 							optionsArr = undefined;

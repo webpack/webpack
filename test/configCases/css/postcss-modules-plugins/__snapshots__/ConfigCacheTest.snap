@@ -799,7 +799,7 @@ Array [
 /* ignore sibling selectors that are already local */
 .postcss-modules-local-by-default_local_modules_css-foo ~ .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
 
-/* ignore psuedo elements that are already local */
+/* ignore pseudo elements that are already local */
 .postcss-modules-local-by-default_local_modules_css-foo:after { a_value: some-value; }
 
 /* trim whitespace after empty broad selector */
@@ -1031,10 +1031,10 @@ Array [
 /* incorrectly handle nested selectors */
 .postcss-modules-local-by-default_local_modules_css-bar:not(.foo-name, .baz-name) { a_value: some-value; }
 
-/* compile explict global element */
+/* compile explicit global element */
 input { a_value: some-value; }
 
-/* compile explict global attribute */
+/* compile explicit global attribute */
 [type=\\"radio\\"], :not([type=\\"radio\\"]) { a_value: some-value; }
 
 /* TODO bug no report */
@@ -1128,7 +1128,7 @@ input { a_value: some-value; }
 
 .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
 
-/* escape local context with explict global */
+/* escape local context with explicit global */
 
 .postcss-modules-local-by-default_local_modules_css-foo .a_value .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
 

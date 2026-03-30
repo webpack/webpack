@@ -6710,13 +6710,13 @@ Object {
   "optimization-split-chunks-hide-path-info": Object {
     "configs": Array [
       Object {
-        "description": "Prevents exposing path info when creating names for parts splitted by maxSize.",
+        "description": "Prevents exposing path info when creating names for parts split by maxSize.",
         "multiple": false,
         "path": "optimization.splitChunks.hidePathInfo",
         "type": "boolean",
       },
     ],
-    "description": "Prevents exposing path info when creating names for parts splitted by maxSize.",
+    "description": "Prevents exposing path info when creating names for parts split by maxSize.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -4,7 +4,7 @@
 
 1. [Aggressive Merging](#aggressive-merging)
 2. [Chunk](#chunk)
-3. [Code Splitted](#code-splitted)
+3. [Code Split](#code-splitted)
 4. [Code Splitting](#code-splitting)
 5. [Coffee Script](#coffee-script)
 6. [CommonJS](#commonjs)
@@ -50,7 +50,7 @@
 
 [two-explicit-vendor-chunks](two-explicit-vendor-chunks)
 
-## Code Splitted
+## Code Split
 
 [code-splitted-require.context-amd](code-splitted-require.context-amd) example demonstrating contexts in a code-split environment with AMD.
 

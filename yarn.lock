@@ -3949,9 +3949,9 @@ detect-newline@^4.0.1:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-4.0.1.tgz#fcefdb5713e1fb8cb2839b8b6ee22e6716ab8f23"
   integrity sha512-qE3Veg1YXzGHQhlA6jzebZN2qVf6NX+A7m7qlhCGG30dJixrAQhYOsJjsnBjJkCSmuOPpCk30145fr8FV0bzog==
 
-devlop@^1.0.0, devlop@^1.1.0:
+develop@^1.0.0, develop@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/devlop/-/devlop-1.1.0.tgz#4db7c2ca4dc6e0e834c30be70c94bbc976dc7018"
+  resolved "https://registry.yarnpkg.com/develop/-/develop-1.1.0.tgz#4db7c2ca4dc6e0e834c30be70c94bbc976dc7018"
   integrity sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==
   dependencies:
     dequal "^2.0.0"
@@ -6845,7 +6845,7 @@ mdast-util-from-markdown@^2.0.0, mdast-util-from-markdown@^2.0.2:
     "@types/mdast" "^4.0.0"
     "@types/unist" "^3.0.0"
     decode-named-character-reference "^1.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     mdast-util-to-string "^4.0.0"
     micromark "^4.0.0"
     micromark-util-decode-numeric-character-reference "^2.0.0"
@@ -6861,7 +6861,7 @@ mdast-util-frontmatter@^2.0.0, mdast-util-frontmatter@^2.0.1:
   integrity sha512-LRqI9+wdgC25P0URIJY9vwocIzCcksduHQ9OF2joxQoyTNVduwLAFUzjoopuRJbJAReaKrNQKAZKL3uCMugWJA==
   dependencies:
     "@types/mdast" "^4.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     escape-string-regexp "^5.0.0"
     mdast-util-from-markdown "^2.0.0"
     mdast-util-to-markdown "^2.0.0"
@@ -6874,7 +6874,7 @@ mdast-util-gfm-autolink-literal@^2.0.0:
   dependencies:
     "@types/mdast" "^4.0.0"
     ccount "^2.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     mdast-util-find-and-replace "^3.0.0"
     micromark-util-character "^2.0.0"
 
@@ -6884,7 +6884,7 @@ mdast-util-gfm-footnote@^2.0.0:
   integrity sha512-sqpDWlsHn7Ac9GNZQMeUzPQSMzR6Wv0WKRNvQRg0KqHh02fpTz69Qc1QSseNX29bhz1ROIyNyxExfawVKTm1GQ==
   dependencies:
     "@types/mdast" "^4.0.0"
-    devlop "^1.1.0"
+    develop "^1.1.0"
     mdast-util-from-markdown "^2.0.0"
     mdast-util-to-markdown "^2.0.0"
     micromark-util-normalize-identifier "^2.0.0"
@@ -6904,7 +6904,7 @@ mdast-util-gfm-table@^2.0.0:
   integrity sha512-78UEvebzz/rJIxLvE7ZtDd/vIQ0RHv+3Mh5DR96p7cS7HsBhYIICDBCu8csTNWNO6tBWfqXPWekRuj2FNOGOZg==
   dependencies:
     "@types/mdast" "^4.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     markdown-table "^3.0.0"
     mdast-util-from-markdown "^2.0.0"
     mdast-util-to-markdown "^2.0.0"
@@ -6915,7 +6915,7 @@ mdast-util-gfm-task-list-item@^2.0.0:
   integrity sha512-IrtvNvjxC1o06taBAVJznEnkiHxLFTzgonUdy8hzFVeDun0uTjxxrRGVaNFqkU1wJR3RBPEfsxmU6jDWPofrTQ==
   dependencies:
     "@types/mdast" "^4.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     mdast-util-from-markdown "^2.0.0"
     mdast-util-to-markdown "^2.0.0"
 
@@ -6948,7 +6948,7 @@ mdast-util-to-hast@^13.0.0:
     "@types/hast" "^3.0.0"
     "@types/mdast" "^4.0.0"
     "@ungap/structured-clone" "^1.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-util-sanitize-uri "^2.0.0"
     trim-lines "^3.0.0"
     unist-util-position "^5.0.0"
@@ -7030,7 +7030,7 @@ micromark-core-commonmark@^2.0.0:
   integrity sha512-RDBrHEMSxVFLg6xvnXmb1Ayr2WzLAWjeSATAoxwKYJV94TeNavgoIdA0a9ytzDSVzBy2YKFK+emCPOEibLeCrg==
   dependencies:
     decode-named-character-reference "^1.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-factory-destination "^2.0.0"
     micromark-factory-label "^2.0.0"
     micromark-factory-space "^2.0.0"
@@ -7071,7 +7071,7 @@ micromark-extension-gfm-footnote@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-extension-gfm-footnote/-/micromark-extension-gfm-footnote-2.1.0.tgz#4dab56d4e398b9853f6fe4efac4fc9361f3e0750"
   integrity sha512-/yPhxI1ntnDNsiHtzLKYnE3vf9JZ6cAisqVDauhp4CEHxlb4uoOTxOCJ+9s51bIB8U1N1FJ1RXOKTIlD5B/gqw==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-core-commonmark "^2.0.0"
     micromark-factory-space "^2.0.0"
     micromark-util-character "^2.0.0"
@@ -7085,7 +7085,7 @@ micromark-extension-gfm-strikethrough@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-extension-gfm-strikethrough/-/micromark-extension-gfm-strikethrough-2.1.0.tgz#86106df8b3a692b5f6a92280d3879be6be46d923"
   integrity sha512-ADVjpOOkjz1hhkZLlBiYA9cR2Anf8F4HqZUO6e5eDcPQd0Txw5fxLzzxnEkSkfnD0wziSGiv7sYhk/ktvbf1uw==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-util-chunked "^2.0.0"
     micromark-util-classify-character "^2.0.0"
     micromark-util-resolve-all "^2.0.0"
@@ -7097,7 +7097,7 @@ micromark-extension-gfm-table@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-extension-gfm-table/-/micromark-extension-gfm-table-2.1.1.tgz#fac70bcbf51fe65f5f44033118d39be8a9b5940b"
   integrity sha512-t2OU/dXXioARrC6yWfJ4hqB7rct14e8f7m0cbI5hUmDyyIlwv5vEtooptH8INkbLzOatzKuVbQmAYcbWoyz6Dg==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-factory-space "^2.0.0"
     micromark-util-character "^2.0.0"
     micromark-util-symbol "^2.0.0"
@@ -7115,7 +7115,7 @@ micromark-extension-gfm-task-list-item@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-extension-gfm-task-list-item/-/micromark-extension-gfm-task-list-item-2.1.0.tgz#bcc34d805639829990ec175c3eea12bb5b781f2c"
   integrity sha512-qIBZhqxqI6fjLDYFTBIa4eivDMnP+OZqsNwmQ3xNLE4Cxwc+zfQEfbs6tzAo2Hjq+bh6q5F+Z8/cksrLFYWQQw==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-factory-space "^2.0.0"
     micromark-util-character "^2.0.0"
     micromark-util-symbol "^2.0.0"
@@ -7149,7 +7149,7 @@ micromark-factory-label@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-factory-label/-/micromark-factory-label-2.0.1.tgz#5267efa97f1e5254efc7f20b459a38cb21058ba1"
   integrity sha512-VFMekyQExqIW7xIChcXn4ok29YE3rnuyveW3wZQWWqF4Nv9Wk5rgJ99KzPvHjkmPXF93FXIbBp6YdW3t71/7Vg==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-util-character "^2.0.0"
     micromark-util-symbol "^2.0.0"
     micromark-util-types "^2.0.0"
@@ -7269,7 +7269,7 @@ micromark-util-subtokenize@^2.0.0:
   resolved "https://registry.yarnpkg.com/micromark-util-subtokenize/-/micromark-util-subtokenize-2.1.0.tgz#d8ade5ba0f3197a1cf6a2999fbbfe6357a1a19ee"
   integrity sha512-XQLu552iSctvnEcgXw6+Sx75GflAPNED1qx7eBJ+wydBb2KCbRZe+NwvIEEMM83uml1+2WSXpBAcp9IUCgCYWA==
   dependencies:
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-util-chunked "^2.0.0"
     micromark-util-symbol "^2.0.0"
     micromark-util-types "^2.0.0"
@@ -7292,7 +7292,7 @@ micromark@^4.0.0:
     "@types/debug" "^4.0.0"
     debug "^4.0.0"
     decode-named-character-reference "^1.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     micromark-core-commonmark "^2.0.0"
     micromark-factory-space "^2.0.0"
     micromark-util-character "^2.0.0"
@@ -9487,9 +9487,9 @@ trim-lines@^3.0.0:
   resolved "https://registry.yarnpkg.com/trim-lines/-/trim-lines-3.0.1.tgz#d802e332a07df861c48802c04321017b1bd87338"
   integrity sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==
 
-trough@^2.0.0:
+through@^2.0.0:
   version "2.2.0"
-  resolved "https://registry.yarnpkg.com/trough/-/trough-2.2.0.tgz#94a60bd6bd375c152c1df911a4b11d5b0256f50f"
+  resolved "https://registry.yarnpkg.com/through/-/through-2.2.0.tgz#94a60bd6bd375c152c1df911a4b11d5b0256f50f"
   integrity sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==
 
 ts-api-utils@^2.4.0:
@@ -9688,10 +9688,10 @@ unified@^11.0.0, unified@^11.0.5:
   dependencies:
     "@types/unist" "^3.0.0"
     bail "^2.0.0"
-    devlop "^1.0.0"
+    develop "^1.0.0"
     extend "^3.0.0"
     is-plain-obj "^4.0.0"
-    trough "^2.0.0"
+    through "^2.0.0"
     vfile "^6.0.0"
 
 unique-filename@^4.0.0:

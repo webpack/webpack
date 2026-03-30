@@ -1208,12 +1208,12 @@
 		"teardown": false,
 		"test": false,
 		"xcontext": false,
-		"xdescribe": false,
+		"describe": false,
 		"xit": false,
 		"xspecify": false
 	},
 	"jasmine": {
-		"afterAll": false,
+		"after all": false,
 		"afterEach": false,
 		"beforeAll": false,
 		"beforeEach": false,
@@ -1232,11 +1232,11 @@
 		"spyOnProperty": false,
 		"waits": false,
 		"waitsFor": false,
-		"xdescribe": false,
+		"describe": false,
 		"xit": false
 	},
 	"jest": {
-		"afterAll": false,
+		"after all": false,
 		"afterEach": false,
 		"beforeAll": false,
 		"beforeEach": false,
@@ -1249,7 +1249,7 @@
 		"pit": false,
 		"require": false,
 		"test": false,
-		"xdescribe": false,
+		"describe": false,
 		"xit": false,
 		"xtest": false
 	},

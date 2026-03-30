@@ -646,7 +646,7 @@ const withCodSpeed = async (bench) => {
 			await mongoMeasurement.stop(uri);
 			await options?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			await options?.afterAll?.call(task, "run");
+			await options?.after all?.call(task, "run");
 
 			// Custom teardown
 			await bench.teardown?.(task, "run");
@@ -721,7 +721,7 @@ const withCodSpeed = async (bench) => {
 
 			options?.afterEach?.call(task, "run");
 			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			options?.afterAll?.call(task, "run");
+			options?.after all?.call(task, "run");
 
 			// Custom teardown
 			bench.teardown?.(task, "run");
@@ -1004,7 +1004,7 @@ async function registerSuite(bench, test, baselines) {
 
 									await promise;
 								},
-								async afterAll() {
+								async after all() {
 									// Close watching
 									await new Promise(
 										/**
@@ -1132,7 +1132,7 @@ if (
  * @template T
  * @param {T[]} array an array
  * @param {number} n number of chunks
- * @returns {T[][]} splitted to b chunks
+ * @returns {T[][]} split to b chunks
  */
 function splitToNChunks(array, n) {
 	/** @type {T[][]} */

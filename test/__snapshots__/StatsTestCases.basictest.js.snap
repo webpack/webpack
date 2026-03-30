@@ -8,7 +8,7 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-entr
   asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
   asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
   Entrypoint main X KiB = fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB
-  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive split
     > ./index main
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
@@ -19,7 +19,7 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-entr
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]
       ./index.js X bytes [built] [code generated]
-  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive split
     > ./index main
     ./c.js X bytes [built] [code generated]
     ./d.js X bytes [built] [code generated]
@@ -35,7 +35,7 @@ content-change:
   asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
   asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
   Entrypoint main X KiB = content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB
-  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive split
     > ./index main
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
@@ -46,7 +46,7 @@ content-change:
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]
       ./index.js X bytes [built] [code generated]
-  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive split
     > ./index main
     ./c.js X bytes [built] [code generated]
     ./d.js X bytes [built] [code generated]
@@ -79,18 +79,18 @@ chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
   > ./b ./c ./index.js 2:0-23
   ./b.js X bytes [built] [code generated]
   ./c.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./c ./d ./e ./index.js 3:0-30
   ./c.js X bytes [built] [code generated]
   ./d.js X bytes [built] [code generated]
 chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./k.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
   ./h.js X bytes [built] [code generated]
   ./i.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./i.js X bytes [built] [code generated]
   ./j.js X bytes [built] [code generated]
@@ -101,11 +101,11 @@ chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
 chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./a ./index.js 1:0-16
   ./a.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./e.js X bytes [built] [code generated]
   ./h.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./b ./d ./e ./f ./g ./index.js 5:0-44
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
   ./b.js X bytes [built] [code generated]
@@ -114,7 +114,7 @@ chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js (main) X bytes (javascript) X KiB 
   > ./index main
   runtime modules X KiB 7 modules
   ./index.js X bytes [built] [code generated]
-chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive split
   > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
   > ./b ./d ./e ./f ./g ./index.js 5:0-44
   > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72

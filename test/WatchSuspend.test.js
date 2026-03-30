@@ -59,7 +59,7 @@ describe("WatchSuspend", () => {
 			});
 		});
 
-		afterAll(() => {
+		after all(() => {
 			watching.close();
 			compiler = null;
 			try {

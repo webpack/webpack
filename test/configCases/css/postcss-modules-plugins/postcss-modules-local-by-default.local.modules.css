@@ -76,7 +76,7 @@
 /* ignore sibling selectors that are already local */
 :local(.foo) ~ :local(.bar) { a_value: some-value; }
 
-/* ignore psuedo elements that are already local */
+/* ignore pseudo elements that are already local */
 :local(.foo):after { a_value: some-value; }
 
 /* trim whitespace after empty broad selector */
@@ -310,10 +310,10 @@
 /* incorrectly handle nested selectors */
 .bar:not(:global .foo-name, .baz-name) { a_value: some-value; }
 
-/* compile explict global element */
+/* compile explicit global element */
 :global(input) { a_value: some-value; }
 
-/* compile explict global attribute */
+/* compile explicit global attribute */
 :global([type="radio"]), :not(:global [type="radio"]) { a_value: some-value; }
 
 /* TODO bug no report */
@@ -410,7 +410,7 @@ input { a_value: some-value; }
 
 :local(.a_value) { a_value3: some-value; }
 
-/* escape local context with explict global */
+/* escape local context with explicit global */
 :import("./import.modules.css") { a_value4: some-value; }
 
 :local .foo :global(.a_value) .bar { a_value4: some-value; }
