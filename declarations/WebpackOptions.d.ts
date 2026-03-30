@@ -2001,7 +2001,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	filename?: string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
 	/**
-	 * Prevents exposing path info when creating names for parts splitted by maxSize.
+	 * Prevents exposing path info when creating names for parts split by maxSize.
 	 */
 	hidePathInfo?: boolean;
 	/**

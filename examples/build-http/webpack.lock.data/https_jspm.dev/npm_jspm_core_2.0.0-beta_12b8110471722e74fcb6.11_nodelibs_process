@@ -53,7 +53,7 @@ function nextTick (fun) {
   if (queue.length === 1 && !draining)
     setTimeout(drainQueue, 0);
 }
-// v8 likes predictible objects
+// v8 likes predictable objects
 function Item(fun, array) {
   this.fun = fun;
   this.array = array;

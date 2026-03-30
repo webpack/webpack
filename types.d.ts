@@ -13194,7 +13194,7 @@ declare interface OptimizationSplitChunksOptions {
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * Prevents exposing path info when creating names for parts splitted by maxSize.
+	 * Prevents exposing path info when creating names for parts split by maxSize.
 	 */
 	hidePathInfo?: boolean;
 
