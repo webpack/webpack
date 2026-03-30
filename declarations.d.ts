@@ -260,3 +260,9 @@ declare module "eslint-scope/lib/referencer" {
 	}
 	export = Referencer;
 }
+
+declare namespace Webpack {
+	interface OptimizationOptions {
+		groupCriticalWarnings?: boolean;
+	}
+}

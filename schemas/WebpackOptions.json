@@ -2781,6 +2781,10 @@
           "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
           "type": "boolean"
         },
+        "groupCriticalWarnings": {
+          "description": "Group identical CriticalDependencyWarnings into a single entry.",
+          "type": "boolean"
+        },
         "mangleExports": {
           "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\"deterministic\": generate short deterministic names optimized for caching, \"size\": generate the shortest possible names).",
           "anyOf": [
