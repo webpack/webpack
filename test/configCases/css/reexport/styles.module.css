@@ -6,6 +6,7 @@
 	__REEXPORT3__: export3;
 }
 
+
 .button-color-red {
 	color: red;
 }
@@ -17,6 +18,16 @@
 .button-complex {
 	composes: button-color-red, button-global-font-size from global, base from "./button.module.css";
 	background: blue;
+}
+
+:root {
+	--color: red;
+}
+
+.custom-properties {
+	color: var(--color);
+	background-color: var(--shared from "./shared-custom-properties.module.css");
+	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
 }
 
 :export {

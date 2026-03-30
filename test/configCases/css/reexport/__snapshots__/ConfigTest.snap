@@ -103,9 +103,25 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	border-radius: 8px;
 }
 
+/*!******************************************************!*\\\\
+  !*** css ./shared-deep-custom-properties.module.css ***!
+  \\\\******************************************************/
+:root {
+	--shared-deep-custom-properties_module_css-deep-shared: black;
+}
+
+/*!*************************************************!*\\\\
+  !*** css ./shared-custom-properties.module.css ***!
+  \\\\*************************************************/
+:root {
+	--shared-custom-properties_module_css-shared: blue;
+	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
+}
+
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
   \\\\*******************************/
+
 
 
 .styles_module_css-button-color-red {
@@ -120,6 +136,16 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	background: blue;
 }
 
+:root {
+	--styles_module_css-color: red;
+}
+
+.styles_module_css-custom-properties {
+	color: var(--styles_module_css-color);
+	background-color: var(--shared-custom-properties_module_css-shared);
+	border-color: var(--shared-custom-properties_module_css-deep-shared);
+}
+
 
 
 /*# sourceMappingURL=bundle0.css.map*/"
@@ -129,6 +155,8 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 Object {
   "button-color-red": "styles_module_css-button-color-red",
   "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "color": "--styles_module_css-color",
+  "custom-properties": "styles_module_css-custom-properties",
   "export": "\\"export\\"",
   "export1": "\\"export1\\"",
   "export2": "\\"export2\\"",
