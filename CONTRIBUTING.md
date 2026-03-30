@@ -38,11 +38,11 @@ If you have created your own loader/plugin please include it on the relevant doc
 - [List of loaders](https://webpack.js.org/loaders/) or [awesome-webpack](https://github.com/webpack-contrib/awesome-webpack#loaders)
 - [List of plugins](https://webpack.js.org/plugins) or [awesome-webpack](https://github.com/webpack-contrib/awesome-webpack#webpack-plugins)
 
-## Set up
+## Setup
 
 [Set up your local webpack repository](_SETUP.md)
 
-## Submitting changes
+## Submitting Changes
 
 After getting some feedback, push to your fork and submit a pull request. We
 may suggest some changes or improvements or alternatives, but for small changes
