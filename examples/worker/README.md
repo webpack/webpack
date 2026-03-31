@@ -175,12 +175,6 @@ export const add = (content, from) => {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -189,6 +183,12 @@ export const add = (content, from) => {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -565,12 +565,6 @@ onconnect = function (e) {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -579,6 +573,12 @@ onconnect = function (e) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -734,36 +734,17 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 12.1 KiB [emitted] (name: main)
-asset workers/fibonacci.js 5.25 KiB [emitted] (name: fibonacci)
-asset chat.js 839 bytes [emitted] (name: chat)
-asset 129.js 729 bytes [emitted]
-chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
-  > ./fibonacci ./example.js 70:30-51
-  > ./fibonacci ./fib-worker.js 2:29-50
-  ./fibonacci.js 103 bytes [built] [code generated]
-    [exports: fibonacci]
-    [all exports used]
-    import() ./fibonacci ./example.js 70:30-51
-    import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 527 bytes [entry] [rendered]
-  > ./example.js 25:19-31:1
-  ./chat-worker.js + 1 modules 527 bytes [built] [code generated]
-    [no exports]
-    [no exports used]
-    new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.88 KiB (runtime) [entry] [rendered]
-  > ./example.js 80:18-84:2
-  runtime modules 1.88 KiB 6 modules
-  ./fib-worker.js 176 bytes [built] [code generated]
-    [no exports used]
-    new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 5.42 KiB 7 modules
-  ./example.js 2.25 KiB [built] [code generated]
-    [no exports used]
-    entry ./example.js main
+asset main.js 12.2 KiB [emitted] (name: main)
+asset workers/fibonacci.js 5.24 KiB [emitted] (name: fibonacci)
+asset chat.js 865 bytes [emitted] (name: chat)
+asset 129.js 732 bytes [emitted]
+runtime modules 7.3 KiB 13 modules
+orphan modules 158 bytes [orphan] 1 module
+cacheable modules 3.17 KiB
+  ./example.js 2.35 KiB [built] [code generated]
+  ./chat-worker.js + 1 modules 553 bytes [built] [code generated]
+  ./fib-worker.js 181 bytes [built] [code generated]
+  ./fibonacci.js 106 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -774,31 +755,12 @@ asset main.js 3.29 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 776 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 156 bytes [emitted] [minimized]
-chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
-  > ./fibonacci ./fib-worker.js 2:29-50
-  > ./fibonacci ./example.js 70:30-51
-  ./fibonacci.js 103 bytes [built] [code generated]
-    [exports: fibonacci]
-    [all exports used]
-    import() ./fibonacci ./example.js 70:30-51
-    import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 527 bytes [entry] [rendered]
-  > ./example.js 25:19-31:1
-  ./chat-worker.js + 1 modules 527 bytes [built] [code generated]
-    [no exports]
-    [no exports used]
-    new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.88 KiB (runtime) [entry] [rendered]
-  > ./example.js 80:18-84:2
-  runtime modules 1.88 KiB 6 modules
-  ./fib-worker.js 176 bytes [built] [code generated]
-    [no exports used]
-    new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 5.42 KiB 7 modules
-  ./example.js 2.25 KiB [built] [code generated]
-    [no exports used]
-    entry ./example.js main
+runtime modules 7.3 KiB 13 modules
+orphan modules 158 bytes [orphan] 1 module
+cacheable modules 3.17 KiB
+  ./example.js 2.35 KiB [built] [code generated]
+  ./chat-worker.js + 1 modules 553 bytes [built] [code generated]
+  ./fib-worker.js 181 bytes [built] [code generated]
+  ./fibonacci.js 106 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

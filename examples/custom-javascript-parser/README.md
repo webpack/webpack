@@ -486,33 +486,33 @@ Implementation example:
 
 ```
 asset oxc.main.js 12.1 KiB [emitted] (name: main)
-asset oxc.655.js 761 bytes [emitted]
+asset oxc.655.js 762 bytes [emitted]
 runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+cacheable modules 510 bytes
+  ./example.js 184 bytes [built] [code generated]
+  ./increment.js 90 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
+  ./math.js 211 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
 asset meriyah.main.js 12.1 KiB [emitted] (name: main)
-asset meriyah.655.js 761 bytes [emitted]
+asset meriyah.655.js 762 bytes [emitted]
 runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+cacheable modules 510 bytes
+  ./example.js 184 bytes [built] [code generated]
+  ./increment.js 90 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
+  ./math.js 211 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
 asset acorn.main.js 12.1 KiB [emitted] (name: main)
-asset acorn.655.js 761 bytes [emitted]
+asset acorn.655.js 762 bytes [emitted]
 runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+cacheable modules 510 bytes
+  ./example.js 184 bytes [built] [code generated]
+  ./increment.js 90 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
+  ./math.js 211 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -522,27 +522,27 @@ webpack X.X.X compiled successfully
 asset oxc.main.js 2.01 KiB [emitted] [minimized] (name: main)
 asset oxc.655.js 121 bytes [emitted] [minimized]
 runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
+orphan modules 301 bytes [orphan] 2 modules
+cacheable modules 510 bytes
+  ./example.js + 2 modules 485 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
 asset meriyah.main.js 2.01 KiB [emitted] [minimized] (name: main)
 asset meriyah.655.js 121 bytes [emitted] [minimized]
 runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
+orphan modules 301 bytes [orphan] 2 modules
+cacheable modules 510 bytes
+  ./example.js + 2 modules 485 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
 asset acorn.main.js 2.01 KiB [emitted] [minimized] (name: main)
 asset acorn.655.js 121 bytes [emitted] [minimized]
 runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
-  ./async-loaded.js 24 bytes [built] [code generated]
+orphan modules 301 bytes [orphan] 2 modules
+cacheable modules 510 bytes
+  ./example.js + 2 modules 485 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

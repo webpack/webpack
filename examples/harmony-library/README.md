@@ -111,15 +111,9 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 2.88 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
-  > ./example main
-  runtime modules 670 bytes 3 modules
-  ./example.js 92 bytes [built] [code generated]
-    [exports: default, increment, value]
-    [used exports unknown]
-    entry ./example main
-    used as library export
+asset MyLibrary.umd.js 2.89 KiB [emitted] (name: main)
+runtime modules 670 bytes 3 modules
+./example.js 97 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -127,12 +121,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset MyLibrary.umd.js 672 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
-  > ./example main
-  runtime modules 670 bytes 3 modules
-  ./example.js 92 bytes [built] [code generated]
-    [exports: default, increment, value]
-    entry ./example main
-    used as library export
+runtime modules 670 bytes 3 modules
+./example.js 97 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

@@ -128,12 +128,6 @@ module.exports = config;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -142,6 +136,12 @@ module.exports = config;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -459,42 +459,17 @@ module.exports = function() {
 
 ```
 asset output.js 9.3 KiB [emitted] (name: main)
-asset pageB_js.output.js 760 bytes [emitted]
-asset pageA_js.output.js 565 bytes [emitted]
-asset pageC_js.output.js 547 bytes [emitted]
-asset reusableComponent_js.output.js 441 bytes [emitted]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 4.92 KiB 6 modules
-  ./example.js 220 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-chunk (runtime: main) pageA_js.output.js 136 bytes [rendered]
-  > ./example.js 3:1-6:3
-  ./pageA.js 136 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageA ./example.js 4:15-33
-    cjs self exports reference ./pageA.js 3:0-14
-chunk (runtime: main) pageB_js.output.js 133 bytes [rendered]
-  > ./example.js 7:1-10:3
-  ./pageB.js 133 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageB ./example.js 8:15-33
-    cjs self exports reference ./pageB.js 1:0-14
-chunk (runtime: main) pageC_js.output.js 136 bytes [rendered]
-  > ./pageB.js 3:1-6:3
-  ./pageC.js 136 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageC ./pageB.js 4:15-33
-    cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) reusableComponent_js.output.js 69 bytes [rendered] split chunk (cache group: default)
-  > ./example.js 3:1-6:3
-  > ./pageB.js 3:1-6:3
-  ./reusableComponent.js 69 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./reusableComponent ./pageA.js 1:24-54
-    cjs require ./reusableComponent ./pageC.js 1:24-54
-    cjs self exports reference ./reusableComponent.js 1:0-14
+asset pageB_js.output.js 767 bytes [emitted]
+asset pageA_js.output.js 571 bytes [emitted]
+asset pageC_js.output.js 553 bytes [emitted]
+asset reusableComponent_js.output.js 444 bytes [emitted]
+runtime modules 4.92 KiB 6 modules
+cacheable modules 729 bytes
+  ./example.js 233 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
+  ./pageB.js 140 bytes [built] [code generated]
+  ./reusableComponent.js 72 bytes [built] [code generated]
+  ./pageC.js 142 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -506,37 +481,12 @@ asset pageB_js.output.js 228 bytes [emitted] [minimized]
 asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
 asset pageC_js.output.js 138 bytes [emitted] [minimized]
 asset pageA_js.output.js 137 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 4.92 KiB 6 modules
-  ./example.js 220 bytes [built] [code generated]
-    [no exports used]
-    entry ./example.js main
-chunk (runtime: main) pageA_js.output.js 136 bytes [rendered]
-  > ./example.js 3:1-6:3
-  ./pageA.js 136 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageA ./example.js 4:15-33
-    cjs self exports reference ./pageA.js 3:0-14
-chunk (runtime: main) pageB_js.output.js 133 bytes [rendered]
-  > ./example.js 7:1-10:3
-  ./pageB.js 133 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageB ./example.js 8:15-33
-    cjs self exports reference ./pageB.js 1:0-14
-chunk (runtime: main) pageC_js.output.js 136 bytes [rendered]
-  > ./pageB.js 3:1-6:3
-  ./pageC.js 136 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./pageC ./pageB.js 4:15-33
-    cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) reusableComponent_js.output.js 69 bytes [rendered] split chunk (cache group: default)
-  > ./pageB.js 3:1-6:3
-  > ./example.js 3:1-6:3
-  ./reusableComponent.js 69 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./reusableComponent ./pageA.js 1:24-54
-    cjs require ./reusableComponent ./pageC.js 1:24-54
-    cjs self exports reference ./reusableComponent.js 1:0-14
+runtime modules 4.92 KiB 6 modules
+cacheable modules 729 bytes
+  ./example.js 233 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
+  ./pageB.js 140 bytes [built] [code generated]
+  ./reusableComponent.js 72 bytes [built] [code generated]
+  ./pageC.js 142 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

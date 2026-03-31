@@ -145,12 +145,6 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -159,6 +153,12 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -424,12 +424,6 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -438,6 +432,12 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -695,41 +695,16 @@ module.exports = function(msg) {
 ```
 asset pageA.js 10.9 KiB [emitted] (name: pageA)
 asset pageB.js 10.9 KiB [emitted] (name: pageB)
-asset shared_js.js 503 bytes [emitted]
+asset shared_js.js 506 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
 Entrypoint pageA 11.3 KiB = commons.js 370 bytes pageA.js 10.9 KiB
 Entrypoint pageB 11.2 KiB = commons.js 370 bytes pageB.js 10.9 KiB
-chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
-  > ./pageA pageA
-  > ./pageB pageB
+runtime modules 11.7 KiB 14 modules
+cacheable modules 377 bytes
+  ./pageA.js 108 bytes [built] [code generated]
+  ./pageB.js 152 bytes [built] [code generated]
   ./common.js 26 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./common.js 1:0-14
-    cjs require ./common ./pageA.js 1:13-32
-    cjs require ./common ./pageB.js 1:13-32
-    cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
-  > ./pageA pageA
-  runtime modules 5.86 KiB 7 modules
-  ./pageA.js 105 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
-  > ./pageB pageB
-  runtime modules 5.86 KiB 7 modules
-  ./pageB.js 148 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./pageB pageB
-chunk (runtime: pageA, pageB) shared_js.js 88 bytes [rendered]
-  > ./shared ./pageA.js 2:0-4:2
-  > ./pageB.js 2:0-5:2
-  ./shared.js 88 bytes [built] [code generated]
-    [used exports unknown]
-    from origin ./pageB.js
-      require.ensure item ./shared ./pageB.js 2:0-5:2
-      cjs require ./shared ./pageB.js 3:14-33
-    amd require ./shared ./pageA.js 2:0-4:2
-    cjs self exports reference ./shared.js 2:0-14
+  ./shared.js 91 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -742,36 +717,11 @@ asset shared_js.js 122 bytes [emitted] [minimized]
 asset commons.js 91 bytes [emitted] [minimized] (name: commons) (id hint: commons)
 Entrypoint pageA 2.23 KiB = commons.js 91 bytes pageA.js 2.14 KiB
 Entrypoint pageB 2.21 KiB = commons.js 91 bytes pageB.js 2.12 KiB
-chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
-  > ./pageA pageA
-  > ./pageB pageB
+runtime modules 11.7 KiB 14 modules
+cacheable modules 377 bytes
+  ./pageA.js 108 bytes [built] [code generated]
+  ./pageB.js 152 bytes [built] [code generated]
   ./common.js 26 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./common.js 1:0-14
-    cjs require ./common ./pageA.js 1:13-32
-    cjs require ./common ./pageB.js 1:13-32
-    cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
-  > ./pageA pageA
-  runtime modules 5.86 KiB 7 modules
-  ./pageA.js 105 bytes [built] [code generated]
-    [no exports used]
-    entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.86 KiB (runtime) [entry] [rendered]
-  > ./pageB pageB
-  runtime modules 5.86 KiB 7 modules
-  ./pageB.js 148 bytes [built] [code generated]
-    [no exports used]
-    entry ./pageB pageB
-chunk (runtime: pageA, pageB) shared_js.js 88 bytes [rendered]
-  > ./shared ./pageA.js 2:0-4:2
-  > ./pageB.js 2:0-5:2
-  ./shared.js 88 bytes [built] [code generated]
-    [used exports unknown]
-    from origin ./pageB.js
-      require.ensure item ./shared ./pageB.js 2:0-5:2
-      cjs require ./shared ./pageB.js 3:14-33
-    amd require ./shared ./pageA.js 2:0-4:2
-    cjs self exports reference ./shared.js 2:0-14
+  ./shared.js 91 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

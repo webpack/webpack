@@ -60,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1fb982cf4f66bf2251ee ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_f7ae746ba4179c2a06ae ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -68,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_1fb982cf4f66bf2251ee */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_f7ae746ba4179c2a06ae */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_1fb982cf4f66bf2251ee" ***!
+  !*** external "vendor_lib_f7ae746ba4179c2a06ae" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -81,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_1fb982cf4f66b
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_1fb982cf4f66bf2251ee;
+module.exports = vendor_lib_f7ae746ba4179c2a06ae;
 
 /***/ })
 /******/ 	]);
@@ -101,12 +101,6 @@ module.exports = vendor_lib_1fb982cf4f66bf2251ee;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -115,6 +109,12 @@ module.exports = vendor_lib_1fb982cf4f66bf2251ee;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -167,15 +167,11 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 ## Unoptimized
 
 ```
-asset app.js 3.7 KiB [emitted] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
-  > ./example-app main
-  dependent modules 84 bytes [dependent] 2 modules
-  runtime modules 274 bytes 1 module
-  ./example-app.js 94 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./example-app main
+asset app.js 3.69 KiB [emitted] (name: main)
+runtime modules 274 bytes 1 module
+./example-app.js 98 bytes [built] [code generated]
+delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_f7ae74...(truncated) 42 bytes [built] [code generated]
+external "vendor_lib_f7ae746ba4179c2a06ae" 42 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -183,13 +179,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset app.js 329 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
-  > ./example-app main
-  dependent modules 84 bytes [dependent] 2 modules
-  ./example-app.js 94 bytes [built] [code generated]
-    [no exports]
-    [no exports used]
-    entry ./example-app main
+./example-app.js 98 bytes [built] [code generated]
+delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_f7ae74...(truncated) 42 bytes [built] [code generated]
+external "vendor_lib_f7ae746ba4179c2a06ae" 42 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 

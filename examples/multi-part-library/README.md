@@ -81,12 +81,6 @@ module.exports = "alpha";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -95,6 +89,12 @@ module.exports = "alpha";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -164,12 +164,6 @@ module.exports = "beta";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -178,6 +172,12 @@ module.exports = "beta";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -207,22 +207,10 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.32 KiB [emitted] (name: beta)
-asset MyLibrary.alpha.js 2.32 KiB [emitted] (name: alpha)
-chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-  > ./alpha alpha
-  ./alpha.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./alpha.js 1:0-14
-    entry ./alpha alpha
-    used as library export
-chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-  > ./beta beta
-  ./beta.js 24 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./beta.js 1:0-14
-    entry ./beta beta
-    used as library export
+asset MyLibrary.beta.js 2.31 KiB [emitted] (name: beta)
+asset MyLibrary.alpha.js 2.31 KiB [emitted] (name: alpha)
+./alpha.js 25 bytes [built] [code generated]
+./beta.js 24 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -231,19 +219,7 @@ webpack X.X.X compiled successfully
 ```
 asset MyLibrary.alpha.js 420 bytes [emitted] [minimized] (name: alpha)
 asset MyLibrary.beta.js 418 bytes [emitted] [minimized] (name: beta)
-chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-  > ./beta beta
-  ./beta.js 24 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./beta.js 1:0-14
-    entry ./beta beta
-    used as library export
-chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-  > ./alpha alpha
-  ./alpha.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./alpha.js 1:0-14
-    entry ./alpha alpha
-    used as library export
+./alpha.js 25 bytes [built] [code generated]
+./beta.js 24 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

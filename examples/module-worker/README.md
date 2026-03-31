@@ -174,12 +174,6 @@ export const add = (content, from) => {
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	// Check if module exists (development only)
-/******/ 	if (__webpack_modules__[moduleId] === undefined) {
-/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 		e.code = 'MODULE_NOT_FOUND';
-/******/ 		throw e;
-/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -188,6 +182,12 @@ export const add = (content, from) => {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 
 /******/ 	// Return the exports of the module
@@ -452,12 +452,6 @@ fibWorker.onmessage = event => {
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	// Check if module exists (development only)
-/******/ 	if (__webpack_modules__[moduleId] === undefined) {
-/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 		e.code = 'MODULE_NOT_FOUND';
-/******/ 		throw e;
-/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -466,6 +460,12 @@ fibWorker.onmessage = event => {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 
 /******/ 	// Return the exports of the module
@@ -655,12 +655,6 @@ var e,o,t={},r={};function s(e){var o=r[e];if(void 0!==o)return o.exports;var n=
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	// Check if module exists (development only)
-/******/ 	if (__webpack_modules__[moduleId] === undefined) {
-/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 		e.code = 'MODULE_NOT_FOUND';
-/******/ 		throw e;
-/******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
 /******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
@@ -669,6 +663,12 @@ var e,o,t={},r={};function s(e){var o=r[e];if(void 0!==o)return o.exports;var n=
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
 /******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 
 /******/ 	// Return the exports of the module
@@ -859,45 +859,18 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 9.09 KiB [emitted] [javascript module] (name: main)
-asset chat.js 7 KiB [emitted] [javascript module] (name: chat)
+asset main.js 9.17 KiB [emitted] [javascript module] (name: main)
+asset chat.js 7.01 KiB [emitted] [javascript module] (name: chat)
 asset workers/fibonacci.js 6.64 KiB [emitted] [javascript module] (name: fibonacci)
 asset 936.js 1.04 KiB [emitted] [javascript module]
-asset 129.js 881 bytes [emitted] [javascript module]
-chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
-  > ./fibonacci ./example.js 70:30-51
-  > ./fibonacci ./fib-worker.js 2:29-50
-  ./fibonacci.js 103 bytes [built] [code generated]
-    [exports: fibonacci]
-    [used exports unknown]
-    import() ./fibonacci ./example.js 70:30-51
-    import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.11 KiB (runtime) [entry] [rendered]
-  > ./example.js 25:19-31:1
-  runtime modules 3.11 KiB 7 modules
-  ./chat-worker.js 442 bytes [built] [code generated]
-    [used exports unknown]
-    new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.11 KiB (runtime) [entry] [rendered]
-  > ./example.js 80:18-84:2
-  runtime modules 3.11 KiB 7 modules
-  ./fib-worker.js 176 bytes [built] [code generated]
-    [used exports unknown]
-    new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.28 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 3.28 KiB 7 modules
-  ./example.js 2.25 KiB [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-chunk (runtime: 1fad8bf8de78b0a77bfd) 936.js 152 bytes [rendered]
-  > ./chat-module ./chat-worker.js 11:31-54
-  > ./chat-module ./chat-worker.js 7:27-50
-  ./chat-module.js 152 bytes [built] [code generated]
-    [exports: add, history]
-    [used exports unknown]
-    import() ./chat-module ./chat-worker.js 7:27-50
-    import() ./chat-module ./chat-worker.js 11:31-54
+asset 129.js 884 bytes [emitted] [javascript module]
+runtime modules 9.49 KiB 21 modules
+cacheable modules 3.23 KiB
+  ./example.js 2.35 KiB [built] [code generated]
+  ./chat-worker.js 462 bytes [built] [code generated]
+  ./fib-worker.js 181 bytes [built] [code generated]
+  ./fibonacci.js 106 bytes [built] [code generated]
+  ./chat-module.js 158 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -909,39 +882,12 @@ asset chat.js 1.08 KiB [emitted] [javascript module] [minimized] (name: chat)
 asset workers/fibonacci.js 951 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
 asset 936.js 225 bytes [emitted] [javascript module] [minimized]
 asset 129.js 199 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
-  > ./fibonacci ./fib-worker.js 2:29-50
-  > ./fibonacci ./example.js 70:30-51
-  ./fibonacci.js 103 bytes [built] [code generated]
-    [exports: fibonacci]
-    [all exports used]
-    import() ./fibonacci ./example.js 70:30-51
-    import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.84 KiB (runtime) [entry] [rendered]
-  > ./example.js 25:19-31:1
-  runtime modules 2.84 KiB 6 modules
-  ./chat-worker.js 442 bytes [built] [code generated]
-    [no exports used]
-    new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.84 KiB (runtime) [entry] [rendered]
-  > ./example.js 80:18-84:2
-  runtime modules 2.84 KiB 6 modules
-  ./fib-worker.js 176 bytes [built] [code generated]
-    [no exports used]
-    new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.01 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 3.01 KiB 6 modules
-  ./example.js 2.25 KiB [built] [code generated]
-    [no exports used]
-    entry ./example.js main
-chunk (runtime: 1fad8bf8de78b0a77bfd) 936.js 152 bytes [rendered]
-  > ./chat-module ./chat-worker.js 11:31-54
-  > ./chat-module ./chat-worker.js 7:27-50
-  ./chat-module.js 152 bytes [built] [code generated]
-    [exports: add, history]
-    [all exports used]
-    import() ./chat-module ./chat-worker.js 7:27-50
-    import() ./chat-module ./chat-worker.js 11:31-54
+runtime modules 8.69 KiB 18 modules
+cacheable modules 3.23 KiB
+  ./example.js 2.35 KiB [built] [code generated]
+  ./chat-worker.js 462 bytes [built] [code generated]
+  ./fib-worker.js 181 bytes [built] [code generated]
+  ./fibonacci.js 106 bytes [built] [code generated]
+  ./chat-module.js 158 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

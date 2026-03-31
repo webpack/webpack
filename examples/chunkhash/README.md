@@ -79,12 +79,6 @@ module.exports = config;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -93,6 +87,12 @@ module.exports = config;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -399,28 +399,15 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 
 ```
 asset runtime~main.[chunkhash].js 12.4 KiB [emitted] (name: runtime~main)
-asset main.[chunkhash].js 873 bytes [emitted] (name: main)
-asset 2.[chunkhash].js 285 bytes [emitted]
-asset 3.[chunkhash].js 267 bytes [emitted]
-Entrypoint main 13.3 KiB = runtime~main.[chunkhash].js 12.4 KiB main.[chunkhash].js 873 bytes
-chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [rendered]
-  > ./example main
-  ./example.js 55 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example main
-chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 7.6 KiB [entry] [rendered]
-  > ./example main
-  runtime modules 7.6 KiB 10 modules
-chunk (runtime: runtime~main) 2.[chunkhash].js 28 bytes [rendered]
-  > ./async1 ./example.js 2:0-18
-  ./async1.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    import() ./async1 ./example.js 2:0-18
-chunk (runtime: runtime~main) 3.[chunkhash].js 28 bytes [rendered]
-  > ./async2 ./example.js 3:0-18
-  ./async2.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    import() ./async2 ./example.js 3:0-18
+asset main.[chunkhash].js 876 bytes [emitted] (name: main)
+asset 2.[chunkhash].js 286 bytes [emitted]
+asset 3.[chunkhash].js 268 bytes [emitted]
+Entrypoint main 13.3 KiB = runtime~main.[chunkhash].js 12.4 KiB main.[chunkhash].js 876 bytes
+runtime modules 7.6 KiB 10 modules
+cacheable modules 116 bytes
+  ./example.js 58 bytes [built] [code generated]
+  ./async1.js 29 bytes [built] [code generated]
+  ./async2.js 29 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -432,23 +419,10 @@ asset main.[chunkhash].js 152 bytes [emitted] [minimized] (name: main)
 asset 471.[chunkhash].js 66 bytes [emitted] [minimized]
 asset 18.[chunkhash].js 64 bytes [emitted] [minimized]
 Entrypoint main 2.88 KiB = runtime~main.[chunkhash].js 2.73 KiB main.[chunkhash].js 152 bytes
-chunk (runtime: runtime~main) 18.[chunkhash].js 28 bytes [rendered]
-  > ./async1 ./example.js 2:0-18
-  ./async1.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    import() ./async1 ./example.js 2:0-18
-chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 7.61 KiB [entry] [rendered]
-  > ./example main
-  runtime modules 7.61 KiB 10 modules
-chunk (runtime: runtime~main) 471.[chunkhash].js 28 bytes [rendered]
-  > ./async2 ./example.js 3:0-18
-  ./async2.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    import() ./async2 ./example.js 3:0-18
-chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [rendered]
-  > ./example main
-  ./example.js 55 bytes [built] [code generated]
-    [no exports used]
-    entry ./example main
+runtime modules 7.61 KiB 10 modules
+cacheable modules 116 bytes
+  ./example.js 58 bytes [built] [code generated]
+  ./async1.js 29 bytes [built] [code generated]
+  ./async2.js 29 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

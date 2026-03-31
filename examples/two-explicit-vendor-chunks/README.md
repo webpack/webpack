@@ -74,12 +74,6 @@ module.exports = "Vendor1";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -88,6 +82,12 @@ module.exports = "Vendor1";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -158,12 +158,6 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -172,6 +166,12 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -257,12 +257,6 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -271,6 +265,12 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -298,46 +298,16 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ## Unoptimized
 
 ```
-asset pageA.js 2.69 KiB [emitted] (name: pageA)
+asset pageA.js 2.68 KiB [emitted] (name: pageA)
 asset vendor2.js 2.26 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.87 KiB [emitted] (name: vendor1)
-asset pageB.js 1.86 KiB [emitted] (name: pageB)
-asset pageC.js 1.86 KiB [emitted] (name: pageC)
-chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
-  > ./pageA pageA
-  dependent modules 77 bytes [dependent] 2 modules
-  ./pageA.js 70 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageA.js 1:0-14
-    entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
-  > ./pageB pageB
-  ./pageB.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageB.js 1:0-14
-    entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
-  > ./pageC pageC
-  ./pageC.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageC.js 1:0-14
-    entry ./pageC pageC
-chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
-  > ./vendor1 vendor1
-  ./vendor1.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./vendor1 ./pageA.js 2:0-20
-    cjs self exports reference ./vendor1.js 1:0-14
-    cjs require ./vendor1 ./vendor2.js 2:0-20
-    entry ./vendor1 vendor1
-chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
-  > ./vendor2 vendor2
-  dependent modules 27 bytes [dependent] 1 module
-  ./vendor2.js 50 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./vendor2 ./pageA.js 3:0-20
-    cjs self exports reference ./vendor2.js 1:0-14
-    entry ./vendor2 vendor2
+asset vendor1.js 1.86 KiB [emitted] (name: vendor1)
+asset pageB.js 1.85 KiB [emitted] (name: pageB)
+asset pageC.js 1.85 KiB [emitted] (name: pageC)
+./pageA.js 73 bytes [built] [code generated]
+./pageB.js 25 bytes [built] [code generated]
+./pageC.js 25 bytes [built] [code generated]
+./vendor1.js 27 bytes [built] [code generated]
+./vendor2.js 52 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -349,40 +319,10 @@ asset vendor2.js 214 bytes [emitted] [minimized] (name: vendor2)
 asset vendor1.js 175 bytes [emitted] [minimized] (name: vendor1)
 asset pageB.js 173 bytes [emitted] [minimized] (name: pageB)
 asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
-chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
-  > ./vendor2 vendor2
-  dependent modules 27 bytes [dependent] 1 module
-  ./vendor2.js 50 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./vendor2 ./pageA.js 3:0-20
-    cjs self exports reference ./vendor2.js 1:0-14
-    entry ./vendor2 vendor2
-chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
-  > ./pageB pageB
-  ./pageB.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageB.js 1:0-14
-    entry ./pageB pageB
-chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
-  > ./pageA pageA
-  dependent modules 77 bytes [dependent] 2 modules
-  ./pageA.js 70 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageA.js 1:0-14
-    entry ./pageA pageA
-chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
-  > ./vendor1 vendor1
-  ./vendor1.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./vendor1 ./pageA.js 2:0-20
-    cjs self exports reference ./vendor1.js 1:0-14
-    cjs require ./vendor1 ./vendor2.js 2:0-20
-    entry ./vendor1 vendor1
-chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
-  > ./pageC pageC
-  ./pageC.js 25 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageC.js 1:0-14
-    entry ./pageC pageC
+./pageA.js 73 bytes [built] [code generated]
+./pageB.js 25 bytes [built] [code generated]
+./pageC.js 25 bytes [built] [code generated]
+./vendor1.js 27 bytes [built] [code generated]
+./vendor2.js 52 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

@@ -212,16 +212,16 @@ inc2(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 3.43 KiB [emitted] (name: main)
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+asset output.js 3.47 KiB [emitted] (name: main)
+./example.js 289 bytes [built] [code generated]
+./increment.js 261 bytes [built] [code generated]
+./math.js 334 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
-asset without.js 3.57 KiB [emitted] (name: main)
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+asset without.js 3.61 KiB [emitted] (name: main)
+./example.js 289 bytes [built] [code generated]
+./increment.js 261 bytes [built] [code generated]
+./math.js 334 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -229,14 +229,14 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 543 bytes [emitted] [minimized] (name: main) 1 related asset
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+./example.js 289 bytes [built] [code generated]
+./increment.js 261 bytes [built] [code generated]
+./math.js 334 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 
 asset without.js 711 bytes [emitted] [minimized] (name: main) 1 related asset
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+./example.js 289 bytes [built] [code generated]
+./increment.js 261 bytes [built] [code generated]
+./math.js 334 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

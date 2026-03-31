@@ -41,7 +41,7 @@ module.exports = config;
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_ca803ba9b1c1f84bc50c;
+var alpha_25a3e61d8022ff6ebe7a;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -109,12 +109,6 @@ module.exports = "module";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -123,6 +117,12 @@ module.exports = "module";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -140,7 +140,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_ca803ba9b1c1f84bc50c = __webpack_exports__;
+/******/ 	alpha_25a3e61d8022ff6ebe7a = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -149,7 +149,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_ca803ba9b1c1f84bc50c","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
+{"name":"alpha_25a3e61d8022ff6ebe7a","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info
@@ -157,22 +157,18 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-asset MyDll.alpha.js 2.84 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.81 KiB [emitted] (name: beta)
-chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
-  > alpha
-  dependent modules 73 bytes [dependent] 3 modules
-  dll alpha 12 bytes [built] [code generated]
-    [used exports unknown]
-    dll entry
-    used as library export
-chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
-  > beta
-  dependent modules 69 bytes [dependent] 3 modules
-  dll beta 12 bytes [built] [code generated]
-    [used exports unknown]
-    dll entry
-    used as library export
+asset MyDll.alpha.js 2.83 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.8 KiB [emitted] (name: beta)
+cacheable modules 144 bytes
+  modules by path ./*.js 91 bytes
+    ./alpha.js 25 bytes [built] [code generated]
+    ./a.js 21 bytes [built] [code generated]
+    ./beta.js 24 bytes [built] [code generated]
+    ./b.js 21 bytes [built] [code generated]
+  ../node_modules/module.js 28 bytes [built] [code generated]
+  ./c.jsx 25 bytes [built] [code generated]
+dll alpha 12 bytes [built] [code generated]
+dll beta 12 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -181,17 +177,15 @@ webpack X.X.X compiled successfully
 ```
 asset MyDll.alpha.js 307 bytes [emitted] [minimized] (name: alpha)
 asset MyDll.beta.js 301 bytes [emitted] [minimized] (name: beta)
-chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
-  > beta
-  dependent modules 69 bytes [dependent] 3 modules
-  dll beta 12 bytes [built] [code generated]
-    dll entry
-    used as library export
-chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
-  > alpha
-  dependent modules 73 bytes [dependent] 3 modules
-  dll alpha 12 bytes [built] [code generated]
-    dll entry
-    used as library export
+cacheable modules 144 bytes
+  modules by path ./*.js 91 bytes
+    ./alpha.js 25 bytes [built] [code generated]
+    ./a.js 21 bytes [built] [code generated]
+    ./beta.js 24 bytes [built] [code generated]
+    ./b.js 21 bytes [built] [code generated]
+  ../node_modules/module.js 28 bytes [built] [code generated]
+  ./c.jsx 25 bytes [built] [code generated]
+dll alpha 12 bytes [built] [code generated]
+dll beta 12 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

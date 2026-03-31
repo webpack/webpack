@@ -68,7 +68,7 @@ module.exports = config;
 # dist/dll.js
 
 ```javascript
-var dll_94914b2e5c944a0a4873;
+var dll_ab3b0a9ca1cad486785a;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -159,12 +159,6 @@ exports.c = "c";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -173,6 +167,12 @@ exports.c = "c";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -219,7 +219,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_94914b2e5c944a0a4873 = __webpack_exports__;
+/******/ 	dll_ab3b0a9ca1cad486785a = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -228,7 +228,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_94914b2e5c944a0a4873","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_ab3b0a9ca1cad486785a","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -237,14 +237,12 @@ exports.c = "c";
 
 ```
 asset dll.js 4.9 KiB [emitted] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
-  > dll
-  runtime modules 670 bytes 3 modules
-  dependent modules 199 bytes [dependent] 2 modules
+runtime modules 670 bytes 3 modules
+orphan modules 109 bytes [orphan] 2 modules
+built modules 222 bytes [built]
   dll dll 12 bytes [built] [code generated]
-    [used exports unknown]
-    dll entry
-    used as library export
+  ./example.js + 2 modules 166 bytes [built] [code generated]
+  ./cjs.js 44 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -252,12 +250,11 @@ webpack X.X.X compiled successfully
 
 ```
 asset dll.js 685 bytes [emitted] [minimized] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
-  > dll
-  runtime modules 670 bytes 3 modules
-  dependent modules 199 bytes [dependent] 2 modules
+runtime modules 670 bytes 3 modules
+orphan modules 109 bytes [orphan] 2 modules
+built modules 222 bytes [built]
   dll dll 12 bytes [built] [code generated]
-    dll entry
-    used as library export
+  ./example.js + 2 modules 166 bytes [built] [code generated]
+  ./cjs.js 44 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

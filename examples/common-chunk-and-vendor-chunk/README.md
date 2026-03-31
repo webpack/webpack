@@ -203,12 +203,6 @@ module.exports = "utility1";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -217,6 +211,12 @@ module.exports = "utility1";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -375,12 +375,6 @@ module.exports = "pageB";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -389,6 +383,12 @@ module.exports = "pageB";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -545,12 +545,6 @@ module.exports = "pageC";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -559,6 +553,12 @@ module.exports = "pageC";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -685,63 +685,24 @@ assets by chunk 744 bytes (id hint: commons)
   asset commons-utility2_js.js 372 bytes [emitted] (id hint: commons)
   asset commons-utility3_js.js 372 bytes [emitted] (id hint: commons)
 asset pageA.js 6.33 KiB [emitted] (name: pageA)
-asset pageB.js 6.05 KiB [emitted] (name: pageB)
-asset pageC.js 5.99 KiB [emitted] (name: pageC)
+asset pageB.js 6.04 KiB [emitted] (name: pageB)
+asset pageC.js 5.98 KiB [emitted] (name: pageC)
 asset vendor.js 713 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.39 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.33 KiB
-Entrypoint pageB 7.47 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 6.05 KiB
-Entrypoint pageC 6.71 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.99 KiB
-chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
-  > ./pageA pageA
-  > ./pageB pageB
-  > ./pageC pageC
-  ./utility2.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./utility2 ./pageA.js 3:15-36
-    cjs require ./utility2 ./pageB.js 2:15-36
-    cjs require ./utility2 ./pageC.js 1:15-36
-    cjs self exports reference ./utility2.js 1:0-14
-chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
-  > ./pageB pageB
-  > ./pageC pageC
-  ./utility3.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./utility3 ./pageB.js 3:15-36
-    cjs require ./utility3 ./pageC.js 2:15-36
-    cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageA pageA
-  runtime modules 2.46 KiB 3 modules
-  dependent modules 28 bytes [dependent] 1 module
-  ./pageA.js 137 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageA.js 5:0-14
-    entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageB pageB
-  runtime modules 2.46 KiB 3 modules
-  ./pageB.js 137 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageB.js 5:0-14
-    entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageC pageC
-  runtime modules 2.46 KiB 3 modules
-  ./pageC.js 102 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageC.js 4:0-14
-    entry ./pageC pageC
-chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
-  > ./pageA pageA
-  > ./pageB pageB
-  ./node_modules/vendor1.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./node_modules/vendor1.js 1:0-14
-    cjs require vendor1 ./pageA.js 1:14-32
-  ./node_modules/vendor2.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./node_modules/vendor2.js 1:0-14
-    cjs require vendor2 ./pageB.js 1:14-32
+Entrypoint pageA 7.38 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.33 KiB
+Entrypoint pageB 7.46 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 6.04 KiB
+Entrypoint pageC 6.71 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.98 KiB
+runtime modules 7.37 KiB 9 modules
+cacheable modules 527 bytes
+  modules by path ./*.js 473 bytes
+    ./pageA.js 142 bytes [built] [code generated]
+    ./pageB.js 142 bytes [built] [code generated]
+    ./pageC.js 105 bytes [built] [code generated]
+    ./utility1.js 28 bytes [built] [code generated]
+    ./utility2.js 28 bytes [built] [code generated]
+    ./utility3.js 28 bytes [built] [code generated]
+  modules by path ./node_modules/*.js 54 bytes
+    ./node_modules/vendor1.js 27 bytes [built] [code generated]
+    ./node_modules/vendor2.js 27 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -758,56 +719,17 @@ asset vendor.js 119 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
 Entrypoint pageA 1.21 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes pageA.js 1020 bytes
 Entrypoint pageB 1.31 KiB = vendor.js 119 bytes commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageB.js 1010 bytes
 Entrypoint pageC 1.18 KiB = commons-utility2_js.js 105 bytes commons-utility3_js.js 105 bytes pageC.js 996 bytes
-chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
-  > ./pageA pageA
-  > ./pageB pageB
-  > ./pageC pageC
-  ./utility2.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./utility2 ./pageA.js 3:15-36
-    cjs require ./utility2 ./pageB.js 2:15-36
-    cjs require ./utility2 ./pageC.js 1:15-36
-    cjs self exports reference ./utility2.js 1:0-14
-chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
-  > ./pageB pageB
-  > ./pageC pageC
-  ./utility3.js 28 bytes [built] [code generated]
-    [used exports unknown]
-    cjs require ./utility3 ./pageB.js 3:15-36
-    cjs require ./utility3 ./pageC.js 2:15-36
-    cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageA pageA
-  runtime modules 2.46 KiB 3 modules
-  dependent modules 28 bytes [dependent] 1 module
-  ./pageA.js 137 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageA.js 5:0-14
-    entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageB pageB
-  runtime modules 2.46 KiB 3 modules
-  ./pageB.js 137 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageB.js 5:0-14
-    entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.46 KiB (runtime) [entry] [rendered]
-  > ./pageC pageC
-  runtime modules 2.46 KiB 3 modules
-  ./pageC.js 102 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./pageC.js 4:0-14
-    entry ./pageC pageC
-chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
-  > ./pageA pageA
-  > ./pageB pageB
-  ./node_modules/vendor1.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./node_modules/vendor1.js 1:0-14
-    cjs require vendor1 ./pageA.js 1:14-32
-  ./node_modules/vendor2.js 27 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./node_modules/vendor2.js 1:0-14
-    cjs require vendor2 ./pageB.js 1:14-32
+runtime modules 7.37 KiB 9 modules
+cacheable modules 527 bytes
+  modules by path ./*.js 473 bytes
+    ./pageA.js 142 bytes [built] [code generated]
+    ./pageB.js 142 bytes [built] [code generated]
+    ./pageC.js 105 bytes [built] [code generated]
+    ./utility1.js 28 bytes [built] [code generated]
+    ./utility2.js 28 bytes [built] [code generated]
+    ./utility3.js 28 bytes [built] [code generated]
+  modules by path ./node_modules/*.js 54 bytes
+    ./node_modules/vendor1.js 27 bytes [built] [code generated]
+    ./node_modules/vendor2.js 27 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```

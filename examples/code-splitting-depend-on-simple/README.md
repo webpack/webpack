@@ -133,12 +133,6 @@ module.exports = 'prop-types';
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -147,6 +141,12 @@ module.exports = 'prop-types';
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -306,41 +306,16 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 7.88 KiB [emitted] (name: react-vendors)
+asset react-vendors.js 7.87 KiB [emitted] (name: react-vendors)
 asset app.js 1.62 KiB [emitted] (name: app)
-chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
-  > ./app.js app
-  ./app.js 139 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.29 KiB (runtime) >{app}< [entry] [rendered]
-  > prop-types react-vendors
-  > react react-vendors
-  > react-dom react-vendors
+chunk (runtime: react-vendors) app.js (app) 144 bytes <{react-vendors}> [initial] [rendered]
+  ./app.js 144 bytes [built] [code generated]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 90 bytes (javascript) 3.29 KiB (runtime) >{app}< [entry] [rendered]
   runtime modules 3.29 KiB 6 modules
-  cacheable modules 87 bytes
-    ./node_modules/prop-types.js 31 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation prop-types ./app.js 3:0-35
-        harmony import specifier prop-types ./app.js 5:29-38
-      cjs self exports reference ./node_modules/prop-types.js 1:0-14
-      entry prop-types react-vendors
-    ./node_modules/react-dom.js 30 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation react-dom ./app.js 2:0-33
-        harmony import specifier react-dom ./app.js 5:19-27
-      cjs self exports reference ./node_modules/react-dom.js 1:0-14
-      entry react-dom react-vendors
-    ./node_modules/react.js 26 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation react ./app.js 1:0-26
-        harmony import specifier react ./app.js 5:12-17
-      cjs self exports reference ./node_modules/react.js 1:0-14
-      entry react react-vendors
+  cacheable modules 90 bytes
+    ./node_modules/prop-types.js 32 bytes [built] [code generated]
+    ./node_modules/react-dom.js 31 bytes [built] [code generated]
+    ./node_modules/react.js 27 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
 
@@ -349,38 +324,13 @@ webpack X.X.X compiled successfully
 ```
 asset react-vendors.js 1.15 KiB [emitted] [minimized] (name: react-vendors)
 asset app.js 184 bytes [emitted] [minimized] (name: app)
-chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
-  > ./app.js app
-  ./app.js 139 bytes [built] [code generated]
-    [no exports]
-    [no exports used]
-    entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.03 KiB (runtime) >{app}< [entry] [rendered]
-  > prop-types react-vendors
-  > react react-vendors
-  > react-dom react-vendors
+chunk (runtime: react-vendors) app.js (app) 144 bytes <{react-vendors}> [initial] [rendered]
+  ./app.js 144 bytes [built] [code generated]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 90 bytes (javascript) 3.03 KiB (runtime) >{app}< [entry] [rendered]
   runtime modules 3.03 KiB 5 modules
-  cacheable modules 87 bytes
-    ./node_modules/prop-types.js 31 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation prop-types ./app.js 3:0-35
-        harmony import specifier prop-types ./app.js 5:29-38
-      cjs self exports reference ./node_modules/prop-types.js 1:0-14
-      entry prop-types react-vendors
-    ./node_modules/react-dom.js 30 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation react-dom ./app.js 2:0-33
-        harmony import specifier react-dom ./app.js 5:19-27
-      cjs self exports reference ./node_modules/react-dom.js 1:0-14
-      entry react-dom react-vendors
-    ./node_modules/react.js 26 bytes [built] [code generated]
-      [used exports unknown]
-      from origin ./app.js
-        harmony side effect evaluation react ./app.js 1:0-26
-        harmony import specifier react ./app.js 5:12-17
-      cjs self exports reference ./node_modules/react.js 1:0-14
-      entry react react-vendors
+  cacheable modules 90 bytes
+    ./node_modules/prop-types.js 32 bytes [built] [code generated]
+    ./node_modules/react-dom.js 31 bytes [built] [code generated]
+    ./node_modules/react.js 27 bytes [built] [code generated]
 webpack X.X.X compiled successfully
 ```
