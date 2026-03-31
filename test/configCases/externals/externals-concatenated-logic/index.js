@@ -1,14 +1,9 @@
 "use strict";
 
-import { join } from "external-1";
+import { join, __WEBPACK_EXTERNAL_MODULE_path_join__ as collision } from "./nested";
 const nodePath = require("path");
 
-function doNothing(obj) { }
-
-const __WEBPACK_EXTERNAL_MODULE_path_join__ = "conflict";
-doNothing({ join });
-
-it("should handle external remapping without visible hacks", function () {
+it("should handle naming conflict and trigger ExternalsPlugin remapping", function () {
     expect(join).toBe(nodePath.join);
-    expect(__WEBPACK_EXTERNAL_MODULE_path_join__).toBe("conflict");
+    expect(collision).toBe("collision");
 });

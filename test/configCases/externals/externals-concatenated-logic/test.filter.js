@@ -1,4 +1,6 @@
 "use strict";
 
-module.exports = () =>
-	!process.version.startsWith("v10.") && !process.version.startsWith("v12.");
+module.exports = () => {
+	const majorVersion = Number.parseInt(process.versions.node.split(".")[0], 10);
+	return majorVersion >= 14;
+};
