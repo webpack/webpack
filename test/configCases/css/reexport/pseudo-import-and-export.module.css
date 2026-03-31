@@ -4,7 +4,7 @@
 }
 
 :export {
-	export1: "export1";
+	export1: "export1-value";
 	export2: __REXPORT2__;
 	export3: __REXPORT3__;
 }

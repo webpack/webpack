@@ -3,6 +3,6 @@
 }
 
 :export {
-	export2: "export2";
+	export2: "export2-value";
 	export3: __REXPORT3__;
 }

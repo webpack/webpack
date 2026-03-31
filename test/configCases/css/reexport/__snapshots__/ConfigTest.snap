@@ -103,6 +103,20 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	border-radius: 8px;
 }
 
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+.classes_module_css-localName {
+	background: red;
+}
+
+.classes_module_css-localNameOther {
+	color: blue;
+}
+
+.classes_module_css-bar {
+	}
+
 /*!******************************************************!*\\\\
   !*** css ./shared-deep-custom-properties.module.css ***!
   \\\\******************************************************/
@@ -123,7 +137,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
   \\\\*******************************/
 
 
-
 .styles_module_css-button-color-red {
 	color: red;
 }
@@ -134,6 +147,20 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .styles_module_css-button-complex {
 	background: blue;
+}
+
+.styles_module_css-exportName73 { color: red; }
+.styles_module_css-exportName74 { color: green; }
+.styles_module_css-exportName75 { color: blue }
+.styles_module_css-exportName74 { color: white; }
+.styles_module_css-exportName74 { color: black; }
+
+.styles_module_css-multiple-composes-with-simple {
+	color: red;
+}
+
+.styles_module_css-multiple-composes-with-composes {
+	color: blue;
 }
 
 :root {
@@ -147,19 +174,25 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
-
-/*# sourceMappingURL=bundle0.css.map*/"
+"
 `;
 
 exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
 Object {
   "button-color-red": "styles_module_css-button-color-red",
-  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
   "color": "--styles_module_css-color",
   "custom-properties": "styles_module_css-custom-properties",
-  "export": "\\"export\\"",
-  "export1": "\\"export1\\"",
-  "export2": "\\"export2\\"",
-  "export3": "\\"export3\\"",
+  "deep-shared": "--shared-custom-properties_module_css-deep-shared",
+  "export": "\\"export-value\\"",
+  "export1": "\\"export1-value\\"",
+  "export2": "\\"export2-value\\"",
+  "export3": "\\"export3-value\\"",
+  "exportName73": "styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName",
+  "exportName74": "styles_module_css-exportName74 styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName styles_module_css-exportName75 my-global",
+  "exportName75": "styles_module_css-exportName75",
+  "multiple-composes-with-composes": "styles_module_css-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
+  "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
+  "shared": "--shared-custom-properties_module_css-shared",
 }
 `;

@@ -6,7 +6,6 @@
 	__REEXPORT3__: export3;
 }
 
-
 .button-color-red {
 	color: red;
 }
@@ -20,6 +19,24 @@
 	background: blue;
 }
 
+.exportName73 { composes: bar from "./classes.module.css"; color: red; }
+.exportName74 { composes: exportName73; color: green; }
+.exportName75 { color: blue }
+.exportName74 { composes: exportName75; color: white; }
+.exportName74 { composes: my-global from global; color: black; }
+
+:local(.multiple-composes-with-simple) {
+	composes: localName from "./classes.module.css";
+	composes: localNameOther from "./classes.module.css";
+	color: red;
+}
+
+:local(.multiple-composes-with-composes) {
+	composes: localName from "./classes.module.css";
+	composes: bar from "./classes.module.css";
+	color: blue;
+}
+
 :root {
 	--color: red;
 }
@@ -31,7 +48,7 @@
 }
 
 :export {
-	export: "export";
+	export: "export-value";
 	export1: __REEXPORT1__;
 	export2: __REEXPORT2__;
 	export3: __REEXPORT3__;

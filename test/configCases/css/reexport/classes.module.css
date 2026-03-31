@@ -1,0 +1,11 @@
+.localName {
+	background: red;
+}
+
+.localNameOther {
+	color: blue;
+}
+
+.bar {
+	composes: localName;
+}
