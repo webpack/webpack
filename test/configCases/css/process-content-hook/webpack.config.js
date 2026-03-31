@@ -1,5 +1,6 @@
 "use strict";
 
+const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
 class MyCssMinimizerPlugin {
@@ -15,22 +16,16 @@ class MyCssMinimizerPlugin {
 				compilation.hooks.processContent.tapPromise(
 					"MyCssMinimizerPlugin",
 					async (
-						/** @type {[string | Buffer, import("webpack-sources").RawSourceMap | undefined]} */ [
-							content,
-							sourceMap
-						],
+						/** @type {import("webpack-sources").Source} */ source,
 						/** @type {string} */ name
 					) => {
 						if (matchObject({ test: /\.css$/ }, name)) {
-							return [
-								/** @type {string} */ (content).replace(
-									/rgba\(255,\s*0,\s*0,\s*1\)/g,
-									"red"
-								),
-								sourceMap
-							];
+							const content = source.source().toString();
+							return new RawSource(
+								content.replace(/rgba\(255,\s*0,\s*0,\s*1\)/g, "red")
+							);
 						}
-						return [content, sourceMap];
+						return source;
 					}
 				);
 			}

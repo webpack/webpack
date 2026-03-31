@@ -2317,10 +2317,7 @@ declare class Compilation {
 		afterModuleHash: SyncHook<[]>;
 		beforeCodeGeneration: SyncHook<[]>;
 		afterCodeGeneration: SyncHook<[]>;
-		processContent: AsyncSeriesWaterfallHook<
-			[[string | Buffer, undefined | RawSourceMap], string],
-			[string | Buffer, undefined | RawSourceMap]
-		>;
+		processContent: AsyncSeriesWaterfallHook<[Source, string], Source>;
 		beforeRuntimeRequirements: SyncHook<[]>;
 		afterRuntimeRequirements: SyncHook<[]>;
 		beforeHash: SyncHook<[]>;
