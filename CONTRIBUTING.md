@@ -88,3 +88,4 @@ For discussions please use our [Discussions](https://github.com/webpack/webpack/
   > Don't worry ... Nothing will happen to the project or to you due to the exploring. The only thing that will happen is you'll be more familiar with what is where and might even get some cool ideas on how to improve various aspects of the project.
 
 - If you would like to work on an issue, drop in a comment at the issue. If it is already assigned to someone, but there is no sign of any work being done, please feel free to drop in a comment so that the issue can be assigned to you if the previous assignee has dropped it entirely.
+
