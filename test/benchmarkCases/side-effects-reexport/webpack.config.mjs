@@ -1,4 +1,4 @@
-/** @type {import("../../../types.d.ts").Configuration} */
+/** @type {import("../../..").Configuration} */
 export default {
 	devtool: false,
 	target: "web",
