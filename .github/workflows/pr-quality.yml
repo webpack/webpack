@@ -16,4 +16,8 @@ jobs:
       - uses: peakoss/anti-slop@85daca1880e9e1af197fc06ea03349daf08f4202 # v0.2.1
         with:
           require-pr-template: true
-          max-failures: 4
+          require-conventional-title: true
+          require-conventional-commits: true
+          max-daily-forks: 5
+          min-global-merge-ratio: 35
+          max-failures: 3
