@@ -16,40 +16,19 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: peakoss/anti-slop@85daca1880e9e1af197fc06ea03349daf08f4202 # v0.2.1
-        if: >-
-          contains(fromJSON('["FIRST_TIMER","FIRST_TIME_CONTRIBUTOR","NONE"]'),
-          github.event.pull_request.author_association)
+        env:
+          IS_NEW: >-
+            ${{ contains(fromJSON('["FIRST_TIMER","FIRST_TIME_CONTRIBUTOR","NONE"]'),
+            github.event.pull_request.author_association) }}
         with:
-          max-failures: 2
+          max-failures: ${{ env.IS_NEW == 'true' && 2 || 3 }}
+          global-merge-ratio-exclude-own: ${{ env.IS_NEW == 'true' }}
+          max-daily-forks: ${{ env.IS_NEW == 'true' && 4 || 7 }}
           require-pr-template: true
           require-conventional-title: true
           require-conventional-commits: true
-          max-daily-forks: 5
-          min-global-merge-ratio: 40
-          global-merge-ratio-exclude-own: true
-          min-account-age: 30
           failure-pr-message: |
             👋 Hi there! This PR was automatically flagged and closed by our quality checks.
 
-            Common reasons include a missing PR template, unconventional title/commits,
-            no linked issue, or insufficient contributor history.
-
             If you believe this was a mistake, please review our contributing guidelines
-            and open a new PR. A maintainer can also reopen this PR and add the `exempt`
-            label to bypass these checks.
-
-      - uses: peakoss/anti-slop@85daca1880e9e1af197fc06ea03349daf08f4202 # v0.2.1
-        if: >-
-          github.event.pull_request.author_association == 'CONTRIBUTOR'
-        with:
-          max-failures: 3
-          require-pr-template: true
-          require-conventional-title: true
-          require-conventional-commits: true
-          min-global-merge-ratio: 35
-          failure-pr-message: |
-            👋 Hey there! This PR was automatically flagged and closed by our quality checks.
-
-            Since you've contributed before, this is unusual, so please double-check that
-            your PR follows the template and conventional commit format, then feel free
-            to reopen or open a fresh PR.
+            and leave a comment explaining **why this is a mistake**.
