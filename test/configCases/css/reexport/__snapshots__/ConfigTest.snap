@@ -140,6 +140,17 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
 }
 
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--vars_module_css-my-var-u1: red;
+}
+
+.vars_module_css-my-var-u1 {
+	color: red;
+}
+
 /*!***************************************!*\\\\
   !*** css ./selectors-more.module.css ***!
   \\\\***************************************/
@@ -212,6 +223,10 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: var(--styles_module_css-color);
 	background-color: var(--shared-custom-properties_module_css-shared);
 	border-color: var(--shared-custom-properties_module_css-deep-shared);
+}
+
+.styles_module_css-from {
+	color: var(--vars_module_css-my-var-u1);
 }
 
 
@@ -334,10 +349,12 @@ Object {
   "exportName74": "styles_module_css-exportName74 styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName styles_module_css-exportName75 my-global",
   "exportName75": "styles_module_css-exportName75",
   "foo": "red",
+  "from": "styles_module_css-from",
   "local-class": "styles_module_css-local-class",
   "multiple-composes-with-composes": "styles_module_css-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
   "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
   "my-custom-color": "#2ecc71",
+  "my-var-u1": "--vars_module_css-my-var-u1",
   "other-selector": "styles_module_css-other-selector-value",
   "primary": "#3498db",
   "reexport-selector": "styles_module_css-reexport-selector-value",
@@ -489,7 +506,18 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
   \\\\*************************************************/
 :root {
 	--qX-CSb: blue;
-	--_TnMz_: var(deep-shared)
+	--_TnMz_: var(--_7xy4NT)
+}
+
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--KP4m31: red;
+}
+
+.KP4m31 {
+	color: red;
 }
 
 /*!***************************************!*\\\\
@@ -562,8 +590,12 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .unbpP8 {
 	color: var(--uGelqc);
-	background-color: var(shared);
-	border-color: var(deep-shared);
+	background-color: var(--qX-CSb);
+	border-color: var(--_TnMz_);
+}
+
+.MI7KS4 {
+	color: var(--KP4m31);
 }
 
 
@@ -677,7 +709,7 @@ Object {
   "custom-properties": "unbpP8",
   "danger": "X10PQ1",
   "danger-alias": "#e74c3c",
-  "deep-shared": "deep-shared",
+  "deep-shared": "--_TnMz_",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
   "export2": "\\"export2-value\\"",
@@ -686,10 +718,12 @@ Object {
   "exportName74": "Ns9rmr qgqd-J pmxb7o sQL78s hsOyo6 my-global",
   "exportName75": "hsOyo6",
   "foo": "red",
+  "from": "MI7KS4",
   "local-class": "gAniDw",
   "multiple-composes-with-composes": "kAC3V_ sQL78s pmxb7o sQL78s",
   "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
   "my-custom-color": "#2ecc71",
+  "my-var-u1": "--KP4m31",
   "other-selector": "Js5iz-",
   "primary": "#3498db",
   "reexport-selector": "fppgTR",
@@ -698,7 +732,7 @@ Object {
   "rename-2": "#e74c3c",
   "rename-3": "#e74c3c",
   "selector": "my-selector-value",
-  "shared": "shared",
+  "shared": "--qX-CSb",
   "the-same-classes-in-composes-but-different-modules": "u0iYW_ sQL78s MClDz9",
   "third": "_6nJNyM",
 }

@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = {
-	moduleScope(scope) {
+	moduleScope(scope, options) {
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";
-		link.href = "bundle0.css";
+		link.href = options.output.filename.replace("js", "css");
 		scope.window.document.head.appendChild(link);
 	}
 };

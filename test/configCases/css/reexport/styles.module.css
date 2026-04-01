@@ -52,6 +52,10 @@
 	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
 }
 
+.from {
+	color: var(--my-var-u1 from "./vars.module.css");
+}
+
 @value primary, secondary as my-custom-color from "./colors.module.css";
 
 .button-with-color {
