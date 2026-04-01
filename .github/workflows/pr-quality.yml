@@ -46,7 +46,6 @@ jobs:
           require-pr-template: true
           require-conventional-title: true
           require-conventional-commits: true
-          max-daily-forks: 5
           min-global-merge-ratio: 35
           failure-pr-message: |
             👋 Hey there! This PR was automatically flagged and closed by our quality checks.
