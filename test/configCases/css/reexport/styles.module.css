@@ -37,6 +37,11 @@
 	color: blue;
 }
 
+.the-same-classes-in-composes-but-different-modules {
+	composes: localName from "./classes.module.css";
+	composes: localName from "./classes-the-same.module.css";
+}
+
 :root {
 	--color: red;
 }
@@ -45,6 +50,104 @@
 	color: var(--color);
 	background-color: var(--shared from "./shared-custom-properties.module.css");
 	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
+}
+
+@value primary, secondary as my-custom-color from "./colors.module.css";
+
+.button-with-color {
+	background-color: primary;
+	color: my-custom-color;
+}
+
+@value foo: red;
+
+.button-with-color-too {
+	color: foo;
+}
+
+@value blue: #3498db;
+@value rename: blue;
+
+.button-rename-1 {
+	background-color: rename;
+}
+
+@value danger from "./colors.module.css";
+@value rename-2: danger;
+
+.button-rename-2 {
+	background-color: rename-2;
+}
+
+@value danger as danger-alias from "./colors.module.css";
+@value rename-3: danger-alias;
+
+.button-rename-3 {
+	background-color: rename-3;
+}
+
+@value colors: "./colors.module.css";
+@value third from colors;
+
+.button-rename-4 {
+	background-color: third;
+}
+
+.button-export-5 {
+	content: __REEXPORT3__
+}
+
+@value selector: my-selector-value;
+.selector { value: selector; }
+
+@value other-selector from "./selectors.module.css";
+.other-selector { value: other-selector; }
+
+@value other-selector as alias-other-selector from "./selectors.module.css";
+.alias-other-selector { value: alias-other-selector; }
+
+@value reexport-selector from "./selectors.module.css";
+.reexport-selector { value: reexport-selector; }
+
+@value reexport-selector as reexport-selector-alias from "./selectors.module.css";
+.reexport-selector-alias { value: reexport-selector-alias; }
+
+@value colors: "./colors.module.css";
+@value third from colors;
+.third { background-color: third; }
+
+@value danger as danger-alias from "./colors.module.css";
+@value rename-3: danger-alias;
+.rename-3 { background-color: rename-3; }
+
+.local-class {
+	color: white;
+}
+
+:global(.global-class-other) {
+	color: red;
+}
+
+.class-with-composes {
+	composes:
+		local-class,
+		global-class from global,
+		global-class-other from global,
+		localName from "./classes.module.css";
+}
+
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+}
+
+.class-local-my { color: red }
+
+.composes-from-import {
+	composes: class-local-my i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	color: red;
 }
 
 :export {

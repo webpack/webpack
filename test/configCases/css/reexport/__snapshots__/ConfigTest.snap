@@ -13,6 +13,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
+
 /*!******************************!*\\\\
   !*** css ./theme.module.css ***!
   \\\\******************************/
@@ -30,12 +31,12 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 /* TODO bug */
 /*@value error: danger from colors;*/
 
-.value-at-rule_module_css-button {
+.DSFgG0 {
 	background-color: #3498db;
 	color: white;
 }
 
-.value-at-rule_module_css-button-error {
+.Rm7a_t {
 	background-color: #e74c3c;
 	border: 2px solid darkred;
 }
@@ -57,48 +58,48 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 /*!******************************!*\\\\
   !*** css ./reset.module.css ***!
   \\\\******************************/
-.reset_module_css-reset-display {
+.r7veIg {
 	display: unset;
 }
 
 /*!************************************!*\\\\
   !*** css ./atoms-extra.module.css ***!
   \\\\************************************/
-.atoms-extra_module_css-transition {
+.uTFqYl {
 	transition: transform 0.2s ease;
 }
 
-.atoms-extra_module_css-cursor {
+._G2W-m {
 	cursor: pointer;
 }
 
 /*!******************************!*\\\\
   !*** css ./atoms.module.css ***!
   \\\\******************************/
-.atoms_module_css-display-flex {
+._4hzrjS {
 	display: flex;
 }
 
-.atoms_module_css-align-center {
+._3N7KUJ {
 	align-items: center;
 }
 
-.atoms_module_css-padding-box {
+.FOqO9N {
 	padding: 16px;
 }
 
-.atoms_module_css-interactive {
+.h1WMpX {
 	will-change: transform;
 }
 
-.atoms_module_css-interactive:hover {
+.h1WMpX:hover {
 	transform: scale(1.02);
 }
 
 /*!*******************************!*\\\\
   !*** css ./button.module.css ***!
   \\\\*******************************/
-.button_module_css-base {
+.IRudRu {
 	border: 1px solid #ccc;
 	border-radius: 8px;
 }
@@ -106,30 +107,67 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 /*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
-.classes_module_css-localName {
+.sQL78s {
 	background: red;
 }
 
-.classes_module_css-localNameOther {
+.Cpujl1 {
 	color: blue;
 }
 
-.classes_module_css-bar {
+.pmxb7o {
 	}
+
+/*!*****************************************!*\\\\
+  !*** css ./classes-the-same.module.css ***!
+  \\\\*****************************************/
+.MClDz9 {
+	background: blue;
+}
 
 /*!******************************************************!*\\\\
   !*** css ./shared-deep-custom-properties.module.css ***!
   \\\\******************************************************/
 :root {
-	--shared-deep-custom-properties_module_css-deep-shared: black;
+	--_7xy4NT: black;
 }
 
 /*!*************************************************!*\\\\
   !*** css ./shared-custom-properties.module.css ***!
   \\\\*************************************************/
 :root {
-	--shared-custom-properties_module_css-shared: blue;
-	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
+	--qX-CSb: blue;
+	--_TnMz_: var(deep-shared)
+}
+
+/*!***************************************!*\\\\
+  !*** css ./selectors-more.module.css ***!
+  \\\\***************************************/
+
+
+/*!**********************************!*\\\\
+  !*** css ./selectors.module.css ***!
+  \\\\**********************************/
+
+
+
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+._0bqD8c {
+	color: a;
+}
+
+.JJtGTB {
+	color: b;
+}
+
+.BNoXdB {
+	color: c;
+}
+
+.xoOP4R {
+	color: e;
 }
 
 /*!*******************************!*\\\\
@@ -137,7 +175,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
   \\\\*******************************/
 
 
-.styles_module_css-button-color-red {
+.Nk2MvV {
 	color: red;
 }
 
@@ -145,32 +183,121 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	font-size: 14px;
 }
 
-.styles_module_css-button-complex {
+.m8FtUN {
 	background: blue;
 }
 
-.styles_module_css-exportName73 { color: red; }
-.styles_module_css-exportName74 { color: green; }
-.styles_module_css-exportName75 { color: blue }
-.styles_module_css-exportName74 { color: white; }
-.styles_module_css-exportName74 { color: black; }
+.qgqd-J { color: red; }
+.Ns9rmr { color: green; }
+.hsOyo6 { color: blue }
+.Ns9rmr { color: white; }
+.Ns9rmr { color: black; }
 
-.styles_module_css-multiple-composes-with-simple {
+.s5T2tp {
 	color: red;
 }
 
-.styles_module_css-multiple-composes-with-composes {
+.kAC3V_ {
 	color: blue;
 }
 
+.u0iYW_ {
+	}
+
 :root {
-	--styles_module_css-color: red;
+	--uGelqc: red;
 }
 
-.styles_module_css-custom-properties {
-	color: var(--styles_module_css-color);
-	background-color: var(--shared-custom-properties_module_css-shared);
-	border-color: var(--shared-custom-properties_module_css-deep-shared);
+.unbpP8 {
+	color: var(--uGelqc);
+	background-color: var(shared);
+	border-color: var(deep-shared);
+}
+
+
+
+.bAMUwp {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.f2oaPF {
+	color: red;
+}
+
+
+
+
+.EwEwRz {
+	background-color: #3498db;
+}
+
+
+
+
+.tmQHLg {
+	background-color: #e74c3c;
+}
+
+
+
+
+.F5aPmd {
+	background-color: #e74c3c;
+}
+
+
+
+
+._T5aMe {
+	background-color: #c1c2c3;
+}
+
+.nqaRG2 {
+	content: \\"export3-value\\"
+}
+
+
+.BBfiX6 { value: my-selector-value; }
+
+
+.Js5iz- { value: other-selector-value; }
+
+
+.Js5iz- { value: other-selector-value; }
+
+
+.fppgTR { value: reexport-selector-value; }
+
+
+.fppgTR { value: reexport-selector-value; }
+
+
+
+._6nJNyM { background-color: #c1c2c3; }
+
+
+
+.X10PQ1 { background-color: #e74c3c; }
+
+.gAniDw {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.gRd4c8 {
+	}
+
+
+.saX-62 { color: red }
+
+._2HzoTb {
+	color: red;
 }
 
 
@@ -179,20 +306,48 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
 Object {
-  "button-color-red": "styles_module_css-button-color-red",
-  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
-  "color": "--styles_module_css-color",
-  "custom-properties": "styles_module_css-custom-properties",
-  "deep-shared": "--shared-custom-properties_module_css-deep-shared",
+  "alias-other-selector": "other-selector-value",
+  "blue": "#3498db",
+  "button-color-red": "Nk2MvV",
+  "button-complex": "m8FtUN Nk2MvV button-global-font-size IRudRu _4hzrjS q3Pc3u _3N7KUJ amatBb FOqO9N Sodbxr h1WMpX uTFqYl r7veIg cS8Hmv A7d2fQ _G2W-m WanFrQ FG340h",
+  "button-export-5": "nqaRG2",
+  "button-rename-1": "EwEwRz",
+  "button-rename-2": "tmQHLg",
+  "button-rename-3": "F5aPmd",
+  "button-rename-4": "_T5aMe",
+  "button-with-color": "bAMUwp",
+  "button-with-color-too": "f2oaPF",
+  "class-local-my": "saX-62",
+  "class-with-composes": "gRd4c8 gAniDw global-class global-class-other sQL78s",
+  "color": "--uGelqc",
+  "colors": "\\"./colors.module.css\\"",
+  "composes-from-import": "_2HzoTb saX-62 _0bqD8c JJtGTB BNoXdB d e f xoOP4R",
+  "custom-properties": "unbpP8",
+  "danger": "X10PQ1",
+  "danger-alias": "#e74c3c",
+  "deep-shared": "deep-shared",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
   "export2": "\\"export2-value\\"",
   "export3": "\\"export3-value\\"",
-  "exportName73": "styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName",
-  "exportName74": "styles_module_css-exportName74 styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName styles_module_css-exportName75 my-global",
-  "exportName75": "styles_module_css-exportName75",
-  "multiple-composes-with-composes": "styles_module_css-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
-  "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
-  "shared": "--shared-custom-properties_module_css-shared",
+  "exportName73": "qgqd-J pmxb7o sQL78s",
+  "exportName74": "Ns9rmr qgqd-J pmxb7o sQL78s hsOyo6 my-global",
+  "exportName75": "hsOyo6",
+  "foo": "red",
+  "local-class": "gAniDw",
+  "multiple-composes-with-composes": "kAC3V_ sQL78s pmxb7o sQL78s",
+  "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
+  "my-custom-color": "#2ecc71",
+  "other-selector": "Js5iz-",
+  "primary": "#3498db",
+  "reexport-selector": "fppgTR",
+  "reexport-selector-alias": "reexport-selector-value",
+  "rename": "#3498db",
+  "rename-2": "#e74c3c",
+  "rename-3": "#e74c3c",
+  "selector": "my-selector-value",
+  "shared": "shared",
+  "the-same-classes-in-composes-but-different-modules": "u0iYW_ sQL78s MClDz9",
+  "third": "_6nJNyM",
 }
 `;
