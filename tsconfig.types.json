@@ -1,7 +1,19 @@
 {
-  "extends": "./tsconfig",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "lib"
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "outDir": "types",
+    "rootDir": "lib",
+    "skipLibCheck": true
   },
-  "include": ["declarations.d.ts", "declarations/*.d.ts", "lib/**/*.js"]
+  "exclude": ["types", "examples", "node_modules"],
+  "include": [
+    "declarations.d.ts",
+    "declarations/*.d.ts",
+    "schemas/**/*.json",
+    "lib/**/*.js"
+  ]
 }

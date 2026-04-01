@@ -50,7 +50,7 @@
     "fix": "yarn fix:code && yarn fix:special && yarn fmt",
     "fix:code": "yarn lint:code --fix",
     "fix:special": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/precompile-schemas --write",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build:types": "rimraf types && tsc -p tsconfig.types.json",
     "build:examples": "cd examples && node buildAll.js",
     "benchmark": "node --max-old-space-size=6144 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
     "pretest": "yarn lint",
