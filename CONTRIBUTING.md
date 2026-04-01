@@ -75,7 +75,7 @@ webpack is statically typed using JSDoc annotation and TypeScript. If you would 
 /** @typedef {import("./NormalModuleFactory").ResolveData} ResolveData */
 ```
 
-Then, automatically generate the type declarations by running `yarn fix` locally, and the changes you have made will be reflected in `types.d.ts`.
+Then, automatically generate the type declarations by running `yarn fix` locally, and the changes you have made will be reflected in the `types/` directory.
 
 ## Discussions
 

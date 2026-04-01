@@ -21,4 +21,5 @@
 .cache
 .eslintcache
 .cspellcache
+/types
 package-lock.json

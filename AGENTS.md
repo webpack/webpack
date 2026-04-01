@@ -13,7 +13,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `test/` — All tests
 - `examples/` — Usage examples for webpack features and configuration options
 - `.changeset/` — Changeset files for releases
-- `types.d.ts` — Auto-generated type definitions (do not edit manually)
+- `types/` — Auto-generated type declarations (do not edit manually)
 - `package.json` — All available commands (defined in `scripts`)
 
 ## Development Workflow
@@ -26,7 +26,6 @@ If your change involves modifying or adding webpack configuration options:
 
 1. Edit `schemas/WebpackOptions.json` (or relevant schema file in `schemas/plugins/`)
 2. Run `yarn fix:special` to regenerate:
-   - `types.d.ts` (compiled from JSDoc + schemas)
    - Precompiled schema validators
    - Runtime code
 3. Now `lib/` code can reference the updated types via JSDoc `@typedef {import("...")}` imports
@@ -68,7 +67,9 @@ yarn fmt           # Prettier format
 yarn tsc           # TypeScript type check (catches type errors in JSDoc annotations)
 ```
 
-If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
+If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
+
+Type declarations (`types/`) are generated automatically at publish time via `yarn build:types` and are not committed to the repository.
 
 ### 6. Git Commit
 
