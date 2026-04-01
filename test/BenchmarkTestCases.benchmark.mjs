@@ -18,10 +18,10 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {import("tinybench").Task} TinybenchTask */
 /** @typedef {import("tinybench").Fn} Fn */
 /** @typedef {import("tinybench").FnOptions} FnOptions */
-/** @typedef {import("../types.d.ts")} Webpack */
-/** @typedef {import("../types.d.ts").Configuration} Configuration */
-/** @typedef {import("../types.d.ts").Stats} Stats */
-/** @typedef {import("../types.d.ts").Watching} Watching */
+/** @typedef {import("..")} Webpack */
+/** @typedef {import("..").Configuration} Configuration */
+/** @typedef {import("..").Stats} Stats */
+/** @typedef {import("..").Watching} Watching */
 
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 

@@ -353,7 +353,7 @@
     "**/webpack.lock.data/**",
     "package.json",
     "yarn.lock",
-    "types.d.ts",
+    "types/**",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "test/JavascriptParser.unittest.js",

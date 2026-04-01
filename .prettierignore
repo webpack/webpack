@@ -28,7 +28,7 @@ coverage/
 # Ignore generated files
 *.check.js
 *.check.d.ts
-types.d.ts
+types
 declarations/WebpackOptions.d.ts
 
 # Ignore precompiled schemas

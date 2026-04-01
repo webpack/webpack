@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "include": ["types.d.ts"],
+  "include": ["types/index.d.ts"],
   "compilerOptions": {
     "lib": ["es2017", "dom"]
   }
