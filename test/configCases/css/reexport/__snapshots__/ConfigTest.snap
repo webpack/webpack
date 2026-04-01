@@ -31,6 +31,358 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 /* TODO bug */
 /*@value error: danger from colors;*/
 
+.value-at-rule_module_css-button {
+	background-color: #3498db;
+	color: white;
+}
+
+.value-at-rule_module_css-button-error {
+	background-color: #e74c3c;
+	border: 2px solid darkred;
+}
+
+/*!***********************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep-more.module.css ***!
+  \\\\***********************************************************/
+
+/*!******************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep.module.css ***!
+  \\\\******************************************************/
+
+
+/*!*************************************************!*\\\\
+  !*** css ./pseudo-import-and-export.module.css ***!
+  \\\\*************************************************/
+
+
+/*!******************************!*\\\\
+  !*** css ./reset.module.css ***!
+  \\\\******************************/
+.reset_module_css-reset-display {
+	display: unset;
+}
+
+/*!************************************!*\\\\
+  !*** css ./atoms-extra.module.css ***!
+  \\\\************************************/
+.atoms-extra_module_css-transition {
+	transition: transform 0.2s ease;
+}
+
+.atoms-extra_module_css-cursor {
+	cursor: pointer;
+}
+
+/*!******************************!*\\\\
+  !*** css ./atoms.module.css ***!
+  \\\\******************************/
+.atoms_module_css-display-flex {
+	display: flex;
+}
+
+.atoms_module_css-align-center {
+	align-items: center;
+}
+
+.atoms_module_css-padding-box {
+	padding: 16px;
+}
+
+.atoms_module_css-interactive {
+	will-change: transform;
+}
+
+.atoms_module_css-interactive:hover {
+	transform: scale(1.02);
+}
+
+/*!*******************************!*\\\\
+  !*** css ./button.module.css ***!
+  \\\\*******************************/
+.button_module_css-base {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+.classes_module_css-localName {
+	background: red;
+}
+
+.classes_module_css-localNameOther {
+	color: blue;
+}
+
+.classes_module_css-bar {
+	}
+
+/*!*****************************************!*\\\\
+  !*** css ./classes-the-same.module.css ***!
+  \\\\*****************************************/
+.classes-the-same_module_css-localName {
+	background: blue;
+}
+
+/*!******************************************************!*\\\\
+  !*** css ./shared-deep-custom-properties.module.css ***!
+  \\\\******************************************************/
+:root {
+	--shared-deep-custom-properties_module_css-deep-shared: black;
+}
+
+/*!*************************************************!*\\\\
+  !*** css ./shared-custom-properties.module.css ***!
+  \\\\*************************************************/
+:root {
+	--shared-custom-properties_module_css-shared: blue;
+	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
+}
+
+/*!***************************************!*\\\\
+  !*** css ./selectors-more.module.css ***!
+  \\\\***************************************/
+
+
+/*!**********************************!*\\\\
+  !*** css ./selectors.module.css ***!
+  \\\\**********************************/
+
+
+
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+.abcd_modules_css-a {
+	color: a;
+}
+
+.abcd_modules_css-b {
+	color: b;
+}
+
+.abcd_modules_css-c {
+	color: c;
+}
+
+.abcd_modules_css-d {
+	color: e;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+
+
+.styles_module_css-button-color-red {
+	color: red;
+}
+
+.button-global-font-size {
+	font-size: 14px;
+}
+
+.styles_module_css-button-complex {
+	background: blue;
+}
+
+.styles_module_css-exportName73 { color: red; }
+.styles_module_css-exportName74 { color: green; }
+.styles_module_css-exportName75 { color: blue }
+.styles_module_css-exportName74 { color: white; }
+.styles_module_css-exportName74 { color: black; }
+
+.styles_module_css-multiple-composes-with-simple {
+	color: red;
+}
+
+.styles_module_css-multiple-composes-with-composes {
+	color: blue;
+}
+
+.styles_module_css-the-same-classes-in-composes-but-different-modules {
+	}
+
+:root {
+	--styles_module_css-color: red;
+}
+
+.styles_module_css-custom-properties {
+	color: var(--styles_module_css-color);
+	background-color: var(--shared-custom-properties_module_css-shared);
+	border-color: var(--shared-custom-properties_module_css-deep-shared);
+}
+
+
+
+.styles_module_css-button-with-color {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.styles_module_css-button-with-color-too {
+	color: red;
+}
+
+
+
+
+.styles_module_css-button-rename-1 {
+	background-color: #3498db;
+}
+
+
+
+
+.styles_module_css-button-rename-2 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css-button-rename-3 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css-button-rename-4 {
+	background-color: #c1c2c3;
+}
+
+.styles_module_css-button-export-5 {
+	content: \\"export3-value\\"
+}
+
+
+.styles_module_css-my-selector-value { value: my-selector-value; }
+
+
+.styles_module_css-other-selector-value { value: other-selector-value; }
+
+
+.styles_module_css-other-selector-value { value: other-selector-value; }
+
+
+.styles_module_css-reexport-selector-value { value: reexport-selector-value; }
+
+
+.styles_module_css-reexport-selector-value { value: reexport-selector-value; }
+
+
+
+.styles_module_css-\\\\#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.styles_module_css-\\\\#e74c3c { background-color: #e74c3c; }
+
+.styles_module_css-local-class {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.styles_module_css-class-with-composes {
+	}
+
+
+.styles_module_css-class-local-my { color: red }
+
+.styles_module_css-composes-from-import {
+	color: red;
+}
+
+
+"
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
+Object {
+  "alias-other-selector": "other-selector-value",
+  "blue": "#3498db",
+  "button-color-red": "styles_module_css-button-color-red",
+  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex button_module_css-display-flex atoms_module_css-align-center button_module_css-align-center atoms_module_css-padding-box button_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-reset-display atoms_module_css-transition atoms-extra_module_css-cursor atoms_module_css-cursor button_module_css-interactive",
+  "button-export-5": "styles_module_css-button-export-5",
+  "button-rename-1": "styles_module_css-button-rename-1",
+  "button-rename-2": "styles_module_css-button-rename-2",
+  "button-rename-3": "styles_module_css-button-rename-3",
+  "button-rename-4": "styles_module_css-button-rename-4",
+  "button-with-color": "styles_module_css-button-with-color",
+  "button-with-color-too": "styles_module_css-button-with-color-too",
+  "class-local-my": "styles_module_css-class-local-my",
+  "class-with-composes": "styles_module_css-class-with-composes styles_module_css-local-class global-class global-class-other classes_module_css-localName",
+  "color": "--styles_module_css-color",
+  "colors": "\\"./colors.module.css\\"",
+  "composes-from-import": "styles_module_css-composes-from-import styles_module_css-class-local-my abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d",
+  "custom-properties": "styles_module_css-custom-properties",
+  "danger": "styles_module_css-#e74c3c",
+  "danger-alias": "#e74c3c",
+  "deep-shared": "--shared-custom-properties_module_css-deep-shared",
+  "export": "\\"export-value\\"",
+  "export1": "\\"export1-value\\"",
+  "export2": "\\"export2-value\\"",
+  "export3": "\\"export3-value\\"",
+  "exportName73": "styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName",
+  "exportName74": "styles_module_css-exportName74 styles_module_css-exportName73 classes_module_css-bar classes_module_css-localName styles_module_css-exportName75 my-global",
+  "exportName75": "styles_module_css-exportName75",
+  "foo": "red",
+  "local-class": "styles_module_css-local-class",
+  "multiple-composes-with-composes": "styles_module_css-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
+  "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
+  "my-custom-color": "#2ecc71",
+  "other-selector": "styles_module_css-other-selector-value",
+  "primary": "#3498db",
+  "reexport-selector": "styles_module_css-reexport-selector-value",
+  "reexport-selector-alias": "reexport-selector-value",
+  "rename": "#3498db",
+  "rename-2": "#e74c3c",
+  "rename-3": "#e74c3c",
+  "selector": "my-selector-value",
+  "shared": "--shared-custom-properties_module_css-shared",
+  "the-same-classes-in-composes-but-different-modules": "styles_module_css-the-same-classes-in-composes-but-different-modules classes_module_css-localName classes-the-same_module_css-localName",
+  "third": "styles_module_css-#c1c2c3",
+}
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 3`] = `
+"/*!************************************!*\\\\
+  !*** css ./colors-more.module.css ***!
+  \\\\************************************/
+
+
+/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+/*!******************************!*\\\\
+  !*** css ./theme.module.css ***!
+  \\\\******************************/
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./value-at-rule.module.css ***!
+  \\\\**************************************/
+
+
+
+/* TODO bug */
+/*@value error: danger from colors;*/
+
 .DSFgG0 {
 	background-color: #3498db;
 	color: white;
@@ -304,7 +656,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 "
 `;
 
-exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 4`] = `
 Object {
   "alias-other-selector": "other-selector-value",
   "blue": "#3498db",
