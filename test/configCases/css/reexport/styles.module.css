@@ -10,14 +10,48 @@
 	color: red;
 }
 
-:global(.button-global-font-size) {
+.u-1\/2 {
+	width: 50%;
+}
+
+:global(.button-global-font-size\a1) {
 	font-size: 14px;
 }
 
+.composes-here {
+	display: block;
+}
+
+.composes-here {
+	background-color: black;
+}
+
 .button-complex {
-	composes: button-color-red, button-global-font-size from global, base from "./button.module.css";
+	composes: u-1\/2, local-composes, button-color-red, button-global-font-size from global, base from "./button.module.css";
 	background: blue;
 }
+
+.button-complex-1 {
+	composes: base-reexport from "./button-reexport.module.css";
+}
+
+.button-complex-2 {
+	composes: local-composes;
+}
+
+/** TODO make this test with reexport deep when composes-here in :import*/
+.local-composes {
+	composes: composes-here, global(bar);
+	color: blue;
+}
+
+.local-composes {
+	composes: composes-here;
+	color: blue;
+}
+
+/* TODO test me */
+/* @value test: composes-here; */
 
 .exportName73 { composes: bar from "./classes.module.css"; color: red; }
 .exportName74 { composes: exportName73; color: green; }
@@ -46,10 +80,14 @@
 	--color: red;
 }
 
+/* TODO bug*/
+/*@value --myValueForCustomVariable: --deep-shared;*/
+
 .custom-properties {
 	color: var(--color);
 	background-color: var(--shared from "./shared-custom-properties.module.css");
 	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
+	/*outline-color: var(--myValueForCustomVariable from "./shared-custom-properties.module.css");*/
 }
 
 .from {
@@ -120,8 +158,8 @@
 @value third from colors;
 .third { background-color: third; }
 
-@value danger as danger-alias from "./colors.module.css";
-@value rename-3: danger-alias;
+@value danger as danger-alias-selector from "./colors.module.css";
+@value rename-3: danger-alias-selector;
 .rename-3 { background-color: rename-3; }
 
 .local-class {
@@ -145,14 +183,48 @@
 	i__i_b_0: b;
 	i__i_c_0: c;
 	i__i_d_0: d;
+	i__i_f_0: f;
 }
 
 .class-local-my { color: red }
 
 .composes-from-import {
-	composes: class-local-my i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0;
+	composes: class-local-my i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0 i__i_f_0;
 	color: red;
 }
+
+:import("./classes.module.css") {
+	abc-from-def: abcd;
+}
+
+.local-for-reexport { color: blue; }
+
+.deep-reexport-in-composes {
+	composes:
+		local-for-reexport
+		abc-from-def;
+}
+
+:import("./classes.module.css") {
+	deep-selector-with-composes: dcba;
+}
+
+.deep-reexport-in-composes {
+	composes:
+		local-for-reexport
+		deep-selector-with-composes;
+}
+
+/* TODO test with @value and test with composes inside deep */
+/*@value in-composes: abc-from-def;*/
+
+/*.local-for-reexport { color: blue; }*/
+
+/*.deep-reexport-in-composes {*/
+/*	composes:*/
+/*		local-for-reexport*/
+/*		in-composes;*/
+/*}*/
 
 :export {
 	export: "export-value";

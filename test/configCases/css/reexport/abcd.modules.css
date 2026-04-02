@@ -11,5 +11,13 @@
 }
 
 .d {
-	color: e;
+	color: d;
+}
+
+.e {
+	color: d;
+}
+
+.f {
+	composes: e;
 }

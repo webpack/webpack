@@ -1,3 +1,8 @@
+:import("./classes-deep.module.css") {
+	my-selector: deep-selector;
+	my-selector-other: deep-selector-with-composes;
+}
+
 .localName {
 	background: red;
 }
@@ -9,3 +14,11 @@
 .bar {
 	composes: localName;
 }
+
+:import("./classes-deep.module.css") {
+	my-selector-other: deep-selector-with-composes;
+}
+
+:export { dcba: my-selector-other  }
+
+:export { abcd: my-selector; dcba: my-selector-other  }

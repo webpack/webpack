@@ -96,6 +96,14 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	transform: scale(1.02);
 }
 
+/*!****************************************!*\\\\
+  !*** css ./button-reexport.module.css ***!
+  \\\\****************************************/
+.button-reexport_module_css-base-reexport {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
 /*!*******************************!*\\\\
   !*** css ./button.module.css ***!
   \\\\*******************************/
@@ -104,9 +112,26 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	border-radius: 8px;
 }
 
+
+
+/*!*************************************!*\\\\
+  !*** css ./classes-deep.module.css ***!
+  \\\\*************************************/
+.classes-deep_module_css-deep-selector {
+	color: red;
+}
+
+.classes-deep_module_css-deep-selector-with-composes {
+	color: red;
+}
+
+.classes-deep_module_css-deep-selector-with-composes {
+	}
+
 /*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
+
 .classes_module_css-localName {
 	background: red;
 }
@@ -117,6 +142,9 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .classes_module_css-bar {
 	}
+
+
+
 
 /*!*****************************************!*\\\\
   !*** css ./classes-the-same.module.css ***!
@@ -178,8 +206,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 .abcd_modules_css-d {
-	color: e;
+	color: d;
 }
+
+.abcd_modules_css-e {
+	color: d;
+}
+
+.abcd_modules_css-f {
+	}
 
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
@@ -190,13 +225,43 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: red;
 }
 
-.button-global-font-size {
+.styles_module_css-u-1\\\\/2 {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
 	font-size: 14px;
+}
+
+.styles_module_css-composes-here {
+	display: block;
+}
+
+.styles_module_css-composes-here {
+	background-color: black;
 }
 
 .styles_module_css-button-complex {
 	background: blue;
 }
+
+.styles_module_css-button-complex-1 {
+	}
+
+.styles_module_css-button-complex-2 {
+	}
+
+/** TODO make this test with reexport deep when composes-here in :import*/
+.styles_module_css-local-composes {
+	color: blue;
+}
+
+.styles_module_css-local-composes {
+	color: blue;
+}
+
+/* TODO test me */
+/* @value test: composes-here; */
 
 .styles_module_css-exportName73 { color: red; }
 .styles_module_css-exportName74 { color: green; }
@@ -219,10 +284,14 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--styles_module_css-color: red;
 }
 
+/* TODO bug*/
+/*@value --myValueForCustomVariable: --deep-shared;*/
+
 .styles_module_css-custom-properties {
 	color: var(--styles_module_css-color);
 	background-color: var(--shared-custom-properties_module_css-shared);
 	border-color: var(--shared-custom-properties_module_css-deep-shared);
+	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
 }
 
 .styles_module_css-from {
@@ -278,24 +347,24 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .styles_module_css-my-selector-value { value: my-selector-value; }
 
 
-.styles_module_css-other-selector-value { value: other-selector-value; }
+.other-selector-value { value: other-selector-value; }
 
 
-.styles_module_css-other-selector-value { value: other-selector-value; }
+.other-selector-value { value: other-selector-value; }
 
 
-.styles_module_css-reexport-selector-value { value: reexport-selector-value; }
+.reexport-selector-value { value: reexport-selector-value; }
 
 
-.styles_module_css-reexport-selector-value { value: reexport-selector-value; }
-
-
-
-.styles_module_css-\\\\#c1c2c3 { background-color: #c1c2c3; }
+.reexport-selector-value { value: reexport-selector-value; }
 
 
 
-.styles_module_css-\\\\#e74c3c { background-color: #e74c3c; }
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
 
 .styles_module_css-local-class {
 	color: white;
@@ -316,6 +385,27 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
+.styles_module_css-local-for-reexport { color: #3498db; }
+
+.styles_module_css-deep-reexport-in-composes {
+	}
+
+
+.styles_module_css-deep-reexport-in-composes {
+	}
+
+/* TODO test with @value and test with composes inside deep */
+/*@value in-composes: abc-from-def;*/
+
+/*.local-for-reexport { color: blue; }*/
+
+/*.deep-reexport-in-composes {*/
+/*	composes:*/
+/*		local-for-reexport*/
+/*		in-composes;*/
+/*}*/
+
+
 "
 `;
 
@@ -324,7 +414,9 @@ Object {
   "alias-other-selector": "other-selector-value",
   "blue": "#3498db",
   "button-color-red": "styles_module_css-button-color-red",
-  "button-complex": "styles_module_css-button-complex styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex button_module_css-display-flex atoms_module_css-align-center button_module_css-align-center atoms_module_css-padding-box button_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-reset-display atoms_module_css-transition atoms-extra_module_css-cursor atoms_module_css-cursor button_module_css-interactive",
+  "button-complex": "styles_module_css-button-complex styles_module_css-u-1/2 styles_module_css-local-composes styles_module_css-composes-here bar styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "button-complex-1": "styles_module_css-button-complex-1 button-reexport_module_css-base-reexport atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "button-complex-2": "styles_module_css-button-complex-2 styles_module_css-local-composes styles_module_css-composes-here bar",
   "button-export-5": "styles_module_css-button-export-5",
   "button-rename-1": "styles_module_css-button-rename-1",
   "button-rename-2": "styles_module_css-button-rename-2",
@@ -336,10 +428,13 @@ Object {
   "class-with-composes": "styles_module_css-class-with-composes styles_module_css-local-class global-class global-class-other classes_module_css-localName",
   "color": "--styles_module_css-color",
   "colors": "\\"./colors.module.css\\"",
-  "composes-from-import": "styles_module_css-composes-from-import styles_module_css-class-local-my abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d",
+  "composes-from-import": "styles_module_css-composes-from-import styles_module_css-class-local-my abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d abcd_modules_css-f abcd_modules_css-e",
+  "composes-here": "styles_module_css-composes-here",
   "custom-properties": "styles_module_css-custom-properties",
-  "danger": "styles_module_css-#e74c3c",
+  "danger": "#e74c3c",
   "danger-alias": "#e74c3c",
+  "danger-alias-selector": "#e74c3c",
+  "deep-reexport-in-composes": "styles_module_css-deep-reexport-in-composes styles_module_css-local-for-reexport classes-deep_module_css-deep-selector styles_module_css-local-for-reexport classes-deep_module_css-deep-selector-with-composes classes-deep_module_css-deep-selector",
   "deep-shared": "--shared-custom-properties_module_css-deep-shared",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
@@ -351,13 +446,15 @@ Object {
   "foo": "red",
   "from": "styles_module_css-from",
   "local-class": "styles_module_css-local-class",
+  "local-composes": "styles_module_css-local-composes styles_module_css-composes-here bar styles_module_css-composes-here",
+  "local-for-reexport": "styles_module_css-local-for-reexport",
   "multiple-composes-with-composes": "styles_module_css-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
   "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
   "my-custom-color": "#2ecc71",
   "my-var-u1": "--vars_module_css-my-var-u1",
-  "other-selector": "styles_module_css-other-selector-value",
+  "other-selector": "other-selector-value",
   "primary": "#3498db",
-  "reexport-selector": "styles_module_css-reexport-selector-value",
+  "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
   "rename-2": "#e74c3c",
@@ -365,7 +462,8 @@ Object {
   "selector": "my-selector-value",
   "shared": "--shared-custom-properties_module_css-shared",
   "the-same-classes-in-composes-but-different-modules": "styles_module_css-the-same-classes-in-composes-but-different-modules classes_module_css-localName classes-the-same_module_css-localName",
-  "third": "styles_module_css-#c1c2c3",
+  "third": "#c1c2c3",
+  "u-1/2": "styles_module_css-u-1/2",
 }
 `;
 
@@ -465,6 +563,14 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	transform: scale(1.02);
 }
 
+/*!****************************************!*\\\\
+  !*** css ./button-reexport.module.css ***!
+  \\\\****************************************/
+._3hkn5Z {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
 /*!*******************************!*\\\\
   !*** css ./button.module.css ***!
   \\\\*******************************/
@@ -473,9 +579,26 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	border-radius: 8px;
 }
 
+
+
+/*!*************************************!*\\\\
+  !*** css ./classes-deep.module.css ***!
+  \\\\*************************************/
+._1U1vje {
+	color: red;
+}
+
+.OPw9Jj {
+	color: red;
+}
+
+.OPw9Jj {
+	}
+
 /*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
+
 .sQL78s {
 	background: red;
 }
@@ -486,6 +609,9 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .pmxb7o {
 	}
+
+
+
 
 /*!*****************************************!*\\\\
   !*** css ./classes-the-same.module.css ***!
@@ -547,8 +673,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 .xoOP4R {
-	color: e;
+	color: d;
 }
+
+._6NOMLC {
+	color: d;
+}
+
+.L4uOGL {
+	}
 
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
@@ -559,13 +692,43 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: red;
 }
 
-.button-global-font-size {
+.FVlv2P {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
 	font-size: 14px;
+}
+
+.vTFlpN {
+	display: block;
+}
+
+.vTFlpN {
+	background-color: black;
 }
 
 .m8FtUN {
 	background: blue;
 }
+
+.OG0OVF {
+	}
+
+.kp2wNS {
+	}
+
+/** TODO make this test with reexport deep when composes-here in :import*/
+.vupji7 {
+	color: blue;
+}
+
+.vupji7 {
+	color: blue;
+}
+
+/* TODO test me */
+/* @value test: composes-here; */
 
 .qgqd-J { color: red; }
 .Ns9rmr { color: green; }
@@ -588,10 +751,14 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--uGelqc: red;
 }
 
+/* TODO bug*/
+/*@value --myValueForCustomVariable: --deep-shared;*/
+
 .unbpP8 {
 	color: var(--uGelqc);
 	background-color: var(--qX-CSb);
 	border-color: var(--_TnMz_);
+	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
 }
 
 .MI7KS4 {
@@ -647,24 +814,24 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .BBfiX6 { value: my-selector-value; }
 
 
-.Js5iz- { value: other-selector-value; }
+.other-selector-value { value: other-selector-value; }
 
 
-.Js5iz- { value: other-selector-value; }
+.other-selector-value { value: other-selector-value; }
 
 
-.fppgTR { value: reexport-selector-value; }
+.reexport-selector-value { value: reexport-selector-value; }
 
 
-.fppgTR { value: reexport-selector-value; }
-
-
-
-._6nJNyM { background-color: #c1c2c3; }
+.reexport-selector-value { value: reexport-selector-value; }
 
 
 
-.X10PQ1 { background-color: #e74c3c; }
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
 
 .gAniDw {
 	color: white;
@@ -685,6 +852,27 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
+.-F4AOV { color: #3498db; }
+
+._0XYMUG {
+	}
+
+
+._0XYMUG {
+	}
+
+/* TODO test with @value and test with composes inside deep */
+/*@value in-composes: abc-from-def;*/
+
+/*.local-for-reexport { color: blue; }*/
+
+/*.deep-reexport-in-composes {*/
+/*	composes:*/
+/*		local-for-reexport*/
+/*		in-composes;*/
+/*}*/
+
+
 "
 `;
 
@@ -693,7 +881,9 @@ Object {
   "alias-other-selector": "other-selector-value",
   "blue": "#3498db",
   "button-color-red": "Nk2MvV",
-  "button-complex": "m8FtUN Nk2MvV button-global-font-size IRudRu _4hzrjS q3Pc3u _3N7KUJ amatBb FOqO9N Sodbxr h1WMpX uTFqYl r7veIg cS8Hmv A7d2fQ _G2W-m WanFrQ FG340h",
+  "button-complex": "m8FtUN FVlv2P vupji7 vTFlpN bar Nk2MvV button-global-font-size IRudRu _4hzrjS _3N7KUJ FOqO9N h1WMpX uTFqYl r7veIg _G2W-m",
+  "button-complex-1": "OG0OVF _3hkn5Z _4hzrjS _3N7KUJ FOqO9N h1WMpX uTFqYl r7veIg _G2W-m",
+  "button-complex-2": "kp2wNS vupji7 vTFlpN bar",
   "button-export-5": "nqaRG2",
   "button-rename-1": "EwEwRz",
   "button-rename-2": "tmQHLg",
@@ -705,10 +895,13 @@ Object {
   "class-with-composes": "gRd4c8 gAniDw global-class global-class-other sQL78s",
   "color": "--uGelqc",
   "colors": "\\"./colors.module.css\\"",
-  "composes-from-import": "_2HzoTb saX-62 _0bqD8c JJtGTB BNoXdB d e f xoOP4R",
+  "composes-from-import": "_2HzoTb saX-62 _0bqD8c JJtGTB BNoXdB d e f xoOP4R L4uOGL _6NOMLC",
+  "composes-here": "vTFlpN",
   "custom-properties": "unbpP8",
-  "danger": "X10PQ1",
+  "danger": "#e74c3c",
   "danger-alias": "#e74c3c",
+  "danger-alias-selector": "#e74c3c",
+  "deep-reexport-in-composes": "_0XYMUG -F4AOV _1U1vje -F4AOV OPw9Jj _1U1vje",
   "deep-shared": "--_TnMz_",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
@@ -720,13 +913,15 @@ Object {
   "foo": "red",
   "from": "MI7KS4",
   "local-class": "gAniDw",
+  "local-composes": "vupji7 vTFlpN bar vTFlpN",
+  "local-for-reexport": "-F4AOV",
   "multiple-composes-with-composes": "kAC3V_ sQL78s pmxb7o sQL78s",
   "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
   "my-custom-color": "#2ecc71",
   "my-var-u1": "--KP4m31",
-  "other-selector": "Js5iz-",
+  "other-selector": "other-selector-value",
   "primary": "#3498db",
-  "reexport-selector": "fppgTR",
+  "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
   "rename-2": "#e74c3c",
@@ -734,6 +929,7 @@ Object {
   "selector": "my-selector-value",
   "shared": "--qX-CSb",
   "the-same-classes-in-composes-but-different-modules": "u0iYW_ sQL78s MClDz9",
-  "third": "_6nJNyM",
+  "third": "#c1c2c3",
+  "u-1/2": "FVlv2P",
 }
 `;
