@@ -9,3 +9,7 @@
 .deep-selector-with-composes {
 	composes: deep-selector;
 }
+
+.deep-nested-c {
+	color: red;
+}

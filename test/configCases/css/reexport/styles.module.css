@@ -215,6 +215,25 @@
 		deep-selector-with-composes;
 }
 
+:import("./classes.module.css") {  __my_custom_import__: my_custom_import }
+
+.only-reexport {
+	composes: __my_custom_import__;
+}
+
+:import("./classes.module.css") {
+	__import_localName__: localName;
+}
+
+.class-from-pseudo-import {
+	color: __import_localName__;
+}
+
+:export {
+	reexport: __import_localName__
+}
+
+
 /* TODO test with @value and test with composes inside deep */
 /*@value in-composes: abc-from-def;*/
 

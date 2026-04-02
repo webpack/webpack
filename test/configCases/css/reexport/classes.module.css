@@ -22,3 +22,9 @@
 :export { dcba: my-selector-other  }
 
 :export { abcd: my-selector; dcba: my-selector-other  }
+
+:import("./classes-deep.module.css") {
+	__my_custom_import__: deep-nested-c;
+}
+
+:export { my_custom_import: __my_custom_import__  }

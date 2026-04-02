@@ -128,6 +128,10 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .classes-deep_module_css-deep-selector-with-composes {
 	}
 
+.classes-deep_module_css-deep-nested-c {
+	color: red;
+}
+
 /*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
@@ -142,6 +146,8 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .classes_module_css-bar {
 	}
+
+
 
 
 
@@ -394,6 +400,17 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .styles_module_css-deep-reexport-in-composes {
 	}
 
+
+.styles_module_css-only-reexport {
+	}
+
+
+.styles_module_css-class-from-pseudo-import {
+	color: classes_module_css-localName;
+}
+
+
+
 /* TODO test with @value and test with composes inside deep */
 /*@value in-composes: abc-from-def;*/
 
@@ -424,6 +441,7 @@ Object {
   "button-rename-4": "styles_module_css-button-rename-4",
   "button-with-color": "styles_module_css-button-with-color",
   "button-with-color-too": "styles_module_css-button-with-color-too",
+  "class-from-pseudo-import": "styles_module_css-class-from-pseudo-import",
   "class-local-my": "styles_module_css-class-local-my",
   "class-with-composes": "styles_module_css-class-with-composes styles_module_css-local-class global-class global-class-other classes_module_css-localName",
   "color": "--styles_module_css-color",
@@ -452,8 +470,10 @@ Object {
   "multiple-composes-with-simple": "styles_module_css-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
   "my-custom-color": "#2ecc71",
   "my-var-u1": "--vars_module_css-my-var-u1",
+  "only-reexport": "styles_module_css-only-reexport classes-deep_module_css-deep-nested-c",
   "other-selector": "other-selector-value",
   "primary": "#3498db",
+  "reexport": "classes_module_css-localName",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
@@ -595,6 +615,10 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .OPw9Jj {
 	}
 
+.h7hEph {
+	color: red;
+}
+
 /*!********************************!*\\\\
   !*** css ./classes.module.css ***!
   \\\\********************************/
@@ -609,6 +633,8 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 .pmxb7o {
 	}
+
+
 
 
 
@@ -861,6 +887,17 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 ._0XYMUG {
 	}
 
+
+.CiSiqk {
+	}
+
+
+.R3-Tbw {
+	color: sQL78s;
+}
+
+
+
 /* TODO test with @value and test with composes inside deep */
 /*@value in-composes: abc-from-def;*/
 
@@ -891,6 +928,7 @@ Object {
   "button-rename-4": "_T5aMe",
   "button-with-color": "bAMUwp",
   "button-with-color-too": "f2oaPF",
+  "class-from-pseudo-import": "R3-Tbw",
   "class-local-my": "saX-62",
   "class-with-composes": "gRd4c8 gAniDw global-class global-class-other sQL78s",
   "color": "--uGelqc",
@@ -919,8 +957,10 @@ Object {
   "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
   "my-custom-color": "#2ecc71",
   "my-var-u1": "--KP4m31",
+  "only-reexport": "CiSiqk h7hEph",
   "other-selector": "other-selector-value",
   "primary": "#3498db",
+  "reexport": "sQL78s",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
