@@ -3429,7 +3429,7 @@ declare class ConstDependency extends NullDependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
-	static TRANSITIVE: typeof TRANSITIVE;
+	static TRANSITIVE: symbol;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -4159,7 +4159,7 @@ declare class Dependency {
 	): void;
 	getContext(): undefined | string;
 	getResourceIdentifier(): null | string;
-	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
+	couldAffectReferencingModule(): boolean | symbol;
 
 	/**
 	 * Returns the referenced module and export
@@ -4219,7 +4219,7 @@ declare class Dependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
-	static TRANSITIVE: typeof TRANSITIVE;
+	static TRANSITIVE: symbol;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -6634,7 +6634,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
-	static TRANSITIVE: typeof TRANSITIVE;
+	static TRANSITIVE: symbol;
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -10586,14 +10586,7 @@ declare interface MergeDuplicateChunksPluginOptions {
 	 */
 	stage?: number;
 }
-type Meta = KnownMeta &
-	Record<
-		| typeof idsSymbolCommonJsExportRequireDependency
-		| typeof idsSymbolHarmonyImportSpecifierDependency
-		| typeof idsSymbolHarmonyExportImportedSpecifierDependency,
-		string[]
-	> &
-	Record<string, any>;
+type Meta = KnownMeta & Record<symbol, string[]> & Record<string, any>;
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
 	options: MinChunkSizePluginOptions;
@@ -10882,7 +10875,7 @@ declare class ModuleDependency extends Dependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
-	static TRANSITIVE: typeof TRANSITIVE;
+	static TRANSITIVE: symbol;
 }
 declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	constructor(
@@ -12526,7 +12519,7 @@ declare class NullDependency extends Dependency {
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static isLowPriorityDependency(dependency: Dependency): boolean;
-	static TRANSITIVE: typeof TRANSITIVE;
+	static TRANSITIVE: symbol;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -18673,7 +18666,6 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
-declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: symbol;
@@ -20444,9 +20436,6 @@ declare namespace exports {
 		LoaderContext
 	};
 }
-declare const idsSymbolCommonJsExportRequireDependency: unique symbol;
-declare const idsSymbolHarmonyExportImportedSpecifierDependency: unique symbol;
-declare const idsSymbolHarmonyImportSpecifierDependency: unique symbol;
 declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
