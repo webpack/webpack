@@ -1,4 +1,5 @@
 @import "./value-at-rule.module.css";
+@import "./cyclical.module.css";
 
 :import("./pseudo-import-and-export.module.css") {
 	__REEXPORT1__: export1;
@@ -233,6 +234,15 @@
 	reexport: __import_localName__
 }
 
+:import("./styles.module.css") {
+	__value_cyclical__: cyclical;
+}
+
+.class {
+	color: __value_cyclical__;
+}
+
+:export { cyclical: __value_cyclical__  }
 
 /* TODO test with @value and test with composes inside deep */
 /*@value in-composes: abc-from-def;*/
