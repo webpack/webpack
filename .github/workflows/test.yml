@@ -159,7 +159,7 @@ jobs:
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
 
       - name: Codecov
-        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           flags: unit
         env:
@@ -201,7 +201,7 @@ jobs:
       - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
 
       - name: Codecov
-        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           flags: test262
         env:
@@ -302,7 +302,7 @@ jobs:
       - run: yarn report:cover:merge
 
       - name: Codecov
-        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           flags: integration
         env:
