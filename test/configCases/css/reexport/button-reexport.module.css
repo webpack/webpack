@@ -1,0 +1,6 @@
+.base-reexport {
+	composes: display-flex align-center padding-box from "./atoms.module.css";
+	composes: interactive from "./atoms.module.css";
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}

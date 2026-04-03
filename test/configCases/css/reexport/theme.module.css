@@ -1,0 +1,4 @@
+@value colors: "./colors.module.css";
+@value primary, secondary from colors;
+
+@value danger as error from colors;

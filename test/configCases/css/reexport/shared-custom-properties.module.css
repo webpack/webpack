@@ -1,0 +1,4 @@
+:root {
+	--shared: blue;
+	--deep-shared: var(--deep-shared from "./shared-deep-custom-properties.module.css")
+}

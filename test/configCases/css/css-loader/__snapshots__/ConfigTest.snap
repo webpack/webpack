@@ -113,7 +113,7 @@ Object {
 exports[`ConfigTestCases css css-loader exported tests should work 10`] = `
 Object {
   "color-grey": "gray",
-  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading node_modules_@otherlocalpackage_style_css-type-heading2",
 }
 `;
 
@@ -656,8 +656,8 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
 Object {
-  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton",
-  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton",
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
 }
 `;
 

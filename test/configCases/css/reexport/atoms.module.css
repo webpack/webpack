@@ -1,0 +1,20 @@
+.display-flex {
+	display: flex;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.padding-box {
+	padding: 16px;
+}
+
+.interactive {
+	composes: transition cursor from "./atoms-extra.module.css";
+	will-change: transform;
+}
+
+.interactive:hover {
+	transform: scale(1.02);
+}
