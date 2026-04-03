@@ -28,8 +28,12 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
-/* TODO bug */
-/*@value error: danger from colors;*/
+
+
+
+.value-at-rule_module_css-color {
+	color: #e74c3c
+}
 
 .value-at-rule_module_css-button {
 	background-color: #3498db;
@@ -740,8 +744,12 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
-/* TODO bug */
-/*@value error: danger from colors;*/
+
+
+
+.S3xPqZ {
+	color: #e74c3c
+}
 
 .DSFgG0 {
 	background-color: #3498db;

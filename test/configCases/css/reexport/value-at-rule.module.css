@@ -1,8 +1,12 @@
 @value primary from "./theme.module.css";
 @value error from "./theme.module.css";
 
-/* TODO bug */
-/*@value error: danger from colors;*/
+@value colors: "./theme.module.css";
+@value danger: error from colors;
+
+.color {
+	color: danger
+}
 
 .button {
 	background-color: primary;
