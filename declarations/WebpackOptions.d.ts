@@ -3214,26 +3214,32 @@ export interface EntryStaticNormalized {
 export interface ExperimentsCommon {
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * @experimental
 	 */
 	asyncWebAssembly?: boolean;
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @experimental
 	 */
 	backCompat?: boolean;
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 	/**
 	 * Apply defaults of next major version.
+	 * @experimental
 	 */
 	futureDefaults?: boolean;
 	/**
 	 * Allow output javascript files as module source type.
+	 * @experimental
 	 */
 	outputModule?: boolean;
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 }
@@ -3292,6 +3298,7 @@ export interface JavascriptParserOptions {
 	createRequire?: boolean | string;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
 	 */
 	deferImport?: boolean;
 	/**
@@ -4011,18 +4018,22 @@ export interface WebpackOptionsNormalized {
 export interface ExperimentsExtra {
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
 	 */
 	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
 	/**
 	 * Enable css support.
+	 * @experimental
 	 */
 	css?: boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
 	 */
 	deferImport?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	[k: string]: any;
@@ -4033,18 +4044,22 @@ export interface ExperimentsExtra {
 export interface ExperimentsNormalizedExtra {
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions;
 	/**
 	 * Enable css support.
+	 * @experimental
 	 */
 	css?: boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
 	 */
 	deferImport?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 }
