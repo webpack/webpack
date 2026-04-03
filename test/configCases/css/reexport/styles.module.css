@@ -40,7 +40,6 @@
 	composes: local-composes;
 }
 
-/** TODO make this test with reexport deep when composes-here in :import*/
 .local-composes {
 	composes: composes-here, global(bar);
 	color: blue;
@@ -51,8 +50,21 @@
 	color: blue;
 }
 
-/* TODO test me */
-/* @value test: composes-here; */
+:import("abcd.modules.css") {
+	__import_f__: f;
+}
+
+.local-composes-with-reexport {
+	composes: composes-here, __import_f__, global(bar);
+	color: blue;
+}
+
+@value composes-test-here: composes-here;
+
+.local-composes-with-reexport-and-value {
+	composes: composes-test-here, __import_f__, global(bar);
+	color: blue;
+}
 
 .exportName73 { composes: bar from "./classes.module.css"; color: red; }
 .exportName74 { composes: exportName73; color: green; }
@@ -81,14 +93,18 @@
 	--color: red;
 }
 
-/* TODO bug*/
-/*@value --myValueForCustomVariable: --deep-shared;*/
+@value --my-custom-property-1: --color;
+
+:import("./vars.module.css") {
+	--reexport-my-var-u1: my-var-u1
+}
 
 .custom-properties {
 	color: var(--color);
 	background-color: var(--shared from "./shared-custom-properties.module.css");
 	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
-	/*outline-color: var(--myValueForCustomVariable from "./shared-custom-properties.module.css");*/
+	outline-color: var(--my-custom-property-1);
+	text-decoration-color: var(--reexport-my-var-u1);
 }
 
 .from {
@@ -210,7 +226,7 @@
 	deep-selector-with-composes: dcba;
 }
 
-.deep-reexport-in-composes {
+.deep-reexport-in-composes-other {
 	composes:
 		local-for-reexport
 		deep-selector-with-composes;
@@ -244,16 +260,17 @@
 
 :export { cyclical: __value_cyclical__  }
 
-/* TODO test with @value and test with composes inside deep */
-/*@value in-composes: abc-from-def;*/
+:import("./classes.module.css") {
+	abc-from-def_local: abcd;
+}
 
-/*.local-for-reexport { color: blue; }*/
+@value in-composes: abc-from-def_local;
 
-/*.deep-reexport-in-composes {*/
-/*	composes:*/
-/*		local-for-reexport*/
-/*		in-composes;*/
-/*}*/
+.local-for-reexport { color: blue; }
+
+.deep-reexport-in-composes-other-other {
+	composes: local-for-reexport in-composes;
+}
 
 :export {
 	export: "export-value";

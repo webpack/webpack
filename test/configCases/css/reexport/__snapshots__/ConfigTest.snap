@@ -6,6 +6,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
   \\\\************************************/
 
 
+
 /*!*******************************!*\\\\
   !*** css ./colors.module.css ***!
   \\\\*******************************/
@@ -130,6 +131,32 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+.abcd_modules_css-a {
+	color: a;
+}
+
+.abcd_modules_css-b {
+	color: b;
+}
+
+.abcd_modules_css-c {
+	color: c;
+}
+
+.abcd_modules_css-d {
+	color: d;
+}
+
+.abcd_modules_css-e {
+	color: d;
+}
+
+.abcd_modules_css-f {
+	}
+
 /*!*************************************!*\\\\
   !*** css ./classes-deep.module.css ***!
   \\\\*************************************/
@@ -175,6 +202,17 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	background: blue;
 }
 
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--vars_module_css-my-var-u1: red;
+}
+
+.vars_module_css-my-var-u1 {
+	color: red;
+}
+
 /*!******************************************************!*\\\\
   !*** css ./shared-deep-custom-properties.module.css ***!
   \\\\******************************************************/
@@ -190,17 +228,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
 }
 
-/*!*****************************!*\\\\
-  !*** css ./vars.module.css ***!
-  \\\\*****************************/
-:root {
-	--vars_module_css-my-var-u1: red;
-}
-
-.vars_module_css-my-var-u1 {
-	color: red;
-}
-
 /*!***************************************!*\\\\
   !*** css ./selectors-more.module.css ***!
   \\\\***************************************/
@@ -211,32 +238,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
   \\\\**********************************/
 
 
-
-/*!******************************!*\\\\
-  !*** css ./abcd.modules.css ***!
-  \\\\******************************/
-.abcd_modules_css-a {
-	color: a;
-}
-
-.abcd_modules_css-b {
-	color: b;
-}
-
-.abcd_modules_css-c {
-	color: c;
-}
-
-.abcd_modules_css-d {
-	color: d;
-}
-
-.abcd_modules_css-e {
-	color: d;
-}
-
-.abcd_modules_css-f {
-	}
 
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
@@ -273,7 +274,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .styles_module_css_d9f7-button-complex-2 {
 	}
 
-/** TODO make this test with reexport deep when composes-here in :import*/
 .styles_module_css_d9f7-local-composes {
 	color: blue;
 }
@@ -282,8 +282,16 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: blue;
 }
 
-/* TODO test me */
-/* @value test: composes-here; */
+
+.styles_module_css_d9f7-local-composes-with-reexport {
+	color: blue;
+}
+
+
+
+.styles_module_css_d9f7-local-composes-with-reexport-and-value {
+	color: blue;
+}
 
 .styles_module_css_d9f7-exportName73 { color: red; }
 .styles_module_css_d9f7-exportName74 { color: green; }
@@ -306,14 +314,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--styles_module_css_d9f7-color: red;
 }
 
-/* TODO bug*/
-/*@value --myValueForCustomVariable: --deep-shared;*/
+
+
 
 .styles_module_css_d9f7-custom-properties {
 	color: var(--styles_module_css_d9f7-color);
 	background-color: var(--shared-custom-properties_module_css-shared);
 	border-color: var(--shared-custom-properties_module_css-deep-shared);
-	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
+	outline-color: var(--styles_module_css_d9f7-color);
+	text-decoration-color: var(--vars_module_css-my-var-u1);
 }
 
 .styles_module_css_d9f7-from {
@@ -413,7 +422,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	}
 
 
-.styles_module_css_d9f7-deep-reexport-in-composes {
+.styles_module_css_d9f7-deep-reexport-in-composes-other {
 	}
 
 
@@ -432,16 +441,13 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
-/* TODO test with @value and test with composes inside deep */
-/*@value in-composes: abc-from-def;*/
 
-/*.local-for-reexport { color: blue; }*/
 
-/*.deep-reexport-in-composes {*/
-/*	composes:*/
-/*		local-for-reexport*/
-/*		in-composes;*/
-/*}*/
+
+.styles_module_css_d9f7-local-for-reexport { color: #3498db; }
+
+.styles_module_css_d9f7-deep-reexport-in-composes-other-other {
+	}
 
 
 /*!*******************************!*\\\\
@@ -479,7 +485,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .styles_module_css_be02-button-complex-2 {
 	}
 
-/** TODO make this test with reexport deep when composes-here in :import*/
 .styles_module_css_be02-local-composes {
 	color: blue;
 }
@@ -488,8 +493,16 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: blue;
 }
 
-/* TODO test me */
-/* @value test: composes-here; */
+
+.styles_module_css_be02-local-composes-with-reexport {
+	color: blue;
+}
+
+
+
+.styles_module_css_be02-local-composes-with-reexport-and-value {
+	color: blue;
+}
 
 .styles_module_css_be02-exportName73 { color: red; }
 .styles_module_css_be02-exportName74 { color: green; }
@@ -512,14 +525,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--styles_module_css_be02-color: red;
 }
 
-/* TODO bug*/
-/*@value --myValueForCustomVariable: --deep-shared;*/
+
+
 
 .styles_module_css_be02-custom-properties {
 	color: var(--styles_module_css_be02-color);
 	background-color: var(--shared-custom-properties_module_css-shared);
 	border-color: var(--shared-custom-properties_module_css-deep-shared);
-	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
+	outline-color: var(--styles_module_css_be02-color);
+	text-decoration-color: var(--vars_module_css-my-var-u1);
 }
 
 .styles_module_css_be02-from {
@@ -619,7 +633,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	}
 
 
-.styles_module_css_be02-deep-reexport-in-composes {
+.styles_module_css_be02-deep-reexport-in-composes-other {
 	}
 
 
@@ -638,16 +652,13 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
-/* TODO test with @value and test with composes inside deep */
-/*@value in-composes: abc-from-def;*/
 
-/*.local-for-reexport { color: blue; }*/
 
-/*.deep-reexport-in-composes {*/
-/*	composes:*/
-/*		local-for-reexport*/
-/*		in-composes;*/
-/*}*/
+
+.styles_module_css_be02-local-for-reexport { color: #3498db; }
+
+.styles_module_css_be02-deep-reexport-in-composes-other-other {
+	}
 
 
 "
@@ -655,6 +666,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
 Object {
+  "--my-custom-property-1": "--color",
   "alias-other-selector": "other-selector-value",
   "blue": "#3498db",
   "button-color-red": "styles_module_css_be02-button-color-red",
@@ -676,12 +688,15 @@ Object {
   "colors": "\\"./colors.module.css\\"",
   "composes-from-import": "styles_module_css_be02-composes-from-import styles_module_css_be02-class-local-my abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d abcd_modules_css-f abcd_modules_css-e",
   "composes-here": "styles_module_css_be02-composes-here",
+  "composes-test-here": "composes-here",
   "custom-properties": "styles_module_css_be02-custom-properties",
   "cyclical": "__value_cyclical__",
   "danger": "#e74c3c",
   "danger-alias": "#e74c3c",
   "danger-alias-selector": "#e74c3c",
-  "deep-reexport-in-composes": "styles_module_css_be02-deep-reexport-in-composes styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector-with-composes classes-deep_module_css-deep-selector",
+  "deep-reexport-in-composes": "styles_module_css_be02-deep-reexport-in-composes styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector",
+  "deep-reexport-in-composes-other": "styles_module_css_be02-deep-reexport-in-composes-other styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector-with-composes classes-deep_module_css-deep-selector",
+  "deep-reexport-in-composes-other-other": "styles_module_css_be02-deep-reexport-in-composes-other-other styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector",
   "deep-shared": "--shared-custom-properties_module_css-deep-shared",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
@@ -692,17 +707,22 @@ Object {
   "exportName75": "styles_module_css_be02-exportName75",
   "foo": "red",
   "from": "styles_module_css_be02-from",
+  "in-composes": "classes-deep_module_css-deep-selector",
   "local-class": "styles_module_css_be02-local-class",
   "local-composes": "styles_module_css_be02-local-composes styles_module_css_be02-composes-here bar styles_module_css_be02-composes-here",
+  "local-composes-with-reexport": "styles_module_css_be02-local-composes-with-reexport styles_module_css_be02-composes-here abcd_modules_css-f abcd_modules_css-e bar",
+  "local-composes-with-reexport-and-value": "styles_module_css_be02-local-composes-with-reexport-and-value styles_module_css_be02-composes-here abcd_modules_css-f abcd_modules_css-e bar",
   "local-for-reexport": "styles_module_css_be02-local-for-reexport",
   "multiple-composes-with-composes": "styles_module_css_be02-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
   "multiple-composes-with-simple": "styles_module_css_be02-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
   "my-custom-color": "#2ecc71",
+  "my-custom-property-1": "--styles_module_css_be02-color",
   "my-var-u1": "--vars_module_css-my-var-u1",
   "only-reexport": "styles_module_css_be02-only-reexport classes-deep_module_css-deep-nested-c",
   "other-selector": "other-selector-value",
   "primary": "#3498db",
   "reexport": "classes_module_css-localName",
+  "reexport-my-var-u1": "--vars_module_css-my-var-u1",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
@@ -720,6 +740,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 "/*!************************************!*\\\\
   !*** css ./colors-more.module.css ***!
   \\\\************************************/
+
 
 
 /*!*******************************!*\\\\
@@ -846,6 +867,32 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+._0bqD8c {
+	color: a;
+}
+
+.JJtGTB {
+	color: b;
+}
+
+.BNoXdB {
+	color: c;
+}
+
+.xoOP4R {
+	color: d;
+}
+
+._6NOMLC {
+	color: d;
+}
+
+.L4uOGL {
+	}
+
 /*!*************************************!*\\\\
   !*** css ./classes-deep.module.css ***!
   \\\\*************************************/
@@ -891,6 +938,17 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	background: blue;
 }
 
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--KP4m31: red;
+}
+
+.KP4m31 {
+	color: red;
+}
+
 /*!******************************************************!*\\\\
   !*** css ./shared-deep-custom-properties.module.css ***!
   \\\\******************************************************/
@@ -906,17 +964,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--_TnMz_: var(--_7xy4NT)
 }
 
-/*!*****************************!*\\\\
-  !*** css ./vars.module.css ***!
-  \\\\*****************************/
-:root {
-	--KP4m31: red;
-}
-
-.KP4m31 {
-	color: red;
-}
-
 /*!***************************************!*\\\\
   !*** css ./selectors-more.module.css ***!
   \\\\***************************************/
@@ -928,32 +975,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 
 
-/*!******************************!*\\\\
-  !*** css ./abcd.modules.css ***!
-  \\\\******************************/
-._0bqD8c {
-	color: a;
-}
-
-.JJtGTB {
-	color: b;
-}
-
-.BNoXdB {
-	color: c;
-}
-
-.xoOP4R {
-	color: d;
-}
-
-._6NOMLC {
-	color: d;
-}
-
-.L4uOGL {
-	}
-
 /*!*******************************!*\\\\
   !*** css ./styles.module.css ***!
   \\\\*******************************/
@@ -989,7 +1010,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .kp2wNS {
 	}
 
-/** TODO make this test with reexport deep when composes-here in :import*/
 .vupji7 {
 	color: blue;
 }
@@ -998,8 +1018,16 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: blue;
 }
 
-/* TODO test me */
-/* @value test: composes-here; */
+
+.VTgblp {
+	color: blue;
+}
+
+
+
+.XeMa0a {
+	color: blue;
+}
 
 .qgqd-J { color: red; }
 .Ns9rmr { color: green; }
@@ -1022,14 +1050,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--uGelqc: red;
 }
 
-/* TODO bug*/
-/*@value --myValueForCustomVariable: --deep-shared;*/
+
+
 
 .unbpP8 {
 	color: var(--uGelqc);
 	background-color: var(--qX-CSb);
 	border-color: var(--_TnMz_);
-	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
+	outline-color: var(--uGelqc);
+	text-decoration-color: var(--KP4m31);
 }
 
 .MI7KS4 {
@@ -1129,7 +1158,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	}
 
 
-._0XYMUG {
+.zB77X1 {
 	}
 
 
@@ -1148,16 +1177,13 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
-/* TODO test with @value and test with composes inside deep */
-/*@value in-composes: abc-from-def;*/
 
-/*.local-for-reexport { color: blue; }*/
 
-/*.deep-reexport-in-composes {*/
-/*	composes:*/
-/*		local-for-reexport*/
-/*		in-composes;*/
-/*}*/
+
+.-F4AOV { color: #3498db; }
+
+.Hh8KGg {
+	}
 
 
 /*!*******************************!*\\\\
@@ -1195,7 +1221,6 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 .kp2wNS {
 	}
 
-/** TODO make this test with reexport deep when composes-here in :import*/
 .vupji7 {
 	color: blue;
 }
@@ -1204,8 +1229,16 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	color: blue;
 }
 
-/* TODO test me */
-/* @value test: composes-here; */
+
+.VTgblp {
+	color: blue;
+}
+
+
+
+.XeMa0a {
+	color: blue;
+}
 
 .qgqd-J { color: red; }
 .Ns9rmr { color: green; }
@@ -1228,14 +1261,15 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	--uGelqc: red;
 }
 
-/* TODO bug*/
-/*@value --myValueForCustomVariable: --deep-shared;*/
+
+
 
 .unbpP8 {
 	color: var(--uGelqc);
 	background-color: var(--qX-CSb);
 	border-color: var(--_TnMz_);
-	/*outline-color: var(--myValueForCustomVariable from \\"./shared-custom-properties.module.css\\");*/
+	outline-color: var(--uGelqc);
+	text-decoration-color: var(--KP4m31);
 }
 
 .MI7KS4 {
@@ -1335,7 +1369,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 	}
 
 
-._0XYMUG {
+.zB77X1 {
 	}
 
 
@@ -1354,16 +1388,13 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 }
 
 
-/* TODO test with @value and test with composes inside deep */
-/*@value in-composes: abc-from-def;*/
 
-/*.local-for-reexport { color: blue; }*/
 
-/*.deep-reexport-in-composes {*/
-/*	composes:*/
-/*		local-for-reexport*/
-/*		in-composes;*/
-/*}*/
+
+.-F4AOV { color: #3498db; }
+
+.Hh8KGg {
+	}
 
 
 "
@@ -1371,6 +1402,7 @@ exports[`ConfigTestCases css reexport exported tests should work with asset modu
 
 exports[`ConfigTestCases css reexport exported tests should work with asset modules 4`] = `
 Object {
+  "--my-custom-property-1": "--color",
   "alias-other-selector": "other-selector-value",
   "blue": "#3498db",
   "button-color-red": "Nk2MvV",
@@ -1392,12 +1424,15 @@ Object {
   "colors": "\\"./colors.module.css\\"",
   "composes-from-import": "_2HzoTb saX-62 _0bqD8c JJtGTB BNoXdB d e f xoOP4R L4uOGL _6NOMLC",
   "composes-here": "vTFlpN",
+  "composes-test-here": "composes-here",
   "custom-properties": "unbpP8",
   "cyclical": "__value_cyclical__",
   "danger": "#e74c3c",
   "danger-alias": "#e74c3c",
   "danger-alias-selector": "#e74c3c",
-  "deep-reexport-in-composes": "_0XYMUG -F4AOV _1U1vje -F4AOV OPw9Jj _1U1vje",
+  "deep-reexport-in-composes": "_0XYMUG -F4AOV _1U1vje",
+  "deep-reexport-in-composes-other": "zB77X1 -F4AOV OPw9Jj _1U1vje",
+  "deep-reexport-in-composes-other-other": "Hh8KGg -F4AOV _1U1vje",
   "deep-shared": "--_TnMz_",
   "export": "\\"export-value\\"",
   "export1": "\\"export1-value\\"",
@@ -1408,17 +1443,22 @@ Object {
   "exportName75": "hsOyo6",
   "foo": "red",
   "from": "MI7KS4",
+  "in-composes": "_1U1vje",
   "local-class": "gAniDw",
   "local-composes": "vupji7 vTFlpN bar vTFlpN",
+  "local-composes-with-reexport": "VTgblp vTFlpN L4uOGL _6NOMLC bar",
+  "local-composes-with-reexport-and-value": "XeMa0a vTFlpN L4uOGL _6NOMLC bar",
   "local-for-reexport": "-F4AOV",
   "multiple-composes-with-composes": "kAC3V_ sQL78s pmxb7o sQL78s",
   "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
   "my-custom-color": "#2ecc71",
+  "my-custom-property-1": "--uGelqc",
   "my-var-u1": "--KP4m31",
   "only-reexport": "CiSiqk h7hEph",
   "other-selector": "other-selector-value",
   "primary": "#3498db",
   "reexport": "sQL78s",
+  "reexport-my-var-u1": "--KP4m31",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
   "rename": "#3498db",
