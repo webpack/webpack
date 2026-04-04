@@ -9834,7 +9834,7 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		preDeclarator: SyncBailHook<
-			[VariableDeclarator, Statement],
+			[VariableDeclarator, VariableDeclaration],
 			boolean | void
 		>;
 		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
