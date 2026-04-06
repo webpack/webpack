@@ -20,31 +20,31 @@ describe("GraphIntegrity (Integration)", () => {
 				const [chunk] = compilation.chunks;
 				const modules = [...chunkGraph.getChunkModulesIterable(chunk)];
 
-				if (modules.length >= 1) {
-					const oldModule = modules[0];
-					const newModule = {
-						identifier: () => "mock-module-identifier",
-						getSourceTypes: () => ["javascript"],
-						size: () => 0,
-						identifierIndex: 0
-					};
+				expect(modules.length).toBeGreaterThanOrEqual(1);
 
-					chunkGraph.replaceModule(oldModule, newModule);
+				const oldModule = modules[0];
+				const newModule = {
+					identifier: () => "mock-module-identifier",
+					getSourceTypes: () => ["javascript"],
+					size: () => 0,
+					identifierIndex: 0
+				};
 
-					const hasNew = chunkGraph.isModuleInChunk(newModule, chunk);
-					const hasOld = chunkGraph.isModuleInChunk(oldModule, chunk);
+				chunkGraph.replaceModule(oldModule, newModule);
 
-					if (!hasNew || hasOld) {
-						throw new Error("Module replacement failed in ChunkGraph");
-					}
+				const hasNew = chunkGraph.isModuleInChunk(newModule, chunk);
+				const hasOld = chunkGraph.isModuleInChunk(oldModule, chunk);
 
-					chunkGraph.connectChunkAndModule(chunk, oldModule);
-					chunkGraph.disconnectChunkAndModule(chunk, oldModule);
+				if (!hasNew || hasOld) {
+					throw new Error("Module replacement failed in ChunkGraph");
+				}
 
-					const [group] = compilation.chunkGroups;
-					if (group) {
-						group.getChildren();
-					}
+				chunkGraph.connectChunkAndModule(chunk, oldModule);
+				chunkGraph.disconnectChunkAndModule(chunk, oldModule);
+
+				const [group] = compilation.chunkGroups;
+				if (group) {
+					group.getChildren();
 				}
 			});
 		});
