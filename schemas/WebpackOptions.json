@@ -1104,6 +1104,10 @@
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean"
+        },
+        "typescript": {
+          "description": "Enable typescript support.",
+          "type": "boolean"
         }
       }
     },
@@ -1193,6 +1197,10 @@
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+          "type": "boolean"
+        },
+        "typescript": {
+          "description": "Enable typescript support.",
           "type": "boolean"
         }
       }
@@ -2036,6 +2044,10 @@
         },
         "system": {
           "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+          "type": "boolean"
+        },
+        "typescript": {
+          "description": "Enable typescript support.",
           "type": "boolean"
         },
         "unknownContextCritical": {
