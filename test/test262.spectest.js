@@ -853,10 +853,6 @@ const knownBugs = [
 
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
-	"module-code/eval-export-dflt-cls-anon.js",
-	"module-code/eval-export-dflt-expr-cls-anon.js",
-	"module-code/eval-export-dflt-expr-fn-anon.js",
-	"module-code/eval-export-dflt-expr-gen-anon.js",
 
 	// improve test runner to keep dynamic import for such case
 	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
@@ -894,9 +890,6 @@ const knownBugs = [
 
 	// Not a bug, we need to improve our test runner
 	"statements/async-function/evaluation-body.js",
-
-	"module-code/instn-named-bndng-dflt-gen-anon.js",
-	"module-code/instn-named-bndng-dflt-fun-anon.js",
 
 	// Do we need to call `Object.setPrototypeOf(__webpack_exports__, null);` for namespace imports and other things
 	"module-code/namespace/internals/get-own-property-str-found-init.js",
@@ -1008,10 +1001,6 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
 
-	"expressions/dynamic-import/eval-export-dflt-cls-anon.js",
-	"expressions/dynamic-import/eval-export-dflt-expr-cls-anon.js",
-	"expressions/dynamic-import/eval-export-dflt-expr-fn-anon.js",
-	"expressions/dynamic-import/eval-export-dflt-expr-gen-anon.js",
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
