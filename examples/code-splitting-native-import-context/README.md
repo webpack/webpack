@@ -86,12 +86,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	if(!__webpack_require__.o(map, req)) {
-		return Promise.resolve().then(() => {
+	try {
+		if(!__webpack_require__.o(map, req)) {
+			return Promise.resolve().then(() => {
 	var e = new Error("Cannot find module '" + req + "'");
 	e.code = 'MODULE_NOT_FOUND';
 	throw e;
 });
+		}
+	} catch(err) {
+		return Promise.reject(err);
 	}
 
 	var ids = map[req], id = ids[0];
@@ -119,12 +123,6 @@ module.exports = webpackAsyncContext;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -133,6 +131,12 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -415,7 +419,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.4 KiB [emitted] [minimized] (name: main)
+asset output.js 2.44 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 127 bytes [emitted] [minimized]
 asset 776.output.js 127 bytes [emitted] [minimized]
 asset 0.output.js 124 bytes [emitted] [minimized]

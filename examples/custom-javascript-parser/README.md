@@ -391,7 +391,6 @@ const oxcParse = require("./internals/oxc-parse.js");
 const config = [
 	// oxc
 	{
-		entry: "./example.js",
 		mode: "production",
 		optimization: {
 			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
@@ -419,7 +418,6 @@ const config = [
 	},
 	// meriyah
 	{
-		entry: "./example.js",
 		mode: "production",
 		optimization: {
 			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
@@ -447,7 +445,6 @@ const config = [
 	},
 	// acorn
 	{
-		entry: "./example.js",
 		mode: "production",
 		output: {
 			filename: "acorn.[name].js"
@@ -485,64 +482,109 @@ Implementation example:
 ## Unoptimized
 
 ```
-asset oxc.main.js 12.1 KiB [emitted] (name: main)
-asset oxc.655.js 761 bytes [emitted]
-runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
+asset output.js 12 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6-6
   ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6-6
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset meriyah.main.js 12.1 KiB [emitted] (name: main)
-asset meriyah.655.js 761 bytes [emitted]
-runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
+asset output.js 12 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset acorn.main.js 12.1 KiB [emitted] (name: main)
-asset acorn.655.js 761 bytes [emitted]
-runtime modules 5.48 KiB 8 modules
-cacheable modules 481 bytes
-  ./example.js 176 bytes [built] [code generated]
-  ./increment.js 86 bytes [built] [code generated]
+asset output.js 12 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
-  ./math.js 195 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset oxc.main.js 2.01 KiB [emitted] [minimized] (name: main)
-asset oxc.655.js 121 bytes [emitted] [minimized]
-runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
+asset output.js 2.01 KiB [emitted] [minimized] (name: main)
+asset 655.output.js 121 bytes [emitted] [minimized]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6-6
   ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    import() ./async-loaded ./example.js + 2 modules ./example.js 6-6
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  ./example.js + 2 modules 457 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset meriyah.main.js 2.01 KiB [emitted] [minimized] (name: main)
-asset meriyah.655.js 121 bytes [emitted] [minimized]
-runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
+asset output.js 2.01 KiB [compared for emit] [minimized] (name: main)
+asset 655.output.js 121 bytes [compared for emit] [minimized]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  ./example.js + 2 modules 457 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset acorn.main.js 2.01 KiB [emitted] [minimized] (name: main)
-asset acorn.655.js 121 bytes [emitted] [minimized]
-runtime modules 5.48 KiB 8 modules
-orphan modules 281 bytes [orphan] 2 modules
-cacheable modules 481 bytes
-  ./example.js + 2 modules 457 bytes [built] [code generated]
+asset output.js 2.01 KiB [compared for emit] [minimized] (name: main)
+asset 655.output.js 121 bytes [compared for emit] [minimized]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.48 KiB 8 modules
+  ./example.js + 2 modules 457 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 ```

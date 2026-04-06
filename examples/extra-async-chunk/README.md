@@ -65,12 +65,6 @@ require.ensure(["./a"], function(require) {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -79,6 +73,12 @@ require.ensure(["./a"], function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -359,7 +359,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.37 KiB [emitted] (name: main)
+asset output.js 9.36 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 329 bytes [emitted]
 asset d_js.output.js 329 bytes [emitted]
