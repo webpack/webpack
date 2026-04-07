@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-detailed should print correct stats for preset-detailed 1`] = `
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <+> [LogTestPlugin] Collapsed group
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
+PublicPath: auto
+asset main.js X KiB {792} [emitted] (name: main)
+asset 964.js X bytes {964} [emitted]
+asset 226.js X bytes {226} [emitted]
+asset 899.js X bytes {899} [emitted]
+Entrypoint main X KiB = main.js
+chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
+  > [964] ./c.js 1:0-52
+chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{899}< >{964}< [entry] [rendered]
+  > ./index main
+chunk {899} (runtime: main) 899.js X bytes <{792}> [rendered]
+  > ./b [237] ./index.js 2:0-16
+chunk {964} (runtime: main) 964.js X bytes <{792}> >{226}< [rendered]
+  > ./c [237] ./index.js 3:0-16
+runtime modules X KiB
+  webpack/runtime/ensure chunk X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/global X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/jsonp chunk loading X KiB {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/load script X KiB {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/publicPath X KiB {792} [code generated]
+    [no exports]
+    [used exports unknown]
+cacheable modules X bytes
+  ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
+    [no exports used]
+    Statement (ExpressionStatement) with side effects in source code at 1:0-15
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./a.js [670] X bytes {792} [depth 1] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./b.js [899] X bytes {899} [depth 1] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./c.js [964] X bytes {964} [depth 1] [built] [code generated]
+    [used exports unknown]
+    Statement (ExpressionStatement) with side effects in source code at 1:0-53
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./d.js [425] X bytes {226} [depth 2] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./e.js [210] X bytes {226} [depth 2] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+
+LOG from LogTestPlugin
+<-> Group
+  <e> Error
+  <w> Warning
+  <i> Info
+      Log
+  <+> Collapsed group
+      Log
+    End
++ 6 hidden lines
+
+LOG from webpack.Compilation
+    6 modules hashed, 0 from cache (1 variants per module in average)
+    100% code generated (6 generated, 0 from cache)
+    100% code generated (7 generated, 0 from cache)
++ 24 hidden lines
+
+LOG from webpack.FlagDependencyExportsPlugin
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)
++ 3 hidden lines
+
+LOG from webpack.buildChunkGraph
+    15 queue items processed (9 blocks)
+    3 chunk groups connected
+    3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
+    3 chunk group info updated (0 already connected chunk groups reconnected)
++ 15 hidden lines
+
+LOG from webpack.FileSystemInfo
+    6 new snapshots created
+    0% root snapshot uncached (0 / 0)
+    0% children snapshot uncached (0 / 0)
+    0 entries tested
+    File info in cache: 6 timestamps 6 hashes 6 timestamp hash combinations
+    File timestamp hash combination snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
+    Managed items info in cache: 0 items
+
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (XXXXXXXXXXXXXXXXXXXX)"
+`;

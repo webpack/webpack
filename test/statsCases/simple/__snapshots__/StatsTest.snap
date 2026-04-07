@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases simple should print correct stats for simple 1`] = `
+"asset bundle.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

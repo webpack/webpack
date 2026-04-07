@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases aggressive-splitting-on-demand should print correct stats for aggressive-splitting-on-demand 1`] = `
+"PublicPath: auto
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+Entrypoint main X KiB = XXXXXXXXXXXXXXXXXXXX.js
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
+  > ./c ./d ./e ./index.js 3:0-30
+  > ./b ./d ./e ./f ./g ./index.js 5:0-44
+  ./e.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
+  > ./b ./c ./index.js 2:0-23
+  ./b.js X bytes [built] [code generated]
+  ./c.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./c ./d ./e ./index.js 3:0-30
+  ./c.js X bytes [built] [code generated]
+  ./d.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
+  > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
+  ./k.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
+  ./h.js X bytes [built] [code generated]
+  ./i.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
+  ./i.js X bytes [built] [code generated]
+  ./j.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered]
+  > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
+  ./j.js X bytes [built] [code generated]
+  ./k.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
+  > ./a ./index.js 1:0-16
+  ./a.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
+  ./e.js X bytes [built] [code generated]
+  ./h.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./b ./d ./e ./f ./g ./index.js 5:0-44
+  > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
+  ./b.js X bytes [built] [code generated]
+  ./d.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  > ./index main
+  runtime modules X KiB 7 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X KiB [rendered] [recorded] aggressive splitted
+  > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
+  > ./b ./d ./e ./f ./g ./index.js 5:0-44
+  > ./b ./d ./e ./f ./g ./h ./i ./j ./k ./index.js 6:0-72
+  ./f.js X bytes [built] [code generated]
+  ./g.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

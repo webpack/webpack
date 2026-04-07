@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases commons-chunk-min-size-0 should print correct stats for commons-chunk-min-size-0 1`] = `
+"asset entry-1.js X KiB [emitted] (name: entry-1)
+asset 903.js X bytes [emitted] (id hint: vendor-1)
+Entrypoint entry-1 X KiB = 903.js X bytes entry-1.js X KiB
+runtime modules X KiB 3 modules
+modules by path ./modules/*.js X bytes
+  ./modules/a.js X bytes [built] [code generated]
+  ./modules/b.js X bytes [built] [code generated]
+  ./modules/c.js X bytes [built] [code generated]
+  ./modules/d.js X bytes [built] [code generated]
+  ./modules/e.js X bytes [built] [code generated]
+  ./modules/f.js X bytes [built] [code generated]
+./entry-1.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

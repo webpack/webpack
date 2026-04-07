@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases module-trace-disabled-in-error should print correct stats for module-trace-disabled-in-error 1`] = `
+"assets by status X KiB [cached] 1 asset
+./index.js X bytes [built] [code generated]
+./inner.js X bytes [built] [code generated]
+./not-existing.js X bytes [built] [code generated]
+./parse-error.js X bytes [built] [code generated] [1 error]
+
+ERROR in ./not-existing.js 1:0-25
+Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'
+
+ERROR in ./parse-error.js 3:4
+Module parse failed: Unexpected token (3:4)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+| Here
+| could
+> be :)
+| your
+| code
+
+webpack x.x.x compiled with 2 errors in X ms"
+`;

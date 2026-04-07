@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preload should print correct stats for preload 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+asset preloaded.js X bytes [emitted] (name: preloaded)
+asset inner2.js X bytes [emitted] (name: inner2)
+asset inner.js X bytes [emitted] (name: inner)
+asset normal.js X bytes [emitted] (name: normal)
+asset preloaded3.js X bytes [emitted] (name: preloaded3)
+asset preloaded2.js X bytes [emitted] (name: preloaded2)
+Entrypoint main X KiB = main.js
+  preload: preloaded2.js (name: preloaded2), preloaded.js (name: preloaded), preloaded3.js (name: preloaded3)
+chunk (runtime: main) preloaded.js (preloaded) X bytes (preload: {573} {253}) [rendered]
+chunk (runtime: main) inner.js (inner) X bytes [rendered]
+chunk (runtime: main) preloaded2.js (preloaded2) X bytes [rendered]
+chunk (runtime: main) inner2.js (inner2) X bytes [rendered]
+chunk (runtime: main) normal.js (normal) X bytes [rendered]
+chunk (runtime: main) preloaded3.js (preloaded3) X bytes [rendered]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) (preload: {485} {165} {676}) [entry] [rendered]"
+`;

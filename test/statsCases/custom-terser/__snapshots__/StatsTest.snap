@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases custom-terser should print correct stats for custom-terser 1`] = `
+"asset bundle.js X bytes [emitted] [minimized] (name: main)
+./index.js X bytes [built] [code generated]
+  [no exports used]
+./a.js X bytes [built] [code generated]
+  [used exports unknown]
+webpack x.x.x compiled successfully in X ms"
+`;

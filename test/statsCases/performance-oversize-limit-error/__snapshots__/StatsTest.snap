@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-oversize-limit-error should print correct stats for performance-oversize-limit-error 1`] = `
+"asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>X KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
+asset <CLR=33,BOLD>sec.js</CLR> <CLR=33,BOLD>X KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: sec)
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> X KiB = <CLR=32,BOLD>main.js</CLR>
+Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> X KiB = <CLR=32,BOLD>sec.js</CLR>
+<CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./index2.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./a.js</CLR> X KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  main.js (X KiB)
+  sec.js (X KiB)</CLR>
+
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      main.js
+  sec (X KiB)
+      sec.js
+</CLR>
+
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
+
+webpack x.x.x compiled with <CLR=31,BOLD>3 errors</CLR> in X ms"
+`;

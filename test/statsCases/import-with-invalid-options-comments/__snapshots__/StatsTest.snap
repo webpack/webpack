@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases import-with-invalid-options-comments should print correct stats for import-with-invalid-options-comments 1`] = `
+"runtime modules X KiB 12 modules
+cacheable modules X bytes
+  ./index.js X bytes [built] [code generated]
+  ./chunk.js X bytes [built] [code generated] [3 warnings]
+  ./chunk-a.js X bytes [built] [code generated]
+  ./chunk-b.js X bytes [built] [code generated]
+  ./chunk-c.js X bytes [built] [code generated]
+  ./chunk-d.js X bytes [built] [code generated]
+
+WARNING in ./chunk.js 2:11-84
+Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
+ @ ./index.js 1:0-49
+
+WARNING in ./chunk.js 4:11-77
+Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
+ @ ./index.js 1:0-49
+
+WARNING in ./chunk.js 5:11-38
+Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
+ @ ./index.js 1:0-49
+
+webpack x.x.x compiled with 3 warnings"
+`;

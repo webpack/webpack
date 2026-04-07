@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases scope-hoisting-bailouts should print correct stats for scope-hoisting-bailouts 1`] = `
+"runtime modules X KiB 10 modules
+built modules X bytes [built]
+  code generated modules X bytes [code generated]
+    ./index.js X bytes [built] [code generated]
+      Statement (ExpressionStatement) with side effects in source code at 7:0-25
+      ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module
+      ModuleConcatenation bailout: Cannot concat with ./eval.js: Module uses eval()
+      ModuleConcatenation bailout: Cannot concat with ./module-id.js: Module uses module.id
+      ModuleConcatenation bailout: Cannot concat with ./module-loaded.js: Module uses module.loaded
+    ./entry.js X bytes [built] [code generated]
+    ./cjs.js X bytes [built] [code generated]
+      CommonJS bailout: module.exports is used directly at 3:0-14
+      Statement (ExpressionStatement) with side effects in source code at 1:0-26
+      ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./ref-from-cjs.js X bytes [built] [code generated]
+    ./eval.js X bytes [built] [code generated]
+      Statement (ExportDefaultDeclaration) with side effects in source code at 1:0-34
+      ModuleConcatenation bailout: Module uses eval()
+    ./module-id.js X bytes [built] [code generated]
+      Statement (ExportDefaultDeclaration) with side effects in source code at 1:0-25
+      ModuleConcatenation bailout: Module uses module.id
+    ./module-loaded.js X bytes [built] [code generated]
+      Statement (ExportDefaultDeclaration) with side effects in source code at 1:0-29
+      ModuleConcatenation bailout: Module uses module.loaded
+    ./concatenated.js + 2 modules X bytes [built] [code generated]
+      ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module external \\"external\\" is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) index)
+    external \\"external\\" X bytes [built] [code generated]
+  orphan modules X bytes [orphan]
+    ./concatenated1.js X bytes [orphan] [built]
+      Dependency (harmony side effect evaluation) with side effects at 1:0-36
+    ./concatenated2.js X bytes [orphan] [built]
+      Dependency (harmony side effect evaluation) with side effects at 1:0-29
+webpack x.x.x compiled successfully in X ms"
+`;

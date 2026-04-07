@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases error-stack-enabled-error should print correct stats for error-stack-enabled-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+ERROR in Test error with stack
+Error: Test error with stack
+    at Test.js:1:1
+    at compile.js:2:2
+
+webpack x.x.x compiled with 1 error in X ms"
+`;

@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases optimize-chunks should print correct stats for optimize-chunks 1`] = `
+"asset main.js X KiB {792} [emitted] (name: main)
+asset cir2 from cir1.js X bytes {816}, {915} [emitted] (name: cir2 from cir1)
+asset cir1.js X bytes {712} [emitted] (name: cir1)
+asset cir2.js X bytes {915} [emitted] (name: cir2)
+asset abd.js X bytes {470}, {518} [emitted] (name: abd)
+asset chunk.js X bytes {125}, {982} [emitted] (name: chunk)
+asset ab.js X bytes {470} [emitted] (name: ab)
+asset ac in ab.js X bytes {125} [emitted] (name: ac in ab)
+chunk {125} (runtime: main) ac in ab.js (ac in ab) X bytes <{470}> >{982}< [rendered]
+  > [237] ./index.js 2:1-5:15
+  ./modules/c.js [494] X bytes {125} {982} [built] [code generated]
+chunk {470} (runtime: main) ab.js (ab) X bytes <{792}> >{125}< [rendered]
+  > [237] ./index.js 1:0-6:8
+  ./modules/a.js [36] X bytes {470} {518} [built] [code generated]
+  ./modules/b.js [618] X bytes {470} {518} [built] [code generated]
+chunk {518} (runtime: main) abd.js (abd) X bytes <{792}> >{982}< [rendered]
+  > [237] ./index.js 8:0-11:9
+  ./modules/a.js [36] X bytes {470} {518} [built] [code generated]
+  ./modules/b.js [618] X bytes {470} {518} [built] [code generated]
+  ./modules/d.js [503] X bytes {518} {982} [built] [code generated]
+chunk {712} (runtime: main) cir1.js (cir1) X bytes <{792}> <{816}> <{915}> >{816}< [rendered]
+  > [237] ./index.js 13:0-54
+  > [448] ./circular2.js 1:0-79
+  ./circular1.js [985] X bytes {712} [built] [code generated]
+chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{470}< >{518}< >{712}< >{915}< [entry] [rendered]
+  > ./index main
+  runtime modules X KiB 7 modules
+  cacheable modules X bytes
+    ./index.js [237] X bytes {792} [built] [code generated]
+    ./modules/f.js [633] X bytes {792} [dependent] [built] [code generated]
+chunk {816} (runtime: main) cir2 from cir1.js (cir2 from cir1) X bytes <{712}> >{712}< [rendered]
+  > [985] ./circular1.js 1:0-79
+  ./circular2.js [448] X bytes {816} {915} [built] [code generated]
+  ./modules/e.js [888] X bytes {816} [built] [code generated]
+chunk {915} (runtime: main) cir2.js (cir2) X bytes <{792}> >{712}< [rendered]
+  > [237] ./index.js 14:0-54
+  ./circular2.js [448] X bytes {816} {915} [built] [code generated]
+chunk {982} (runtime: main) chunk.js (chunk) X bytes <{125}> <{518}> [rendered]
+  > [237] ./index.js 3:2-4:13
+  > [237] ./index.js 9:1-10:12
+  ./modules/c.js [494] X bytes {125} {982} [built] [code generated]
+  ./modules/d.js [503] X bytes {518} {982} [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

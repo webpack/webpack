@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases dll-reference-plugin-issue-7624-error should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
+"assets by status X bytes [cached] 1 asset
+./entry.js X bytes [built] [code generated]
+
+ERROR in Dll manifest ./blank-manifest.json
+Unexpected end of JSON input while parsing empty string
+
+webpack x.x.x compiled with 1 error in X ms"
+`;

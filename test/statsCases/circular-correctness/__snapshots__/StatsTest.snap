@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases circular-correctness should print correct stats for circular-correctness 1`] = `
+"chunk (runtime: main) 199.bundle.js (b) X bytes <{390}> <{792}> >{390}< [rendered]
+  ./module-b.js X bytes [built] [code generated]
+chunk (runtime: main) 390.bundle.js (c) X bytes <{199}> <{996}> >{199}< >{996}< [rendered]
+  ./module-c.js X bytes [built] [code generated]
+chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) >{199}< >{996}< [entry] [rendered]
+  runtime modules X KiB 10 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) 996.bundle.js (a) X bytes <{390}> <{792}> >{390}< [rendered]
+  ./module-a.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

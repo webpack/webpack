@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases issue-7577 should print correct stats for issue-7577 1`] = `
+"asset a-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset a-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset a-all-a_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+Entrypoint main X KiB = a-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB a-all-a_js-XXXXXXXXXXXXXXXXXXXX.js X bytes a-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
+runtime modules X KiB 3 modules
+./a.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset b-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset b-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+asset b-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset b-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: vendors)
+Entrypoint main X KiB = b-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB b-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes b-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes b-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
+runtime modules X KiB 5 modules
+cacheable modules X bytes
+  ./b.js X bytes [built] [code generated]
+  ./node_modules/vendor.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+assets by chunk X bytes (id hint: all)
+  asset c-all-b_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+  asset c-all-c_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: all)
+asset c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: runtime~main)
+asset c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
+asset c-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: vendors)
+Entrypoint main X KiB = c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB c-all-c_js-XXXXXXXXXXXXXXXXXXXX.js X bytes c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
+runtime modules X KiB 13 modules
+cacheable modules X bytes
+  ./c.js X bytes [built] [code generated]
+  ./b.js X bytes [built] [code generated]
+  ./node_modules/vendor.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

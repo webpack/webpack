@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-automatic-name should print correct stats for split-chunks-automatic-name 1`] = `
+"Entrypoint main X KiB = main.js
+chunk (runtime: main) async-a.js (async-a) X bytes <{main}> ={common-d_js}= ={common-node_modules_x_js}= ={common-node_modules_y_js}= [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js + 1 modules X bytes [built] [code generated]
+chunk (runtime: main) async-b.js (async-b) X bytes <{main}> ={common-d_js}= ={common-f_js}= ={common-node_modules_x_js}= ={common-node_modules_y_js}= [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js X bytes [built] [code generated]
+chunk (runtime: main) async-c.js (async-c) X bytes <{main}> ={common-d_js}= ={common-f_js}= ={common-node_modules_x_js}= ={common-node_modules_z_js}= [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js X bytes [built] [code generated]
+chunk (runtime: main) common-d_js.js (id hint: common) X bytes <{main}> ={async-a}= ={async-b}= ={async-c}= ={common-f_js}= ={common-node_modules_x_js}= ={common-node_modules_y_js}= ={common-node_modules_z_js}= [rendered] split chunk (cache group: a)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  > ./c ./index.js 3:0-47
+  ./d.js X bytes [built] [code generated]
+chunk (runtime: main) common-f_js.js (id hint: common) X bytes <{main}> ={async-b}= ={async-c}= ={common-d_js}= ={common-node_modules_x_js}= ={common-node_modules_y_js}= ={common-node_modules_z_js}= [rendered] split chunk (cache group: a)
+  > ./b ./index.js 2:0-47
+  > ./c ./index.js 3:0-47
+  ./f.js X bytes [built] [code generated]
+chunk (runtime: main) common-node_modules_x_js.js (id hint: common) X bytes <{main}> ={async-a}= ={async-b}= ={async-c}= ={common-d_js}= ={common-f_js}= ={common-node_modules_y_js}= ={common-node_modules_z_js}= [rendered] split chunk (cache group: b)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  > ./c ./index.js 3:0-47
+  ./node_modules/x.js X bytes [built] [code generated]
+chunk (runtime: main) common-node_modules_y_js.js (id hint: common) X bytes <{main}> ={async-a}= ={async-b}= ={common-d_js}= ={common-f_js}= ={common-node_modules_x_js}= [rendered] split chunk (cache group: b)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  ./node_modules/y.js X bytes [built] [code generated]
+chunk (runtime: main) common-node_modules_z_js.js (id hint: common) X bytes <{main}> ={async-c}= ={common-d_js}= ={common-f_js}= ={common-node_modules_x_js}= [rendered] split chunk (cache group: b)
+  > ./c ./index.js 3:0-47
+  ./node_modules/z.js X bytes [built] [code generated]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{async-a}< >{async-b}< >{async-c}< >{common-d_js}< >{common-f_js}< >{common-node_modules_x_js}< >{common-node_modules_y_js}< >{common-node_modules_z_js}< [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 9 modules
+  ./index.js X bytes [built] [code generated]
+production (webpack x.x.x) compiled successfully"
+`;

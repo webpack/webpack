@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases commons-plugin-issue-4980 should print correct stats for commons-plugin-issue-4980 1`] = `
+"asset app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB [emitted] [immutable] (name: app)
+asset vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
+Entrypoint app X KiB = vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB
+runtime modules X KiB 4 modules
+orphan modules X bytes [orphan] 2 modules
+cacheable modules X bytes
+  ./entry-1.js + 2 modules X bytes [built] [code generated]
+  ./constants.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB [emitted] [immutable] (name: app)
+asset vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes [emitted] [immutable] (name: vendor) (id hint: vendor)
+Entrypoint app X KiB = vendor.XXXXXXXXXXXXXXXXXXXX-X.js X bytes app.XXXXXXXXXXXXXXXXXXXX-X.js X KiB
+runtime modules X KiB 4 modules
+orphan modules X bytes [orphan] 2 modules
+cacheable modules X bytes
+  ./entry-2.js + 2 modules X bytes [built] [code generated]
+  ./constants.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

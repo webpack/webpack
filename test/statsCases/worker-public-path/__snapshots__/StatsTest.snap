@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases worker-public-path should print correct stats for worker-public-path 1`] = `
+"asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset 447-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+runtime modules X KiB 5 modules
+cacheable modules X bytes
+  ./index.js X bytes [built] [code generated]
+  ./worker.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

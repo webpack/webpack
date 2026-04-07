@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases named-chunks-plugin-async should print correct stats for named-chunks-plugin-async 1`] = `
+"asset entry.js X KiB [emitted] (name: entry)
+asset modules_a_js.js X bytes [emitted]
+asset modules_b_js.js X bytes [emitted]
+runtime modules X KiB 10 modules
+cacheable modules X bytes
+  ./entry.js X bytes [built] [code generated]
+  ./modules/a.js X bytes [built] [code generated]
+  ./modules/b.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

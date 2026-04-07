@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-no-async-chunks-shown should print correct stats for performance-no-async-chunks-shown 1`] = `
+"asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>X KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
+asset <CLR=32,BOLD>sec.js</CLR> X KiB <CLR=32,BOLD>[emitted]</CLR> (name: sec)
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> X KiB = <CLR=32,BOLD>main.js</CLR>
+Entrypoint <CLR=BOLD>sec</CLR> X KiB = <CLR=32,BOLD>sec.js</CLR>
+<CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./index2.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./a.js</CLR> X KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./b.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./c.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+<CLR=BOLD>./d.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  main.js (X KiB)</CLR>
+
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      main.js
+</CLR>
+
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
+
+webpack x.x.x compiled with <CLR=33,BOLD>3 warnings</CLR> in X ms"
+`;

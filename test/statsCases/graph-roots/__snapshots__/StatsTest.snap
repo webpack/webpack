@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases graph-roots should print correct stats for graph-roots 1`] = `
+"chunk (runtime: main) cycle.js (cycle) X bytes [rendered]
+  ./cycle/a.js X bytes [built] [code generated]
+  ./cycle/b.js X bytes [built] [code generated]
+  ./cycle/c.js X bytes [built] [code generated]
+  ./cycle/index.js X bytes [built] [code generated]
+chunk (runtime: main) cycle2.js (cycle2) X bytes [rendered]
+  dependent modules X bytes [dependent] 3 modules
+  ./cycle2/index.js X bytes [built] [code generated]
+chunk (runtime: main) cycles.js (cycles) X bytes [rendered]
+  dependent modules X bytes [dependent] 6 modules
+  ./cycles/1/index.js X bytes [built] [code generated]
+  ./cycles/2/index.js X bytes [built] [code generated]
+chunk (runtime: main) id-equals-name_js.js (id-equals-name_js) X bytes [rendered]
+  ./id-equals-name.js?1 X bytes [built] [code generated]
+chunk (runtime: main) id-equals-name_js-_70e2.js (id-equals-name_js-_70e2) X bytes [rendered]
+  ./id-equals-name.js?2 X bytes [built] [code generated]
+chunk (runtime: main) id-equals-name_js0.js X bytes [rendered]
+  ./id-equals-name.js X bytes [built] [code generated]
+chunk (runtime: main) id-equals-name_js_3.js X bytes [rendered]
+  ./id-equals-name.js?3 X bytes [built] [code generated]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 9 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) tree.js (tree) X bytes [rendered]
+  dependent modules X bytes [dependent] 3 modules
+  ./tree/index.js X bytes [built] [code generated]
+chunk (runtime: main) trees.js (trees) X bytes [rendered]
+  dependent modules X bytes [dependent] 3 modules
+  ./trees/1.js X bytes [built] [code generated]
+  ./trees/2.js X bytes [built] [code generated]
+  ./trees/3.js X bytes [built] [code generated]"
+`;

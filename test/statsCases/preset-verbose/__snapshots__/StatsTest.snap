@@ -1,0 +1,220 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-verbose should print correct stats for preset-verbose 1`] = `
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <-> [LogTestPlugin] Collapsed group
+        [LogTestPlugin] Log inside collapsed group
+    <-> [LogTestPlugin] Inner group
+          [LogTestPlugin] Inner inner message
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
+PublicPath: auto
+asset main.js X KiB {792} [emitted] (name: main)
+asset 964.js X bytes {964} [emitted]
+asset 226.js X bytes {226} [emitted]
+asset 899.js X bytes {899} [emitted]
+Entrypoint main X KiB = main.js
+chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
+  > [964] ./c.js 1:0-52
+  ./d.js [425] X bytes {226} [depth 2] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    require.ensure item ./d [964] ./c.js 1:0-52
+    cjs self exports reference [425] ./d.js 1:0-14
+    X ms [237] -> X ms [964] ->
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+  ./e.js [210] X bytes {226} [depth 2] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    require.ensure item ./e [964] ./c.js 1:0-52
+    cjs self exports reference [210] ./e.js 1:0-14
+    X ms [237] -> X ms [964] ->
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{899}< >{964}< [entry] [rendered]
+  > ./index main
+  runtime modules X KiB
+    webpack/runtime/ensure chunk X bytes {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/global X bytes {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/jsonp chunk loading X KiB {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/load script X KiB {792} [code generated]
+      [no exports]
+      [used exports unknown]
+    webpack/runtime/publicPath X KiB {792} [code generated]
+      [no exports]
+      [used exports unknown]
+  cacheable modules X bytes
+    ./a.js [670] X bytes {792} [depth 1] [dependent] [built] [code generated]
+      [used exports unknown]
+      CommonJS bailout: module.exports is used directly at 1:0-14
+      Statement (ExpressionStatement) with side effects in source code at 1:0-21
+      ModuleConcatenation bailout: Module is not an ECMAScript module
+      cjs self exports reference [670] ./a.js 1:0-14
+      cjs require ./a [237] ./index.js 1:0-14
+      X ms [237] ->
+      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+    ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
+      [no exports used]
+      Statement (ExpressionStatement) with side effects in source code at 1:0-15
+      ModuleConcatenation bailout: Module is not an ECMAScript module
+      entry ./index main
+      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+chunk {899} (runtime: main) 899.js X bytes <{792}> [rendered]
+  > ./b [237] ./index.js 2:0-16
+  ./b.js [899] X bytes {899} [depth 1] [built] [code generated]
+    [used exports unknown]
+    CommonJS bailout: module.exports is used directly at 1:0-14
+    Statement (ExpressionStatement) with side effects in source code at 1:0-21
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    cjs self exports reference [899] ./b.js 1:0-14
+    amd require ./b [237] ./index.js 2:0-16
+    X ms [237] ->
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+chunk {964} (runtime: main) 964.js X bytes <{792}> >{226}< [rendered]
+  > ./c [237] ./index.js 3:0-16
+  ./c.js [964] X bytes {964} [depth 1] [built] [code generated]
+    [used exports unknown]
+    Statement (ExpressionStatement) with side effects in source code at 1:0-53
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+    amd require ./c [237] ./index.js 3:0-16
+    X ms [237] ->
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+  
+
+LOG from LogTestPlugin
+<-> Group
+  <e> Error
+  <w> Warning
+  <i> Info
+      Log
+  <-> Collapsed group
+        Log inside collapsed group
+    <-> Inner group
+          Inner inner message
+      Log
+    End
++ 1 hidden lines
+
+LOG from webpack.Compiler
+<t> make hook: X ms
+<t> finish make hook: X ms
+<t> finish compilation: X ms
+<t> seal compilation: X ms
+<t> afterCompile hook: X ms
+<t> emitAssets: X ms
+<t> emitRecords: X ms
+<t> done hook: X ms
+<t> beginIdle: X ms
+
+LOG from webpack.Compilation
+<t> finish module profiles: X ms
+<t> compute affected modules: X ms
+<t> finish modules: X ms
+<t> report dependency errors and warnings: X ms
+<t> optimize dependencies: X ms
+<t> create chunks: X ms
+<t> compute affected modules with chunk graph: X ms
+<t> optimize: X ms
+    6 modules hashed, 0 from cache (1 variants per module in average)
+<t> module hashing: X ms
+    100% code generated (6 generated, 0 from cache)
+<t> code generation: X ms
+<t> runtime requirements.modules: X ms
+<t> runtime requirements.chunks: X ms
+<t> runtime requirements.entries: X ms
+<t> runtime requirements: X ms
+<t> hashing: initialize hash: X ms
+<t> hashing: sort chunks: X ms
+<t> hashing: hash runtime modules: X ms
+<t> hashing: hash chunks: X ms
+<t> hashing: hash digest: X ms
+<t> hashing: process full hash modules: X ms
+<t> hashing: X ms
+    100% code generated (7 generated, 0 from cache)
+<t> record hash: X ms
+<t> module assets: X ms
+<t> create chunk assets: X ms
+<t> process assets: X ms
+
+LOG from webpack.FlagDependencyExportsPlugin
+<t> restore cached provided exports: X ms
+<t> figure out provided exports: X ms
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)
+<t> store provided exports into cache: X ms
+
+LOG from webpack.InnerGraphPlugin
+<t> infer dependency usage: X ms
+
+LOG from webpack.SideEffectsFlagPlugin
+<t> update dependencies: X ms
+
+LOG from webpack.FlagDependencyUsagePlugin
+<t> initialize exports usage: X ms
+<t> trace exports usage in graph: X ms
+
+LOG from webpack.buildChunkGraph
+<t> visitModules: prepare: X ms
+<t> visitModules: visiting: X ms
+<t> visitModules: calculating available modules: X ms
+<t> visitModules: merging available modules: X ms
+<t> visitModules: check modules for revisit: X ms
+<t> visitModules: prepare: X ms
+<t> visitModules: visiting: X ms
+<t> visitModules: calculating available modules: X ms
+<t> visitModules: merging available modules: X ms
+<t> visitModules: check modules for revisit: X ms
+<t> visitModules: prepare: X ms
+<t> visitModules: visiting: X ms
+    15 queue items processed (9 blocks)
+    3 chunk groups connected
+    3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
+    3 chunk group info updated (0 already connected chunk groups reconnected)
+<t> visitModules: X ms
+<t> connectChunkGroups: X ms
+<t> cleanup: X ms
+
+LOG from webpack.SplitChunksPlugin
+<t> prepare: X ms
+<t> modules: X ms
+<t> queue: X ms
+<t> maxSize: X ms
+
+LOG from webpack.ModuleConcatenationPlugin
+<t> select relevant modules: X ms
+<t> sort relevant modules: X ms
+<t> find modules to concatenate: X ms
+<t> sort concat configurations: X ms
+<t> create concatenated modules: X ms
++ 3 hidden lines
+
+LOG from webpack.FileSystemInfo
+    6 new snapshots created
+    0% root snapshot uncached (0 / 0)
+    0% children snapshot uncached (0 / 0)
+    0 entries tested
+    File info in cache: 6 timestamps 6 hashes 6 timestamp hash combinations
+    File timestamp hash combination snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
+    Managed items info in cache: 0 items
+
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (XXXXXXXXXXXXXXXXXXXX)"
+`;

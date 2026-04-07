@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases side-effects-simple-unused should print correct stats for side-effects-simple-unused 1`] = `
+"asset main.js X bytes [emitted] (name: main)
+./index.js + 2 modules X bytes [built] [code generated]
+  [no exports used]
+  entry ./index main
+  | ./index.js X bytes [built]
+  |   [no exports used]
+  | ./node_modules/pmodule/index.js X bytes [built]
+  |   [only some exports used: default]
+  |   [inactive] harmony side effect evaluation pmodule ./index.js 1:0-33
+  |   harmony import specifier pmodule ./index.js 3:12-15
+  |   [inactive] harmony import specifier pmodule ./index.js 3:17-18
+  | ./node_modules/pmodule/c.js X bytes [built]
+  |   [only some exports used: z]
+  |   [inactive] from origin ./node_modules/pmodule/b.js
+  |     [inactive] harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
+  |     [inactive] harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
+  |   harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
+  |   [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30 (skipped side-effect-free modules)
+./node_modules/pmodule/index.js X bytes [orphan] [built]
+  [only some exports used: default]
+  [inactive] harmony side effect evaluation pmodule ./index.js 1:0-33
+  harmony import specifier pmodule ./index.js 3:12-15
+  [inactive] harmony import specifier pmodule ./index.js 3:17-18
+./node_modules/pmodule/c.js X bytes [orphan] [built]
+  [only some exports used: z]
+  [inactive] from origin ./node_modules/pmodule/b.js
+    [inactive] harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
+    [inactive] harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
+  harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
+  [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30 (skipped side-effect-free modules)
+./node_modules/pmodule/a.js X bytes [orphan] [built]
+  [module unused]
+  [inactive] from origin ./index.js + 2 modules
+    [inactive] harmony side effect evaluation ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+    [inactive] harmony export imported specifier ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+  [inactive] from origin ./node_modules/pmodule/index.js
+    [inactive] harmony side effect evaluation ./a ./node_modules/pmodule/index.js 1:0-20
+    [inactive] harmony export imported specifier ./a ./node_modules/pmodule/index.js 1:0-20
+./node_modules/pmodule/b.js X bytes [orphan] [built]
+  [module unused]
+  [inactive] from origin ./index.js + 2 modules
+    [inactive] harmony side effect evaluation ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+  [inactive] from origin ./node_modules/pmodule/index.js
+    [inactive] harmony side effect evaluation ./b ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
+webpack x.x.x compiled successfully in X ms"
+`;

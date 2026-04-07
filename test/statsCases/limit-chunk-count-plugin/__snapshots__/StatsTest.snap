@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases limit-chunk-count-plugin should print correct stats for limit-chunk-count-plugin 1`] = `
+"1 chunks:
+  asset bundle1.js X KiB [emitted] (name: main)
+  chunk (runtime: main) bundle1.js (main) X bytes (javascript) X KiB (runtime) <{792}> >{792}< [entry] [rendered]
+    runtime modules X KiB 4 modules
+    cacheable modules X bytes
+      ./a.js X bytes [dependent] [built] [code generated]
+      ./b.js X bytes [dependent] [built] [code generated]
+      ./c.js X bytes [dependent] [built] [code generated]
+      ./d.js X bytes [dependent] [built] [code generated]
+      ./e.js X bytes [dependent] [built] [code generated]
+      ./index.js X bytes [built] [code generated]
+  1 chunks (webpack x.x.x) compiled successfully in X ms
+
+2 chunks:
+  asset bundle2.js X KiB [emitted] (name: main)
+  asset 390.bundle2.js X bytes [emitted] (name: c)
+  chunk (runtime: main) 390.bundle2.js (c) X bytes <{390}> <{792}> >{390}< [rendered]
+    dependent modules X bytes [dependent]
+      ./d.js X bytes [dependent] [built] [code generated]
+      ./e.js X bytes [dependent] [built] [code generated]
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: main) bundle2.js (main) X bytes (javascript) X KiB (runtime) >{390}< [entry] [rendered]
+    runtime modules X KiB 10 modules
+    ./index.js X bytes [built] [code generated]
+  2 chunks (webpack x.x.x) compiled successfully in X ms
+
+3 chunks:
+  asset bundle3.js X KiB [emitted] (name: main)
+  asset 390.bundle3.js X bytes [emitted] (name: c)
+  asset 226.bundle3.js X bytes [emitted]
+  chunk (runtime: main) 226.bundle3.js X bytes <{390}> [rendered]
+    ./d.js X bytes [built] [code generated]
+    ./e.js X bytes [built] [code generated]
+  chunk (runtime: main) 390.bundle3.js (c) X bytes <{792}> >{226}< [rendered]
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: main) bundle3.js (main) X bytes (javascript) X KiB (runtime) >{390}< [entry] [rendered]
+    runtime modules X KiB 10 modules
+    ./index.js X bytes [built] [code generated]
+  3 chunks (webpack x.x.x) compiled successfully in X ms
+
+4 chunks:
+  asset bundle4.js X KiB [emitted] (name: main)
+  asset 390.bundle4.js X bytes [emitted] (name: c)
+  asset 226.bundle4.js X bytes [emitted]
+  asset 78.bundle4.js X bytes [emitted]
+  chunk (runtime: main) 78.bundle4.js X bytes <{792}> [rendered]
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) 226.bundle4.js X bytes <{390}> [rendered]
+    ./d.js X bytes [built] [code generated]
+    ./e.js X bytes [built] [code generated]
+  chunk (runtime: main) 390.bundle4.js (c) X bytes <{792}> >{226}< [rendered]
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: main) bundle4.js (main) X bytes (javascript) X KiB (runtime) >{78}< >{390}< [entry] [rendered]
+    runtime modules X KiB 10 modules
+    ./index.js X bytes [built] [code generated]
+  4 chunks (webpack x.x.x) compiled successfully in X ms"
+`;

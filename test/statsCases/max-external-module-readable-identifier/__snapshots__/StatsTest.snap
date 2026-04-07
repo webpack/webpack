@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases max-external-module-readable-identifier should print correct stats for max-external-module-readable-identifier 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+external \\"very-very-very-very-long-external-module-readable-identifier-it-should...(truncated) X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

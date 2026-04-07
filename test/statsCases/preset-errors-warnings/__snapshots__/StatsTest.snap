@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-errors-warnings should print correct stats for preset-errors-warnings 1`] = `
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+LOG from LogTestPlugin
+<e> Error
+<w> Warning
++ 13 hidden lines
+
+webpack compiled successfully"
+`;
