@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-errors-only-error should print correct stats for preset-errors-only-error 1`] = `
+"<e> [LogTestPlugin] Error
+LOG from LogTestPlugin
+<e> Error
++ 14 hidden lines
+
+ERROR in ./index.js 1:0-25
+Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
+
+webpack compiled with 1 error"
+`;

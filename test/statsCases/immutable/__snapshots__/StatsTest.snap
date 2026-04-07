@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases immutable should print correct stats for immutable 1`] = `
+"asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
+asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]"
+`;

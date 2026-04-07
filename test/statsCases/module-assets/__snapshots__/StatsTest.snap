@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases module-assets should print correct stats for module-assets 1`] = `
+"assets by path *.js X KiB
+  asset main.js X KiB [emitted] (name: main)
+  asset a.js X bytes [emitted] (name: a)
+  asset b.js X bytes [emitted] (name: b)
+assets by path *.png X KiB
+  asset 1.png X KiB [emitted] [from: node_modules/a/1.png] (auxiliary name: a)
+  asset 2.png X KiB [emitted] [from: node_modules/a/2.png] (auxiliary name: a, b)
+Entrypoint main X KiB = main.js
+Chunk Group a X bytes (X KiB) = a.js X bytes (1.png X KiB 2.png X KiB)
+Chunk Group b X bytes (X KiB) = b.js X bytes (2.png X KiB)
+chunk (runtime: main) b.js (b) X bytes [rendered]
+  ./node_modules/a/2.png X bytes [dependent] [built] [code generated] [1 asset]
+  ./node_modules/b/index.js X bytes [built] [code generated]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 8 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) a.js (a) X bytes [rendered]
+  ./node_modules/a/2.png X bytes [dependent] [built] [code generated] [1 asset]
+  ./node_modules/a/index.js + 1 modules X bytes [built] [code generated] [1 asset]
+runtime modules X KiB 8 modules
+orphan modules X bytes [orphan] 1 module
+modules with assets X bytes
+  modules by path ./node_modules/a/ X bytes
+    ./node_modules/a/index.js + 1 modules X bytes [built] [code generated] [1 asset]
+    ./node_modules/a/2.png X bytes [built] [code generated] [1 asset]
+  ./index.js X bytes [built] [code generated]
+  ./node_modules/b/index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

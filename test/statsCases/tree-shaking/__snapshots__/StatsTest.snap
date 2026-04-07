@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases tree-shaking should print correct stats for tree-shaking 1`] = `
+"asset bundle.js X KiB [emitted] (name: main)
+runtime modules X bytes 3 modules
+orphan modules X bytes [orphan] 1 module
+cacheable modules X bytes
+  ./index.js X bytes [built] [code generated] [1 warning]
+    [no exports]
+    [no exports used]
+  ./reexport-known.js X bytes [built] [code generated]
+    [exports: a, b]
+    [only some exports used: a]
+  ./reexport-unknown.js X bytes [built] [code generated]
+    [exports: a, b, c, d]
+    [only some exports used: a, c]
+  ./reexport-star-known.js X bytes [built] [code generated]
+    [exports: a, b]
+    [only some exports used: a]
+  ./reexport-star-unknown.js X bytes [built] [code generated]
+    [only some exports used: a, c]
+  ./edge.js X bytes [built] [code generated]
+    [only some exports used: y]
+  ./require.include.js X bytes [built] [code generated]
+    [exports: a, default]
+    [no exports used]
+  ./a.js X bytes [built] [code generated]
+    [exports: a]
+    [all exports used]
+  ./unknown.js X bytes [built] [code generated]
+    [used exports unknown]
+  ./unknown2.js X bytes [built] [code generated]
+    [used exports unknown]
+
+WARNING in ./index.js 9:0-36
+require.include() is deprecated and will be removed soon.
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;

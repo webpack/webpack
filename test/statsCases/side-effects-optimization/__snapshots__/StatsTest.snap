@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases side-effects-optimization should print correct stats for side-effects-optimization 1`] = `
+"asset main.js X bytes [emitted] [minimized] (name: main)
+orphan modules X KiB [orphan] 4 modules
+cacheable modules X KiB
+  ./index.js + 2 modules X KiB [built] [code generated]
+    [no exports]
+    [no exports used]
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js: Module is not an ECMAScript module
+    | ./index.js X bytes [built]
+    |   [no exports]
+    |   [no exports used]
+    |   Statement (ExpressionStatement) with side effects in source code at 4:0-30
+    | ./node_modules/big-module/a.js X bytes [built]
+    |   [only some exports used: a]
+    | ./node_modules/module-with-export/index.js X KiB [built]
+    |   [only some exports used: smallVar]
+  ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
+    [used exports unknown]
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+webpack x.x.x compiled successfully in X ms
+
+asset main.no-side.js X bytes [emitted] [minimized] (name: main)
+runtime modules X bytes 4 modules
+orphan modules X bytes [orphan] 2 modules
+cacheable modules X KiB
+  modules by path ./node_modules/module-with-export/*.js X KiB
+    ./node_modules/module-with-export/index.js X KiB [built] [code generated]
+      [only some exports used: huh, smallVar]
+      ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+    ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
+      [used exports unknown]
+      ModuleConcatenation bailout: Module is not an ECMAScript module
+  ./index.js + 2 modules X bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/log.js: Module ./node_modules/big-module/log.js is referenced from these modules with unsupported syntax: ./node_modules/big-module/log.js (referenced with module decorator)
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js: Module ./node_modules/big-module/log.js is referenced from these modules with unsupported syntax: ./node_modules/big-module/log.js (referenced with module decorator)
+    | ./index.js X bytes [built]
+    |   [no exports]
+    |   [no exports used]
+    | ./node_modules/big-module/index.js X bytes [built]
+    |   [only some exports used: a, huh]
+    |   ModuleConcatenation bailout: List of module exports is dynamic (a: maybe provided (runtime-defined) and used in main, huh: maybe provided (runtime-defined) and used in main)
+    | ./node_modules/big-module/a.js X bytes [built]
+    |   [only some exports used: a, huh]
+    |   ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+  ./node_modules/big-module/log.js X bytes [built] [code generated]
+    [only some exports used: huh]
+    ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+webpack x.x.x compiled successfully in X ms"
+`;

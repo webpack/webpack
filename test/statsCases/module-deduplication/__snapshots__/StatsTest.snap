@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases module-deduplication should print correct stats for module-deduplication 1`] = `
+"asset e2.js X KiB [emitted] (name: e2)
+asset e3.js X KiB [emitted] (name: e3)
+asset e1.js X KiB [emitted] (name: e1)
+asset 471.js X bytes [emitted]
+asset 752.js X bytes [emitted]
+asset 637.js X bytes [emitted]
+asset 371.js X bytes [emitted]
+asset 852.js X bytes [emitted]
+asset 18.js X bytes [emitted]
+chunk (runtime: e1) 18.js X bytes [rendered]
+  ./async1.js X bytes [built] [code generated]
+chunk (runtime: e2) e2.js (e2) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 9 modules
+  cacheable modules X bytes
+    ./b.js X bytes [dependent] [built] [code generated]
+    ./e2.js + 2 modules X bytes [built] [code generated]
+    ./f.js X bytes [dependent] [built] [code generated]
+chunk (runtime: e1) e1.js (e1) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 9 modules
+  cacheable modules X bytes
+    ./b.js X bytes [dependent] [built] [code generated]
+    ./d.js X bytes [dependent] [built] [code generated]
+    ./e1.js + 2 modules X bytes [built] [code generated]
+chunk (runtime: e3) 371.js X bytes [rendered]
+  ./async3.js X bytes [built] [code generated]
+chunk (runtime: e1, e3) 471.js X bytes [rendered]
+  ./async2.js X bytes [built] [code generated]
+  ./f.js X bytes [dependent] [built] [code generated]
+chunk (runtime: e2, e3) 637.js X bytes [rendered]
+  ./async1.js X bytes [built] [code generated]
+  ./d.js X bytes [dependent] [built] [code generated]
+chunk (runtime: e1, e2) 752.js X bytes [rendered]
+  ./async3.js X bytes [built] [code generated]
+  ./h.js X bytes [dependent] [built] [code generated]
+chunk (runtime: e2) 852.js X bytes [rendered]
+  ./async2.js X bytes [built] [code generated]
+chunk (runtime: e3) e3.js (e3) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  runtime modules X KiB 9 modules
+  cacheable modules X bytes
+    ./b.js X bytes [dependent] [built] [code generated]
+    ./e3.js + 2 modules X bytes [built] [code generated]
+    ./h.js X bytes [dependent] [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

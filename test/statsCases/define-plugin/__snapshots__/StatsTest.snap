@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases define-plugin should print correct stats for define-plugin 1`] = `
+"asset 123.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset 321.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset both.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset log.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+
+DEBUG LOG from webpack.DefinePlugin
+    Replaced \\"VALUE\\" with \\"123\\"
+
+webpack x.x.x compiled successfully in X ms"
+`;

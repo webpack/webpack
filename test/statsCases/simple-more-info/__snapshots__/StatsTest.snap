@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases simple-more-info should print correct stats for simple-more-info 1`] = `
+"PublicPath: auto
+asset bundle.js X bytes [emitted] (name: main)
+./index.js X bytes [built] [code generated]
+  entry ./index main
+  X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+webpack x.x.x compiled successfully in X ms"
+`;

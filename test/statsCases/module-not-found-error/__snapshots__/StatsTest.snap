@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases module-not-found-error should print correct stats for module-not-found-error 1`] = `
+"ERROR in ./index.js 2:0-13
+Module not found: Error: Can't resolve 'os' in 'Xdir/module-not-found-error'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { \\"os\\": require.resolve(\\"os-browserify/browser\\") }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { \\"os\\": false }
+
+webpack compiled with 1 error"
+`;

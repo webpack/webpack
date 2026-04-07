@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-chunk-name should print correct stats for split-chunks-chunk-name 1`] = `
+"Entrypoint main X KiB = default/main.js
+chunk (runtime: main) default/async-b.js (async-b) (id hint: vendors) X bytes <{792}> [rendered] reused as split chunk (cache group: defaultVendors)
+  > b ./index.js 2:0-45
+  ./node_modules/b.js X bytes [built] [code generated]
+chunk (runtime: main) default/async-a.js (async-a) X bytes <{792}> [rendered]
+  > a ./index.js 1:0-45
+  ./node_modules/a.js X bytes [built] [code generated]
+chunk (runtime: main) default/async-c-1.js (async-c-1) (id hint: vendors) X bytes <{792}> [rendered] reused as split chunk (cache group: defaultVendors)
+  > c ./index.js 3:0-47
+  > c ./index.js 4:0-47
+  ./node_modules/c.js X bytes [built] [code generated]
+chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{511}< [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 9 modules
+  ./index.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

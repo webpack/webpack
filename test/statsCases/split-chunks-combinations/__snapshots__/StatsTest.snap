@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-combinations should print correct stats for split-chunks-combinations 1`] = `
+"Entrypoint main X KiB = main.js
+chunk (runtime: main) async-g.js (async-g) X bytes <{792}> [rendered]
+  > ./g ./index.js 7:0-47
+  dependent modules X bytes [dependent] 1 module
+  ./g.js X bytes [built] [code generated]
+chunk (runtime: main) async-b.js (async-b) X bytes <{792}> ={914}= [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js X bytes [built] [code generated]
+chunk (runtime: main) async-f.js (async-f) X bytes <{792}> [rendered]
+  > ./f ./index.js 6:0-47
+  dependent modules X bytes [dependent] 1 module
+  ./f.js X bytes [built] [code generated]
+chunk (runtime: main) async-e.js (async-e) X bytes <{792}> [rendered]
+  > ./e ./index.js 5:0-47
+  dependent modules X bytes [dependent] 1 module
+  ./e.js X bytes [built] [code generated]
+chunk (runtime: main) async-a.js (async-a) X bytes <{792}> ={914}= [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js X bytes [built] [code generated]
+chunk (runtime: main) async-d.js (async-d) X bytes <{792}> [rendered]
+  > ./d ./index.js 4:0-47
+  dependent modules X bytes [dependent] 1 module
+  ./d.js X bytes [built] [code generated]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{49}< >{60}< >{240}< >{251}< >{263}< >{442}< >{869}< >{914}< [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 9 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) async-c.js (async-c) X bytes <{792}> [rendered]
+  > ./c ./index.js 3:0-47
+  dependent modules X bytes [dependent] 1 module
+  ./c.js X bytes [built] [code generated]
+chunk (runtime: main) 914.js X bytes <{792}> ={60}= ={263}= [rendered] split chunk (cache group: default)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  ./x.js X bytes [built] [code generated]
+  ./y.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

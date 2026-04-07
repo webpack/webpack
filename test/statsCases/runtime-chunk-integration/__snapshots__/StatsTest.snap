@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases runtime-chunk-integration should print correct stats for runtime-chunk-integration 1`] = `
+"base:
+  asset without-runtime.js X KiB [emitted] (name: runtime)
+  asset without-580.js X KiB [emitted]
+  asset without-main1.js X bytes [emitted] (name: main1)
+  Entrypoint main1 X KiB = without-runtime.js X KiB without-main1.js X bytes
+  runtime modules X KiB 10 modules
+  cacheable modules X bytes
+    ./main1.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./c.js X bytes [built] [code generated]
+    ./d.js X bytes [built] [code generated]
+  base (webpack x.x.x) compiled successfully
+
+static custom name:
+  asset with-manifest.js X KiB [emitted] (name: manifest)
+  asset with-580.js X KiB [emitted]
+  asset with-main1.js X bytes [emitted] (name: main1)
+  asset with-main2.js X bytes [emitted] (name: main2)
+  asset with-main3.js X bytes [emitted] (name: main3)
+  Entrypoint main1 X KiB = with-manifest.js X KiB with-main1.js X bytes
+  Entrypoint main2 X KiB = with-manifest.js X KiB with-main2.js X bytes
+  Entrypoint main3 X KiB = with-manifest.js X KiB with-main3.js X bytes
+  runtime modules X KiB 10 modules
+  cacheable modules X bytes
+    ./main1.js X bytes [built] [code generated]
+    ./main2.js X bytes [built] [code generated]
+    ./main3.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./c.js X bytes [built] [code generated]
+    ./d.js X bytes [built] [code generated]
+  static custom name (webpack x.x.x) compiled successfully
+
+dynamic custom name:
+  asset func-b.js X KiB [emitted] (name: b)
+  asset func-a.js X KiB [emitted] (name: a)
+  asset func-580.js X KiB [emitted]
+  asset func-main1.js X bytes [emitted] (name: main1)
+  asset func-main2.js X bytes [emitted] (name: main2)
+  asset func-main3.js X bytes [emitted] (name: main3)
+  Entrypoint main1 X KiB = func-b.js X KiB func-main1.js X bytes
+  Entrypoint main2 X KiB = func-b.js X KiB func-main2.js X bytes
+  Entrypoint main3 X KiB = func-a.js X KiB func-main3.js X bytes
+  runtime modules X KiB 13 modules
+  cacheable modules X bytes
+    ./main1.js X bytes [built] [code generated]
+    ./main2.js X bytes [built] [code generated]
+    ./main3.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./c.js X bytes [built] [code generated]
+    ./d.js X bytes [built] [code generated]
+  dynamic custom name (webpack x.x.x) compiled successfully"
+`;

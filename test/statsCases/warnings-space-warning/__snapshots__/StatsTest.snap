@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases warnings-space-warning should print correct stats for warnings-space-warning 1`] = `
+"asset main.js X bytes [emitted] (name: main)
+orphan modules X bytes [orphan] 1 module
+runtime modules X bytes 1 module
+./index.js + 1 modules X bytes [built] [code generated]
+
+WARNING in ./index.js 3:12-14
+export 'bb' (imported as 'bb') was not found in './a' (possible exports: a)
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;

@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases logging should print correct stats for logging 1`] = `
+"<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
+asset <CLR=32,BOLD>main.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
+<CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+
+<CLR=BOLD>LOG from LogTestPlugin</CLR>
+<-> <CLR=36,BOLD>Group</CLR>
+  <i> <CLR=32,BOLD>Info</CLR>
+      <CLR=BOLD>Log</CLR>
+  <+> <CLR=36,BOLD>Collapsed group</CLR>
+      <CLR=BOLD>Log</CLR>
+    <CLR=BOLD>End</CLR>
++ 6 hidden lines
+
+<CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ./node_modules/custom-loader/index.js ./node_modules/custom-loader/index.js!./index.js</CLR>
+<e> <CLR=31,BOLD>An error</CLR>
+|     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
+<w> <CLR=33,BOLD>A warning</CLR>
+|     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
+<-> <CLR=36,BOLD>Unimportant</CLR>
+  <i> <CLR=32,BOLD>Info message</CLR>
+      <CLR=BOLD>Just log</CLR>
+      Just debug
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
+  <-> <CLR=36,BOLD>Nested</CLR>
+        <CLR=BOLD>Log inside collapsed group</CLR>
+      Trace
+  |     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
+      -------
+      <CLR=BOLD>After clear</CLR>
+
+<CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ./node_modules/custom-loader/index.js Named Logger ./node_modules/custom-loader/index.js!./index.js</CLR>
+    Message with named logger
+
+<CLR=BOLD>LOG from webpack.Compilation</CLR>
+    <CLR=BOLD>1 modules hashed, 0 from cache (1 variants per module in average)</CLR>
+    <CLR=BOLD>100% code generated (1 generated, 0 from cache)</CLR>
++ 24 hidden lines
+
+<CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
+    <CLR=BOLD>0% of exports of modules have been determined (1 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)</CLR>
++ 3 hidden lines
+
+<CLR=BOLD>LOG from webpack.buildChunkGraph</CLR>
+    <CLR=BOLD>2 queue items processed (1 blocks)</CLR>
+    <CLR=BOLD>0 chunk groups connected</CLR>
+    <CLR=BOLD>0 chunk groups processed for merging (0 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)</CLR>
+    <CLR=BOLD>0 chunk group info updated (0 already connected chunk groups reconnected)</CLR>
++ 5 hidden lines
+
+<CLR=BOLD>LOG from webpack.FileSystemInfo</CLR>
+    <CLR=BOLD>1 new snapshots created</CLR>
+    <CLR=BOLD>0% root snapshot uncached (0 / 0)</CLR>
+    <CLR=BOLD>0% children snapshot uncached (0 / 0)</CLR>
+    <CLR=BOLD>0 entries tested</CLR>
+    <CLR=BOLD>File info in cache: 1 timestamps 1 hashes 1 timestamp hash combinations</CLR>
+    <CLR=BOLD>File timestamp hash combination snapshot optimization: 0% (0/1) entries shared via 0 shared snapshots (0 times referenced)</CLR>
+    <CLR=BOLD>Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations</CLR>
+    <CLR=BOLD>Managed items info in cache: 0 items</CLR>
+
+webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
+`;

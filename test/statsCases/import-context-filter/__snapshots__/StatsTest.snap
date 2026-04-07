@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases import-context-filter should print correct stats for import-context-filter 1`] = `
+"asset entry.js X KiB [emitted] (name: entry)
+asset 0.js X bytes [emitted]
+asset 717.js X bytes [emitted]
+asset 776.js X bytes [emitted]
+runtime modules X KiB 9 modules
+built modules X bytes [built]
+  modules by path ./templates/*.js X bytes
+    ./templates/bar.js X bytes [optional] [built] [code generated]
+    ./templates/baz.js X bytes [optional] [built] [code generated]
+    ./templates/foo.js X bytes [optional] [built] [code generated]
+  ./entry.js X bytes [built] [code generated]
+  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ referencedExp...(truncated) X bytes [optional] [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

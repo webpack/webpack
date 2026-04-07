@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-runtime-specific should print correct stats for split-chunks-runtime-specific 1`] = `
+"used-exports:
+  asset used-exports-c.js X KiB [emitted] (name: c)
+  asset used-exports-b.js X KiB [emitted] (name: b)
+  asset used-exports-637.js X bytes [emitted]
+  asset used-exports-a.js X bytes [emitted] (name: a)
+  Entrypoint a X bytes = used-exports-a.js
+  Entrypoint b X KiB = used-exports-637.js X bytes used-exports-b.js X KiB
+  Entrypoint c X KiB = used-exports-637.js X bytes used-exports-c.js X KiB
+  chunk (runtime: b) used-exports-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: c) used-exports-c.js (c) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: b, c) used-exports-637.js X bytes [initial] [rendered] split chunk (cache group: default)
+    ./objects.js X bytes [built] [code generated]
+  chunk (runtime: a) used-exports-a.js (a) X bytes [entry] [rendered]
+    ./a.js + 1 modules X bytes [built] [code generated]
+  used-exports (webpack x.x.x) compiled successfully in X ms
+
+no-used-exports:
+  asset no-used-exports-c.js X KiB [emitted] (name: c)
+  asset no-used-exports-a.js X KiB [emitted] (name: a)
+  asset no-used-exports-b.js X KiB [emitted] (name: b)
+  asset no-used-exports-637.js X bytes [emitted]
+  Entrypoint a X KiB = no-used-exports-637.js X bytes no-used-exports-a.js X KiB
+  Entrypoint b X KiB = no-used-exports-637.js X bytes no-used-exports-b.js X KiB
+  Entrypoint c X KiB = no-used-exports-637.js X bytes no-used-exports-c.js X KiB
+  chunk (runtime: b) no-used-exports-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: c) no-used-exports-c.js (c) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c) no-used-exports-637.js X bytes [initial] [rendered] split chunk (cache group: default)
+    ./objects.js X bytes [built] [code generated]
+  chunk (runtime: a) no-used-exports-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./a.js X bytes [built] [code generated]
+  no-used-exports (webpack x.x.x) compiled successfully in X ms
+
+global:
+  asset global-c.js X KiB [emitted] (name: c)
+  asset global-a.js X KiB [emitted] (name: a)
+  asset global-b.js X KiB [emitted] (name: b)
+  asset global-637.js X bytes [emitted]
+  Entrypoint a X KiB = global-637.js X bytes global-a.js X KiB
+  Entrypoint b X KiB = global-637.js X bytes global-b.js X KiB
+  Entrypoint c X KiB = global-637.js X bytes global-c.js X KiB
+  chunk (runtime: b) global-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: c) global-c.js (c) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c) global-637.js X bytes [initial] [rendered] split chunk (cache group: default)
+    ./objects.js X bytes [built] [code generated]
+  chunk (runtime: a) global-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+    runtime modules X KiB 4 modules
+    ./a.js X bytes [built] [code generated]
+  global (webpack x.x.x) compiled successfully in X ms"
+`;

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases color-enabled-custom should print correct stats for color-enabled-custom 1`] = `
+"asset <CLR=32>main.js</CLR> X bytes <CLR=32>[emitted]</CLR> (name: main)
+<CLR=BOLD>./index.js</CLR> X bytes <CLR=33>[built]</CLR> <CLR=33>[code generated]</CLR>
+webpack x.x.x compiled <CLR=32>successfully</CLR> in X ms"
+`;

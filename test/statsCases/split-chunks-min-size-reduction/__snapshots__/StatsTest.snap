@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-min-size-reduction should print correct stats for split-chunks-min-size-reduction 1`] = `
+"Entrypoint main X KiB = default/main.js
+chunk (runtime: main) default/async-b.js (async-b) X bytes <{792}> [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js X bytes [built] [code generated]
+  ./node_modules/shared.js?1 X bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/async-e.js (async-e) X bytes <{792}> ={784}= [rendered]
+  > ./e ./index.js 5:0-47
+  ./e.js X bytes [built] [code generated]
+chunk (runtime: main) default/async-a.js (async-a) X bytes <{792}> [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js X bytes [built] [code generated]
+  ./node_modules/shared.js?1 X bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/async-d.js (async-d) X bytes <{792}> ={784}= [rendered]
+  > ./d ./index.js 4:0-47
+  ./d.js X bytes [built] [code generated]
+chunk (runtime: main) default/784.js (id hint: vendors) X bytes <{792}> ={251}= ={442}= ={869}= [rendered] split chunk (cache group: defaultVendors)
+  > ./c ./index.js 3:0-47
+  > ./d ./index.js 4:0-47
+  > ./e ./index.js 5:0-47
+  ./node_modules/shared.js?2 X bytes [built] [code generated]
+chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{251}< >{263}< >{442}< >{784}< >{869}< [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 9 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) default/async-c.js (async-c) X bytes <{792}> ={784}= [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

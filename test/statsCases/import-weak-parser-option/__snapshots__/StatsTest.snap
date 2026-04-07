@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases import-weak-parser-option should print correct stats for import-weak-parser-option 1`] = `
+"asset entry.js X KiB [emitted] (name: entry)
+asset 237.js X bytes [emitted]
+runtime modules X KiB 10 modules
+orphan modules X bytes [orphan] 1 module
+cacheable modules X bytes
+  ./entry.js X bytes [built] [code generated]
+  ./modules/b.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

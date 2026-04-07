@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases runtime-chunk should print correct stats for runtime-chunk 1`] = `
+"Entrypoint e1 X KiB = runtime~e1.js X KiB e1.js X KiB
+Entrypoint e2 X KiB = runtime~e2.js X KiB e2.js X KiB
+webpack x.x.x compiled successfully"
+`;
