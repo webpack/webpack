@@ -103,12 +103,6 @@ console.log(getArray(1, 2, 3));
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -117,6 +111,12 @@ console.log(getArray(1, 2, 3));
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -149,7 +149,7 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.63 KiB [emitted] (name: main)
+asset output.js 2.62 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 663 bytes [dependent] 1 module

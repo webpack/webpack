@@ -213,15 +213,21 @@ inc2(a); // 2
 
 ```
 asset output.js 3.43 KiB [emitted] (name: main)
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+chunk (runtime: main) output.js (main) 841 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 564 bytes [dependent] 2 modules
+  ./example.js 277 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
 asset without.js 3.57 KiB [emitted] (name: main)
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+chunk (runtime: main) without.js (main) 841 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 564 bytes [dependent] 2 modules
+  ./example.js 277 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 ```
 
@@ -229,14 +235,20 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 543 bytes [emitted] [minimized] (name: main) 1 related asset
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+chunk (runtime: main) output.js (main) 841 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 564 bytes [dependent] 2 modules
+  ./example.js 277 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 
 asset without.js 711 bytes [emitted] [minimized] (name: main) 1 related asset
-./example.js 277 bytes [built] [code generated]
-./increment.js 251 bytes [built] [code generated]
-./math.js 313 bytes [built] [code generated]
+chunk (runtime: main) without.js (main) 841 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 564 bytes [dependent] 2 modules
+  ./example.js 277 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
 webpack X.X.X compiled successfully
 ```

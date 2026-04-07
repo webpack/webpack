@@ -1,0 +1,5 @@
+@import url("./layer-at-rule-other-too.css") layer(base) supports(display: grid) screen and (min-width: 900px);
+
+.bar {
+  color: blue;
+}

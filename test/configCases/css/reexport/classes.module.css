@@ -1,0 +1,30 @@
+:import("./classes-deep.module.css") {
+	my-selector: deep-selector;
+	my-selector-other: deep-selector-with-composes;
+}
+
+.localName {
+	background: red;
+}
+
+.localNameOther {
+	color: blue;
+}
+
+.bar {
+	composes: localName;
+}
+
+:import("./classes-deep.module.css") {
+	my-selector-other: deep-selector-with-composes;
+}
+
+:export { dcba: my-selector-other  }
+
+:export { abcd: my-selector; dcba: my-selector-other  }
+
+:import("./classes-deep.module.css") {
+	__my_custom_import__: deep-nested-c;
+}
+
+:export { my_custom_import: __my_custom_import__  }

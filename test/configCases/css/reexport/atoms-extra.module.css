@@ -1,0 +1,8 @@
+.transition {
+	composes: reset-display from "./reset.module.css";
+	transition: transform 0.2s ease;
+}
+
+.cursor {
+	cursor: pointer;
+}

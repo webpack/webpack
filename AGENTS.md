@@ -18,7 +18,9 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 ## Development Workflow
 
-### 1. Modifying Schemas or Types (if needed)
+### 1. Making Changes to `lib/` (and schemas if needed)
+
+Modify source code in `lib/` as needed.
 
 If your change involves modifying or adding webpack configuration options:
 
@@ -29,54 +31,15 @@ If your change involves modifying or adding webpack configuration options:
    - Runtime code
 3. Now `lib/` code can reference the updated types via JSDoc `@typedef {import("...")}` imports
 
-### 2. Making Changes to `lib/`
+### 2. Writing and Running Tests
 
-Modify source code in `lib/` as needed. If step 1 was performed, the latest type definitions are already available.
+**For bug fixes, always write the test case first.** Run the test to confirm it fails, reproducing the bug. Then make the code change (step 1) and re-run the test — a passing test confirms the fix.
 
-For bug fixes, consider writing the test case (step 3) first. Run the test to confirm it fails, reproducing the bug. Then make the code change and re-run the test — a passing test confirms the fix.
+For new features, tests can be written alongside or after the implementation.
 
-### 3. Writing Tests
+Only run tests when test files are modified or explicitly requested. See [TESTING_DOCS.md](TESTING_DOCS.md) for test directory structure, naming conventions, and how to run specific test cases.
 
-Test files live in `test/` with naming conventions:
-
-- `*.unittest.js` — Unit tests
-- `*.basictest.js` — Basic integration tests
-- `*.test.js` — Full integration tests
-- `*.longtest.js` — Long-running tests
-
-**Test case directories:**
-
-- `test/cases/` — Compilation test cases (each subdirectory is a test case with `index.js` + optional `webpack.config.js`)
-- `test/configCases/` — Config-driven test cases (each has `webpack.config.js` + test files)
-- `test/statsCases/` — Stats output snapshot tests
-- `test/watchCases/` — Watch mode test cases (file change detection, incremental rebuild)
-- `test/hotCases/` — HMR (Hot Module Replacement) test cases
-- `test/benchmarkCases/` — Performance benchmark cases (each has `index.js` + `webpack.config.mjs` + optional `options.mjs` with `setup()`)
-- `test/*.unittest.js` — Unit tests using Jest directly (e.g., `test/FileSystemInfo.unittest.js` uses `memfs` for filesystem mocking)
-
-### 4. Running Tests
-
-Only run tests when test files are modified or explicitly requested.
-
-**Choose test command based on modified directory:**
-
-| Modified directory/file | Command                                                   |
-| ----------------------- | --------------------------------------------------------- |
-| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`       |
-| `test/cases/`           | `yarn test:basic`                                         |
-| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"` |
-| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`  |
-| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`   |
-| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`     |
-| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                     |
-
-You can add `--testNamePattern="<case-name>"` to run only specific test cases for faster validation. Multiple patterns can be combined with `|`. For example, if you only modified `test/configCases/css/basic/`:
-
-```bash
-yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic"
-```
-
-### 5. Adding a Changeset
+### 3. Adding a Changeset
 
 Every user-facing change needs a changeset file:
 
@@ -89,19 +52,24 @@ Every user-facing change needs a changeset file:
 Description of the change.
 ```
 
-Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes.
+Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc. — the change type is already indicated by `patch`/`minor`/`major`.
 
-### 6. Updating Examples (if needed)
+### 4. Updating Examples (if needed)
 
 If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. Run `yarn build:examples` to ensure the examples build successfully.
 
-### 7. Linting and Formatting
+### 5. Linting and Formatting
 
-Run linting and formatting as the final step:
+Run linting, formatting, and type checking as the final step:
 
 ```bash
 yarn fix:code      # ESLint autofix
 yarn fmt           # Prettier format
+yarn tsc           # TypeScript type check (catches type errors in JSDoc annotations)
 ```
 
 If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
+
+### 6. Git Commit
+
+Do **NOT** add `Co-authored-by` lines in commit messages. The GitHub CLA bot requires the email to map to a real GitHub account, and unrecognized emails will cause CLA check failures.

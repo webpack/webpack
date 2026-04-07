@@ -1,0 +1,1473 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 1`] = `
+"/*!************************************!*\\\\
+  !*** css ./colors-more.module.css ***!
+  \\\\************************************/
+
+
+
+/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+/*!******************************!*\\\\
+  !*** css ./theme.module.css ***!
+  \\\\******************************/
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./value-at-rule.module.css ***!
+  \\\\**************************************/
+
+
+
+
+
+
+.value-at-rule_module_css-color {
+	color: #e74c3c
+}
+
+.value-at-rule_module_css-button {
+	background-color: #3498db;
+	color: white;
+}
+
+.value-at-rule_module_css-button-error {
+	background-color: #e74c3c;
+	border: 2px solid darkred;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./cyclical.module.css ***!
+  \\\\*********************************/
+
+.cyclical_module_css-class {
+	color: __value__;
+}
+
+.cyclical_module_css-class-with-composes-nested {
+	}
+
+
+/*!***********************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep-more.module.css ***!
+  \\\\***********************************************************/
+
+/*!******************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep.module.css ***!
+  \\\\******************************************************/
+
+
+/*!*************************************************!*\\\\
+  !*** css ./pseudo-import-and-export.module.css ***!
+  \\\\*************************************************/
+
+
+/*!******************************!*\\\\
+  !*** css ./reset.module.css ***!
+  \\\\******************************/
+.reset_module_css-reset-display {
+	display: unset;
+}
+
+/*!************************************!*\\\\
+  !*** css ./atoms-extra.module.css ***!
+  \\\\************************************/
+.atoms-extra_module_css-transition {
+	transition: transform 0.2s ease;
+}
+
+.atoms-extra_module_css-cursor {
+	cursor: pointer;
+}
+
+/*!******************************!*\\\\
+  !*** css ./atoms.module.css ***!
+  \\\\******************************/
+.atoms_module_css-display-flex {
+	display: flex;
+}
+
+.atoms_module_css-align-center {
+	align-items: center;
+}
+
+.atoms_module_css-padding-box {
+	padding: 16px;
+}
+
+.atoms_module_css-interactive {
+	will-change: transform;
+}
+
+.atoms_module_css-interactive:hover {
+	transform: scale(1.02);
+}
+
+/*!****************************************!*\\\\
+  !*** css ./button-reexport.module.css ***!
+  \\\\****************************************/
+.button-reexport_module_css-base-reexport {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./button.module.css ***!
+  \\\\*******************************/
+.button_module_css-base {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+
+
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+.abcd_modules_css-a {
+	color: a;
+}
+
+.abcd_modules_css-b {
+	color: b;
+}
+
+.abcd_modules_css-c {
+	color: c;
+}
+
+.abcd_modules_css-d {
+	color: d;
+}
+
+.abcd_modules_css-e {
+	color: d;
+}
+
+.abcd_modules_css-f {
+	}
+
+/*!*************************************!*\\\\
+  !*** css ./classes-deep.module.css ***!
+  \\\\*************************************/
+.classes-deep_module_css-deep-selector {
+	color: red;
+}
+
+.classes-deep_module_css-deep-selector-with-composes {
+	color: red;
+}
+
+.classes-deep_module_css-deep-selector-with-composes {
+	}
+
+.classes-deep_module_css-deep-nested-c {
+	color: red;
+}
+
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+
+.classes_module_css-localName {
+	background: red;
+}
+
+.classes_module_css-localNameOther {
+	color: blue;
+}
+
+.classes_module_css-bar {
+	}
+
+
+
+
+
+
+/*!*****************************************!*\\\\
+  !*** css ./classes-the-same.module.css ***!
+  \\\\*****************************************/
+.classes-the-same_module_css-localName {
+	background: blue;
+}
+
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--vars_module_css-my-var-u1: red;
+}
+
+.vars_module_css-my-var-u1 {
+	color: red;
+}
+
+/*!******************************************************!*\\\\
+  !*** css ./shared-deep-custom-properties.module.css ***!
+  \\\\******************************************************/
+:root {
+	--shared-deep-custom-properties_module_css-deep-shared: black;
+}
+
+/*!*************************************************!*\\\\
+  !*** css ./shared-custom-properties.module.css ***!
+  \\\\*************************************************/
+:root {
+	--shared-custom-properties_module_css-shared: blue;
+	--shared-custom-properties_module_css-deep-shared: var(--shared-deep-custom-properties_module_css-deep-shared)
+}
+
+/*!***************************************!*\\\\
+  !*** css ./selectors-more.module.css ***!
+  \\\\***************************************/
+
+
+/*!**********************************!*\\\\
+  !*** css ./selectors.module.css ***!
+  \\\\**********************************/
+
+
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+
+
+.styles_module_css_d9f7-button-color-red {
+	color: red;
+}
+
+.styles_module_css_d9f7-u-1\\\\/2 {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
+	font-size: 14px;
+}
+
+.styles_module_css_d9f7-composes-here {
+	display: block;
+}
+
+.styles_module_css_d9f7-composes-here {
+	background-color: black;
+}
+
+.styles_module_css_d9f7-button-complex {
+	background: blue;
+}
+
+.styles_module_css_d9f7-button-complex-1 {
+	}
+
+.styles_module_css_d9f7-button-complex-2 {
+	}
+
+.styles_module_css_d9f7-local-composes {
+	color: blue;
+}
+
+.styles_module_css_d9f7-local-composes {
+	color: blue;
+}
+
+
+.styles_module_css_d9f7-local-composes-with-reexport {
+	color: blue;
+}
+
+
+
+.styles_module_css_d9f7-local-composes-with-reexport-and-value {
+	color: blue;
+}
+
+.styles_module_css_d9f7-exportName73 { color: red; }
+.styles_module_css_d9f7-exportName74 { color: green; }
+.styles_module_css_d9f7-exportName75 { color: blue }
+.styles_module_css_d9f7-exportName74 { color: white; }
+.styles_module_css_d9f7-exportName74 { color: black; }
+
+.styles_module_css_d9f7-multiple-composes-with-simple {
+	color: red;
+}
+
+.styles_module_css_d9f7-multiple-composes-with-composes {
+	color: blue;
+}
+
+.styles_module_css_d9f7-the-same-classes-in-composes-but-different-modules {
+	}
+
+:root {
+	--styles_module_css_d9f7-color: red;
+}
+
+
+
+
+.styles_module_css_d9f7-custom-properties {
+	color: var(--styles_module_css_d9f7-color);
+	background-color: var(--shared-custom-properties_module_css-shared);
+	border-color: var(--shared-custom-properties_module_css-deep-shared);
+	outline-color: var(--styles_module_css_d9f7-color);
+	text-decoration-color: var(--vars_module_css-my-var-u1);
+}
+
+.styles_module_css_d9f7-from {
+	color: var(--vars_module_css-my-var-u1);
+}
+
+
+
+.styles_module_css_d9f7-button-with-color {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.styles_module_css_d9f7-button-with-color-too {
+	color: red;
+}
+
+
+
+
+.styles_module_css_d9f7-button-rename-1 {
+	background-color: #3498db;
+}
+
+
+
+
+.styles_module_css_d9f7-button-rename-2 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css_d9f7-button-rename-3 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css_d9f7-button-rename-4 {
+	background-color: #c1c2c3;
+}
+
+.styles_module_css_d9f7-button-export-5 {
+	content: \\"export3-value\\"
+}
+
+
+.styles_module_css_d9f7-my-selector-value { value: my-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
+
+.styles_module_css_d9f7-local-class {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.styles_module_css_d9f7-class-with-composes {
+	}
+
+
+.styles_module_css_d9f7-class-local-my { color: red }
+
+.styles_module_css_d9f7-composes-from-import {
+	color: red;
+}
+
+
+.styles_module_css_d9f7-local-for-reexport { color: #3498db; }
+
+.styles_module_css_d9f7-deep-reexport-in-composes {
+	}
+
+
+.styles_module_css_d9f7-deep-reexport-in-composes-other {
+	}
+
+
+.styles_module_css_d9f7-only-reexport {
+	}
+
+
+.styles_module_css_d9f7-class-from-pseudo-import {
+	color: classes_module_css-localName;
+}
+
+
+
+.styles_module_css_d9f7-class {
+	color: __value_cyclical__;
+}
+
+
+
+
+
+.styles_module_css_d9f7-local-for-reexport { color: #3498db; }
+
+.styles_module_css_d9f7-deep-reexport-in-composes-other-other {
+	}
+
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+
+
+.styles_module_css_be02-button-color-red {
+	color: red;
+}
+
+.styles_module_css_be02-u-1\\\\/2 {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
+	font-size: 14px;
+}
+
+.styles_module_css_be02-composes-here {
+	display: block;
+}
+
+.styles_module_css_be02-composes-here {
+	background-color: black;
+}
+
+.styles_module_css_be02-button-complex {
+	background: blue;
+}
+
+.styles_module_css_be02-button-complex-1 {
+	}
+
+.styles_module_css_be02-button-complex-2 {
+	}
+
+.styles_module_css_be02-local-composes {
+	color: blue;
+}
+
+.styles_module_css_be02-local-composes {
+	color: blue;
+}
+
+
+.styles_module_css_be02-local-composes-with-reexport {
+	color: blue;
+}
+
+
+
+.styles_module_css_be02-local-composes-with-reexport-and-value {
+	color: blue;
+}
+
+.styles_module_css_be02-exportName73 { color: red; }
+.styles_module_css_be02-exportName74 { color: green; }
+.styles_module_css_be02-exportName75 { color: blue }
+.styles_module_css_be02-exportName74 { color: white; }
+.styles_module_css_be02-exportName74 { color: black; }
+
+.styles_module_css_be02-multiple-composes-with-simple {
+	color: red;
+}
+
+.styles_module_css_be02-multiple-composes-with-composes {
+	color: blue;
+}
+
+.styles_module_css_be02-the-same-classes-in-composes-but-different-modules {
+	}
+
+:root {
+	--styles_module_css_be02-color: red;
+}
+
+
+
+
+.styles_module_css_be02-custom-properties {
+	color: var(--styles_module_css_be02-color);
+	background-color: var(--shared-custom-properties_module_css-shared);
+	border-color: var(--shared-custom-properties_module_css-deep-shared);
+	outline-color: var(--styles_module_css_be02-color);
+	text-decoration-color: var(--vars_module_css-my-var-u1);
+}
+
+.styles_module_css_be02-from {
+	color: var(--vars_module_css-my-var-u1);
+}
+
+
+
+.styles_module_css_be02-button-with-color {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.styles_module_css_be02-button-with-color-too {
+	color: red;
+}
+
+
+
+
+.styles_module_css_be02-button-rename-1 {
+	background-color: #3498db;
+}
+
+
+
+
+.styles_module_css_be02-button-rename-2 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css_be02-button-rename-3 {
+	background-color: #e74c3c;
+}
+
+
+
+
+.styles_module_css_be02-button-rename-4 {
+	background-color: #c1c2c3;
+}
+
+.styles_module_css_be02-button-export-5 {
+	content: \\"export3-value\\"
+}
+
+
+.styles_module_css_be02-my-selector-value { value: my-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
+
+.styles_module_css_be02-local-class {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.styles_module_css_be02-class-with-composes {
+	}
+
+
+.styles_module_css_be02-class-local-my { color: red }
+
+.styles_module_css_be02-composes-from-import {
+	color: red;
+}
+
+
+.styles_module_css_be02-local-for-reexport { color: #3498db; }
+
+.styles_module_css_be02-deep-reexport-in-composes {
+	}
+
+
+.styles_module_css_be02-deep-reexport-in-composes-other {
+	}
+
+
+.styles_module_css_be02-only-reexport {
+	}
+
+
+.styles_module_css_be02-class-from-pseudo-import {
+	color: classes_module_css-localName;
+}
+
+
+
+.styles_module_css_be02-class {
+	color: __value_cyclical__;
+}
+
+
+
+
+
+.styles_module_css_be02-local-for-reexport { color: #3498db; }
+
+.styles_module_css_be02-deep-reexport-in-composes-other-other {
+	}
+
+
+"
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 2`] = `
+Object {
+  "--my-custom-property-1": "--color",
+  "alias-other-selector": "other-selector-value",
+  "blue": "#3498db",
+  "button-color-red": "styles_module_css_be02-button-color-red",
+  "button-complex": "styles_module_css_be02-button-complex styles_module_css_be02-u-1/2 styles_module_css_be02-local-composes styles_module_css_be02-composes-here bar styles_module_css_be02-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "button-complex-1": "styles_module_css_be02-button-complex-1 button-reexport_module_css-base-reexport atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
+  "button-complex-2": "styles_module_css_be02-button-complex-2 styles_module_css_be02-local-composes styles_module_css_be02-composes-here bar",
+  "button-export-5": "styles_module_css_be02-button-export-5",
+  "button-rename-1": "styles_module_css_be02-button-rename-1",
+  "button-rename-2": "styles_module_css_be02-button-rename-2",
+  "button-rename-3": "styles_module_css_be02-button-rename-3",
+  "button-rename-4": "styles_module_css_be02-button-rename-4",
+  "button-with-color": "styles_module_css_be02-button-with-color",
+  "button-with-color-too": "styles_module_css_be02-button-with-color-too",
+  "class": "styles_module_css_be02-class",
+  "class-from-pseudo-import": "styles_module_css_be02-class-from-pseudo-import",
+  "class-local-my": "styles_module_css_be02-class-local-my",
+  "class-with-composes": "styles_module_css_be02-class-with-composes styles_module_css_be02-local-class global-class global-class-other classes_module_css-localName",
+  "color": "--styles_module_css_be02-color",
+  "colors": "\\"./colors.module.css\\"",
+  "composes-from-import": "styles_module_css_be02-composes-from-import styles_module_css_be02-class-local-my abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d abcd_modules_css-f abcd_modules_css-e",
+  "composes-here": "styles_module_css_be02-composes-here",
+  "composes-test-here": "composes-here",
+  "custom-properties": "styles_module_css_be02-custom-properties",
+  "cyclical": "__value_cyclical__",
+  "danger": "#e74c3c",
+  "danger-alias": "#e74c3c",
+  "danger-alias-selector": "#e74c3c",
+  "deep-reexport-in-composes": "styles_module_css_be02-deep-reexport-in-composes styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector",
+  "deep-reexport-in-composes-other": "styles_module_css_be02-deep-reexport-in-composes-other styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector-with-composes classes-deep_module_css-deep-selector",
+  "deep-reexport-in-composes-other-other": "styles_module_css_be02-deep-reexport-in-composes-other-other styles_module_css_be02-local-for-reexport classes-deep_module_css-deep-selector",
+  "deep-shared": "--shared-custom-properties_module_css-deep-shared",
+  "export": "\\"export-value\\"",
+  "export1": "\\"export1-value\\"",
+  "export2": "\\"export2-value\\"",
+  "export3": "\\"export3-value\\"",
+  "exportName73": "styles_module_css_be02-exportName73 classes_module_css-bar classes_module_css-localName",
+  "exportName74": "styles_module_css_be02-exportName74 styles_module_css_be02-exportName73 classes_module_css-bar classes_module_css-localName styles_module_css_be02-exportName75 my-global",
+  "exportName75": "styles_module_css_be02-exportName75",
+  "foo": "red",
+  "from": "styles_module_css_be02-from",
+  "in-composes": "classes-deep_module_css-deep-selector",
+  "local-class": "styles_module_css_be02-local-class",
+  "local-composes": "styles_module_css_be02-local-composes styles_module_css_be02-composes-here bar styles_module_css_be02-composes-here",
+  "local-composes-with-reexport": "styles_module_css_be02-local-composes-with-reexport styles_module_css_be02-composes-here abcd_modules_css-f abcd_modules_css-e bar",
+  "local-composes-with-reexport-and-value": "styles_module_css_be02-local-composes-with-reexport-and-value styles_module_css_be02-composes-here abcd_modules_css-f abcd_modules_css-e bar",
+  "local-for-reexport": "styles_module_css_be02-local-for-reexport",
+  "multiple-composes-with-composes": "styles_module_css_be02-multiple-composes-with-composes classes_module_css-localName classes_module_css-bar classes_module_css-localName",
+  "multiple-composes-with-simple": "styles_module_css_be02-multiple-composes-with-simple classes_module_css-localName classes_module_css-localNameOther",
+  "my-custom-color": "#2ecc71",
+  "my-custom-property-1": "--styles_module_css_be02-color",
+  "my-var-u1": "--vars_module_css-my-var-u1",
+  "only-reexport": "styles_module_css_be02-only-reexport classes-deep_module_css-deep-nested-c",
+  "other-selector": "other-selector-value",
+  "primary": "#3498db",
+  "reexport": "classes_module_css-localName",
+  "reexport-my-var-u1": "--vars_module_css-my-var-u1",
+  "reexport-selector": "reexport-selector-value",
+  "reexport-selector-alias": "reexport-selector-value",
+  "rename": "#3498db",
+  "rename-2": "#e74c3c",
+  "rename-3": "#e74c3c",
+  "selector": "my-selector-value",
+  "shared": "--shared-custom-properties_module_css-shared",
+  "the-same-classes-in-composes-but-different-modules": "styles_module_css_be02-the-same-classes-in-composes-but-different-modules classes_module_css-localName classes-the-same_module_css-localName",
+  "third": "#c1c2c3",
+  "u-1/2": "styles_module_css_be02-u-1/2",
+}
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 3`] = `
+"/*!************************************!*\\\\
+  !*** css ./colors-more.module.css ***!
+  \\\\************************************/
+
+
+
+/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+
+/*!******************************!*\\\\
+  !*** css ./theme.module.css ***!
+  \\\\******************************/
+
+
+
+
+
+/*!**************************************!*\\\\
+  !*** css ./value-at-rule.module.css ***!
+  \\\\**************************************/
+
+
+
+
+
+
+.S3xPqZ {
+	color: #e74c3c
+}
+
+.DSFgG0 {
+	background-color: #3498db;
+	color: white;
+}
+
+.Rm7a_t {
+	background-color: #e74c3c;
+	border: 2px solid darkred;
+}
+
+/*!*********************************!*\\\\
+  !*** css ./cyclical.module.css ***!
+  \\\\*********************************/
+
+._9gmTyg {
+	color: __value__;
+}
+
+.Tm1Jev {
+	}
+
+
+/*!***********************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep-more.module.css ***!
+  \\\\***********************************************************/
+
+/*!******************************************************!*\\\\
+  !*** css ./pseudo-import-and-export-deep.module.css ***!
+  \\\\******************************************************/
+
+
+/*!*************************************************!*\\\\
+  !*** css ./pseudo-import-and-export.module.css ***!
+  \\\\*************************************************/
+
+
+/*!******************************!*\\\\
+  !*** css ./reset.module.css ***!
+  \\\\******************************/
+.r7veIg {
+	display: unset;
+}
+
+/*!************************************!*\\\\
+  !*** css ./atoms-extra.module.css ***!
+  \\\\************************************/
+.uTFqYl {
+	transition: transform 0.2s ease;
+}
+
+._G2W-m {
+	cursor: pointer;
+}
+
+/*!******************************!*\\\\
+  !*** css ./atoms.module.css ***!
+  \\\\******************************/
+._4hzrjS {
+	display: flex;
+}
+
+._3N7KUJ {
+	align-items: center;
+}
+
+.FOqO9N {
+	padding: 16px;
+}
+
+.h1WMpX {
+	will-change: transform;
+}
+
+.h1WMpX:hover {
+	transform: scale(1.02);
+}
+
+/*!****************************************!*\\\\
+  !*** css ./button-reexport.module.css ***!
+  \\\\****************************************/
+._3hkn5Z {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./button.module.css ***!
+  \\\\*******************************/
+.IRudRu {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+
+
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+._0bqD8c {
+	color: a;
+}
+
+.JJtGTB {
+	color: b;
+}
+
+.BNoXdB {
+	color: c;
+}
+
+.xoOP4R {
+	color: d;
+}
+
+._6NOMLC {
+	color: d;
+}
+
+.L4uOGL {
+	}
+
+/*!*************************************!*\\\\
+  !*** css ./classes-deep.module.css ***!
+  \\\\*************************************/
+._1U1vje {
+	color: red;
+}
+
+.OPw9Jj {
+	color: red;
+}
+
+.OPw9Jj {
+	}
+
+.h7hEph {
+	color: red;
+}
+
+/*!********************************!*\\\\
+  !*** css ./classes.module.css ***!
+  \\\\********************************/
+
+.sQL78s {
+	background: red;
+}
+
+.Cpujl1 {
+	color: blue;
+}
+
+.pmxb7o {
+	}
+
+
+
+
+
+
+/*!*****************************************!*\\\\
+  !*** css ./classes-the-same.module.css ***!
+  \\\\*****************************************/
+.MClDz9 {
+	background: blue;
+}
+
+/*!*****************************!*\\\\
+  !*** css ./vars.module.css ***!
+  \\\\*****************************/
+:root {
+	--KP4m31: red;
+}
+
+.KP4m31 {
+	color: red;
+}
+
+/*!******************************************************!*\\\\
+  !*** css ./shared-deep-custom-properties.module.css ***!
+  \\\\******************************************************/
+:root {
+	--_7xy4NT: black;
+}
+
+/*!*************************************************!*\\\\
+  !*** css ./shared-custom-properties.module.css ***!
+  \\\\*************************************************/
+:root {
+	--qX-CSb: blue;
+	--_TnMz_: var(--_7xy4NT)
+}
+
+/*!***************************************!*\\\\
+  !*** css ./selectors-more.module.css ***!
+  \\\\***************************************/
+
+
+/*!**********************************!*\\\\
+  !*** css ./selectors.module.css ***!
+  \\\\**********************************/
+
+
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+
+
+.Nk2MvV {
+	color: red;
+}
+
+.FVlv2P {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
+	font-size: 14px;
+}
+
+.vTFlpN {
+	display: block;
+}
+
+.vTFlpN {
+	background-color: black;
+}
+
+.m8FtUN {
+	background: blue;
+}
+
+.OG0OVF {
+	}
+
+.kp2wNS {
+	}
+
+.vupji7 {
+	color: blue;
+}
+
+.vupji7 {
+	color: blue;
+}
+
+
+.VTgblp {
+	color: blue;
+}
+
+
+
+.XeMa0a {
+	color: blue;
+}
+
+.qgqd-J { color: red; }
+.Ns9rmr { color: green; }
+.hsOyo6 { color: blue }
+.Ns9rmr { color: white; }
+.Ns9rmr { color: black; }
+
+.s5T2tp {
+	color: red;
+}
+
+.kAC3V_ {
+	color: blue;
+}
+
+.u0iYW_ {
+	}
+
+:root {
+	--uGelqc: red;
+}
+
+
+
+
+.unbpP8 {
+	color: var(--uGelqc);
+	background-color: var(--qX-CSb);
+	border-color: var(--_TnMz_);
+	outline-color: var(--uGelqc);
+	text-decoration-color: var(--KP4m31);
+}
+
+.MI7KS4 {
+	color: var(--KP4m31);
+}
+
+
+
+.bAMUwp {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.f2oaPF {
+	color: red;
+}
+
+
+
+
+.EwEwRz {
+	background-color: #3498db;
+}
+
+
+
+
+.tmQHLg {
+	background-color: #e74c3c;
+}
+
+
+
+
+.F5aPmd {
+	background-color: #e74c3c;
+}
+
+
+
+
+._T5aMe {
+	background-color: #c1c2c3;
+}
+
+.nqaRG2 {
+	content: \\"export3-value\\"
+}
+
+
+.BBfiX6 { value: my-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
+
+.gAniDw {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.gRd4c8 {
+	}
+
+
+.saX-62 { color: red }
+
+._2HzoTb {
+	color: red;
+}
+
+
+.-F4AOV { color: #3498db; }
+
+._0XYMUG {
+	}
+
+
+.zB77X1 {
+	}
+
+
+.CiSiqk {
+	}
+
+
+.R3-Tbw {
+	color: sQL78s;
+}
+
+
+
+.A7_UOA {
+	color: __value_cyclical__;
+}
+
+
+
+
+
+.-F4AOV { color: #3498db; }
+
+.Hh8KGg {
+	}
+
+
+/*!*******************************!*\\\\
+  !*** css ./styles.module.css ***!
+  \\\\*******************************/
+
+
+.Nk2MvV {
+	color: red;
+}
+
+.FVlv2P {
+	width: 50%;
+}
+
+.button-global-font-size\\\\a1 {
+	font-size: 14px;
+}
+
+.vTFlpN {
+	display: block;
+}
+
+.vTFlpN {
+	background-color: black;
+}
+
+.m8FtUN {
+	background: blue;
+}
+
+.OG0OVF {
+	}
+
+.kp2wNS {
+	}
+
+.vupji7 {
+	color: blue;
+}
+
+.vupji7 {
+	color: blue;
+}
+
+
+.VTgblp {
+	color: blue;
+}
+
+
+
+.XeMa0a {
+	color: blue;
+}
+
+.qgqd-J { color: red; }
+.Ns9rmr { color: green; }
+.hsOyo6 { color: blue }
+.Ns9rmr { color: white; }
+.Ns9rmr { color: black; }
+
+.s5T2tp {
+	color: red;
+}
+
+.kAC3V_ {
+	color: blue;
+}
+
+.u0iYW_ {
+	}
+
+:root {
+	--uGelqc: red;
+}
+
+
+
+
+.unbpP8 {
+	color: var(--uGelqc);
+	background-color: var(--qX-CSb);
+	border-color: var(--_TnMz_);
+	outline-color: var(--uGelqc);
+	text-decoration-color: var(--KP4m31);
+}
+
+.MI7KS4 {
+	color: var(--KP4m31);
+}
+
+
+
+.bAMUwp {
+	background-color: #3498db;
+	color: #2ecc71;
+}
+
+
+
+.f2oaPF {
+	color: red;
+}
+
+
+
+
+.EwEwRz {
+	background-color: #3498db;
+}
+
+
+
+
+.tmQHLg {
+	background-color: #e74c3c;
+}
+
+
+
+
+.F5aPmd {
+	background-color: #e74c3c;
+}
+
+
+
+
+._T5aMe {
+	background-color: #c1c2c3;
+}
+
+.nqaRG2 {
+	content: \\"export3-value\\"
+}
+
+
+.BBfiX6 { value: my-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.other-selector-value { value: other-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+.reexport-selector-value { value: reexport-selector-value; }
+
+
+
+.#c1c2c3 { background-color: #c1c2c3; }
+
+
+
+.#e74c3c { background-color: #e74c3c; }
+
+.gAniDw {
+	color: white;
+}
+
+.global-class-other {
+	color: red;
+}
+
+.gRd4c8 {
+	}
+
+
+.saX-62 { color: red }
+
+._2HzoTb {
+	color: red;
+}
+
+
+.-F4AOV { color: #3498db; }
+
+._0XYMUG {
+	}
+
+
+.zB77X1 {
+	}
+
+
+.CiSiqk {
+	}
+
+
+.R3-Tbw {
+	color: sQL78s;
+}
+
+
+
+.A7_UOA {
+	color: __value_cyclical__;
+}
+
+
+
+
+
+.-F4AOV { color: #3498db; }
+
+.Hh8KGg {
+	}
+
+
+"
+`;
+
+exports[`ConfigTestCases css reexport exported tests should work with asset modules 4`] = `
+Object {
+  "--my-custom-property-1": "--color",
+  "alias-other-selector": "other-selector-value",
+  "blue": "#3498db",
+  "button-color-red": "Nk2MvV",
+  "button-complex": "m8FtUN FVlv2P vupji7 vTFlpN bar Nk2MvV button-global-font-size IRudRu _4hzrjS _3N7KUJ FOqO9N h1WMpX uTFqYl r7veIg _G2W-m",
+  "button-complex-1": "OG0OVF _3hkn5Z _4hzrjS _3N7KUJ FOqO9N h1WMpX uTFqYl r7veIg _G2W-m",
+  "button-complex-2": "kp2wNS vupji7 vTFlpN bar",
+  "button-export-5": "nqaRG2",
+  "button-rename-1": "EwEwRz",
+  "button-rename-2": "tmQHLg",
+  "button-rename-3": "F5aPmd",
+  "button-rename-4": "_T5aMe",
+  "button-with-color": "bAMUwp",
+  "button-with-color-too": "f2oaPF",
+  "class": "A7_UOA",
+  "class-from-pseudo-import": "R3-Tbw",
+  "class-local-my": "saX-62",
+  "class-with-composes": "gRd4c8 gAniDw global-class global-class-other sQL78s",
+  "color": "--uGelqc",
+  "colors": "\\"./colors.module.css\\"",
+  "composes-from-import": "_2HzoTb saX-62 _0bqD8c JJtGTB BNoXdB d e f xoOP4R L4uOGL _6NOMLC",
+  "composes-here": "vTFlpN",
+  "composes-test-here": "composes-here",
+  "custom-properties": "unbpP8",
+  "cyclical": "__value_cyclical__",
+  "danger": "#e74c3c",
+  "danger-alias": "#e74c3c",
+  "danger-alias-selector": "#e74c3c",
+  "deep-reexport-in-composes": "_0XYMUG -F4AOV _1U1vje",
+  "deep-reexport-in-composes-other": "zB77X1 -F4AOV OPw9Jj _1U1vje",
+  "deep-reexport-in-composes-other-other": "Hh8KGg -F4AOV _1U1vje",
+  "deep-shared": "--_TnMz_",
+  "export": "\\"export-value\\"",
+  "export1": "\\"export1-value\\"",
+  "export2": "\\"export2-value\\"",
+  "export3": "\\"export3-value\\"",
+  "exportName73": "qgqd-J pmxb7o sQL78s",
+  "exportName74": "Ns9rmr qgqd-J pmxb7o sQL78s hsOyo6 my-global",
+  "exportName75": "hsOyo6",
+  "foo": "red",
+  "from": "MI7KS4",
+  "in-composes": "_1U1vje",
+  "local-class": "gAniDw",
+  "local-composes": "vupji7 vTFlpN bar vTFlpN",
+  "local-composes-with-reexport": "VTgblp vTFlpN L4uOGL _6NOMLC bar",
+  "local-composes-with-reexport-and-value": "XeMa0a vTFlpN L4uOGL _6NOMLC bar",
+  "local-for-reexport": "-F4AOV",
+  "multiple-composes-with-composes": "kAC3V_ sQL78s pmxb7o sQL78s",
+  "multiple-composes-with-simple": "s5T2tp sQL78s Cpujl1",
+  "my-custom-color": "#2ecc71",
+  "my-custom-property-1": "--uGelqc",
+  "my-var-u1": "--KP4m31",
+  "only-reexport": "CiSiqk h7hEph",
+  "other-selector": "other-selector-value",
+  "primary": "#3498db",
+  "reexport": "sQL78s",
+  "reexport-my-var-u1": "--KP4m31",
+  "reexport-selector": "reexport-selector-value",
+  "reexport-selector-alias": "reexport-selector-value",
+  "rename": "#3498db",
+  "rename-2": "#e74c3c",
+  "rename-3": "#e74c3c",
+  "selector": "my-selector-value",
+  "shared": "--qX-CSb",
+  "the-same-classes-in-composes-but-different-modules": "u0iYW_ sQL78s MClDz9",
+  "third": "#c1c2c3",
+  "u-1/2": "FVlv2P",
+}
+`;

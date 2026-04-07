@@ -1,0 +1,721 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css public-path exported tests should work 1`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(same_root.svg);
+}
+
+.class-2 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(same_root.svg);
+}
+
+.class-6 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 2`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 3`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(/static/img/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(/static/img/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(/static/img/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(/static/img/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 4`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(/static/img/../deep/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(/static/img/../deep/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(/static/img/../deep/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(/static/img/../deep/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 5`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(//cdn.webpack.js/assets/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(//cdn.webpack.js/assets/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(//cdn.webpack.js/assets/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(//cdn.webpack.js/assets/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 6`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(same_root.svg);
+}
+
+.class-2 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(same_root.svg);
+}
+
+.class-6 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 7`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(https://webpack.js.org/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(https://webpack.js.org/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(https://webpack.js.org/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(https://webpack.js.org/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 8`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(https://webpack.js.org/../foo/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(https://webpack.js.org/../foo/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(https://webpack.js.org/../foo/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(https://webpack.js.org/../foo/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 9`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(https://webpack.js.org/foo/../same_root.svg);
+}
+
+.class-2 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(https://webpack.js.org/foo/../styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(https://webpack.js.org/foo/../same_root.svg);
+}
+
+.class-6 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(https://webpack.js.org/foo/../c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 10`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(https://webpack.js.org./same_root.svg);
+}
+
+.class-2 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(https://webpack.js.org./styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(https://webpack.js.org./same_root.svg);
+}
+
+.class-6 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(https://webpack.js.org./c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 11`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(../same_root.svg);
+}
+
+.class-2 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(../styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(../same_root.svg);
+}
+
+.class-6 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(../c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 12`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(./same_root.svg);
+}
+
+.class-2 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(./styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(./same_root.svg);
+}
+
+.class-6 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(./c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 13`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(../static/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(../static/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(../static/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(../static/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 14`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(./static/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(./static/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(./static/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(./static/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;
+
+exports[`ConfigTestCases css public-path exported tests should work 15`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class-1 {
+	background-image: url(https://webpack.js.org/undefined/same_root.svg);
+}
+
+.class-2 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+.class-3 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+.class-4 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+.class-5 {
+	background-image: url(https://webpack.js.org/undefined/styles/nested/nested_dir.svg);
+}
+
+/*!******************************!*\\\\
+  !*** css ./nested/style.css ***!
+  \\\\******************************/
+.class-5 {
+	background-image: url(https://webpack.js.org/undefined/same_root.svg);
+}
+
+.class-6 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+.class-7 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+.class-8 {
+	background-image: url(https://webpack.js.org/undefined/c9e192c015437a21dea1.svg);
+}
+
+",
+]
+`;

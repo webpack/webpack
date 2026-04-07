@@ -1,0 +1,15 @@
+:import("./cyclical.module.css") {
+	__value__: value;
+}
+
+.class {
+	color: __value__;
+}
+
+.class-with-composes-nested {
+	composes: class-with-composes-nested from "./cyclical.module.css";
+}
+
+:export {
+	value: __value__;
+}

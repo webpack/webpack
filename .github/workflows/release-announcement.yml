@@ -48,6 +48,7 @@ jobs:
 
           curl -X POST -H "Content-Type: application/json" \
                -d "$PAYLOAD" \
-               "${{ secrets.DISCORD_WEBHOOK }}"
+               "${DISCORD_WEBHOOK}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

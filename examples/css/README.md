@@ -26,36 +26,9 @@ body {
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ([
-/* 0 */,
-/* 1 */
-/*!***********************!*\
-  !*** css ./style.css ***!
-  \***********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: has css modules */
-/***/ (() => {
+/******/ 	var __webpack_modules__ = ({
 
-
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
-/*!************************!*\
-  !*** css ./style2.css ***!
-  \************************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: has css modules */
-/***/ (() => {
-
-
-
-/***/ }),
-/* 6 */
+/***/ 6
 /*!******************************!*\
   !*** css ./style.module.css ***!
   \******************************/
@@ -64,15 +37,17 @@ body {
 /*! export main [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, module, has css modules, __webpack_require__.* */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+(module, __unused_webpack_exports, __webpack_require__) {
 
 __webpack_require__.r(module.exports = {
 	"large": "--QRIlVD",
 	"main": "zI6JBT"
 });
 
-/***/ })
-/******/ 	]);
+
+/***/ }
+
+/******/ 	});
 ```
 
 <details><summary><code>/* webpack runtime code */</code></summary>
@@ -89,12 +64,6 @@ __webpack_require__.r(module.exports = {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -103,6 +72,12 @@ __webpack_require__.r(module.exports = {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -419,15 +394,13 @@ var __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 1);
-/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 5);
-/* harmony import */ var _style_module_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.module.css */ 6);
+/* harmony import */ var _style_module_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.module.css */ 6);
 
 
 
 __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 7));
 
-document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_IMPORTED_MODULE_2__.main;
+document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_IMPORTED_MODULE_0__.main;
 
 })();
 
@@ -550,18 +523,18 @@ body {
 ## Unoptimized
 
 ```
-assets by path *.js 16.4 KiB
-  asset output.js 16.1 KiB [emitted] (name: main)
-  asset 1.output.js 331 bytes [emitted]
+assets by path *.js 15.7 KiB
+  asset output.js 15.4 KiB [emitted] (name: main)
+  asset 1.output.js 332 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 17.2 KiB (14.6 KiB) = output.js 16.1 KiB output.css 1.04 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 256 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
+Entrypoint main 16.4 KiB (14.6 KiB) = output.js 15.4 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.8 KiB 9 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 80 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -586,22 +559,22 @@ assets by path *.css 475 bytes
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 Entrypoint main 3.48 KiB (14.6 KiB) = output.js 3.04 KiB output.css 451 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 362 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 442 bytes (javascript) 8.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.53 KiB 8 modules
   dependent modules 14.6 KiB (asset) 42 bytes (css-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
-  cacheable modules 362 bytes (javascript) 375 bytes (css)
-    ./example.js + 3 modules 269 bytes [built] [code generated]
+  cacheable modules 442 bytes (javascript) 375 bytes (css)
+    ./example.js + 3 modules 351 bytes [built] [code generated]
       [no exports]
       [no exports used]
       entry ./example.js main
-    css ./style.css 1 bytes (javascript) 148 bytes (css) [built] [code generated]
+    css ./style.css 148 bytes [built] [code generated]
       [no exports]
       [no exports used]
     css ./style.module.css 91 bytes (javascript) 200 bytes (css) [built] [code generated]
       [exports: large, main]
       [only some exports used: main]
-    css ./style2.css 1 bytes (javascript) 27 bytes (css) [built] [code generated]
+    css ./style2.css 27 bytes [built] [code generated]
       [no exports]
       [no exports used]
 chunk (runtime: main) 822.output.js, 822.output.css 1 bytes (javascript) 23 bytes (css) [rendered]

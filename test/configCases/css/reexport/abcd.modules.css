@@ -1,0 +1,23 @@
+.a {
+	color: a;
+}
+
+.b {
+	color: b;
+}
+
+.c {
+	color: c;
+}
+
+.d {
+	color: d;
+}
+
+.e {
+	color: d;
+}
+
+.f {
+	composes: e;
+}

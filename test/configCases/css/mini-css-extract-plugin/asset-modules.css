@@ -1,0 +1,4 @@
+body {
+	background: red;
+	background-image: url(./webpack.svg);
+}

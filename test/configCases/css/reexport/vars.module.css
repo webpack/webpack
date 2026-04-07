@@ -1,0 +1,7 @@
+:root {
+	--my-var-u1: red;
+}
+
+.my-var-u1 {
+	color: red;
+}

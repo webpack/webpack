@@ -1,0 +1,2 @@
+@value other-selector: other-selector-value;
+@value reexport-selector from "./selectors-more.module.css";

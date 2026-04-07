@@ -1,0 +1,7 @@
+@import url("./layer-at-rule-named.css") layer(framework);
+@import url("./layer-at-rule-unnamed.css") layer;
+@import url("./layer-at-rule-name-and-supports-and-media.css") layer(default) supports(display: flex) (prefers-color-scheme: dark);
+
+.top {
+	background: red;
+}

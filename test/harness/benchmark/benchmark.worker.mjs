@@ -21,10 +21,10 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {import("tinybench").Bench} TinybenchBench */
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 
-/** @typedef {import("../../../types.d.ts")} Webpack */
-/** @typedef {import("../../../types.d.ts").Configuration} Configuration */
-/** @typedef {import("../../../types.d.ts").Stats} Stats */
-/** @typedef {import("../../../types.d.ts").Watching} Watching */
+/** @typedef {import("../../..")} Webpack */
+/** @typedef {import("../../..").Configuration} Configuration */
+/** @typedef {import("../../..").Stats} Stats */
+/** @typedef {import("../../..").Watching} Watching */
 /** @typedef {import("../../../test/BenchmarkTestCases.benchmark.mjs").Scenario} Scenario */
 /** @typedef {import("../../../test/BenchmarkTestCases.benchmark.mjs").Baseline} Baseline */
 

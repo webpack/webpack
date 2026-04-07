@@ -8,7 +8,6 @@ const oxcParse = require("./internals/oxc-parse.js");
 const config = [
 	// oxc
 	{
-		entry: "./example.js",
 		mode: "production",
 		optimization: {
 			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
@@ -36,7 +35,6 @@ const config = [
 	},
 	// meriyah
 	{
-		entry: "./example.js",
 		mode: "production",
 		optimization: {
 			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
@@ -64,7 +62,6 @@ const config = [
 	},
 	// acorn
 	{
-		entry: "./example.js",
 		mode: "production",
 		output: {
 			filename: "acorn.[name].js"
