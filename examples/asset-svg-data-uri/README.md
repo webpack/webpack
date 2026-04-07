@@ -89,8 +89,7 @@ module.exports = config;
   !*** ./images/file.svg ***!
   \*************************/
 /*! default exports */
-/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -114,12 +113,6 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -128,6 +121,12 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -203,7 +202,7 @@ function createImageElement(title, src) {
 ## webpack output
 
 ```
-asset output.js 4.17 KiB [emitted] (name: main)
+asset output.js 4.06 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module

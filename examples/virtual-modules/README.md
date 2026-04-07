@@ -104,72 +104,78 @@ const config = (env = "development") => ({
 		]
 	},
 	plugins: [
-		new webpack.experiments.schemes.VirtualUrlPlugin({
-			"my-module": 'export const msg = "from virtual module"',
-			"my-async-module": async () => {
-				const value = await Promise.resolve("async-value");
+		new webpack.experiments.schemes.VirtualUrlPlugin(
+			{
+				"my-module": 'export const msg = "from virtual module"',
+				"my-async-module": async () => {
+					const value = await Promise.resolve("async-value");
 
-				return `export default "${value}"`;
-			},
-			"build-info": {
-				source() {
-					return `export const version = "${VERSION}"`;
+					return `export default "${value}"`;
 				},
-				// Re-evaluate this value at each compilation, useful when getting a value from a variable
-				version: true
-			},
-			"hello.ts": "export const hello = 'hello';",
-			"my-json-modules": {
-				type: ".json",
-				source: () => '{"name": "virtual-url-plugin"}'
-			},
-			// Loaders will work with virtual modules
-			"my-typescript-module": {
-				type: ".ts",
-				source: () => `
+				"build-info": {
+					source() {
+						return `export const version = "${VERSION}"`;
+					},
+					// Re-evaluate this value at each compilation, useful when getting a value from a variable
+					version: true
+				},
+				"hello.ts": "export const hello = 'hello';",
+				"my-json-modules": {
+					type: ".json",
+					source: () => '{"name": "virtual-url-plugin"}'
+				},
+				// Loaders will work with virtual modules
+				"my-typescript-module": {
+					type: ".ts",
+					source: () => `
 const value: string = "value-from-typescript";
 
 export default value;`
-			},
-			routes: {
-				source(
-					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
-				) {
-					// Use `loaderContext.addContextDependency` to monitor the addition or removal of subdirectories in routesPath to trigger the rebuilding of virtual modules.
-					// See more - https://webpack.js.org/api/loaders/#the-loader-context
-					loaderContext.addContextDependency(routesPath);
+				},
+				routes: {
+					source(
+						/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+					) {
+						// Use `loaderContext.addContextDependency` to monitor the addition or removal of subdirectories in routesPath to trigger the rebuilding of virtual modules.
+						// See more - https://webpack.js.org/api/loaders/#the-loader-context
+						loaderContext.addContextDependency(routesPath);
 
-					const files = fs.readdirSync(routesPath);
+						const files = fs.readdirSync(routesPath);
 
-					return `export const routes = {${files
-						.map(
-							(key) => `${key.split(".")[0]}: () => import('./routes/${key}')`
-						)
-						.join(",\n")}}`;
+						return `export const routes = {${files
+							.map(
+								(key) => `${key.split(".")[0]}: () => import('./routes/${key}')`
+							)
+							.join(",\n")}}`;
+					}
+				},
+				"code-from-file": {
+					async source(
+						/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
+					) {
+						const pathToFile = path.resolve(__dirname, "./code.js");
+
+						// Will trigger rebuild on changes in the file
+						loaderContext.addDependency(pathToFile);
+
+						const code = await fs.promises.readFile(pathToFile, "utf8");
+
+						return code;
+					}
+				},
+				"src/components/button.js":
+					"import { trim } from './utils';export const button = trim('button ');",
+				"logo.svg": {
+					type: ".svg",
+					source() {
+						return '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>';
+					}
 				}
 			},
-			"code-from-file": {
-				async source(
-					/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
-				) {
-					const pathToFile = path.resolve(__dirname, "./code.js");
-
-					// Will trigger rebuild on changes in the file
-					loaderContext.addDependency(pathToFile);
-
-					const code = await fs.promises.readFile(pathToFile, "utf8");
-
-					return code;
-				}
-			},
-			"src/components/button.js": "import { trim } from './utils';export const button = trim('button ');",
-			"logo.svg": {
-				type: ".svg",
-				source() {
-					return '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>';
-				}
+			{
+				context: "auto"
 			}
-		}),
+		),
 		new webpack.experiments.schemes.VirtualUrlPlugin(
 			{
 				"my-module": `const msg = "from virtual module with custom scheme";
@@ -458,8 +464,7 @@ const trim = (str) => str.trim();
   !*** virtual:logo.svg ***!
   \************************/
 /*! default exports */
-/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -483,12 +488,6 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -497,6 +496,12 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -704,7 +709,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 ## Unoptimized
 
 ```
-asset output.js 20.2 KiB [emitted] (name: main)
+asset output.js 20.1 KiB [emitted] (name: main)
 asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)

@@ -51,7 +51,7 @@ module.exports = config;
 # dist/vendor.js
 
 ```javascript
-var vendor_a7d019ade9c1312f71c9;
+var vendor_19a5eb797fd6f4980c5d;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -106,12 +106,6 @@ module.exports = "Vendor2";
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -120,6 +114,12 @@ module.exports = "Vendor2";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -137,7 +137,7 @@ module.exports = "Vendor2";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_a7d019ade9c1312f71c9 = __webpack_exports__;
+/******/ 	vendor_19a5eb797fd6f4980c5d = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -163,18 +163,18 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_a7d019ade9c1312f71c9 ***!
+  !*** delegated ./vendor.js from dll-reference vendor_19a5eb797fd6f4980c5d ***!
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_a7d019ade9c1312f71c9 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_19a5eb797fd6f4980c5d */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_a7d019ade9c1312f71c9" ***!
+  !*** external "vendor_19a5eb797fd6f4980c5d" ***!
   \**********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -182,7 +182,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_a7d019ade9c1312f7
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_a7d019ade9c1312f71c9;
+module.exports = vendor_19a5eb797fd6f4980c5d;
 
 /***/ })
 /******/ 	]);
@@ -202,12 +202,6 @@ module.exports = vendor_a7d019ade9c1312f71c9;
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -216,6 +210,12 @@ module.exports = vendor_a7d019ade9c1312f71c9;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -244,7 +244,7 @@ module.exports = vendor_a7d019ade9c1312f71c9;
 
 ```
 vendor:
-  asset vendor.js 2.54 KiB [emitted] (name: main)
+  asset vendor.js 2.53 KiB [emitted] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -255,9 +255,9 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
-  asset pageB.js 2.89 KiB [emitted] (name: pageB)
-  asset pageA.js 2.87 KiB [emitted] (name: pageA)
-  asset pageC.js 1.86 KiB [emitted] (name: pageC)
+  asset pageB.js 2.88 KiB [emitted] (name: pageB)
+  asset pageA.js 2.86 KiB [emitted] (name: pageA)
+  asset pageC.js 1.85 KiB [emitted] (name: pageC)
   chunk (runtime: pageA) pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
     dependent modules 84 bytes [dependent] 2 modules
@@ -295,8 +295,8 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
+  asset pageB.js 290 bytes [emitted] [minimized] (name: pageB)
   asset pageA.js 288 bytes [emitted] [minimized] (name: pageA)
-  asset pageB.js 288 bytes [emitted] [minimized] (name: pageB)
   asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB

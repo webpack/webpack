@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_1fb982cf4f66bf2251ee;
+var vendor_lib_d7c09c7924bc958c7cc2;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -98,12 +98,6 @@ function square(n) {
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -112,6 +106,12 @@ function square(n) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -158,7 +158,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_1fb982cf4f66bf2251ee = __webpack_exports__;
+/******/ 	vendor_lib_d7c09c7924bc958c7cc2 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -167,7 +167,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_1fb982cf4f66bf2251ee","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_d7c09c7924bc958c7cc2","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -175,7 +175,7 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.94 KiB [emitted] (name: main)
+asset vendor.js 3.93 KiB [emitted] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 670 bytes 3 modules

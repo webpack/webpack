@@ -163,12 +163,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	if(!__webpack_require__.o(map, req)) {
-		return Promise.resolve().then(() => {
+	try {
+		if(!__webpack_require__.o(map, req)) {
+			return Promise.resolve().then(() => {
 	var e = new Error("Cannot find module '" + req + "'");
 	e.code = 'MODULE_NOT_FOUND';
 	throw e;
 });
+		}
+	} catch(err) {
+		return Promise.reject(err);
 	}
 
 	var ids = map[req], id = ids[0];
@@ -217,12 +221,6 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -231,6 +229,12 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -541,11 +545,11 @@ module.exports = function() {
 ```
 asset pageA.bundle.js 13.2 KiB [emitted] (name: pageA)
 asset pageB.bundle.js 13.2 KiB [emitted] (name: pageB)
-asset router_js.bundle.js 2.53 KiB [emitted]
+asset router_js.bundle.js 2.58 KiB [emitted]
 asset aPage.bundle.js 380 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 380 bytes [emitted] (name: bPage)
-Entrypoint pageA 16.1 KiB = router_js.bundle.js 2.53 KiB aPage.bundle.js 380 bytes pageA.bundle.js 13.2 KiB
-Entrypoint pageB 16.1 KiB = router_js.bundle.js 2.53 KiB bPage.bundle.js 380 bytes pageB.bundle.js 13.2 KiB
+Entrypoint pageA 16.2 KiB = router_js.bundle.js 2.58 KiB aPage.bundle.js 380 bytes pageA.bundle.js 13.2 KiB
+Entrypoint pageB 16.2 KiB = router_js.bundle.js 2.58 KiB bPage.bundle.js 380 bytes pageB.bundle.js 13.2 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -596,11 +600,11 @@ webpack X.X.X compiled successfully
 ```
 asset pageA.bundle.js 2.82 KiB [emitted] [minimized] (name: pageA)
 asset pageB.bundle.js 2.82 KiB [emitted] [minimized] (name: pageB)
-asset router_js.bundle.js 538 bytes [emitted] [minimized]
+asset router_js.bundle.js 576 bytes [emitted] [minimized]
 asset aPage.bundle.js 116 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 116 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.46 KiB = router_js.bundle.js 538 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.82 KiB
-Entrypoint pageB 3.46 KiB = router_js.bundle.js 538 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.82 KiB
+Entrypoint pageA 3.5 KiB = router_js.bundle.js 576 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.82 KiB
+Entrypoint pageB 3.5 KiB = router_js.bundle.js 576 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.82 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
