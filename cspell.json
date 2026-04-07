@@ -369,6 +369,7 @@
     "test/statsCases/**",
     "test/fixtures/**",
     "test/memoryLimitCases/**",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "WORKING_GROUP.md"
   ]
 }
