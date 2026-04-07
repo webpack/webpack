@@ -4,11 +4,11 @@ exports[`StatsTestCases wasm-explorer-examples-sync should print correct stats f
 "assets by path *.js X KiB
   asset bundle.js X KiB [emitted] (name: main)
   asset 836.bundle.js X KiB [emitted]
-  asset 946.bundle.js X bytes [emitted]
+  asset 360.bundle.js X bytes [emitted]
   asset 787.bundle.js X bytes [emitted] (id hint: vendors)
-  asset 573.bundle.js X bytes [emitted]
-  asset 672.bundle.js X bytes [emitted]
-  asset 989.bundle.js X bytes [emitted]
+  asset 201.bundle.js X bytes [emitted]
+  asset 458.bundle.js X bytes [emitted]
+  asset 873.bundle.js X bytes [emitted]
 assets by path *.wasm X KiB
   asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
   asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
@@ -16,9 +16,12 @@ assets by path *.wasm X KiB
   asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
   asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
   asset XXXXXXXXXXXXXXXXXXXX.module.wasm X bytes [emitted] [immutable]
-chunk (runtime: main) 573.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
+chunk (runtime: main) 201.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
   ./Q_rsqrt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
-chunk (runtime: main) 672.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
+chunk (runtime: main) 360.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
+  ./fact.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+  ./fast-math.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
+chunk (runtime: main) 458.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
   ./duff.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
 chunk (runtime: main) 787.bundle.js (id hint: vendors) X bytes [rendered] split chunk (cache group: defaultVendors)
   ./node_modules/env.js X bytes [built] [code generated]
@@ -28,10 +31,7 @@ chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) [ent
 chunk (runtime: main) 836.bundle.js X KiB (javascript) X bytes (webassembly) [rendered]
   ./testFunction.wasm X bytes (javascript) X bytes (webassembly) [dependent] [built] [code generated]
   ./tests.js X KiB [built] [code generated]
-chunk (runtime: main) 946.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
-  ./fact.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
-  ./fast-math.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
-chunk (runtime: main) 989.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
+chunk (runtime: main) 873.bundle.js X bytes (javascript) X bytes (webassembly) [rendered]
   ./popcnt.wasm X bytes (javascript) X bytes (webassembly) [built] [code generated]
 runtime modules X KiB 10 modules
 cacheable modules X KiB (javascript) X KiB (webassembly)
