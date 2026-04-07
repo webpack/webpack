@@ -6920,7 +6920,7 @@ declare interface ImportDependencyMeta {
 	externalType?: "import" | "module";
 }
 type ImportExpressionJavascriptParser = ImportExpressionImport & {
-	phase?: "source" | "defer";
+	phase?: "defer" | "source";
 };
 declare interface ImportModuleOptions {
 	/**
@@ -11948,7 +11948,6 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
-	sourcePhase: boolean;
 	error: null | WebpackError;
 	getResource(): null | string;
 
@@ -12111,11 +12110,6 @@ declare interface NormalModuleCreateData {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
-
-	/**
-	 * whether this module is imported at source phase
-	 */
-	sourcePhase?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -15513,6 +15507,7 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptions;
 	context: string;
 	request: string;
+	phase?: "defer" | "source" | "evaluation";
 	attributes?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
