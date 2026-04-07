@@ -23,16 +23,26 @@ Each member of the working group is required to adhere to the [governance model 
 
 ## Members
 
-- [snitin315](https://github.com/snitin315) -
+- [@alexander-akait](https://github.com/alexander-akait) -
+  **Alexander Akait**
+- [@avivkeller](https://github.com/avivkeller) -
+  **Aviv Keller** <<me@aviv.sh>> (he/him)
+- [@hai-x](https://github.com/hai-x) -
+  **hai-x** <<haijie0619@gmail.com>>
+- [@jhnns](https://github.com/jhnns) -
+  **Johannes Ewald** <<mail@johannesewald.de>> (he/him)
+- [@joshwiens](https://github.com/joshwiens) -
+  **Joshua Wiens** <<joshuaw@easymetrics.com>>
+- [@sokra](https://github.com/sokra) -
+  **Tobias Koppers** <<tobias.koppers@googlemail.com>>
+- [@snitin315](https://github.com/snitin315) -
   **Nitin Kumar** <<snitin315@gmail.com>> (he/him)
-- [thelarkinn](https://github.com/thelarkinn) -
-  **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
-- [jhnns](https://github.com/jhnns) -
-  **Johannes Ewald** <<mail@johannesewald.de>>
-- [sokra](https://github.com/sokra) -
-  **Tobias Koppers** <<jackworks@protonmail.co>>
-- [spacek33z](https://github.com/spacek33z) -
-  **Kees Kluskens** <<kees@webduck.nl>>
+- [@spacek33z](https://github.com/spacek33z) -
+  **Kees Kluskens** <<kees@kees.im>>
+- [@thelarkinn](https://github.com/thelarkinn) -
+  **Sean Larkin** <<selarkin@microsoft.com>>
+- [@xiaoxiaojx](https://github.com/xiaoxiaojx) -
+  **Xiao** <<784487301@qq.com>> (he/him)
 
 ## Communication
 
