@@ -167,7 +167,7 @@
     "node-gyp": "^12.1.0",
     "nyc": "^18.0.0",
     "open-cli": "^8.0.0",
-    "oxc-parser": "^0.123.0",
+    "oxc-parser": "^0.124.0",
     "pkg-pr-new": "^0.0.66",
     "prettier": "^3.7.4",
     "prettier-2": "npm:prettier@^2",
