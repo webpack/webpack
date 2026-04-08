@@ -57,6 +57,8 @@ const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 /** @type {string} */
 let _baseOutputPath;
 
+const codspeedRunnerMode = getCodspeedRunnerMode();
+
 /**
  * @param {string} filename filename
  * @returns {string} sanitized filename
@@ -240,8 +242,6 @@ function getTaskUri(bench, taskName, rootCallingFile) {
  * @returns {Promise<Bench>} modifier bench
  */
 const withCodSpeed = async (bench) => {
-	const codspeedRunnerMode = getCodspeedRunnerMode();
-
 	if (codspeedRunnerMode === "disabled") {
 		return bench;
 	}
@@ -353,14 +353,11 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeAll?.call(task, "run");
 
-			if (codspeedRunnerMode === "simulation") {
-				// Custom warmup
-				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
-				const samples = [];
-
-				while (samples.length < bench.iterations - 1) {
-					samples.push(await iterationAsync(task, name));
-				}
+			// Custom warmup
+			// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
+			const samples = [];
+			while (samples.length < bench.iterations - 1) {
+				samples.push(await iterationAsync(task, name));
 			}
 
 			await options?.beforeEach?.call(task, "run");
@@ -427,13 +424,10 @@ const withCodSpeed = async (bench) => {
 
 			options?.beforeAll?.call(task, "run");
 
-			if (codspeedRunnerMode === "simulation") {
-				// Custom warmup
-				const samples = [];
-
-				while (samples.length < bench.iterations - 1) {
-					samples.push(iteration(task, name));
-				}
+			// Custom warmup
+			const samples = [];
+			while (samples.length < bench.iterations - 1) {
+				samples.push(iteration(task, name));
 			}
 
 			options?.beforeEach?.call(task, "run");
@@ -883,9 +877,7 @@ export async function run({ task, casesPath, baseOutputPath }) {
 		new Bench({
 			now: hrtimeNow,
 			throws: true,
-			warmup: true,
-			warmupIterations: 2,
-			iterations: 8,
+			iterations: codspeedRunnerMode === "simulation" ? 8 : 2,
 			setup(task, mode) {
 				if (!task) {
 					return;
