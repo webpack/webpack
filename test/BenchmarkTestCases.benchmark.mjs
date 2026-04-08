@@ -34,6 +34,13 @@ import { simpleGit } from "simple-git";
  * @property {Baseline[]} baselines baselines
  */
 
+/**
+ * @typedef {object} ShardAssignment
+ * @property {string} scenarioName scenario this shard handles
+ * @property {number} splitIndex 0-based index for splitting benchmarks within this scenario
+ * @property {number} splitTotal total shards dedicated to this scenario
+ */
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
@@ -178,6 +185,23 @@ function splitToNChunks(array, n) {
 	return result;
 }
 
+/** @type {Map<number, ShardAssignment[]>} */
+const SCENARIO_SHARD_LAYOUTS = new Map([
+	[
+		4,
+		[
+			{ scenarioName: "mode-development", splitIndex: 0, splitTotal: 1 },
+			{
+				scenarioName: "mode-development-rebuild",
+				splitIndex: 0,
+				splitTotal: 1
+			},
+			{ scenarioName: "mode-production", splitIndex: 0, splitTotal: 2 },
+			{ scenarioName: "mode-production", splitIndex: 1, splitTotal: 2 }
+		]
+	]
+]);
+
 class BenchmarkRunner {
 	constructor() {
 		/** @type {Scenario[]} */
@@ -282,10 +306,6 @@ class BenchmarkRunner {
 			new Worker(
 				path.resolve(__dirname, "harness/benchmark/benchmark.worker.mjs"),
 				{
-					computeWorkerKey: (_arg1, arg2) => {
-						const { task } = /** @type {{ task: BenchmarkTask }} */ (arg2);
-						return task.scenario.name;
-					},
 					exposedMethods: ["run"],
 					numWorkers,
 					forkOptions: { silent: false, execArgv: getV8Flags() }
@@ -348,6 +368,35 @@ class BenchmarkRunner {
 		}
 
 		return benchmarkTasks;
+	}
+
+	/**
+	 * Create benchmark tasks using scenario-aware sharding.
+	 * Each shard runs a specific scenario (or a portion of benchmarks for that scenario).
+	 * @param {string[]} benchmarks all benchmarks
+	 * @param {ShardAssignment} assignment the shard assignment
+	 * @param {Baseline[]} baselines all baselines
+	 * @returns {BenchmarkTask[]} tasks
+	 */
+	createScenarioAwareTasks(benchmarks, assignment, baselines) {
+		const scenario = this.scenarios.find(
+			(s) => s.name === assignment.scenarioName
+		);
+
+		if (!scenario) {
+			throw new Error(
+				`Unknown scenario "${assignment.scenarioName}" in shard layout`
+			);
+		}
+
+		const shardBenchmarks =
+			assignment.splitTotal > 1
+				? splitToNChunks([...benchmarks], assignment.splitTotal)[
+						assignment.splitIndex
+					]
+				: benchmarks;
+
+		return this.createBenchmarkTasks(shardBenchmarks, [scenario], baselines);
 	}
 
 	/**
@@ -445,22 +494,52 @@ class BenchmarkRunner {
 		}
 
 		const countOfBenchmarks = benchmarks.length;
+		const layout = SCENARIO_SHARD_LAYOUTS.get(shard[1]);
 
-		if (countOfBenchmarks < shard[1]) {
-			throw new Error(
-				`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
+		/** @type {BenchmarkTask[]} */
+		let benchmarkTasks;
+
+		if (layout) {
+			// Scenario-aware sharding
+			const assignment = layout[shard[0] - 1];
+
+			if (!assignment) {
+				throw new Error(
+					`Invalid shard index ${shard[0]} for layout with ${shard[1]} shards`
+				);
+			}
+
+			if (
+				assignment.splitTotal > 1 &&
+				countOfBenchmarks < assignment.splitTotal
+			) {
+				throw new Error(
+					`Not enough benchmarks (${countOfBenchmarks}) to split into ${assignment.splitTotal} parts for scenario "${assignment.scenarioName}"`
+				);
+			}
+
+			benchmarkTasks = this.createScenarioAwareTasks(
+				benchmarks,
+				assignment,
+				baselines
+			);
+		} else {
+			// Fallback: simple benchmark sharding
+			if (countOfBenchmarks < shard[1]) {
+				throw new Error(
+					`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
+				);
+			}
+
+			const shardedBenchmarks = splitToNChunks([...benchmarks], shard[1])[
+				shard[0] - 1
+			];
+			benchmarkTasks = this.createBenchmarkTasks(
+				shardedBenchmarks,
+				this.scenarios,
+				baselines
 			);
 		}
-
-		const shardedBenchmarks = splitToNChunks(benchmarks, shard[1])[
-			shard[0] - 1
-		];
-
-		const benchmarkTasks = this.createBenchmarkTasks(
-			shardedBenchmarks,
-			this.scenarios,
-			baselines
-		);
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
