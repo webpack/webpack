@@ -502,13 +502,11 @@ class BenchmarkRunner {
 		if (layout) {
 			// Scenario-aware sharding
 			const assignment = layout[shard[0] - 1];
-
 			if (!assignment) {
 				throw new Error(
 					`Invalid shard index ${shard[0]} for layout with ${shard[1]} shards`
 				);
 			}
-
 			if (
 				assignment.splitTotal > 1 &&
 				countOfBenchmarks < assignment.splitTotal
