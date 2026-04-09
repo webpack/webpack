@@ -2055,3 +2055,9 @@ p:not(:local(#main-paragraph)) {
 .wrapper {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
+
+.importantAnimation {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
+}
