@@ -11,6 +11,36 @@ function readEnv() {
 	return { GITHUB_SERVER_URL };
 }
 
+/**
+ * Validates that a string is a valid Git commit hash (7-40 hex characters).
+ * @param {string} commit
+ * @returns {boolean}
+ */
+function isValidCommitHash(commit) {
+	return typeof commit === "string" && /^[0-9a-f]{7,40}$/i.test(commit);
+}
+
+/**
+ * Validates that a string is a valid GitHub repository slug (owner/repo).
+ * @param {string} repo
+ * @returns {boolean}
+ */
+function isValidRepoSlug(repo) {
+	return (
+		typeof repo === "string" &&
+		/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)
+	);
+}
+
+/**
+ * Validates that a string is a valid GitHub username (alphanumeric, hyphens).
+ * @param {string} user
+ * @returns {boolean}
+ */
+function isValidUsername(user) {
+	return typeof user === "string" && /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(user);
+}
+
 /** @type {ChangelogFunctions} */
 const changelogFunctions = {
 	getDependencyReleaseLine: async (
@@ -25,10 +55,10 @@ const changelogFunctions = {
 		}
 		if (dependenciesUpdated.length === 0) return "";
 
-		const changesetLink = `- Updated dependencies [${(
+		const commitLinks = (
 			await Promise.all(
 				changesets.map(async (cs) => {
-					if (cs.commit) {
+					if (cs.commit && isValidCommitHash(cs.commit) && isValidRepoSlug(options.repo)) {
 						const { links } = await getInfo({
 							repo: options.repo,
 							commit: cs.commit
@@ -39,7 +69,9 @@ const changelogFunctions = {
 			)
 		)
 			.filter(Boolean)
-			.join(", ")}]:`;
+			.join(", ");
+
+		const changesetLink = "- Updated dependencies [" + commitLinks + "]:";
 
 		const updatedDependenciesList = dependenciesUpdated.map(
 			(dependency) => `  - ${dependency.name}@${dependency.newVersion}`
@@ -88,7 +120,7 @@ const changelogFunctions = {
 					repo: options.repo,
 					pull: prFromSummary
 				});
-				if (commitFromSummary) {
+				if (commitFromSummary && isValidCommitHash(commitFromSummary) && isValidRepoSlug(options.repo)) {
 					const shortCommitId = commitFromSummary.slice(0, 7);
 					links = {
 						...links,
@@ -97,8 +129,10 @@ const changelogFunctions = {
 				}
 				return links;
 			}
-			const commitToFetchFrom = commitFromSummary || changeset.commit;
-			if (commitToFetchFrom) {
+			const commitToFetchFrom =
+				(commitFromSummary && isValidCommitHash(commitFromSummary) ? commitFromSummary : null) ||
+				(changeset.commit && isValidCommitHash(changeset.commit) ? changeset.commit : null);
+			if (commitToFetchFrom && isValidRepoSlug(options.repo)) {
 				const { links } = await getInfo({
 					repo: options.repo,
 					commit: commitToFetchFrom
@@ -114,6 +148,7 @@ const changelogFunctions = {
 
 		const users = usersFromSummary.length
 			? usersFromSummary
+					.filter(isValidUsername)
 					.map(
 						(userFromSummary) =>
 							`[@${userFromSummary}](${GITHUB_SERVER_URL}/${userFromSummary})`
