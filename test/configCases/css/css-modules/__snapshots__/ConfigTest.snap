@@ -2737,8 +2737,8 @@ p:not(#my-app-style_module_css-main-paragraph) {
 }
 
 .my-app-style_module_css-importantAnimation {
-	animation: none !my-app-style_module_css-important;
-	animation-name: none !my-app-style_module_css-important;
+	animation: none !important;
+	animation-name: none !important;
 	color: red !important;
 }
 
@@ -10958,8 +10958,8 @@ p:not(#dBVRDQ) {
 }
 
 .fR4zhQ {
-	animation: none !nCG28w;
-	animation-name: none !nCG28w;
+	animation: none !important;
+	animation-name: none !important;
 	color: red !important;
 }
 
