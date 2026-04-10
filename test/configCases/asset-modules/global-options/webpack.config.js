@@ -1,7 +1,7 @@
 "use strict";
 
-const mimeTypes = require("mime-types");
 const svgToMiniDataURI = require("mini-svg-data-uri");
+const mimeTypes = require("../../../../lib/util/mimeTypes");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
