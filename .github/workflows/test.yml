@@ -84,6 +84,8 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - run: yarn fix:special
+
       - name: Collect types coverage
         run: yarn types:cover:report
 
@@ -130,6 +132,8 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - run: yarn fix:special
+
       - run: yarn test:basic --ci
 
   unit:
@@ -148,6 +152,8 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
+
+      - run: yarn fix:special
 
       - name: Cache jest result
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
@@ -184,6 +190,8 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
+
+      - run: yarn fix:special
 
       - name: Cache jest result
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
@@ -287,6 +295,8 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
+
+      - run: yarn fix:special
 
       - name: Cache jest result
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
