@@ -347,7 +347,7 @@ declare interface Asset {
 declare abstract class AssetBytesGenerator extends Generator {
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -377,11 +377,11 @@ declare abstract class AssetGenerator extends Generator {
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	outputPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 	emit?: boolean;
-	getMimeType(module: NormalModule): string;
-	generateDataUri(module: NormalModule): string;
+	getMimeType(module: NormalModule<ParserClass>): string;
+	generateDataUri(module: NormalModule<ParserClass>): string;
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -490,7 +490,7 @@ declare interface AssetResourceGeneratorOptions {
 declare abstract class AssetSourceGenerator extends Generator {
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -1091,7 +1091,7 @@ declare abstract class ByTypeGenerator extends Generator {
 	map: { [index: string]: undefined | Generator };
 	generateError?: (
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	) => null | Source;
 }
@@ -2479,7 +2479,9 @@ declare class Compilation {
 		/**
 		 * @deprecated
 		 */
-		get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]>;
+		get normalModuleLoader(): SyncHook<
+			[AnyLoaderContext, NormalModule<ParserClass>]
+		>;
 	}>;
 	name?: string;
 	startTime?: number;
@@ -3838,21 +3840,21 @@ declare interface CssData {
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
 	sourceDependency(
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		dependency: Dependency,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext & { cssData: CssData }
 	): void;
 	sourceModule(
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext & { cssData: CssData }
 	): void;
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -3914,7 +3916,12 @@ declare interface CssLoadingRuntimeModulePluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
 }
-declare abstract class CssModule extends NormalModule {
+declare abstract class CssModule extends NormalModule<
+	CssParser,
+	CssParserOptions | CssModuleParserOptions,
+	CssGenerator,
+	CssGeneratorOptions | CssModuleGeneratorOptions
+> {
 	cssLayer: CssLayer;
 	supports: Supports;
 	media: Media;
@@ -4165,7 +4172,7 @@ declare class DefinePlugin {
 	static getCompilationHooks(compilation: Compilation): DefinePluginHooks;
 	static runtimeValue(
 		fn: (value: {
-			module: NormalModule;
+			module: NormalModule<ParserClass>;
 			key: string;
 			readonly version: ValueCacheVersion;
 		}) => CodeValuePrimitive,
@@ -6416,11 +6423,14 @@ declare interface GeneratedSourceInfo {
 }
 declare class Generator {
 	constructor();
-	getTypes(module: NormalModule): ReadonlySet<string>;
-	getSize(module: NormalModule, type?: string): number;
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	getTypes(module: NormalModule<ParserClass>): ReadonlySet<string>;
+	getSize(module: NormalModule<ParserClass>, type?: string): number;
+	generate(
+		module: NormalModule<ParserClass>,
+		__1: GenerateContext
+	): null | Source;
 	getConcatenationBailoutReason(
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
@@ -7229,7 +7239,7 @@ declare abstract class JavascriptGenerator extends Generator {
 	): void;
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -8959,7 +8969,7 @@ declare abstract class JsonGenerator extends Generator {
 	options: JsonGeneratorOptions;
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: NormalModule<ParserClass>,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -11759,6 +11769,16 @@ declare interface ModuleSettings {
 	type?: string;
 
 	/**
+	 * Options for the resolver.
+	 */
+	resolve?: ResolveOptions;
+
+	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+
+	/**
 	 * Options for parsing.
 	 */
 	parser?: { [index: string]: any };
@@ -11767,16 +11787,6 @@ declare interface ModuleSettings {
 	 * The options for the module generator.
 	 */
 	generator?: { [index: string]: any };
-
-	/**
-	 * Enable/Disable extracting source map.
-	 */
-	extractSourceMap?: boolean;
-
-	/**
-	 * Options for the resolver.
-	 */
-	resolve?: ResolveOptions;
 
 	/**
 	 * Flags a module as with or without side effects.
@@ -12080,16 +12090,21 @@ declare interface NodeTemplatePluginOptions {
 	asyncChunkLoading?: boolean;
 }
 type NonNullable<T> = T & {};
-declare class NormalModule extends Module {
-	constructor(__0: NormalModuleCreateData);
+declare class NormalModule<
+	P extends ParserClass = ParserClass,
+	PO extends ParserOptions = ParserOptions,
+	G extends Generator = Generator,
+	GO extends GeneratorOptions = GeneratorOptions
+> extends Module {
+	constructor(__0: NormalModuleCreateDataNormalModuleObject_1<P, PO, G, GO>);
 	request: string;
 	userRequest: string;
 	rawRequest: string;
 	binary: boolean;
-	parser?: ParserClass;
-	parserOptions?: ParserOptions;
-	generator?: Generator;
-	generatorOptions?: GeneratorOptions;
+	parser?: P;
+	parserOptions?: PO;
+	generator?: G;
+	generatorOptions?: GO;
 	resource: string;
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
 	matchResource?: string;
@@ -12139,7 +12154,9 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(
+		context: ObjectDeserializerContext
+	): NormalModule<ParserClass>;
 
 	/**
 	 * In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
@@ -12148,13 +12165,18 @@ declare class NormalModule extends Module {
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
-	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
-	beforeParse: SyncHook<[NormalModule]>;
-	beforeSnapshot: SyncHook<[NormalModule]>;
+	loader: SyncHook<[AnyLoaderContext, NormalModule<ParserClass>]>;
+	beforeLoaders: SyncHook<
+		[LoaderItem[], NormalModule<ParserClass>, AnyLoaderContext]
+	>;
+	beforeParse: SyncHook<[NormalModule<ParserClass>]>;
+	beforeSnapshot: SyncHook<[NormalModule<ParserClass>]>;
 	readResourceForScheme: HookMap<
 		FakeHook<
-			AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+			AsyncSeriesBailHook<
+				[string, NormalModule<ParserClass>],
+				null | string | Buffer
+			>
 		>
 	>;
 	readResource: HookMap<
@@ -12167,7 +12189,7 @@ declare interface NormalModuleCompilationHooks {
 				undefined | string | RawSourceMap,
 				undefined | PreparsedAst
 			],
-			NormalModule
+			NormalModule<ParserClass>
 		],
 		[
 			string | Buffer,
@@ -12175,9 +12197,17 @@ declare interface NormalModuleCompilationHooks {
 			undefined | PreparsedAst
 		]
 	>;
-	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
+	needBuild: AsyncSeriesBailHook<
+		[NormalModule<ParserClass>, NeedBuildContext],
+		boolean
+	>;
 }
-declare interface NormalModuleCreateData {
+declare interface NormalModuleCreateDataNormalModuleObject_1<
+	P extends ParserClass = ParserClass,
+	PO extends ParserOptions = ParserOptions,
+	G extends Generator = Generator,
+	GO extends GeneratorOptions = GeneratorOptions
+> {
 	/**
 	 * an optional layer in which the module is
 	 */
@@ -12231,22 +12261,22 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the parser used
 	 */
-	parser: ParserClass;
+	parser: P;
 
 	/**
 	 * the options of the parser used
 	 */
-	parserOptions?: ParserOptions;
+	parserOptions?: PO;
 
 	/**
 	 * the generator used
 	 */
-	generator: Generator;
+	generator: G;
 
 	/**
 	 * the options of the generator used
 	 */
-	generatorOptions?: GeneratorOptions;
+	generatorOptions?: GO;
 
 	/**
 	 * options used for resolving requests from this module
@@ -12272,7 +12302,73 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<
 			[
-				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
+				Partial<{
+					/**
+					 * an optional layer in which the module is
+					 */
+					layer?: string;
+					/**
+					 * module type. When deserializing, this is set to an empty string "".
+					 */
+					type: string;
+					/**
+					 * request string
+					 */
+					request: string;
+					/**
+					 * request intended by user (without loaders from config)
+					 */
+					userRequest: string;
+					/**
+					 * request without resolving
+					 */
+					rawRequest: string;
+					/**
+					 * list of loaders
+					 */
+					loaders: LoaderItem[];
+					/**
+					 * path + query of the real resource
+					 */
+					resource: string;
+					/**
+					 * resource resolve data
+					 */
+					resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+					/**
+					 * context directory for resolving
+					 */
+					context: string;
+					/**
+					 * path + query of the matched resource (virtual)
+					 */
+					matchResource?: string;
+					/**
+					 * the parser used
+					 */
+					parser: ParserClass;
+					/**
+					 * the options of the parser used
+					 */
+					parserOptions?: ParserOptions;
+					/**
+					 * the generator used
+					 */
+					generator: Generator;
+					/**
+					 * the options of the generator used
+					 */
+					generatorOptions?: GeneratorOptions;
+					/**
+					 * options used for resolving requests from this module
+					 */
+					resolveOptions?: ResolveOptions;
+					/**
+					 * enable/disable extracting source map
+					 */
+					extractSourceMap: boolean;
+					settings: ModuleSettings;
+				}>,
 				ResolveData
 			],
 			void | Module
@@ -12280,7 +12376,73 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		module: SyncWaterfallHook<
 			[
 				Module,
-				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
+				Partial<{
+					/**
+					 * an optional layer in which the module is
+					 */
+					layer?: string;
+					/**
+					 * module type. When deserializing, this is set to an empty string "".
+					 */
+					type: string;
+					/**
+					 * request string
+					 */
+					request: string;
+					/**
+					 * request intended by user (without loaders from config)
+					 */
+					userRequest: string;
+					/**
+					 * request without resolving
+					 */
+					rawRequest: string;
+					/**
+					 * list of loaders
+					 */
+					loaders: LoaderItem[];
+					/**
+					 * path + query of the real resource
+					 */
+					resource: string;
+					/**
+					 * resource resolve data
+					 */
+					resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+					/**
+					 * context directory for resolving
+					 */
+					context: string;
+					/**
+					 * path + query of the matched resource (virtual)
+					 */
+					matchResource?: string;
+					/**
+					 * the parser used
+					 */
+					parser: ParserClass;
+					/**
+					 * the options of the parser used
+					 */
+					parserOptions?: ParserOptions;
+					/**
+					 * the generator used
+					 */
+					generator: Generator;
+					/**
+					 * the options of the generator used
+					 */
+					generatorOptions?: GeneratorOptions;
+					/**
+					 * options used for resolving requests from this module
+					 */
+					resolveOptions?: ResolveOptions;
+					/**
+					 * enable/disable extracting source map
+					 */
+					extractSourceMap: boolean;
+					settings: ModuleSettings;
+				}>,
 				ResolveData
 			],
 			Module
@@ -12507,7 +12669,73 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		createModuleClass: HookMap<
 			SyncBailHook<
 				[
-					Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
+					Partial<{
+						/**
+						 * an optional layer in which the module is
+						 */
+						layer?: string;
+						/**
+						 * module type. When deserializing, this is set to an empty string "".
+						 */
+						type: string;
+						/**
+						 * request string
+						 */
+						request: string;
+						/**
+						 * request intended by user (without loaders from config)
+						 */
+						userRequest: string;
+						/**
+						 * request without resolving
+						 */
+						rawRequest: string;
+						/**
+						 * list of loaders
+						 */
+						loaders: LoaderItem[];
+						/**
+						 * path + query of the real resource
+						 */
+						resource: string;
+						/**
+						 * resource resolve data
+						 */
+						resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+						/**
+						 * context directory for resolving
+						 */
+						context: string;
+						/**
+						 * path + query of the matched resource (virtual)
+						 */
+						matchResource?: string;
+						/**
+						 * the parser used
+						 */
+						parser: ParserClass;
+						/**
+						 * the options of the parser used
+						 */
+						parserOptions?: ParserOptions;
+						/**
+						 * the generator used
+						 */
+						generator: Generator;
+						/**
+						 * the options of the generator used
+						 */
+						generatorOptions?: GeneratorOptions;
+						/**
+						 * options used for resolving requests from this module
+						 */
+						resolveOptions?: ResolveOptions;
+						/**
+						 * enable/disable extracting source map
+						 */
+						extractSourceMap: boolean;
+						settings: ModuleSettings;
+					}>,
 					ResolveData
 				],
 				void | Module
@@ -12541,10 +12769,22 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext: ResolveContext,
 		callback: CallbackWebpackFunction_1<LoaderItem[]>
 	): void;
-	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
-	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
-	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
-	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	getParser<P extends ParserClass = ParserClass>(
+		type: string,
+		parserOptions?: ParserOptions
+	): P;
+	createParser<P extends ParserClass = ParserClass>(
+		type: string,
+		parserOptions?: ParserOptions
+	): P;
+	getGenerator<G extends Generator = Generator>(
+		type: string,
+		generatorOptions?: GeneratorOptions
+	): G;
+	createGenerator<G extends Generator = Generator>(
+		type: string,
+		generatorOptions?: GeneratorOptions
+	): G;
 	getResolver(
 		type: string,
 		resolveOptions?: ResolveOptionsWithDependencyType
@@ -12603,7 +12843,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	hashDigest: string;
 	hashDigestLength: number;
 	hashSalt?: string;
-	_module?: NormalModule;
+	_module?: NormalModule<ParserClass>;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
 }
@@ -14283,8 +14523,8 @@ declare interface ParserOptionsByModuleTypeUnknown {
 type ParserState = ParserStateBase & Record<string, any>;
 declare interface ParserStateBase {
 	source: string | Buffer;
-	current: NormalModule;
-	module: NormalModule;
+	current: NormalModule<ParserClass>;
+	module: NormalModule<ParserClass>;
 	compilation: Compilation;
 	options: WebpackOptionsNormalizedWithDefaults;
 }
@@ -15656,7 +15896,73 @@ declare interface ResolveData {
 	attributes?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
-	createData: Partial<NormalModuleCreateData & { settings: ModuleSettings }>;
+	createData: Partial<{
+		/**
+		 * an optional layer in which the module is
+		 */
+		layer?: string;
+		/**
+		 * module type. When deserializing, this is set to an empty string "".
+		 */
+		type: string;
+		/**
+		 * request string
+		 */
+		request: string;
+		/**
+		 * request intended by user (without loaders from config)
+		 */
+		userRequest: string;
+		/**
+		 * request without resolving
+		 */
+		rawRequest: string;
+		/**
+		 * list of loaders
+		 */
+		loaders: LoaderItem[];
+		/**
+		 * path + query of the real resource
+		 */
+		resource: string;
+		/**
+		 * resource resolve data
+		 */
+		resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+		/**
+		 * context directory for resolving
+		 */
+		context: string;
+		/**
+		 * path + query of the matched resource (virtual)
+		 */
+		matchResource?: string;
+		/**
+		 * the parser used
+		 */
+		parser: ParserClass;
+		/**
+		 * the options of the parser used
+		 */
+		parserOptions?: ParserOptions;
+		/**
+		 * the generator used
+		 */
+		generator: Generator;
+		/**
+		 * the options of the generator used
+		 */
+		generatorOptions?: GeneratorOptions;
+		/**
+		 * options used for resolving requests from this module
+		 */
+		resolveOptions?: ResolveOptions;
+		/**
+		 * enable/disable extracting source map
+		 */
+		extractSourceMap: boolean;
+		settings: ModuleSettings;
+	}>;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
@@ -17293,7 +17599,7 @@ declare abstract class RuntimeTemplate {
 }
 declare abstract class RuntimeValue {
 	fn: (value: {
-		module: NormalModule;
+		module: NormalModule<ParserClass>;
 		key: string;
 		readonly version: ValueCacheVersion;
 	}) => CodeValuePrimitive;
@@ -18985,7 +19291,7 @@ declare interface UpdateHashContextGenerator {
 	/**
 	 * the module
 	 */
-	module: NormalModule;
+	module: NormalModule<ParserClass>;
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 	runtimeTemplate?: RuntimeTemplate;
