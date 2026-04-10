@@ -1574,7 +1574,7 @@ declare class Chunk {
 	get entryModule(): Module;
 
 	/**
-	 * Checks whether this chunk has entry module.
+	 * Checks whether this chunk has an entry module.
 	 * @deprecated
 	 */
 	hasEntryModule(): boolean;
@@ -1592,7 +1592,7 @@ declare class Chunk {
 	removeModule(module: Module): void;
 
 	/**
-	 * Gets number of modules.
+	 * Gets the number of modules in this chunk.
 	 * @deprecated
 	 */
 	getNumberOfModules(): number;
@@ -1603,13 +1603,13 @@ declare class Chunk {
 	get modulesIterable(): Iterable<Module>;
 
 	/**
-	 * Compares the provided values and returns their ordering.
+	 * Compares this chunk with another chunk.
 	 * @deprecated
 	 */
 	compareTo(otherChunk: Chunk): 0 | 1 | -1;
 
 	/**
-	 * Returns true, if the chunk contains the module.
+	 * Checks whether this chunk contains the module.
 	 * @deprecated
 	 */
 	containsModule(module: Module): boolean;
@@ -1621,25 +1621,25 @@ declare class Chunk {
 	getModules(): Module[];
 
 	/**
-	 * Describes how this remove operation behaves.
+	 * Removes this chunk from the chunk graph and chunk groups.
 	 * @deprecated
 	 */
 	remove(): void;
 
 	/**
-	 * Processes the provided module.
+	 * Moves a module from this chunk to another chunk.
 	 * @deprecated
 	 */
 	moveModule(module: Module, otherChunk: Chunk): void;
 
 	/**
-	 * Returns true, if the specified chunk has been integrated.
+	 * Integrates another chunk into this chunk when possible.
 	 * @deprecated
 	 */
 	integrate(otherChunk: Chunk): boolean;
 
 	/**
-	 * Checks whether it can be integrated.
+	 * Checks whether this chunk can be integrated with another chunk.
 	 * @deprecated
 	 */
 	canBeIntegrated(otherChunk: Chunk): boolean;
@@ -1651,7 +1651,7 @@ declare class Chunk {
 	isEmpty(): boolean;
 
 	/**
-	 * Returns total size of all modules in this chunk.
+	 * Returns the total size of all modules in this chunk.
 	 * @deprecated
 	 */
 	modulesSize(): number;
@@ -1663,7 +1663,7 @@ declare class Chunk {
 	size(options?: ChunkSizeOptions): number;
 
 	/**
-	 * Returns total size of the chunk or false if the chunk can't be integrated.
+	 * Returns the integrated size with another chunk.
 	 * @deprecated
 	 */
 	integratedSize(otherChunk: Chunk, options: ChunkSizeOptions): number;
@@ -1675,7 +1675,7 @@ declare class Chunk {
 	getChunkModuleMaps(filterFn: (m: Module) => boolean): ChunkModuleMaps;
 
 	/**
-	 * Checks whether this chunk contains the filter fn.
+	 * Checks whether this chunk contains a matching module in the graph.
 	 * @deprecated
 	 */
 	hasModuleInGraph(
@@ -3641,9 +3641,9 @@ declare class Compilation {
 	assignDepth(module: Module): void;
 
 	/**
-	 * Processes the provided module.
+	 * Assigns depth values to the provided modules.
 	 */
-	assignDepths(modules: Set<Module>): void;
+	assignDepths(modules: Module[] | Set<Module>): void;
 
 	/**
 	 * Gets dependency referenced exports.
@@ -13661,7 +13661,7 @@ declare class Module extends DependenciesBlock {
 
 	/**
 	 * Returns the module id assigned by the chunk graph.
-	 * Updates id using the provided value.
+	 * Updates the module id using the provided value.
 	 * @deprecated
 	 * @deprecated
 	 */
@@ -13674,7 +13674,7 @@ declare class Module extends DependenciesBlock {
 	get hash(): string;
 
 	/**
-	 * Gets rendered hash.
+	 * Returns the rendered hash of the module.
 	 * @deprecated
 	 */
 	get renderedHash(): string;
@@ -13686,16 +13686,16 @@ declare class Module extends DependenciesBlock {
 	profile?: ModuleProfile;
 
 	/**
-	 * Returns the pre order index.
-	 * Updates index using the provided value.
+	 * Returns the pre-order index.
+	 * Updates the pre-order index using the provided value.
 	 * @deprecated
 	 * @deprecated
 	 */
 	index: null | number;
 
 	/**
-	 * Returns the post order index.
-	 * Updates index2 using the provided value.
+	 * Returns the post-order index.
+	 * Updates the post-order index using the provided value.
 	 * @deprecated
 	 * @deprecated
 	 */
@@ -13703,15 +13703,15 @@ declare class Module extends DependenciesBlock {
 
 	/**
 	 * Returns the depth.
-	 * Updates depth using the provided value.
+	 * Updates the depth using the provided value.
 	 * @deprecated
 	 * @deprecated
 	 */
 	depth: null | number;
 
 	/**
-	 * Returns issuer.
-	 * Updates issuer using the provided value.
+	 * Returns the issuer.
+	 * Updates the issuer using the provided value.
 	 * @deprecated
 	 * @deprecated
 	 */
@@ -13749,7 +13749,7 @@ declare class Module extends DependenciesBlock {
 	removeChunk(chunk: Chunk): void;
 
 	/**
-	 * Checks whether this module is in chunk.
+	 * Checks whether this module is in the provided chunk.
 	 * @deprecated
 	 */
 	isInChunk(chunk: Chunk): boolean;
@@ -13775,7 +13775,7 @@ declare class Module extends DependenciesBlock {
 	get chunksIterable(): Iterable<Chunk>;
 
 	/**
-	 * Checks whether this module is provided.
+	 * Checks whether this module provides the specified export.
 	 * @deprecated
 	 */
 	isProvided(exportName: string): null | boolean;
