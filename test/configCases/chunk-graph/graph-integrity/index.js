@@ -1,3 +1,3 @@
 it("should compile", () => {
-    expect(true).toBe(true);
+	expect(true).toBe(true);
 });
