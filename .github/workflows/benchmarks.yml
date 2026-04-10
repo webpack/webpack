@@ -41,7 +41,9 @@ jobs:
 
       - run: yarn link --frozen-lockfile || true
 
-      - run: yarn link webpack --frozen-lockfile
+      - run: yarn link webpack --frozen-
+
+      - run: yarn fix:special
 
       - name: Check Memory Status
         run: >
@@ -82,6 +84,8 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
+
+      - run: yarn fix:special
 
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@db35df748deb45fdef0960669f57d627c1956c30 # v4.13.1

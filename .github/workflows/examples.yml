@@ -30,6 +30,8 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - run: yarn fix:special
+
       - run: yarn build:examples
 
       - name: Create Pull Request
