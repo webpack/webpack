@@ -3854,7 +3854,7 @@ declare abstract class CssGenerator extends Generator {
 		error: Error,
 		module: NormalModule,
 		generateContext: GenerateContext
-	): null | Source;
+	): GenerateResult;
 }
 
 /**
@@ -6398,6 +6398,7 @@ declare interface GenerateContext {
 	 */
 	getData?: () => CodeGenerationResultData;
 }
+type GenerateResult = null | Source | Promise<null | Source>;
 declare interface GeneratedSourceInfo {
 	/**
 	 * generated line
@@ -6418,7 +6419,7 @@ declare class Generator {
 	constructor();
 	getTypes(module: NormalModule): ReadonlySet<string>;
 	getSize(module: NormalModule, type?: string): number;
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	generate(module: NormalModule, __1: GenerateContext): GenerateResult;
 	getConcatenationBailoutReason(
 		module: NormalModule,
 		context: ConcatenationBailoutReasonContext
@@ -10947,7 +10948,9 @@ declare class Module extends DependenciesBlock {
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
-	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
+	codeGeneration(
+		context: CodeGenerationContext
+	): CodeGenerationResult | Promise<CodeGenerationResult>;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
 	hasChunkCondition(): boolean;
 
