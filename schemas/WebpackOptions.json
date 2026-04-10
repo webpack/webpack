@@ -1048,16 +1048,17 @@
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
-      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "backCompat": {
           "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "buildHttp": {
           "description": "Build http(s): urls using a lockfile and resource content cache.",
@@ -1068,23 +1069,28 @@
             {
               "$ref": "#/definitions/HttpUriOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
@@ -1095,66 +1101,40 @@
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        }
-      }
-    },
-    "ExperimentsCommon": {
-      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
-        },
-        "backCompat": {
-          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
-        },
-        "cacheUnaffected": {
-          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
-        },
-        "futureDefaults": {
-          "description": "Apply defaults of next major version.",
-          "type": "boolean"
-        },
-        "outputModule": {
-          "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
-        },
-        "syncWebAssembly": {
-          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         }
       }
     },
     "ExperimentsNormalized": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
-      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "backCompat": {
           "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "buildHttp": {
           "description": "Build http(s): urls using a lockfile and resource content cache.",
@@ -1162,23 +1142,28 @@
             {
               "$ref": "#/definitions/HttpUriOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
@@ -1189,19 +1174,23 @@
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         }
       }
     },

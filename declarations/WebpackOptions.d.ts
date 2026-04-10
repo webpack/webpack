@@ -178,9 +178,17 @@ export type WasmLoadingType = ("fetch" | "async-node") | string;
  */
 export type EntryUnnamed = EntryItem;
 /**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ * List of allowed URIs for building http resources.
  */
-export type Experiments = ExperimentsCommon & ExperimentsExtra;
+export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
+/**
+ * List of allowed URIs (resp. the beginning of them).
+ */
+export type HttpUriOptionsAllowedUris = (
+	| RegExp
+	| string
+	| import("../lib/schemes/HttpUriPlugin").AllowedUriFn
+)[];
 /**
  * Extend configuration from another configuration (only works when using webpack-cli).
  */
@@ -842,11 +850,6 @@ export type EntryDynamicNormalized =
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 /**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-export type ExperimentsNormalized = ExperimentsCommon &
-	ExperimentsNormalizedExtra;
-/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
@@ -856,18 +859,6 @@ export type ExternalItemValue =
 	| {
 			[k: string]: any;
 	  };
-/**
- * List of allowed URIs for building http resources.
- */
-export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
-/**
- * List of allowed URIs (resp. the beginning of them).
- */
-export type HttpUriOptionsAllowedUris = (
-	| RegExp
-	| string
-	| import("../lib/schemes/HttpUriPlugin").AllowedUriFn
-)[];
 /**
  * Ignore specific warnings.
  */
@@ -1297,6 +1288,146 @@ export interface LibraryCustomUmdObject {
 	 * Name of the property exposed globally by a UMD library.
 	 */
 	root?: string[] | string;
+}
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export interface Experiments {
+	/**
+	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * @experimental
+	 */
+	asyncWebAssembly?: boolean;
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @experimental
+	 */
+	backCompat?: boolean;
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
+	 */
+	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
+	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @experimental
+	 */
+	cacheUnaffected?: boolean;
+	/**
+	 * Enable css support.
+	 * @experimental
+	 */
+	css?: boolean;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
+	 */
+	deferImport?: boolean;
+	/**
+	 * Apply defaults of next major version.
+	 * @experimental
+	 */
+	futureDefaults?: boolean;
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
+	 */
+	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Allow output javascript files as module source type.
+	 * @experimental
+	 */
+	outputModule?: boolean;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @experimental
+	 */
+	sourceImport?: boolean;
+	/**
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @experimental
+	 */
+	syncWebAssembly?: boolean;
+	[k: string]: any;
+}
+/**
+ * Options for building http resources.
+ */
+export interface HttpUriOptions {
+	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
+	allowedUris: HttpUriOptionsAllowedUris;
+	/**
+	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+	 */
+	cacheLocation?: false | string;
+	/**
+	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
+	 */
+	frozen?: boolean;
+	/**
+	 * Location of the lockfile.
+	 */
+	lockfileLocation?: string;
+	/**
+	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
+	 */
+	proxy?: string;
+	/**
+	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+	 */
+	upgrade?: boolean;
+}
+/**
+ * Options for compiling entrypoints and import()s only when they are accessed.
+ */
+export interface LazyCompilationOptions {
+	/**
+	 * Specifies the backend that should be used for handling client keep alive.
+	 */
+	backend?:
+		| import("../lib/hmr/LazyCompilationPlugin").BackEnd
+		| LazyCompilationDefaultBackendOptions;
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin").TestFn;
+}
+/**
+ * Options for the default backend.
+ */
+export interface LazyCompilationDefaultBackendOptions {
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+	/**
+	 * Specifies where to listen to from the server.
+	 */
+	listen?:
+		| number
+		| import("net").ListenOptions
+		| import("../lib/hmr/lazyCompilationBackend").Listen;
+	/**
+	 * Specifies the protocol the client should use to connect to the server.
+	 */
+	protocol?: "http" | "https";
+	/**
+	 * Specifies how to create the server handling the EventSource requests.
+	 */
+	server?:
+		| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
+		| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
+		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
 }
 /**
  * Enable presets of externals for specific targets.
@@ -3215,60 +3346,62 @@ export interface EntryStaticNormalized {
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
-export interface ExperimentsCommon {
+export interface ExperimentsNormalized {
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * @experimental
 	 */
 	asyncWebAssembly?: boolean;
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @experimental
 	 */
 	backCompat?: boolean;
 	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
+	 */
+	buildHttp?: HttpUriOptions;
+	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 	/**
+	 * Enable css support.
+	 * @experimental
+	 */
+	css?: boolean;
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
+	 */
+	deferImport?: boolean;
+	/**
 	 * Apply defaults of next major version.
+	 * @experimental
 	 */
 	futureDefaults?: boolean;
 	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
+	 */
+	lazyCompilation?: false | LazyCompilationOptions;
+	/**
 	 * Allow output javascript files as module source type.
+	 * @experimental
 	 */
 	outputModule?: boolean;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @experimental
+	 */
+	sourceImport?: boolean;
+	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
-}
-/**
- * Options for building http resources.
- */
-export interface HttpUriOptions {
-	/**
-	 * List of allowed URIs (resp. the beginning of them).
-	 */
-	allowedUris: HttpUriOptionsAllowedUris;
-	/**
-	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
-	 */
-	cacheLocation?: false | string;
-	/**
-	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
-	 */
-	frozen?: boolean;
-	/**
-	 * Location of the lockfile.
-	 */
-	lockfileLocation?: string;
-	/**
-	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
-	 */
-	proxy?: string;
-	/**
-	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
-	 */
-	upgrade?: boolean;
 }
 /**
  * Parser options for javascript modules.
@@ -3469,56 +3602,6 @@ export interface JsonParserOptions {
 	 * Function to parser content and return JSON.
 	 */
 	parse?: import("../lib/json/JsonParser").ParseFn;
-}
-/**
- * Options for the default backend.
- */
-export interface LazyCompilationDefaultBackendOptions {
-	/**
-	 * A custom client.
-	 */
-	client?: string;
-	/**
-	 * Specifies where to listen to from the server.
-	 */
-	listen?:
-		| number
-		| import("net").ListenOptions
-		| import("../lib/hmr/lazyCompilationBackend").Listen;
-	/**
-	 * Specifies the protocol the client should use to connect to the server.
-	 */
-	protocol?: "http" | "https";
-	/**
-	 * Specifies how to create the server handling the EventSource requests.
-	 */
-	server?:
-		| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
-		| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
-		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
-}
-/**
- * Options for compiling entrypoints and import()s only when they are accessed.
- */
-export interface LazyCompilationOptions {
-	/**
-	 * Specifies the backend that should be used for handling client keep alive.
-	 */
-	backend?:
-		| import("../lib/hmr/LazyCompilationPlugin").BackEnd
-		| LazyCompilationDefaultBackendOptions;
-	/**
-	 * Enable/disable lazy compilation for entries.
-	 */
-	entries?: boolean;
-	/**
-	 * Enable/disable lazy compilation for import() modules.
-	 */
-	imports?: boolean;
-	/**
-	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-	 */
-	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin").TestFn;
 }
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
@@ -4011,57 +4094,6 @@ export interface WebpackOptionsNormalized {
 	 * Options for the watcher.
 	 */
 	watchOptions: WatchOptions;
-}
-/**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-export interface ExperimentsExtra {
-	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
-	 */
-	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
-	/**
-	 * Enable css support.
-	 */
-	css?: boolean;
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
-	 */
-	deferImport?: boolean;
-	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?: boolean | LazyCompilationOptions;
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
-	 */
-	sourceImport?: boolean;
-	[k: string]: any;
-}
-/**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-export interface ExperimentsNormalizedExtra {
-	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
-	 */
-	buildHttp?: HttpUriOptions;
-	/**
-	 * Enable css support.
-	 */
-	css?: boolean;
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
-	 */
-	deferImport?: boolean;
-	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?: false | LazyCompilationOptions;
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
-	 */
-	sourceImport?: boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
