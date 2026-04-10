@@ -25,7 +25,6 @@ updates:
           - "json-parse-even-better-errors"
           - "strip-ansi"
           - "rimraf"
-          - "mime-types"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
