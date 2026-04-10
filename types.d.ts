@@ -6734,39 +6734,76 @@ declare interface ExecuteOptions {
 }
 declare interface ExistenceOnlyTimeEntryFileSystemInfo {}
 declare interface ExistenceOnlyTimeEntryTypesIndex {}
-type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
-declare interface ExperimentsCommon {
+declare interface Experiments {
+	[index: string]: any;
+
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * @experimental
 	 */
 	asyncWebAssembly?: boolean;
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @experimental
 	 */
 	backCompat?: boolean;
 
 	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
+	 */
+	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
+
+	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 
 	/**
+	 * Enable css support.
+	 * @experimental
+	 */
+	css?: boolean;
+
+	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
+	 */
+	deferImport?: boolean;
+
+	/**
 	 * Apply defaults of next major version.
+	 * @experimental
 	 */
 	futureDefaults?: boolean;
 
 	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
+	 */
+	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
 	 * Allow output javascript files as module source type.
+	 * @experimental
 	 */
 	outputModule?: boolean;
 
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @experimental
+	 */
+	sourceImport?: boolean;
+
+	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 }
@@ -6774,64 +6811,72 @@ declare interface ExperimentsCommon {
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
-declare interface ExperimentsExtra {
-	[index: string]: any;
+declare interface ExperimentsNormalized {
+	/**
+	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * @experimental
+	 */
+	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @experimental
+	 */
+	backCompat?: boolean;
 
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
-	 */
-	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
-
-	/**
-	 * Enable css support.
-	 */
-	css?: boolean;
-
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
-	 */
-	deferImport?: boolean;
-
-	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?: boolean | LazyCompilationOptions;
-
-	/**
-	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
-	 */
-	sourceImport?: boolean;
-}
-type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
-
-/**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-declare interface ExperimentsNormalizedExtra {
-	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions;
 
 	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @experimental
+	 */
+	cacheUnaffected?: boolean;
+
+	/**
 	 * Enable css support.
+	 * @experimental
 	 */
 	css?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @experimental
 	 */
 	deferImport?: boolean;
 
 	/**
+	 * Apply defaults of next major version.
+	 * @experimental
+	 */
+	futureDefaults?: boolean;
+
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 
 	/**
+	 * Allow output javascript files as module source type.
+	 * @experimental
+	 */
+	outputModule?: boolean;
+
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @experimental
 	 */
 	sourceImport?: boolean;
+
+	/**
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @experimental
+	 */
+	syncWebAssembly?: boolean;
 }
 declare abstract class ExportInfo {
 	name: string;
