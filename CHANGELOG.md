@@ -1,5 +1,15 @@
 # webpack
 
+## 5.106.1
+
+### Patch Changes
+
+- Fix two ES5-environment regressions in the anonymous default export `.name` fix-up: the generated code referenced an undeclared `__WEBPACK_DEFAULT_EXPORT__` binding causing `ReferenceError`, and used `Reflect.defineProperty` which is not available in pre-ES2015 runtimes. The fix-up now references the real assignment target and uses `Object.defineProperty` / `Object.getOwnPropertyDescriptor`. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20796](https://github.com/webpack/webpack/pull/20796))
+
+- Prevent `!important` from being renamed as a local identifier in CSS modules. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20798](https://github.com/webpack/webpack/pull/20798))
+
+- Use compiler context instead of module context for CSS modules local ident hashing to avoid hash collisions when files with the same name exist in different directories. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20799](https://github.com/webpack/webpack/pull/20799))
+
 ## 5.106.0
 
 ### Minor Changes
