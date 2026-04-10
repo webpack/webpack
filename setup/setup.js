@@ -19,6 +19,7 @@ function setup() {
 				if (!(await checkSymlinkExistsAsync())) {
 					throw new Error("windows symlink was not successfully created");
 				}
+				await runFixSpecialAsync();
 			}
 		})
 		.then(() => {
@@ -37,6 +38,13 @@ async function runSetupSymlinkAsync() {
 	await exec("yarn", ["install"], "Install dependencies");
 	await exec("yarn", ["link"], "Create webpack symlink");
 	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
+}
+
+/**
+ * @returns {Promise<void>} result
+ */
+async function runFixSpecialAsync() {
+	await exec("yarn", ["fix:special"], "Generate needed files");
 }
 
 /**

@@ -22,3 +22,9 @@
 .eslintcache
 .cspellcache
 package-lock.json
+
+# `yarn fix:special` generated files
+types.d.ts
+schemas/**.check.*
+declarations/plugins
+declarations/WebpackOptions.d.ts
