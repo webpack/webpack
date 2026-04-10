@@ -2736,6 +2736,12 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
 }
 
+.my-app-style_module_css-importantAnimation {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -5511,6 +5517,12 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
+.importantAnimation {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
+}
+
 
 /*# sourceMappingURL=use-style-global_js.bundle4.css.map*/"
 `;
@@ -8198,6 +8210,12 @@ p:not(#dBVRDQ) {
 
 .wrapper {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
+}
+
+.importantAnimation {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
 }
 
 "
@@ -10939,6 +10957,12 @@ p:not(#dBVRDQ) {
 	grid-template-columns: [_1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end];
 }
 
+.fR4zhQ {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
+}
+
 /*!*********************************!*\\\\
   !*** css ./style.module.my-css ***!
   \\\\*********************************/
@@ -11147,6 +11171,7 @@ Object {
   "id-bar": "my-app-style_module_css-id-bar",
   "id-foo": "my-app-style_module_css-id-foo",
   "ident": "my-app-style_module_css-ident",
+  "importantAnimation": "my-app-style_module_css-importantAnimation",
   "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
   "inSupportScope": "my-app-style_module_css-inSupportScope",
   "infobox": "my-app-style_module_css-infobox",
@@ -13914,6 +13939,12 @@ p:not(#my-app-style_module_css-main-paragraph) {
 
 .my-app-style_module_css-wrapper {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
+}
+
+.my-app-style_module_css-importantAnimation {
+	animation: none !important;
+	animation-name: none !important;
+	color: red !important;
 }
 
 
