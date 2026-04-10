@@ -57,6 +57,9 @@ const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 /** @type {string} */
 let _baseOutputPath;
 
+/** @type {string | undefined} */
+let _callingFile;
+
 const codspeedRunnerMode = getCodspeedRunnerMode();
 
 /**
@@ -192,6 +195,8 @@ function getStackTrace(belowFn) {
 }
 
 function getCallingFile() {
+	if (_callingFile) return _callingFile;
+
 	const stack = getStackTrace();
 	let callingFile = /** @type {string} */ (stack[2].getFileName()); // [here, withCodSpeed, actual caller]
 	const gitDir = getGitDir(callingFile);
@@ -201,9 +206,8 @@ function getCallingFile() {
 	if (callingFile.startsWith("file://")) {
 		callingFile = fileURLToPath(callingFile);
 	}
-	// TODO
-	return "test/BenchmarkTestCases.benchmark.mjs";
-	// return path.relative(gitDir, callingFile);
+
+	return path.relative(gitDir, callingFile);
 }
 
 /** @typedef {{ uri: string, fn: Fn, options: FnOptions | undefined }} TaskMeta */
@@ -857,12 +861,14 @@ async function addWatchBench({
  * @param {import("../../BenchmarkTestCases.benchmark.mjs").BenchmarkTask} options.task benchmark task
  * @param {string} options.casesPath cases path
  * @param {string} options.baseOutputPath base output path
+ * @param {string=} options.callingFile calling file path relative to git root
  * @returns {Promise<BenchmarkResult>} benchmark result
  */
-export async function run({ task, casesPath, baseOutputPath }) {
+export async function run({ task, casesPath, baseOutputPath, callingFile }) {
 	console.log(`Worker ${process.pid}: Running ${task.id}`);
 
 	_baseOutputPath = baseOutputPath;
+	_callingFile = callingFile;
 
 	const { benchmark, scenario, baselines } = task;
 	const testDirectory = path.join(casesPath, benchmark);

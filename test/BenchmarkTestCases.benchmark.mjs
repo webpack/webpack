@@ -44,6 +44,7 @@ import { simpleGit } from "simple-git";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
+const callingFile = path.relative(rootPath, fileURLToPath(import.meta.url));
 
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 
@@ -570,7 +571,8 @@ class BenchmarkRunner {
 				const result = await runBenchmark({
 					task,
 					casesPath: this.casesPath,
-					baseOutputPath: this.baseOutputPath
+					baseOutputPath: this.baseOutputPath,
+					callingFile
 				});
 				benchmarkResults.push(result);
 			} catch (err) {
@@ -615,7 +617,8 @@ class BenchmarkRunner {
 						.run({
 							task,
 							casesPath: this.casesPath,
-							baseOutputPath: this.baseOutputPath
+							baseOutputPath: this.baseOutputPath,
+							callingFile
 						})
 						.catch((err) => {
 							if (err instanceof Error) {
