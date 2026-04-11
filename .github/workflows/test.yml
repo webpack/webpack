@@ -167,6 +167,10 @@ jobs:
 
   test262:
     needs: basic
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -189,8 +193,8 @@ jobs:
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: .jest-cache
-          key: jest-test262-${{ env.GITHUB_SHA }}
-          restore-keys: jest-test262-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          key: jest-test262-${{ matrix.shard }}-${{ env.GITHUB_SHA }}
+          restore-keys: jest-test262-${{ matrix.shard }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -199,6 +203,8 @@ jobs:
           ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
 
       - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
+        env:
+          SHARD: ${{ matrix.shard }}
 
       - name: Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0

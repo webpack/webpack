@@ -1049,10 +1049,49 @@ const testFiles = fs
 	.globSync(`${baseDir}/**/*.js`)
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
+const shard =
+	typeof process.env.SHARD !== "undefined"
+		? process.env.SHARD.split("/").map((item) => Number.parseInt(item, 10))
+		: [1, 1];
+
+if (
+	typeof shard[0] === "undefined" ||
+	typeof shard[1] === "undefined" ||
+	shard[0] > shard[1] ||
+	shard[0] <= 0 ||
+	shard[1] <= 0
+) {
+	throw new Error(
+		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
+	);
+}
+
+/**
+ * @template T
+ * @param {T[]} array an array
+ * @param {number} n number of chunks
+ * @returns {T[][]} splitted to n chunks
+ */
+function splitToNChunks(array, n) {
+	/** @type {T[][]} */
+	const result = [];
+
+	for (let i = n; i > 0; i--) {
+		result.push(
+			/** @type {T[]} */
+			(array.splice(0, Math.ceil(array.length / i)))
+		);
+	}
+
+	return result;
+}
+
+const shardedTestFiles = splitToNChunks([...testFiles], shard[1])[shard[0] - 1];
+
 describe("test262", () => {
 	for (const mode of ["development", "production"]) {
 		describe(mode, () => {
-			for (const testFile of testFiles) {
+			for (const testFile of shardedTestFiles) {
 				const name = path.posix.relative(baseDir, testFile);
 				const outputPath = path.resolve(
 					__dirname,
