@@ -262,6 +262,22 @@ describe("ProgressPlugin", () => {
 		});
 	});
 
+	it("should respect falsy boolean options", () => {
+		const plugin = new webpack.ProgressPlugin({
+			modules: false,
+			dependencies: false,
+			entries: false,
+			activeModules: false,
+			profile: false
+		});
+
+		expect(plugin.showModules).toBe(false);
+		expect(plugin.showDependencies).toBe(false);
+		expect(plugin.showEntries).toBe(false);
+		expect(plugin.showActiveModules).toBe(false);
+		expect(plugin.profile).toBe(false);
+	});
+
 	it("should get the custom handler text from the log", () => {
 		const compiler = createSimpleCompilerWithCustomHandler();
 
