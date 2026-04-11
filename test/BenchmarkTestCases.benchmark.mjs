@@ -658,3 +658,54 @@ class BenchmarkRunner {
 }
 
 await new BenchmarkRunner().run();
+
+function logSystemInfo() {
+	// Process CPU
+	const cpu = process.cpuUsage();
+	console.log("=== CPU ===");
+	console.log("Process CPU (ms):", {
+		user: (cpu.user / 1000).toFixed(1),
+		system: (cpu.system / 1000).toFixed(1)
+	});
+	console.log(
+		"Load average (1/5/15 min):",
+		os.loadavg().map((v) => v.toFixed(2))
+	);
+
+	// Process Memory
+	const mem = process.memoryUsage();
+	console.log("=== Process Memory (MB) ===");
+	console.log({
+		rss: (mem.rss / 1024 / 1024).toFixed(1),
+		heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(1),
+		heapUsed: (mem.heapUsed / 1024 / 1024).toFixed(1),
+		external: (mem.external / 1024 / 1024).toFixed(1),
+		arrayBuffers: (mem.arrayBuffers / 1024 / 1024).toFixed(1)
+	});
+
+	// System Memory
+	const totalMem = os.totalmem();
+	const freeMem = os.freemem();
+	console.log("=== System Memory (MB) ===");
+	console.log({
+		total: (totalMem / 1024 / 1024).toFixed(1),
+		free: (freeMem / 1024 / 1024).toFixed(1),
+		used: ((totalMem - freeMem) / 1024 / 1024).toFixed(1),
+		usagePercent: `${(((totalMem - freeMem) / totalMem) * 100).toFixed(1)}%`
+	});
+
+	// Uptime
+	console.log("Process uptime:", `${process.uptime().toFixed(1)}s`);
+}
+
+process.on("SIGTERM", () => {
+	console.log(">>> Received SIGTERM");
+	logSystemInfo();
+	// eslint-disable-next-line n/no-process-exit
+	process.exit(0);
+});
+
+process.on("exit", (code) => {
+	console.log(">>> Exiting with code:", code);
+	logSystemInfo();
+});
