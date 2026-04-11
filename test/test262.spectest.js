@@ -480,6 +480,11 @@ const compile = async (entry, scenario, options = {}) =>
 				outputModule: scenario === "module",
 				deferImport: true
 			},
+			optimization: {
+				emitOnErrors: true,
+				minimize: false
+			},
+			cache: false,
 			module: {
 				parser: {
 					javascript: {
