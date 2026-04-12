@@ -120,19 +120,19 @@ describe("parseJson", () => {
 		expect(JSON.stringify(parseJson(bom))).toBe(str);
 	});
 
-	it("better errors when faced with \\b and other malarky", () => {
+	it("better errors when faced with repeated BOM bytes and trailing \\b characters", () => {
 		const str = JSON.stringify({
 			foo: 1,
 			bar: {
 				baz: [1, 2, 3, "four"]
 			}
 		});
-		const bombom = Buffer.concat([
+		const doubleBomBuffer = Buffer.concat([
 			Buffer.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf]),
 			Buffer.from(str)
 		]);
 
-		jsonThrows(bombom.toString(), {
+		jsonThrows(doubleBomBuffer.toString(), {
 			message: /Unexpected token "." \(0xFEFF\)/
 		});
 
