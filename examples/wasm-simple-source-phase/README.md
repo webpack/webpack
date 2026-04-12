@@ -122,7 +122,7 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "1c545c3619192bad4309");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "fe9ccbc5cbba7613cdf1");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -191,7 +191,7 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "962ca49bf0c3e7267ccb");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "d798e383c3892e343c60");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -210,7 +210,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "d456c84d5bfd5c5ee966");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "46b45835e448f114dc51");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -234,12 +234,6 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
@@ -248,6 +242,12 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -413,13 +413,13 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 ```
 asset output.js 14.5 KiB [emitted] (name: main)
-asset d456c84d5bfd5c5ee966.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset 962ca49bf0c3e7267ccb.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset 1c545c3619192bad4309.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.58 KiB (javascript) 170 bytes (webassembly) 3.53 KiB (runtime) [entry] [rendered]
+asset 46b45835e448f114dc51.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset d798e383c3892e343c60.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset fe9ccbc5cbba7613cdf1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.53 KiB 6 modules
-  dependent modules 793 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
+  dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -431,13 +431,13 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 3.08 KiB [emitted] [minimized] (name: main)
-asset a2613da14a9ad08ff2d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset 6f2ce3b57f35ec6c80cf.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset 3895b007f753bc25b760.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.58 KiB (javascript) 170 bytes (webassembly) 3.26 KiB (runtime) [entry] [rendered]
+asset 84086aa601e9bc2e6062.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset c25ea682bcc0f49d705c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset 27041c6bb99e67e6993a.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.26 KiB 5 modules
-  dependent modules 793 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
+  dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
     [no exports used]
