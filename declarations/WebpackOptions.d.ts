@@ -3601,7 +3601,7 @@ export interface JsonParserOptions {
 	/**
 	 * Function to parser content and return JSON.
 	 */
-	parse?: import("../lib/util/parseJson").ParseJsonFn;
+	parse?: import("../lib/json/JsonParser").ParseFn;
 }
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).

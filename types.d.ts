@@ -11792,7 +11792,9 @@ declare interface JsonParserOptions {
 	/**
 	 * Function to parser content and return JSON.
 	 */
-	parse?: ParseJsonFn<JsonValueFs>;
+	parse?: (
+		input: string
+	) => null | string | number | boolean | Buffer | JsonObjectFs | JsonValueFs[];
 }
 type JsonValueFs =
 	| null
@@ -17680,9 +17682,6 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 };
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
-}
-declare interface ParseJsonFn<R = JsonValueFs> {
-	(raw: string, reviver?: (this: any, key: string, value?: any) => any): R;
 }
 declare interface ParseOptions {
 	sourceType: "module" | "script";
