@@ -23,7 +23,7 @@ module.exports = {
 							size: () => 0
 						};
 
-						// @ts-expect-error
+						// @ts-expect-error for tests
 						chunkGraph.replaceModule(m, mock);
 
 						if (!chunkGraph.isModuleInChunk(mock, chunk)) {
@@ -34,7 +34,7 @@ module.exports = {
 						}
 
 						// Restore original state for downstream stats
-						// @ts-expect-error
+						// @ts-expect-error for tests
 						chunkGraph.replaceModule(mock, m);
 
 						chunkGraph.disconnectChunkAndModule(chunk, m);
