@@ -2736,10 +2736,26 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end my-app-style_module_css-col-start-col-start] 1fr [my-app-style_module_css-col-end-col-end];
 }
 
-.my-app-style_module_css-importantAnimation {
+.my-app-style_module_css-important {
 	animation: none !important;
+	animation: my-app-style_module_css-my-name !important;
 	animation-name: none !important;
+	animation-name: my-app-style_module_css-my-name !important;
+
 	color: red !important;
+
+	container: my-app-style_module_css-sticky-heading / inline-size !important;
+	container-name: my-app-style_module_css-tall !important;
+
+	grid-column: my-app-style_module_css-col-start-col-start / my-app-style_module_css-col-start-col-start 5 !important;
+	grid-area: my-app-style_module_css-some-grid-area-some-grid-area !important;
+
+	list-style-type: my-app-style_module_css-extend-thumbs !important;
+	list-style: my-app-style_module_css-extend-thumbs !important;
+
+	fallback: my-app-style_module_css-thumbs !important;
+	system: extends my-app-style_module_css-thumbs !important;
+	speak-as: my-app-style_module_css-thumbs !important;
 }
 
 /*!*********************************!*\\\\
@@ -5517,10 +5533,26 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-.importantAnimation {
+.important {
 	animation: none !important;
+	animation: my-name !important;
 	animation-name: none !important;
+	animation-name: my-name !important;
+
 	color: red !important;
+
+	container: sticky-heading / inline-size !important;
+	container-name: tall !important;
+
+	grid-column: col-start / col-start 5 !important;
+	grid-area: some-grid-area !important;
+
+	list-style-type: extend-thumbs !important;
+	list-style: extend-thumbs !important;
+
+	fallback: thumbs !important;
+	system: extends thumbs !important;
+	speak-as: thumbs !important;
 }
 
 
@@ -8212,10 +8244,26 @@ p:not(#dBVRDQ) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-.importantAnimation {
+.important {
 	animation: none !important;
+	animation: my-name !important;
 	animation-name: none !important;
+	animation-name: my-name !important;
+
 	color: red !important;
+
+	container: sticky-heading / inline-size !important;
+	container-name: tall !important;
+
+	grid-column: col-start / col-start 5 !important;
+	grid-area: some-grid-area !important;
+
+	list-style-type: extend-thumbs !important;
+	list-style: extend-thumbs !important;
+
+	fallback: thumbs !important;
+	system: extends thumbs !important;
+	speak-as: thumbs !important;
 }
 
 "
@@ -10957,10 +11005,26 @@ p:not(#dBVRDQ) {
 	grid-template-columns: [_1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end _1Yrglr-col-start] 1fr [UIbRwt-col-end];
 }
 
-.fR4zhQ {
+.nCG28w {
 	animation: none !important;
+	animation: zUPdgb !important;
 	animation-name: none !important;
+	animation-name: zUPdgb !important;
+
 	color: red !important;
+
+	container: _5unArO / inline-size !important;
+	container-name: _16PWt_ !important;
+
+	grid-column: _1Yrglr-col-start / _1Yrglr-col-start 5 !important;
+	grid-area: -UptLF-some-grid-area !important;
+
+	list-style-type: YZsmDI !important;
+	list-style: YZsmDI !important;
+
+	fallback: _0L28GV !important;
+	system: extends _0L28GV !important;
+	speak-as: _0L28GV !important;
 }
 
 /*!*********************************!*\\\\
@@ -11171,7 +11235,7 @@ Object {
   "id-bar": "my-app-style_module_css-id-bar",
   "id-foo": "my-app-style_module_css-id-foo",
   "ident": "my-app-style_module_css-ident",
-  "importantAnimation": "my-app-style_module_css-importantAnimation",
+  "important": "my-app-style_module_css-important",
   "in-local-global-scope": "my-app-style_module_css-in-local-global-scope",
   "inSupportScope": "my-app-style_module_css-inSupportScope",
   "infobox": "my-app-style_module_css-infobox",
@@ -13941,10 +14005,26 @@ p:not(#my-app-style_module_css-main-paragraph) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-.my-app-style_module_css-importantAnimation {
+.my-app-style_module_css-important {
 	animation: none !important;
+	animation: my-name !important;
 	animation-name: none !important;
+	animation-name: my-name !important;
+
 	color: red !important;
+
+	container: sticky-heading / inline-size !important;
+	container-name: tall !important;
+
+	grid-column: col-start / col-start 5 !important;
+	grid-area: some-grid-area !important;
+
+	list-style-type: extend-thumbs !important;
+	list-style: extend-thumbs !important;
+
+	fallback: thumbs !important;
+	system: extends thumbs !important;
+	speak-as: thumbs !important;
 }
 
 
