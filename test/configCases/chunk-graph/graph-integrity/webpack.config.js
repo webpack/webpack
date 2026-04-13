@@ -26,6 +26,7 @@ module.exports = {
 						// @ts-expect-error for tests
 						chunkGraph.replaceModule(m, mock);
 
+						// @ts-expect-error for tests
 						if (!chunkGraph.isModuleInChunk(mock, chunk)) {
 							throw new Error("replaceModule failed (new module missing)");
 						}
