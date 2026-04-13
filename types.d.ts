@@ -12039,6 +12039,11 @@ declare interface KnownBuildInfo {
 	cssData?: CssData;
 
 	/**
+	 * for css modules (charset at-rule)
+	 */
+	charset?: string;
+
+	/**
 	 * for json modules
 	 */
 	jsonData?: JsonData;

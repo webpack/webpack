@@ -405,7 +405,8 @@ body {
 `;
 
 exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with multiple @charset at-rules 1`] = `
-"/*!***********************************************!*\\\\
+"@charset \\"UTF-8\\";
+/*!***********************************************!*\\\\
   !*** external \\"http://some/path/to/css1.css\\" ***!
   \\\\***********************************************/
 @import url(\\"http://some/path/to/css1.css\\");
@@ -436,7 +437,7 @@ exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should 
 /*!****************************************!*\\\\
   !*** css ./multiple-at-charset-aa.css ***!
   \\\\****************************************/
-@charset \\"utf-8\\";
+
 
 .aa {
 	background: green;
@@ -445,7 +446,7 @@ exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should 
 /*!***************************************!*\\\\
   !*** css ./multiple-at-charset-a.css ***!
   \\\\***************************************/
-@charset \\"utf-8\\";
+
 
 
 body {
@@ -455,7 +456,7 @@ body {
 /*!****************************************!*\\\\
   !*** css ./multiple-at-charset-ba.css ***!
   \\\\****************************************/
-@charset \\"utf-8\\";
+
 
 .ba {
 	background: green;
@@ -464,7 +465,7 @@ body {
 /*!****************************************!*\\\\
   !*** css ./multiple-at-charset-bb.css ***!
   \\\\****************************************/
-@charset \\"utf-8\\";
+
 
 .bb {
 	background: green;
@@ -473,7 +474,7 @@ body {
 /*!***************************************!*\\\\
   !*** css ./multiple-at-charset-b.css ***!
   \\\\***************************************/
-@charset \\"utf-8\\";
+
 
 
 
