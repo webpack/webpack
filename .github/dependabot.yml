@@ -22,7 +22,6 @@ updates:
           - "major"
         exclude-patterns:
           - "eslint-scope"
-          - "json-parse-even-better-errors"
           - "strip-ansi"
           - "rimraf"
   - package-ecosystem: "github-actions"

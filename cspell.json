@@ -336,7 +336,8 @@
     "WHATWG",
     "publicpath",
     "Uninstantiated",
-    "sccs"
+    "sccs",
+    "FEFF"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
@@ -359,6 +360,7 @@
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "test/JavascriptParser.unittest.js",
+    "test/test262-cases/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",
