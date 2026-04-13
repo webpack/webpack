@@ -170,7 +170,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
+        shard: [1/2, 2/2]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

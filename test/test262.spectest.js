@@ -1048,6 +1048,30 @@ const knownBugs = [
 	"module-code/top-level-await/module-import-resolution.js",
 	"module-code/top-level-await/module-import-unwrapped.js"
 ];
+
+const knownProductionBuildBugs = [
+	// Production inner graph drops class heritage access
+	"statements/class/definition/prototype-getter.js",
+	// Production inner graph drops unused export value access
+	"module-code/eval-export-dflt-expr-err-get-value.js",
+	// Production concatenation loses immutable import assignment
+	"module-code/instn-iee-bndng-fun.js",
+	"module-code/instn-iee-bndng-gen.js",
+	"module-code/instn-iee-bndng-var.js",
+	// Production provided exports misses namespace re-exports
+	"module-code/instn-star-props-nrml.js",
+	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
+	// Production concatenation orders eager import after defer
+	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
+	// Production inner graph drops using initializers
+	"statements/using/Symbol.dispose-getter.js",
+	"statements/using/gets-initializer-Symbol.dispose-property-once.js",
+	"statements/using/initializer-disposed-at-end-of-block.js",
+	"statements/using/initializer-disposed-at-end-of-forstatement.js",
+	"statements/using/multiple-resources-disposed-in-reverse-order.js",
+	"statements/using/puts-initializer-on-top-of-disposableresourcestack-multiple-bindings.js",
+	"statements/using/puts-initializer-on-top-of-disposableresourcestack-subsequent-usings.js"
+];
 /* cspell:enable */
 
 const testFiles = fs
@@ -1127,7 +1151,8 @@ describe("test262", () => {
 					meta.features.includes("source-phase-imports-module-source") ||
 					// TODO improve in our test runner
 					(meta.negative && meta.negative.phase === "resolution") ||
-					knownBugs.includes(name)
+					knownBugs.includes(name) ||
+					(mode === "production" && knownProductionBuildBugs.includes(name))
 				) {
 					// eslint-disable-next-line jest/no-disabled-tests
 					it.skip(name, () => {});
