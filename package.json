@@ -165,7 +165,7 @@
     "mini-svg-data-uri": "^1.2.3",
     "node-gyp": "^12.1.0",
     "nyc": "^18.0.0",
-    "open-cli": "^8.0.0",
+    "open-cli": "^9.0.0",
     "oxc-parser": "^0.125.0",
     "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.2",
