@@ -1,2 +1,2 @@
-require('buffer')
+require('tty')
 require('os')
