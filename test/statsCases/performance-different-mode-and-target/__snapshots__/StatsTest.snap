@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-different-mode-and-target should print correct stats for performance-different-mode-and-target 1`] = `
+"asset warning.pro-web.js X KiB [emitted] [big] (name: main)
+./index.js X KiB [built] [code generated]
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  warning.pro-web.js (X KiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      warning.pro-web.js
+
+WARNING in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+
+webpack x.x.x compiled with 3 warnings in X ms
+
+asset warning.pro-webworker.js X KiB [emitted] [big] (name: main)
+./index.js X KiB [built] [code generated]
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  warning.pro-webworker.js (X KiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      warning.pro-webworker.js
+
+WARNING in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+
+webpack x.x.x compiled with 3 warnings in X ms
+
+asset no-warning.pro-node.js X KiB [emitted] (name: main)
+./index.js X KiB [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset no-warning.dev-web.js X MiB [emitted] (name: main)
+./index.js X KiB [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset no-warning.dev-node.js X MiB [emitted] (name: main)
+./index.js X KiB [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset no-warning.dev-web-with-limit-set.js X MiB [emitted] [big] (name: main)
+./index.js X KiB [built] [code generated]
+webpack x.x.x compiled successfully in X ms
+
+asset warning.pro-node-with-hints-set.js X KiB [emitted] [big] (name: main)
+./index.js X KiB [built] [code generated]
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  warning.pro-node-with-hints-set.js (X KiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      warning.pro-node-with-hints-set.js
+
+WARNING in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+
+webpack x.x.x compiled with 3 warnings in X ms"
+`;

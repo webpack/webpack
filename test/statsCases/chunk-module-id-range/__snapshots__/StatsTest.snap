@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases chunk-module-id-range should print correct stats for chunk-module-id-range 1`] = `
+"PublicPath: auto
+asset main1.js X KiB [emitted] (name: main1)
+asset main2.js X KiB [emitted] (name: main2)
+Entrypoint main1 X KiB = main1.js
+Entrypoint main2 X KiB = main2.js
+chunk (runtime: main1) main1.js (main1) X bytes (javascript) X bytes (runtime) [entry] [rendered]
+  > ./main1 main1
+  runtime modules X bytes 3 modules
+  cacheable modules X bytes
+    ./a.js X bytes [dependent] [built] [code generated]
+    ./b.js X bytes [dependent] [built] [code generated]
+    ./c.js X bytes [dependent] [built] [code generated]
+    ./d.js X bytes [dependent] [built] [code generated]
+    ./main1.js X bytes [built] [code generated]
+chunk (runtime: main2) main2.js (main2) X bytes (javascript) X bytes (runtime) [entry] [rendered]
+  > ./main2 main2
+  runtime modules X bytes 3 modules
+  cacheable modules X bytes
+    ./a.js X bytes [dependent] [built] [code generated]
+    ./d.js X bytes [dependent] [built] [code generated]
+    ./e.js X bytes [dependent] [built] [code generated]
+    ./f.js X bytes [dependent] [built] [code generated]
+    ./main2.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

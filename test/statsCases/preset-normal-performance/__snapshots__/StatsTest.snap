@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-normal-performance should print correct stats for preset-normal-performance 1`] = `
+"asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>X KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
+asset <CLR=32,BOLD>964.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>226.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>899.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR>
+runtime modules X KiB 7 modules
+cacheable modules X KiB
+  <CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+  <CLR=BOLD>./a.js</CLR> X KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+  <CLR=BOLD>./b.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+  <CLR=BOLD>./c.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+  <CLR=BOLD>./d.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+  <CLR=BOLD>./e.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
+This can impact web performance.
+Assets: 
+  main.js (X KiB)</CLR>
+
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      main.js
+</CLR>
+
+webpack x.x.x compiled with <CLR=33,BOLD>2 warnings</CLR> in X ms"
+`;

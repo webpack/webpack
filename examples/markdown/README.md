@@ -406,8 +406,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
   !*** ./raw-to-uint8-array.md ***!
   \*******************************/
 /*! default exports */
-/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.*, __webpack_require__.tb, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -419,8 +418,7 @@ module.exports = __webpack_require__.tb("IyBFeGFtcGxlIGhlYWRpbmdzCgojIyBTYW1wbGU
   !*** ./raw-to-string.md ***!
   \**************************/
 /*! default exports */
-/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -444,12 +442,6 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
@@ -458,6 +450,12 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -499,19 +497,28 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 	/* webpack/runtime/to binary */
 /******/ 	(() => {
 /******/ 		// define to binary helper
+/******/ 		const toImmutableBytes = (value) => {
+/******/ 			var {buffer} = value;
+/******/ 			const throwErr = () => {
+/******/ 				throw new TypeError('ArrayBuffer is immutable');
+/******/ 			};
+/******/ 			Object.defineProperties(buffer, { immutable: { value: true },  resize: { value: throwErr }, transfer: { value: throwErr }, transferToFixedLength: { value: throwErr } });
+/******/ 			Object.freeze(buffer);
+/******/ 			return value;
+/******/ 		}
 /******/ 		__webpack_require__.tb =  (() => {
-/******/ 			var table = new Uint8Array(128);
+/******/ 			const table = new Uint8Array(128);
 /******/ 			for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i;
 /******/ 			return (base64) => {
-/******/ 				var n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0);
+/******/ 				const n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0);
 /******/ 				for (var i = 0, j = 0; i < n;) {
-/******/ 					var c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)];
-/******/ 					var c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)];
+/******/ 					const c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)];
+/******/ 					const c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)];
 /******/ 					bytes[j++] = (c0 << 2) | (c1 >> 4);
 /******/ 					bytes[j++] = (c1 << 4) | (c2 >> 2);
 /******/ 					bytes[j++] = (c2 << 6) | c3;
 /******/ 				}
-/******/ 				return bytes
+/******/ 				return toImmutableBytes(bytes)
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
@@ -662,11 +669,11 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 18.6 KiB [emitted] (name: main)
+asset output.js 18.9 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 1.78 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.16 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.78 KiB 6 modules
+  runtime modules 2.16 KiB 6 modules
   dependent modules 8.89 KiB (javascript) 14.6 KiB (asset) [dependent] 4 modules
   ./example.js 2.39 KiB [built] [code generated]
     [no exports]
@@ -679,10 +686,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-asset output.js 10.8 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 14.6 KiB (asset) 11.4 KiB (javascript) 1.22 KiB (runtime) [entry] [rendered]
+asset output.js 11 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 14.6 KiB (asset) 11.4 KiB (javascript) 1.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.22 KiB 4 modules
+  runtime modules 1.59 KiB 4 modules
   dependent modules 14.6 KiB (asset) 42 bytes (javascript) [dependent] 1 module
   ./example.js + 3 modules 11.3 KiB [built] [code generated]
     [no exports]

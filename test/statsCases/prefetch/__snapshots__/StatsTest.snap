@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases prefetch should print correct stats for prefetch 1`] = `
+"asset main.js X KiB {792} [emitted] (name: main)
+asset prefetched.js X bytes {529} [emitted] (name: prefetched)
+asset inner2.js X bytes {573} [emitted] (name: inner2)
+asset inner.js X bytes {253} [emitted] (name: inner)
+asset normal.js X bytes {574} [emitted] (name: normal)
+asset prefetched2.js X bytes {337} [emitted] (name: prefetched2)
+asset prefetched3.js X bytes {528} [emitted] (name: prefetched3)
+Entrypoint main X KiB = main.js
+  prefetch: prefetched2.js {337} (name: prefetched2), prefetched.js {529} (name: prefetched), prefetched3.js {528} (name: prefetched3)
+chunk {253} (runtime: main) inner.js (inner) X bytes <{529}> [rendered]
+chunk {337} (runtime: main) prefetched2.js (prefetched2) X bytes <{792}> [rendered]
+chunk {528} (runtime: main) prefetched3.js (prefetched3) X bytes <{792}> [rendered]
+chunk {529} (runtime: main) prefetched.js (prefetched) X bytes <{792}> >{253}< >{573}< (prefetch: {573} {253}) [rendered]
+chunk {573} (runtime: main) inner2.js (inner2) X bytes <{529}> [rendered]
+chunk {574} (runtime: main) normal.js (normal) X bytes <{792}> [rendered]
+chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{337}< >{528}< >{529}< >{574}< (prefetch: {337} {529} {528}) [entry] [rendered]"
+`;

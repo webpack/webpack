@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-minimal should print correct stats for preset-minimal 1`] = `
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+4 assets
+13 modules
+
+LOG from LogTestPlugin
+<e> Error
+<w> Warning
++ 13 hidden lines
+
+webpack x.x.x compiled successfully in X ms"
+`;

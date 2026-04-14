@@ -12,7 +12,7 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         id: app-token
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
@@ -20,7 +20,7 @@ jobs:
 
       - name: Dependabot metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
+        uses: dependabot/fetch-metadata@ffa630c65fa7e0ecfa0625b5ceda64399aea1b36 # v3.0.0
         with:
           github-token: "${{ steps.app-token.outputs.token }}"
 

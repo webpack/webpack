@@ -10,11 +10,11 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const prepareOptions = require("./helpers/prepareOptions");
 const { remove } = require("./helpers/remove");
-const { TestRunner } = require("./runner");
 
 /**
  * @param {string} src src

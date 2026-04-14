@@ -72,7 +72,6 @@ export function reset() {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
@@ -125,7 +124,7 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),o=0,c(o
 ## Unoptimized
 
 ```
-asset output.js 1.68 KiB [emitted] [javascript module] (name: main)
+asset output.js 1.65 KiB [emitted] [javascript module] (name: main)
 chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 396 bytes 2 modules

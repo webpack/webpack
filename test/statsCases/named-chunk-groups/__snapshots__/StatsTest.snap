@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases named-chunk-groups should print correct stats for named-chunk-groups 1`] = `
+"Chunk Group main X KiB = a-main.js
+Chunk Group async-a X KiB = a-48.js X bytes a-async-a.js X bytes
+Chunk Group async-b X KiB = a-48.js X bytes a-async-b.js X bytes
+Chunk Group async-c X KiB = a-vendors.js X bytes a-async-c.js X bytes
+chunk (runtime: main) a-48.js X bytes [rendered] split chunk (cache group: default)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  ./shared.js X bytes [built] [code generated]
+chunk (runtime: main) a-async-b.js (async-b) X bytes [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js X bytes [built] [code generated]
+chunk (runtime: main) a-vendors.js (vendors) (id hint: vendors) X bytes [rendered] split chunk (cache group: vendors) (name: vendors)
+  > ./c ./index.js 3:0-47
+  ./node_modules/x.js X bytes [built] [code generated]
+  ./node_modules/y.js X bytes [built] [code generated]
+chunk (runtime: main) a-async-a.js (async-a) X bytes [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js X bytes [built] [code generated]
+chunk (runtime: main) a-main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 10 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) a-async-c.js (async-c) X bytes [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully
+
+Entrypoint main X KiB = b-main.js
+Chunk Group async-a X KiB = b-48.js X bytes b-async-a.js X bytes
+Chunk Group async-b X KiB = b-48.js X bytes b-async-b.js X bytes
+Chunk Group async-c X KiB = b-vendors.js X bytes b-async-c.js X bytes
+chunk (runtime: main) b-48.js X bytes [rendered] split chunk (cache group: default)
+  > ./a ./index.js 1:0-47
+  > ./b ./index.js 2:0-47
+  ./shared.js X bytes [built] [code generated]
+chunk (runtime: main) b-async-b.js (async-b) X bytes [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js X bytes [built] [code generated]
+chunk (runtime: main) b-vendors.js (vendors) (id hint: vendors) X bytes [rendered] split chunk (cache group: vendors) (name: vendors)
+  > ./c ./index.js 3:0-47
+  ./node_modules/x.js X bytes [built] [code generated]
+  ./node_modules/y.js X bytes [built] [code generated]
+chunk (runtime: main) b-async-a.js (async-a) X bytes [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js X bytes [built] [code generated]
+chunk (runtime: main) b-main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
+  > ./ main
+  runtime modules X KiB 10 modules
+  ./index.js X bytes [built] [code generated]
+chunk (runtime: main) b-async-c.js (async-c) X bytes [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js X bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;

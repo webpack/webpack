@@ -1,0 +1,15 @@
+.class-5 {
+	background-image: url(../same_root.svg);
+}
+
+.class-6 {
+	background-image: url(../images/webpack.svg);
+}
+
+.class-7 {
+	background-image: url(./deep_nested/webpack.svg);
+}
+
+.class-8 {
+	background-image: url(deep_nested/webpack.svg);
+}

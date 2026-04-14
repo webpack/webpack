@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases prefetch-preload-mixed should print correct stats for prefetch-preload-mixed 1`] = `
+"chunk (runtime: main) a2.js (a2) X bytes <{996}> [rendered]
+chunk (runtime: main) b.js (b) X bytes <{792}> >{364}< >{567}< >{758}< (prefetch: {364} {758}) (preload: {567}) [rendered]
+chunk (runtime: main) a1.js (a1) X bytes <{996}> [rendered]
+chunk (runtime: main) b1.js (b1) X bytes <{199}> [rendered]
+chunk (runtime: main) c.js (c) X bytes <{792}> >{896}< >{907}< (preload: {907} {896}) [rendered]
+chunk (runtime: main) b2.js (b2) X bytes <{199}> [rendered]
+chunk (runtime: main) b3.js (b3) X bytes <{199}> [rendered]
+chunk (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{199}< >{390}< >{996}< (prefetch: {996} {199} {390}) [entry] [rendered]
+chunk (runtime: main) c2.js (c2) X bytes <{390}> [rendered]
+chunk (runtime: main) c1.js (c1) X bytes <{390}> [rendered]
+chunk (runtime: main) a.js (a) X bytes <{792}> >{150}< >{341}< (prefetch: {341} {150}) [rendered]"
+`;

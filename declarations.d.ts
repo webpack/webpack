@@ -228,15 +228,6 @@ declare module "webpack-sources" {
 	} from "webpack-sources/types";
 }
 
-declare module "json-parse-even-better-errors" {
-	function parseJson(
-		text: string,
-		reviver?: (this: any, key: string, value: any) => any,
-		context?: number
-	): any;
-	export = parseJson;
-}
-
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| Array<RecursiveArrayOrRecord<T>>

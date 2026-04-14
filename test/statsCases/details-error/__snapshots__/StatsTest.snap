@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases details-error should print correct stats for details-error 1`] = `
+"0 errors 0 warnings:
+  asset 0.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+  0 errors 0 warnings (webpack x.x.x) compiled successfully in X ms
+
+1 errors 0 warnings:
+  asset 1.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  ERROR in Test
+  Error details
+
+  1 errors 0 warnings (webpack x.x.x) compiled with 1 error in X ms
+
+0 errors 1 warnings:
+  asset 10.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  1 warning has detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  0 errors 1 warnings (webpack x.x.x) compiled with 1 warning in X ms
+
+2 errors 0 warnings:
+  asset 2.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  ERROR in Test
+  Error details
+
+  ERROR in Test
+  Error details
+
+  2 errors 0 warnings (webpack x.x.x) compiled with 2 errors in X ms
+
+0 errors 2 warnings:
+  asset 20.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  WARNING in Test
+
+  2 warnings have detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  0 errors 2 warnings (webpack x.x.x) compiled with 2 warnings in X ms
+
+1 errors 1 warnings:
+  asset 11.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  1 warning has detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  ERROR in Test
+  Error details
+
+  1 errors 1 warnings (webpack x.x.x) compiled with 1 error and 1 warning in X ms
+
+2 errors 1 warnings:
+  asset 12.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  1 warning has detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  ERROR in Test
+  Error details
+
+  ERROR in Test
+  Error details
+
+  2 errors 1 warnings (webpack x.x.x) compiled with 2 errors and 1 warning in X ms
+
+3 errors 1 warnings:
+  asset 13.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  1 warning has detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  ERROR in Test
+
+  ERROR in Test
+
+  ERROR in Test
+
+  3 errors have detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  3 errors 1 warnings (webpack x.x.x) compiled with 3 errors and 1 warning in X ms
+
+3 errors 0 warnings:
+  asset 3.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  ERROR in Test
+
+  ERROR in Test
+
+  ERROR in Test
+
+  3 errors have detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  3 errors 0 warnings (webpack x.x.x) compiled with 3 errors in X ms
+
+0 errors 3 warnings:
+  asset 30.js X KiB [emitted] (name: main)
+  ./index.js X bytes [built] [code generated]
+
+  WARNING in Test
+
+  WARNING in Test
+
+  WARNING in Test
+
+  3 warnings have detailed information that is not shown.
+  Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+  0 errors 3 warnings (webpack x.x.x) compiled with 3 warnings in X ms"
+`;

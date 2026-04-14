@@ -126,6 +126,7 @@ describe("snapshots", () => {
 		    "futureDefaults": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
+		    "sourceImport": false,
 		    "syncWebAssembly": false,
 		  },
 		  "externals": undefined,
@@ -297,6 +298,7 @@ describe("snapshots", () => {
 		        "exprContextRegExp": false,
 		        "exprContextRequest": ".",
 		        "importMeta": true,
+		        "sourceImport": false,
 		        "strictExportPresence": undefined,
 		        "strictThisContextOnImports": false,
 		        "unknownContextCritical": true,
@@ -2286,7 +2288,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -2363,8 +2366,6 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
-			+       },
-			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2374,6 +2375,7 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
@@ -2381,6 +2383,7 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
@@ -2388,17 +2391,16 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			@@ ... @@
+			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2422,6 +2424,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2854,7 +2857,6 @@ describe("snapshots", () => {
 			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
 			+           Object {
@@ -2872,7 +2874,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2946,6 +2948,8 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2955,6 +2959,7 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
@@ -2962,6 +2967,7 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
@@ -2969,12 +2975,11 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "localIdentHashDigest": "base64url",
 			+         "localIdentHashDigestLength": 6,
+			+         "localIdentHashFunction": "xxhash64",
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -2987,7 +2992,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3003,6 +3008,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3023,9 +3029,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3069,9 +3072,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

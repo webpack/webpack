@@ -1,0 +1,409 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks-max-size should print correct stats for split-chunks-max-size 1`] = `
+"production:
+  Entrypoint main X KiB = 13 assets
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./index.js X KiB [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./big.js?1 X bytes [built] [code generated]
+    ./big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 5 modules
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?2 X KiB [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./small.js?1 X bytes [built] [code generated]
+    ./small.js?2 X bytes [built] [code generated]
+    ./small.js?3 X bytes [built] [code generated]
+    ./small.js?4 X bytes [built] [code generated]
+    ./small.js?5 X bytes [built] [code generated]
+    ./small.js?6 X bytes [built] [code generated]
+    ./small.js?7 X bytes [built] [code generated]
+    ./small.js?8 X bytes [built] [code generated]
+    ./small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) prod-241.js (id hint: vendors) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/big.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) prod-273.js (id hint: vendors) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./subfolder/big.js?1 X bytes [built] [code generated]
+    ./subfolder/big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/big.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?2 X bytes [built] [code generated]
+    ./in-some-directory/small.js?3 X bytes [built] [code generated]
+    ./in-some-directory/small.js?4 X bytes [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./inner-module/small.js?1 X bytes [built] [code generated]
+    ./inner-module/small.js?2 X bytes [built] [code generated]
+    ./inner-module/small.js?3 X bytes [built] [code generated]
+    ./inner-module/small.js?4 X bytes [built] [code generated]
+    ./inner-module/small.js?5 X bytes [built] [code generated]
+    ./inner-module/small.js?6 X bytes [built] [code generated]
+    ./inner-module/small.js?7 X bytes [built] [code generated]
+    ./inner-module/small.js?8 X bytes [built] [code generated]
+    ./inner-module/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
+    > ./ main
+    ./subfolder/small.js?1 X bytes [built] [code generated]
+    ./subfolder/small.js?2 X bytes [built] [code generated]
+    ./subfolder/small.js?3 X bytes [built] [code generated]
+    ./subfolder/small.js?4 X bytes [built] [code generated]
+    ./subfolder/small.js?5 X bytes [built] [code generated]
+    ./subfolder/small.js?6 X bytes [built] [code generated]
+    ./subfolder/small.js?7 X bytes [built] [code generated]
+    ./subfolder/small.js?8 X bytes [built] [code generated]
+    ./subfolder/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) prod-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?3 X KiB [built] [code generated]
+  production (webpack x.x.x) compiled successfully
+
+development:
+  Entrypoint main X KiB = 13 assets
+  chunk (runtime: main) dev-main-big_js-1.js (main-big_js-1) X bytes ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./big.js?1 X bytes [built] [code generated]
+    ./big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-in-some-directory_b.js (main-in-some-directory_b) X bytes ={main-big_js-1}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/big.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?2 X bytes [built] [code generated]
+    ./in-some-directory/small.js?3 X bytes [built] [code generated]
+    ./in-some-directory/small.js?4 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-in-some-directory_very-big_js-XXXXXXXX.js (main-in-some-directory_very-big_js-8d76cf03) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) dev-main-index_js-XXXXXXXX.js (main-index_js-41f5a26e) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./index.js X KiB [built] [code generated]
+  chunk (runtime: main) dev-main-inner-module_small_js-3.js (main-inner-module_small_js-3) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./inner-module/small.js?1 X bytes [built] [code generated]
+    ./inner-module/small.js?2 X bytes [built] [code generated]
+    ./inner-module/small.js?3 X bytes [built] [code generated]
+    ./inner-module/small.js?4 X bytes [built] [code generated]
+    ./inner-module/small.js?5 X bytes [built] [code generated]
+    ./inner-module/small.js?6 X bytes [built] [code generated]
+    ./inner-module/small.js?7 X bytes [built] [code generated]
+    ./inner-module/small.js?8 X bytes [built] [code generated]
+    ./inner-module/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-small_js-1.js (main-small_js-1) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./small.js?1 X bytes [built] [code generated]
+    ./small.js?2 X bytes [built] [code generated]
+    ./small.js?3 X bytes [built] [code generated]
+    ./small.js?4 X bytes [built] [code generated]
+    ./small.js?5 X bytes [built] [code generated]
+    ./small.js?6 X bytes [built] [code generated]
+    ./small.js?7 X bytes [built] [code generated]
+    ./small.js?8 X bytes [built] [code generated]
+    ./small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-subfolder_big_js-b.js (main-subfolder_big_js-b) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./subfolder/big.js?1 X bytes [built] [code generated]
+    ./subfolder/big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-subfolder_small_js-1.js (main-subfolder_small_js-1) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./subfolder/small.js?1 X bytes [built] [code generated]
+    ./subfolder/small.js?2 X bytes [built] [code generated]
+    ./subfolder/small.js?3 X bytes [built] [code generated]
+    ./subfolder/small.js?4 X bytes [built] [code generated]
+    ./subfolder/small.js?5 X bytes [built] [code generated]
+    ./subfolder/small.js?6 X bytes [built] [code generated]
+    ./subfolder/small.js?7 X bytes [built] [code generated]
+    ./subfolder/small.js?8 X bytes [built] [code generated]
+    ./subfolder/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-08cf55cf) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?2 X KiB [built] [code generated]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-4647fb9d) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?3 X KiB [built] [code generated]
+  chunk (runtime: main) dev-main-very-big_js-XXXXXXXX.js (main-very-big_js-62f7f644) X KiB (javascript) X KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 6 modules
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) dev-vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2.js (id hint: vendors) X bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/big.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) dev-vendors-node_modules_very-big_js_1.js (id hint: vendors) X KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/very-big.js?1 X KiB [built] [code generated]
+  development (webpack x.x.x) compiled successfully
+
+switched:
+  Entrypoint main X KiB = 9 assets
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+    > ./ main
+    ./index.js X KiB [built] [code generated]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={161}= ={210}= ={241}= ={273}= ={866}= ={945}= [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 5 modules
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={124}= ={210}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?2 X KiB [built] [code generated]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-7aeafcb2) X KiB ={37}= ={59}= ={124}= ={161}= ={241}= ={273}= ={866}= ={945}= [initial] [rendered]
+    > ./ main
+    modules by path ./inner-module/*.js X bytes
+      ./inner-module/small.js?1 X bytes [built] [code generated]
+      + 8 modules
+    modules by path ./in-some-directory/*.js X bytes
+      ./in-some-directory/big.js?1 X bytes [built] [code generated]
+      ./in-some-directory/small.js?1 X bytes [built] [code generated]
+      + 3 modules
+    modules by path ./*.js X bytes
+      ./big.js?1 X bytes [built] [code generated]
+      ./big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) switchXX-XXX.js (id hint: vendors) X bytes ={37}= ={59}= ={124}= ={161}= ={210}= ={273}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/big.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) switchXX-XXX.js (id hint: vendors) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={866}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-879072e3) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={945}= [initial] [rendered]
+    > ./ main
+    modules by path ./subfolder/*.js X KiB
+      ./subfolder/big.js?1 X bytes [built] [code generated]
+      ./subfolder/big.js?2 X bytes [built] [code generated]
+      ./subfolder/small.js?1 X bytes [built] [code generated]
+      + 8 modules
+    modules by path ./*.js X bytes
+      ./small.js?1 X bytes [built] [code generated]
+      ./small.js?2 X bytes [built] [code generated]
+      ./small.js?3 X bytes [built] [code generated]
+      + 6 modules
+  chunk (runtime: main) switched-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={124}= ={161}= ={210}= ={241}= ={273}= ={866}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?3 X KiB [built] [code generated]
+
+  WARNING in SplitChunksPlugin
+  Cache group defaultVendors
+  Configured minSize (X bytes) is bigger than maxSize (X bytes).
+  This seem to be a invalid optimization.splitChunks configuration.
+
+  WARNING in SplitChunksPlugin
+  Fallback cache group
+  Configured minSize (X bytes) is bigger than maxSize (X bytes).
+  This seem to be a invalid optimization.splitChunks configuration.
+
+  switched (webpack x.x.x) compiled with 2 warnings
+
+zero-min:
+  Entrypoint main X KiB = 13 assets
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-6bb16544) X KiB ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-1df31ce3) X KiB ={37}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./index.js X KiB [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-10f51d07) X bytes ={37}= ={59}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./big.js?1 X bytes [built] [code generated]
+    ./big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-12217e1d) X KiB (javascript) X KiB (runtime) ={37}= ={59}= ={121}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 5 modules
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-77a8c116) X KiB ={37}= ={59}= ={121}= ={124}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?2 X KiB [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-e7c5ace7) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./small.js?1 X bytes [built] [code generated]
+    ./small.js?2 X bytes [built] [code generated]
+    ./small.js?3 X bytes [built] [code generated]
+    ./small.js?4 X bytes [built] [code generated]
+    ./small.js?5 X bytes [built] [code generated]
+    ./small.js?6 X bytes [built] [code generated]
+    ./small.js?7 X bytes [built] [code generated]
+    ./small.js?8 X bytes [built] [code generated]
+    ./small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-241.js (id hint: vendors) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={273}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/big.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-273.js (id hint: vendors) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={382}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-5cfff2c6) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={409}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./subfolder/big.js?1 X bytes [built] [code generated]
+    ./subfolder/big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-3c98d7c3) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={808}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./in-some-directory/big.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?2 X bytes [built] [code generated]
+    ./in-some-directory/small.js?3 X bytes [built] [code generated]
+    ./in-some-directory/small.js?4 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-2f7dcf2e) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={942}= ={945}= [initial] [rendered]
+    > ./ main
+    ./inner-module/small.js?1 X bytes [built] [code generated]
+    ./inner-module/small.js?2 X bytes [built] [code generated]
+    ./inner-module/small.js?3 X bytes [built] [code generated]
+    ./inner-module/small.js?4 X bytes [built] [code generated]
+    ./inner-module/small.js?5 X bytes [built] [code generated]
+    ./inner-module/small.js?6 X bytes [built] [code generated]
+    ./inner-module/small.js?7 X bytes [built] [code generated]
+    ./inner-module/small.js?8 X bytes [built] [code generated]
+    ./inner-module/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-1443e336) X bytes ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={945}= [initial] [rendered]
+    > ./ main
+    ./subfolder/small.js?1 X bytes [built] [code generated]
+    ./subfolder/small.js?2 X bytes [built] [code generated]
+    ./subfolder/small.js?3 X bytes [built] [code generated]
+    ./subfolder/small.js?4 X bytes [built] [code generated]
+    ./subfolder/small.js?5 X bytes [built] [code generated]
+    ./subfolder/small.js?6 X bytes [built] [code generated]
+    ./subfolder/small.js?7 X bytes [built] [code generated]
+    ./subfolder/small.js?8 X bytes [built] [code generated]
+    ./subfolder/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) zero-min-main-XXXXXXXX.js (main-89a43a0f) X KiB ={37}= ={59}= ={121}= ={124}= ={161}= ={181}= ={241}= ={273}= ={382}= ={409}= ={808}= ={942}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?3 X KiB [built] [code generated]
+  zero-min (webpack x.x.x) compiled successfully
+
+max-async-size:
+  Entrypoint main X KiB = max-async-size-main.js
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-bde52cb3) X bytes <{792}> ={565}= ={664}= ={901}= [rendered]
+    > ./b ./async/index.js 10:2-49
+    > ./a ./async/index.js 9:2-49
+    dependent modules X bytes [dependent] 9 modules
+    cacheable modules X bytes
+      ./async/a.js X bytes [built] [code generated]
+      ./async/b.js X bytes [built] [code generated]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-89a43a0f) X KiB <{792}> ={265}= ={664}= ={901}= [rendered]
+    > ./b ./async/index.js 10:2-49
+    > ./a ./async/index.js 9:2-49
+    ./very-big.js?3 X KiB [built] [code generated]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-12217e1d) X KiB <{792}> ={265}= ={565}= ={901}= [rendered]
+    > ./b ./async/index.js 10:2-49
+    > ./a ./async/index.js 9:2-49
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) max-async-size-main.js (main) X KiB (javascript) X KiB (runtime) >{265}< >{565}< >{664}< >{901}< [entry] [rendered]
+    > ./async main
+    runtime modules X KiB 10 modules
+    dependent modules X KiB [dependent] 6 modules
+    ./async/index.js X bytes [built] [code generated]
+  chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-77a8c116) X KiB <{792}> ={265}= ={565}= ={664}= [rendered]
+    > ./b ./async/index.js 10:2-49
+    > ./a ./async/index.js 9:2-49
+    ./very-big.js?2 X KiB [built] [code generated]
+  max-async-size (webpack x.x.x) compiled successfully
+
+enforce-min-size:
+  Entrypoint main X KiB = 14 assets
+  chunk (runtime: main) enforce-min-size-35.js (id hint: all) X bytes ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./subfolder/small.js?1 X bytes [built] [code generated]
+    ./subfolder/small.js?2 X bytes [built] [code generated]
+    ./subfolder/small.js?3 X bytes [built] [code generated]
+    ./subfolder/small.js?4 X bytes [built] [code generated]
+    ./subfolder/small.js?5 X bytes [built] [code generated]
+    ./subfolder/small.js?6 X bytes [built] [code generated]
+    ./subfolder/small.js?7 X bytes [built] [code generated]
+    ./subfolder/small.js?8 X bytes [built] [code generated]
+    ./subfolder/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-90.js (id hint: all) X KiB ={35}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-120.js (id hint: all) X KiB ={35}= ={90}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./very-big.js?3 X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-237.js (id hint: all) X KiB ={35}= ={90}= ={120}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./index.js X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-241.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./node_modules/big.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?1 X bytes [built] [code generated]
+    ./node_modules/small.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-262.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={241}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./small.js?1 X bytes [built] [code generated]
+    ./small.js?2 X bytes [built] [code generated]
+    ./small.js?3 X bytes [built] [code generated]
+    ./small.js?4 X bytes [built] [code generated]
+    ./small.js?5 X bytes [built] [code generated]
+    ./small.js?6 X bytes [built] [code generated]
+    ./small.js?7 X bytes [built] [code generated]
+    ./small.js?8 X bytes [built] [code generated]
+    ./small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-273.js (id hint: all) X KiB ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./node_modules/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-411.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={491}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./subfolder/big.js?1 X bytes [built] [code generated]
+    ./subfolder/big.js?2 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-491.js (id hint: all) X KiB ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={792}= ={858}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./in-some-directory/very-big.js?1 X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-main.js (main) X KiB ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={858}= ={928}= ={929}= ={962}= [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 5 modules
+  chunk (runtime: main) enforce-min-size-858.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={928}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./inner-module/small.js?1 X bytes [built] [code generated]
+    ./inner-module/small.js?2 X bytes [built] [code generated]
+    ./inner-module/small.js?3 X bytes [built] [code generated]
+    ./inner-module/small.js?4 X bytes [built] [code generated]
+    ./inner-module/small.js?5 X bytes [built] [code generated]
+    ./inner-module/small.js?6 X bytes [built] [code generated]
+    ./inner-module/small.js?7 X bytes [built] [code generated]
+    ./inner-module/small.js?8 X bytes [built] [code generated]
+    ./inner-module/small.js?9 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-928.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={929}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./in-some-directory/big.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?1 X bytes [built] [code generated]
+    ./in-some-directory/small.js?2 X bytes [built] [code generated]
+    ./in-some-directory/small.js?3 X bytes [built] [code generated]
+    ./in-some-directory/small.js?4 X bytes [built] [code generated]
+  chunk (runtime: main) enforce-min-size-929.js (id hint: all) X KiB ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={962}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./very-big.js?2 X KiB [built] [code generated]
+  chunk (runtime: main) enforce-min-size-962.js (id hint: all) X bytes ={35}= ={90}= ={120}= ={237}= ={241}= ={262}= ={273}= ={411}= ={491}= ={792}= ={858}= ={928}= ={929}= [initial] [rendered] split chunk (cache group: all)
+    > ./ main
+    ./big.js?1 X bytes [built] [code generated]
+    ./big.js?2 X bytes [built] [code generated]
+  enforce-min-size (webpack x.x.x) compiled successfully
+
+only-async:
+  Entrypoint main X KiB = only-async-main.js
+  chunk (runtime: main) only-async-main.js (main) X KiB (javascript) X bytes (runtime) [entry] [rendered]
+    > ./ main
+    dependent modules X KiB [dependent] 44 modules
+    runtime modules X bytes 3 modules
+    ./index.js X KiB [built] [code generated]
+  only-async (webpack x.x.x) compiled successfully"
+`;

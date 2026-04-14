@@ -1,0 +1,417 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases split-chunks should print correct stats for split-chunks 1`] = `
+"default:
+  Entrypoint main X KiB = default/main.js
+  Entrypoint a X KiB = default/a.js
+  Entrypoint b X KiB = default/b.js
+  Entrypoint c X KiB = default/c.js
+  chunk (runtime: a, main) default/async-g.js (async-g) X bytes <{263}> <{425}> <{628}> <{723}> <{996}> ={935}= [rendered]
+    > ./g ./a.js 6:0-47
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) default/async-b.js (async-b) X bytes <{792}> ={425}= ={628}= ={723}= ={935}= [rendered]
+    > ./b ./index.js 2:0-47
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: b) default/b.js (b) X bytes (javascript) X bytes (runtime) [entry] [rendered]
+    > ./b b
+    dependent modules X bytes [dependent] 4 modules
+    runtime modules X bytes 2 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) default/async-a.js (async-a) X bytes <{792}> ={425}= ={628}= ={723}= >{49}< >{935}< [rendered]
+    > ./a ./index.js 1:0-47
+    ./a.js + 1 modules X bytes [built] [code generated]
+  chunk (runtime: c) default/c.js (c) X bytes (javascript) X bytes (runtime) [entry] [rendered]
+    > ./c c
+    dependent modules X bytes [dependent] 4 modules
+    runtime modules X bytes 2 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: main) default/425.js X bytes <{792}> ={60}= ={263}= ={628}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: main) default/628.js (id hint: vendors) X bytes <{792}> ={60}= ={263}= ={425}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    ./node_modules/x.js X bytes [built] [code generated]
+  chunk (runtime: main) default/723.js (id hint: vendors) X bytes <{792}> ={60}= ={263}= ={425}= ={628}= ={935}= >{49}< >{935}< [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    ./node_modules/y.js X bytes [built] [code generated]
+  chunk (runtime: main) default/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: main) default/862.js (id hint: vendors) X bytes <{792}> ={425}= ={628}= ={869}= ={935}= [rendered] split chunk (cache group: defaultVendors)
+    > ./c ./index.js 3:0-47
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: main) default/async-c.js (async-c) X bytes <{792}> ={425}= ={628}= ={862}= ={935}= [rendered]
+    > ./c ./index.js 3:0-47
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, main) default/935.js X bytes <{263}> <{425}> <{628}> <{723}> <{792}> <{996}> ={49}= ={60}= ={425}= ={628}= ={723}= ={862}= ={869}= [rendered] split chunk (cache group: default)
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./g ./a.js 6:0-47
+    ./f.js X bytes [built] [code generated]
+  chunk (runtime: a) default/a.js (a) X bytes (javascript) X KiB (runtime) >{49}< >{935}< [entry] [rendered]
+    > ./a a
+    runtime modules X KiB 9 modules
+    dependent modules X bytes [dependent] 3 modules
+    ./a.js + 1 modules X bytes [built] [code generated]
+  default (webpack x.x.x) compiled successfully
+
+all-chunks:
+  Entrypoint main X KiB = all-chunks/main.js
+  Entrypoint a X KiB = all-chunks/628.js X bytes all-chunks/723.js X bytes all-chunks/425.js X bytes all-chunks/210.js X bytes all-chunks/a.js X KiB
+  Entrypoint b X KiB = all-chunks/628.js X bytes all-chunks/723.js X bytes all-chunks/425.js X bytes all-chunks/935.js X bytes all-chunks/b.js X KiB
+  Entrypoint c X KiB = all-chunks/628.js X bytes all-chunks/862.js X bytes all-chunks/425.js X bytes all-chunks/935.js X bytes all-chunks/c.js X KiB
+  chunk (runtime: a, main) all-chunks/async-g.js (async-g) X bytes <{210}> <{263}> <{425}> <{628}> <{723}> <{996}> ={935}= [rendered]
+    > ./g ./a.js 6:0-47
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) all-chunks/async-b.js (async-b) X bytes <{792}> ={425}= ={628}= ={723}= ={935}= [rendered]
+    > ./b ./index.js 2:0-47
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: b) all-chunks/b.js (b) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={723}= ={935}= [entry] [rendered]
+    > ./b b
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: a, main) all-chunks/210.js X bytes <{792}> ={263}= ={425}= ={628}= ={723}= ={996}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./a a
+    ./e.js X bytes [built] [code generated]
+  chunk (runtime: main) all-chunks/async-a.js (async-a) X bytes <{792}> ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [rendered]
+    > ./a ./index.js 1:0-47
+    ./a.js X bytes [built] [code generated]
+  chunk (runtime: c) all-chunks/c.js (c) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={862}= ={935}= [entry] [rendered]
+    > ./c c
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c, main) all-chunks/425.js X bytes <{792}> ={60}= ={199}= ={210}= ={263}= ={390}= ={628}= ={723}= ={862}= ={869}= ={935}= ={996}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./a a
+    > ./b b
+    > ./c c
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c, main) all-chunks/628.js (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={210}= ={263}= ={390}= ={425}= ={723}= ={862}= ={869}= ={935}= ={996}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./a a
+    > ./b b
+    > ./c c
+    ./node_modules/x.js X bytes [built] [code generated]
+  chunk (runtime: a, b, main) all-chunks/723.js (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={210}= ={263}= ={425}= ={628}= ={935}= ={996}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./a a
+    > ./b b
+    ./node_modules/y.js X bytes [built] [code generated]
+  chunk (runtime: main) all-chunks/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{210}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: c, main) all-chunks/862.js (id hint: vendors) X bytes <{792}> ={390}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./c ./index.js 3:0-47
+    > ./c c
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: main) all-chunks/async-c.js (async-c) X bytes <{792}> ={425}= ={628}= ={862}= ={935}= [rendered]
+    > ./c ./index.js 3:0-47
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c, main) all-chunks/935.js X bytes <{210}> <{263}> <{425}> <{628}> <{723}> <{792}> <{996}> ={49}= ={60}= ={199}= ={390}= ={425}= ={628}= ={723}= ={862}= ={869}= [initial] [rendered] split chunk (cache group: default)
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./g ./a.js 6:0-47
+    > ./b b
+    > ./c c
+    ./f.js X bytes [built] [code generated]
+  chunk (runtime: a) all-chunks/a.js (a) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
+    > ./a a
+    runtime modules X KiB 10 modules
+    ./a.js X bytes [built] [code generated]
+  all-chunks (webpack x.x.x) compiled successfully
+
+manual:
+  Entrypoint main X KiB = manual/main.js
+  Entrypoint a X KiB = manual/vendors.js X KiB manual/a.js X KiB
+  Entrypoint b X KiB = manual/vendors.js X KiB manual/b.js X KiB
+  Entrypoint c X KiB = manual/vendors.js X KiB manual/c.js X KiB
+  chunk (runtime: a, main) manual/async-g.js (async-g) X bytes <{96}> <{263}> <{996}> [rendered]
+    > ./g ./a.js 6:0-47
+    dependent modules X bytes [dependent] 1 module
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) manual/async-b.js (async-b) X bytes <{792}> ={96}= [rendered]
+    > ./b ./index.js 2:0-47
+    dependent modules X bytes [dependent] 2 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c, main) manual/vendors.js (vendors) (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={263}= ={390}= ={869}= ={996}= >{49}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./a a
+    > x a
+    > y a
+    > z a
+    > ./b b
+    > x b
+    > y b
+    > z b
+    > ./c c
+    > x c
+    > y c
+    > z c
+    ./node_modules/x.js X bytes [built] [code generated]
+    ./node_modules/y.js X bytes [built] [code generated]
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: b) manual/b.js (b) X bytes (javascript) X KiB (runtime) ={96}= [entry] [rendered]
+    > ./b b
+    > x b
+    > y b
+    > z b
+    runtime modules X KiB 4 modules
+    dependent modules X bytes [dependent] 2 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) manual/async-a.js (async-a) X bytes <{792}> ={96}= >{49}< [rendered]
+    > ./a ./index.js 1:0-47
+    dependent modules X bytes [dependent] 1 module
+    ./a.js + 1 modules X bytes [built] [code generated]
+  chunk (runtime: c) manual/c.js (c) X bytes (javascript) X KiB (runtime) ={96}= [entry] [rendered]
+    > ./c c
+    > x c
+    > y c
+    > z c
+    runtime modules X KiB 4 modules
+    dependent modules X bytes [dependent] 2 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: main) manual/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: main) manual/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
+    > ./c ./index.js 3:0-47
+    dependent modules X bytes [dependent] 2 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a) manual/a.js (a) X bytes (javascript) X KiB (runtime) ={96}= >{49}< [entry] [rendered]
+    > ./a a
+    > x a
+    > y a
+    > z a
+    runtime modules X KiB 10 modules
+    dependent modules X bytes [dependent] 1 module
+    ./a.js + 1 modules X bytes [built] [code generated]
+  manual (webpack x.x.x) compiled successfully
+
+name-too-long:
+  Entrypoint main X KiB = name-too-long/main.js
+  Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/210.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
+  Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb X KiB = name-too-long/628.js X bytes name-too-long/723.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
+  Entrypoint cccccccccccccccccccccccccccccc X KiB = name-too-long/628.js X bytes name-too-long/862.js X bytes name-too-long/425.js X bytes name-too-long/935.js X bytes name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js X KiB
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, main) name-too-long/async-g.js (async-g) X bytes <{210}> <{263}> <{425}> <{505}> <{628}> <{723}> ={935}= [rendered]
+    > ./g ./a.js 6:0-47
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) name-too-long/async-b.js (async-b) X bytes <{792}> ={425}= ={628}= ={723}= ={935}= [rendered]
+    > ./b ./index.js 2:0-47
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={723}= ={935}= [entry] [rendered]
+    > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, main) name-too-long/210.js X bytes <{792}> ={263}= ={425}= ={505}= ={628}= ={723}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    ./e.js X bytes [built] [code generated]
+  chunk (runtime: main) name-too-long/async-a.js (async-a) X bytes <{792}> ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [rendered]
+    > ./a ./index.js 1:0-47
+    ./a.js X bytes [built] [code generated]
+  chunk (runtime: cccccccccccccccccccccccccccccc) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (cccccccccccccccccccccccccccccc) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={862}= ={935}= [entry] [rendered]
+    > ./c cccccccccccccccccccccccccccccc
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccccccccc, main) name-too-long/425.js X bytes <{792}> ={60}= ={63}= ={210}= ={263}= ={349}= ={505}= ={628}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    > ./c cccccccccccccccccccccccccccccc
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) name-too-long/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) X bytes (javascript) X KiB (runtime) ={210}= ={425}= ={628}= ={723}= >{49}< >{935}< [entry] [rendered]
+    > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    runtime modules X KiB 10 modules
+    ./a.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccccccccc, main) name-too-long/628.js (id hint: vendors) X bytes <{792}> ={60}= ={63}= ={210}= ={263}= ={349}= ={425}= ={505}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    > ./c cccccccccccccccccccccccccccccc
+    ./node_modules/x.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, main) name-too-long/723.js (id hint: vendors) X bytes <{792}> ={60}= ={63}= ={210}= ={263}= ={425}= ={505}= ={628}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    ./node_modules/y.js X bytes [built] [code generated]
+  chunk (runtime: main) name-too-long/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{210}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: cccccccccccccccccccccccccccccc, main) name-too-long/862.js (id hint: vendors) X bytes <{792}> ={349}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./c ./index.js 3:0-47
+    > ./c cccccccccccccccccccccccccccccc
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: main) name-too-long/async-c.js (async-c) X bytes <{792}> ={425}= ={628}= ={862}= ={935}= [rendered]
+    > ./c ./index.js 3:0-47
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccccccccc, main) name-too-long/935.js X bytes <{210}> <{263}> <{425}> <{505}> <{628}> <{723}> <{792}> ={49}= ={60}= ={63}= ={349}= ={425}= ={628}= ={723}= ={862}= ={869}= [initial] [rendered] split chunk (cache group: default)
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./g ./a.js 6:0-47
+    > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    > ./c cccccccccccccccccccccccccccccc
+    ./f.js X bytes [built] [code generated]
+  name-too-long (webpack x.x.x) compiled successfully
+
+custom-chunks-filter:
+  Entrypoint main X KiB = custom-chunks-filter/main.js
+  Entrypoint a X KiB = custom-chunks-filter/a.js
+  Entrypoint b X KiB = custom-chunks-filter/628.js X bytes custom-chunks-filter/723.js X bytes custom-chunks-filter/935.js X bytes custom-chunks-filter/425.js X bytes custom-chunks-filter/b.js X KiB
+  Entrypoint c X KiB = custom-chunks-filter/628.js X bytes custom-chunks-filter/862.js X bytes custom-chunks-filter/935.js X bytes custom-chunks-filter/425.js X bytes custom-chunks-filter/c.js X KiB
+  chunk (runtime: a, main) custom-chunks-filter/async-g.js (async-g) X bytes <{263}> <{425}> <{628}> <{723}> <{996}> ={935}= [rendered]
+    > ./g ./a.js 6:0-47
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter/async-b.js (async-b) X bytes <{792}> ={425}= ={628}= ={723}= ={935}= [rendered]
+    > ./b ./index.js 2:0-47
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: b) custom-chunks-filter/b.js (b) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={723}= ={935}= [entry] [rendered]
+    > ./b b
+    runtime modules X KiB 4 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter/async-a.js (async-a) X bytes <{792}> ={425}= ={628}= ={723}= >{49}< >{935}< [rendered]
+    > ./a ./index.js 1:0-47
+    ./a.js + 1 modules X bytes [built] [code generated]
+  chunk (runtime: c) custom-chunks-filter/c.js (c) X bytes (javascript) X KiB (runtime) ={425}= ={628}= ={862}= ={935}= [entry] [rendered]
+    > ./c c
+    runtime modules X KiB 4 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: b, c, main) custom-chunks-filter/425.js X bytes <{792}> ={60}= ={199}= ={263}= ={390}= ={628}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: default)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./b b
+    > ./c c
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: b, c, main) custom-chunks-filter/628.js (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={263}= ={390}= ={425}= ={723}= ={862}= ={869}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./b b
+    > ./c c
+    ./node_modules/x.js X bytes [built] [code generated]
+  chunk (runtime: b, main) custom-chunks-filter/723.js (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={263}= ={425}= ={628}= ={935}= >{49}< >{935}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./b b
+    ./node_modules/y.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{263}< >{425}< >{628}< >{723}< >{862}< >{869}< >{935}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: c, main) custom-chunks-filter/862.js (id hint: vendors) X bytes <{792}> ={390}= ={425}= ={628}= ={869}= ={935}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./c ./index.js 3:0-47
+    > ./c c
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter/async-c.js (async-c) X bytes <{792}> ={425}= ={628}= ={862}= ={935}= [rendered]
+    > ./c ./index.js 3:0-47
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a, b, c, main) custom-chunks-filter/935.js X bytes <{263}> <{425}> <{628}> <{723}> <{792}> <{996}> ={49}= ={60}= ={199}= ={390}= ={425}= ={628}= ={723}= ={862}= ={869}= [initial] [rendered] split chunk (cache group: default)
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./g ./a.js 6:0-47
+    > ./b b
+    > ./c c
+    ./f.js X bytes [built] [code generated]
+  chunk (runtime: a) custom-chunks-filter/a.js (a) X bytes (javascript) X KiB (runtime) >{49}< >{935}< [entry] [rendered]
+    > ./a a
+    runtime modules X KiB 9 modules
+    dependent modules X bytes [dependent] 3 modules
+    ./a.js + 1 modules X bytes [built] [code generated]
+  custom-chunks-filter (webpack x.x.x) compiled successfully
+
+custom-chunks-filter-in-cache-groups:
+  Entrypoint main X KiB = custom-chunks-filter-in-cache-groups/main.js
+  Entrypoint a X KiB = custom-chunks-filter-in-cache-groups/765.js X bytes custom-chunks-filter-in-cache-groups/a.js X KiB
+  Entrypoint b X KiB = custom-chunks-filter-in-cache-groups/vendors.js X KiB custom-chunks-filter-in-cache-groups/b.js X KiB
+  Entrypoint c X KiB = custom-chunks-filter-in-cache-groups/vendors.js X KiB custom-chunks-filter-in-cache-groups/c.js X KiB
+  chunk (runtime: a, main) custom-chunks-filter-in-cache-groups/async-g.js (async-g) X bytes <{96}> <{263}> <{765}> <{996}> [rendered]
+    > ./g ./a.js 6:0-47
+    dependent modules X bytes [dependent] 1 module
+    ./g.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-b.js (async-b) X bytes <{792}> ={96}= [rendered]
+    > ./b ./index.js 2:0-47
+    dependent modules X bytes [dependent] 2 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: b, c, main) custom-chunks-filter-in-cache-groups/vendors.js (vendors) (id hint: vendors) X bytes <{792}> ={60}= ={199}= ={263}= ={390}= ={869}= >{49}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    > ./a ./index.js 1:0-47
+    > ./b ./index.js 2:0-47
+    > ./c ./index.js 3:0-47
+    > ./b b
+    > x b
+    > y b
+    > z b
+    > ./c c
+    > x c
+    > y c
+    > z c
+    ./node_modules/x.js X bytes [built] [code generated]
+    ./node_modules/y.js X bytes [built] [code generated]
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: b) custom-chunks-filter-in-cache-groups/b.js (b) X bytes (javascript) X KiB (runtime) ={96}= [entry] [rendered]
+    > ./b b
+    > x b
+    > y b
+    > z b
+    runtime modules X KiB 4 modules
+    dependent modules X bytes [dependent] 2 modules
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-a.js (async-a) X bytes <{792}> ={96}= >{49}< [rendered]
+    > ./a ./index.js 1:0-47
+    dependent modules X bytes [dependent] 1 module
+    ./a.js + 1 modules X bytes [built] [code generated]
+  chunk (runtime: c) custom-chunks-filter-in-cache-groups/c.js (c) X bytes (javascript) X KiB (runtime) ={96}= [entry] [rendered]
+    > ./c c
+    > x c
+    > y c
+    > z c
+    runtime modules X KiB 4 modules
+    dependent modules X bytes [dependent] 2 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a) custom-chunks-filter-in-cache-groups/765.js (id hint: vendors) X bytes ={996}= >{49}< [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./a a
+    > x a
+    > y a
+    > z a
+    ./node_modules/x.js X bytes [built] [code generated]
+    ./node_modules/y.js X bytes [built] [code generated]
+    ./node_modules/z.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter-in-cache-groups/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
+    > ./ main
+    runtime modules X KiB 9 modules
+    ./index.js X bytes [built] [code generated]
+  chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
+    > ./c ./index.js 3:0-47
+    dependent modules X bytes [dependent] 2 modules
+    ./c.js X bytes [built] [code generated]
+  chunk (runtime: a) custom-chunks-filter-in-cache-groups/a.js (a) X bytes (javascript) X KiB (runtime) ={765}= >{49}< [entry] [rendered]
+    > ./a a
+    > x a
+    > y a
+    > z a
+    runtime modules X KiB 10 modules
+    dependent modules X bytes [dependent] 1 module
+    ./a.js + 1 modules X bytes [built] [code generated]
+  custom-chunks-filter-in-cache-groups (webpack x.x.x) compiled successfully"
+`;

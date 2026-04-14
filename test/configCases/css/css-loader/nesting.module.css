@@ -1,0 +1,82 @@
+.notice {
+	width: 90%;
+	justify-content: center;
+	border-radius: 1rem;
+	border: black solid 2px;
+	background-color: #ffc107;
+	color: black;
+	padding: 1rem;
+
+	.notice-heading:before {
+		/* equivalent to `.notice .notice-heading:before` */
+		content: "ℹ︎ ";
+	}
+
+	&.warning {
+		/* equivalent to `.notice.warning` */
+		background-color: #d81b60;
+		border-color: #d81b60;
+		color: white;
+		.warning-heading:before {
+			/* equivalent to `.notice.warning .warning-heading:before` */
+			content: "! ";
+		}
+	}
+
+	&.success {
+		/* equivalent to `.notice.success` */
+		background-color: #004d40;
+		border-color: #004d40;
+		color: white;
+
+		.success-heading:before {
+			/* equivalent to `.notice.success .success-heading:before` */
+			content: "✓ ";
+		}
+	}
+}
+
+.foo {
+	color: red;
+}
+
+.bar {
+	composes: foo;
+
+	&.baz {
+		color: blue;
+	}
+}
+
+.foo {
+	display: grid;
+
+	@media (orientation: landscape) {
+		& {
+			grid-auto-flow: column;
+		}
+	}
+}
+
+@media (orientation: landscape) {
+	.a {
+		color: red;
+	}
+}
+
+@media (orientation: landscape) {
+	@media (orientation: landscape) {
+		.b {
+			color: red;
+			composes: a;
+		}
+	}
+}
+
+.n {
+	composes: a;
+
+	@media (orientation: landscape) {
+		color: red;
+	}
+}

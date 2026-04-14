@@ -1,0 +1,2550 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 1`] = `
+Object {
+  "bar": "postcss-modules-extract-imports_modules_css-bar",
+  "baz": "postcss-modules-extract-imports_modules_css-baz",
+  "exportName1": "postcss-modules-extract-imports_modules_css-exportName1 importName secondImport",
+  "exportName10": "postcss-modules-extract-imports_modules_css-exportName10",
+  "exportName11": "postcss-modules-extract-imports_modules_css-exportName11 b_modules_css-b c_modules_css-c",
+  "exportName12": "postcss-modules-extract-imports_modules_css-exportName12 library_modules_css-importName",
+  "exportName13": "postcss-modules-extract-imports_modules_css-exportName13 library_modules_css-importName",
+  "exportName14": "postcss-modules-extract-imports_modules_css-exportName14 library_modules_css-importName library_modules_css-importName2 library_modules_css-importName library_modules_css-importName2",
+  "exportName15": "postcss-modules-extract-imports_modules_css-exportName15 library_modules_css-importName",
+  "exportName16": "postcss-modules-extract-imports_modules_css-exportName16 library_modules_css-importName beforeName importName secondImport library_modules_css-firstImport library_modules_css-secondImport",
+  "exportName17": "postcss-modules-extract-imports_modules_css-exportName17 a_modules_css-a b_modules_css-b c_modules_css-c a_modules_css-a c_modules_css-c",
+  "exportName18": "postcss-modules-extract-imports_modules_css-exportName18 library_modules_css-importName library_modules_css-importName2 library_modules_css-importName3 library_modules_css-importName4",
+  "exportName19": "postcss-modules-extract-imports_modules_css-exportName19 postcss-modules-extract-imports_modules_css-foo postcss-modules-extract-imports_modules_css-bar postcss-modules-extract-imports_modules_css-baz",
+  "exportName19-nested": "postcss-modules-extract-imports_modules_css-exportName19-nested",
+  "exportName19-nested-nested": "postcss-modules-extract-imports_modules_css-exportName19-nested-nested",
+  "exportName2": "postcss-modules-extract-imports_modules_css-exportName2 library_modules_css-importName",
+  "exportName20": "postcss-modules-extract-imports_modules_css-exportName20 c_modules_css-c",
+  "exportName21": "postcss-modules-extract-imports_modules_css-exportName21 b_modules_css-b c_modules_css-c",
+  "exportName22": "postcss-modules-extract-imports_modules_css-exportName22 a_modules_css-a b_modules_css-b c_modules_css-c a_modules_css-a c_modules_css-c",
+  "exportName23": "postcss-modules-extract-imports_modules_css-exportName23 a_modules_css-a",
+  "exportName24": "postcss-modules-extract-imports_modules_css-exportName24 b_modules_css-b a_modules_css-hidden-b",
+  "exportName25": "postcss-modules-extract-imports_modules_css-exportName25 c_modules_css-c a_modules_css-hidden-c",
+  "exportName26": "postcss-modules-extract-imports_modules_css-exportName26 c_modules_css-hidden-d b_modules_css-hidden-d d_modules_css-d",
+  "exportName27": "postcss-modules-extract-imports_modules_css-exportName27 characters_modules_css-a characters_modules_css--b characters_modules_css---c characters_modules_css-_d characters_modules_css-a_ characters_modules_css-b- characters_modules_css-c-- characters_modules_css-d%",
+  "exportName28": "postcss-modules-extract-imports_modules_css-exportName28 b_modules_css-b-last c_modules_css-c-last",
+  "exportName29": "postcss-modules-extract-imports_modules_css-exportName29 c_modules_css-c-last b_modules_css-b-last",
+  "exportName3": "postcss-modules-extract-imports_modules_css-exportName3 library_modules_css-importName library_modules_css-secondImport",
+  "exportName30": "postcss-modules-extract-imports_modules_css-exportName30",
+  "exportName31": "postcss-modules-extract-imports_modules_css-exportName31 postcss-modules-extract-imports_modules_css-from postcss-modules-extract-imports_modules_css-from",
+  "exportName32": "postcss-modules-extract-imports_modules_css-exportName32",
+  "exportName33": "postcss-modules-extract-imports_modules_css-exportName33",
+  "exportName34": "postcss-modules-extract-imports_modules_css-exportName34 a_modules_css-a b_modules_css-b",
+  "exportName35": "postcss-modules-extract-imports_modules_css-exportName35 other_css-className",
+  "exportName36": "postcss-modules-extract-imports_modules_css-exportName36 c_modules_css-deep-nested-c",
+  "exportName37": "postcss-modules-extract-imports_modules_css-exportName37 postcss-modules-extract-imports_modules_css-localName",
+  "exportName38": "postcss-modules-extract-imports_modules_css-exportName38 postcss-modules-extract-imports_modules_css-localName",
+  "exportName39": "postcss-modules-extract-imports_modules_css-exportName39 postcss-modules-extract-imports_modules_css-localName",
+  "exportName4": "postcss-modules-extract-imports_modules_css-exportName4 postcss-modules-extract-imports_modules_css-localName",
+  "exportName40": "postcss-modules-extract-imports_modules_css-exportName40 postcss-modules-extract-imports_modules_css-localName",
+  "exportName41": "postcss-modules-extract-imports_modules_css-exportName41 postcss-modules-extract-imports_modules_css-localName",
+  "exportName42": "postcss-modules-extract-imports_modules_css-exportName42 postcss-modules-extract-imports_modules_css-localName",
+  "exportName43": "postcss-modules-extract-imports_modules_css-exportName43 postcss-modules-extract-imports_modules_css-localName",
+  "exportName44": "postcss-modules-extract-imports_modules_css-exportName44",
+  "exportName5": "postcss-modules-extract-imports_modules_css-exportName5 library_modules_css-importName library_modules_css-importName2",
+  "exportName6": "postcss-modules-extract-imports_modules_css-exportName6 library_modules_css-importName",
+  "exportName7": "postcss-modules-extract-imports_modules_css-exportName7 library_modules_css-importName library_modules_css-secondImport",
+  "exportName8": "postcss-modules-extract-imports_modules_css-exportName8 library_modules_css-importName library_modules_css-secondImport library_modules_css-importName library_modules_css-importName2",
+  "exportName9": "postcss-modules-extract-imports_modules_css-exportName9 library_modules_css-secondImport library_modules_css-secondImport library_modules_css-thirdDep",
+  "foo": "postcss-modules-extract-imports_modules_css-foo",
+  "from": "postcss-modules-extract-imports_modules_css-from",
+  "localName": "postcss-modules-extract-imports_modules_css-localName",
+  "otherExport": "postcss-modules-extract-imports_modules_css-otherExport library_modules_css-thirdImport library_modules_css-otherLibImport",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 2`] = `
+Object {
+  "
+": "postcss-modules-local-by-default_local_modules_css-
+",
+  " as": "postcss-modules-local-by-default_local_modules_css- as",
+  "#test": "postcss-modules-local-by-default_local_modules_css-#test",
+  "-
+": "postcss-modules-local-by-default_local_modules_css--
+",
+  "--": "postcss-modules-local-by-default_local_modules_css---",
+  "--
+": "postcss-modules-local-by-default_local_modules_css---
+",
+  "--foo": "postcss-modules-local-by-default_local_modules_css---foo",
+  "-a_value": "postcss-modules-local-by-default_local_modules_css--a_value",
+  ":)": "postcss-modules-local-by-default_local_modules_css-:)",
+  "@bounce": "postcss-modules-local-by-default_local_modules_css-@bounce",
+  "@foo": "postcss-modules-local-by-default_local_modules_css-@foo",
+  "BAR": "postcss-modules-local-by-default_local_modules_css-BAR",
+  "a": "postcss-modules-local-by-default_local_modules_css-a",
+  "a_value": "postcss-modules-local-by-default_local_modules_css-a_value",
+  "article-body": "postcss-modules-local-by-default_local_modules_css-article-body",
+  "article-footer": "postcss-modules-local-by-default_local_modules_css-article-footer",
+  "article-header": "postcss-modules-local-by-default_local_modules_css-article-header",
+  "b": "postcss-modules-local-by-default_local_modules_css-b",
+  "bar": "postcss-modules-local-by-default_local_modules_css-bar",
+  "bar-unique": "--postcss-modules-local-by-default_local_modules_css-bar-unique",
+  "barfoo": "postcss-modules-local-by-default_local_modules_css-barfoo",
+  "baz": "postcss-modules-local-by-default_local_modules_css-baz",
+  "bou@nce": "postcss-modules-local-by-default_local_modules_css-bou@nce",
+  "bounce": "postcss-modules-local-by-default_local_modules_css-bounce",
+  "c": "postcss-modules-local-by-default_local_modules_css-c",
+  "class": "postcss-modules-local-by-default_local_modules_css-class",
+  "class-1": "postcss-modules-local-by-default_local_modules_css-class-1",
+  "colon-local-name": "postcss-modules-local-by-default_local_modules_css-colon-local-name",
+  "constructor": "postcss-modules-local-by-default_local_modules_css-constructor",
+  "duplicate-name": "postcss-modules-local-by-default_local_modules_css-duplicate-name",
+  "ease": "postcss-modules-local-by-default_local_modules_css-ease",
+  "ease-in": "postcss-modules-local-by-default_local_modules_css-ease-in",
+  "ease-out": "postcss-modules-local-by-default_local_modules_css-ease-out",
+  "easeOutQuart": "--postcss-modules-local-by-default_local_modules_css-easeOutQuart",
+  "f@oo": "postcss-modules-local-by-default_local_modules_css-f@oo",
+  "fade": "postcss-modules-local-by-default_local_modules_css-fade",
+  "fade-in": "postcss-modules-local-by-default_local_modules_css-fade-in",
+  "fadeInOut": "postcss-modules-local-by-default_local_modules_css-fadeInOut",
+  "fly": "postcss-modules-local-by-default_local_modules_css-fly",
+  "foo": "__foo",
+  "foo-bar": "--postcss-modules-local-by-default_local_modules_css-foo-bar",
+  "foobar": "postcss-modules-local-by-default_local_modules_css-foobar",
+  "infinite": "postcss-modules-local-by-default_local_modules_css-infinite",
+  "local-name": "postcss-modules-local-by-default_local_modules_css-local-name",
+  "my-custom-var": "--postcss-modules-local-by-default_local_modules_css-my-custom-var",
+  "name": "postcss-modules-local-by-default_local_modules_css-name",
+  "rotate": "postcss-modules-local-by-default_local_modules_css-rotate",
+  "slide-right": "postcss-modules-local-by-default_local_modules_css-slide-right",
+  "spin": "postcss-modules-local-by-default_local_modules_css-spin",
+  "sr-only": "--postcss-modules-local-by-default_local_modules_css-sr-only",
+  "t t": "postcss-modules-local-by-default_local_modules_css-t t",
+  "test": "postcss-modules-local-by-default_local_modules_css-test",
+  "title-align": "--postcss-modules-local-by-default_local_modules_css-title-align",
+  "u-m+ ": "postcss-modules-local-by-default_local_modules_css-u-m+ ",
+  "😃bounce😃": "postcss-modules-local-by-default_local_modules_css-😃bounce😃",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 3`] = `
+Object {
+  "a": "postcss-modules-local-by-default_global_modules_css-a",
+  "article-header": "postcss-modules-local-by-default_global_modules_css-article-header",
+  "b": "postcss-modules-local-by-default_global_modules_css-b",
+  "bar": "postcss-modules-local-by-default_global_modules_css-bar",
+  "baz": "postcss-modules-local-by-default_global_modules_css-baz",
+  "bounce": "postcss-modules-local-by-default_global_modules_css-bounce",
+  "class": "postcss-modules-local-by-default_global_modules_css-class",
+  "class-1": "postcss-modules-local-by-default_global_modules_css-class-1",
+  "fly": "postcss-modules-local-by-default_global_modules_css-fly",
+  "foo": "postcss-modules-local-by-default_global_modules_css-foo",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 4`] = `
+Object {
+  "a": "postcss-modules-local-by-default_pure_modules_css-a",
+  "article-footer": "postcss-modules-local-by-default_pure_modules_css-article-footer",
+  "article-header": "postcss-modules-local-by-default_pure_modules_css-article-header",
+  "bar": "postcss-modules-local-by-default_pure_modules_css-bar",
+  "baz": "postcss-modules-local-by-default_pure_modules_css-baz",
+  "bounce": "postcss-modules-local-by-default_pure_modules_css-bounce",
+  "class": "postcss-modules-local-by-default_pure_modules_css-class",
+  "class-1": "postcss-modules-local-by-default_pure_modules_css-class-1",
+  "class-2": "postcss-modules-local-by-default_pure_modules_css-class-2",
+  "export-foo": "__foo",
+  "fadeInOut": "postcss-modules-local-by-default_pure_modules_css-fadeInOut",
+  "fly": "postcss-modules-local-by-default_pure_modules_css-fly",
+  "foo": "postcss-modules-local-by-default_pure_modules_css-foo",
+  "label": "postcss-modules-local-by-default_pure_modules_css-label",
+  "local": "postcss-modules-local-by-default_pure_modules_css-local",
+  "rotate": "postcss-modules-local-by-default_pure_modules_css-rotate",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 5`] = `
+Object {
+  "a": "postcss-modules-scope_modules_css-a",
+  "bar": "--postcss-modules-scope_modules_css-bar",
+  "class": "postcss-modules-scope_modules_css-class abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d",
+  "className": "postcss-modules-scope_modules_css-className",
+  "constructor": "postcss-modules-scope_modules_css-constructor",
+  "exportName1": "postcss-modules-scope_modules_css-exportName1",
+  "exportName10": "postcss-modules-scope_modules_css-exportName10 a b postcss-modules-scope_modules_css-local-a postcss-modules-scope_modules_css-local-b",
+  "exportName11": "postcss-modules-scope_modules_css-exportName11",
+  "exportName12": "postcss-modules-scope_modules_css-exportName12 postcss-modules-scope_modules_css-exportName11",
+  "exportName13": "postcss-modules-scope_modules_css-exportName13",
+  "exportName14": "postcss-modules-scope_modules_css-exportName14",
+  "exportName15": "postcss-modules-scope_modules_css-exportName15",
+  "exportName16": "postcss-modules-scope_modules_css-exportName16",
+  "exportName17": "postcss-modules-scope_modules_css-exportName17",
+  "exportName18": "postcss-modules-scope_modules_css-exportName18",
+  "exportName19": "postcss-modules-scope_modules_css-exportName19",
+  "exportName2": "postcss-modules-scope_modules_css-exportName2",
+  "exportName20": "postcss-modules-scope_modules_css-exportName20",
+  "exportName21": "postcss-modules-scope_modules_css-exportName21",
+  "exportName22": "postcss-modules-scope_modules_css-exportName22",
+  "exportName23": "postcss-modules-scope_modules_css-exportName23",
+  "exportName24": "postcss-modules-scope_modules_css-exportName24",
+  "exportName25": "postcss-modules-scope_modules_css-exportName25",
+  "exportName26": "postcss-modules-scope_modules_css-exportName26",
+  "exportName27": "postcss-modules-scope_modules_css-exportName27",
+  "exportName28": "postcss-modules-scope_modules_css-exportName28",
+  "exportName29": "postcss-modules-scope_modules_css-exportName29",
+  "exportName3": "postcss-modules-scope_modules_css-exportName3",
+  "exportName30": "postcss-modules-scope_modules_css-exportName30",
+  "exportName31": "postcss-modules-scope_modules_css-exportName31",
+  "exportName32": "postcss-modules-scope_modules_css-exportName32",
+  "exportName33": "postcss-modules-scope_modules_css-exportName33",
+  "exportName34": "postcss-modules-scope_modules_css-exportName34",
+  "exportName35": "postcss-modules-scope_modules_css-exportName35",
+  "exportName36": "postcss-modules-scope_modules_css-exportName36",
+  "exportName37": "postcss-modules-scope_modules_css-exportName37",
+  "exportName38": "postcss-modules-scope_modules_css-exportName38",
+  "exportName39": "postcss-modules-scope_modules_css-exportName39 postcss-modules-scope_modules_css-exportName40",
+  "exportName4": "postcss-modules-scope_modules_css-exportName4",
+  "exportName41": "postcss-modules-scope_modules_css-exportName41",
+  "exportName42": "postcss-modules-scope_modules_css-exportName42 postcss-modules-scope_modules_css-exportName41",
+  "exportName43": "postcss-modules-scope_modules_css-exportName43",
+  "exportName44": "postcss-modules-scope_modules_css-exportName44",
+  "exportName45": "postcss-modules-scope_modules_css-exportName45",
+  "exportName46": "postcss-modules-scope_modules_css-exportName46",
+  "exportName47": "postcss-modules-scope_modules_css-exportName47",
+  "exportName48": "postcss-modules-scope_modules_css-exportName48",
+  "exportName49": "postcss-modules-scope_modules_css-exportName49",
+  "exportName5": "postcss-modules-scope_modules_css-exportName5",
+  "exportName50": "postcss-modules-scope_modules_css-exportName50",
+  "exportName51": "postcss-modules-scope_modules_css-exportName51",
+  "exportName52": "postcss-modules-scope_modules_css-exportName52",
+  "exportName53": "postcss-modules-scope_modules_css-exportName53",
+  "exportName54": "postcss-modules-scope_modules_css-exportName54",
+  "exportName55": "postcss-modules-scope_modules_css-exportName55",
+  "exportName56": "postcss-modules-scope_modules_css-exportName56",
+  "exportName57": "postcss-modules-scope_modules_css-exportName57",
+  "exportName58": "postcss-modules-scope_modules_css-exportName58 postcss-modules-scope_modules_css-exportName57",
+  "exportName59": "postcss-modules-scope_modules_css-exportName59 postcss-modules-scope_modules_css-exportName58 postcss-modules-scope_modules_css-exportName57",
+  "exportName6": "postcss-modules-scope_modules_css-exportName6",
+  "exportName60": "postcss-modules-scope_modules_css-exportName60 otherClass andAgain aThirdClass",
+  "exportName60-function-syntax": "postcss-modules-scope_modules_css-exportName60-function-syntax otherClass andAgain aThirdClass",
+  "exportName63": "postcss-modules-scope_modules_css-exportName63",
+  "exportName64": "postcss-modules-scope_modules_css-exportName64",
+  "exportName65": "postcss-modules-scope_modules_css-exportName65",
+  "exportName66": "postcss-modules-scope_modules_css-exportName66 postcss-modules-scope_modules_css-exportName63 postcss-modules-scope_modules_css-exportName64 postcss-modules-scope_modules_css-exportName65",
+  "exportName67": "postcss-modules-scope_modules_css-exportName67",
+  "exportName68": "postcss-modules-scope_modules_css-exportName68 postcss-modules-scope_modules_css-exportName67",
+  "exportName69": "postcss-modules-scope_modules_css-exportName69 postcss-modules-scope_modules_css-exportName68 postcss-modules-scope_modules_css-exportName67",
+  "exportName7": "postcss-modules-scope_modules_css-exportName7",
+  "exportName70": "postcss-modules-scope_modules_css-exportName70 postcss-modules-scope_modules_css-exportName71 postcss-modules-scope_modules_css-exportName72",
+  "exportName71": "postcss-modules-scope_modules_css-exportName71 postcss-modules-scope_modules_css-exportName72",
+  "exportName72": "postcss-modules-scope_modules_css-exportName72",
+  "exportName73": "postcss-modules-scope_modules_css-exportName73 classes_css-bar classes_css-localName",
+  "exportName74": "postcss-modules-scope_modules_css-exportName74 postcss-modules-scope_modules_css-exportName73 classes_css-bar classes_css-localName postcss-modules-scope_modules_css-exportName75 my-global",
+  "exportName75": "postcss-modules-scope_modules_css-exportName75",
+  "exportName76": "postcss-modules-scope_modules_css-exportName76 import_modules_css-otherClass",
+  "exportName77": "postcss-modules-scope_modules_css-exportName77 abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d",
+  "exportName78": "postcss-modules-scope_modules_css-exportName78",
+  "exportName79": "postcss-modules-scope_modules_css-exportName79 postcss-modules-scope_modules_css-class abcd_modules_css-a abcd_modules_css-b abcd_modules_css-c d e f abcd_modules_css-d postcss-modules-scope_modules_css-bar",
+  "exportName8": "postcss-modules-scope_modules_css-exportName8",
+  "exportName9": "postcss-modules-scope_modules_css-exportName9",
+  "fade-export": "postcss-modules-scope_modules_css-fade-export",
+  "fade-in": "postcss-modules-scope_modules_css-fade-in",
+  "fade-in-export": "postcss-modules-scope_modules_css-fade-in-export",
+  "fade-out": "postcss-modules-scope_modules_css-fade-out",
+  "fadeIn": "postcss-modules-scope_modules_css-fadeIn",
+  "fadeIn-export": "postcss-modules-scope_modules_css-fadeIn-export",
+  "global": "postcss-modules-scope_modules_css-global",
+  "idName": "postcss-modules-scope_modules_css-idName",
+  "local-a": "postcss-modules-scope_modules_css-local-a",
+  "local-b": "postcss-modules-scope_modules_css-local-b",
+  "slidein": "postcss-modules-scope_modules_css-slidein",
+  "smile": "postcss-modules-scope_modules_css-smile",
+  "smile_with_A": "postcss-modules-scope_modules_css-smile_with_A",
+  "sr-only": "--postcss-modules-scope_modules_css-sr-only",
+  "test": "--postcss-modules-scope_modules_css-test",
+  "title-align": "--postcss-modules-scope_modules_css-title-align",
+  "toString": "postcss-modules-scope_modules_css-toString",
+  "wrong": "postcss-modules-scope_modules_css-wrong",
+  "😀": "postcss-modules-scope_modules_css-😀",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 6`] = `
+Object {
+  "--red": "blue",
+  "a": "a_modules_css-a",
+  "b": "b_modules_css-b",
+  "bar": "postcss-modules-values_modules_css-bar",
+  "char3": "#0f0",
+  "char6": "#00ff00",
+  "color": "--postcss-modules-values_modules_css-color",
+  "colors": "\\"./colors.css\\"",
+  "coolShadow": "0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14)",
+  "exportName": "blue",
+  "exportName1": "blue @value exportName2 yellow",
+  "exportName10": "red",
+  "exportName11": "red",
+  "exportName12": "blue",
+  "exportName13": "postcss-modules-values_modules_css-exportName13",
+  "exportName14": "postcss-modules-values_modules_css-exportName14",
+  "exportName15": "postcss-modules-values_modules_css-exportName15",
+  "exportName16": "postcss-modules-values_modules_css-exportName16",
+  "exportName17": "postcss-modules-values_modules_css-exportName17",
+  "exportName18": "#FFF",
+  "exportName19": "#FFF",
+  "exportName2": "(max-width: 599px)",
+  "exportName20": "postcss-modules-values_modules_css-exportName20",
+  "exportName22": "10px",
+  "exportName23": "calc(exportName22 * 2)",
+  "exportName24": "postcss-modules-values_modules_css-exportName24",
+  "exportName25": "postcss-modules-values_modules_css-exportName25",
+  "exportName26": "postcss-modules-values_modules_css-exportName26",
+  "exportName27": "postcss-modules-values_modules_css-exportName27",
+  "exportName28": "postcss-modules-values_modules_css-exportName28",
+  "exportName29": "postcss-modules-values_modules_css-exportName29",
+  "exportName3": "red",
+  "exportName30": "postcss-modules-values_modules_css-exportName30",
+  "exportName4": "red",
+  "exportName5": "red",
+  "exportName6": "red",
+  "exportName7": "40px",
+  "exportName8": "36px",
+  "exportName9": "fuchsia",
+  "exportNameRed": "blue",
+  "foo-replace": "postcss-modules-values_modules_css-foo-replace",
+  "foo-replace-1": "postcss-modules-values_modules_css-foo-replace-1",
+  "foo-replace-2": "postcss-modules-values_modules_css-foo-replace-2",
+  "foo-replace-3": "postcss-modules-values_modules_css-foo-replace-3",
+  "foo-replace-4": "postcss-modules-values_modules_css-foo-replace-4",
+  "hsla": "hsla(220, 13.0%, 18.0%, 1)",
+  "my-own-color": "--postcss-modules-values_modules_css-my-own-color",
+  "named": "aqua",
+  "namedBlue": "red",
+  "namedRed": "blue",
+  "otherBlue": "red",
+  "otherRed": "blue",
+  "parentheses": "color(red lightness(50%))",
+  "red": "yellow",
+  "rgba": "rgba(34, 12, 64, 0.3)",
+  "v-color": "my-custom-value",
+  "v-comment": "",
+  "v-comment-other": "/* comment */",
+  "v-empty": " /* comment */",
+  "v-empty-1": " ",
+  "v-empty-2": "   ",
+  "wrongOrder": "blue",
+}
+`;
+
+exports[`ConfigCacheTestCases css postcss-modules-plugins exported tests should work 7`] = `
+Array [
+  "/*!*********************************!*\\\\
+  !*** css ./library.modules.css ***!
+  \\\\*********************************/
+.library_modules_css-something {}
+
+.library_modules_css-importName {
+	color: red;
+}
+
+.library_modules_css-importName2 {
+	color: red;
+}
+
+.library_modules_css-importName3 {
+	color: azure;
+}
+
+.library_modules_css-importName4 {
+	color: antiquewhite;
+}
+
+.library_modules_css-secondImport {
+	color: green;
+}
+
+.library_modules_css-thirdImport {
+	color: blue;
+}
+
+.library_modules_css-otherLibImport {
+	color: yellow;
+}
+
+.library_modules_css-thirdDep {
+	color: black;
+}
+
+.library_modules_css-firstImport {
+	color: red;
+}
+
+.library_modules_css-secondImport {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./b.modules.css ***!
+  \\\\***************************/
+.b_modules_css-b { color: red; }
+
+.b_modules_css-hidden-d {
+	color: blue;
+}
+
+.b_modules_css-b-last {
+	color: red;
+}
+
+
+/*!***************************!*\\\\
+  !*** css ./c.modules.css ***!
+  \\\\***************************/
+.c_modules_css-c { color: red }
+
+.c_modules_css-hidden-d {
+	color: blue;
+}
+
+.c_modules_css-c-last {
+	color: red;
+}
+
+.c_modules_css-deep-nested-c {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./a.modules.css ***!
+  \\\\***************************/
+.a_modules_css-a { color: red; }
+
+.a_modules_css-hidden-b {
+	color: blue;
+}
+
+.a_modules_css-hidden-c {
+	color: aliceblue;
+}
+
+/*!***************************!*\\\\
+  !*** css ./d.modules.css ***!
+  \\\\***************************/
+.d_modules_css-d {
+	color: red;
+}
+
+/*!************************************!*\\\\
+  !*** css ./characters.modules.css ***!
+  \\\\************************************/
+.characters_modules_css-a {
+	color: red;
+}
+
+.characters_modules_css-a_ {
+	color: red;
+}
+
+.characters_modules_css--b {
+	color: red;
+}
+
+.characters_modules_css-b- {
+	color: red;
+}
+
+.characters_modules_css---c {
+	color: red;
+}
+
+.characters_modules_css-c-- {
+	color: red;
+}
+
+.characters_modules_css-_d {
+	color: red;
+}
+
+.characters_modules_css-d\\\\% {
+	color: tan;
+}
+
+/*!***********************!*\\\\
+  !*** css ./other.css ***!
+  \\\\***********************/
+.other_css-className { color: red }
+
+/*!********************************!*\\\\
+  !*** css ./import.modules.css ***!
+  \\\\********************************/
+
+.import_modules_css-abc {
+	color: red;
+}
+
+.import_modules_css-__foo {
+	color: red;
+}
+
+.import_modules_css-some-value {
+	color: red;
+}
+
+.import_modules_css-otherClass {
+	color: red;
+}
+
+
+/*!**************************************************!*\\\\
+  !*** css ./node_modules/foo/my-custom-style.css ***!
+  \\\\**************************************************/
+.node_modules_foo_my-custom-style_css-custom-other-name {
+	color: red;
+}
+
+/*!*********************************************************!*\\\\
+  !*** css ./postcss-modules-extract-imports.modules.css ***!
+  \\\\*********************************************************/
+/* postcss-modules-extract-imports */
+
+
+/* composing-globals */
+.postcss-modules-extract-imports_modules_css-exportName1 { other: rule; }
+
+/* existing-import */
+
+.postcss-modules-extract-imports_modules_css-exportName2 {
+	}
+
+/* import-comment */
+/*
+:local(.exportName) {
+  composes: importName from \\"path/library.css\\";
+  other: rule;
+}
+*/
+
+/* import-consolidate */
+.postcss-modules-extract-imports_modules_css-exportName3 {
+	other: rule;
+}
+
+.postcss-modules-extract-imports_modules_css-otherExport {
+	}
+
+/* import-local-extends */
+.postcss-modules-extract-imports_modules_css-localName { color: red; }
+
+.postcss-modules-extract-imports_modules_css-exportName4 {
+	other: rule;
+}
+
+/* import-media */
+@media screen {
+	.postcss-modules-extract-imports_modules_css-exportName5 {
+		other: rule2;
+	}
+}
+
+.postcss-modules-extract-imports_modules_css-exportName6 {
+	other: rule;
+}
+
+/* import-multiple-classes */
+.postcss-modules-extract-imports_modules_css-exportName7 { other: rule; }
+
+/* import-multiple-references */
+.postcss-modules-extract-imports_modules_css-exportName8 {
+	}
+.postcss-modules-extract-imports_modules_css-exportName9 {
+	}
+
+/* import-only-whitelist */
+.postcss-modules-extract-imports_modules_css-exportName10 { imports: importName from \\"path/library.css\\"; something-else: otherLibImport from \\"path/other-lib.css\\"; }
+
+/* import-preserving-order */
+.postcss-modules-extract-imports_modules_css-exportName11 {
+	color: #aaa;
+}
+
+/* import-single-quotes */
+.postcss-modules-extract-imports_modules_css-exportName12 {
+	other: rule;
+}
+
+/* import-double-quotes */
+.postcss-modules-extract-imports_modules_css-exportName13 {
+	other: rule;
+}
+
+/* import-spacing */
+.postcss-modules-extract-imports_modules_css-exportName14 {
+	other: rule;
+}
+
+/* import-within */
+.postcss-modules-extract-imports_modules_css-exportName15 {
+	other: rule;
+}
+
+/* multiple-composes */
+.postcss-modules-extract-imports_modules_css-exportName16 {
+	other: rule;
+}
+
+.postcss-modules-extract-imports_modules_css-exportName17 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName18 {
+	}
+
+.postcss-modules-extract-imports_modules_css-foo { color: red }
+.postcss-modules-extract-imports_modules_css-bar { color: blue }
+.postcss-modules-extract-imports_modules_css-baz { color: green }
+.postcss-modules-extract-imports_modules_css-exportName19 {
+	}
+
+/* nesting */
+.postcss-modules-extract-imports_modules_css-exportName19 {
+	display: grid;
+
+	@media (orientation: landscape) {
+		&.postcss-modules-extract-imports_modules_css-exportName19-nested {
+			grid-auto-flow: column;
+
+			@media (min-width: 1024px) {
+				&.postcss-modules-extract-imports_modules_css-exportName19-nested-nested {
+					composes: importName from \\"library.modules.css\\";
+				}
+			}
+		}
+	}
+}
+
+/* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
+/* resolve-composes-order */
+.postcss-modules-extract-imports_modules_css-exportName20 {
+	color: #bebebe;
+}
+
+.postcss-modules-extract-imports_modules_css-exportName21 {
+	/* \`b\` should be after \`c\` */
+	color: #aaa;
+}
+
+/* resolve-duplicates */
+
+.postcss-modules-extract-imports_modules_css-exportName22 {
+	}
+
+/* resolve-imports-order */
+
+
+.postcss-modules-extract-imports_modules_css-exportName23 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName24 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName25 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName26 {
+	}
+
+/* valid-characters */
+.postcss-modules-extract-imports_modules_css-exportName27 {
+	}
+
+/* We pass this test */
+/* check-import-order */
+.postcss-modules-extract-imports_modules_css-exportName28  {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName29 {
+	}
+
+/* empty-composes */
+.postcss-modules-extract-imports_modules_css-exportName30 {
+	}
+
+/* weird-composes */
+.postcss-modules-extract-imports_modules_css-from { color: red; }
+.postcss-modules-extract-imports_modules_css-exportName31 {
+	}
+
+/* broken-composes */
+.postcss-modules-extract-imports_modules_css-exportName32 {
+	composes: className from 12;
+}
+
+/* broken-composes-2 */
+.postcss-modules-extract-imports_modules_css-exportName33 {
+	composes: 12;
+}
+
+/* composes-multiple-declarations */
+.postcss-modules-extract-imports_modules_css-exportName34 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName34 {
+	}
+
+/* inherit-module-type */
+.postcss-modules-extract-imports_modules_css-exportName35 {
+	}
+
+/* composes from-import */
+
+.postcss-modules-extract-imports_modules_css-exportName36 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName37 {}
+
+.postcss-modules-extract-imports_modules_css-exportName38 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName39 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName40 {color:red;}
+
+.postcss-modules-extract-imports_modules_css-exportName41 {color:red;}
+
+.postcss-modules-extract-imports_modules_css-exportName42 {color:red}
+
+.postcss-modules-extract-imports_modules_css-exportName43 {
+
+	color:red;
+}
+
+
+.postcss-modules-extract-imports_modules_css-exportName44 { color: unknown; }
+
+/*!****************************************************************!*\\\\
+  !*** css ./postcss-modules-local-by-default.local.modules.css ***!
+  \\\\****************************************************************/
+/* postcss-modules-local-by-default */
+
+
+/* scope selectors */
+.postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+
+/* scope escaped selectors */
+.postcss-modules-local-by-default_local_modules_css-\\\\:\\\\) {}
+
+/* scope ids */
+#postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+
+/* scope escaped ids */
+#postcss-modules-local-by-default_local_modules_css-\\\\#test {}
+
+/* scope escaped ids (2) */
+#postcss-modules-local-by-default_local_modules_css-u-m\\\\+\\\\ {}
+
+/* scope multiple selectors */
+.postcss-modules-local-by-default_local_modules_css-foo, .postcss-modules-local-by-default_local_modules_css-baz { a_value: some-value; }
+
+/* scope sibling selectors */
+.postcss-modules-local-by-default_local_modules_css-foo ~ .postcss-modules-local-by-default_local_modules_css-baz { a_value: some-value; }
+
+/* scope pseudo elements */
+.postcss-modules-local-by-default_local_modules_css-foo:after { a_value: some-value; }
+
+/* scope media queries */
+@media only screen { .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; } }
+
+/* allow narrow global selectors */
+.foo .bar { a_value: some-value; }
+
+/* allow narrow local selectors */
+.postcss-modules-local-by-default_local_modules_css-foo .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* allow broad global selectors */
+.foo .bar { a_value: some-value; }
+
+/* allow broad local selectors */
+.postcss-modules-local-by-default_local_modules_css-foo .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* allow multiple narrow global selectors */
+.foo, .bar { a_value: some-value; }
+
+/* allow multiple broad global selectors */
+.foo, .bar { a_value: some-value; }
+
+/* allow multiple broad local selectors */
+.postcss-modules-local-by-default_local_modules_css-foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* allow narrow global selectors nested inside local styles */
+.postcss-modules-local-by-default_local_modules_css-foo .foo .bar { a_value: some-value; }
+
+/* allow broad global selectors nested inside local styles */
+.postcss-modules-local-by-default_local_modules_css-foo .foo .bar { a_value: some-value; }
+
+/* allow parentheses inside narrow global selectors */
+.postcss-modules-local-by-default_local_modules_css-foo .foo:not(.bar) { a_value: some-value; }
+
+/* allow parentheses inside narrow local selectors */
+.postcss-modules-local-by-default_local_modules_css-foo .postcss-modules-local-by-default_local_modules_css-foo:not(.postcss-modules-local-by-default_local_modules_css-bar) { a_value: some-value; }
+
+/* allow narrow global selectors appended to local styles */
+.postcss-modules-local-by-default_local_modules_css-foo.foo.bar { a_value: some-value; }
+
+/* ignore selectors that are already local */
+.postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+
+/* ignore nested selectors that are already local */
+.postcss-modules-local-by-default_local_modules_css-foo .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* ignore multiple selectors that are already local */
+.postcss-modules-local-by-default_local_modules_css-foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* ignore sibling selectors that are already local */
+.postcss-modules-local-by-default_local_modules_css-foo ~ .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* ignore psuedo elements that are already local */
+.postcss-modules-local-by-default_local_modules_css-foo:after { a_value: some-value; }
+
+/* trim whitespace after empty broad selector */
+.postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* broad global should be limited to selector */
+.foo, .postcss-modules-local-by-default_local_modules_css-bar , .postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+
+/* broad global should be limited to nested selector */
+.postcss-modules-local-by-default_local_modules_css-foo:not(.bar).postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+
+/* broad global and local should allow switching */
+.postcss-modules-local-by-default_local_modules_css-foo .bar .postcss-modules-local-by-default_local_modules_css-foobar .postcss-modules-local-by-default_local_modules_css-barfoo { a_value: some-value; }
+
+/* localize a single animation-name */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-bar; }
+
+/* localize a single animation-name #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-bar; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-bar; }
+
+/* passed because \`--bar\` not found */
+/* not localize animation-name in a var function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: var(--postcss-modules-local-by-default_local_modules_css-bar-unique); }
+
+/* passed because \`--bar\` not found */
+/* not localize animation-name in a var function #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--postcss-modules-local-by-default_local_modules_css-bar-unique); }
+/* Work, because found */
+:root { --postcss-modules-local-by-default_local_modules_css-my-custom-var: name; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: vAr(--postcss-modules-local-by-default_local_modules_css-my-custom-var); }
+
+/* not localize animation-name in an env function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: env(bar); }
+
+/* not localize animation-name in an global function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: bar; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: bar; }
+
+/* localize and not localize animation-name in mixed case */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-fadeInOut, moveLeft300px, postcss-modules-local-by-default_local_modules_css-bounce; }
+
+/* not localize animation in an global function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: bar; }
+
+/* not localize a certain animation in an global function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: bar, postcss-modules-local-by-default_local_modules_css-foo; }
+
+/* localize and not localize a certain animation in mixed case */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-rotate 1s, spin 3s, postcss-modules-local-by-default_local_modules_css-fly 6s; }
+
+/* not localize animation-name in an env function #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: eNv(bar); }
+
+/* not localize a single animation-delay */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-delay: 1s; }
+
+/* localize multiple animation-names */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-bar, postcss-modules-local-by-default_local_modules_css-foobar; }
+
+/* not localize revert */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: revert; }
+
+/* not localize revert #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert; }
+
+/* not localize revert #3 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert, postcss-modules-local-by-default_local_modules_css-foo, none; }
+
+/* not localize revert-layer */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: revert-layer; }
+
+/* not localize revert */
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: revert-layer; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\@bounce; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-bou\\\\@nce; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\ as; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-t\\\\ t; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---\\\\A; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-\\\\A; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css--\\\\A; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---; }
+
+/* localize animation using special characters */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-😃bounce😃; }
+
+/* localize custom property */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css---foo; }
+
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-fade .2s var(--postcss-modules-local-by-default_local_modules_css-easeOutQuart) .1s forwards }
+
+/* not localize name in nested function */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-fade .2s env(FOO_BAR) .1s forwards, postcss-modules-local-by-default_local_modules_css-name }
+
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--postcss-modules-local-by-default_local_modules_css-foo-bar) .1s forwards, postcss-modules-local-by-default_local_modules_css-name }
+
+/* don't find a localize name, but localize var */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: var(--postcss-modules-local-by-default_local_modules_css-foo-bar) .1s forwards postcss-modules-local-by-default_local_modules_css-name, postcss-modules-local-by-default_local_modules_css-name }
+
+/* localize animation */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-a; }
+
+/* localize animation #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-bar 5s, postcss-modules-local-by-default_local_modules_css-foobar; }
+
+/* localize animation #3 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: ease postcss-modules-local-by-default_local_modules_css-ease; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: ease postcss-modules-local-by-default_local_modules_css-ease; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: ease postcss-modules-local-by-default_local_modules_css-ease, ease-in postcss-modules-local-by-default_local_modules_css-ease-in, ease-out postcss-modules-local-by-default_local_modules_css-ease-out; }
+
+/* localize animation #4 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 0s ease 0s 1 normal none postcss-modules-local-by-default_local_modules_css-test running; }
+
+/* localize animation with vendor prefix */
+.postcss-modules-local-by-default_local_modules_css-foo { -webkit-animation: postcss-modules-local-by-default_local_modules_css-bar; animation: postcss-modules-local-by-default_local_modules_css-bar; }
+
+/* not localize other rules */
+.postcss-modules-local-by-default_local_modules_css-foo { content: \\"animation: bar;\\" }
+
+/* not localize global rules */
+.foo { animation: foo; animation-name: bar; }
+
+/* handle nested global */
+.a:not(.b) { a_value: some-value; }
+
+/* handle nested global #1 */
+.a:not(.b:not(.c)) { a_value: some-value; }
+
+/* handle nested global #2 */
+.postcss-modules-local-by-default_local_modules_css-a:not(:not(:not(.c))) { a_value: some-value; }
+
+/* handle nested global #3 */
+.a:not(.b, .c) { a_value: some-value; }
+
+/* handle nested global #4 */
+.postcss-modules-local-by-default_local_modules_css-a:not(.b, .postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
+
+/* handle nested global #5 */
+.a:not(.postcss-modules-local-by-default_local_modules_css-b, .c) { a_value: some-value; }
+
+/* handle nested global #6 */
+.a:not(.b, .c) { a_value: some-value; }
+
+/* handle nested global #7 */
+.postcss-modules-local-by-default_local_modules_css-a:not(.postcss-modules-local-by-default_local_modules_css-b, .postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
+
+/* handle nested global #8 */
+.a:not(.postcss-modules-local-by-default_local_modules_css-b, .postcss-modules-local-by-default_local_modules_css-c) { a_value: some-value; }
+
+/* handle a complex animation rule */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-foo, postcss-modules-local-by-default_local_modules_css-bar 5s linear 2s infinite alternate, postcss-modules-local-by-default_local_modules_css-barfoo 1s; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-foo, postcss-modules-local-by-default_local_modules_css-BAR 5s LINEAR 2s INFINITE ALTERNATE, postcss-modules-local-by-default_local_modules_css-barfoo 1s; }
+
+/* handle animations where the first value is not the animation name */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s postcss-modules-local-by-default_local_modules_css-foo; }
+
+/* handle animations where the first value is not the animation name whilst also using keywords */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s normal ease-out infinite postcss-modules-local-by-default_local_modules_css-foo; }
+
+/* not treat animation curve as identifier of animation name even if it separated by comma */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out, postcss-modules-local-by-default_local_modules_css-fade-in 300ms forwards ease-out; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; @media screen { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; } }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; .postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-slide-right 300ms forwards ease-out; } }
+
+/* not treat \\"start\\" and \\"end\\" keywords in steps() function as identifiers */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, end) infinite; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-spin 1s STEPS(12, start) infinite; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, END) infinite; }
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-spin 1s steps(12, START) infinite; }
+
+/* handle animations with custom timing functions */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s normal cubic-bezier(0.25, 0.5, 0.5. 0.75) postcss-modules-local-by-default_local_modules_css-foo; }
+
+/* handle animations whose names are keywords */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s infinite postcss-modules-local-by-default_local_modules_css-infinite; }
+
+/* handle not localize an animation shorthand value of \\"inherit\\" */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: inherit; }
+
+/* handle \\"constructor\\" as animation name */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: postcss-modules-local-by-default_local_modules_css-constructor postcss-modules-local-by-default_local_modules_css-constructor; }
+
+/* default to local when mode provided */
+.postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
+
+/* localize keyframes */
+@keyframes postcss-modules-local-by-default_local_modules_css-foo { from { a_value: some-value; } to { a_value: some-value; } }
+
+/* localize keyframes starting with special characters */
+@keyframes postcss-modules-local-by-default_local_modules_css-\\\\@foo { from { color: red; } to { color: blue; } }
+
+/* localize keyframes containing special characters */
+@keyframes postcss-modules-local-by-default_local_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
+
+/* localize explicit keyframes */
+@keyframes postcss-modules-local-by-default_local_modules_css-foo { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@-webkit-keyframes bar { from { color: red; } to { color: blue; } }
+@keyframes postcss-modules-local-by-default_local_modules_css-local-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes postcss-modules-local-by-default_local_modules_css-colon-local-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes global-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes colon-global-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+
+/* ignore :export statements */
+
+/* ignore :import statements */
+
+/* incorrectly handle nested selectors */
+.postcss-modules-local-by-default_local_modules_css-bar:not(.foo-name, .baz-name) { a_value: some-value; }
+
+/* compile explict global element */
+input { a_value: some-value; }
+
+/* compile explict global attribute */
+[type=\\"radio\\"], :not([type=\\"radio\\"]) { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on inconsistent selector result */
+.foo, .postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* throw on nested :locals, but we allow to do it */
+.postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
+
+/* throw on nested :globals, but we allow to do it */
+.foo { a_value: some-value; }
+
+/* throw on nested mixed, but we allow to do it */
+.foo { a_value: some-value; }
+
+/* throw on nested broad :local, but we allow to do it */
+.postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
+
+/* throw on incorrect spacing with broad :global */
+.postcss-modules-local-by-default_local_modules_css-foo .bar { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on incorrect spacing with broad :local */
+.postcss-modules-local-by-default_local_modules_css-foo.postcss-modules-local-by-default_local_modules_css-bar { a_value: some-value; }
+
+/* pass through global element */
+input { a_value: some-value; }
+
+/* localise class and pass through element */
+.postcss-modules-local-by-default_local_modules_css-foo input { a_value: some-value; }
+
+/* pass through attribute selector */
+[type=\\"radio\\"] { a_value: some-value; }
+
+/* Not related to us */
+/* not modify urls without option */
+/*.a { background: url(./image.png); }*/
+/*:global .b { background: url(image.png); }*/
+/*.c { background: url(\\"./image.png\\"); }*/
+
+/* Not related to us */
+/* rewrite url in local block */
+/*.a { background: url(./image.png); }*/
+/*:global .b { background: url(image.png); }*/
+/*.c { background: url(\\"./image.png\\"); }*/
+/*.c { background: url('./image.png'); }*/
+/*.d { background: -webkit-image-set(url(\\"./image.png\\") 1x, url(\\"./image2x.png\\") 2x); }*/
+/*@font-face { src: url(\\"./font.woff\\"); }*/
+/*@-webkit-font-face { src: url(\\"./font.woff\\"); }*/
+/*@media screen { .a { src: url(\\"./image.png\\"); } }*/
+/*@keyframes :global(ani1) { 0% { src: url(\\"image.png\\"); } }*/
+/*@keyframes ani2 { 0% { src: url(\\"./image.png\\"); } }*/
+/*foo { background: end-with-url(something); }*/
+
+/* Not related to us */
+/* not crash on atrule without nodes */
+/*@charset \\"utf-8\\";*/
+
+/* not break unicode characters */
+.postcss-modules-local-by-default_local_modules_css-a { content: \\"\\\\2193\\" }
+
+/* not break unicode characters */
+.postcss-modules-local-by-default_local_modules_css-a { content: \\"\\\\2193\\\\2193\\" }
+
+/* not break unicode characters */
+.postcss-modules-local-by-default_local_modules_css-a { content: \\"\\\\2193 \\\\2193\\" }
+
+/* not break unicode characters */
+.postcss-modules-local-by-default_local_modules_css-a { content: \\"\\\\2193\\\\2193\\\\2193\\" }
+
+/* not break unicode characters */
+.postcss-modules-local-by-default_local_modules_css-a { content: \\"\\\\2193 \\\\2193 \\\\2193\\" }
+
+/* not ignore custom property set */
+:root { --postcss-modules-local-by-default_local_modules_css-title-align: center; --postcss-modules-local-by-default_local_modules_css-sr-only: { position: absolute; } }
+
+/* not localize imported alias */
+
+.postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
+
+/*
+ * All the original \`import()\` tests do not replace the property, but we can consider this a feature,
+ * because we allow to replace any identifier, we can reconsider this in future
+ */
+
+/* not localize nested imported alias */
+
+.postcss-modules-local-by-default_local_modules_css-foo > .postcss-modules-local-by-default_local_modules_css-a_value > .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
+
+/* ignore imported in explicit local */
+
+.postcss-modules-local-by-default_local_modules_css-a_value { import_modules_css-some-value: some-value; }
+
+/* escape local context with explict global */
+
+.postcss-modules-local-by-default_local_modules_css-foo .a_value .postcss-modules-local-by-default_local_modules_css-bar { import_modules_css-some-value: some-value; }
+
+/* respect explicit local */
+
+.postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-a_value .postcss-modules-local-by-default_local_modules_css-foo .a_value { import_modules_css-some-value: some-value; }
+
+/* not localize imported animation-name */
+
+.postcss-modules-local-by-default_local_modules_css-foo { animation-name: postcss-modules-local-by-default_local_modules_css-a_value; }
+
+/* Not related to us */
+/* throw on invalid syntax id usage */
+. { a_value: some-value; }
+
+/* Not related to us */
+/* throw on invalid syntax class usage */
+# { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid syntax local class usage */
+. { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid syntax local id usage */
+# { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+. { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+# { a_value: some-value; }
+
+/* TODO bug no report */
+/* throw on invalid global class usage */
+.a:not(.b, .c) { a_value: some-value; }
+
+/* css nesting */
+.postcss-modules-local-by-default_local_modules_css-foo {
+	&.postcss-modules-local-by-default_local_modules_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.postcss-modules-local-by-default_local_modules_css-bar {
+			c_value: some-value;
+		}
+
+		&.postcss-modules-local-by-default_local_modules_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* handle negative animation-delay in animation shorthand */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s -500ms; }
+
+/* handle negative animation-delay in animation shorthand #1 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s -500.0ms; }
+
+/* handle negative animation-delay in animation shorthand #2 */
+.postcss-modules-local-by-default_local_modules_css-foo { animation: 1s -500.0ms postcss-modules-local-by-default_local_modules_css--a_value; }
+
+/* @scope at-rule */
+.postcss-modules-local-by-default_local_modules_css-article-header {
+	color: red;
+}
+
+.postcss-modules-local-by-default_local_modules_css-article-body {
+	color: blue;
+}
+
+@scope      (.postcss-modules-local-by-default_local_modules_css-article-body)     to       (.postcss-modules-local-by-default_local_modules_css-article-header)        {
+	.postcss-modules-local-by-default_local_modules_css-article-body {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope(.postcss-modules-local-by-default_local_modules_css-article-body)to(.postcss-modules-local-by-default_local_modules_css-article-header){
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
+		border: 5px solid black;
+	}
+}
+
+@scope    (   .postcss-modules-local-by-default_local_modules_css-article-body   )    {
+	img {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/* @scope at-rule #1 */
+@scope (.postcss-modules-local-by-default_local_modules_css-article-body) to (figure) {
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
+		border: 5px solid black;
+	}
+}
+
+/* @scope at-rule #2 */
+@scope (.postcss-modules-local-by-default_local_modules_css-article-body) to (.class) {
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
+		border: 5px solid black;
+	}
+	.postcss-modules-local-by-default_local_modules_css-class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/* @scope at-rule #5 */
+@scope (.postcss-modules-local-by-default_local_modules_css-article-header) to (.postcss-modules-local-by-default_local_modules_css-class) {
+	.postcss-modules-local-by-default_local_modules_css-article-footer {
+		color: red;
+	}
+}
+
+/* @scope at-rule #6 */
+.postcss-modules-local-by-default_local_modules_css-foo {
+	@scope (.postcss-modules-local-by-default_local_modules_css-article-header) to (.postcss-modules-local-by-default_local_modules_css-class) {
+		:scope {
+			background: blue;
+		}
+
+		.postcss-modules-local-by-default_local_modules_css-bar {
+			color: red;
+		}
+	}
+}
+
+/* duplicate-name */
+#postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
+.postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
+
+/* in-media */
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value } }
+
+/*!*****************************************************************!*\\\\
+  !*** css ./postcss-modules-local-by-default.global.modules.css ***!
+  \\\\*****************************************************************/
+/* postcss-modules-local-by-default */
+
+
+/* localize and not localize animation-name in mixed case #2 */
+.foo { animation-name: fadeInOut, moveLeft300px, postcss-modules-local-by-default_global_modules_css-bounce; }
+
+/* localize and not localize a certain animation in mixed case #2 */
+.foo { animation: rotate 1s, spin 3s, postcss-modules-local-by-default_global_modules_css-fly 6s; }
+
+/* default to global when mode provided */
+.foo { a_value: some-value; }
+
+/* use correct spacing */
+.a .postcss-modules-local-by-default_global_modules_css-b {}
+.a.postcss-modules-local-by-default_global_modules_css-b {}
+.a.postcss-modules-local-by-default_global_modules_css-b {}
+.a.postcss-modules-local-by-default_global_modules_css-b {}
+.a .postcss-modules-local-by-default_global_modules_css-b {}
+.a .postcss-modules-local-by-default_global_modules_css-b {}
+.postcss-modules-local-by-default_global_modules_css-a.b {}
+.postcss-modules-local-by-default_global_modules_css-a.b {}
+.postcss-modules-local-by-default_global_modules_css-a .b {}
+.postcss-modules-local-by-default_global_modules_css-a .b {}
+.a /* test */ /* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
+.a /* test *//* test*/ .postcss-modules-local-by-default_global_modules_css-b {}
+.a/* test */ /* test*/.postcss-modules-local-by-default_global_modules_css-b {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b/* test */ {}
+.a.postcss-modules-local-by-default_global_modules_css-b /* test */ {}
+
+/* localize keyframes in global default mode */
+@keyframes foo { a_value: some-value; }
+
+/* css nesting #1 */
+.postcss-modules-local-by-default_global_modules_css-foo {
+	&.postcss-modules-local-by-default_global_modules_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.postcss-modules-local-by-default_global_modules_css-bar {
+			c_value: some-value;
+		}
+
+		&.postcss-modules-local-by-default_global_modules_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* @scope at-rule #3 */
+@scope (.postcss-modules-local-by-default_global_modules_css-article-header) to (.class) {
+	.article-footer {
+		border: 5px solid black;
+	}
+	.postcss-modules-local-by-default_global_modules_css-class-1 {
+		color: red;
+	}
+	.class-2 {
+		color: blue;
+	}
+}
+
+/*!***************************************************************!*\\\\
+  !*** css ./postcss-modules-local-by-default.pure.modules.css ***!
+  \\\\***************************************************************/
+/* postcss-modules-local-by-default */
+/* TODO not implemented yet */
+
+@keyframes postcss-modules-local-by-default_pure_modules_css-bounce {}
+@keyframes postcss-modules-local-by-default_pure_modules_css-fly {}
+
+/* localize and not localize animation-name in mixed case #3 */
+.postcss-modules-local-by-default_pure_modules_css-foo { animation-name: postcss-modules-local-by-default_pure_modules_css-fadeInOut, moveLeft300px, postcss-modules-local-by-default_pure_modules_css-bounce; }
+
+/* localize and not localize a certain animation in mixed case #2 */
+.postcss-modules-local-by-default_pure_modules_css-foo { animation: postcss-modules-local-by-default_pure_modules_css-rotate 1s, spin 3s, postcss-modules-local-by-default_pure_modules_css-fly 6s; }
+
+/* compile in pure mode */
+.foo.postcss-modules-local-by-default_pure_modules_css-bar, [type=\\"radio\\"] ~ .postcss-modules-local-by-default_pure_modules_css-label, :not(.postcss-modules-local-by-default_pure_modules_css-foo), #postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; }
+
+/* throw on not pure selector (global class) */
+.foo { a_value: some-value; }
+
+/* throw on not pure selector (with multiple 1) */
+.postcss-modules-local-by-default_pure_modules_css-foo, .bar { a_value: some-value; }
+
+/* throw on not pure selector (with multiple 2) */
+.bar, .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; }
+
+/* throw on not pure selector (element) */
+input { a_value: some-value; }
+
+/* throw on not pure selector (attribute) */
+[type=\\"radio\\"] { a_value: some-value; }
+
+/* throw on not pure keyframes */
+@keyframes foo { a_value: some-value; }
+
+/* consider & statements as pure */
+.postcss-modules-local-by-default_pure_modules_css-foo { &:hover { a_value: some-value; } }
+
+/* consider & statements as pure #2 */
+.postcss-modules-local-by-default_pure_modules_css-foo { @media screen and (min-width: 900px) { &:hover { a_value: some-value; } } }
+
+/* consider global inside local as pure */
+.postcss-modules-local-by-default_pure_modules_css-foo button { a_value: some-value; }
+
+/* consider selector & statements as pure */
+.postcss-modules-local-by-default_pure_modules_css-foo { html &:hover { a_value: some-value; } }
+
+/* consider selector & statements as pure */
+.postcss-modules-local-by-default_pure_modules_css-foo { &.bar { a_value: some-value; } }
+
+/* throw on nested & selectors without a local selector */
+.foo { &:hover { a_value: some-value; } }
+
+/* should suppress errors for global selectors after ignore comment */
+/* cssmodules-pure-ignore */
+.foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #2 */
+/* cssmodules-pure-ignore */
+/* another comment */
+.foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #3 */
+/* another comment */
+/* cssmodules-pure-ignore */
+.foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #4 */
+/* cssmodules-pure-ignore */ /* another comment */
+.foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #5 */
+/* another comment */ /* cssmodules-pure-ignore */
+.foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #6 */
+.postcss-modules-local-by-default_pure_modules_css-foo { /* cssmodules-pure-ignore */ .bar { color: blue }; }
+
+/* should suppress errors for global selectors after ignore comment #7 */
+/* cssmodules-pure-ignore */ .foo { /* cssmodules-pure-ignore */ .bar { color: blue } }
+
+/* should suppress errors for global selectors after ignore comment #8 */
+/*     cssmodules-pure-ignore     */ .foo { color: blue; }
+
+/* should suppress errors for global selectors after ignore comment #9 */
+/*
+    cssmodules-pure-ignore
+    */ .foo { color: blue; }
+
+/* should allow additional text in ignore comment */
+/* cssmodules-pure-ignore - needed for third party integration */
+#foo { color: blue; }
+
+/* should not affect rules after the ignored block */
+/* cssmodules-pure-ignore */
+.foo { color: blue; }
+.bar { color: red; }
+
+/* should work with nested global selectors in ignored block */
+/* cssmodules-pure-ignore */
+.foo {
+	.bar { color: blue; }
+}
+
+/* should work with ignored nested global selectors in ignored block */
+/* cssmodules-pure-ignore */
+.foo {
+	/* cssmodules-pure-ignore */
+	.bar { color: blue; }
+}
+
+/* should work with view transitions in ignored block */
+/* cssmodules-pure-ignore */
+::view-transition-group(modal) {
+	animation-duration: 300ms;
+}
+
+/* should work with keyframes in ignored block */
+/* cssmodules-pure-ignore */
+@keyframes fadeOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+/* should work with scope in ignored block */
+
+/* cssmodules-pure-ignore */
+@scope (.foo) to (.bar) {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
+		border: 5px solid black;
+	}
+}
+
+
+/* should work with scope in ignored block #2 */
+
+/* cssmodules-pure-ignore */
+@scope (.foo)
+to (.bar) {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
+		border: 5px solid black;
+	}
+}
+
+
+/* should work in media queries */
+@media (min-width: 768px) {
+	/* cssmodules-pure-ignore */
+	.foo { color: blue; }
+}
+
+/* should handle multiple ignore comments */
+/* cssmodules-pure-ignore */
+.foo { color: blue; }
+.postcss-modules-local-by-default_pure_modules_css-local { color: green; }
+/* cssmodules-pure-ignore */
+.bar { color: red; }
+
+/* should work with complex selectors in ignored block */
+/* cssmodules-pure-ignore */
+.foo:hover > .bar + .baz {
+	color: blue;
+}
+
+/* should work with multiple selectors in ignored block */
+/* cssmodules-pure-ignore */
+.foo,
+.bar,
+.baz {
+	color: blue;
+}
+
+/* should work with pseudo-elements in ignored block */
+/* cssmodules-pure-ignore */
+.foo::before,
+.foo::after {
+	content: '';
+}
+
+/* should disable pure mode checks for entire file with no-check comment */
+/* cssmodules-pure-no-check */
+.foo { border: 1px solid #e2e8f0 }
+.bar { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) }
+.baz { background: #4299e1 }
+
+/* should disable pure mode checks for nested selectors */
+/* cssmodules-pure-no-check */
+.foo {
+	&:hover { border-color: #cbd5e0 }
+	& .bar { color: blue }
+}
+
+/* should ignore no-check comment if not at root level */
+.bar { color: blue }
+/* cssmodules-pure-no-check */
+
+/* should ignore no-check comment if not at root level #2 */
+/* Some file description */
+.postcss-modules-local-by-default_pure_modules_css-class { color: red; }
+/* cssmodules-pure-no-check */
+.foo { color: blue }
+
+/* should allow other comments before no-check comment */
+/* Some file description */
+/* cssmodules-pure-no-check */
+.foo { color: blue }
+
+/* should disable pure mode checks for deep nested selectors */
+/* cssmodules-pure-no-check */
+.foo { max-width: 600px }
+.bar { background: #fafafa }
+.baz {
+	.foobar {
+		&::-webkit-scrollbar { width: 8px }
+	}
+}
+
+/* should work with keyframes when no-check is enabled */
+/* cssmodules-pure-no-check */
+@keyframes fadeIn {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+.animate { animation: fadeIn 0.3s }
+
+/* should allow multiline no-check comment */
+/*
+  cssmodules-pure-no-check
+*/
+.foo { color: blue }
+
+/* should allow additional text in no-check comment */
+/* cssmodules-pure-no-check - needed for styling third-party components */
+.foo { color: blue }
+
+/* should work with media queries when no-check is enabled */
+/* cssmodules-pure-no-check */
+@media (max-width: 768px) {
+	.foo { position: fixed }
+}
+
+/* css nesting #2 */
+
+.postcss-modules-local-by-default_pure_modules_css-foo {
+	&.postcss-modules-local-by-default_pure_modules_css-class {
+		a_value: some-value;
+	}
+
+	@media screen and (min-width: 900px) {
+		b_value: some-value;
+
+		.postcss-modules-local-by-default_pure_modules_css-bar {
+			c_value: some-value;
+		}
+
+		&.postcss-modules-local-by-default_pure_modules_css-baz {
+			c_value: some-value;
+		}
+	}
+}
+
+/* css nesting #3 */
+.postcss-modules-local-by-default_pure_modules_css-foo { span { a_value: some-value; } }
+
+/* css nesting (unfolded) #3 */
+.postcss-modules-local-by-default_pure_modules_css-foo span { a_value: some-value }
+
+/* css nesting #4 */
+.postcss-modules-local-by-default_pure_modules_css-foo { span { a { a_value: some-value; } } }
+
+/* css nesting (unfolded) #4 */
+.postcss-modules-local-by-default_pure_modules_css-foo span a { a_value: some-value }
+
+/* css nesting #5 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } }
+
+/* css nesting (unfolded) #5 */
+html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value }
+
+/* css nesting #6 */
+html { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } }
+
+/* css nesting (unfolded) #6 */
+@media screen and (min-width: 900px) { html .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value } }
+
+/* css nesting #7 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } .postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; } }
+
+/* css nesting (unfolded) #7 */
+html .postcss-modules-local-by-default_pure_modules_css-foo, html .postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value }
+
+/* css nesting #8 */
+.postcss-modules-local-by-default_pure_modules_css-class { @media screen and (min-width: 900px) { & > span { a_value: some-value; } } }
+
+/* css nesting (unfolded) #8 */
+@media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-class > span { a_value: some-value } }
+
+/* css nesting #9 */
+html { @media screen and (min-width: 900px) { & > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value; } } }
+
+/* css nesting (unfolded) #9 */
+@media screen and (min-width: 900px) { html > .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value } }
+
+/* css nesting #10 */
+.postcss-modules-local-by-default_pure_modules_css-class { @media screen and (min-width: 900px) { & { a_value: some-value; } } }
+
+/* css nesting (unfolded) #10 */
+@media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-class { a_value: some-value } }
+
+/* css nesting #11 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { span { a_value: some-value; } } }
+
+/* css nesting (unfolded) #11 */
+html .postcss-modules-local-by-default_pure_modules_css-foo span { a_value: some-value }
+
+/* css nesting #12 */
+html { button { .postcss-modules-local-by-default_pure_modules_css-foo { div { span { a_value: some-value; } } } } }
+
+/* css nesting #13 */
+.postcss-modules-local-by-default_pure_modules_css-foo { button { div { div { span { a_value: some-value; } } } } }
+
+/* css nesting #14 */
+html { button { div { div { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } } } }
+
+/* css nesting #15 */
+html { button { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { div { span { a_value: some-value; } } } } } }
+
+/* css nesting #16 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } }
+
+/* css nesting #17 */
+.postcss-modules-local-by-default_pure_modules_css-foo { div { a_value: some-value; } }
+
+/* css nesting #18 */
+@media screen and (min-width: 900px) { html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } }
+
+/* css nesting #19 */
+html { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } } }
+
+/* css nesting #20 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { @media screen and (min-width: 900px) { a_value: some-value; } } }
+
+/* css nesting #21 */
+@media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-foo { div { a_value: some-value; } } }
+
+/* css nesting #22 */
+.postcss-modules-local-by-default_pure_modules_css-foo { @media screen and (min-width: 900px) { div { a_value: some-value; } } }
+
+/* css nesting #23 */
+.postcss-modules-local-by-default_pure_modules_css-foo { div { @media screen and (min-width: 900px) { a_value: some-value; } } }
+
+/* css nesting - throw on mixed parents */
+.postcss-modules-local-by-default_pure_modules_css-foo, html { span { a_value: some-value; } }
+
+/* css nesting - throw on & */
+html { & > span { a_value: some-value; } }
+
+/* css nesting - throw on & #2 */
+html { button { & > span { a_value: some-value; } } }
+
+/* css nesting - throw on & #3 */
+html { @media screen and (min-width: 900px) { & > span { a_value: some-value; } } }
+
+/* css nesting - throw on & #4 */
+html { button { div { div { & { a_value: some-value; } } } } }
+
+/* css nesting - throw */
+html { button { div { div { div { a_value: some-value; } } } } }
+
+/* css nesting - throw #2 */
+html { button { div { div { div { } } } } }
+
+/* css nesting - throw #3 */
+html { button { @media screen and (min-width: 900px) { div { div { div { } } } } } }
+
+/* css nesting - throw #4 */
+@media screen and (min-width: 900px) { html { button { div { div { div { } } } } } }
+
+/* css nesting - throw #5 */
+html { div { @media screen and (min-width: 900px) { color: red } } }
+
+/* css nesting - throw #6 */
+html { div { @media screen and (min-width: 900px) { @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #7 */
+html { div { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-a { } @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #7 */
+html { div { @media screen and (min-width: 900px) { .postcss-modules-local-by-default_pure_modules_css-a { a_value: some-value; } @media screen and (min-width: 900px) { color: red } } } }
+
+/* css nesting - throw #8 */
+
+@media screen and (min-width: 900px) {
+	.postcss-modules-local-by-default_pure_modules_css-a { a_value: some-value; }
+	@media screen and (min-width: 900px) {
+		div {
+			color: red
+		}
+	}
+}
+
+/* css nesting - throw on global styles with a local selector */
+html { a_value: some-value; .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } }
+
+/* css nesting - throw on global styles with a local selector #2 */
+html { .postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; } a_value: some-value; }
+
+/* css nesting - throw on global styles with a local selector #3 */
+
+html {
+	.postcss-modules-local-by-default_pure_modules_css-foo { a_value: some-value; }
+	button {
+		color: red;
+		.postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; }
+	}
+}
+
+/* css nesting - throw on global styles with a local selector #4 */
+
+html {
+	@media screen and (min-width: 900px) {
+		button {
+			color: red;
+			.postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; }
+		}
+	}
+}
+
+/* consider :import statements pure */
+
+/* consider :export statements pure */
+
+/* @scope at-rule #4 */
+
+@scope (.postcss-modules-local-by-default_pure_modules_css-article-header) to (.postcss-modules-local-by-default_pure_modules_css-class) {
+	.postcss-modules-local-by-default_pure_modules_css-article-footer {
+		border: 5px solid black;
+	}
+	.postcss-modules-local-by-default_pure_modules_css-class-1 {
+		color: red;
+	}
+	.postcss-modules-local-by-default_pure_modules_css-class-2 {
+		color: blue;
+	}
+}
+
+
+/* @scope at-rule #7 */
+
+@scope (.article-header.postcss-modules-local-by-default_pure_modules_css-foo) to (.class.postcss-modules-local-by-default_pure_modules_css-bar) {
+	.postcss-modules-local-by-default_pure_modules_css-bar {
+		color: red;
+	}
+}
+
+/*!******************************!*\\\\
+  !*** css ./abcd.modules.css ***!
+  \\\\******************************/
+.abcd_modules_css-a {
+	color: red;
+}
+
+.abcd_modules_css-b {
+	color: red;
+}
+
+.abcd_modules_css-c {
+	color: red;
+}
+
+.abcd_modules_css-d {
+	color: red;
+}
+
+/*!*************************!*\\\\
+  !*** css ./classes.css ***!
+  \\\\*************************/
+.classes_css-localName {
+	background: red;
+}
+
+.classes_css-bar {
+	}
+
+/*!***********************************************!*\\\\
+  !*** css ./postcss-modules-scope.modules.css ***!
+  \\\\***********************************************/
+/* postcss-modules-scope */
+
+/* at-rule-scope */
+.postcss-modules-scope_modules_css-exportName4 {
+	color: red;
+}
+
+@scope (.postcss-modules-scope_modules_css-exportName1) to (.postcss-modules-scope_modules_css-exportName2) {
+	.postcss-modules-scope_modules_css-exportName3 {
+		border: 5px solid black;
+		background-color: goldenrod;
+	}
+}
+
+@scope (.postcss-modules-scope_modules_css-exportName1) {
+	.postcss-modules-scope_modules_css-exportName5 {
+		border: 5px solid black;
+	}
+}
+
+@scope (.postcss-modules-scope_modules_css-exportName1) to (img) {
+	.postcss-modules-scope_modules_css-exportName3 {
+		background-color: goldenrod;
+	}
+}
+
+@scope (.postcss-modules-scope_modules_css-exportName6) {
+	img {
+		backdrop-filter: blur(2px);
+	}
+}
+
+@scope {
+	:scope {
+		color: red;
+	}
+}
+
+/* at-rule */
+.postcss-modules-scope_modules_css-exportName7 {
+	background: red;
+}
+
+@media screen {
+	.postcss-modules-scope_modules_css-exportName8 {
+		color: green;
+		.postcss-modules-scope_modules_css-exportName9 {
+			color: blue;
+		}
+	}
+}
+
+/* composes-only-allowed */
+.postcss-modules-scope_modules_css-local-a { color: red; }
+.postcss-modules-scope_modules_css-local-b { color: green; }
+.postcss-modules-scope_modules_css-exportName10 {
+	a-composes: c;
+	composes-b: d;
+	a-composes-b: e;
+	a-compose-with-b: b;
+}
+
+/* css-nesting-composes */
+.postcss-modules-scope_modules_css-exportName11 {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-exportName12 {
+	display: grid;
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+	}
+}
+
+/* css-nesting */
+.postcss-modules-scope_modules_css-exportName12 {
+	background: red;
+}
+
+.postcss-modules-scope_modules_css-exportName13 {
+	color: green;
+
+	@media (max-width: 520px) {
+		.postcss-modules-scope_modules_css-exportName14 {
+			color: darkgreen;
+		}
+
+		&.postcss-modules-scope_modules_css-exportName15 {
+			color: blue;
+		}
+	}
+}
+
+.postcss-modules-scope_modules_css-exportName16 {
+	color: red;
+
+	&.postcss-modules-scope_modules_css-exportName17 {
+		color: green;
+	}
+
+	.postcss-modules-scope_modules_css-exportName18 {
+		color: blue;
+	}
+}
+
+/* error-comma-in-local */
+.postcss-modules-scope_modules_css-className { color: red; }
+.postcss-modules-scope_modules_css-exportName19, .postcss-modules-scope_modules_css-exportName20 {
+	composes: className;
+}
+
+/* error-composes-css-nesting-at-rule */
+.postcss-modules-scope_modules_css-exportName21 {
+}
+
+@media (min-width: 1024px) {
+	.postcss-modules-scope_modules_css-exportName22 {
+		.postcss-modules-scope_modules_css-exportName23 {
+			compose-with: exportName21;
+		}
+	}
+}
+
+/* error-composes-css-nesting-with-media */
+.postcss-modules-scope_modules_css-exportName24 {
+}
+
+.postcss-modules-scope_modules_css-exportName25 {
+	@media (min-width: 1024px) {
+		.postcss-modules-scope_modules_css-exportName26 {
+			compose-with: exportName24;
+		}
+	}
+}
+
+/* error-composes-css-nesting */
+.postcss-modules-scope_modules_css-exportName27 {
+}
+
+.postcss-modules-scope_modules_css-exportName28 {
+	.postcss-modules-scope_modules_css-exportName29 {
+		compose-with: exportName27;
+	}
+}
+
+/* TODO bug no report */
+/* error-composes-keyframes */
+.postcss-modules-scope_modules_css-exportName30 {
+}
+
+@keyframes postcss-modules-scope_modules_css-slidein {
+	from {
+		transform: translateX(0%);
+	}
+
+	to {
+		composes: exportName30;
+	}
+}
+
+/* TODO bug no report */
+/* error-composes-not-allowed-in-local-id */
+.postcss-modules-scope_modules_css-exportName31 {}
+
+#postcss-modules-scope_modules_css-idName {
+	composes: exportName31;
+}
+
+/* error-composes-not-allowed-in-multiple */
+.postcss-modules-scope_modules_css-exportName32 {}
+.postcss-modules-scope_modules_css-exportName33 .postcss-modules-scope_modules_css-exportName34 {
+	composes: exportName32;
+}
+
+/* TODO bug no report */
+/* error-composes-not-allowed-in-simple */
+.postcss-modules-scope_modules_css-exportName35 {}
+body {
+	composes: exportName35;
+}
+
+/* error-composes-not-allowed-in-wrong-local */
+.postcss-modules-scope_modules_css-exportName36 {}
+.postcss-modules-scope_modules_css-exportName37.postcss-modules-scope_modules_css-exportName38 {
+	composes: exportName36;
+}
+
+/* error-composes-not-defined-class */
+.postcss-modules-scope_modules_css-exportName39 {
+	}
+
+/* TODO bug no report */
+/* error-multiple-nested-media */
+.postcss-modules-scope_modules_css-exportName41 {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName42 {
+	display: grid;
+
+	@media (orientation: landscape) {
+		grid-auto-flow: column;
+
+		@media (min-width: 1024px) {
+			}
+	}
+}
+
+/* TODO bug no report */
+/* error-not-allowed-in-local */
+body {
+	color: red;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-href */
+.postcss-modules-scope_modules_css-exportName42[href^=\\"https\\"] {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-target */
+.postcss-modules-scope_modules_css-exportName43[target=\\"_blank\\"] {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-title */
+.postcss-modules-scope_modules_css-exportName44[title=\\"flower\\"] {
+	color: blue;
+}
+
+/* TODO bug no report */
+/* error-when-attribute-is-title */
+.postcss-modules-scope_modules_css-exportName45[type=\\"text\\"] {
+	color: blue;
+}
+
+/* escape-sequence */
+.postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile_with_A {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀 .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-😀{
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀 .postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-😀{
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀 .postcss-modules-scope_modules_css-smile_with_A .postcss-modules-scope_modules_css-😀{
+	color: red;
+}
+
+#postcss-modules-scope_modules_css-😀 #postcss-modules-scope_modules_css-smile #postcss-modules-scope_modules_css-😀{
+	color: red;
+}
+
+#postcss-modules-scope_modules_css-😀 #postcss-modules-scope_modules_css-smile_with_A #postcss-modules-scope_modules_css-😀{
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-a .postcss-modules-scope_modules_css-smile b {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile > .postcss-modules-scope_modules_css-smile > .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀.postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀.postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-😀 .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile .postcss-modules-scope_modules_css-a {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-smile.postcss-modules-scope_modules_css-a {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-a .postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-a.postcss-modules-scope_modules_css-smile {
+	color: red;
+}
+
+/* export-child-class */
+.postcss-modules-scope_modules_css-exportName46 {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-exportName46 h1 {
+	color: blue;
+}
+
+/* export-class-attribute */
+.postcss-modules-scope_modules_css-exportName47 {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-exportName48 {
+	color: green;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class = postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[class~=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= \\"postcss-modules-scope_modules_css-exportName47\\" ] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName48[ class ~= postcss-modules-scope_modules_css-exportName47 ] {
+	color: blue;
+}
+
+.globalClass[class=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.globaClass[class~=\\"otherGlobalClass\\"] {
+	color: blue;
+}
+
+.postcss-modules-scope_modules_css-exportName49[class=\\"postcss-modules-scope_modules_css-exportName47\\"] {
+	color: blue;
+}
+
+/* export-difficult */
+@keyframes postcss-modules-scope_modules_css-fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes postcss-modules-scope_modules_css-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+.postcss-modules-scope_modules_css-fadeIn {
+	animation: postcss-modules-scope_modules_css-fade-in 5s,/* some, :local(comment) */
+	postcss-modules-scope_modules_css-fade-out 1s postcss-modules-scope_modules_css-wrong;
+	content: postcss-modules-scope_modules_css-fade-in, wrong, \\"difficult, :local(wrong)\\" postcss-modules-scope_modules_css-wrong;
+}
+
+/* export-global-class */
+.postcss-modules-scope_modules_css-exportName50 {
+	color: green;
+}
+
+.postcss-modules-scope_modules_css-exportName50:hover {
+	color: red;
+}
+
+@media screen {
+	body {
+		background: red;
+	}
+}
+
+.postcss-modules-scope_modules_css-exportName51 {
+	color: blue;
+}
+
+/* export-keyframes */
+@keyframes postcss-modules-scope_modules_css-fade-in-export {
+	from {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes postcss-modules-scope_modules_css-fade-export {
+	from {
+		opacity: 0.5;
+	}
+}
+
+.postcss-modules-scope_modules_css-fadeIn-export {
+	animation-name: postcss-modules-scope_modules_css-fade-in-export;
+}
+
+.postcss-modules-scope_modules_css-fadeIn-export {
+	animation: 2s postcss-modules-scope_modules_css-fade-in-export;
+}
+
+.postcss-modules-scope_modules_css-fadeIn-export {
+	animation: postcss-modules-scope_modules_css-fade-in-export 2s;
+}
+
+/* export-keywords-selector */
+.postcss-modules-scope_modules_css-constructor {
+	color: green;
+}
+
+.postcss-modules-scope_modules_css-toString {
+	color: red;
+}
+
+/* export-multiple-classes */
+.postcss-modules-scope_modules_css-exportName52 .postcss-modules-scope_modules_css-exportName53 {
+	color: green;
+}
+
+.postcss-modules-scope_modules_css-exportName52.postcss-modules-scope_modules_css-exportName53 {
+	color: red;
+}
+
+/* export-nested-class */
+.postcss-modules-scope_modules_css-exportName54:not(.postcss-modules-scope_modules_css-exportName55.postcss-modules-scope_modules_css-global) {
+	color: green;
+}
+
+.postcss-modules-scope_modules_css-exportName54:has(.postcss-modules-scope_modules_css-exportName55, .postcss-modules-scope_modules_css-exportName56) {
+	color: red;
+}
+
+/* export-with-composes-imported-class */
+
+.postcss-modules-scope_modules_css-exportName76 {
+	color: green;
+}
+
+/* export-with-composes */
+.postcss-modules-scope_modules_css-exportName57 { background: red; }
+.postcss-modules-scope_modules_css-exportName58 { color: green; }
+.postcss-modules-scope_modules_css-exportName59 { color: green; }
+
+ /* export-with-global-composes */
+.otherClass { background: red; }
+.andAgain { font-size: 2em; }
+.aThirdClass { color: red; }
+.postcss-modules-scope_modules_css-exportName60-function-syntax { color: green; }
+.postcss-modules-scope_modules_css-exportName60 { color: green; }
+
+/* export-with-multiple-composes */
+.postcss-modules-scope_modules_css-exportName63 { background: red; }
+.postcss-modules-scope_modules_css-exportName64 { font-size: 2em; }
+.postcss-modules-scope_modules_css-exportName65 { color: red; }
+.postcss-modules-scope_modules_css-exportName66 { color: green; }
+
+/* export-with-transitive-composes */
+.postcss-modules-scope_modules_css-exportName67 {
+	font-size: 2em;
+}
+.postcss-modules-scope_modules_css-exportName68 {
+	background: red;
+}
+.postcss-modules-scope_modules_css-exportName69 {
+	color: green;
+}
+
+/* Not related to us */
+/* ignore-custom-property-set */
+:root {
+	--postcss-modules-scope_modules_css-title-align: center;
+	--postcss-modules-scope_modules_css-sr-only: {
+		position: absolute;
+	}
+}
+
+/* multiple-composes */
+.postcss-modules-scope_modules_css-class {
+	color: red;
+}
+
+/* nested-rule */
+:root {
+	--postcss-modules-scope_modules_css-test: {
+		--postcss-modules-scope_modules_css-test: foo;
+		--postcss-modules-scope_modules_css-bar: 1;
+	}
+}
+
+/* We pass this limitation, order can be any now */
+/* export-with-composes-broken-order */
+.postcss-modules-scope_modules_css-exportName70 { color: green; }
+.postcss-modules-scope_modules_css-exportName71 { color: green; }
+.postcss-modules-scope_modules_css-exportName72 { background: red; }
+
+/* transitive composes */
+.postcss-modules-scope_modules_css-exportName73 { color: green; }
+.postcss-modules-scope_modules_css-exportName74 { color: green; }
+.postcss-modules-scope_modules_css-exportName75 { color: red }
+.postcss-modules-scope_modules_css-exportName74 { color: green; }
+.postcss-modules-scope_modules_css-exportName74 { color: green; }
+
+/* deep transitive composes */
+.postcss-modules-scope_modules_css-exportName77 {
+	color: red;
+}
+
+.postcss-modules-scope_modules_css-exportName78 {}
+
+.postcss-modules-scope_modules_css-exportName79 {
+	}
+
+/*!************************!*\\\\
+  !*** css ./colors.css ***!
+  \\\\************************/
+
+
+
+/*!********************************!*\\\\
+  !*** css ./colors.modules.css ***!
+  \\\\********************************/
+
+
+
+
+
+
+
+
+
+
+/*!************************************************!*\\\\
+  !*** css ./postcss-modules-values.modules.css ***!
+  \\\\************************************************/
+/* postcss-modules-values */
+
+/* should export a constant */
+
+
+/* Should pass for us, not a warning */
+/* gives a warnings when there is no semicolon between lines */
+
+
+/* Should pass for us, not a warning */
+/* gives a warnings on empty value */
+
+
+/* Should pass for us, not a warning */
+/* gives a warnings on empty value with comment */
+
+
+/* should export a more complex constant */
+
+
+/* should replace constants within the file */
+
+.postcss-modules-values_modules_css-foo-replace { color: red; }
+
+/* should replace constants within the file #1 */
+
+.postcss-modules-values_modules_css-foo-replace-1 { &.postcss-modules-values_modules_css-bar { color: red; } }
+
+/* should replace constants within the file #2 */
+
+.postcss-modules-values_modules_css-foo-replace-2 { @media (min-width: 1024px) { &.postcss-modules-values_modules_css-bar { color: red; } } }
+
+/* should replace constants within the file #3 */
+
+.postcss-modules-values_modules_css-foo-replace-3 { @media (min-width: 1024px) { &.postcss-modules-values_modules_css-bar { @media (min-width: 1024px) { color: red; } } } }
+
+/* should replace constants within the file #4 */
+
+
+.postcss-modules-values_modules_css-foo-replace-4 { height: 40px; height: 36px; }
+
+/* should replace selectors within the file */
+
+.postcss-modules-values_modules_css-fuchsia { color: fuchsia; }
+
+/* should replace selectors within the file #1 */
+
+#postcss-modules-values_modules_css-red { color: red; }
+
+/* should replace selectors within the file #2 */
+
+.postcss-modules-values_modules_css-red > .postcss-modules-values_modules_css-red { color: red; }
+
+/* should import and re-export a simple constant */
+
+
+/* should import a simple constant and replace usages */
+
+.postcss-modules-values_modules_css-exportName13 { color: blue; }
+
+/* should import and alias a constant and replace usages */
+
+.postcss-modules-values_modules_css-exportName14 { color: yellow; }
+
+/* should import multiple from a single file */
+
+.postcss-modules-values_modules_css-exportName15 { color: blue; }
+.postcss-modules-values_modules_css-exportName16 { color: red }
+
+/* should import from a definition */
+
+
+.postcss-modules-values_modules_css-exportName17 { color: red; }
+
+/* should only allow values for paths if defined in the right order - throw an error */
+
+
+
+/* should allow transitive values */
+
+
+.postcss-modules-values_modules_css-exportName20 { color: #FFF; }
+
+/* TODO bug */
+/* should allow transitive values within calc */
+
+
+.postcss-modules-values_modules_css-exportName24 { margin: calc(exportName22 * 2); }
+
+/* should preserve import order */
+
+
+
+/* should allow custom-property-style names */
+
+.postcss-modules-values_modules_css-exportName25 { color: blue; }
+
+/* should allow all colour types */
+
+
+
+
+
+.postcss-modules-values_modules_css-exportName26 {
+	color: aqua;
+	background-color: #0f0;
+	border-top-color: #00ff00;
+	border-bottom-color: rgba(34, 12, 64, 0.3);
+	outline-color: hsla(220, 13.0%, 18.0%, 1);
+}
+
+/* should import multiple from a single file on multiple lines */
+
+.postcss-modules-values_modules_css-exportName27 { color: red; }
+.postcss-modules-values_modules_css-exportName28 { color: blue }
+
+/* should allow definitions with commas in them */
+
+.postcss-modules-values_modules_css-exportName29 { box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14); }
+
+/* should allow values with nested parentheses */
+
+.postcss-modules-values_modules_css-exportName30 {
+	color: color(red lightness(50%))
+}
+
+/* should work with custom properties */
+
+:root { --postcss-modules-values_modules_css-my-own-color: my-custom-value; }
+
+/* should work with empty custom properties */
+
+:root { --postcss-modules-values_modules_css-color: ; }
+
+/* should work with empty custom properties #2 */
+
+:root { --postcss-modules-values_modules_css-color:   ; }
+
+/* should work with empty custom properties #3 */
+
+:root { --postcss-modules-values_modules_css-color: /* comment */; }
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;

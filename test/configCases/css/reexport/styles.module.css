@@ -1,0 +1,280 @@
+@import "./value-at-rule.module.css";
+@import "./cyclical.module.css";
+
+:import("./pseudo-import-and-export.module.css") {
+	__REEXPORT1__: export1;
+	__REEXPORT2__: export2;
+	__REEXPORT3__: export3;
+}
+
+.button-color-red {
+	color: red;
+}
+
+.u-1\/2 {
+	width: 50%;
+}
+
+:global(.button-global-font-size\a1) {
+	font-size: 14px;
+}
+
+.composes-here {
+	display: block;
+}
+
+.composes-here {
+	background-color: black;
+}
+
+.button-complex {
+	composes: u-1\/2, local-composes, button-color-red, button-global-font-size from global, base from "./button.module.css";
+	background: blue;
+}
+
+.button-complex-1 {
+	composes: base-reexport from "./button-reexport.module.css";
+}
+
+.button-complex-2 {
+	composes: local-composes;
+}
+
+.local-composes {
+	composes: composes-here, global(bar);
+	color: blue;
+}
+
+.local-composes {
+	composes: composes-here;
+	color: blue;
+}
+
+:import("abcd.modules.css") {
+	__import_f__: f;
+}
+
+.local-composes-with-reexport {
+	composes: composes-here, __import_f__, global(bar);
+	color: blue;
+}
+
+@value composes-test-here: composes-here;
+
+.local-composes-with-reexport-and-value {
+	composes: composes-test-here, __import_f__, global(bar);
+	color: blue;
+}
+
+.exportName73 { composes: bar from "./classes.module.css"; color: red; }
+.exportName74 { composes: exportName73; color: green; }
+.exportName75 { color: blue }
+.exportName74 { composes: exportName75; color: white; }
+.exportName74 { composes: my-global from global; color: black; }
+
+:local(.multiple-composes-with-simple) {
+	composes: localName from "./classes.module.css";
+	composes: localNameOther from "./classes.module.css";
+	color: red;
+}
+
+:local(.multiple-composes-with-composes) {
+	composes: localName from "./classes.module.css";
+	composes: bar from "./classes.module.css";
+	color: blue;
+}
+
+.the-same-classes-in-composes-but-different-modules {
+	composes: localName from "./classes.module.css";
+	composes: localName from "./classes-the-same.module.css";
+}
+
+:root {
+	--color: red;
+}
+
+@value --my-custom-property-1: --color;
+
+:import("./vars.module.css") {
+	--reexport-my-var-u1: my-var-u1
+}
+
+.custom-properties {
+	color: var(--color);
+	background-color: var(--shared from "./shared-custom-properties.module.css");
+	border-color: var(--deep-shared from "./shared-custom-properties.module.css");
+	outline-color: var(--my-custom-property-1);
+	text-decoration-color: var(--reexport-my-var-u1);
+}
+
+.from {
+	color: var(--my-var-u1 from "./vars.module.css");
+}
+
+@value primary, secondary as my-custom-color from "./colors.module.css";
+
+.button-with-color {
+	background-color: primary;
+	color: my-custom-color;
+}
+
+@value foo: red;
+
+.button-with-color-too {
+	color: foo;
+}
+
+@value blue: #3498db;
+@value rename: blue;
+
+.button-rename-1 {
+	background-color: rename;
+}
+
+@value danger from "./colors.module.css";
+@value rename-2: danger;
+
+.button-rename-2 {
+	background-color: rename-2;
+}
+
+@value danger as danger-alias from "./colors.module.css";
+@value rename-3: danger-alias;
+
+.button-rename-3 {
+	background-color: rename-3;
+}
+
+@value colors: "./colors.module.css";
+@value third from colors;
+
+.button-rename-4 {
+	background-color: third;
+}
+
+.button-export-5 {
+	content: __REEXPORT3__
+}
+
+@value selector: my-selector-value;
+.selector { value: selector; }
+
+@value other-selector from "./selectors.module.css";
+.other-selector { value: other-selector; }
+
+@value other-selector as alias-other-selector from "./selectors.module.css";
+.alias-other-selector { value: alias-other-selector; }
+
+@value reexport-selector from "./selectors.module.css";
+.reexport-selector { value: reexport-selector; }
+
+@value reexport-selector as reexport-selector-alias from "./selectors.module.css";
+.reexport-selector-alias { value: reexport-selector-alias; }
+
+@value colors: "./colors.module.css";
+@value third from colors;
+.third { background-color: third; }
+
+@value danger as danger-alias-selector from "./colors.module.css";
+@value rename-3: danger-alias-selector;
+.rename-3 { background-color: rename-3; }
+
+.local-class {
+	color: white;
+}
+
+:global(.global-class-other) {
+	color: red;
+}
+
+.class-with-composes {
+	composes:
+		local-class,
+		global-class from global,
+		global-class-other from global,
+		localName from "./classes.module.css";
+}
+
+:import("abcd.modules.css") {
+	i__i_a_0: a;
+	i__i_b_0: b;
+	i__i_c_0: c;
+	i__i_d_0: d;
+	i__i_f_0: f;
+}
+
+.class-local-my { color: red }
+
+.composes-from-import {
+	composes: class-local-my i__i_a_0 i__i_b_0, i__i_c_0, global(d) global(e), global(f), i__i_d_0 i__i_f_0;
+	color: red;
+}
+
+:import("./classes.module.css") {
+	abc-from-def: abcd;
+}
+
+.local-for-reexport { color: blue; }
+
+.deep-reexport-in-composes {
+	composes:
+		local-for-reexport
+		abc-from-def;
+}
+
+:import("./classes.module.css") {
+	deep-selector-with-composes: dcba;
+}
+
+.deep-reexport-in-composes-other {
+	composes:
+		local-for-reexport
+		deep-selector-with-composes;
+}
+
+:import("./classes.module.css") {  __my_custom_import__: my_custom_import }
+
+.only-reexport {
+	composes: __my_custom_import__;
+}
+
+:import("./classes.module.css") {
+	__import_localName__: localName;
+}
+
+.class-from-pseudo-import {
+	color: __import_localName__;
+}
+
+:export {
+	reexport: __import_localName__
+}
+
+:import("./styles.module.css") {
+	__value_cyclical__: cyclical;
+}
+
+.class {
+	color: __value_cyclical__;
+}
+
+:export { cyclical: __value_cyclical__  }
+
+:import("./classes.module.css") {
+	abc-from-def_local: abcd;
+}
+
+@value in-composes: abc-from-def_local;
+
+.local-for-reexport { color: blue; }
+
+.deep-reexport-in-composes-other-other {
+	composes: local-for-reexport in-composes;
+}
+
+:export {
+	export: "export-value";
+	export1: __REEXPORT1__;
+	export2: __REEXPORT2__;
+	export3: __REEXPORT3__;
+}

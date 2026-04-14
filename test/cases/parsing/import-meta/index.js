@@ -44,10 +44,6 @@ it("should return undefined for unknown property", () => {
 	expect(() => import.meta.other.other.other).toThrow();
 });
 
-it("should add warning on direct import.meta usage", () => {
-	expect(Object.keys(import.meta)).toHaveLength(0);
-});
-
 it("should support destructuring assignment", async () => {
 	let version, url2, c;
 	({ webpack: version } = { url: url2 } = { c } = import.meta);

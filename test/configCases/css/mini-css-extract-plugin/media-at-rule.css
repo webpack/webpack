@@ -1,0 +1,31 @@
+@import url("./media-at-rule-a.css");
+@import url("./media-at-rule-b.css") screen and (orientation: landscape);
+@import url("./media-at-rule-c.css") supports(display: flex);
+@import url("./media-at-rule-d.css") supports(display: flex) screen and (min-width: 400px);
+@import url("./media-at-rule-e.css")    supports(   display   :    flex   )    screen    and    (   min-width   :    400px   )   ;
+@import url("./media-at-rule-f.css") supports(not (display: flex));
+@import url("./media-at-rule-g.css") SUPPORTS(NOT (DISPLAY: FLEX));
+
+div {
+  color: blue;
+}
+
+@media {
+  div {
+    color: red;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  article {
+    padding: 1rem 3rem;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    article {
+      display: flex;
+    }
+  }
+}

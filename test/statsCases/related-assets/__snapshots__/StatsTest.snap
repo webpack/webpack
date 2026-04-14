@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases related-assets should print correct stats for related-assets 1`] = `
+"default:
+  assets by path *.js X KiB
+    asset default-main.js X KiB [emitted] (name: main) 3 related assets
+    asset default-chunk_js.js X bytes [emitted] 3 related assets
+  assets by path *.css X bytes
+    asset default-chunk_js.css X bytes [emitted] 3 related assets
+    asset default-main.css X bytes [emitted] (name: main) 3 related assets
+  asset default-file.jpg X KiB [emitted] [from: file.jpg] (auxiliary name: main)
+
+relatedAssets:
+  assets by path *.js X KiB
+    asset relatedAssets-main.js X KiB [emitted] (name: main)
+      compressed relatedAssets-main.js.br X KiB [emitted]
+      compressed relatedAssets-main.js.gz X KiB [emitted]
+      sourceMap relatedAssets-main.js.map X KiB [emitted] [dev] (auxiliary name: main)
+        compressed relatedAssets-main.js.map.br X KiB [emitted]
+        compressed relatedAssets-main.js.map.gz X KiB [emitted]
+    asset relatedAssets-chunk_js.js X bytes [emitted]
+      compressed relatedAssets-chunk_js.js.br X bytes [emitted]
+      compressed relatedAssets-chunk_js.js.gz X bytes [emitted]
+      sourceMap relatedAssets-chunk_js.js.map X bytes [emitted] [dev]
+        compressed relatedAssets-chunk_js.js.map.br X bytes [emitted]
+        compressed relatedAssets-chunk_js.js.map.gz X bytes [emitted]
+  assets by path *.css X bytes
+    asset relatedAssets-chunk_js.css X bytes [emitted]
+      sourceMap relatedAssets-chunk_js.css.map X bytes [emitted] [dev]
+        compressed relatedAssets-chunk_js.css.map.br X bytes [emitted]
+        compressed relatedAssets-chunk_js.css.map.gz X bytes [emitted]
+      compressed relatedAssets-chunk_js.css.br X bytes [emitted]
+      compressed relatedAssets-chunk_js.css.gz X bytes [emitted]
+    asset relatedAssets-main.css X bytes [emitted] (name: main)
+      sourceMap relatedAssets-main.css.map X bytes [emitted] [dev] (auxiliary name: main)
+        compressed relatedAssets-main.css.map.br X bytes [emitted]
+        compressed relatedAssets-main.css.map.gz X bytes [emitted]
+      compressed relatedAssets-main.css.br X bytes [emitted]
+      compressed relatedAssets-main.css.gz X bytes [emitted]
+  asset relatedAssets-file.jpg X KiB [emitted] [from: file.jpg] (auxiliary name: main)
+
+exclude1:
+  assets by path *.js X KiB
+    asset exclude1-main.js X KiB [emitted] (name: main)
+      hidden assets X KiB 2 assets
+      sourceMap exclude1-main.js.map X KiB [emitted] [dev] (auxiliary name: main)
+        hidden assets X KiB 2 assets
+        + 1 related asset
+      + 1 related asset
+    asset exclude1-chunk_js.js X bytes [emitted]
+      hidden assets X KiB 2 assets
+      sourceMap exclude1-chunk_js.js.map X bytes [emitted] [dev]
+        hidden assets X bytes 2 assets
+        + 1 related asset
+      + 1 related asset
+  assets by path *.css X bytes
+    asset exclude1-chunk_js.css X bytes [emitted]
+      hidden assets X bytes 2 assets
+      sourceMap exclude1-chunk_js.css.map X bytes [emitted] [dev]
+        hidden assets X bytes 2 assets
+        + 1 related asset
+      + 1 related asset
+    asset exclude1-main.css X bytes [emitted] (name: main)
+      hidden assets X bytes 2 assets
+      sourceMap exclude1-main.css.map X bytes [emitted] [dev] (auxiliary name: main)
+        hidden assets X bytes 2 assets
+        + 1 related asset
+      + 1 related asset
+  asset exclude1-file.jpg X KiB [emitted] [from: file.jpg] (auxiliary name: main)
+
+exclude2:
+  assets by path *.js X KiB
+    asset exclude2-main.js X KiB [emitted] (name: main)
+      hidden assets X KiB 1 asset
+      compressed exclude2-main.js.br X KiB [emitted]
+      compressed exclude2-main.js.gz X KiB [emitted]
+    asset exclude2-chunk_js.js X bytes [emitted]
+      hidden assets X bytes 1 asset
+      compressed exclude2-chunk_js.js.br X bytes [emitted]
+      compressed exclude2-chunk_js.js.gz X bytes [emitted]
+  assets by path *.css X bytes
+    asset exclude2-chunk_js.css X bytes [emitted]
+      hidden assets X bytes 1 asset
+      compressed exclude2-chunk_js.css.br X bytes [emitted]
+      compressed exclude2-chunk_js.css.gz X bytes [emitted]
+    asset exclude2-main.css X bytes [emitted] (name: main)
+      hidden assets X bytes 1 asset
+      compressed exclude2-main.css.br X bytes [emitted]
+      compressed exclude2-main.css.gz X bytes [emitted]
+  asset exclude2-file.jpg X KiB [emitted] [from: file.jpg] (auxiliary name: main)
+
+exclude3:
+  hidden assets X bytes 2 assets
+  assets by status X KiB [emitted]
+    asset exclude3-main.js X KiB [emitted] (name: main)
+      compressed exclude3-main.js.br X KiB [emitted]
+      compressed exclude3-main.js.gz X KiB [emitted]
+      sourceMap exclude3-main.js.map X KiB [emitted] [dev] (auxiliary name: main)
+        compressed exclude3-main.js.map.br X KiB [emitted]
+        compressed exclude3-main.js.map.gz X KiB [emitted]
+    asset exclude3-file.jpg X KiB [emitted] [from: file.jpg] (auxiliary name: main)
+    asset exclude3-main.css X bytes [emitted] (name: main)
+      sourceMap exclude3-main.css.map X bytes [emitted] [dev] (auxiliary name: main)
+        compressed exclude3-main.css.map.br X bytes [emitted]
+        compressed exclude3-main.css.map.gz X bytes [emitted]
+      compressed exclude3-main.css.br X bytes [emitted]
+      compressed exclude3-main.css.gz X bytes [emitted]"
+`;

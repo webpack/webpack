@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases aggressive-splitting-entry should print correct stats for aggressive-splitting-entry 1`] = `
+"fitting:
+  PublicPath: auto
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  Entrypoint main X KiB = fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+    > ./index main
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
+    > ./index main
+    runtime modules X KiB 11 modules
+    cacheable modules X KiB
+      ./e.js X bytes [dependent] [built] [code generated]
+      ./f.js X bytes [dependent] [built] [code generated]
+      ./index.js X bytes [built] [code generated]
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+    > ./index main
+    ./c.js X bytes [built] [code generated]
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
+    > ./g ./index.js 7:0-13
+    ./g.js X bytes [built] [code generated]
+  fitting (webpack x.x.x) compiled successfully in X ms
+
+content-change:
+  PublicPath: auto
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  asset content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+  Entrypoint main X KiB = content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+    > ./index main
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
+    > ./index main
+    runtime modules X KiB 11 modules
+    cacheable modules X KiB
+      ./e.js X bytes [dependent] [built] [code generated]
+      ./f.js X bytes [dependent] [built] [code generated]
+      ./index.js X bytes [built] [code generated]
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB [initial] [rendered] [recorded] aggressive splitted
+    > ./index main
+    ./c.js X bytes [built] [code generated]
+    ./d.js X bytes [built] [code generated]
+  chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
+    > ./g ./index.js 7:0-13
+    ./g.js X bytes [built] [code generated]
+  content-change (webpack x.x.x) compiled successfully in X ms"
+`;

@@ -415,7 +415,15 @@
     },
     "CssGeneratorLocalIdentName": {
       "description": "Configure the generated local ident name.",
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+        }
+      ]
     },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
@@ -452,6 +460,9 @@
         },
         "localIdentHashDigestLength": {
           "$ref": "#/definitions/HashDigestLength"
+        },
+        "localIdentHashFunction": {
+          "$ref": "#/definitions/HashFunction"
         },
         "localIdentHashSalt": {
           "$ref": "#/definitions/HashSalt"
@@ -1037,16 +1048,17 @@
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
-      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "backCompat": {
           "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "buildHttp": {
           "description": "Build http(s): urls using a lockfile and resource content cache.",
@@ -1057,23 +1069,28 @@
             {
               "$ref": "#/definitions/HttpUriOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
@@ -1084,62 +1101,40 @@
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
+        },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+          "type": "boolean",
+          "experimental": true
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
-        }
-      }
-    },
-    "ExperimentsCommon": {
-      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
-        },
-        "backCompat": {
-          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
-        },
-        "cacheUnaffected": {
-          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
-        },
-        "futureDefaults": {
-          "description": "Apply defaults of next major version.",
-          "type": "boolean"
-        },
-        "outputModule": {
-          "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
-        },
-        "syncWebAssembly": {
-          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         }
       }
     },
     "ExperimentsNormalized": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
-      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "backCompat": {
           "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "buildHttp": {
           "description": "Build http(s): urls using a lockfile and resource content cache.",
@@ -1147,23 +1142,28 @@
             {
               "$ref": "#/definitions/HttpUriOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
@@ -1174,15 +1174,23 @@
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
-          ]
+          ],
+          "experimental": true
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
+        },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+          "type": "boolean",
+          "experimental": true
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         }
       }
     },
@@ -2014,6 +2022,10 @@
           "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
           "type": "boolean"
         },
+        "sourceImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
+          "type": "boolean"
+        },
         "strictExportPresence": {
           "description": "Deprecated in favor of \"exportsPresence\". Emit errors instead of warnings when imported names don't exist in imported module.",
           "type": "boolean",
@@ -2496,7 +2508,8 @@
         },
         "exprContextCritical": {
           "description": "Enable warnings for full dynamic dependencies.",
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true
         },
         "exprContextRecursive": {
           "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
@@ -2819,15 +2832,7 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
-          "enum": [
-            "natural",
-            "named",
-            "hashed",
-            "deterministic",
-            "size",
-            false
-          ],
-          "deprecated": true
+          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
@@ -2992,15 +2997,7 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
-          "enum": [
-            "natural",
-            "named",
-            "hashed",
-            "deterministic",
-            "size",
-            false
-          ],
-          "deprecated": true
+          "enum": ["natural", "named", "hashed", "deterministic", "size", false]
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
@@ -4925,6 +4922,14 @@
           "description": "Options for parsing.",
           "type": "object",
           "additionalProperties": true
+        },
+        "phase": {
+          "description": "Match the import phase of the dependency.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
         },
         "realResource": {
           "description": "Match the real resource path of the module.",

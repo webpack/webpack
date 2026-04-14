@@ -26,7 +26,7 @@ it("concatenation and mangling should work", () => {
 			"simple": "_8cG3vB",
 		});
 
-		expect(Object.keys(__webpack_modules__).length).toBe(target === "web" ? 7 : 1)
+		expect(Object.keys(__webpack_modules__).length).toBe(target === "web" ? 8 : 1)
 	}
 });
 
@@ -38,13 +38,15 @@ it("should have correct convention for css exports name", (done) => {
 		import("./style.module.css?dashes"),
 		import("./style.module.css?dashes-only"),
 		import("./style.module.css?upper"),
-	]).then(([asIs, camelCase, camelCaseOnly, dashes, dashesOnly, upper]) => {
+		import("./style.module.css?upper-no-named-exports"),
+	]).then(([asIs, camelCase, camelCaseOnly, dashes, dashesOnly, upper, upperNoNamedExport]) => {
 		expect(asIs).toMatchSnapshot('as-is');
 		expect(camelCase).toMatchSnapshot('camel-case');
 		expect(camelCaseOnly).toMatchSnapshot('camel-case-only');
 		expect(dashes).toMatchSnapshot('dashes');
 		expect(dashesOnly).toMatchSnapshot('dashes-only');
 		expect(upper).toMatchSnapshot('upper');
+		expect(upperNoNamedExport.default).toMatchSnapshot('upper-and-no-named-export');
 		done()
 	}).catch(done)
 });

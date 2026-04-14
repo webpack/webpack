@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases parse-error should print correct stats for parse-error 1`] = `
+"assets by status X KiB [cached] 1 asset
+orphan modules X bytes [orphan] 1 module
+./index.js + 1 modules X bytes [built] [code generated]
+./b.js X bytes [built] [code generated] [1 error]
+
+ERROR in ./b.js 6:7
+Module parse failed: Unexpected token (6:7)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+| includes
+| a
+> parser )
+| error
+| in
+ @ ./a.js 2:0-13
+ @ ./index.js 2:0-13
+
+webpack x.x.x compiled with 1 error"
+`;

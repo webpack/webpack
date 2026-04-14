@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases preset-none should print correct stats for preset-none 1`] = `
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+<i> [LogTestPlugin] Info
+"
+`;

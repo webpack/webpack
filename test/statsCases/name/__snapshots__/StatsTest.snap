@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases name should print correct stats for name 1`] = `
+"./app.js:
+  asset bundle1.js X bytes [emitted] (name: main)
+  ./app.js X bytes [built] [code generated]
+  Xdir/name/app.js (webpack x.x.x) compiled successfully in X ms
+
+./server.js:
+  asset bundle2.js X bytes [emitted] (name: main)
+  ./server.js X bytes [built] [code generated]
+  Xdir/name/server.js (webpack x.x.x) compiled successfully in X ms"
+`;

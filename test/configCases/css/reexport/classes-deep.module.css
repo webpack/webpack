@@ -1,0 +1,15 @@
+.deep-selector {
+	color: red;
+}
+
+.deep-selector-with-composes {
+	color: red;
+}
+
+.deep-selector-with-composes {
+	composes: deep-selector;
+}
+
+.deep-nested-c {
+	color: red;
+}

@@ -13,6 +13,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write # Required for OIDC authentication with CodSpeed
 
 jobs:
   benchmark:
@@ -49,11 +50,10 @@ jobs:
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@281164b0f014a4e7badd2c02cecad9b595b70537 # v4.11.1
+        uses: CodSpeedHQ/action@db35df748deb45fdef0960669f57d627c1956c30 # v4.13.1
         with:
           run: yarn benchmark --ci
           mode: "simulation"
-          token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
@@ -84,7 +84,7 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - name: Run memory benchmarks
-        uses: CodSpeedHQ/action@281164b0f014a4e7badd2c02cecad9b595b70537 # v4.11.1
+        uses: CodSpeedHQ/action@db35df748deb45fdef0960669f57d627c1956c30 # v4.13.1
         with:
           run: yarn benchmark --ci
           mode: "memory"

@@ -1,0 +1,6 @@
+@import "@foo/package/style.module.css";
+@import "foo/package/style.module.css";
+
+.myClass {
+	color: red;
+}

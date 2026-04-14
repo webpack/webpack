@@ -127,9 +127,10 @@
     "jrburke",
     "jsfile",
     "jsons",
+    "jshttp",
+    "jsdoc",
     "junit",
     "Junya",
-    "jsdoc",
     "jwalton",
     "kaios",
     "Kees",
@@ -191,6 +192,7 @@
     "parallelism",
     "passthrough",
     "pathinfo",
+    "peakoss",
     "performant",
     "Phoscur",
     "parseargs",
@@ -334,7 +336,8 @@
     "WHATWG",
     "publicpath",
     "Uninstantiated",
-    "sccs"
+    "sccs",
+    "FEFF"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
@@ -357,6 +360,7 @@
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "test/JavascriptParser.unittest.js",
+    "test/test262-cases/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",
@@ -368,6 +372,7 @@
     "test/statsCases/**",
     "test/fixtures/**",
     "test/memoryLimitCases/**",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "WORKING_GROUP.md"
   ]
 }

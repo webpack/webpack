@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases concat-and-sideeffects should print correct stats for concat-and-sideeffects 1`] = `
+"./index.js + 2 modules X bytes [built] [code generated]
+  | ./index.js X bytes [built]
+  |   Statement (ExpressionStatement) with side effects in source code at 3:0-15
+  | ./node_modules/pmodule/a.js X bytes [built]
+  | ./node_modules/pmodule/aa.js X bytes [built]
+./node_modules/pmodule/a.js X bytes [orphan] [built]
+./node_modules/pmodule/index.js X bytes [orphan] [built]
+  ModuleConcatenation bailout: Module is not in any chunk
+./node_modules/pmodule/aa.js X bytes [orphan] [built]
+./node_modules/pmodule/b.js X bytes [orphan] [built]
+  ModuleConcatenation bailout: Module is not in any chunk
+./node_modules/pmodule/c.js X bytes [orphan] [built]
+  ModuleConcatenation bailout: Module is not in any chunk
+./node_modules/pmodule/bb.js X bytes [orphan] [built]
+  ModuleConcatenation bailout: Module is not in any chunk
+./node_modules/pmodule/cc.js X bytes [orphan] [built]
+  ModuleConcatenation bailout: Module is not in any chunk"
+`;

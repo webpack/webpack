@@ -1,0 +1,405 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 1`] = `
+Object {
+  "#": "style_modules_css-#",
+  "##": "style_modules_css-##",
+  "#.#.#": "style_modules_css-#.#.#",
+  "#fake-id": "style_modules_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "style_modules_css--a-b-c-",
+  "-a0-34a___f": "style_modules_css--a0-34a___f",
+  ".": "style_modules_css-.",
+  "123": "style_modules_css-123",
+  "1a2b3c": "style_modules_css-1a2b3c",
+  ":)": "style_modules_css-:)",
+  ":\`(": "style_modules_css-:\`(",
+  ":hover": "style_modules_css-:hover",
+  ":hover:focus:active": "style_modules_css-:hover:focus:active",
+  "<><<<>><>": "style_modules_css-<><<<>><>",
+  "<p>": "style_modules_css-<p>",
+  "?": "style_modules_css-?",
+  "@": "style_modules_css-@",
+  "B&W?": "style_modules_css-B&W?",
+  "[attr=value]": "style_modules_css-[attr=value]",
+  "_": "style_modules_css-_",
+  "_test": "style_modules_css-_test",
+  "class": "style_modules_css-class",
+  "className": "style_modules_css-className",
+  "f!o!o": "style_modules_css-f!o!o",
+  "f'o'o": "style_modules_css-f'o'o",
+  "f*o*o": "style_modules_css-f*o*o",
+  "f+o+o": "style_modules_css-f+o+o",
+  "f/o/o": "style_modules_css-f/o/o",
+  "f@oo": "style_modules_css-f@oo",
+  "f\\\\o\\\\o": "style_modules_css-f\\\\o\\\\o",
+  "foo.bar": "style_modules_css-foo.bar",
+  "foo/bar": "style_modules_css-foo/bar",
+  "foo/bar/baz": "style_modules_css-foo/bar/baz",
+  "foo\\\\bar": "style_modules_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "style_modules_css-foo\\\\bar\\\\baz",
+  "f~o~o": "style_modules_css-f~o~o",
+  "m_x_@": "style_modules_css-m_x_@",
+  "main-bg-color": "--style_modules_css-main-bg-color",
+  "main-bg-color-@2": "--style_modules_css-main-bg-color-@2",
+  "someId": "style_modules_css-someId",
+  "subClass": "style_modules_css-subClass",
+  "test": "style_modules_css-test",
+  "{}": "style_modules_css-{}",
+  "©": "style_modules_css-©",
+  "“‘’”": "style_modules_css-“‘’”",
+  "⌘⌥": "style_modules_css-⌘⌥",
+  "☺☃": "style_modules_css-☺☃",
+  "♥": "style_modules_css-♥",
+  "𝄞♪♩♫♬": "style_modules_css-𝄞♪♩♫♬",
+  "💩": "style_modules_css-💩",
+  "😍": "style_modules_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: classes 2`] = `
+Object {
+  "#": "style_modules_css-#",
+  "##": "style_modules_css-##",
+  "#.#.#": "style_modules_css-#.#.#",
+  "#fake-id": "style_modules_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "style_modules_css--a-b-c-",
+  "-a0-34a___f": "style_modules_css--a0-34a___f",
+  ".": "style_modules_css-.",
+  "123": "style_modules_css-123",
+  "1a2b3c": "style_modules_css-1a2b3c",
+  ":)": "style_modules_css-:)",
+  ":\`(": "style_modules_css-:\`(",
+  ":hover": "style_modules_css-:hover",
+  ":hover:focus:active": "style_modules_css-:hover:focus:active",
+  "<><<<>><>": "style_modules_css-<><<<>><>",
+  "<p>": "style_modules_css-<p>",
+  "?": "style_modules_css-?",
+  "@": "style_modules_css-@",
+  "B&W?": "style_modules_css-B&W?",
+  "[attr=value]": "style_modules_css-[attr=value]",
+  "_": "style_modules_css-_",
+  "_test": "style_modules_css-_test",
+  "class": "style_modules_css-class",
+  "className": "style_modules_css-className",
+  "f!o!o": "style_modules_css-f!o!o",
+  "f'o'o": "style_modules_css-f'o'o",
+  "f*o*o": "style_modules_css-f*o*o",
+  "f+o+o": "style_modules_css-f+o+o",
+  "f/o/o": "style_modules_css-f/o/o",
+  "f@oo": "style_modules_css-f@oo",
+  "f\\\\o\\\\o": "style_modules_css-f\\\\o\\\\o",
+  "foo.bar": "style_modules_css-foo.bar",
+  "foo/bar": "style_modules_css-foo/bar",
+  "foo/bar/baz": "style_modules_css-foo/bar/baz",
+  "foo\\\\bar": "style_modules_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "style_modules_css-foo\\\\bar\\\\baz",
+  "f~o~o": "style_modules_css-f~o~o",
+  "m_x_@": "style_modules_css-m_x_@",
+  "main-bg-color": "--style_modules_css-main-bg-color",
+  "main-bg-color-@2": "--style_modules_css-main-bg-color-@2",
+  "someId": "style_modules_css-someId",
+  "subClass": "style_modules_css-subClass",
+  "test": "style_modules_css-test",
+  "{}": "style_modules_css-{}",
+  "©": "style_modules_css-©",
+  "“‘’”": "style_modules_css-“‘’”",
+  "⌘⌥": "style_modules_css-⌘⌥",
+  "☺☃": "style_modules_css-☺☃",
+  "♥": "style_modules_css-♥",
+  "𝄞♪♩♫♬": "style_modules_css-𝄞♪♩♫♬",
+  "💩": "style_modules_css-💩",
+  "😍": "style_modules_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: css 1`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+.style_modules_css-class {
+	color: red;
+}
+
+.style_modules_css-class {
+	background: blue;
+}
+
+.style_modules_css-test {
+	background: red;
+}
+
+.style_modules_css-_test {
+	background: blue;
+}
+
+.style_modules_css-className {
+	background: red;
+}
+
+#style_modules_css-someId {
+	background: green;
+}
+
+.style_modules_css-className .style_modules_css-subClass {
+	color: green;
+}
+
+#style_modules_css-someId .style_modules_css-subClass {
+	color: blue;
+}
+
+.style_modules_css--a0-34a___f {
+	color: red;
+}
+
+.style_modules_css-m_x_\\\\@ {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.style_modules_css-B\\\\&W\\\\? {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.style_modules_css-\\\\:\\\\\`\\\\( {
+	color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.style_modules_css-1a2b3c {
+	color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#style_modules_css-\\\\#fake-id {
+	color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#style_modules_css--a-b-c- {
+	color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#style_modules_css-© {
+	color: black;
+}
+
+.style_modules_css-♥ { background: lime; }
+.style_modules_css-© { background: lime; }
+.style_modules_css-😍 { background: lime; }
+.style_modules_css-“‘’” { background: lime; }
+.style_modules_css-☺☃ { background: lime; }
+.style_modules_css-⌘⌥ { background: lime; }
+.style_modules_css-𝄞♪♩♫♬ { background: lime; }
+.style_modules_css-💩 { background: lime; }
+.style_modules_css-\\\\? { background: lime; }
+.style_modules_css-\\\\@ { background: lime; }
+.style_modules_css-\\\\. { background: lime; }
+.style_modules_css-\\\\:\\\\) { background: lime; }
+.style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
+.style_modules_css-123 { background: lime; }
+.style_modules_css-1a2b3c { background: lime; }
+.style_modules_css-\\\\<p\\\\> { background: lime; }
+.style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.style_modules_css-\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.style_modules_css-_ { background: lime; }
+.style_modules_css-\\\\{\\\\} { background: lime; }
+.style_modules_css-\\\\#fake-id { background: lime; }
+.style_modules_css-foo\\\\.bar { background: lime; }
+.style_modules_css-\\\\:hover { background: lime; }
+.style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
+.style_modules_css-f\\\\/o\\\\/o { background: lime; }
+.style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+.style_modules_css-f\\\\*o\\\\*o { background: lime; }
+.style_modules_css-f\\\\!o\\\\!o { background: lime; }
+.style_modules_css-f\\\\'o\\\\'o { background: lime; }
+.style_modules_css-f\\\\~o\\\\~o { background: lime; }
+.style_modules_css-f\\\\+o\\\\+o { background: lime; }
+
+.style_modules_css-foo\\\\/bar {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\\\\\bar {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\/bar\\\\/baz {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
+	background: hotpink;
+}
+
+:root {
+	--style_modules_css-main-bg-color: red;
+	--style_modules_css-main-bg-color-\\\\@2: blue;
+}
+
+details {
+	background-color: var(--style_modules_css-main-bg-color);
+	background-color: var(--style_modules_css-main-bg-color-\\\\@2);
+}
+
+@keyframes style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;
+
+exports[`ConfigCacheTestCases css escape-unescape exported tests should work with URLs in CSS: css 2`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+.style_modules_css-class {
+	color: red;
+}
+
+.style_modules_css-class {
+	background: blue;
+}
+
+.style_modules_css-test {
+	background: red;
+}
+
+.style_modules_css-_test {
+	background: blue;
+}
+
+.style_modules_css-className {
+	background: red;
+}
+
+#style_modules_css-someId {
+	background: green;
+}
+
+.style_modules_css-className .style_modules_css-subClass {
+	color: green;
+}
+
+#style_modules_css-someId .style_modules_css-subClass {
+	color: blue;
+}
+
+.style_modules_css--a0-34a___f {
+	color: red;
+}
+
+.style_modules_css-m_x_\\\\@ {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.style_modules_css-B\\\\&W\\\\? {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.style_modules_css-\\\\:\\\\\`\\\\( {
+	color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.style_modules_css-1a2b3c {
+	color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#style_modules_css-\\\\#fake-id {
+	color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#style_modules_css--a-b-c- {
+	color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#style_modules_css-© {
+	color: black;
+}
+
+.style_modules_css-♥ { background: lime; }
+.style_modules_css-© { background: lime; }
+.style_modules_css-😍 { background: lime; }
+.style_modules_css-“‘’” { background: lime; }
+.style_modules_css-☺☃ { background: lime; }
+.style_modules_css-⌘⌥ { background: lime; }
+.style_modules_css-𝄞♪♩♫♬ { background: lime; }
+.style_modules_css-💩 { background: lime; }
+.style_modules_css-\\\\? { background: lime; }
+.style_modules_css-\\\\@ { background: lime; }
+.style_modules_css-\\\\. { background: lime; }
+.style_modules_css-\\\\:\\\\) { background: lime; }
+.style_modules_css-\\\\:\\\\\`\\\\( { background: lime; }
+.style_modules_css-123 { background: lime; }
+.style_modules_css-1a2b3c { background: lime; }
+.style_modules_css-\\\\<p\\\\> { background: lime; }
+.style_modules_css-\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> { background: lime; }
+.style_modules_css-\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. { background: lime; }
+.style_modules_css-\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\# { background: lime; }
+.style_modules_css-\\\\#\\\\.\\\\#\\\\.\\\\# { background: lime; }
+.style_modules_css-_ { background: lime; }
+.style_modules_css-\\\\{\\\\} { background: lime; }
+.style_modules_css-\\\\#fake-id { background: lime; }
+.style_modules_css-foo\\\\.bar { background: lime; }
+.style_modules_css-\\\\:hover { background: lime; }
+.style_modules_css-\\\\:hover\\\\:focus\\\\:active { background: lime; }
+.style_modules_css-\\\\[attr\\\\=value\\\\] { background: lime; }
+.style_modules_css-f\\\\/o\\\\/o { background: lime; }
+.style_modules_css-f\\\\\\\\o\\\\\\\\o { background: lime; }
+.style_modules_css-f\\\\*o\\\\*o { background: lime; }
+.style_modules_css-f\\\\!o\\\\!o { background: lime; }
+.style_modules_css-f\\\\'o\\\\'o { background: lime; }
+.style_modules_css-f\\\\~o\\\\~o { background: lime; }
+.style_modules_css-f\\\\+o\\\\+o { background: lime; }
+
+.style_modules_css-foo\\\\/bar {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\\\\\bar {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\/bar\\\\/baz {
+	background: hotpink;
+}
+
+.style_modules_css-foo\\\\\\\\bar\\\\\\\\baz {
+	background: hotpink;
+}
+
+:root {
+	--style_modules_css-main-bg-color: red;
+	--style_modules_css-main-bg-color-\\\\@2: blue;
+}
+
+details {
+	background-color: var(--style_modules_css-main-bg-color);
+	background-color: var(--style_modules_css-main-bg-color-\\\\@2);
+}
+
+@keyframes style_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;

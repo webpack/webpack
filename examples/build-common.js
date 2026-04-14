@@ -23,13 +23,13 @@ const extraArgs = "";
 
 const globalObj = /** @type {typeof globalThis & GlobalObj} */ (global);
 
-const targetArgs = globalObj
+const targetArgs = globalObj.NO_TARGET_ARGS
 	? ""
 	: "--entry ./example.js --output-filename output.js";
-const displayReasons = globalObj
+const displayReasons = globalObj.NO_REASONS
 	? ""
 	: "--stats-reasons --stats-used-exports --stats-provided-exports";
-const statsArgs = globalObj
+const statsArgs = globalObj.NO_STATS_OPTIONS
 	? ""
 	: "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
 const publicPathArgs = globalObj.NO_PUBLIC_PATH
@@ -38,6 +38,7 @@ const publicPathArgs = globalObj.NO_PUBLIC_PATH
 const statsColorsArg = globalObj.STATS_COLORS ? "" : "--no-color";
 
 const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
+
 
 let readme = fs.readFileSync(
 	require("path").join(process.cwd(), "template.md"),

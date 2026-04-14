@@ -31,4 +31,3 @@ ignore:
   - "lib/ChunkTemplate.js"
   - "lib/MainTemplate.js"
   - "lib/ModuleTemplate.js"
-comment: off

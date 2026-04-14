@@ -208,12 +208,6 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 		// Check if module exists (development only)
-/******/ 		if (__webpack_modules__[moduleId] === undefined) {
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
@@ -222,6 +216,12 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -407,9 +407,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.79 KiB [emitted] [minimized] (name: main)
-asset 93de874acf2fa7def7d9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset 5055869d769f484de216.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset db91ebd6538fd6985888.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+asset 3b1a62caaedfb3eb3143.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset 220ae91849c4ebd5dd7c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset 1543e79e74598fd156b7.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.45 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.45 KiB 5 modules
