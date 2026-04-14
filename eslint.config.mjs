@@ -35,6 +35,7 @@ export default defineConfig([
 
 		// Ignore generated files
 		"*.check.js",
+		"*.compat.js",
 
 		// Ignore not supported files
 		"*.d.ts",
