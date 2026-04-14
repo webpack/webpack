@@ -471,7 +471,7 @@ const compile = async (entry, scenario, options = {}) =>
 				...options.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
-			mode: "development",
+			mode: options.mode || "development",
 			target: "node",
 			devtool: false,
 			stats: "errors-warnings",
@@ -480,6 +480,11 @@ const compile = async (entry, scenario, options = {}) =>
 				outputModule: scenario === "module",
 				deferImport: true
 			},
+			optimization: {
+				emitOnErrors: true,
+				minimize: false
+			},
+			cache: false,
 			module: {
 				parser: {
 					javascript: {
@@ -1043,231 +1048,315 @@ const knownBugs = [
 	"module-code/top-level-await/module-import-resolution.js",
 	"module-code/top-level-await/module-import-unwrapped.js"
 ];
+
+const knownProductionBuildBugs = [
+	// Production inner graph drops class heritage access
+	"statements/class/definition/prototype-getter.js",
+	// Production inner graph drops unused export value access
+	"module-code/eval-export-dflt-expr-err-get-value.js",
+	// Production concatenation loses immutable import assignment
+	"module-code/instn-iee-bndng-fun.js",
+	"module-code/instn-iee-bndng-gen.js",
+	"module-code/instn-iee-bndng-var.js",
+	// Production provided exports misses namespace re-exports
+	"module-code/instn-star-props-nrml.js",
+	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
+	// Production concatenation orders eager import after defer
+	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
+	// Production inner graph drops using initializers
+	"statements/using/Symbol.dispose-getter.js",
+	"statements/using/gets-initializer-Symbol.dispose-property-once.js",
+	"statements/using/initializer-disposed-at-end-of-block.js",
+	"statements/using/initializer-disposed-at-end-of-forstatement.js",
+	"statements/using/multiple-resources-disposed-in-reverse-order.js",
+	"statements/using/puts-initializer-on-top-of-disposableresourcestack-multiple-bindings.js",
+	"statements/using/puts-initializer-on-top-of-disposableresourcestack-subsequent-usings.js"
+];
 /* cspell:enable */
 
 const testFiles = fs
 	.globSync(`${baseDir}/**/*.js`)
 	.filter((name) => !/_FIXTURE\.js$/i.test(name));
 
-describe("test262", () => {
-	for (const testFile of testFiles) {
-		const name = path.posix.relative(baseDir, testFile);
-		const outputPath = path.resolve(
-			__dirname,
-			"./js/test262-cases",
-			path.join(path.dirname(name), path.basename(name, path.extname(name)))
+const shard =
+	typeof process.env.SHARD !== "undefined"
+		? process.env.SHARD.split("/").map((item) => Number.parseInt(item, 10))
+		: [1, 1];
+
+if (
+	typeof shard[0] === "undefined" ||
+	typeof shard[1] === "undefined" ||
+	shard[0] > shard[1] ||
+	shard[0] <= 0 ||
+	shard[1] <= 0
+) {
+	throw new Error(
+		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
+	);
+}
+
+/**
+ * @template T
+ * @param {T[]} array an array
+ * @param {number} n number of chunks
+ * @returns {T[][]} splitted to n chunks
+ */
+function splitToNChunks(array, n) {
+	/** @type {T[][]} */
+	const result = [];
+
+	for (let i = n; i > 0; i--) {
+		result.push(
+			/** @type {T[]} */
+			(array.splice(0, Math.ceil(array.length / i)))
 		);
-		const outputFile = path.resolve(outputPath, "./main.js");
-		const content = fs.readFileSync(testFile, "utf8");
-		const meta = getTest262Meta(content);
+	}
 
-		if (
-			meta.negative &&
-			!["parse", "runtime", "resolution"].includes(meta.negative.phase)
-		) {
-			throw new Error(
-				`Error in test file "${outputFile}" ("${testFile}"), unknown "${meta.negative.phase}" negative phase`
-			);
-		}
+	return result;
+}
 
-		if (
-			// Decorators are not supported
-			meta.features.includes("decorators") ||
-			// V8 optimization bugs
-			meta.features.includes("Symbol.unscopables") ||
-			// TODO Not implemented
-			meta.features.includes("source-phase-imports") ||
-			meta.features.includes("source-phase-imports-module-source") ||
-			// TODO improve in our test runner
-			(meta.negative && meta.negative.phase === "resolution") ||
-			knownBugs.includes(name)
-		) {
-			// eslint-disable-next-line jest/no-disabled-tests
-			it.skip(name, () => {});
+const shardedTestFiles = splitToNChunks([...testFiles], shard[1])[shard[0] - 1];
 
-			continue;
-		}
-
-		let scenarios;
-
-		if (meta.flags.includes("module")) {
-			scenarios = ["module"];
-		} else if (meta.flags.includes("raw")) {
-			scenarios = ["sloppy"];
-		} else if (meta.flags.includes("onlyStrict")) {
-			scenarios = ["strict"];
-		} else if (meta.flags.includes("noStrict")) {
-			scenarios = ["sloppy"];
-		} else {
-			scenarios = ["sloppy", "strict"];
-		}
-
-		for (const scenario of scenarios) {
-			it(`${name} ("${scenario}")`, async () => {
-				if (needDebug) {
-					process.stdout.write(`Running ${name} ("${scenario}")\n`);
-				}
-
-				const stats = await compile(testFile, scenario, {
-					output: {
-						path: outputPath,
-						filename: path.relative(outputPath, outputFile)
-					}
-				});
-
-				const includes = meta.flags.includes("raw")
-					? []
-					: [
-							"sta.js",
-							"assert.js",
-							// We override `$MAX_ITERATIONS` above
-							...meta.includes.filter((item) => item !== "tcoHelper.js")
-						];
-				const includesCode = await Promise.all(
-					includes.map((include) =>
-						fs.promises.readFile(
-							path.resolve(test262HarnessDir, include),
-							"utf8"
-						)
-					)
+describe("test262", () => {
+	for (const mode of ["development", "production"]) {
+		describe(mode, () => {
+			for (const testFile of shardedTestFiles) {
+				const name = path.posix.relative(baseDir, testFile);
+				const outputPath = path.resolve(
+					__dirname,
+					"./js/test262-cases",
+					mode,
+					path.join(path.dirname(name), path.basename(name, path.extname(name)))
 				);
+				const outputFile = path.resolve(outputPath, "./main.js");
+				const content = fs.readFileSync(testFile, "utf8");
+				const meta = getTest262Meta(content);
 
-				const bundledCode = await outputFileSystem.promises.readFile(
-					outputFile,
-					"utf8"
-				);
-				const codeBefore = [
-					scenario === "strict" ? "'use strict';" : "",
-					...includesCode
-				].join("\n");
-				const code = [codeBefore, bundledCode].join("\n");
-
-				const isAsync = meta.flags.includes("async");
-
-				const moduleCache = new Map();
-				const sandbox = Object.create(null);
-
-				sandbox.$MAX_ITERATIONS = 1;
-
-				let resolve;
-				let reject;
-				let asyncPromise;
-
-				if (isAsync) {
-					asyncPromise = new Promise((res, rej) => {
-						resolve = res;
-						reject = rej;
-					});
-
-					sandbox.$DONE = (err) => {
-						if (err) reject(err);
-						else resolve();
-					};
-				}
-
-				const context = vm.createContext(sandbox, {
-					microtaskMode: "afterEvaluate"
-				});
-
-				sandbox.globalThis = sandbox;
-				sandbox.Buffer = Buffer;
-				sandbox.$262 = create262Host(context);
-				// For debug
-				sandbox.console = console;
-
-				if (scenario !== "module") {
-					sandbox.require = createRequire(outputPath, context);
-				}
-
-				let errored = false;
-
-				try {
-					if (scenario === "module") {
-						await runModule(context, code, outputFile, testFile, moduleCache);
-					} else {
-						await runScript(context, code, outputFile, testFile, moduleCache, {
-							lineOffset: -codeBefore.split("\n").length
-						});
-					}
-
-					if (isAsync) {
-						await asyncPromise;
-					}
-
-					if (meta.negative) {
-						throw new Error(
-							`Error in test file "${outputFile}" ("${testFile}"), expected ${
-								meta.negative.phase === "parse"
-									? "parse"
-									: meta.negative.phase === "runtime"
-										? "runtime"
-										: ""
-							} error`
-						);
-					}
-				} catch (err) {
-					errored = err;
-				}
-
-				if (errored && knownV8Bugs.includes(name)) {
-					return;
-				}
-
-				const { warnings, errors } = stats.compilation;
-
-				const isExpectedParseError =
-					errored &&
+				if (
 					meta.negative &&
-					meta.negative.phase === "parse" &&
-					// meta.negative.type === errored.constructor.name &&
-					errors.every((item) => item.name === "ModuleParseError");
-
-				const isExpectedRuntimeError =
-					errored &&
-					meta.negative &&
-					meta.negative.phase === "runtime" &&
-					errored.constructor.name === meta.negative.type;
-
-				if (errored && !isExpectedParseError && !isExpectedRuntimeError) {
+					!["parse", "runtime", "resolution"].includes(meta.negative.phase)
+				) {
 					throw new Error(
-						`Error in test file "${outputFile}" ("${testFile}")`,
-						{
-							cause: errored instanceof Error ? errored : new Error(errored)
-						}
+						`Error in test file "${outputFile}" ("${testFile}"), unknown "${meta.negative.phase}" negative phase`
 					);
 				}
 
 				if (
-					warnings.length > 0 &&
-					// Just syntax test
-					name !== "module-code/top-level-await/syntax/await-expr-dyn-import.js"
+					// Decorators are not supported
+					meta.features.includes("decorators") ||
+					// V8 optimization bugs
+					meta.features.includes("Symbol.unscopables") ||
+					// TODO Not implemented
+					meta.features.includes("source-phase-imports") ||
+					meta.features.includes("source-phase-imports-module-source") ||
+					// TODO improve in our test runner
+					(meta.negative && meta.negative.phase === "resolution") ||
+					knownBugs.includes(name) ||
+					(mode === "production" && knownProductionBuildBugs.includes(name))
 				) {
-					throw new Error(
-						`Warnings in test file "${outputFile}" ("${testFile}")`,
-						{
-							cause: new Error(`Errors:\n\n${warnings.join("\n")}`)
+					// eslint-disable-next-line jest/no-disabled-tests
+					it.skip(name, () => {});
+
+					continue;
+				}
+
+				let scenarios;
+
+				if (meta.flags.includes("module")) {
+					scenarios = ["module"];
+				} else if (meta.flags.includes("raw")) {
+					scenarios = ["sloppy"];
+				} else if (meta.flags.includes("onlyStrict")) {
+					scenarios = ["strict"];
+				} else if (meta.flags.includes("noStrict")) {
+					scenarios = ["sloppy"];
+				} else {
+					scenarios = ["sloppy", "strict"];
+				}
+
+				for (const scenario of scenarios) {
+					it(`${name} ("${scenario}")`, async () => {
+						if (needDebug) {
+							process.stdout.write(`Running ${name} ("${scenario}")\n`);
 						}
-					);
-				}
 
-				const hasUnexpectedErrors = errors.some(
-					(item) =>
-						!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
-				);
+						const stats = await compile(testFile, scenario, {
+							mode,
+							output: {
+								path: outputPath,
+								filename: path.relative(outputPath, outputFile)
+							}
+						});
 
-				if (!isExpectedParseError && hasUnexpectedErrors) {
-					throw new Error(
-						`Errors in test file "${outputFile}" ("${testFile}")`,
-						{
-							cause: new Error(`Errors:\n\n${errors.join("\n")}`)
+						const includes = meta.flags.includes("raw")
+							? []
+							: [
+									"sta.js",
+									"assert.js",
+									// We override `$MAX_ITERATIONS` above
+									...meta.includes.filter((item) => item !== "tcoHelper.js")
+								];
+						const includesCode = await Promise.all(
+							includes.map((include) =>
+								fs.promises.readFile(
+									path.resolve(test262HarnessDir, include),
+									"utf8"
+								)
+							)
+						);
+
+						const bundledCode = await outputFileSystem.promises.readFile(
+							outputFile,
+							"utf8"
+						);
+						const codeBefore = [
+							scenario === "strict" ? "'use strict';" : "",
+							...includesCode
+						].join("\n");
+						const code = [codeBefore, bundledCode].join("\n");
+
+						const isAsync = meta.flags.includes("async");
+
+						const moduleCache = new Map();
+						const sandbox = Object.create(null);
+
+						sandbox.$MAX_ITERATIONS = 1;
+
+						let resolve;
+						let reject;
+						let asyncPromise;
+
+						if (isAsync) {
+							asyncPromise = new Promise((res, rej) => {
+								resolve = res;
+								reject = rej;
+							});
+
+							sandbox.$DONE = (err) => {
+								if (err) reject(err);
+								else resolve();
+							};
 						}
-					);
-				}
 
-				if (needDebug) {
-					process.stdout.write(`Finished ${name} ("${scenario}")\n`);
+						const context = vm.createContext(sandbox, {
+							microtaskMode: "afterEvaluate"
+						});
+
+						sandbox.globalThis = sandbox;
+						sandbox.Buffer = Buffer;
+						sandbox.$262 = create262Host(context);
+						// For debug
+						sandbox.console = console;
+
+						if (scenario !== "module") {
+							sandbox.require = createRequire(outputPath, context);
+						}
+
+						let errored = false;
+
+						try {
+							if (scenario === "module") {
+								await runModule(
+									context,
+									code,
+									outputFile,
+									testFile,
+									moduleCache
+								);
+							} else {
+								await runScript(
+									context,
+									code,
+									outputFile,
+									testFile,
+									moduleCache,
+									{
+										lineOffset: -codeBefore.split("\n").length
+									}
+								);
+							}
+
+							if (isAsync) {
+								await asyncPromise;
+							}
+
+							if (meta.negative) {
+								throw new Error(
+									`Error in test file "${outputFile}" ("${testFile}"), expected ${
+										meta.negative.phase === "parse"
+											? "parse"
+											: meta.negative.phase === "runtime"
+												? "runtime"
+												: ""
+									} error`
+								);
+							}
+						} catch (err) {
+							errored = err;
+						}
+
+						if (errored && knownV8Bugs.includes(name)) {
+							return;
+						}
+
+						const { warnings, errors } = stats.compilation;
+
+						const isExpectedParseError =
+							errored &&
+							meta.negative &&
+							meta.negative.phase === "parse" &&
+							// meta.negative.type === errored.constructor.name &&
+							errors.every((item) => item.name === "ModuleParseError");
+
+						const isExpectedRuntimeError =
+							errored &&
+							meta.negative &&
+							meta.negative.phase === "runtime" &&
+							errored.constructor.name === meta.negative.type;
+
+						if (errored && !isExpectedParseError && !isExpectedRuntimeError) {
+							throw new Error(
+								`Error in test file "${outputFile}" ("${testFile}")`,
+								{
+									cause: errored instanceof Error ? errored : new Error(errored)
+								}
+							);
+						}
+
+						if (
+							warnings.length > 0 &&
+							// Just syntax test
+							name !==
+								"module-code/top-level-await/syntax/await-expr-dyn-import.js"
+						) {
+							throw new Error(
+								`Warnings in test file "${outputFile}" ("${testFile}")`,
+								{
+									cause: new Error(`Errors:\n\n${warnings.join("\n")}`)
+								}
+							);
+						}
+
+						const hasUnexpectedErrors = errors.some(
+							(item) =>
+								!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
+						);
+
+						if (!isExpectedParseError && hasUnexpectedErrors) {
+							throw new Error(
+								`Errors in test file "${outputFile}" ("${testFile}")`,
+								{
+									cause: new Error(`Errors:\n\n${errors.join("\n")}`)
+								}
+							);
+						}
+
+						if (needDebug) {
+							process.stdout.write(`Finished ${name} ("${scenario}")\n`);
+						}
+					});
 				}
-			});
-		}
+			}
+		});
 	}
 });
