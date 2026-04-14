@@ -22,7 +22,6 @@ updates:
           - "major"
         exclude-patterns:
           - "eslint-scope"
-          - "strip-ansi"
           - "rimraf"
   - package-ecosystem: "github-actions"
     directory: "/"
