@@ -303,6 +303,17 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - name: Check and set ulimit
+        run: |
+          echo "Default soft limit: $(ulimit -n)"
+          echo "Default hard limit: $(ulimit -Hn)"
+
+          ulimit -n 10240 || ulimit -n 4096
+
+          echo "New soft limit: $(ulimit -n)"
+          echo "New hard limit: $(ulimit -Hn)"
+        if: matrix.os == 'macos-latest'
+
       - name: Cache jest result
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
