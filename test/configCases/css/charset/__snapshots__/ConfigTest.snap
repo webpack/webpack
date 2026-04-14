@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases css charset exported tests should work handle \`@charset\` at-rule 1`] = `
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 1`] = `
 Array [
   "@charset \\"UTF-8\\";
 /*!***********************************************!*\\\\
@@ -48,7 +48,7 @@ Array [
 ]
 `;
 
-exports[`ConfigTestCases css charset exported tests should work handle \`@charset\` at-rule 2`] = `
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 2`] = `
 "/*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
   \\\\*******************************************************/
@@ -118,7 +118,7 @@ exports[`ConfigTestCases css charset exported tests should work handle \`@charse
 "
 `;
 
-exports[`ConfigTestCases css charset exported tests should work handle \`@charset\` at-rule 3`] = `
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 3`] = `
 "/*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
   \\\\*******************************************************/
@@ -150,7 +150,7 @@ exports[`ConfigTestCases css charset exported tests should work handle \`@charse
 "
 `;
 
-exports[`ConfigTestCases css charset exported tests should work handle \`@charset\` at-rule 4`] = `
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 4`] = `
 "@charset \\"UTF-8\\";
 /*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
@@ -193,7 +193,7 @@ exports[`ConfigTestCases css charset exported tests should work handle \`@charse
 "
 `;
 
-exports[`ConfigTestCases css charset exported tests should work handle \`@charset\` at-rule 5`] = `
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 5`] = `
 Array [
   "/*!****************************************************!*\\\\
   !*** css ./styles-6.style.css (exportType: style) ***!

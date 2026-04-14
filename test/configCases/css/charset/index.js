@@ -6,7 +6,7 @@ import textImport from "./import.text.css";
 import styleSheet from "./styles-5.css-style-sheet.css";
 import "./styles-6.style.css";
 
-it("should work handle `@charset` at-rule", () => {
+it("should handle `@charset` at-rule", () => {
 	const links = document.getElementsByTagName("link");
 	const css1 = [];
 
