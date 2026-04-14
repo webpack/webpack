@@ -1,0 +1,5 @@
+@import url(./f-dep.css) layer(components);
+
+.f-class {
+	animation: none;
+}
