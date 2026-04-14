@@ -184,7 +184,6 @@
     "rimraf": "^3.0.2",
     "script-loader": "^0.7.2",
     "simple-git": "^3.28.0",
-    "strip-ansi": "^6.0.0",
     "style-loader": "^4.0.0",
     "terser": "^5.43.1",
     "three": "^0.183.1",

@@ -4,7 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const jestDiff = require("jest-diff").diff;
-const stripVTControlCharacters = require("strip-ansi");
+const stripVTControlCharacters = require("./helpers/stripVTControlCharacters");
 
 /** @typedef {import("../lib/index").Configuration} Configuration */
 /** @typedef {import("../lib/index").WebpackOptionsNormalized} WebpackOptionsNormalized */
