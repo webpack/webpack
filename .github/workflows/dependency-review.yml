@@ -28,6 +28,7 @@ jobs:
             pkg:npm/@apidevtools/json-schema-ref-parser,
             pkg:npm/cookie-signature,
             pkg:npm/ansis
+            pkg:npm/strtok3
           allow-licenses: |
             0BSD,
             AFL-1.1,
