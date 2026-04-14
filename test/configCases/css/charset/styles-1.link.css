@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+@import url("http://some/path/to/css1.css");
+@import "./import.link.css";
+
+.class-1 {
+	color: red;
+}

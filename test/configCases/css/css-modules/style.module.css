@@ -2056,8 +2056,24 @@ p:not(:local(#main-paragraph)) {
 	grid-template-columns: [col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end col-start] 1fr [col-end];
 }
 
-.importantAnimation {
+.important {
 	animation: none !important;
+	animation: my-name !important;
 	animation-name: none !important;
+	animation-name: my-name !important;
+
 	color: red !important;
+
+	container: sticky-heading / inline-size !important;
+	container-name: tall !important;
+
+	grid-column: col-start / col-start 5 !important;
+	grid-area: some-grid-area !important;
+
+	list-style-type: extend-thumbs !important;
+	list-style: extend-thumbs !important;
+
+	fallback: thumbs !important;
+	system: extends thumbs !important;
+	speak-as: thumbs !important;
 }

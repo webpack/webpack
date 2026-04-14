@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+@import "./import-nested.text.css";
+@import "./import-nested.text.css?foo=bar";
+
+.import {
+	color: red;
+}
