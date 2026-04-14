@@ -213,7 +213,8 @@ const knownV8PrefixAndPostfixBugs = [
 const knownV8Bugs = [
 	...knownV8EvalBugs,
 	...knownV8WithBugs,
-	...knownV8PrefixAndPostfixBugs
+	...knownV8PrefixAndPostfixBugs,
+	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
 /* cspell:disable */
@@ -794,6 +795,9 @@ const knownBugs = [
 	"import/import-defer/evaluation-triggers/ignore-symbol-toStringTag-super-property-define.js",
 	"import/import-defer/evaluation-triggers/trigger-exported-string-delete.js",
 	"import/import-defer/evaluation-triggers/trigger-not-exported-string-delete.js",
+	"import/import-defer/evaluation-triggers/ignore-exported-then-super-property-set-exported.js",
+	"import/import-defer/evaluation-triggers/ignore-not-exported-then-super-property-set-exported.js",
+	"import/import-defer/evaluation-triggers/ignore-symbol-other-super-property-set-exported.js",
 	// Bugs with defer and evaluation
 	"import/import-defer/deferred-namespace-object/identity.js",
 	"import/import-defer/deferred-namespace-object/to-string-tag.js",
