@@ -1,0 +1,5 @@
+@import url(./c-dep-dep.css);
+
+.c-dep-class {
+	visibility: hidden;
+}

@@ -1,0 +1,5 @@
+@import url(./f-dep-dep.css) supports(display: grid) screen and (min-width: 500px);
+
+.f-dep-class {
+	transition: all 0.3s;
+}
