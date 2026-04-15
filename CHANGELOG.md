@@ -1,5 +1,23 @@
 # webpack
 
+## 5.106.2
+
+### Patch Changes
+
+- CSS @import now inherits the parent module's exportType, so a file configured as "text" correctly creates a style tag when @imported by a "style" parent. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20838](https://github.com/webpack/webpack/pull/20838))
+
+- Make asset modules available in JS context when referenced from both CSS and a lazily compiled JS chunk. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20801](https://github.com/webpack/webpack/pull/20801))
+
+- Include missing generator options in hash to ensure persistent cache invalidation when configuration changes (CssGenerator `exportsOnly`, JsonGenerator `JSONParse`, WebAssemblyGenerator `mangleImports`). (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20821](https://github.com/webpack/webpack/pull/20821))
+
+- Fix `||` default value handling in ProgressPlugin and ManifestPlugin that incorrectly overrode user-provided falsy values (e.g. `modules: false`, `entries: false`, `entrypoints: false`). (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20823](https://github.com/webpack/webpack/pull/20823))
+
+- Migrate from `mime-types` to `mime-db`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20812](https://github.com/webpack/webpack/pull/20812))
+
+- Handle `@charset` at-rules in CSS modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#20831](https://github.com/webpack/webpack/pull/20831))
+
+- Marked all experimental options in types. (by [@alexander-akait](https://github.com/alexander-akait) in [#20814](https://github.com/webpack/webpack/pull/20814))
+
 ## 5.106.1
 
 ### Patch Changes
