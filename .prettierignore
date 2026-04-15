@@ -28,6 +28,7 @@ coverage/
 # Ignore generated files
 *.check.js
 *.check.d.ts
+*.compat.js
 types.d.ts
 declarations/WebpackOptions.d.ts
 

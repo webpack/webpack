@@ -6,7 +6,7 @@
 
 import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
-import { Scope } from "eslint-scope";
+import { Reference, Scope, Variable } from "eslint-scope";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -4188,8 +4188,8 @@ declare interface ConcatenatedModuleInfo {
 	source?: ReplaceSource;
 	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 	runtimeRequirements?: ReadonlySet<string>;
-	globalScope?: Scope;
-	moduleScope?: Scope;
+	globalScope?: Scope<Variable<Reference>>;
+	moduleScope?: Scope<Variable<Reference>>;
 	internalNames: Map<string, string>;
 	exportMap?: Map<string, string>;
 	rawExportMap?: Map<string, string>;
