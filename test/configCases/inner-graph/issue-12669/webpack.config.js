@@ -16,25 +16,14 @@ module.exports = createTestCases({
 				"map",
 				"map_",
 				"none",
-				"some",
 				"zip"
 			],
 			"../Associative": [],
-			"../Either": ["left", "right"],
+			"../Either": [],
 			"../Function": [],
 			"../Identity": [],
 			"../Ord": [],
-			"../Prelude": [
-				"implementCompactF",
-				"implementForEachF",
-				"implementSeparateF",
-				"instance",
-				"matchers",
-				"orElseF",
-				"structF",
-				"succeedF",
-				"tupleF"
-			]
+			"../Prelude": ["instance", "matchers"]
 		}
 	},
 	if: {
@@ -50,26 +39,14 @@ module.exports = createTestCases({
 				"map",
 				"map_",
 				"none",
-				"some",
 				"zip"
 			],
 			"../Associative": [],
-			"../Either": ["left", "right"],
+			"../Either": [],
 			"../Function": [],
 			"../Identity": [],
 			"../Ord": [],
-			"../Prelude": [
-				"implementCompactF",
-				"implementForEachF",
-				"implementSeparateF",
-				"instance",
-				"matchers",
-				"orElseF",
-				"structF",
-				"succeedF",
-				"tupleF",
-				"conditionalF"
-			]
+			"../Prelude": ["conditionalF", "instance", "matchers"]
 		}
 	}
 });
