@@ -145,5 +145,43 @@ module.exports = [
 				}
 			]
 		}
+	},
+	{
+		...common,
+		output: {
+			filename: "bundle7.[contenthash].js",
+			chunkFilename: "css7/[name].[contenthash].js",
+			cssChunkFilename: "css7/[name].[contenthash].css"
+		},
+		module: {
+			rules: [
+				{
+					test: /\.css$/,
+					type: "css/module",
+					generator: {
+						exportType: "style"
+					}
+				}
+			]
+		}
+	},
+	{
+		...common,
+		output: {
+			filename: "bundle8.[contenthash].js",
+			chunkFilename: "css8/[name].[contenthash].js",
+			cssChunkFilename: "css8/[name].[contenthash].css"
+		},
+		module: {
+			rules: [
+				{
+					test: /\.css$/,
+					type: "css/module",
+					generator: {
+						exportType: "css-style-sheet"
+					}
+				}
+			]
+		}
 	}
 ];

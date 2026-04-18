@@ -16,7 +16,7 @@ module.exports = {
 		return [`./css${i}/${async}`, `./${bundle}`];
 	},
 	afterExecute: () => {
-		expect(allBundles.size).toBe(7);
+		expect(allBundles.size).toBe(9);
 		expect(allCss.size).toBe(7);
 	}
 };
