@@ -41,7 +41,7 @@ module.exports = config;
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_3d2af242fd40c349a342;
+var alpha_8d3c9b718dbdd3092850;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -140,7 +140,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_3d2af242fd40c349a342 = __webpack_exports__;
+/******/ 	alpha_8d3c9b718dbdd3092850 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -149,7 +149,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_3d2af242fd40c349a342","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
+{"name":"alpha_8d3c9b718dbdd3092850","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info

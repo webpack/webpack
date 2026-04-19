@@ -68,7 +68,7 @@ module.exports = config;
 # dist/dll.js
 
 ```javascript
-var dll_addb527cf511fee631c9;
+var dll_ef5717755c0813399274;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -219,7 +219,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_addb527cf511fee631c9 = __webpack_exports__;
+/******/ 	dll_ef5717755c0813399274 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -228,7 +228,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_addb527cf511fee631c9","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_ef5717755c0813399274","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info

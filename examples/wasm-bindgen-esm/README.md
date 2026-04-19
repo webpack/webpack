@@ -183,7 +183,7 @@ __webpack_async_result__();
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f");
+module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584");
 
 /***/ })
 /******/ 	]);
@@ -383,7 +383,7 @@ module.exports = __webpack_require__.v(exports, module.id, "ffe21e855d11d22ab54f
 ## Unoptimized
 
 ```
-asset ffe21e855d11d22ab54f.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
+asset 83f766418938094a1584.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
 asset output.js 14 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -399,7 +399,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 0ebd9cd70a23ec1e751d.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
+asset d9d80d430272dc67db6b.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
 asset output.js 3.32 KiB [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.45 KiB (runtime) [entry] [rendered]
   > ./example.js main

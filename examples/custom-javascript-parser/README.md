@@ -500,8 +500,8 @@ chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.48 KiB (runtime)
     entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset output.js 12 KiB [emitted] (name: main)
-asset 655.output.js 761 bytes [emitted]
+asset output.js 12 KiB [compared for emit] (name: main)
+asset 655.output.js 761 bytes [compared for emit]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]

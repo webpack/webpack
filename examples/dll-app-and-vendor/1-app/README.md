@@ -60,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_d7c09c7924bc958c7cc2 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c74703445a44f12167cd ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -68,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d7c09c7924bc958c7cc2 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c74703445a44f12167cd */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_d7c09c7924bc958c7cc2" ***!
+  !*** external "vendor_lib_c74703445a44f12167cd" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -81,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d7c09c7924bc9
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_d7c09c7924bc958c7cc2;
+module.exports = vendor_lib_c74703445a44f12167cd;
 
 /***/ })
 /******/ 	]);
@@ -182,7 +182,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset app.js 327 bytes [emitted] [minimized] (name: main)
+asset app.js 329 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules

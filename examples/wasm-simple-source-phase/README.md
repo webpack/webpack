@@ -122,7 +122,7 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "fe9ccbc5cbba7613cdf1");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "0bb22d2508a3f5746503");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -191,7 +191,7 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "d798e383c3892e343c60");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "f215af0bd9b5ea85aee7");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -210,7 +210,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "46b45835e448f114dc51");
+	var __webpack_wasm_module__ = await __webpack_require__.vs(module.id, "690d0ef01c3f29042287");
 	__webpack_require__.d(exports, { "default": () => (__webpack_wasm_module__) });
 	__webpack_async_result__();
 	} catch(e) { __webpack_async_result__(e); }
@@ -413,9 +413,9 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 ```
 asset output.js 14.5 KiB [emitted] (name: main)
-asset 46b45835e448f114dc51.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset d798e383c3892e343c60.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset fe9ccbc5cbba7613cdf1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.53 KiB 6 modules
@@ -431,9 +431,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 3.08 KiB [emitted] [minimized] (name: main)
-asset 84086aa601e9bc2e6062.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset c25ea682bcc0f49d705c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset 27041c6bb99e67e6993a.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+asset cf7e85ed8e63f4d888d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset a2f8efa4d5c0dcec35af.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset 8c504d8ec13ead0a0a07.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.26 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.26 KiB 5 modules
