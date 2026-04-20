@@ -18102,6 +18102,18 @@ declare class ProgressPlugin {
 	showDependencies: boolean;
 	showActiveModules: boolean;
 	percentBy: null | "entries" | "modules" | "dependencies";
+	progressBar:
+		| false
+		| Required<{
+				/**
+				 * Color used for the filled portion of the bar.
+				 */
+				color?: string;
+				/**
+				 * Name shown before the progress bar.
+				 */
+				name?: string;
+		  }>;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -18117,7 +18129,19 @@ declare class ProgressPlugin {
 	static defaultOptions: Required<Omit<ProgressPluginOptions, "handler">>;
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
-		logger: WebpackLogger
+		logger: WebpackLogger,
+		progressBar:
+			| false
+			| Required<{
+					/**
+					 * Color used for the filled portion of the bar.
+					 */
+					color?: string;
+					/**
+					 * Name shown before the progress bar.
+					 */
+					name?: string;
+			  }>
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -18172,6 +18196,22 @@ declare interface ProgressPluginOptions {
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
+
+	/**
+	 * Generate progress bar. Default: false.
+	 */
+	progressBar?:
+		| boolean
+		| {
+				/**
+				 * Color used for the filled portion of the bar.
+				 */
+				color?: string;
+				/**
+				 * Name shown before the progress bar.
+				 */
+				name?: string;
+		  };
 }
 declare class ProvidePlugin {
 	/**

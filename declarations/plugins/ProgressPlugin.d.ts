@@ -50,4 +50,19 @@ export interface ProgressPluginOptions {
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: true | false | null;
+	/**
+	 * Generate progress bar. Default: false.
+	 */
+	progressBar?:
+		| boolean
+		| {
+				/**
+				 * Color used for the filled portion of the bar.
+				 */
+				color?: string;
+				/**
+				 * Name shown before the progress bar.
+				 */
+				name?: string;
+		  };
 }
