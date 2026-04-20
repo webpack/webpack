@@ -39,6 +39,14 @@ const samples = [
 		expected: "my+data"
 	},
 	{
+		specifier: "my.data:image/jpg;base64",
+		expected: "my.data"
+	},
+	{
+		specifier: "My.Data+Ext:image/jpg;base64",
+		expected: "my.data+ext"
+	},
+	{
 		specifier: "my-data/next:image/",
 		expected: undefined
 	},
