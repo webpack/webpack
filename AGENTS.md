@@ -70,6 +70,35 @@ yarn tsc           # TypeScript type check (catches type errors in JSDoc annotat
 
 If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
 
-### 6. Git Commit
+### 6. Git Commit & Pull Request
 
-Do **NOT** add `Co-authored-by` lines in commit messages. The GitHub CLA bot requires the email to map to a real GitHub account, and unrecognized emails will cause CLA check failures.
+#### Commit author identity (required for CLA)
+
+EasyCLA matches the **commit author email** to a GitHub account with a signed CLA. A commit using an unrecognized author email such as `claude-bot@users.noreply.github.com`, `noreply@anthropic.com`, or any other email not associated with the requester's GitHub account and signed CLA will fail the CLA check and block the PR.
+
+Before the first commit of a task, set the author to the GitHub account that requested the work — never to a bot identity. Resolve the identity in this order:
+
+1. An identity the user explicitly states in the task (`commit as alice <alice@example.com>`).
+2. The requester's GitHub login + their public no-reply email: `<USER_ID>+<login>@users.noreply.github.com` (look up `USER_ID` by reading the numeric `id` from the GitHub REST API `/users/<login>` response).
+3. If neither is available, **ask** — do not guess and do not fall back to a bot identity.
+
+Apply per-commit (preferred, no global side-effects):
+
+```bash
+git -c user.name="<login>" -c user.email="<email>" commit -m "…"
+```
+
+Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also break the CLA check.
+
+#### Pull request body
+
+webpack uses an **org-wide** PR template from the [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md) repository (there is no template file inside `webpack/webpack`). When opening a PR, fill **every** section of that template, in order, keeping the headings exactly as written:
+
+- **Summary** — motivation and what problem is solved; link the related issue.
+- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
+- **Did you add tests for your changes?** — yes/no + which test files.
+- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
+- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
+- **Use of AI** — required. State that Claude Code was used and how (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+
+Do not delete sections, do not reorder, do not strip the HTML comment hints — write the answer directly under each heading. If a section truly does not apply, write `n/a` under it.
