@@ -221,7 +221,21 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [10.x, 20.x, 22.x, 24.x, 25.x]
         part: [a, b]
+        exclude:
+          # Node.js 10.x has no native arm64 macOS binaries and `macos-latest`
+          # is Apple Silicon, so x64 Node 10 runs under Rosetta 2 emulation
+          # which makes the integration suite ~2-3x slower. Run it on the
+          # native Intel runner below instead.
+          - os: macos-latest
+            node-version: 10.x
         include:
+          # Native Intel x64 runner for Node.js 10.x on macOS.
+          - os: macos-13
+            node-version: 10.x
+            part: a
+          - os: macos-13
+            node-version: 10.x
+            part: b
           # Test with main branches of webpack dependencies
           - os: ubuntu-latest
             node-version: lts/*
@@ -248,22 +262,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        id: calculate_architecture
-        with:
-          result-encoding: string
-          script: |
-            if ('${{ matrix.os }}' === 'macos-latest' && '${{ matrix['node-version'] }}' === '10.x') {
-              return "x64"
-            } else {
-              return ''
-            }
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: ${{ matrix.node-version }}
-          architecture: ${{ steps.calculate_architecture.outputs.result }}
           cache: yarn
 
       # Install old `jest` version and deps for legacy node versions
