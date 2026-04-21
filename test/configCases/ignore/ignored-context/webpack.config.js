@@ -6,7 +6,7 @@ module.exports = {
 	plugins: [
 		new webpack.IgnorePlugin({
 			resourceRegExp: /ignored-sub-module/,
-			contextRegExp: /folder/
+			contextRegExp: /(^|[\/\\])folder([\/\\]|$)/
 		})
 	]
 };
