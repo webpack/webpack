@@ -40,7 +40,15 @@ const checkV8Flags = () => {
 		(flag) => !actualFlags.includes(flag)
 	);
 	if (missingFlags.length > 0) {
-		console.warn(`Missing required flags: ${missingFlags.join(", ")}`);
+		// Missing flags invalidate deterministic benchmarking (hash/random seeds,
+		// GC scheduling, JIT). Throw instead of warning so CI and local runs can't
+		// silently produce unstable numbers — use `yarn benchmark` to run with
+		// the correct flags.
+		throw new Error(
+			`Missing required V8 flags for stable benchmarking: ${missingFlags.join(
+				", "
+			)}\nRun via \`yarn benchmark\` so the flags declared in package.json are applied.`
+		);
 	}
 };
 
@@ -629,9 +637,14 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeAll?.call(task, "run");
 
-			if (codspeedRunnerMode === "simulation") {
+			if (
+				codspeedRunnerMode === "simulation" ||
+				codspeedRunnerMode === "memory"
+			) {
 				// Custom warmup
-				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack
+				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack.
+				// Memory mode also needs warmup so the first measured sample isn't
+				// polluted by module loading, lazy webpack init, and JIT shape transitions.
 				const samples = [];
 
 				while (samples.length < bench.iterations - 1) {
@@ -641,7 +654,14 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
+			// Two GCs + microtask drain: a single major GC can leave promoted-but-
+			// unreachable objects pending finalization, which would otherwise be
+			// attributed to the measured sample (especially under massif).
 			global.gc?.();
+			global.gc?.();
+			await new Promise((resolve) => {
+				setImmediate(resolve);
+			});
 			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
 			await mongoMeasurement.stop(uri);
 			await options?.afterEach?.call(task, "run");
@@ -706,8 +726,11 @@ const withCodSpeed = async (bench) => {
 
 			options?.beforeAll?.call(task, "run");
 
-			if (codspeedRunnerMode === "simulation") {
-				// Custom warmup
+			if (
+				codspeedRunnerMode === "simulation" ||
+				codspeedRunnerMode === "memory"
+			) {
+				// Custom warmup — see the async path for rationale.
 				const samples = [];
 
 				while (samples.length < bench.iterations - 1) {
@@ -717,6 +740,10 @@ const withCodSpeed = async (bench) => {
 
 			options?.beforeEach?.call(task, "run");
 
+			// Two GCs so finalization doesn't leak allocations into the measured
+			// sample (sync path has no microtask queue to drain).
+			global.gc?.();
+			global.gc?.();
 			wrapWithInstrumentHooks(wrapFunctionWithFrame(fn, false), uri);
 
 			options?.afterEach?.call(task, "run");
@@ -832,250 +859,240 @@ async function registerSuite(bench, test, baselines) {
 		)
 	).default;
 
-	await Promise.all(
-		baselines.map(async (baseline) => {
-			const webpack = await baseline.webpack();
+	// Register sequentially so task order in `bench.tasks` is deterministic.
+	// Parallel registration makes the order depend on Promise resolution,
+	// which then leaks into the shared-process state (require.cache, webpack
+	// singletons) seen by each measurement.
+	for (const baseline of baselines) {
+		const webpack = await baseline.webpack();
 
-			await Promise.all(
-				scenarios.map(async (scenario) => {
-					const config = buildConfiguration(
-						test,
-						baseline,
-						realConfig,
-						scenario,
-						testDirectory
-					);
+		for (const scenario of scenarios) {
+			const config = buildConfiguration(
+				test,
+				baseline,
+				realConfig,
+				scenario,
+				testDirectory
+			);
 
-					const stringifiedScenario = JSON.stringify(scenario);
-					const benchName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-					const fullBenchName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
+			const stringifiedScenario = JSON.stringify(scenario);
+			const benchName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+			const fullBenchName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
 
-					console.log(`Register: ${fullBenchName}`);
+			console.log(`Register: ${fullBenchName}`);
 
-					if (scenario.watch) {
-						if (!config.entry) {
-							throw new Error(`No entry for "${fullBenchName}" bench.`);
-						}
+			if (scenario.watch) {
+				if (!config.entry) {
+					throw new Error(`No entry for "${fullBenchName}" bench.`);
+				}
 
-						const entry = path.resolve(/** @type {string} */ (config.entry));
-						const originalEntryContent = await fs.readFile(entry, "utf8");
+				const entry = path.resolve(/** @type {string} */ (config.entry));
+				const originalEntryContent = await fs.readFile(entry, "utf8");
 
-						/** @type {Watching | undefined} */
-						let watching;
-						/** @type {(err: Error | null, stats?: Stats) => void} */
-						let next;
+				/** @type {Watching | undefined} */
+				let watching;
+				/** @type {(err: Error | null, stats?: Stats) => void} */
+				let next;
 
-						/**
-						 * @param {Error | null} err err
-						 * @param {Stats=} stats stats
-						 */
-						const watchCallback = (err, stats) => {
-							if (next) {
-								next(err, stats);
+				/**
+				 * @param {Error | null} err err
+				 * @param {Stats=} stats stats
+				 */
+				const watchCallback = (err, stats) => {
+					if (next) {
+						next(err, stats);
+					}
+				};
+
+				bench.add(
+					benchName,
+					async () => {
+						/** @type {((value?: void) => void)} */
+						let resolve;
+						/** @type {((err: Error | null) => void)} */
+						let reject;
+
+						const promise = new Promise((res, rej) => {
+							resolve = res;
+							reject = rej;
+						});
+
+						next = (err, stats) => {
+							if (err || !stats) {
+								reject(err);
+								return;
 							}
+
+							if (stats.hasWarnings() || stats.hasErrors()) {
+								reject(new Error(stats.toString()));
+								return;
+							}
+
+							// Construct and print stats to be more accurate with real life projects
+							stats.toString();
+							resolve();
 						};
 
-						bench.add(
-							benchName,
-							async () => {
-								/** @type {((value?: void) => void)} */
-								let resolve;
-								/** @type {((err: Error | null) => void)} */
-								let reject;
-
-								const promise = new Promise((res, rej) => {
-									resolve = res;
-									reject = rej;
-								});
-
-								next = (err, stats) => {
-									if (err || !stats) {
-										reject(err);
-										return;
-									}
-
-									if (stats.hasWarnings() || stats.hasErrors()) {
-										reject(new Error(stats.toString()));
-										return;
-									}
-
-									// Construct and print stats to be more accurate with real life projects
-									stats.toString();
-									resolve();
-								};
-
-								await new Promise(
-									/**
-									 * @param {(value?: void) => void} resolve resolve
-									 * @param {(err: Error) => void} reject reject
-									 */
-									(resolve, reject) => {
-										writeFile(
-											entry,
-											`${originalEntryContent};console.log('watch test')`,
-											(err) => {
-												if (err) {
-													reject(err);
-													return;
-												}
-
-												resolve();
-											}
-										);
-									}
-								);
-
-								await promise;
-							},
-							{
-								beforeEach(mode) {
-									console.time(`Time (${mode} mode): ${benchName}`);
-								},
-								afterEach(mode) {
-									console.timeEnd(`Time (${mode} mode): ${benchName}`);
-								},
-								async beforeAll() {
-									/** @type {Task} */
-									(this).collectBy =
-										`${test}, scenario '${stringifiedScenario}'`;
-
-									/** @type {((value?: void) => void)} */
-									let resolve;
-									/** @type {((err: Error | null) => void)} */
-									let reject;
-
-									const promise = new Promise((res, rej) => {
-										resolve = res;
-										reject = rej;
-									});
-
-									next = (err, stats) => {
-										if (err || !stats) {
+						await new Promise(
+							/**
+							 * @param {(value?: void) => void} resolve resolve
+							 * @param {(err: Error) => void} reject reject
+							 */
+							(resolve, reject) => {
+								writeFile(
+									entry,
+									`${originalEntryContent};console.log('watch test')`,
+									(err) => {
+										if (err) {
 											reject(err);
 											return;
 										}
 
-										if (stats.hasWarnings() || stats.hasErrors()) {
-											reject(new Error(stats.toString()));
+										resolve();
+									}
+								);
+							}
+						);
+
+						await promise;
+					},
+					{
+						beforeEach(mode) {
+							console.time(`Time (${mode} mode): ${benchName}`);
+						},
+						afterEach(mode) {
+							console.timeEnd(`Time (${mode} mode): ${benchName}`);
+						},
+						async beforeAll() {
+							/** @type {Task} */
+							(this).collectBy = `${test}, scenario '${stringifiedScenario}'`;
+
+							/** @type {((value?: void) => void)} */
+							let resolve;
+							/** @type {((err: Error | null) => void)} */
+							let reject;
+
+							const promise = new Promise((res, rej) => {
+								resolve = res;
+								reject = rej;
+							});
+
+							next = (err, stats) => {
+								if (err || !stats) {
+									reject(err);
+									return;
+								}
+
+								if (stats.hasWarnings() || stats.hasErrors()) {
+									reject(new Error(stats.toString()));
+									return;
+								}
+
+								// Construct and print stats to be more accurate with real life projects
+								stats.toString();
+								resolve();
+							};
+
+							if (GENERATE_PROFILE) {
+								await withProfiling(
+									benchName,
+									async () =>
+										(watching = await runWatch(webpack, config, watchCallback))
+								);
+							} else {
+								watching = await runWatch(webpack, config, watchCallback);
+							}
+
+							// Make an extra fs call to warn up filesystem caches
+							// Also wait a first run callback
+							await new Promise(
+								/**
+								 * @param {(value?: void) => void} resolve resolve
+								 * @param {(err: Error) => void} reject reject
+								 */
+								(resolve, reject) => {
+									writeFile(
+										entry,
+										`${originalEntryContent};console.log('watch test')`,
+										(err) => {
+											if (err) {
+												reject(err);
+												return;
+											}
+
+											resolve();
+										}
+									);
+								}
+							);
+
+							await promise;
+						},
+						async afterAll() {
+							// Close watching
+							await new Promise(
+								/**
+								 * @param {(value?: void) => void} resolve resolve
+								 * @param {(err: Error) => void} reject reject
+								 */
+								(resolve, reject) => {
+									if (watching) {
+										watching.close((closeErr) => {
+											if (closeErr) {
+												reject(closeErr);
+												return;
+											}
+
+											resolve();
+										});
+									}
+								}
+							);
+
+							// Write original content
+							await new Promise(
+								/**
+								 * @param {(value?: void) => void} resolve resolve
+								 * @param {(err: Error) => void} reject reject
+								 */
+								(resolve, reject) => {
+									writeFile(entry, originalEntryContent, (err) => {
+										if (err) {
+											reject(err);
 											return;
 										}
 
-										// Construct and print stats to be more accurate with real life projects
-										stats.toString();
 										resolve();
-									};
-
-									if (GENERATE_PROFILE) {
-										await withProfiling(
-											benchName,
-											async () =>
-												(watching = await runWatch(
-													webpack,
-													config,
-													watchCallback
-												))
-										);
-									} else {
-										watching = await runWatch(webpack, config, watchCallback);
-									}
-
-									// Make an extra fs call to warn up filesystem caches
-									// Also wait a first run callback
-									await new Promise(
-										/**
-										 * @param {(value?: void) => void} resolve resolve
-										 * @param {(err: Error) => void} reject reject
-										 */
-										(resolve, reject) => {
-											writeFile(
-												entry,
-												`${originalEntryContent};console.log('watch test')`,
-												(err) => {
-													if (err) {
-														reject(err);
-														return;
-													}
-
-													resolve();
-												}
-											);
-										}
-									);
-
-									await promise;
-								},
-								async afterAll() {
-									// Close watching
-									await new Promise(
-										/**
-										 * @param {(value?: void) => void} resolve resolve
-										 * @param {(err: Error) => void} reject reject
-										 */
-										(resolve, reject) => {
-											if (watching) {
-												watching.close((closeErr) => {
-													if (closeErr) {
-														reject(closeErr);
-														return;
-													}
-
-													resolve();
-												});
-											}
-										}
-									);
-
-									// Write original content
-									await new Promise(
-										/**
-										 * @param {(value?: void) => void} resolve resolve
-										 * @param {(err: Error) => void} reject reject
-										 */
-										(resolve, reject) => {
-											writeFile(entry, originalEntryContent, (err) => {
-												if (err) {
-													reject(err);
-													return;
-												}
-
-												resolve();
-											});
-										}
-									);
+									});
 								}
-							}
-						);
-					} else {
-						bench.add(
-							benchName,
-							async () => {
-								if (GENERATE_PROFILE) {
-									await withProfiling(benchName, () =>
-										runWebpack(webpack, config)
-									);
-								} else {
-									await runWebpack(webpack, config);
-								}
-							},
-							{
-								beforeEach(mode) {
-									console.time(`Time (${mode} mode): ${benchName}`);
-								},
-								afterEach(mode) {
-									console.timeEnd(`Time (${mode} mode): ${benchName}`);
-								},
-								beforeAll() {
-									/** @type {Task} */
-									(this).collectBy =
-										`${test}, scenario '${stringifiedScenario}'`;
-								}
-							}
-						);
+							);
+						}
 					}
-				})
-			);
-		})
-	);
+				);
+			} else {
+				bench.add(
+					benchName,
+					async () => {
+						await (GENERATE_PROFILE
+							? withProfiling(benchName, () => runWebpack(webpack, config))
+							: runWebpack(webpack, config));
+					},
+					{
+						beforeEach(mode) {
+							console.time(`Time (${mode} mode): ${benchName}`);
+						},
+						afterEach(mode) {
+							console.timeEnd(`Time (${mode} mode): ${benchName}`);
+						},
+						beforeAll() {
+							/** @type {Task} */
+							(this).collectBy = `${test}, scenario '${stringifiedScenario}'`;
+						}
+					}
+				);
+			}
+		}
+	}
 }
 
 await fs.rm(baseOutputPath, { recursive: true, force: true });
@@ -1156,11 +1173,13 @@ if (countOfBenchmarks < shard[1]) {
 	);
 }
 
-await Promise.all(
-	splitToNChunks(benchmarks, shard[1])[shard[0] - 1].map((benchmark) =>
-		registerSuite(bench, benchmark, baselines)
-	)
-);
+// Register suites sequentially. Parallel registration makes task order in
+// `bench.tasks` depend on Promise resolution order, which in turn changes the
+// shared-process state (module graph, require.cache, webpack internals)
+// each benchmark observes.
+for (const benchmark of splitToNChunks(benchmarks, shard[1])[shard[0] - 1]) {
+	await registerSuite(bench, benchmark, baselines);
+}
 
 /**
  * @param {number} value value
