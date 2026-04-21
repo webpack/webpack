@@ -74,7 +74,7 @@ If any `lib/` file's exports (public API) were modified, also run `yarn fix:spec
 
 #### Commit author identity (required for CLA)
 
-EasyCLA matches the **commit author email** to a GitHub account with a signed CLA. A commit authored as `Claude`, `claude-bot`, `noreply@anthropic.com`, or any other unrecognized identity will fail the CLA check and block the PR.
+EasyCLA matches the **commit author email** to a GitHub account with a signed CLA. A commit using an unrecognized author email such as `claude-bot@users.noreply.github.com`, `noreply@anthropic.com`, or any other email not associated with the requester's GitHub account and signed CLA will fail the CLA check and block the PR.
 
 Before the first commit of a task, set the author to the GitHub account that requested the work — never to a bot identity. Resolve the identity in this order:
 
