@@ -19,7 +19,11 @@ module.exports = {
 			compiler.hooks.emit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
 				const customDirPath = path.join(outputPath, CUSTOM_DIR);
-				const ignoredDirPath = path.join(outputPath, IGNORED_DIR, "that/should/not/be/removed");
+				const ignoredDirPath = path.join(
+					outputPath,
+					IGNORED_DIR,
+					"that/should/not/be/removed"
+				);
 
 				fs.mkdirSync(customDirPath, { recursive: true });
 				fs.writeFileSync(path.join(customDirPath, "file.ext"), "");
@@ -28,7 +32,10 @@ module.exports = {
 			});
 			compiler.hooks.afterEmit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
-				expect(readDir(outputPath)).toMatchInlineSnapshot(`
+				const result = readDir(outputPath);
+				result.directories.sort();
+				result.files.sort();
+				expect(result).toMatchInlineSnapshot(`
 			Object {
 			  "directories": Array [
 			    "ignored",
@@ -40,8 +47,8 @@ module.exports = {
 			    "ignored/dir/that/should/not/be/removed",
 			  ],
 			  "files": Array [
-			    "ignored/dir/that/should/not/be/removed/file.ext",
 			    "bundle0.js",
+			    "ignored/dir/that/should/not/be/removed/file.ext",
 			  ],
 			}
 		`);
