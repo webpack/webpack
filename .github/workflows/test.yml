@@ -222,20 +222,10 @@ jobs:
         node-version: [10.x, 20.x, 22.x, 24.x, 25.x]
         part: [a, b]
         exclude:
-          # GitHub's free Apple Silicon `macos-latest` runners have 3 vCPU /
-          # 7 GB (vs 4 vCPU / 16 GB on Linux) and slower filesystem I/O, so
-          # "part a" (~44 test files) averages ~26 min on macOS vs ~10 min
-          # on Linux and frequently queues for 10-30 min before starting.
-          # macOS-specific regressions are not Node-version specific, so we
-          # rely on Linux for full Node version coverage and only run the
-          # active LTS (22.x) and latest (25.x) on macOS.
-          - os: macos-latest
-            node-version: 20.x
-          - os: macos-latest
-            node-version: 24.x
-          # Node.js 10.x has no native arm64 macOS binaries; running x64 Node
-          # under Rosetta 2 emulation makes the suite another 2-3x slower.
-          # Use the native Intel runner included below instead.
+          # Node.js 10.x has no native arm64 macOS binaries and `macos-latest`
+          # is Apple Silicon, so x64 Node 10 runs under Rosetta 2 emulation
+          # which makes the integration suite ~2-3x slower. Run it on the
+          # native Intel runner below instead.
           - os: macos-latest
             node-version: 10.x
         include:
