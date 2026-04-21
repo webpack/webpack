@@ -1003,7 +1003,7 @@ async function registerSuite(bench, test, baselines) {
 								watching = await runWatch(webpack, config, watchCallback);
 							}
 
-							// Make an extra fs call to warn up filesystem caches
+							// Make an extra fs call to warm up filesystem caches
 							// Also wait a first run callback
 							await new Promise(
 								/**
