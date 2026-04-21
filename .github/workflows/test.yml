@@ -153,8 +153,10 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .jest-cache
-          key: jest-unit-${{ env.GITHUB_SHA }}
-          restore-keys: jest-unit-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          key: jest-unit-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-unit-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-unit-${{ runner.os }}-
 
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
 
@@ -193,8 +195,10 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .jest-cache
-          key: jest-test262-${{ matrix.shard }}-${{ env.GITHUB_SHA }}
-          restore-keys: jest-test262-${{ matrix.shard }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          key: jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-test262-${{ matrix.shard }}-${{ runner.os }}-
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -305,8 +309,10 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .jest-cache
-          key: jest-integration-${{ env.GITHUB_SHA }}
-          restore-keys: jest-integration-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}
+          key: jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-
 
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
         env:
