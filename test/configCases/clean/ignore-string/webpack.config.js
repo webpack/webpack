@@ -1,6 +1,5 @@
 "use strict";
 
-const fs = require("fs");
 const path = require("path");
 const readDir = require("../enabled/readdir");
 
@@ -18,6 +17,7 @@ module.exports = {
 		(compiler) => {
 			compiler.hooks.emit.tap("Test", (compilation) => {
 				const outputPath = compilation.getPath(compiler.outputPath, {});
+				const fs = compiler.outputFileSystem;
 				const customDirPath = path.join(outputPath, CUSTOM_DIR);
 				const ignoredDirPath = path.join(
 					outputPath,
