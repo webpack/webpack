@@ -79,7 +79,7 @@ EasyCLA matches the **commit author email** to a GitHub account with a signed CL
 Before the first commit of a task, set the author to the GitHub account that requested the work — never to a bot identity. Resolve the identity in this order:
 
 1. An identity the user explicitly states in the task (`commit as alice <alice@example.com>`).
-2. The requester's GitHub login + their public no-reply email: `<USER_ID>+<login>@users.noreply.github.com` (look up `USER_ID` via `mcp__github__get_me` or the GitHub REST API `/users/<login>`).
+2. The requester's GitHub login + their public no-reply email: `<USER_ID>+<login>@users.noreply.github.com` (look up `USER_ID` by reading the numeric `id` from the GitHub REST API `/users/<login>` response).
 3. If neither is available, **ask** — do not guess and do not fall back to a bot identity.
 
 Apply per-commit (preferred, no global side-effects):
