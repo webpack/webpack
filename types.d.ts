@@ -21604,7 +21604,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R extends unknown>(fn: (set: SortableSet<T>) => R): R;
+	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
