@@ -1,6 +1,6 @@
 "use strict";
 
-const WebpackError = require("../lib/WebpackError");
+const WebpackError = require("../lib/errors/WebpackError");
 
 describe("WebpackError", () => {
 	class CustomError extends WebpackError {

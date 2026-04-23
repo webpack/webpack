@@ -1,6 +1,6 @@
 "use strict";
 
-const AbstractMethodError = require("../lib/AbstractMethodError");
+const AbstractMethodError = require("../lib/errors/AbstractMethodError");
 
 describe("WebpackError", () => {
 	class Foo {
