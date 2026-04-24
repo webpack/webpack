@@ -7,7 +7,7 @@ permissions:
 
 on:
   pull_request_target:
-    types: [opened, reopened] 
+    types: [opened, reopened]
 
 jobs:
   anti-slop:
