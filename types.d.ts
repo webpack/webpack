@@ -11735,22 +11735,6 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
-declare interface JsonModulesPluginParserOptions {
-	/**
-	 * The depth of json dependency flagged as `exportInfo`.
-	 */
-	exportsDepth?: number;
-
-	/**
-	 * Allow named exports for json of object type
-	 */
-	namedExports?: boolean;
-
-	/**
-	 * Function that executes for a module source string and should return json-compatible data.
-	 */
-	parse?: (input: string) => any;
-}
 declare interface JsonObjectFs {
 	[index: string]:
 		| undefined
@@ -11772,7 +11756,7 @@ declare interface JsonObjectTypes {
 		| JsonValueTypes[];
 }
 declare abstract class JsonParser extends ParserClass {
-	options: JsonModulesPluginParserOptions;
+	options: JsonParserOptions;
 }
 
 /**
@@ -24456,6 +24440,14 @@ declare namespace exports {
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
 	}
+	export namespace dll {
+		export {
+			DelegatedPlugin,
+			DllPlugin,
+			DllReferencePlugin,
+			LibManifestPlugin
+		};
+	}
 	export namespace container {
 		export const scope: <T>(
 			scope: string,
@@ -24747,10 +24739,7 @@ declare namespace exports {
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
 		DefinePlugin,
-		DelegatedPlugin,
 		Dependency,
-		DllPlugin,
-		DllReferencePlugin,
 		DynamicEntryPlugin,
 		DotenvPlugin,
 		EntryOptionPlugin,
@@ -24766,7 +24755,6 @@ declare namespace exports {
 		InitFragment,
 		IgnorePlugin,
 		JavascriptModulesPlugin,
-		LibManifestPlugin,
 		LibraryTemplatePlugin,
 		LoaderOptionsPlugin,
 		LoaderTargetPlugin,
@@ -24795,6 +24783,10 @@ declare namespace exports {
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
+		DelegatedPlugin,
+		DllPlugin,
+		DllReferencePlugin,
+		LibManifestPlugin,
 		EntryLibIndex as Entry,
 		EntryNormalized,
 		EntryObject,
