@@ -1,4 +1,4 @@
-const HookWebpackError = require('../../../../lib/HookWebpackError.js');
+const HookWebpackError = require('../../../../lib/errors/HookWebpackError.js');
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function loader() {

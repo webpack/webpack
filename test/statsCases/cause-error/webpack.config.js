@@ -1,6 +1,6 @@
 "use strict";
 
-const WebpackError = require("../../../lib/WebpackError");
+const WebpackError = require("../../../lib/errors/WebpackError");
 
 /** @typedef {Error & { cause?: unknown }} ErrorWithCause */
 

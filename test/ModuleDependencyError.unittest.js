@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const ModuleDependencyError = require("../lib/ModuleDependencyError");
+const ModuleDependencyError = require("../lib/errors/ModuleDependencyError");
 
 describe("ModuleDependencyError", () => {
 	let env;
