@@ -3017,10 +3017,10 @@ asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
-assemblyscript@^0.28.9:
-  version "0.28.14"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.14.tgz#3de4daab433ec98c0821d73cb1c04ed18b682d16"
-  integrity sha512-YcFSCNhjvHdvjjqdfc1PyiA60AYalmDH2FDMF9LNmYJjoKf8c826xw3zkOD83PGoyz8RNH9KDt8FYMtkIOJNPw==
+assemblyscript@^0.28.15:
+  version "0.28.15"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.28.15.tgz#871a5a44528b1a0e74608c9fc84bef11b33b230d"
+  integrity sha512-Ji6X2HqV2u7K4rMeiCh1qhhEZ+S9o4HhIJwC55k9sgIWhliN7+yKnFLrJOD/X10VH57rxQ3JDP7LS+SDI9fB9g==
   dependencies:
     binaryen "123.0.0-nightly.20250530"
     long "^5.2.4"
@@ -6593,10 +6593,10 @@ listr2@^9.0.5:
     rfdc "^1.4.1"
     wrap-ansi "^9.0.0"
 
-loader-runner@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.1.tgz#6c76ed29b0ccce9af379208299f07f876de737e3"
-  integrity sha512-IWqP2SCPhyVFTBtRcgMHdzlf9ul25NwaFx4wCEH/KjAXuuHY4yNjvPXsBokp8jCB936PyWRaPKUNh8NvylLp2Q==
+loader-runner@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.2.tgz#9913d3a15971f8f635915e601fb5c9d495d918e9"
+  integrity sha512-DFEqQ3ihfS9blba08cLfYf1NRAIEm+dDjic073DRDc3/JspI/8wYmtDsHwd3+4hwvdxSK7PGaElfTmm0awWJ4w==
 
 loader-utils@^1.1.0:
   version "1.4.2"
@@ -9160,20 +9160,30 @@ term-size@^2.1.0:
   resolved "https://registry.yarnpkg.com/term-size/-/term-size-2.2.1.tgz#2a6a54840432c2fb6320fea0f415531e90189f54"
   integrity sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==
 
-terser-webpack-plugin@^5.3.17:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.4.0.tgz#95fc4cf4437e587be11ecf37d08636089174d76b"
-  integrity sha512-Bn5vxm48flOIfkdl5CaD2+1CiUVbonWQ3KQPyP7/EuIl9Gbzq/gQFOzaMFUEgVjB1396tcK0SG8XcNJ/2kDH8g==
+terser-webpack-plugin@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.5.0.tgz#d92b8e2c892dd09c683c38120394267e8d8660ef"
+  integrity sha512-UYhptBwhWvfIjKd/UuFo6D8uq9xpGLDK+z8EDsj/zWhrTaH34cKEbrkMKfV5YWqGBvAYA3tlzZbs2R+qYrbQJA==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.25"
     jest-worker "^27.4.5"
     schema-utils "^4.3.0"
     terser "^5.31.1"
 
-terser@^5.15.1, terser@^5.31.1, terser@^5.32.0, terser@^5.43.1:
+terser@^5.15.1, terser@^5.31.1, terser@^5.32.0:
   version "5.46.1"
   resolved "https://registry.yarnpkg.com/terser/-/terser-5.46.1.tgz#40e4b1e35d5f13130f82793a8b3eeb7ec3a92eee"
   integrity sha512-vzCjQO/rgUuK9sf8VJZvjqiqiHFaZLnOiimmUuOKODxWL8mm/xua7viT7aqX7dgPY60otQjUotzFMmCB4VdmqQ==
+  dependencies:
+    "@jridgewell/source-map" "^0.3.3"
+    acorn "^8.15.0"
+    commander "^2.20.0"
+    source-map-support "~0.5.20"
+
+terser@^5.46.2:
+  version "5.46.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.46.2.tgz#b9529672d5b0024c7959571c83b82f65077b2a4f"
+  integrity sha512-uxfo9fPcSgLDYob/w1FuL0c99MWiJDnv+5qXSQc5+Ki5NjVNsYi66INnMFBjf6uFz6OnX12piJQPF4IpjJTNTw==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.15.0"
