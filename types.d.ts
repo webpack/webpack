@@ -6,7 +6,6 @@
 
 import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
-import { Scope } from "eslint-scope";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -935,19 +934,19 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| CatchClause
-		| Property
 		| AssignmentProperty
+		| Property
+		| CatchClause
 		| ClassBody
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
 		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
 		| TemplateElement;
 	isUnknown(): boolean;
 	isNull(): boolean;
@@ -1170,19 +1169,19 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| ObjectPattern
-			| ArrayPattern
-			| RestElement
-			| AssignmentPattern
-			| SwitchCase
-			| CatchClause
-			| Property
 			| AssignmentProperty
+			| Property
+			| CatchClause
 			| ClassBody
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
 			| ExportSpecifier
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| SwitchCase
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
@@ -10987,11 +10986,11 @@ declare class JavascriptParser extends ParserClass {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		fn: () => void
 	): void;
@@ -11066,11 +11065,11 @@ declare class JavascriptParser extends ParserClass {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		onIdent: (ident: string) => void
 	): void;
@@ -11082,11 +11081,11 @@ declare class JavascriptParser extends ParserClass {
 		pattern:
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
-			| AssignmentPattern
-			| Property,
+			| AssignmentPattern,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -15472,7 +15471,6 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	/**
 	 * Creates an instance of NodeEnvironmentPlugin.
@@ -15491,6 +15489,81 @@ declare interface NodeEnvironmentPluginOptions {
 	 */
 	infrastructureLogging: InfrastructureLogging;
 }
+type NodeEstreeIndex =
+	| Program
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| AssignmentProperty
+	| Property
+	| CatchClause
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement;
 
 /**
  * Options object for node compatibility features.
@@ -15548,6 +15621,7 @@ declare interface NodeTemplatePluginOptions {
 	 */
 	asyncChunkLoading?: boolean;
 }
+type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData);
@@ -18997,6 +19071,93 @@ type RecursiveArrayOrRecord<T> =
 	| RecursiveArrayOrRecord<T>[]
 	| T;
 declare interface RecursiveNonNullable<T> {}
+declare interface Reference {
+	identifier: Identifier;
+	from: Scope;
+	resolved: null | Variable;
+	writeExpr:
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+	init: boolean;
+	isWrite: () => boolean;
+	isRead: () => boolean;
+	isWriteOnly: () => boolean;
+	isReadOnly: () => boolean;
+	isReadWrite: () => boolean;
+}
 type ReferenceableItem = string | object;
 declare interface ReferencedExport {
 	/**
@@ -21136,6 +21297,33 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+declare interface Scope {
+	type:
+		| "function"
+		| "module"
+		| "global"
+		| "block"
+		| "catch"
+		| "class"
+		| "class-field-initializer"
+		| "class-static-block"
+		| "for"
+		| "function-expression-name"
+		| "switch"
+		| "with"
+		| "TDZ";
+	isStrict: boolean;
+	upper: null | Scope;
+	childScopes: Scope[];
+	variableScope: Scope;
+	block: NodeEstreeIndex;
+	variables: Variable[];
+	set: Map<string, Variable>;
+	references: Reference[];
+	through: Reference[];
+	functionExpressionScope: boolean;
+	implicit?: { variables: Variable[]; set: Map<string, Variable> };
+}
 
 /**
  * Helper function for joining two ranges into a single range. This is useful
@@ -23097,6 +23285,13 @@ type ValueCacheVersion = string | Set<string>;
 declare interface Values {
 	[index: string]: Value[];
 }
+declare interface Variable {
+	name: string;
+	scope: Scope;
+	identifiers: Identifier[];
+	references: Reference[];
+	defs: any[];
+}
 declare class VariableInfo {
 	/**
 	 * Creates an instance of VariableInfo.
@@ -23824,7 +24019,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node: Node;
+	node: NodeWebpackOptions;
 
 	/**
 	 * Enables/Disables integrated optimizations.
@@ -23931,11 +24126,11 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 				use: RawDevTool;
 		  }[]
 	>;
-} & { stats: NonNullable<StatsValue> } & { node: NonNullable<Node> } & {
-	profile: NonNullable<undefined | boolean>;
-} & { parallelism: number } & { snapshot: SnapshotNormalizedWithDefaults } & {
-	externalsPresets: ExternalsPresetsNormalizedWithDefaults;
-} & {
+} & { stats: NonNullable<StatsValue> } & {
+	node: NonNullable<NodeWebpackOptions>;
+} & { profile: NonNullable<undefined | boolean> } & { parallelism: number } & {
+	snapshot: SnapshotNormalizedWithDefaults;
+} & { externalsPresets: ExternalsPresetsNormalizedWithDefaults } & {
 	externalsType: NonNullable<
 		| undefined
 		| "import"
