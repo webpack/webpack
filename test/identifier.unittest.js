@@ -119,4 +119,80 @@ describe("util/identifier", () => {
 			});
 		}
 	});
+
+	describe("parseResource", () => {
+		// [input, expectedPath, expectedQuery, expectedFragment]
+		/** @type {[string, string, string, string][]} */
+		const cases = [
+			["path", "path", "", ""],
+			["path?query", "path", "?query", ""],
+			["path#hash", "path", "", "#hash"],
+			["path?query#hash", "path", "?query", "#hash"],
+			["path#hash?query", "path", "", "#hash?query"],
+			["./file.js#fragment", "./file.js", "", "#fragment"],
+			["./file.js?query#fragment", "./file.js", "?query", "#fragment"],
+			["\0#path\0??\0#query#hash", "#path?", "?#query", "#hash"],
+			// Absolute path with `#` in a directory name (followed by path separator)
+			// should be kept as part of the path, not treated as a fragment.
+			// See https://github.com/webpack/webpack/issues/16819
+			[
+				"/home/user/f#/webpack/file.js",
+				"/home/user/f#/webpack/file.js",
+				"",
+				""
+			],
+			[
+				"/home/user/f#/webpack/file.js?query",
+				"/home/user/f#/webpack/file.js",
+				"?query",
+				""
+			],
+			[
+				"/home/user/f#/webpack/file.js#fragment",
+				"/home/user/f#/webpack/file.js",
+				"",
+				"#fragment"
+			],
+			[
+				"/home/user/f#/webpack/file.js?query#fragment",
+				"/home/user/f#/webpack/file.js",
+				"?query",
+				"#fragment"
+			],
+			[
+				"/home/user/f#/a#/file.js?query",
+				"/home/user/f#/a#/file.js",
+				"?query",
+				""
+			],
+			[
+				"C:\\Users\\f#\\webpack\\file.js",
+				"C:\\Users\\f#\\webpack\\file.js",
+				"",
+				""
+			],
+			[
+				"C:\\Users\\f#\\webpack\\file.js?query",
+				"C:\\Users\\f#\\webpack\\file.js",
+				"?query",
+				""
+			],
+			[
+				"C:/Users/f#/webpack/file.js?query#fragment",
+				"C:/Users/f#/webpack/file.js",
+				"?query",
+				"#fragment"
+			]
+		];
+		for (const case_ of cases) {
+			it(case_[0], () => {
+				const { resource, path, query, fragment } =
+					identifierUtil.parseResource(case_[0]);
+				expect(resource).toBe(case_[0]);
+				expect(path).toBe(case_[1]);
+				expect(query).toBe(case_[2]);
+				expect(fragment).toBe(case_[3]);
+			});
+		}
+	});
 });
