@@ -7,28 +7,8 @@ permissions:
 
 on:
   pull_request_target:
-    types: [opened, reopened]
+    types: [opened, reopened] 
 
 jobs:
   anti-slop:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - uses: peakoss/anti-slop@57858eead489d08b255fab2af45a506c2ca6eab2 # v0.3.0
-        env:
-          IS_NEW: >-
-            ${{ contains(fromJSON('["FIRST_TIMER","FIRST_TIME_CONTRIBUTOR","NONE"]'),
-            github.event.pull_request.author_association) }}
-        with:
-          max-failures: ${{ env.IS_NEW == 'true' && 2 || 3 }}
-          global-merge-ratio-exclude-own: ${{ env.IS_NEW == 'true' }}
-          max-daily-forks: ${{ env.IS_NEW == 'true' && 4 || 7 }}
-          require-pr-template: true
-          require-conventional-title: true
-          require-conventional-commits: true
-          failure-pr-message: |
-            👋 Hi there! This PR was automatically flagged and closed by our quality checks.
-
-            If you believe this was a mistake, please review our contributing guidelines
-            and leave a comment explaining **why this is a mistake**.
+    uses: webpack/.github/.github/workflows/pr-quality.yml@a03552c758d8c244b3cfc2985aff7020469e0473
