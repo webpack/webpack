@@ -1,0 +1,9 @@
+.imported-class {
+	color: green;
+	font-style: italic;
+}
+---
+.imported-class-updated {
+	color: purple;
+	font-style: italic;
+}

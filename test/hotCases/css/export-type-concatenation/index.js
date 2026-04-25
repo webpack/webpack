@@ -1,0 +1,40 @@
+import textStyle from "./text.css";
+
+it("should handle HMR for exportType with concatenation", async function (done) {
+	expect(typeof textStyle).toBe("string");
+	expect(textStyle).toContain("color: red");
+	expect(textStyle).toContain("text-class");
+	expect(textStyle).toContain("imported-class");
+	// del.css is @imported in initial version
+	expect(textStyle).toContain("del-class");
+
+	const { default: hi } = await import("./hi.txt", { with: { type: "text" }});
+	expect(hi).toBe("hi");
+
+	const sheetStyle = await import("./stylesheet.css", { with: { type: "css" }});
+	expect(sheetStyle.default).toBeInstanceOf(CSSStyleSheet);
+	const rules = Array.from(sheetStyle.default.cssRules);
+	const rule = rules.find(r => r.selectorText.includes("sheet-class"));
+	expect(rule).toBeDefined();
+	expect(rule.style.color).toBe("green");
+
+	module.hot.accept(["./text.css", "./stylesheet.css", "./hi.txt"], () => {
+		expect(typeof textStyle).toBe("string");
+		expect(textStyle).toContain("imported-class-updated");
+		// del.css should no longer be included after HMR update
+		expect(textStyle).not.toContain("del-class");
+	});
+
+	NEXT(require("../../update")(done, true, () => {
+		import("./stylesheet.css", { with: { type: "css" }}).then(updatedSheetStyle => {
+			expect(updatedSheetStyle.default).toBeInstanceOf(CSSStyleSheet);
+			const rules = Array.from(updatedSheetStyle.default.cssRules);
+			const importedRule = rules.find(r => r.selectorText.includes("imported-class-updated"));
+			expect(importedRule).toBeDefined();
+			expect(importedRule.style.color).toBe("purple");
+			done();
+		});
+	}))
+});
+
+module.hot.accept();

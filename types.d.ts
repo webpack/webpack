@@ -5537,6 +5537,11 @@ declare class Dependency {
 	createIgnoredModule(context: string): Module;
 
 	/**
+	 * Returns true if this dependency supports module concatenation (scope hoisting).
+	 */
+	supportsConcatenation(): boolean;
+
+	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
 	serialize(__0: ObjectSerializerContext): void;

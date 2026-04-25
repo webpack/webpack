@@ -1,0 +1,41 @@
+"use strict";
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	target: "web",
+	mode: "production",
+	devtool: false,
+	optimization: {
+		concatenateModules: true,
+		minimize: false,
+		usedExports: true
+	},
+	module: {
+		rules: [
+			{
+				test: /text-.*\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "text"
+				}
+			},
+			{
+				test: /sheet-.*\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "css-style-sheet"
+				}
+			},
+			{
+				test: /dep\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "text"
+				}
+			}
+		]
+	},
+	experiments: {
+		css: true
+	}
+};

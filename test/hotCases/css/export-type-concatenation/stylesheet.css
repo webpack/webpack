@@ -1,0 +1,6 @@
+@import "./imported.css";
+.sheet-class {
+	color: green;
+	padding: 10px;
+}
+
