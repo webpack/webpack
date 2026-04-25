@@ -9,7 +9,7 @@ it("should allow to create css modules", done => {
 			const path = __non_webpack_require__("path");
 			if (__STATS_I__ === 4 || __STATS_I__ === 5) {
 				const cssOutputFilename = prod
-					? `638.bundle${__STATS_I__}.css`
+					? `244.bundle${__STATS_I__}.css`
 					: `use-style-global_js.bundle${__STATS_I__}.css`;
 
 				const cssContent = fs.readFileSync(

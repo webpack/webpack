@@ -1,0 +1,5 @@
+@import url(./text-a-dep.css);
+
+.text-a {
+	color: red;
+}

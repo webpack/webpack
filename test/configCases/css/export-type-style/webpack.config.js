@@ -35,7 +35,8 @@ function createConfig(target, concatenateModules) {
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				"process.env.BROWSER": JSON.stringify(target === "web")
+				"process.env.BROWSER": JSON.stringify(target === "web"),
+				"process.env.CONCAT": JSON.stringify(concatenateModules)
 			})
 		]
 	};
