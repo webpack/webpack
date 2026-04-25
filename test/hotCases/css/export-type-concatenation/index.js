@@ -1,40 +1,73 @@
-import textStyle from "./text.css";
+import textA from "./text-a.css";
+import textB from "./text-b.css";
+import sheetA from "./sheet-a.css";
+import sheetB from "./sheet-b.css";
+import "./style-a.css";
+import "./style-b.css";
+import { "link-a-class" as linkAClass } from "./link-a.module.css";
+import { "link-b-class" as linkBClass } from "./link-b.module.css";
 
-it("should handle HMR for exportType with concatenation", async function (done) {
-	expect(typeof textStyle).toBe("string");
-	expect(textStyle).toContain("color: red");
-	expect(textStyle).toContain("text-class");
-	expect(textStyle).toContain("imported-class");
-	// del.css is @imported in initial version
-	expect(textStyle).toContain("del-class");
+it("should handle HMR for all exportTypes with concatenation", function (done) {
+	// Initial state: text
+	expect(typeof textA).toBe("string");
+	expect(textA).toContain("color: red");
+	expect(textA).toContain("font-size: 12px");
+	expect(typeof textB).toBe("string");
+	expect(textB).toContain("color: blue");
 
-	const { default: hi } = await import("./hi.txt", { with: { type: "text" }});
-	expect(hi).toBe("hi");
+	// Initial state: css-style-sheet
+	expect(sheetA).toBeInstanceOf(CSSStyleSheet);
+	expect(sheetA._cssText).toContain("color: green");
+	expect(sheetA._cssText).toContain("font-weight: bold");
+	expect(sheetB).toBeInstanceOf(CSSStyleSheet);
+	expect(sheetB._cssText).toContain("color: purple");
 
-	const sheetStyle = await import("./stylesheet.css", { with: { type: "css" }});
-	expect(sheetStyle.default).toBeInstanceOf(CSSStyleSheet);
-	const rules = Array.from(sheetStyle.default.cssRules);
-	const rule = rules.find(r => r.selectorText.includes("sheet-class"));
-	expect(rule).toBeDefined();
-	expect(rule.style.color).toBe("green");
+	// Initial state: style
+	const styles = window.document.getElementsByTagName("style");
+	const allCSS = Array.from(styles).map(s => s.textContent);
+	expect(allCSS.some(c => c.includes("color: orange"))).toBe(true);
+	expect(allCSS.some(c => c.includes("font-style: italic"))).toBe(true);
+	expect(allCSS.some(c => c.includes("color: brown"))).toBe(true);
 
-	module.hot.accept(["./text.css", "./stylesheet.css", "./hi.txt"], () => {
-		expect(typeof textStyle).toBe("string");
-		expect(textStyle).toContain("imported-class-updated");
-		// del.css should no longer be included after HMR update
-		expect(textStyle).not.toContain("del-class");
-	});
+	// Initial state: link
+	expect(typeof linkAClass).toBe("string");
+	expect(linkAClass.length).toBeGreaterThan(0);
+	expect(typeof linkBClass).toBe("string");
+	expect(linkBClass.length).toBeGreaterThan(0);
 
-	NEXT(require("../../update")(done, true, () => {
-		import("./stylesheet.css", { with: { type: "css" }}).then(updatedSheetStyle => {
-			expect(updatedSheetStyle.default).toBeInstanceOf(CSSStyleSheet);
-			const rules = Array.from(updatedSheetStyle.default.cssRules);
-			const importedRule = rules.find(r => r.selectorText.includes("imported-class-updated"));
-			expect(importedRule).toBeDefined();
-			expect(importedRule.style.color).toBe("purple");
+	module.hot.accept(
+		[
+			"./text-a.css",
+			"./text-b.css",
+			"./sheet-a.css",
+			"./sheet-b.css",
+			"./style-a.css",
+			"./style-b.css",
+			"./link-a.module.css",
+			"./link-b.module.css"
+		],
+		() => {
+			// After HMR: text
+			expect(textA).toContain("font-size: 14px");
+			expect(textB).toContain("color: cyan");
+
+			// After HMR: css-style-sheet
+			expect(sheetA._cssText).toContain("font-weight: normal");
+			expect(sheetB._cssText).toContain("color: violet");
+		}
+	);
+
+	NEXT(
+		require("../../update")(done, true, () => {
+			// After HMR: style
+			const styles = window.document.getElementsByTagName("style");
+			const allCSS = Array.from(styles).map(s => s.textContent);
+			expect(allCSS.some(c => c.includes("font-style: oblique"))).toBe(true);
+			expect(allCSS.some(c => c.includes("color: tan"))).toBe(true);
+
 			done();
-		});
-	}))
+		})
+	);
 });
 
 module.hot.accept();

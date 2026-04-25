@@ -27,10 +27,10 @@ module.exports = {
 				}
 			},
 			{
-				test: /dep\.css$/,
+				test: /style-.*\.css$/,
 				type: "css/module",
 				parser: {
-					exportType: "text"
+					exportType: "style"
 				}
 			}
 		]

@@ -1,0 +1,5 @@
+@import url(./link-a-dep.module.css);
+
+.link-a-class {
+	text-align: center;
+}

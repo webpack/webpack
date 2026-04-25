@@ -11,17 +11,24 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /text\.css$/,
+				test: /text-.*\.css$/,
 				type: "css/module",
 				parser: {
 					exportType: "text"
 				}
 			},
 			{
-				test: /stylesheet\.css$/,
+				test: /sheet-.*\.css$/,
 				type: "css/module",
 				parser: {
 					exportType: "css-style-sheet"
+				}
+			},
+			{
+				test: /style-.*\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "style"
 				}
 			}
 		]
