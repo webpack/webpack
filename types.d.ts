@@ -4610,6 +4610,12 @@ declare class ConstDependency extends NullDependency {
 	 * Returns true if the dependency is a low priority dependency.
 	 */
 	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency supports module concatenation (scope hoisting).
+	 * @deprecated In webpack 6, call supportsConcatenation() directly on the dependency instance instead of using this static method.
+	 */
+	static supportsConcatenation(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
@@ -5559,6 +5565,12 @@ declare class Dependency {
 	 * Returns true if the dependency is a low priority dependency.
 	 */
 	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency supports module concatenation (scope hoisting).
+	 * @deprecated In webpack 6, call supportsConcatenation() directly on the dependency instance instead of using this static method.
+	 */
+	static supportsConcatenation(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
 declare interface DependencyConstructor {
@@ -8549,6 +8561,12 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	 * Returns true if the dependency is a low priority dependency.
 	 */
 	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency supports module concatenation (scope hoisting).
+	 * @deprecated In webpack 6, call supportsConcatenation() directly on the dependency instance instead of using this static method.
+	 */
+	static supportsConcatenation(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
@@ -14129,6 +14147,12 @@ declare class ModuleDependency extends Dependency {
 	 * Returns true if the dependency is a low priority dependency.
 	 */
 	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency supports module concatenation (scope hoisting).
+	 * @deprecated In webpack 6, call supportsConcatenation() directly on the dependency instance instead of using this static method.
+	 */
+	static supportsConcatenation(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
 declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
@@ -16172,6 +16196,12 @@ declare class NullDependency extends Dependency {
 	 * Returns true if the dependency is a low priority dependency.
 	 */
 	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency supports module concatenation (scope hoisting).
+	 * @deprecated In webpack 6, call supportsConcatenation() directly on the dependency instance instead of using this static method.
+	 */
+	static supportsConcatenation(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
