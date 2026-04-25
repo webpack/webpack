@@ -18,6 +18,10 @@ module.exports = {
 				result.createData.resource = path.join(dir, "after.js");
 			}
 		}),
-		new NormalModuleReplacementPlugin(/[/\\]after-relative\.js$/, "./after.js")
+		new NormalModuleReplacementPlugin(/[/\\]after-relative\.js$/, "./after.js"),
+		new NormalModuleReplacementPlugin(
+			/(?<!\.)[/\\]after-absolute\.js$/,
+			path.resolve(__dirname, "./after.js")
+		)
 	]
 };

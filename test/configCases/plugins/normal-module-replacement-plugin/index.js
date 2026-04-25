@@ -16,6 +16,11 @@ it("should use NormalModuleReplacementPlugin for function replacement (afterReso
 });
 
 it("should use NormalModuleReplacementPlugin for relative path replacement (afterResolve)", function () {
-    const result = require("./after-relative.js");
-    expect(result).toBe("replaced-after-resolve");
+	const result = require("./after-relative.js");
+	expect(result).toBe("replaced-after-resolve");
+});
+
+it("should use NormalModuleReplacementPlugin for absolute path replacement (afterResolve)", function () {
+	const result = require("./after-absolute.js");
+	expect(result).toBe("replaced-after-resolve");
 });
