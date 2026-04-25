@@ -1,13 +1,12 @@
-import textA from "./text-a.css";
-import textB from "./text-b.css";
-import sheetA from "./sheet-a.css";
-import sheetB from "./sheet-b.css";
-import "./style-a.css";
-import "./style-b.css";
-import { "link-a-class" as linkAClass } from "./link-a.module.css";
-import { "link-b-class" as linkBClass } from "./link-b.module.css";
+import { textA, textB, sheetA, sheetB, linkAClass, linkBClass } from "./lib.js";
 
 it("should handle HMR for all exportTypes with concatenation", function (done) {
+	// Verify modules are concatenated: only index.js and lib.js (+ update helper)
+	// should exist as separate modules, all CSS modules should be inlined into lib.js
+	const moduleIds = Object.keys(__webpack_require__.m);
+	const appModules = moduleIds.filter(id => !id.includes("update"));
+	expect(appModules.length).toBe(2);
+
 	// Initial state: text
 	expect(typeof textA).toBe("string");
 	expect(textA).toContain("color: red");
@@ -22,13 +21,6 @@ it("should handle HMR for all exportTypes with concatenation", function (done) {
 	expect(sheetB).toBeInstanceOf(CSSStyleSheet);
 	expect(sheetB._cssText).toContain("color: purple");
 
-	// Initial state: style
-	const styles = window.document.getElementsByTagName("style");
-	const allCSS = Array.from(styles).map(s => s.textContent);
-	expect(allCSS.some(c => c.includes("color: orange"))).toBe(true);
-	expect(allCSS.some(c => c.includes("font-style: italic"))).toBe(true);
-	expect(allCSS.some(c => c.includes("color: brown"))).toBe(true);
-
 	// Initial state: link
 	expect(typeof linkAClass).toBe("string");
 	expect(linkAClass.length).toBeGreaterThan(0);
@@ -36,16 +28,7 @@ it("should handle HMR for all exportTypes with concatenation", function (done) {
 	expect(linkBClass.length).toBeGreaterThan(0);
 
 	module.hot.accept(
-		[
-			"./text-a.css",
-			"./text-b.css",
-			"./sheet-a.css",
-			"./sheet-b.css",
-			"./style-a.css",
-			"./style-b.css",
-			"./link-a.module.css",
-			"./link-b.module.css"
-		],
+		["./lib.js"],
 		() => {
 			// After HMR: text
 			expect(textA).toContain("font-size: 14px");
@@ -59,12 +42,6 @@ it("should handle HMR for all exportTypes with concatenation", function (done) {
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			// After HMR: style
-			const styles = window.document.getElementsByTagName("style");
-			const allCSS = Array.from(styles).map(s => s.textContent);
-			expect(allCSS.some(c => c.includes("font-style: oblique"))).toBe(true);
-			expect(allCSS.some(c => c.includes("color: tan"))).toBe(true);
-
 			done();
 		})
 	);

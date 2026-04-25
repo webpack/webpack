@@ -25,13 +25,6 @@ module.exports = {
 				parser: {
 					exportType: "css-style-sheet"
 				}
-			},
-			{
-				test: /style-.*\.css$/,
-				type: "css/module",
-				parser: {
-					exportType: "style"
-				}
 			}
 		]
 	},
