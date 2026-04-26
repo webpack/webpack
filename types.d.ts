@@ -4997,7 +4997,7 @@ declare abstract class CssGenerator extends Generator {
 		error: Error,
 		module: NormalModule,
 		generateContext: GenerateContext
-	): null | Source;
+	): GenerateResult;
 }
 
 /**
@@ -8138,6 +8138,7 @@ declare interface GenerateContext {
 	 */
 	getData?: () => CodeGenerationResultData;
 }
+type GenerateResult = null | Source | Promise<null | Source>;
 declare interface GeneratedSourceInfo {
 	/**
 	 * generated line
@@ -8170,7 +8171,7 @@ declare class Generator {
 	/**
 	 * Generates generated code for this runtime module.
 	 */
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	generate(module: NormalModule, __1: GenerateContext): GenerateResult;
 
 	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
@@ -14007,7 +14008,9 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * Generates code and runtime requirements for this module.
 	 */
-	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
+	codeGeneration(
+		context: CodeGenerationContext
+	): CodeGenerationResult | Promise<CodeGenerationResult>;
 
 	/**
 	 * Returns true if the module can be placed in the chunk.
