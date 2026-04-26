@@ -1,0 +1,5 @@
+@import url(./sheet-a-dep.css);
+
+.sheet-a {
+	color: green;
+}
