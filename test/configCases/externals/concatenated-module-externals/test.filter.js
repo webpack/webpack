@@ -1,5 +1,6 @@
 "use strict";
 
 module.exports = function filter() {
-	return /^v(20|22|24)/.test(process.version);
+	const major = Number(process.versions.node.split(".")[0]);
+	return major >= 20;
 };
