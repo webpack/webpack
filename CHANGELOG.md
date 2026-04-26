@@ -1,5 +1,15 @@
 # webpack
 
+## 5.107.0
+
+### Minor Changes
+
+- Support the `#__NO_SIDE_EFFECTS__` annotation to mark functions as pure for better tree-shaking. (by [@hai-x](https://github.com/hai-x) in [#20775](https://github.com/webpack/webpack/pull/20775))
+
+### Patch Changes
+
+- Remove outdated `@types/eslint-scope` package from dependencies. (by [@alexander-akait](https://github.com/alexander-akait) in [#20869](https://github.com/webpack/webpack/pull/20869))
+
 ## 5.106.2
 
 ### Patch Changes
