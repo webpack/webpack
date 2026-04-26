@@ -120,3 +120,30 @@ describe("util/identifier", () => {
 		}
 	});
 });
+
+describe("parseResource", () => {
+	/** @type {[string, string, string, string][]} */
+	const cases = [
+		["path#hash?query", "path", "?query", "#hash"],
+		["path?query#hash", "path", "?query", "#hash"],
+		["/home/user/test#folder/file.js", "/home/user/test#folder/file.js", "", ""],
+		["C:\\Users\\test#folder\\file.js", "C:\\Users\\test#folder\\file.js", "", ""],
+		[
+			"/home/user/test#folder/file.js?query#frag",
+			"/home/user/test#folder/file.js",
+			"?query",
+			"#frag"
+		],
+		["path/to/file.js#frag", "path/to/file.js", "", "#frag"],
+		["/abs/path/file.js#fragment", "/abs/path/file.js", "", "#fragment"],
+		["C:\\abs\\path\\file.js#fragment", "C:\\abs\\path\\file.js", "", "#fragment"]
+	];
+	for (const [input, path, query, fragment] of cases) {
+		it(input, () => {
+			const result = identifierUtil.parseResource(input);
+			expect(result.path).toBe(path);
+			expect(result.query).toBe(query);
+			expect(result.fragment).toBe(fragment);
+		});
+	}
+});
