@@ -17,12 +17,15 @@ const publicPaths = [
 	"./",
 	"../static/",
 	"./static/",
-	// TODO BUG
 	/**
 	 * @param {PathData} pathData path data
 	 * @returns {string} public path
 	 */
-	(pathData) => `https://webpack.js.org/${pathData.hash}/`
+	(pathData) => `https://webpack.js.org/${pathData.hash}/`,
+	"https://webpack.js.org/[fullhash]/",
+	"https://webpack.js.org/[fullhash:8]/",
+	() => "https://webpack.js.org/[fullhash]/",
+	() => "https://webpack.js.org/[fullhash:8]/"
 ];
 
 /** @type {import("../../../../").Configuration[]} */
