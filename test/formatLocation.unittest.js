@@ -1,6 +1,6 @@
 "use strict";
 
-const formatLocation = require("../lib/formatLocation");
+const formatLocation = require("../lib/util/formatLocation");
 
 describe("formatLocation", () => {
 	const testCases = [
