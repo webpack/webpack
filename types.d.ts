@@ -1510,7 +1510,7 @@ declare interface CallbackCacheCache<T> {
 	 * Creates a callback wrapper that waits for a fixed number of completions and
 	 * forwards the first error immediately.
 	 */
-	(err: null | WebpackError, result?: T): void;
+	(err: null | Error, result?: T): void;
 }
 declare interface CallbackCacheCacheFacade<T> {
 	(err?: null | Error, result?: null | T): void;
@@ -13846,12 +13846,12 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * Adds the provided warning to the module.
 	 */
-	addWarning(warning: WebpackError): void;
+	addWarning(warning: Error): void;
 
 	/**
 	 * Returns list of warnings if any.
 	 */
-	getWarnings(): undefined | Iterable<WebpackError>;
+	getWarnings(): undefined | Error[];
 
 	/**
 	 * Gets number of warnings.
@@ -13861,12 +13861,12 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * Adds the provided error to the module.
 	 */
-	addError(error: WebpackError): void;
+	addError(error: Error): void;
 
 	/**
 	 * Returns list of errors if any.
 	 */
-	getErrors(): undefined | Iterable<WebpackError>;
+	getErrors(): undefined | Error[];
 
 	/**
 	 * Gets number of errors.
@@ -15632,7 +15632,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
-	error: null | WebpackError;
+	error: null | Error;
 	getResource(): null | string;
 
 	/**
@@ -15659,7 +15659,7 @@ declare class NormalModule extends Module {
 		sourceMap?: null | string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
-	markModuleAsErrored(error: WebpackError): void;
+	markModuleAsErrored(error: Error): void;
 	applyNoParseRule(
 		rule: string | RegExp | ((content: string) => boolean),
 		content: string
