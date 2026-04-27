@@ -44,15 +44,29 @@ const makeModule = (namedExports) => ({
 const makeConfig = ({ namedExports, outputModule }) => {
 	/** @type {Configuration} */
 	const config = {
+		// Two entry files: only one form of static import works per
+		// namedExports value (named imports vs default import), so we
+		// switch the entry rather than have one file with imports that
+		// fail to resolve in the other config.
+		entry: namedExports ? "./index-named.js" : "./index-default.js",
 		mode: "production",
-		target: "web",
+		// target: node so the test code can `require("fs")` to inspect the
+		// emitted bundle without needing externals plumbing.
+		target: "node",
 		devtool: false,
+		node: {
+			__dirname: false,
+			__filename: false
+		},
 		optimization: {
 			chunkIds: "named",
 			moduleIds: "named",
-			// Make concatenation explicit (default in production, repeated for clarity)
+			// Concatenation must be on for CSS modules to actually inline
+			// their exports into the parent scope; without it, CSS modules
+			// stay as separate runtime modules with full-string export keys.
 			concatenateModules: true,
-			// Make JS export mangling explicit
+			// Mangle JS export identifiers deterministically so we can
+			// assert mangling actually happened in the bundle source.
 			mangleExports: "deterministic",
 			usedExports: true,
 			providedExports: true
@@ -64,13 +78,6 @@ const makeConfig = ({ namedExports, outputModule }) => {
 				"process.env.OUTPUT_MODULE": JSON.stringify(outputModule)
 			})
 		],
-		// re-exports.js does named re-exports from CSS modules; when
-		// namedExports is false those modules expose only `default`, so
-		// the named re-exports legitimately warn. We expect this and
-		// ignore the warnings rather than removing the re-exports.
-		ignoreWarnings: namedExports
-			? undefined
-			: [/Should not import the named export .* from default-exporting module/],
 		experiments: { css: true }
 	};
 	if (outputModule) {
