@@ -24484,6 +24484,7 @@ declare namespace exports {
 		export let returnExportsFromRuntime: "return-exports-from-runtime";
 		export let runtimeId: "__webpack_require__.j";
 		export let scriptNonce: "__webpack_require__.nc";
+		export let setAnonymousDefaultName: "__webpack_require__.dn";
 		export let shareScopeMap: "__webpack_require__.S";
 		export let startup: "__webpack_require__.x";
 		export let startupEntrypoint: "__webpack_require__.X";

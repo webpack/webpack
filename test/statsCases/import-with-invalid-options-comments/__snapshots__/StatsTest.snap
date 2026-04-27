@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`StatsTestCases import-with-invalid-options-comments should print correct stats for import-with-invalid-options-comments 1`] = `
-"runtime modules X KiB 12 modules
+"runtime modules X KiB 13 modules
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated]
   ./chunk.js X bytes [built] [code generated] [3 warnings]
