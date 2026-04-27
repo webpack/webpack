@@ -44,7 +44,16 @@ const makeConfig = ({ namedExports, outputModule }) => {
 		mode: "production",
 		target: "web",
 		devtool: false,
-		optimization: { chunkIds: "named", moduleIds: "named" },
+		optimization: {
+			chunkIds: "named",
+			moduleIds: "named",
+			// Make concatenation explicit (default in production, repeated for clarity)
+			concatenateModules: true,
+			// Make JS export mangling explicit
+			mangleExports: "deterministic",
+			usedExports: true,
+			providedExports: true
+		},
 		module: makeModule(namedExports),
 		plugins: [
 			new webpack.DefinePlugin({
@@ -52,6 +61,13 @@ const makeConfig = ({ namedExports, outputModule }) => {
 				"process.env.OUTPUT_MODULE": JSON.stringify(outputModule)
 			})
 		],
+		// re-exports.js does named re-exports from CSS modules; when
+		// namedExports is false those modules expose only `default`, so
+		// the named re-exports legitimately warn. We expect this and
+		// ignore the warnings rather than removing the re-exports.
+		ignoreWarnings: namedExports
+			? undefined
+			: [/Should not import the named export .* from default-exporting module/],
 		experiments: { css: true }
 	};
 	if (outputModule) {
