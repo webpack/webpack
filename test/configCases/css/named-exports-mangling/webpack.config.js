@@ -5,7 +5,10 @@ const webpack = require("../../../../");
 /** @typedef {import("../../../../").Configuration} Configuration */
 /** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
 /** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/** @typedef {NonNullable<GeneratorOptionsByModuleTypeKnown["css/module"]>["exportsConvention"]} ExportsConvention */
+/** @typedef {Extract<ExportsConvention, string>} ExportsConventionLiteral */
 
+/** @type {ExportsConventionLiteral[]} */
 const conventions = [
 	"as-is",
 	"camel-case",

@@ -72,17 +72,19 @@ it(`should expose the right export shape per convention (${matrixTitle})`, (done
 });
 
 it(`should expose default export when namedExports is disabled (${matrixTitle})`, (done) => {
-	import("./style.module.css?camel-case").then((mod) => {
-		if (namedExports) {
-			// Named exports: the camelCase identifier sits on the namespace
-			expect(mod.btnInfoIsDisabled).toBeDefined();
-		} else {
-			// Default-only mode: exports are nested under `default`
-			expect(mod.default).toBeDefined();
-			expect(mod.default.btnInfoIsDisabled).toBeDefined();
-		}
-		done();
-	}, done);
+	import("./style.module.css?camel-case")
+		.then((mod) => {
+			if (namedExports) {
+				// Named exports: the camelCase identifier sits on the namespace
+				expect(mod.btnInfoIsDisabled).toBeDefined();
+			} else {
+				// Default-only mode: exports are nested under `default`
+				expect(mod.default).toBeDefined();
+				expect(mod.default.btnInfoIsDisabled).toBeDefined();
+			}
+			done();
+		})
+		.catch(done);
 });
 
 it(`should mark JS named exports as mangleable in production for every convention (${matrixTitle})`, () => {
