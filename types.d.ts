@@ -2683,6 +2683,11 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	undoPath: string;
 
 	/**
+	 * compilation hash
+	 */
+	hash?: string;
+
+	/**
 	 * moduleFactoryCache
 	 */
 	moduleFactoryCache: WeakMap<Source, ModuleFactoryCacheEntry>;
@@ -14192,6 +14197,11 @@ declare interface ModuleFactoryCacheEntry {
 	undoPath: string;
 
 	/**
+	 * - The compilation hash
+	 */
+	hash?: string;
+
+	/**
 	 * - The inheritance chain
 	 */
 	inheritance: [CssLayer, Supports, Media][];
@@ -19238,6 +19248,11 @@ declare interface RenderContextCssModulesPlugin {
 	 * undo path to css file
 	 */
 	undoPath: string;
+
+	/**
+	 * compilation hash
+	 */
+	hash?: string;
 
 	/**
 	 * modules
