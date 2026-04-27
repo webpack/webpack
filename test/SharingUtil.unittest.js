@@ -1,6 +1,33 @@
 "use strict";
 
+const ProvideSharedModule = require("../lib/sharing/ProvideSharedModule");
 const { normalizeVersion } = require("../lib/sharing/utils");
+const { makePathsRelative } = require("../lib/util/identifier");
+
+describe("ProvideSharedModule identifier", () => {
+	it("normalizes the request path across different build roots", () => {
+		const a = new ProvideSharedModule(
+			"default",
+			"x",
+			"1.0.0",
+			"/runner-a/project/node_modules/x/index.js",
+			true
+		).identifier();
+		const b = new ProvideSharedModule(
+			"default",
+			"x",
+			"1.0.0",
+			"/runner-b/project/node_modules/x/index.js",
+			true
+		).identifier();
+		// After makePathsRelative the two identifiers must match so that
+		// DeterministicModuleIdsPlugin assigns the same id for the same
+		// shared module regardless of the absolute project root.
+		expect(makePathsRelative("/runner-a/project", a)).toBe(
+			makePathsRelative("/runner-b/project", b)
+		);
+	});
+});
 
 describe("normalize dep version", () => {
 	const commonInvalid = [
