@@ -1,6 +1,6 @@
 "use strict";
 
-const { formatSize } = require("../lib/SizeFormatHelpers");
+const formatSize = require("../lib/util/formatSize");
 
 describe("SizeFormatHelpers", () => {
 	describe("formatSize", () => {
