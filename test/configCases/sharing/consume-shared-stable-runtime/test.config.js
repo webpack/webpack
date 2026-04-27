@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const findOutputFiles = require("../../../helpers/findOutputFiles");
 
+const regex = /^[^\n]*?\b(\d+):\s*\(\)/gm;
+
 module.exports = {
 	findBundle(i, options) {
 		const runtime = findOutputFiles(options, /^runtime\.js$/)[0];
@@ -16,9 +18,14 @@ module.exports = {
 			src
 		);
 		expect(block).not.toBeNull();
-		const ids = [...block[1].matchAll(/^[^\n]*?\b(\d+):\s*\(\)/gm)].map((m) =>
-			Number(m[1])
-		);
+
+		const ids = [];
+		let match;
+
+		while ((match = regex.exec(block[1])) !== null) {
+			ids.push(Number(match[1]));
+		}
+
 		expect(ids.length).toBeGreaterThan(0);
 
 		const sorted = [...ids].sort((a, b) => a - b);
