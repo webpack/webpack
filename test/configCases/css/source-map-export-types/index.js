@@ -32,6 +32,9 @@ const expectedSourceMarker = useLess ? "@brand-color" : ".source-map-test-class"
 const BASE64_CHARS =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+const escapeRegExp = (value) =>
+	value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const decodeVlq = (str, pos) => {
 	let result = 0;
 	let shift = 0;
@@ -191,7 +194,7 @@ const expectSourceMappingComment = (relativeBundleFile, mapFileName) => {
 	// DevTools discovers the map via this trailing annotation; its absence
 	// means no map is loaded even if the .map file exists on disk.
 	expect(content).toMatch(
-		new RegExp(`sourceMappingURL=${mapFileName.replace(/\./g, "\\.")}`)
+		new RegExp(`sourceMappingURL=${escapeRegExp(mapFileName)}`)
 	);
 };
 
