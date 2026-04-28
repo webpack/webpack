@@ -63,52 +63,45 @@ it(`should concatenate every CSS module out of __webpack_modules__ (${matrixTitl
 	expect(cssModuleKeys).toEqual([]);
 });
 
-if (!outputModule) {
-	// CJS bundle — `__dirname` and `__non_webpack_require__("fs")` are
-	// straightforward. Skip the source-text checks for ESM output to
-	// avoid wiring up an `import.meta.url`-based __dirname polyfill;
-	// the mangling/concatenation behavior we assert is identical
-	// across output modes.
-	it(`should not leave EXTERNAL MODULE markers for CSS in the bundle (${matrixTitle})`, () => {
-		const fs = __non_webpack_require__("fs");
-		const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
+it(`should not leave EXTERNAL MODULE markers for CSS in the bundle (${matrixTitle})`, () => {
+	const fs = __non_webpack_require__("fs");
+	const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
 
-		for (const convention of [
-			"as-is",
-			"camel-case",
-			"camel-case-only",
-			"dashes",
-			"dashes-only"
-		]) {
-			expect(source).not.toContain(
-				`EXTERNAL MODULE: css ./style.module.css?${convention}`
-			);
-			expect(source).not.toContain(
-				`__webpack_require__("./style.module.css?${convention}")`
-			);
-		}
-	});
+	for (const convention of [
+		"as-is",
+		"camel-case",
+		"camel-case-only",
+		"dashes",
+		"dashes-only"
+	]) {
+		expect(source).not.toContain(
+			`EXTERNAL MODULE: css ./style.module.css?${convention}`
+		);
+		expect(source).not.toContain(
+			`__webpack_require__("./style.module.css?${convention}")`
+		);
+	}
+});
 
-	it(`should mangle JS export identifiers in production (${matrixTitle})`, () => {
-		const fs = __non_webpack_require__("fs");
-		const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
+it(`should mangle JS export identifiers in production (${matrixTitle})`, () => {
+	const fs = __non_webpack_require__("fs");
+	const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
 
-		// When CSS modules are concatenated, every named export becomes a
-		// `const <identifier> = <value>;` declaration in the entry scope
-		// (CssGenerator.js#L472–497). With
-		// `mangleExports: "deterministic"`, that identifier is the mangled
-		// used-name, so the original long names must NOT appear as
-		// const/let/var bindings.
-		const longCssExportNames = [
-			"btnInfoIsDisabled",
-			"btnInfoIsDisabled1",
-			"btnInfo_isDisabled",
-			"myBtnInfoIsDisabled",
-			"fooBar"
-		];
-		for (const name of longCssExportNames) {
-			const declRegex = new RegExp(`(?:const|let|var)\\s+${name}\\b`);
-			expect(source).not.toMatch(declRegex);
-		}
-	});
-}
+	// When CSS modules are concatenated, every named export becomes a
+	// `const <identifier> = <value>;` declaration in the entry scope
+	// (CssGenerator.js#L472–497). With
+	// `mangleExports: "deterministic"`, that identifier is the mangled
+	// used-name, so the original long names must NOT appear as
+	// const/let/var bindings.
+	const longCssExportNames = [
+		"btnInfoIsDisabled",
+		"btnInfoIsDisabled1",
+		"btnInfo_isDisabled",
+		"myBtnInfoIsDisabled",
+		"fooBar"
+	];
+	for (const name of longCssExportNames) {
+		const declRegex = new RegExp(`(?:const|let|var)\\s+${name}\\b`);
+		expect(source).not.toMatch(declRegex);
+	}
+});

@@ -54,22 +54,10 @@ const makeConfig = ({ namedExports, outputModule }) => {
 		// emitted bundle without needing externals plumbing.
 		target: "node",
 		devtool: false,
-		node: {
-			__dirname: false,
-			__filename: false
-		},
 		optimization: {
 			chunkIds: "named",
 			moduleIds: "named",
-			// Concatenation must be on for CSS modules to actually inline
-			// their exports into the parent scope; without it, CSS modules
-			// stay as separate runtime modules with full-string export keys.
-			concatenateModules: true,
-			// Mangle JS export identifiers deterministically so we can
-			// assert mangling actually happened in the bundle source.
-			mangleExports: "deterministic",
-			usedExports: true,
-			providedExports: true
+			concatenateModules: true
 		},
 		module: makeModule(namedExports),
 		plugins: [
