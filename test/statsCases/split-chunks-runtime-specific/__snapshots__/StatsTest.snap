@@ -30,15 +30,15 @@ no-used-exports:
   Entrypoint b X KiB = no-used-exports-637.js X bytes no-used-exports-b.js X KiB
   Entrypoint c X KiB = no-used-exports-637.js X bytes no-used-exports-c.js X KiB
   chunk (runtime: b) no-used-exports-b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     ./b.js X bytes [built] [code generated]
   chunk (runtime: c) no-used-exports-c.js (c) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     ./c.js X bytes [built] [code generated]
   chunk (runtime: a, b, c) no-used-exports-637.js X bytes [initial] [rendered] split chunk (cache group: default)
     ./objects.js X bytes [built] [code generated]
   chunk (runtime: a) no-used-exports-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     ./a.js X bytes [built] [code generated]
   no-used-exports (webpack x.x.x) compiled successfully in X ms
 
