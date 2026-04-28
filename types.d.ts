@@ -24463,6 +24463,7 @@ declare namespace exports {
 		export let interceptModuleExecution: "__webpack_require__.i";
 		export let loadScript: "__webpack_require__.l";
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
+		export let makeModuleSource: "__webpack_require__.M";
 		export let makeNamespaceObject: "__webpack_require__.r";
 		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
 		export let module: "module";
