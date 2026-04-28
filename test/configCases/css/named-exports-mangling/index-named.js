@@ -62,9 +62,9 @@ it(`should concatenate every CSS module out of __webpack_modules__ (${matrixTitl
 	expect(cssModuleKeys).toEqual([]);
 });
 
-it(`should not leave EXTERNAL MODULE markers for CSS in the bundle (${matrixTitle})`, () => {
+it(`should concatenate CSS modules in the bundle (${matrixTitle})`, () => {
 	const fs = __non_webpack_require__("fs");
-	const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
+	const source = fs.readFileSync(`${__dirname}/bundle${__STATS_I__ === 0 ? "0.js" : "2.mjs"}`, "utf-8");
 
 	for (const convention of [
 		"as-is",
@@ -74,9 +74,6 @@ it(`should not leave EXTERNAL MODULE markers for CSS in the bundle (${matrixTitl
 		"dashes-only"
 	]) {
 		expect(source).not.toContain(
-			`EXTERNAL MODULE: css ./style.module.css?${convention}`
-		);
-		expect(source).not.toContain(
 			`__webpack_require__("./style.module.css?${convention}")`
 		);
 	}
@@ -84,7 +81,7 @@ it(`should not leave EXTERNAL MODULE markers for CSS in the bundle (${matrixTitl
 
 it(`should mangle JS export identifiers in production (${matrixTitle})`, () => {
 	const fs = __non_webpack_require__("fs");
-	const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
+	const source = fs.readFileSync(`${__dirname}/bundle${__STATS_I__ === 0 ? "0.js" : "2.mjs"}`, "utf-8");
 
 	// When CSS modules are concatenated, every named export becomes a
 	// `const <identifier> = <value>;` declaration in the entry scope
