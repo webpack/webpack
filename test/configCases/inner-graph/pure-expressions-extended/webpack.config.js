@@ -39,10 +39,30 @@ module.exports = createTestCases({
 			dep: ["e"]
 		}
 	},
-	all: {
-		usedExports: ["chained", "tagged", "negated", "typed", "voided"],
+	eqStrict: {
+		usedExports: ["eqStrict"],
 		expect: {
-			dep: ["a", "b", "c", "d", "e"]
+			dep: ["f"]
+		}
+	},
+	neStrict: {
+		usedExports: ["neStrict"],
+		expect: {
+			dep: ["g"]
+		}
+	},
+	all: {
+		usedExports: [
+			"chained",
+			"tagged",
+			"negated",
+			"typed",
+			"voided",
+			"eqStrict",
+			"neStrict"
+		],
+		expect: {
+			dep: ["a", "b", "c", "d", "e", "f", "g"]
 		}
 	}
 });
