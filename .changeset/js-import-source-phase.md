@@ -2,9 +2,12 @@
 "webpack": minor
 ---
 
-Support source-phase imports for JavaScript modules. With the
-`experiments.sourceImport` option enabled, `import source X from "./mod.js"`
-and `import.source("./mod.js")` bind to an opaque module reflection (a frozen
-object whose `Symbol.toStringTag` is `"Module"`) instead of evaluating the
-imported module. This mirrors the existing source-phase support for async
-WebAssembly modules and aligns with the TC39 source-phase imports proposal.
+Honor the TC39 source-phase imports proposal for JavaScript modules. With
+`experiments.sourceImport` enabled, both static `import source X from "./mod.js"`
+and dynamic `import.source("./mod.js")` now throw a `SyntaxError` at runtime
+when the imported module is a JavaScript source-text module (matching V8 and
+the test262 `source-phase-imports` cases). The existing source-phase support
+for asynchronous WebAssembly modules is unchanged.
+
+`import source X from "./mod.js"` is also validated at compile time to require
+the default-binding form (`import source name from '...'`).
