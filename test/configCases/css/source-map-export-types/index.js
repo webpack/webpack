@@ -3,12 +3,13 @@ import * as css from "STYLE_UNDER_TEST";
 // Reference the import so it isn't tree-shaken away for value-returning
 // exportTypes (text / css-style-sheet); side-effect-only imports would
 // otherwise be optimized out and the CSS module would never be included
-// in the JS bundle's source map.
+// in the JS bundle.
 globalThis.__keepCssAlive = css;
 
 const fs = __nodeFs;
 const path = __nodePath;
 const NodeSourceMap = __NodeSourceMap;
+const NodeBuffer = __NodeBuffer;
 
 const CASES = [
 	{ exportType: "link", useLess: false },
@@ -59,7 +60,7 @@ const decodeVlq = (str, pos) => {
 // Decodes every segment in `mappings`, asserting per-segment field counts
 // (1, 4, or 5), and that all running counters stay non-negative and that
 // every source/name index points to a real entry in `sources`/`names`.
-// This is the same set of invariants that prevent Chrome DevTools from
+// These are the same invariants that prevent Chrome DevTools from
 // silently rejecting individual mappings.
 const decodeAllMappings = (map) => {
 	const mappings = map.mappings;
@@ -138,12 +139,7 @@ const decodeAllMappings = (map) => {
 	return { segments, segmentsWithSource, referencedSources };
 };
 
-const readMap = (relativeMapFile) => {
-	const mapFile = path.resolve(outputPath, relativeMapFile);
-	expect(fs.existsSync(mapFile)).toBe(true);
-	const raw = fs.readFileSync(mapFile, "utf-8");
-	const map = JSON.parse(raw);
-
+const validateMap = (map) => {
 	expect(map.version).toBe(3);
 	expect(Array.isArray(map.sources)).toBe(true);
 	expect(map.sources.length).toBeGreaterThan(0);
@@ -156,8 +152,6 @@ const readMap = (relativeMapFile) => {
 	expect(Array.isArray(map.sourcesContent)).toBe(true);
 	expect(map.sourcesContent.length).toBe(map.sources.length);
 	for (const content of map.sourcesContent) {
-		// Every source must carry inline content so DevTools can show the
-		// original text without needing to re-fetch from disk.
 		expect(typeof content).toBe("string");
 	}
 	if (map.names !== undefined) {
@@ -183,28 +177,46 @@ const readMap = (relativeMapFile) => {
 	expect(segments).toBeGreaterThan(0);
 	expect(segmentsWithSource).toBeGreaterThan(0);
 	expect(referencedSources.size).toBeGreaterThan(0);
-
-	return map;
 };
 
-const expectSourceMappingComment = (relativeBundleFile, mapFileName) => {
-	const bundleFile = path.resolve(outputPath, relativeBundleFile);
-	expect(fs.existsSync(bundleFile)).toBe(true);
-	const content = fs.readFileSync(bundleFile, "utf-8");
-	// DevTools discovers the map via this trailing annotation; its absence
-	// means no map is loaded even if the .map file exists on disk.
+const expectExpectedSourceInMap = (map) => {
+	const sourceIndex = map.sources.findIndex((s) =>
+		s.includes(expectedSourceFile)
+	);
+	expect(sourceIndex).toBeGreaterThanOrEqual(0);
+	expect(map.sourcesContent[sourceIndex]).toContain(expectedSourceMarker);
+};
+
+const readExternalMap = (relativeMapFile) => {
+	const mapFile = path.resolve(outputPath, relativeMapFile);
+	expect(fs.existsSync(mapFile)).toBe(true);
+	return JSON.parse(fs.readFileSync(mapFile, "utf-8"));
+};
+
+const expectExternalMappingURL = (relativeFile, mapFileName) => {
+	const file = path.resolve(outputPath, relativeFile);
+	expect(fs.existsSync(file)).toBe(true);
+	const content = fs.readFileSync(file, "utf-8");
 	expect(content).toMatch(
 		new RegExp(`sourceMappingURL=${escapeRegExp(mapFileName)}`)
 	);
 };
 
-const expectSourceInMap = (map) => {
-	const sourceIndex = map.sources.findIndex((s) =>
-		s.includes(expectedSourceFile)
-	);
-	expect(sourceIndex).toBeGreaterThanOrEqual(0);
-	expect(typeof map.sourcesContent[sourceIndex]).toBe("string");
-	expect(map.sourcesContent[sourceIndex]).toContain(expectedSourceMarker);
+// For text/style/css-style-sheet the CSS is embedded as a JS string literal
+// with an inline `sourceMappingURL=data:application/json;base64,...` comment
+// inside the CSS text itself. That comment is what DevTools uses to map
+// the applied stylesheet back to its original sources.
+const SOURCE_MAPPING_DATA_URI =
+	/sourceMappingURL=data:application\/json(?:;charset=[^;,]+)?;base64,([A-Za-z0-9+/=]+)/;
+
+const extractInlineCssMap = (relativeBundleFile) => {
+	const bundleFile = path.resolve(outputPath, relativeBundleFile);
+	expect(fs.existsSync(bundleFile)).toBe(true);
+	const bundle = fs.readFileSync(bundleFile, "utf-8");
+	const match = bundle.match(SOURCE_MAPPING_DATA_URI);
+	expect(match).not.toBeNull();
+	const decoded = NodeBuffer.from(match[1], "base64").toString("utf-8");
+	return JSON.parse(decoded);
 };
 
 const label = `exportType="${exportType}"${useLess ? " through less-loader" : ""}`;
@@ -212,13 +224,22 @@ const label = `exportType="${exportType}"${useLess ? " through less-loader" : ""
 it(`should generate a valid source map for ${label}`, () => {
 	if (exportType === "link") {
 		const mapName = `bundle${__STATS_I__}.css.map`;
-		const map = readMap(mapName);
-		expectSourceMappingComment(`bundle${__STATS_I__}.css`, mapName);
-		expectSourceInMap(map);
-	} else {
-		const mapName = `bundle${__STATS_I__}.js.map`;
-		const map = readMap(mapName);
-		expectSourceMappingComment(`bundle${__STATS_I__}.js`, mapName);
-		expectSourceInMap(map);
+		expectExternalMappingURL(`bundle${__STATS_I__}.css`, mapName);
+		const map = readExternalMap(mapName);
+		validateMap(map);
+		expectExpectedSourceInMap(map);
+		return;
 	}
+
+	// JS bundle still gets its own external source map for the JS code.
+	const jsMapName = `bundle${__STATS_I__}.js.map`;
+	expectExternalMappingURL(`bundle${__STATS_I__}.js`, jsMapName);
+	const jsMap = readExternalMap(jsMapName);
+	validateMap(jsMap);
+
+	// And the CSS embedded in the JS string literal carries an inline
+	// data URI source map that DevTools can resolve.
+	const cssMap = extractInlineCssMap(`bundle${__STATS_I__}.js`);
+	validateMap(cssMap);
+	expectExpectedSourceInMap(cssMap);
 });

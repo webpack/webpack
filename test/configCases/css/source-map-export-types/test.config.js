@@ -9,5 +9,6 @@ module.exports = {
 		scope.__nodeFs = fs;
 		scope.__nodePath = path;
 		scope.__NodeSourceMap = SourceMap;
+		scope.__NodeBuffer = Buffer;
 	}
 };
