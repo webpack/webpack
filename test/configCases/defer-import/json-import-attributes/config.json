@@ -1,0 +1,8 @@
+{
+	"value": 42,
+	"name": "webpack",
+	"nested": {
+		"foo": "bar",
+		"list": [1, 2, 3]
+	}
+}
