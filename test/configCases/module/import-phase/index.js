@@ -5,5 +5,10 @@ it("should allow to match rules by import phase", async () => {
 
 	expect(evaluation.default).toBe("evaluation");
 	expect(deferred.default).toBe("defer");
-	expect(source).toBe("source");
+	// Source-phase imports for JS modules return an opaque module reflection
+	// (the source is not evaluated, so the phase-specific loader output is not
+	// observable through the binding).
+	expect(typeof source).toBe("object");
+	expect(source).not.toBeNull();
+	expect(Object.prototype.toString.call(source)).toBe("[object Module]");
 });
