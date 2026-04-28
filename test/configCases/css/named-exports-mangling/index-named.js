@@ -28,7 +28,6 @@ import {
 	btnInfo_isDisabled as dashesOnlyBtnInfo_isDisabled
 } from "./style.module.css?dashes-only";
 
-const outputModule = process.env.OUTPUT_MODULE === true;
 const matrixTitle = `output.module=${process.env.OUTPUT_MODULE}, namedExports=true`;
 
 it(`should resolve every named import per convention (${matrixTitle})`, () => {
