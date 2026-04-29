@@ -6276,6 +6276,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "optimization.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-avoid-entry-iife": Object {
     "configs": Array [
       Object {

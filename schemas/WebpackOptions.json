@@ -2748,6 +2748,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "anonymousDefaultExportName": {
+          "description": "Set .name to \"default\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+          "type": "boolean"
+        },
         "avoidEntryIife": {
           "description": "Avoid wrapping the entry module in an IIFE.",
           "type": "boolean"
@@ -2916,6 +2920,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "anonymousDefaultExportName": {
+          "description": "Set .name to \"default\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+          "type": "boolean"
+        },
         "avoidEntryIife": {
           "description": "Avoid wrapping the entry module in an IIFE.",
           "type": "boolean"

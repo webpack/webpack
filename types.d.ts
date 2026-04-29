@@ -16403,6 +16403,11 @@ declare interface Open {
  */
 declare interface Optimization {
 	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
+
+	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
 	avoidEntryIife?: boolean;
@@ -16552,6 +16557,11 @@ declare interface Optimization {
  * Enables/Disables integrated optimizations.
  */
 declare interface OptimizationNormalized {
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
+
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
@@ -16730,6 +16740,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<undefined | boolean>;
+	anonymousDefaultExportName: NonNullable<undefined | boolean>;
 	avoidEntryIife: NonNullable<undefined | boolean>;
 	emitOnErrors: NonNullable<undefined | boolean>;
 	checkWasmTypes: NonNullable<undefined | boolean>;

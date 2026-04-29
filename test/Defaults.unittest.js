@@ -323,6 +323,7 @@ describe("snapshots", () => {
 		    "global": true,
 		  },
 		  "optimization": Object {
+		    "anonymousDefaultExportName": true,
 		    "avoidEntryIife": false,
 		    "checkWasmTypes": false,
 		    "chunkIds": "natural",
@@ -1194,6 +1195,9 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
+		-     "anonymousDefaultExportName": true,
+		+     "anonymousDefaultExportName": false,
+		@@ ... @@
 		-     "chunkLoadingGlobal": "webpackChunkwebpack",
 		+     "chunkLoadingGlobal": "webpackChunkmyLib_awesome",
 		@@ ... @@
@@ -1238,6 +1242,9 @@ describe("snapshots", () => {
 			- Expected
 			+ Received
 
+			@@ ... @@
+			-     "anonymousDefaultExportName": true,
+			+     "anonymousDefaultExportName": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunkmyLib",
@@ -1286,6 +1293,9 @@ describe("snapshots", () => {
 			- Expected
 			+ Received
 
+			@@ ... @@
+			-     "anonymousDefaultExportName": true,
+			+     "anonymousDefaultExportName": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunkmyLib_lib",
@@ -1338,6 +1348,9 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
+			-     "anonymousDefaultExportName": true,
+			+     "anonymousDefaultExportName": false,
+			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunkmyLib",
 			@@ ... @@
@@ -1389,6 +1402,9 @@ describe("snapshots", () => {
 			- Expected
 			+ Received
 
+			@@ ... @@
+			-     "anonymousDefaultExportName": true,
+			+     "anonymousDefaultExportName": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunk_name_my_name_Lib_name_",

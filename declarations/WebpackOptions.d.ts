@@ -1945,6 +1945,10 @@ export interface NodeOptions {
  */
 export interface Optimization {
 	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
+	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
 	avoidEntryIife?: boolean;
@@ -3636,6 +3640,10 @@ export interface ModuleOptionsNormalized {
  * Enables/Disables integrated optimizations.
  */
 export interface OptimizationNormalized {
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
