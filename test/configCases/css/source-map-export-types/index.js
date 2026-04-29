@@ -227,19 +227,34 @@ it(`should generate a valid source map for ${label}`, () => {
 	expectExternalMappingURL(`bundle${__STATS_I__}.js`, jsMapName);
 	const jsMap = readExternalMap(jsMapName);
 	validateMap(jsMap);
-	// The CSS module's emitted JS wrapper must be visible in the bundle's
-	// JS source map (alongside ./index.js, the runtime helpers, etc.) so
-	// DevTools can navigate to the generated module. Through less-loader
-	// the loader-side preprocessor variables are gone by this point, so
-	// we only assert the always-present class selector here — the deep
-	// marker check happens against the inline CSS map below.
+	// The full generated JS wrapper for the CSS module must show up in
+	// the bundle's JS source map under the module's identifier — same
+	// shape css-loader produces for CSS modules consumed in JS. That
+	// means sourcesContent here is the emitted runtime call (e.g.
+	// `__webpack_require__.r(module.exports = { "default": "…" });` for
+	// `text`, `__webpack_require__.is(<id>, "…");` for `style`, or the
+	// `new CSSStyleSheet(); sheet.replaceSync(cssText)` IIFE for
+	// `css-style-sheet`), not the raw CSS or just its JS literal form.
 	const cssModuleSourceIdx = jsMap.sources.findIndex((s) =>
 		s.includes(expectedSourceFile)
 	);
 	expect(cssModuleSourceIdx).toBeGreaterThanOrEqual(0);
-	expect(jsMap.sourcesContent[cssModuleSourceIdx]).toContain(
-		".source-map-test-class"
-	);
+	const cssModuleSourcesContent = jsMap.sourcesContent[cssModuleSourceIdx];
+	expect(cssModuleSourcesContent).toContain("__webpack_require__");
+	// The bug we are guarding against was exposing only the bare JSON
+	// literal (which would start with `"` and have nothing else around it);
+	// the full wrapper has webpack runtime calls before the literal.
+	expect(cssModuleSourcesContent.startsWith('"')).toBe(false);
+	if (exportType === "text") {
+		expect(cssModuleSourcesContent).toContain("module.exports");
+		expect(cssModuleSourcesContent).toContain('"default":');
+	} else if (exportType === "css-style-sheet") {
+		expect(cssModuleSourcesContent).toContain("new CSSStyleSheet()");
+		expect(cssModuleSourcesContent).toContain("replaceSync");
+	}
+	// CSS payload still has to be reachable from sourcesContent so DevTools
+	// can search across module sources.
+	expect(cssModuleSourcesContent).toContain(".source-map-test-class");
 
 	// And the CSS embedded in the JS string literal carries an inline
 	// data URI source map that DevTools can resolve.
