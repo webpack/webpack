@@ -151,7 +151,7 @@
     "jest-diff": "^30.3.0",
     "jest-environment-node": "^30.3.0",
     "jest-snapshot": "^30.3.0",
-    "jest-junit": "^16.0.0",
+    "jest-junit": "^17.0.0",
     "json-loader": "^0.5.7",
     "json5": "^2.1.3",
     "less": "^4.6.4",
