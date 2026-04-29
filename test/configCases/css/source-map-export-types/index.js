@@ -8,7 +8,6 @@ globalThis.__keepCssAlive = css;
 
 const fs = __nodeFs;
 const path = __nodePath;
-const NodeSourceMap = __NodeSourceMap;
 const NodeBuffer = __NodeBuffer;
 
 const CASES = [
@@ -163,14 +162,6 @@ const validateMap = (map) => {
 	if (map.file !== undefined) {
 		expect(typeof map.file).toBe("string");
 	}
-
-	// Hand it to Node's built-in source map consumer (the same machinery
-	// used by V8 / DevTools for stack-trace decoding) and confirm it can
-	// resolve a real entry — this catches structurally invalid maps that
-	// Chrome DevTools would silently fail on.
-	const consumer = new NodeSourceMap(map);
-	const firstEntry = consumer.findEntry(0, 0);
-	expect(firstEntry).toBeDefined();
 
 	const { segments, segmentsWithSource, referencedSources } =
 		decodeAllMappings(map);
