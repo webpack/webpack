@@ -3,30 +3,44 @@
 "use strict";
 
 /**
- * @param {string} command process to run
  * @param {string[]} args command line arguments
  * @returns {Promise<void>} promise
  */
-const runCommand = (command, args) => {
+const runNpm = (args) => {
 	const cp = require("child_process");
 
 	return new Promise((resolve, reject) => {
-		const executedCommand = cp.spawn(command, args, {
-			stdio: "inherit",
-			shell: true
-		});
+		const proc = cp.spawn("npm", args, { stdio: "inherit", shell: false });
+		proc.on("error", reject);
+		proc.on("exit", (code) => (code === 0 ? resolve() : reject()));
+	});
+};
 
-		executedCommand.on("error", (error) => {
-			reject(error);
-		});
+/**
+ * @param {string[]} args command line arguments
+ * @returns {Promise<void>} promise
+ */
+const runYarn = (args) => {
+	const cp = require("child_process");
 
-		executedCommand.on("exit", (code) => {
-			if (code === 0) {
-				resolve();
-			} else {
-				reject();
-			}
-		});
+	return new Promise((resolve, reject) => {
+		const proc = cp.spawn("yarn", args, { stdio: "inherit", shell: false });
+		proc.on("error", reject);
+		proc.on("exit", (code) => (code === 0 ? resolve() : reject()));
+	});
+};
+
+/**
+ * @param {string[]} args command line arguments
+ * @returns {Promise<void>} promise
+ */
+const runPnpm = (args) => {
+	const cp = require("child_process");
+
+	return new Promise((resolve, reject) => {
+		const proc = cp.spawn("pnpm", args, { stdio: "inherit", shell: false });
+		proc.on("error", reject);
+		proc.on("exit", (code) => (code === 0 ? resolve() : reject()));
 	});
 };
 
@@ -39,39 +53,12 @@ const isInstalled = (packageName) => {
 		return true;
 	}
 
-	const path = require("path");
-	const fs = require("graceful-fs");
-
-	let dir = __dirname;
-
-	do {
-		try {
-			if (
-				fs.statSync(path.join(dir, "node_modules", packageName)).isDirectory()
-			) {
-				return true;
-			}
-		} catch (_error) {
-			// Nothing
-		}
-	} while (dir !== (dir = path.dirname(dir)));
-
-	// https://github.com/nodejs/node/blob/v18.9.1/lib/internal/modules/cjs/loader.js#L1274
-	const { globalPaths } =
-		/** @type {typeof import("module") & { globalPaths: string[] }} */
-		(require("module"));
-
-	for (const internalPath of globalPaths) {
-		try {
-			if (fs.statSync(path.join(internalPath, packageName)).isDirectory()) {
-				return true;
-			}
-		} catch (_error) {
-			// Nothing
-		}
+	try {
+		require.resolve(`${packageName}/package.json`);
+		return true;
+	} catch (_error) {
+		return false;
 	}
-
-	return false;
 };
 
 /**
@@ -81,20 +68,31 @@ const isInstalled = (packageName) => {
 const runCli = (cli) => {
 	const path = require("path");
 
-	const pkgPath = require.resolve(`${cli.package}/package.json`);
+	// Use the known package name literal to obtain a trusted base path via require.resolve
+	const pkgPath = require.resolve("webpack-cli/package.json");
 
 	/** @type {Record<string, EXPECTED_ANY> & { type: string, bin: Record<string, string> }} */
 	const pkg = require(pkgPath);
 
-	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
-		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			(err) => {
-				console.error(err);
-				process.exitCode = 1;
-			}
-		);
+	const pkgDir = path.dirname(pkgPath);
+	// Use the known bin name literal to obtain the binary relative path
+	const binRelPath = pkg.bin["webpack-cli"];
+	const resolvedBin = path.resolve(pkgDir, binRelPath);
+
+	// Prevent path traversal: ensure the resolved binary stays within the package directory
+	if (!resolvedBin.startsWith(pkgDir + path.sep)) {
+		console.error(`Invalid binary path for ${cli.package}`);
+		process.exitCode = 1;
+		return;
+	}
+
+	if (pkg.type === "module" || /\.mjs/i.test(binRelPath)) {
+		import(resolvedBin).catch((err) => {
+			console.error(err);
+			process.exitCode = 1;
+		});
 	} else {
-		require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+		require(resolvedBin);
 	}
 };
 
@@ -178,11 +176,13 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(
-			/** @type {string} */
-			(packageManager),
-			[...installOptions, cli.package]
-		)
+		const runner =
+			packageManager === "yarn"
+				? runYarn
+				: packageManager === "pnpm"
+					? runPnpm
+					: runNpm;
+		runner([...installOptions, cli.package])
 			.then(() => {
 				runCli(cli);
 			})
