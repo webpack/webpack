@@ -227,6 +227,19 @@ it(`should generate a valid source map for ${label}`, () => {
 	expectExternalMappingURL(`bundle${__STATS_I__}.js`, jsMapName);
 	const jsMap = readExternalMap(jsMapName);
 	validateMap(jsMap);
+	// The CSS module's emitted JS wrapper must be visible in the bundle's
+	// JS source map (alongside ./index.js, the runtime helpers, etc.) so
+	// DevTools can navigate to the generated module. Through less-loader
+	// the loader-side preprocessor variables are gone by this point, so
+	// we only assert the always-present class selector here — the deep
+	// marker check happens against the inline CSS map below.
+	const cssModuleSourceIdx = jsMap.sources.findIndex((s) =>
+		s.includes(expectedSourceFile)
+	);
+	expect(cssModuleSourceIdx).toBeGreaterThanOrEqual(0);
+	expect(jsMap.sourcesContent[cssModuleSourceIdx]).toContain(
+		".source-map-test-class"
+	);
 
 	// And the CSS embedded in the JS string literal carries an inline
 	// data URI source map that DevTools can resolve.
