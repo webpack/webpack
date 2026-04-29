@@ -1,0 +1,9 @@
+.nosources-test-class {
+	color: rebeccapurple;
+	font-size: 18px;
+}
+
+.nested-rule {
+	background: linear-gradient(red, blue);
+	padding: 4px 8px;
+}

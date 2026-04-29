@@ -1,0 +1,12 @@
+@brand-color: rebeccapurple;
+@spacing: 4px;
+
+.source-map-test-class {
+	color: @brand-color;
+	font-size: 18px;
+
+	.nested-rule {
+		background: linear-gradient(red, blue);
+		padding: @spacing (@spacing * 2);
+	}
+}
