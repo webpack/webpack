@@ -145,6 +145,14 @@ const validateMap = (map) => {
 	for (const source of map.sources) {
 		expect(typeof source).toBe("string");
 		expect(source.length).toBeGreaterThan(0);
+		// Sources must be relative to the compilation context — never an
+		// absolute filesystem path. The CSS module identifier embeds an
+		// absolute path by default, so this guards against accidentally
+		// passing it raw to OriginalSource instead of going through
+		// requestShortener / readableIdentifier.
+		const stripped = source.replace(/^webpack:\/+/, "");
+		expect(stripped.startsWith("/")).toBe(false);
+		expect(/^[A-Za-z]:[\\/]/.test(stripped)).toBe(false);
 	}
 	expect(typeof map.mappings).toBe("string");
 	expect(map.mappings.length).toBeGreaterThan(0);
