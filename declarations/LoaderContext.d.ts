@@ -29,16 +29,71 @@ type Schema = Parameters<typeof validate>[0];
 /** These properties are added by the NormalModule */
 export interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string.
+	 * @returns The parsed loader options
+	 */
 	getOptions(): OptionsType;
+
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
+	 * @param schema An optional JSON schema to validate the options against
+	 * @returns The parsed loader options
+	 */
 	getOptions(schema: Schema): OptionsType;
-	emitWarning(warning: Error): void;
-	emitError(error: Error): void;
+
+	/**
+	 * Emits a warning for this module.
+	 * The warning will be displayed to the user during compilation.
+	 * @param {Error | string} warning the warning message or error object
+	 */
+	emitWarning(warning: Error | string): void;
+
+	/**
+	 * Emits an error for this module.
+	 * The error will be displayed to the user and typically causes the compilation to fail.
+	 * @param {Error | string} error the error message or error object
+	 */
+	emitError(error: Error | string): void;
+
+	/**
+	 * Gets a logger instance scoped to this loader and module.
+	 * Useful for emitting debug or compilation information in a structured way.
+	 * @param name the name or category of the logger
+	 * @returns the scoped logger instance
+	 */
 	getLogger(name?: string): Logger;
+
+	/**
+	 * Resolves a module request (e.g., a relative path or module name) to an absolute file path.
+	 * It uses Webpack's internal resolver, taking into account configured aliases and extensions.
+	 * @param context The absolute path of the directory to use as the base for resolution
+	 * @param request The module request string to resolve (e.g., './image.png', 'lodash')
+	 * @param callback A callback function invoked with the resolved absolute path, or false if ignored
+	 */
 	resolve(context: string, request: string, callback: ResolveCallback): void;
+
+	/**
+	 * Creates a resolve function with specific options.
+	 * The returned function can be used as a Promise-based resolver or a callback-based resolver.
+	 * @param options custom resolve options
+	 * @returns dual-mode resolve function
+	 */
 	getResolve(
 		options?: ResolveOptionsWithDependencyType
 	): ((context: string, request: string, callback: ResolveCallback) => void) &
 		((context: string, request: string) => Promise<string>);
+
+	/**
+	 * Emits a new file (asset) to the compilation output directory.
+	 * This allows loaders to generate additional files alongside the main module output.
+	 * @param name the name or path of the file to emit
+	 * @param content the content of the file
+	 * @param sourceMap optional source map for the emitted file
+	 * @param assetInfo optional metadata about the asset
+	 */
 	emitFile(
 		name: string,
 		content: string | Buffer,
