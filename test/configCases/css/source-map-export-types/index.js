@@ -5,7 +5,6 @@ import * as css from "STYLE_UNDER_TEST";
 // otherwise be optimized out and the CSS module would never be included
 // in the JS bundle.
 globalThis.__keepCssAlive = css;
-
 const fs = __nodeFs;
 const path = __nodePath;
 const NodeBuffer = __NodeBuffer;
