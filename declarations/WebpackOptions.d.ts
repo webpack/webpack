@@ -3068,7 +3068,7 @@ export interface StatsOptions {
  */
 export interface WatchOptions {
 	/**
-	 * Additional files or directories to watch that are not part of the dependency graph (will trigger a rebuild on change).
+	 * Additional files, directories or glob patterns to watch that are not part of the dependency graph (will trigger a rebuild on change). Glob patterns require Node.js >= 22.
 	 */
 	additional?: string[] | string;
 	/**

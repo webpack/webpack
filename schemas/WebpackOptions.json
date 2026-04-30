@@ -5896,18 +5896,18 @@
       "additionalProperties": false,
       "properties": {
         "additional": {
-          "description": "Additional files or directories to watch that are not part of the dependency graph (will trigger a rebuild on change).",
+          "description": "Additional files, directories or glob patterns to watch that are not part of the dependency graph (will trigger a rebuild on change). Glob patterns require Node.js >= 22.",
           "anyOf": [
             {
               "type": "array",
               "items": {
-                "description": "A path to a file or directory that should be watched additionally.",
+                "description": "A path or glob pattern for files/directories that should be watched additionally.",
                 "type": "string",
                 "minLength": 1
               }
             },
             {
-              "description": "A path to a file or directory that should be watched additionally.",
+              "description": "A path or glob pattern for files/directories that should be watched additionally.",
               "type": "string",
               "minLength": 1
             }
