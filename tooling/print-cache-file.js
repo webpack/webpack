@@ -68,8 +68,11 @@ const printData = async (data, indent) => {
 		}
 		return;
 	}
+	/** @type {Map<number, EXPECTED_ANY>} */
 	const referencedValues = new Map();
+	/** @type {Map<number, number>} */
 	const referencedValuesCounters = new Map();
+	/** @type {Map<number, string>} */
 	const referencedTypes = new Map();
 	let currentReference = 0;
 	let currentTypeReference = 0;
