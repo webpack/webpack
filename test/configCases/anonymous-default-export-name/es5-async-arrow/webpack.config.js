@@ -14,5 +14,12 @@ module.exports = {
 			dynamicImport: false,
 			forOf: false
 		}
+	},
+	module: {
+		javascript: {
+			generater: {
+				anonymousDefaultExportName: true
+			}
+		}
 	}
 };
