@@ -3404,10 +3404,6 @@ export interface ExperimentsNormalized {
 	syncWebAssembly?: boolean;
 }
 /**
- * Generator options for javascript modules.
- */
-export interface JavascriptGeneratorOptions {}
-/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -4163,21 +4159,21 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 */
 	"css/module"?: CssModuleGeneratorOptions;
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	javascript?: JavascriptGeneratorOptions;
+	javascript?: EmptyGeneratorOptions;
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/auto"?: JavascriptGeneratorOptions;
+	"javascript/auto"?: EmptyGeneratorOptions;
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/dynamic"?: JavascriptGeneratorOptions;
+	"javascript/dynamic"?: EmptyGeneratorOptions;
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/esm"?: JavascriptGeneratorOptions;
+	"javascript/esm"?: EmptyGeneratorOptions;
 	/**
 	 * Generator options for json modules.
 	 */

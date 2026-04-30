@@ -1628,16 +1628,16 @@
           "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "javascript": {
-          "$ref": "#/definitions/JavascriptGeneratorOptions"
+          "$ref": "#/definitions/EmptyGeneratorOptions"
         },
         "javascript/auto": {
-          "$ref": "#/definitions/JavascriptGeneratorOptions"
+          "$ref": "#/definitions/EmptyGeneratorOptions"
         },
         "javascript/dynamic": {
-          "$ref": "#/definitions/JavascriptGeneratorOptions"
+          "$ref": "#/definitions/EmptyGeneratorOptions"
         },
         "javascript/esm": {
-          "$ref": "#/definitions/JavascriptGeneratorOptions"
+          "$ref": "#/definitions/EmptyGeneratorOptions"
         },
         "json": {
           "$ref": "#/definitions/JsonGeneratorOptions"
@@ -1864,12 +1864,6 @@
           "tsType": "NodeJS.WritableStream & { isTTY?: boolean, columns?: number, rows?: number }"
         }
       }
-    },
-    "JavascriptGeneratorOptions": {
-      "description": "Generator options for javascript modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {}
     },
     "JavascriptParserOptions": {
       "description": "Parser options for javascript modules.",

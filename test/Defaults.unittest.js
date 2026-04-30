@@ -274,7 +274,6 @@ describe("snapshots", () => {
 		      },
 		    ],
 		    "generator": Object {
-		      "javascript": Object {},
 		      "json": Object {
 		        "JSONParse": true,
 		      },

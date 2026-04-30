@@ -8253,24 +8253,24 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	"css/module"?: CssModuleGeneratorOptions;
 
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	javascript?: JavascriptGeneratorOptions;
+	javascript?: EmptyGeneratorOptions;
 
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/auto"?: JavascriptGeneratorOptions;
+	"javascript/auto"?: EmptyGeneratorOptions;
 
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/dynamic"?: JavascriptGeneratorOptions;
+	"javascript/dynamic"?: EmptyGeneratorOptions;
 
 	/**
-	 * Generator options for javascript modules.
+	 * No generator options are supported for this module type.
 	 */
-	"javascript/esm"?: JavascriptGeneratorOptions;
+	"javascript/esm"?: EmptyGeneratorOptions;
 
 	/**
 	 * Generator options for json modules.
@@ -9428,11 +9428,6 @@ declare abstract class JavascriptGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
-
-/**
- * Generator options for javascript modules.
- */
-declare interface JavascriptGeneratorOptions {}
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
