@@ -9432,12 +9432,7 @@ declare abstract class JavascriptGenerator extends Generator {
 /**
  * Generator options for javascript modules.
  */
-declare interface JavascriptGeneratorOptions {
-	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
-}
+declare interface JavascriptGeneratorOptions {}
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
@@ -11499,6 +11494,11 @@ declare interface JavascriptParserOptions {
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
 	amd?: false | { [index: string]: any };
+
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
 
 	/**
 	 * Enable/disable special handling for browserify bundles.

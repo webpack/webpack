@@ -3406,12 +3406,7 @@ export interface ExperimentsNormalized {
 /**
  * Generator options for javascript modules.
  */
-export interface JavascriptGeneratorOptions {
-	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
-}
+export interface JavascriptGeneratorOptions {}
 /**
  * Parser options for javascript modules.
  */
@@ -3420,6 +3415,10 @@ export interface JavascriptParserOptions {
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
 	amd?: Amd;
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
 	/**
 	 * Enable/disable special handling for browserify bundles.
 	 */

@@ -274,9 +274,7 @@ describe("snapshots", () => {
 		      },
 		    ],
 		    "generator": Object {
-		      "javascript": Object {
-		        "anonymousDefaultExportName": true,
-		      },
+		      "javascript": Object {},
 		      "json": Object {
 		        "JSONParse": true,
 		      },
@@ -289,6 +287,7 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "javascript": Object {
+		        "anonymousDefaultExportName": true,
 		        "createRequire": false,
 		        "deferImport": false,
 		        "dynamicImportFetchPriority": false,

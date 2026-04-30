@@ -16,8 +16,8 @@ module.exports = {
 		}
 	},
 	module: {
-		generator: {
-			javascript: {
+		parser: {
+			"javascript/auto": {
 				anonymousDefaultExportName: true
 			}
 		}
