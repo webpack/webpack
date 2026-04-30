@@ -318,7 +318,7 @@ jobs:
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
 
       # Don't run code coverage analysis on older versions of NodeJS, this will speed up our CI
-      - run: yarn integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
+      - run: yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x' || matrix.node-version == '16.x' || matrix.node-version == '18.x' || matrix.node-version == '20.x'
 
       - run: yarn report:cover:merge
