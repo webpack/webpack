@@ -61,3 +61,13 @@ it("should expose only the wasm exports on the deferred namespace", async () => 
 	expect(Reflect.has(dyn, "getNumber")).toBe(true);
 	expect(Reflect.has(dyn, "default")).toBe(false);
 });
+
+// Note: side-effect-counter-style deferral verification (the canonical pattern
+// from `defer-runtime/all.js`) does not currently work for async wasm modules.
+// A JS wrapper that imports the async wasm becomes top-level-async itself,
+// which means: (a) `import defer * as` of the wrapper makes the bundle
+// top-level-async and the test framework cannot register `it()` calls; and
+// (b) dynamic `import.defer` of the wrapper resolves to a proxy that does not
+// re-await the async wasm dep on first access, so wasm exports read as
+// `undefined` even after evaluation. The deferral guarantee for synchronous
+// modules is exercised by the JSON, asset, and CSS tests.

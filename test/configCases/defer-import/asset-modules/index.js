@@ -32,6 +32,23 @@ import resourceEager from "./payload.svg?eager";
 import defer * as deferInline from "./payload.svg?inline";
 import inlineEager from "./payload.svg?inline&eager";
 
+// JS wrappers around each asset type — used to verify the TC39 import-defer
+// invariant that evaluation must be delayed until first observable access on
+// the namespace. Asset modules have no observable evaluation side effects of
+// their own, so each wrapper calls `touch()` at top level; the wrapper
+// (and therefore the asset module behind it) must not be evaluated until
+// `wrapped*.default` is first read.
+import defer * as wrappedText from "./wrapper-text.js";
+import defer * as wrappedBytes from "./wrapper-bytes.js";
+import defer * as wrappedResource from "./wrapper-resource.js";
+import defer * as wrappedInline from "./wrapper-inline.js";
+
+import {
+	assertTouched,
+	assertUntouched,
+	reset
+} from "./side-effect-counter.cjs";
+
 const PAYLOAD_TEXT = "hello asset modules\n";
 const get = Reflect.get;
 
@@ -152,4 +169,36 @@ it("should produce equivalent namespaces for `webpackMode: \"eager\"` defer", as
 	assertIsNamespaceObject(eager);
 	expect(eager.default).toBe(PAYLOAD_TEXT);
 	expect(eager.default).toBe(get(deferText, "default"));
+});
+
+it("should defer evaluation until first access for every asset module type (TC39 spec invariant)", () => {
+	// asset/source via `with { type: "text" }`
+	reset();
+	assertIsNamespaceObject(wrappedText);
+	assertUntouched();
+	expect(get(wrappedText, "default")).toBe(PAYLOAD_TEXT);
+	assertTouched();
+
+	// asset/bytes via `with { type: "bytes" }`
+	reset();
+	assertIsNamespaceObject(wrappedBytes);
+	assertUntouched();
+	expect(new TextDecoder("utf-8").decode(get(wrappedBytes, "default"))).toBe(
+		PAYLOAD_TEXT
+	);
+	assertTouched();
+
+	// asset/resource — URL string
+	reset();
+	assertIsNamespaceObject(wrappedResource);
+	assertUntouched();
+	expect(get(wrappedResource, "default")).toMatch(/^[\da-f]+\.svg$/);
+	assertTouched();
+
+	// asset/inline — data URI string
+	reset();
+	assertIsNamespaceObject(wrappedInline);
+	assertUntouched();
+	expect(get(wrappedInline, "default")).toMatch(/^data:image\/svg\+xml(;|,)/);
+	assertTouched();
 });
