@@ -2,7 +2,7 @@
 __webpack_nonce__ = "nonce";
 __webpack_public_path__ = "https://example.com/public/path/";
 
-it("should prefetch and preload child chunks on chunk load", () => {
+it("should prefetch and preload child chunks on chunk load", async () => {
 	let link, script;
 
 	expect(document.head._children).toHaveLength(3);
@@ -64,76 +64,80 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	expect(link.getAttribute("nonce")).toBe("nonce");
 	expect(link.crossOrigin).toBe("anonymous");
 
-	// Run the script
-	import(/* webpackIgnore: true */ "./chunk1.js");
+	// Run the script — `await` is required: on older V8 the host import
+	// callback for `import(webpackIgnore)` is queued as a microtask, so
+	// without awaiting, `script.onload()` would fire before the chunk's
+	// `webpackChunk.push` runs and the JSONP runtime would reject with
+	// "Loading chunk chunk1 failed".
+	await import(/* webpackIgnore: true */ "./chunk1.js");
 
 	script.onload();
 
-	return promise.then(() => {
-		expect(document.head._children).toHaveLength(8);
+	await promise;
 
-		// Test prefetching for chunk1-c and chunk1-a in this order
-		link = document.head._children[6];
-		expect(link._type).toBe("link");
-		expect(link.rel).toBe("prefetch");
-		expect(link.as).toBe("script");
-		expect(link.href).toBe("https://example.com/public/path/chunk1-c.js");
-		expect(link.crossOrigin).toBe("anonymous");
+	expect(document.head._children).toHaveLength(8);
 
-		link = document.head._children[7];
-		expect(link._type).toBe("link");
-		expect(link.rel).toBe("prefetch");
-		expect(link.as).toBe("script");
-		expect(link.href).toBe("https://example.com/public/path/chunk1-a.js");
-		expect(link.crossOrigin).toBe("anonymous");
+	// Test prefetching for chunk1-c and chunk1-a in this order
+	link = document.head._children[6];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("prefetch");
+	expect(link.as).toBe("script");
+	expect(link.href).toBe("https://example.com/public/path/chunk1-c.js");
+	expect(link.crossOrigin).toBe("anonymous");
 
-		const promise2 = import(
-			/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1.js"
-		);
+	link = document.head._children[7];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("prefetch");
+	expect(link.as).toBe("script");
+	expect(link.href).toBe("https://example.com/public/path/chunk1-a.js");
+	expect(link.crossOrigin).toBe("anonymous");
 
-		// Loading chunk1 again should not trigger prefetch/preload
-		expect(document.head._children).toHaveLength(8);
+	const promise2 = import(
+		/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1.js"
+	);
 
-		const promise3 = import(/* webpackChunkName: "chunk2" */ "./chunk2.js");
+	// Loading chunk1 again should not trigger prefetch/preload
+	expect(document.head._children).toHaveLength(8);
 
-		expect(document.head._children).toHaveLength(9);
+	const promise3 = import(/* webpackChunkName: "chunk2" */ "./chunk2.js");
 
-		// Test normal script loading
-		script = document.head._children[8];
-		expect(script._type).toBe("script");
-		expect(script.src).toBe("https://example.com/public/path/chunk2.js");
-		expect(script.getAttribute("nonce")).toBe("nonce");
-		expect(script.crossOrigin).toBe("anonymous");
-		expect(script.onload).toBeTypeOf("function");
+	expect(document.head._children).toHaveLength(9);
 
-		// Run the script
-		import(/* webpackIgnore: true */ "./chunk2.js");
+	// Test normal script loading
+	script = document.head._children[8];
+	expect(script._type).toBe("script");
+	expect(script.src).toBe("https://example.com/public/path/chunk2.js");
+	expect(script.getAttribute("nonce")).toBe("nonce");
+	expect(script.crossOrigin).toBe("anonymous");
+	expect(script.onload).toBeTypeOf("function");
 
-		script.onload();
+	// Run the script — see note above about awaiting before script.onload().
+	await import(/* webpackIgnore: true */ "./chunk2.js");
 
-		return promise3.then(() => {
-			// Loading chunk2 again should not trigger prefetch/preload as it's already prefetch/preloaded
-			expect(document.head._children).toHaveLength(8);
+	script.onload();
 
-			const promise4 = import(/* webpackChunkName: "chunk1-css" */ "./chunk1.css");
+	await promise3;
 
-			expect(document.head._children).toHaveLength(10);
+	// Loading chunk2 again should not trigger prefetch/preload as it's already prefetch/preloaded
+	expect(document.head._children).toHaveLength(8);
 
-			link = document.head._children[8];
-			expect(link._type).toBe("link");
-			expect(link.rel).toBe("stylesheet");
-			expect(link.href).toBe("https://example.com/public/path/chunk1-css.css");
-			expect(link.crossOrigin).toBe("anonymous");
+	const promise4 = import(/* webpackChunkName: "chunk1-css" */ "./chunk1.css");
 
-			const promise5 = import(/* webpackChunkName: "chunk2-css", webpackPrefetch: true */ "./chunk2.css");
+	expect(document.head._children).toHaveLength(10);
 
-			expect(document.head._children).toHaveLength(12);
+	link = document.head._children[8];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("stylesheet");
+	expect(link.href).toBe("https://example.com/public/path/chunk1-css.css");
+	expect(link.crossOrigin).toBe("anonymous");
 
-			link = document.head._children[10];
-			expect(link._type).toBe("link");
-			expect(link.rel).toBe("stylesheet");
-			expect(link.href).toBe("https://example.com/public/path/chunk2-css.css");
-			expect(link.crossOrigin).toBe("anonymous");
-		});
-	});
+	const promise5 = import(/* webpackChunkName: "chunk2-css", webpackPrefetch: true */ "./chunk2.css");
+
+	expect(document.head._children).toHaveLength(12);
+
+	link = document.head._children[10];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("stylesheet");
+	expect(link.href).toBe("https://example.com/public/path/chunk2-css.css");
+	expect(link.crossOrigin).toBe("anonymous");
 });
