@@ -58,6 +58,8 @@
     "test:basic:deno": "yarn test:base:deno --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:unit": "yarn test:base --testMatch \"<rootDir>/test/*.unittest.js\"",
     "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
+    "test:integration:a": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\"",
+    "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
     "test:test262": "yarn test:base --testMatch \"<rootDir>/test/*.spectest.js\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
