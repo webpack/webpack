@@ -217,10 +217,17 @@ const describeCases = (config) => {
 										triggeringFilename = filename;
 									}
 								);
+								const optionsList = Array.isArray(options)
+									? options
+									: [options];
+								const mergedWatchOptions = optionsList.map((item) => ({
+									aggregateTimeout: 1000,
+									...item.watchOptions
+								}));
 								compiler.watch(
-									{
-										aggregateTimeout: 1000
-									},
+									Array.isArray(options)
+										? mergedWatchOptions
+										: mergedWatchOptions[0],
 									async (err, stats) => {
 										if (err) return compilationFinished(err);
 										if (!stats) {

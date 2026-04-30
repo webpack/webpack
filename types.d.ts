@@ -23465,6 +23465,11 @@ declare interface WatchIgnorePluginOptions {
  */
 declare interface WatchOptions {
 	/**
+	 * Additional files or directories to watch that are not part of the dependency graph (will trigger a rebuild on change).
+	 */
+	additional?: string | string[];
+
+	/**
 	 * Delay the rebuilt after the first change. Value is a time in ms.
 	 */
 	aggregateTimeout?: number;
