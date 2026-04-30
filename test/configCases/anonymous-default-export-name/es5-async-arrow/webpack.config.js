@@ -14,5 +14,12 @@ module.exports = {
 			dynamicImport: false,
 			forOf: false
 		}
+	},
+	module: {
+		parser: {
+			"javascript/auto": {
+				anonymousDefaultExportName: true
+			}
+		}
 	}
 };

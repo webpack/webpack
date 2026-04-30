@@ -2569,6 +2569,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.parser.javascript.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-amd": Object {
     "configs": Array [
       Object {
@@ -2582,6 +2595,19 @@ Object {
       },
     ],
     "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3353,6 +3379,19 @@ Object {
       },
     ],
     "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4135,6 +4174,19 @@ Object {
       },
     ],
     "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
     "multiple": false,
     "simpleType": "boolean",
   },

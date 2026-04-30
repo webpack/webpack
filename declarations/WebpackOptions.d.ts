@@ -3412,6 +3412,10 @@ export interface JavascriptParserOptions {
 	 */
 	amd?: Amd;
 	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
+	/**
 	 * Enable/disable special handling for browserify bundles.
 	 */
 	browserify?: boolean;
