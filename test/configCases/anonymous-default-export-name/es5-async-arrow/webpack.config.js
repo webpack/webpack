@@ -16,8 +16,8 @@ module.exports = {
 		}
 	},
 	module: {
-		javascript: {
-			generater: {
+		generator: {
+			javascript: {
 				anonymousDefaultExportName: true
 			}
 		}
