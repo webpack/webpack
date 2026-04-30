@@ -1628,16 +1628,16 @@
           "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "javascript": {
-          "$ref": "#/definitions/EmptyGeneratorOptions"
+          "$ref": "#/definitions/JavascriptGeneratorOptions"
         },
         "javascript/auto": {
-          "$ref": "#/definitions/EmptyGeneratorOptions"
+          "$ref": "#/definitions/JavascriptGeneratorOptions"
         },
         "javascript/dynamic": {
-          "$ref": "#/definitions/EmptyGeneratorOptions"
+          "$ref": "#/definitions/JavascriptGeneratorOptions"
         },
         "javascript/esm": {
-          "$ref": "#/definitions/EmptyGeneratorOptions"
+          "$ref": "#/definitions/JavascriptGeneratorOptions"
         },
         "json": {
           "$ref": "#/definitions/JsonGeneratorOptions"
@@ -1862,6 +1862,17 @@
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
           "tsType": "NodeJS.WritableStream & { isTTY?: boolean, columns?: number, rows?: number }"
+        }
+      }
+    },
+    "JavascriptGeneratorOptions": {
+      "description": "Generator options for javascript modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anonymousDefaultExportName": {
+          "description": "Set .name to \"default\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+          "type": "boolean"
         }
       }
     },
@@ -2748,10 +2759,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "anonymousDefaultExportName": {
-          "description": "Set .name to \"default\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
-          "type": "boolean"
-        },
         "avoidEntryIife": {
           "description": "Avoid wrapping the entry module in an IIFE.",
           "type": "boolean"
@@ -2920,10 +2927,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "anonymousDefaultExportName": {
-          "description": "Set .name to \"default\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
-          "type": "boolean"
-        },
         "avoidEntryIife": {
           "description": "Avoid wrapping the entry module in an IIFE.",
           "type": "boolean"

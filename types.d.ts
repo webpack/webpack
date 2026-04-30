@@ -8253,24 +8253,24 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	"css/module"?: CssModuleGeneratorOptions;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	javascript?: EmptyGeneratorOptions;
+	javascript?: JavascriptGeneratorOptions;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
+	"javascript/auto"?: JavascriptGeneratorOptions;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
+	"javascript/dynamic"?: JavascriptGeneratorOptions;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
+	"javascript/esm"?: JavascriptGeneratorOptions;
 
 	/**
 	 * Generator options for json modules.
@@ -9427,6 +9427,16 @@ declare abstract class JavascriptGenerator extends Generator {
 		module: NormalModule,
 		generateContext: GenerateContext
 	): null | Source;
+}
+
+/**
+ * Generator options for javascript modules.
+ */
+declare interface JavascriptGeneratorOptions {
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
@@ -16403,11 +16413,6 @@ declare interface Open {
  */
 declare interface Optimization {
 	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
-
-	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
 	avoidEntryIife?: boolean;
@@ -16557,11 +16562,6 @@ declare interface Optimization {
  * Enables/Disables integrated optimizations.
  */
 declare interface OptimizationNormalized {
-	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
-
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
@@ -16740,7 +16740,6 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<undefined | boolean>;
-	anonymousDefaultExportName: NonNullable<undefined | boolean>;
 	avoidEntryIife: NonNullable<undefined | boolean>;
 	emitOnErrors: NonNullable<undefined | boolean>;
 	checkWasmTypes: NonNullable<undefined | boolean>;

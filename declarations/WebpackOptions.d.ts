@@ -1945,10 +1945,6 @@ export interface NodeOptions {
  */
 export interface Optimization {
 	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
-	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
 	avoidEntryIife?: boolean;
@@ -3408,6 +3404,15 @@ export interface ExperimentsNormalized {
 	syncWebAssembly?: boolean;
 }
 /**
+ * Generator options for javascript modules.
+ */
+export interface JavascriptGeneratorOptions {
+	/**
+	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
+	 */
+	anonymousDefaultExportName?: boolean;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -3640,10 +3645,6 @@ export interface ModuleOptionsNormalized {
  * Enables/Disables integrated optimizations.
  */
 export interface OptimizationNormalized {
-	/**
-	 * Set .name to "default" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.
-	 */
-	anonymousDefaultExportName?: boolean;
 	/**
 	 * Avoid wrapping the entry module in an IIFE.
 	 */
@@ -4163,21 +4164,21 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 */
 	"css/module"?: CssModuleGeneratorOptions;
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	javascript?: EmptyGeneratorOptions;
+	javascript?: JavascriptGeneratorOptions;
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
+	"javascript/auto"?: JavascriptGeneratorOptions;
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
+	"javascript/dynamic"?: JavascriptGeneratorOptions;
 	/**
-	 * No generator options are supported for this module type.
+	 * Generator options for javascript modules.
 	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
+	"javascript/esm"?: JavascriptGeneratorOptions;
 	/**
 	 * Generator options for json modules.
 	 */

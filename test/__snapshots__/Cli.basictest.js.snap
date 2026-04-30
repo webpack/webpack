@@ -2029,6 +2029,58 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-javascript-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.generator.javascript.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-javascript-auto-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.generator.javascript/auto.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-javascript-dynamic-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.generator.javascript/dynamic.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-javascript-esm-anonymous-default-export-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+        "multiple": false,
+        "path": "module.generator.javascript/esm.anonymousDefaultExportName",
+        "type": "boolean",
+      },
+    ],
+    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-json-json-parse": Object {
     "configs": Array [
       Object {
@@ -6275,19 +6327,6 @@ Object {
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
     "simpleType": "string",
-  },
-  "optimization-anonymous-default-export-name": Object {
-    "configs": Array [
-      Object {
-        "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
-        "multiple": false,
-        "path": "optimization.anonymousDefaultExportName",
-        "type": "boolean",
-      },
-    ],
-    "description": "Set .name to \\"default\\" for anonymous default export functions and classes per ES spec. Disable to reduce output size when .name is not needed.",
-    "multiple": false,
-    "simpleType": "boolean",
   },
   "optimization-avoid-entry-iife": Object {
     "configs": Array [
