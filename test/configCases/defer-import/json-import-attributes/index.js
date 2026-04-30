@@ -1,5 +1,12 @@
 import defer * as data from "./config.json" with { type: "json" };
 import defer * as dataStr from "./config.json" with { "type": "json" };
+import defer * as wrapped from "./wrapper.js";
+
+import {
+	assertTouched,
+	assertUntouched,
+	reset
+} from "./side-effect-counter.cjs";
 
 function assertIsNamespaceObject(ns) {
 	if (typeof ns !== "object" || ns === null) {
@@ -85,4 +92,25 @@ it("should match Node.js for dynamic `import.defer` of a JSON module", async () 
 it("should produce the same JSON value for static and dynamic `import defer`", async () => {
 	const dyn = await import.defer("./config.json", { with: { type: "json" } });
 	expect(dyn.default).toEqual(data.default);
+});
+
+it("should defer evaluation until first access (TC39 spec invariant)", () => {
+	// Synthetic JSON modules have no observable evaluation side effects, so
+	// we wrap the JSON import in a JS module (`wrapper.js`) that calls
+	// `touch()` at top level. `import defer * as wrapped` must not evaluate
+	// the wrapper until the namespace is observably accessed; this is the
+	// core guarantee of the TC39 import-defer proposal.
+	reset();
+	assertIsNamespaceObject(wrapped);
+	assertUntouched();
+
+	const value = Reflect.get(wrapped, "default");
+	assertTouched();
+
+	expect(value.value).toBe(42);
+
+	// Subsequent accesses must not re-evaluate the wrapper.
+	reset();
+	expect(Reflect.get(wrapped, "default")).toBe(value);
+	assertUntouched();
 });
