@@ -230,8 +230,7 @@ describe("normalize dep version", () => {
 		"https://www.github.com/foo/bar": "",
 		"foo/bar#branch with space": "branch with space",
 		"https://github.com/foo/bar/tree/branch": "branch",
-		"user..test--/..foo-js# . . . . . some . tags / / /":
-			" . . . . . some . tags / / /"
+		"user..test--/..foo-js# . . . . . some . tags / / /": ""
 	};
 
 	const gitlabInvalid = [
