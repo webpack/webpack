@@ -49,6 +49,28 @@
         "profile": {
           "description": "Collect profile data for progress steps. Default: false.",
           "enum": [true, false, null]
+        },
+        "progressBar": {
+          "description": "Generate progress bar. Default: false.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "description": "Color used for the filled portion of the bar.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name shown before the progress bar.",
+                  "type": "string"
+                }
+              }
+            }
+          ]
         }
       }
     }

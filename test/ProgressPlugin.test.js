@@ -278,6 +278,80 @@ describe("ProgressPlugin", () => {
 		expect(plugin.profile).toBe(false);
 	});
 
+	it("should normalize progressBar option", () => {
+		expect(new webpack.ProgressPlugin({}).progressBar).toBe(false);
+		expect(new webpack.ProgressPlugin({ progressBar: false }).progressBar).toBe(
+			false
+		);
+		expect(
+			new webpack.ProgressPlugin({ progressBar: true }).progressBar
+		).toEqual({ name: "Build", color: "green" });
+		expect(
+			new webpack.ProgressPlugin({ progressBar: { name: "Custom" } })
+				.progressBar
+		).toEqual({ name: "Custom", color: "green" });
+		expect(
+			new webpack.ProgressPlugin({ progressBar: { color: "red" } }).progressBar
+		).toEqual({ name: "Build", color: "red" });
+		expect(
+			new webpack.ProgressPlugin({
+				progressBar: { name: "Custom", color: "cyan" }
+			}).progressBar
+		).toEqual({ name: "Custom", color: "cyan" });
+	});
+
+	it("should render progress bar with block characters when enabled", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: { name: "TestBar", color: "magenta" }
+		});
+
+		process.stderr.columns = 70;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toContain("━");
+			expect(logs).toContain("●");
+			expect(logs).toContain("TestBar");
+			expect(logs).toEqual(expect.stringMatching(/\(\d+%\)/));
+		});
+	});
+
+	it("should render progress bar when applied to MultiCompiler", () => {
+		const compiler = createMultiCompiler({
+			progressBar: { name: "MultiBar", color: "cyan" }
+		});
+
+		process.stderr.columns = 200;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+
+			expect(logs).toContain("━");
+			expect(logs).toContain("●");
+			expect(logs).toContain("MultiBar");
+			expect(logs).toEqual(expect.stringMatching(/\(\d+%\)/));
+		});
+	});
+
+	it("should render progress bars for two parallel compilers", () => {
+		const compilerA = createSimpleCompiler({
+			progressBar: { name: "BarA", color: "red" }
+		});
+		const compilerB = createSimpleCompiler({
+			progressBar: { name: "BarB", color: "blue" }
+		});
+
+		process.stderr.columns = 70;
+		return Promise.all([
+			runCompilerAsync(compilerA),
+			runCompilerAsync(compilerB)
+		]).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toContain("BarA");
+			expect(logs).toContain("BarB");
+			expect(logs).toContain("━");
+			expect(logs).toContain("●");
+		});
+	});
+
 	it("should get the custom handler text from the log", () => {
 		const compiler = createSimpleCompilerWithCustomHandler();
 
