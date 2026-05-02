@@ -1,0 +1,7 @@
+.sheet-a-dep {
+	font-weight: bold;
+}
+---
+.sheet-a-dep-updated {
+	font-weight: normal;
+}

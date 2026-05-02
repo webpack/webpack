@@ -1,0 +1,9 @@
+@import url(./style-a-dep.css);
+
+.style-a {
+	color: red;
+}
+---
+.style-a {
+	color: red;
+}

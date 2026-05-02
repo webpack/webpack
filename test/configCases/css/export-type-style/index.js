@@ -153,5 +153,5 @@ it("should have the correct total number of style tags", () => {
 	// empty-middle-dep.css, empty-middle.css,
 	// empty-chain-leaf.css, empty-chain-b.css, empty-chain-a.css, empty-chain-top.css
 	// = 24
-	expect(styles.length).toBe(24);
+	expect(styles.length).toBe(process.env.CONCAT ? 1 : 24);
 });
