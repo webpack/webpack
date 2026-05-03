@@ -152,8 +152,8 @@
     "jest-cli": "^30.3.0",
     "jest-diff": "^30.3.0",
     "jest-environment-node": "^30.3.0",
-    "jest-snapshot": "^30.3.0",
     "jest-junit": "^17.0.0",
+    "jest-snapshot": "^30.3.0",
     "json-loader": "^0.5.7",
     "json5": "^2.1.3",
     "less": "^4.6.4",
@@ -198,6 +198,7 @@
     "url-loader": "^4.1.0",
     "wast-loader": "^1.12.1",
     "webassembly-feature": "1.3.0",
+    "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
     "xxhashjs": "^0.2.2",
     "yamljs": "^0.3.0"
