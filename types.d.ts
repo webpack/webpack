@@ -12057,6 +12057,11 @@ declare interface KnownBuildMeta {
 	jsIncompatibleExports?: Record<string, string>;
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
 	exportsSourceByRuntime?: Map<string, string>;
+
+	/**
+	 * namespace object should not include __esModule property
+	 */
+	namespaceWithoutEsModule?: boolean;
 }
 declare interface KnownContext {
 	/**
