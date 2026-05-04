@@ -44,6 +44,10 @@ import {
 	reset
 } from "./side-effect-counter.cjs";
 
+// Normalize CRLF -> LF for cross-platform stability — `.gitattributes`
+// pins this directory to `eol=lf`, but defending in code keeps the test
+// robust if a user has a stricter `core.autocrlf` override.
+const normalize = s => s.replace(/\r\n/g, "\n");
 const PAYLOAD_TEXT = "hello asset modules\n";
 
 function assertIsNamespaceObject(ns) {
@@ -74,7 +78,7 @@ it("should defer asset/source via static `import defer` + `with { type: 'text' }
 	assertOnlyDefault(deferText);
 
 	expect(typeof deferText.default).toBe("string");
-	expect(deferText.default).toBe(PAYLOAD_TEXT);
+	expect(normalize(deferText.default)).toBe(PAYLOAD_TEXT);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
 	expect(deferText.default).toBe(textEager);
 
@@ -87,7 +91,7 @@ it("should defer asset/source via dynamic `import.defer` + `with { type: 'text' 
 	const dyn = await import.defer("./payload.txt", { with: { type: "text" } });
 	assertIsNamespaceObject(dyn);
 	assertOnlyDefault(dyn);
-	expect(dyn.default).toBe(PAYLOAD_TEXT);
+	expect(normalize(dyn.default)).toBe(PAYLOAD_TEXT);
 	expect(dyn.default).toBe(deferText.default);
 });
 
@@ -96,7 +100,7 @@ it("should defer asset/bytes via static `import defer` + `with { type: 'bytes' }
 	assertOnlyDefault(deferBytes);
 
 	const decoder = new TextDecoder("utf-8");
-	expect(decoder.decode(deferBytes.default)).toBe(PAYLOAD_TEXT);
+	expect(normalize(decoder.decode(deferBytes.default))).toBe(PAYLOAD_TEXT);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
 	expect(decoder.decode(deferBytes.default)).toBe(
 		decoder.decode(bytesEager)
@@ -112,7 +116,7 @@ it("should defer asset/bytes via dynamic `import.defer` + `with { type: 'bytes' 
 	assertIsNamespaceObject(dyn);
 	assertOnlyDefault(dyn);
 	const decoder = new TextDecoder("utf-8");
-	expect(decoder.decode(dyn.default)).toBe(PAYLOAD_TEXT);
+	expect(normalize(decoder.decode(dyn.default))).toBe(PAYLOAD_TEXT);
 	expect(decoder.decode(dyn.default)).toBe(
 		decoder.decode(deferBytes.default)
 	);
@@ -161,7 +165,7 @@ it("should produce equivalent namespaces for `webpackMode: \"eager\"` defer", as
 		{ with: { type: "text" } }
 	);
 	assertIsNamespaceObject(eager);
-	expect(eager.default).toBe(PAYLOAD_TEXT);
+	expect(normalize(eager.default)).toBe(PAYLOAD_TEXT);
 	expect(eager.default).toBe(deferText.default);
 });
 
@@ -170,16 +174,16 @@ it("should defer evaluation until first access for every asset module type (TC39
 	reset();
 	assertIsNamespaceObject(wrappedText);
 	assertUntouched();
-	expect(wrappedText.default).toBe(PAYLOAD_TEXT);
+	expect(normalize(wrappedText.default)).toBe(PAYLOAD_TEXT);
 	assertTouched();
 
 	// asset/bytes via `with { type: "bytes" }`
 	reset();
 	assertIsNamespaceObject(wrappedBytes);
 	assertUntouched();
-	expect(new TextDecoder("utf-8").decode(wrappedBytes.default)).toBe(
-		PAYLOAD_TEXT
-	);
+	expect(
+		normalize(new TextDecoder("utf-8").decode(wrappedBytes.default))
+	).toBe(PAYLOAD_TEXT);
 	assertTouched();
 
 	// asset/resource — URL string
