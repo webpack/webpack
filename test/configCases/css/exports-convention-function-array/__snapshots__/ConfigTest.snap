@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css exports-convention-function-array exported tests should export both the original and the uppercase form when exportsConvention returns an array 1`] = `
+Object {
+  "BTN-INFO_IS-DISABLED": "style_module_css-btn-info_is-disabled",
+  "FOO_BAR": "style_module_css-foo_bar",
+  "SIMPLE": "style_module_css-simple",
+  "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
+  "foo_bar": "style_module_css-foo_bar",
+  "simple": "style_module_css-simple",
+}
+`;

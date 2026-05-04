@@ -1,0 +1,16 @@
+.button {
+	color: red;
+}
+
+.primary {
+	composes: button;
+	background: blue;
+}
+
+.PascalCase {
+	color: green;
+}
+
+.with-dashes {
+	color: purple;
+}
