@@ -10,6 +10,7 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
+	// @ts-expect-error remove when when we will migrate to ECMA modules
 	// eslint-disable-next-line import/no-unresolved, n/no-unsupported-features/es-syntax
 	const asc = (await import("assemblyscript/asc")).default;
 

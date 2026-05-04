@@ -848,6 +848,17 @@ declare interface BaseResolveRequest {
 	 */
 	__innerRequest_relativePath?: string;
 }
+declare interface BasenameCacheEntry {
+	/**
+	 * cached dirname function
+	 */
+	fn: (maybePath: string, suffix?: string) => string;
+
+	/**
+	 * the underlying cache map
+	 */
+	cache: Map<string, Map<undefined | string, undefined | string>>;
+}
 declare abstract class BasicEvaluatedExpression {
 	type: number;
 	range?: [number, number];
@@ -3950,6 +3961,52 @@ declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
 	contextModuleFactory: ContextModuleFactory;
 }
+declare interface CompiledAliasOption {
+	/**
+	 * original alias name
+	 */
+	name: string;
+
+	/**
+	 * name + "/" — precomputed to avoid per-resolve concat
+	 */
+	nameWithSlash: string;
+
+	/**
+	 * alias target(s)
+	 */
+	alias: Alias;
+
+	/**
+	 * normalized onlyModule flag
+	 */
+	onlyModule: boolean;
+
+	/**
+	 * absolute form of `name` (with slash ending), null when not absolute
+	 */
+	absolutePath: null | string;
+
+	/**
+	 * substring before the single "*" in `name`, null when no wildcard
+	 */
+	wildcardPrefix: null | string;
+
+	/**
+	 * substring after the single "*" in `name`, null when no wildcard
+	 */
+	wildcardSuffix: null | string;
+
+	/**
+	 * first character code of `name` — used as a cheap screen on the hot path. `-1` indicates "matches any first char" (empty wildcard prefix).
+	 */
+	firstCharCode: number;
+
+	/**
+	 * true when `alias` is an array — precomputed so the hot path skips `Array.isArray`
+	 */
+	arrayAlias: boolean;
+}
 declare class Compiler {
 	/**
 	 * Creates an instance of Compiler.
@@ -5858,6 +5915,17 @@ declare interface DirentTypes<T extends string | Buffer = string> {
 	 * path
 	 */
 	path?: string;
+}
+declare interface DirnameCacheEntry {
+	/**
+	 * cached dirname function
+	 */
+	fn: (maybePath: string) => string;
+
+	/**
+	 * the underlying cache map
+	 */
+	cache: Map<string, string>;
 }
 declare interface Disposable {
 	[Symbol.dispose](): void;
@@ -11704,6 +11772,17 @@ declare interface JavascriptParserOptions {
 type JavascriptParserState = ParserStateBase &
 	Record<string, any> &
 	KnownJavascriptParserState;
+declare interface JoinCacheEntry {
+	/**
+	 * cached join function
+	 */
+	fn: (rootPath: string, request: string) => string;
+
+	/**
+	 * the underlying cache map
+	 */
+	cache: Map<string, Map<string, undefined | string>>;
+}
 declare abstract class JsonData {
 	/**
 	 * Returns raw JSON data.
@@ -17918,6 +17997,22 @@ declare interface ParserStateBase {
 	compilation: Compilation;
 	options: WebpackOptionsNormalizedWithDefaults;
 }
+declare interface PathCacheFunctions {
+	/**
+	 * cached join
+	 */
+	join: JoinCacheEntry;
+
+	/**
+	 * cached dirname
+	 */
+	dirname: DirnameCacheEntry;
+
+	/**
+	 * cached basename
+	 */
+	basename: BasenameCacheEntry;
+}
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
@@ -19425,9 +19520,9 @@ declare interface ResolveContext {
 	missingDependencies?: WriteOnlySet<string>;
 
 	/**
-	 * set of hooks' calls. For instance, `resolve → parsedResolve → describedResolve`,
+	 * tip of the resolver call stack (a singly-linked list with Set-like API). For instance, `resolve → parsedResolve → describedResolve`. Accepts a legacy `Set<string>` for back-compat with older callers; it is normalized internally without a hot-path branch.
 	 */
-	stack?: Set<string>;
+	stack?: Set<string> | StackEntry;
 
 	/**
 	 * log function
@@ -19704,6 +19799,11 @@ declare interface ResolveOptionsResolverFactoryObject1 {
 	extensionAlias: ExtensionAliasOption[];
 
 	/**
+	 * apply extension alias to exports field targets
+	 */
+	extensionAliasForExports: boolean;
+
+	/**
 	 * cache predicate
 	 */
 	cachePredicate: (predicate: ResolveRequest) => boolean;
@@ -19838,6 +19938,11 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	 * An object which maps extension to extension aliases
 	 */
 	extensionAlias?: ExtensionAliasOptions;
+
+	/**
+	 * Also apply `extensionAlias` to paths resolved through the package.json `exports` field. Off by default (Node.js-aligned); when enabled, matches TypeScript's behavior for packages that ship TS sources alongside compiled JS.
+	 */
+	extensionAliasForExports?: boolean;
 
 	/**
 	 * A list of alias fields in description files
@@ -20005,6 +20110,7 @@ declare interface ResolvedOptions {
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsResolverFactoryObject1;
+	pathCache: PathCacheFunctions;
 	hooks: KnownHooks;
 	ensureHook(
 		name:
@@ -20029,10 +20135,56 @@ declare abstract class Resolver {
 		null | ResolveRequest
 	>;
 	resolveSync(
+		path: string,
+		request: string,
+		resolveContext?: ResolveContext
+	): string | false;
+	resolveSync(
 		context: ContextTypes,
 		path: string,
-		request: string
+		request: string,
+		resolveContext?: ResolveContext
 	): string | false;
+	resolvePromise(
+		path: string,
+		request: string,
+		resolveContext?: ResolveContext
+	): Promise<string | false>;
+	resolvePromise(
+		context: ContextTypes,
+		path: string,
+		request: string,
+		resolveContext?: ResolveContext
+	): Promise<string | false>;
+	resolve(
+		path: string,
+		request: string,
+		callback: (
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
+		) => void
+	): void;
+	resolve(
+		path: string,
+		request: string,
+		resolveContext: ResolveContext,
+		callback: (
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
+		) => void
+	): void;
+	resolve(
+		context: ContextTypes,
+		path: string,
+		request: string,
+		callback: (
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
+		) => void
+	): void;
 	resolve(
 		context: ContextTypes,
 		path: string,
@@ -20058,8 +20210,10 @@ declare abstract class Resolver {
 	isModule(path: string): boolean;
 	isPrivate(path: string): boolean;
 	isDirectory(path: string): boolean;
-	join(path: string, request: string): string;
 	normalize(path: string): string;
+	join(path: string, request: string): string;
+	dirname(path: string): string;
+	basename(path: string, suffix?: string): string;
 }
 declare interface ResolverCache {
 	direct: WeakMap<ResolveOptionsWithDependencyType, ResolverWithOptions>;
@@ -22059,6 +22213,41 @@ declare interface SplitData {
 	modules: string[];
 	size: number;
 }
+declare abstract class StackEntry {
+	name?: string;
+	path: string | false;
+	request: string;
+	query: string;
+	fragment: string;
+	directory: boolean;
+	module: boolean;
+	parent?: StackEntry;
+
+	/**
+	 * Strings seeded by callers that still pass `stack: new Set([...])`.
+	 * Propagated through the chain so deeper `doResolve` calls still see
+	 * them during recursion checks. `undefined` in the common case so
+	 * there is no extra work on the hot path.
+	 */
+	preSeeded?: Set<string>;
+
+	/**
+	 * Walk the linked list looking for an entry with the same request shape.
+	 * Set-compatible: callers that used `stack.has(entry)` keep working.
+	 */
+	has(query: StackEntry): boolean;
+
+	/**
+	 * Number of entries on the stack (oldest-to-newest length).
+	 */
+	get size(): number;
+
+	/**
+	 * Human-readable form used in recursion error messages and logs.
+	 * Matches the historical string format so existing log parsers stay valid.
+	 */
+	toString(): string;
+}
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
 	stack: Map<K, InternalCell<V>>[];
@@ -23237,7 +23426,7 @@ declare interface TsconfigPathsData {
 	/**
 	 * tsconfig file data
 	 */
-	alias: AliasOption[];
+	alias: CompiledAliasOption[];
 
 	/**
 	 * tsconfig file data
@@ -23264,6 +23453,11 @@ declare interface TsconfigPathsMap {
 	 * all contexts (main + refs) for quick lookup
 	 */
 	allContexts: { [index: string]: TsconfigPathsData };
+
+	/**
+	 * precomputed `Object.keys(allContexts)` — read-only; used on the `_selectPathsDataForContext` hot path
+	 */
+	contextList: string[];
 
 	/**
 	 * file dependencies
