@@ -1066,15 +1066,7 @@ const knownProductionBuildBugs = [
 	"module-code/instn-star-props-nrml.js",
 	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
 	// Production concatenation orders eager import after defer
-	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
-	// Production inner graph drops using initializers
-	"statements/using/Symbol.dispose-getter.js",
-	"statements/using/gets-initializer-Symbol.dispose-property-once.js",
-	"statements/using/initializer-disposed-at-end-of-block.js",
-	"statements/using/initializer-disposed-at-end-of-forstatement.js",
-	"statements/using/multiple-resources-disposed-in-reverse-order.js",
-	"statements/using/puts-initializer-on-top-of-disposableresourcestack-multiple-bindings.js",
-	"statements/using/puts-initializer-on-top-of-disposableresourcestack-subsequent-usings.js"
+	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js"
 ];
 /* cspell:enable */
 
