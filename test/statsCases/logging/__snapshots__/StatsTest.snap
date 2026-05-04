@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`StatsTestCases logging should print correct stats for logging 1`] = `
-"<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
+"<i> [LogTestPlugin] Info
 asset <CLR=32,BOLD>main.js</CLR> X bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
 <CLR=BOLD>./index.js</CLR> X bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
 
