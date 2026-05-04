@@ -1,0 +1,9 @@
+@import "./at-import-chain-ae.css";
+@import "./at-import-chain-aa.css";
+@import "./at-import-chain-ab.css";
+@import "./at-import-chain-ac.css";
+@import "./at-import-chain-ad.css";
+
+body {
+	background: red;
+}

@@ -1,0 +1,50 @@
+.a {
+	color: green;
+	animation: a;
+}
+
+@keyframes a {
+	0% { left: 0; }
+	100% { left: 100px; }
+}
+
+@keyframes b {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.b {
+	animation: b;
+}
+
+@keyframes :global(c) {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.c {
+	animation: c1;
+	animation: c2, c3, c4;
+}
+
+@keyframes :global(d) {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.d {
+	animation-name: d;
+}
+
+:global(.e) {
+	animation: a;
+}
+
+@keyframes :local(local-keyframe) {
+	0% { left: 0; }
+	100% { left: 100px; }
+}
+
+.f {
+	animation-name: local-keyframe;
+}

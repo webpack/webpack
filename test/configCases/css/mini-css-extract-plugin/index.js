@@ -108,3 +108,35 @@ it("should work with local `@import` with media query, supports and layer", asyn
 
 	expect(links.find((item) => /local-at-import-with-media/.test(item.href)).sheet.css).toMatchSnapshot();
 });
+
+it("should work with `@import` in the entry", async () => {
+	await import("./at-import-in-the-entry.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /at-import-in-the-entry_js/.test(item.href)).sheet.css).toMatchSnapshot();
+});
+
+it("should work with deeply chained local `@import`", async () => {
+	await import("./at-import-chain.js");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /at-import-chain_js/.test(item.href)).sheet.css).toMatchSnapshot();
+});
+
+it("should work with multiple async chunks importing the same CSS in different order", async () => {
+	const one = await import("./content-entries-one.js");
+	const two = await import("./content-entries-two.js");
+
+	expect(one.default).toBe("one");
+	expect(two.default).toBe("two");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(
+		links
+			.filter((item) => /content-entries-(one|two)_js/.test(item.href))
+			.map((item) => item.sheet.css)
+	).toMatchSnapshot();
+});

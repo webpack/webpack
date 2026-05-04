@@ -1,0 +1,6 @@
+@import "./at-import-chain-ba.css";
+@import "./at-import-chain-bb.css";
+
+body {
+	background: yellow;
+}

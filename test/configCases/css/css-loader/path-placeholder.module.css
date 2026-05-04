@@ -1,0 +1,11 @@
+.foo {
+	color: red;
+}
+
+.foo\/bar {
+	color: blue;
+}
+
+.\[\/\?\<\>\\\\\3A \*\|\"\3A \] {
+	color: yellow;
+}

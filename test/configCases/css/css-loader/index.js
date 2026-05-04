@@ -26,6 +26,10 @@ import * as styles24 from "./icss.module.css";
 import * as styles25 from "./empty.module.css";
 import * as styles26 from "./component-name.module.css";
 import * as styles27 from "./composes-chain.module.css";
+import * as styles28 from "./file.with.many.dots.in.name.module.css";
+import * as styles29 from "./composes-duplicate.module.css";
+import * as styles30 from "./keyframes-leak-scope.module.css";
+import * as styles31 from "./path-placeholder.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -64,5 +68,9 @@ it("should work", () => {
 	expect(styles25).toMatchSnapshot();
 	expect(styles26).toMatchSnapshot();
 	expect(styles27).toMatchSnapshot();
+	expect(styles28).toMatchSnapshot();
+	expect(styles29).toMatchSnapshot();
+	expect(styles30).toMatchSnapshot();
+	expect(styles31).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

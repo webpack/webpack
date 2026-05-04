@@ -65,6 +65,25 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 "
 `;
 
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with \`@import\` in the entry 1`] = `
+"/*!********************************************************!*\\\\
+  !*** external \\"http://some/path/to/manrope-fonts.css\\" ***!
+  \\\\********************************************************/
+@import url(\\"http://some/path/to/manrope-fonts.css\\");
+/*!******************************************!*\\\\
+  !*** css ./at-import-in-the-entry-a.css ***!
+  \\\\******************************************/
+body {
+	font-family: \\"Manrope\\";
+}
+
+/*!******************************************!*\\\\
+  !*** css ./at-import-in-the-entry-b.css ***!
+  \\\\******************************************/
+
+"
+`;
+
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with asset modules 1`] = `
 "/*!*******************************!*\\\\
   !*** css ./asset-modules.css ***!
@@ -129,6 +148,75 @@ Object {
   "b__class": "bHJbOX",
   "cClass": "PPFDk2",
 }
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with deeply chained local \`@import\` 1`] = `
+"/*!************************************!*\\\\
+  !*** css ./at-import-chain-ae.css ***!
+  \\\\************************************/
+.ae {
+	background: green;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-aa.css ***!
+  \\\\************************************/
+.aa {
+	background: green;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-ab.css ***!
+  \\\\************************************/
+.ab {
+	background: green;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-ac.css ***!
+  \\\\************************************/
+.ac {
+	background: green;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-ad.css ***!
+  \\\\************************************/
+.ad {
+	background: green;
+}
+
+/*!***********************************!*\\\\
+  !*** css ./at-import-chain-a.css ***!
+  \\\\***********************************/
+
+body {
+	background: red;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-ba.css ***!
+  \\\\************************************/
+.ba {
+	background: green;
+}
+
+/*!************************************!*\\\\
+  !*** css ./at-import-chain-bb.css ***!
+  \\\\************************************/
+.bb {
+	background: green;
+}
+
+/*!***********************************!*\\\\
+  !*** css ./at-import-chain-b.css ***!
+  \\\\***********************************/
+
+body {
+	background: yellow;
+}
+
+"
 `;
 
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with different layer at-rules 1`] = `
@@ -523,6 +611,41 @@ body {
 }
 
 "
+`;
+
+exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with multiple async chunks importing the same CSS in different order 1`] = `
+Array [
+  "/*!****************************************!*\\\\
+  !*** css ./content-entries-style1.css ***!
+  \\\\****************************************/
+.content-entries-a {
+	width: 100px;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./content-entries-style2.css ***!
+  \\\\****************************************/
+.content-entries-b {
+	width: 100px;
+}
+
+",
+  "/*!****************************************!*\\\\
+  !*** css ./content-entries-style2.css ***!
+  \\\\****************************************/
+.content-entries-b {
+	width: 100px;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./content-entries-style1.css ***!
+  \\\\****************************************/
+.content-entries-a {
+	width: 100px;
+}
+
+",
+]
 `;
 
 exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work with shared \`@import\` 1`] = `

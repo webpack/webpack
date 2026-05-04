@@ -717,6 +717,45 @@ Object {
 `;
 
 exports[`ConfigCacheTestCases css css-loader exported tests should work 29`] = `
+Object {
+  "a": "file_with_many_dots_in_name_module_css-a",
+  "b": "file_with_many_dots_in_name_module_css-b",
+  "c": "file_with_many_dots_in_name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 30`] = `
+Object {
+  "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
+  "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
+  "simple-foo": "composes-duplicate_module_css-simple-foo imported-simple_module_css-imported-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 31`] = `
+Object {
+  "a": "keyframes-leak-scope_module_css-a",
+  "b": "keyframes-leak-scope_module_css-b",
+  "c": "keyframes-leak-scope_module_css-c",
+  "c1": "keyframes-leak-scope_module_css-c1",
+  "c2": "keyframes-leak-scope_module_css-c2",
+  "c3": "keyframes-leak-scope_module_css-c3",
+  "c4": "keyframes-leak-scope_module_css-c4",
+  "d": "keyframes-leak-scope_module_css-d",
+  "f": "keyframes-leak-scope_module_css-f",
+  "local-keyframe": "keyframes-leak-scope_module_css-local-keyframe",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 32`] = `
+Object {
+  "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
+  "foo": "path-placeholder_module_css-foo",
+  "foo/bar": "path-placeholder_module_css-foo/bar",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should work 33`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
@@ -2543,6 +2582,112 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 
 .composes-chain_module_css-target {
 	padding: 10px;
+}
+
+/*!****************************************************!*\\\\
+  !*** css ./file.with.many.dots.in.name.module.css ***!
+  \\\\****************************************************/
+.file_with_many_dots_in_name_module_css-a {
+	color: red;
+}
+
+.file_with_many_dots_in_name_module_css-b {
+	color: green;
+}
+
+.file_with_many_dots_in_name_module_css-c {
+	color: blue;
+}
+
+/*!****************************************!*\\\\
+  !*** css ./imported-simple.module.css ***!
+  \\\\****************************************/
+.imported-simple_module_css-imported-simple {
+	background: yellow;
+}
+
+/*!*******************************************!*\\\\
+  !*** css ./composes-duplicate.module.css ***!
+  \\\\*******************************************/
+.composes-duplicate_module_css-simple-foo {
+	color: red;
+	}
+
+.composes-duplicate_module_css-simple-bar {
+	color: blue;
+	}
+
+.composes-duplicate_module_css-simple-baz {
+	color: green;
+	}
+
+/*!*********************************************!*\\\\
+  !*** css ./keyframes-leak-scope.module.css ***!
+  \\\\*********************************************/
+.keyframes-leak-scope_module_css-a {
+	color: green;
+	animation: keyframes-leak-scope_module_css-a;
+}
+
+@keyframes keyframes-leak-scope_module_css-a {
+	0% { left: 0; }
+	100% { left: 100px; }
+}
+
+@keyframes keyframes-leak-scope_module_css-b {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.keyframes-leak-scope_module_css-b {
+	animation: keyframes-leak-scope_module_css-b;
+}
+
+@keyframes c {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.keyframes-leak-scope_module_css-c {
+	animation: keyframes-leak-scope_module_css-c1;
+	animation: keyframes-leak-scope_module_css-c2, keyframes-leak-scope_module_css-c3, keyframes-leak-scope_module_css-c4;
+}
+
+@keyframes d {
+	0% { left: 10px; }
+	100% { left: 20px; }
+}
+
+.keyframes-leak-scope_module_css-d {
+	animation-name: keyframes-leak-scope_module_css-d;
+}
+
+.e {
+	animation: keyframes-leak-scope_module_css-a;
+}
+
+@keyframes keyframes-leak-scope_module_css-local-keyframe {
+	0% { left: 0; }
+	100% { left: 100px; }
+}
+
+.keyframes-leak-scope_module_css-f {
+	animation-name: keyframes-leak-scope_module_css-local-keyframe;
+}
+
+/*!*****************************************!*\\\\
+  !*** css ./path-placeholder.module.css ***!
+  \\\\*****************************************/
+.path-placeholder_module_css-foo {
+	color: red;
+}
+
+.path-placeholder_module_css-foo\\\\/bar {
+	color: blue;
+}
+
+.path-placeholder_module_css-\\\\[\\\\/\\\\?\\\\<\\\\>\\\\\\\\\\\\\\\\\\\\:\\\\*\\\\|\\\\\\"\\\\:\\\\] {
+	color: yellow;
 }
 
 ",

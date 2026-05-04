@@ -1,0 +1,14 @@
+.simple-foo {
+	color: red;
+	composes: imported-simple from './imported-simple.module.css';
+}
+
+.simple-bar {
+	color: blue;
+	composes: imported-simple from './imported-simple.module.css';
+}
+
+.simple-baz {
+	color: green;
+	composes: imported-simple from './imported-simple.module.css';
+}
