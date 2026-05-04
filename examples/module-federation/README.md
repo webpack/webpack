@@ -2195,8 +2195,8 @@ app:
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
       provide shared module (default) react@19.2.5 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: app) node_modules_react_index_js.js 17 KiB [rendered]
-    > consume shared module (default) react@^19.2.5 (singleton) (fallback: ../../node_modules/react/index.js)
     > provide shared module (default) react@19.2.5 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.2.5 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 16.8 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) src_bootstrap_js.js 26.3 KiB (javascript) 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
@@ -2221,8 +2221,8 @@ mfe-b:
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
       provide shared module (default) react@19.2.5 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) node_modules_react_index_js.js 17 KiB [rendered]
-    > consume shared module (default) react@^19.2.5 (singleton) (fallback: ../../node_modules/react/index.js)
     > provide shared module (default) react@19.2.5 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.2.5 (singleton) (fallback: ../../node_modules/react/index.js)
     dependent modules 16.8 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 752 bytes (javascript) 84 bytes (consume-shared) [rendered]
@@ -2249,8 +2249,8 @@ mfe-c:
       provide shared module (default) date-fns@4.1.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
       provide shared module (default) lodash/random@4.18.1 = ../../node_modules/lo...(truncated) 42 bytes [built] [code generated]
   chunk (runtime: mfeCCC) node_modules_lodash_random_js.js 16.3 KiB [rendered]
-    > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
     > provide shared module (default) lodash/random@4.18.1 = ../../node_modules/lodash/random.js
+    > consume shared module (default) lodash/random@^4.17.19 (strict) (fallback: ../../node_modules/lodash/random.js)
     dependent modules 13.7 KiB [dependent] 20 modules
     ../../node_modules/lodash/random.js 2.56 KiB [built] [code generated]
   chunk (runtime: mfeCCC) src-c_Component_js.js 467 bytes (javascript) 42 bytes (consume-shared) [rendered]
