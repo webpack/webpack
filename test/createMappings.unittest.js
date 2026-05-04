@@ -1,5 +1,6 @@
 "use strict";
 
+// cspell:disable -- VLQ-encoded source-map mappings strings below
 const { encodeMappings, encodeVLQ } = require("../lib/util/createMappings");
 
 describe("encodeVLQ", () => {
@@ -105,3 +106,4 @@ describe("encodeMappings", () => {
 		expect(result).toBe("AAAAA;AACAC");
 	});
 });
+// cspell:enable
