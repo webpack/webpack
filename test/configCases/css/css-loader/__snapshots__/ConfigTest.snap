@@ -691,7 +691,32 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 26`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 26`] = `Object {}`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 27`] = `
+Object {
+  "Button": "component-name_module_css-Button",
+  "Container": "component-name_module_css-Container",
+  "Header": "component-name_module_css-Header",
+  "HeaderTitle": "component-name_module_css-HeaderTitle component-name_module_css-Header",
+  "MyButton": "component-name_module_css-MyButton",
+  "PrimaryButton": "component-name_module_css-PrimaryButton component-name_module_css-Button",
+  "UPPER": "component-name_module_css-UPPER",
+  "lowercase": "component-name_module_css-lowercase",
+  "mixedCase": "component-name_module_css-mixedCase",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 28`] = `
+Object {
+  "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-3": "composes-chain_module_css-level-3",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 29`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
@@ -2457,6 +2482,68 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 }
 
 
+
+/*!******************************!*\\\\
+  !*** css ./empty.module.css ***!
+  \\\\******************************/
+
+/*!***************************************!*\\\\
+  !*** css ./component-name.module.css ***!
+  \\\\***************************************/
+.component-name_module_css-Button {
+	color: red;
+}
+
+.component-name_module_css-MyButton {
+	color: green;
+}
+
+.component-name_module_css-PrimaryButton {
+	background: blue;
+}
+
+.component-name_module_css-Container {
+	display: flex;
+}
+
+.component-name_module_css-Header {
+	font-size: 24px;
+}
+
+.component-name_module_css-HeaderTitle {
+	font-weight: bold;
+}
+
+.component-name_module_css-UPPER {
+	color: black;
+}
+
+.component-name_module_css-lowercase {
+	color: white;
+}
+
+.component-name_module_css-mixedCase {
+	color: gray;
+}
+
+/*!***************************************!*\\\\
+  !*** css ./composes-chain.module.css ***!
+  \\\\***************************************/
+.composes-chain_module_css-level-3 {
+	color: blue;
+}
+
+.composes-chain_module_css-level-2 {
+	background: yellow;
+}
+
+.composes-chain_module_css-level-1 {
+	border: 1px solid black;
+}
+
+.composes-chain_module_css-target {
+	padding: 10px;
+}
 
 ",
 ]

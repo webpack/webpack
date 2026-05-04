@@ -1,0 +1,37 @@
+.Button {
+	color: red;
+}
+
+.MyButton {
+	color: green;
+}
+
+.PrimaryButton {
+	composes: Button;
+	background: blue;
+}
+
+.Container {
+	display: flex;
+}
+
+.Header {
+	font-size: 24px;
+}
+
+.HeaderTitle {
+	composes: Header;
+	font-weight: bold;
+}
+
+.UPPER {
+	color: black;
+}
+
+.lowercase {
+	color: white;
+}
+
+.mixedCase {
+	color: gray;
+}

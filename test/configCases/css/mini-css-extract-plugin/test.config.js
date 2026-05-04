@@ -20,6 +20,7 @@ module.exports = {
 			"composes-async-1.chunk.js",
 			"composes-async-2.chunk.js",
 			"composes-async_js.chunk.js",
+			"local-at-import-with-media_css.chunk.js",
 			"bundle0.js"
 		];
 	}

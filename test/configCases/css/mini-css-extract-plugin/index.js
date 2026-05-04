@@ -100,3 +100,11 @@ it("should work with different order of CSS modules in async chunks", async () =
 it("should work with composes in async chunks", async () => {
 	await import("./composes-async.js");
 });
+
+it("should work with local `@import` with media query, supports and layer", async () => {
+	await import("./local-at-import-with-media.css");
+
+	const links = [...document.getElementsByTagName("link")];
+
+	expect(links.find((item) => /local-at-import-with-media/.test(item.href)).sheet.css).toMatchSnapshot();
+});

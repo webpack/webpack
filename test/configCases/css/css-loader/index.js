@@ -23,6 +23,9 @@ import * as styles21 from "./dedup.module.css";
 import * as styles22 from "./composes-from-less.module.css";
 import * as styles23 from "./tilde.module.css";
 import * as styles24 from "./icss.module.css";
+import * as styles25 from "./empty.module.css";
+import * as styles26 from "./component-name.module.css";
+import * as styles27 from "./composes-chain.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -58,5 +61,8 @@ it("should work", () => {
 	expect(styles22).toMatchSnapshot();
 	expect(styles23).toMatchSnapshot();
 	expect(styles24).toMatchSnapshot();
+	expect(styles25).toMatchSnapshot();
+	expect(styles26).toMatchSnapshot();
+	expect(styles27).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

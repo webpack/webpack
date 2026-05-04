@@ -1,0 +1,18 @@
+.level-3 {
+	color: blue;
+}
+
+.level-2 {
+	composes: level-3;
+	background: yellow;
+}
+
+.level-1 {
+	composes: level-2;
+	border: 1px solid black;
+}
+
+.target {
+	composes: level-1;
+	padding: 10px;
+}

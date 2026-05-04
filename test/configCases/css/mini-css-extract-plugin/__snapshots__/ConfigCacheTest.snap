@@ -393,6 +393,45 @@ exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should 
 "
 `;
 
+exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with local \`@import\` with media query, supports and layer 1`] = `
+"/*!*************************************************************************************!*\\\\
+  !*** css ./local-at-import-media-screen.css (media: screen and (min-width: 768px)) ***!
+  \\\\*************************************************************************************/
+@media screen and (min-width: 768px) {
+	.local-import-screen {
+		font-size: 18px;
+	}
+}
+
+/*!************************************************************!*\\\\
+  !*** css ./local-at-import-media-print.css (media: print) ***!
+  \\\\************************************************************/
+@media print {
+	.local-import-print {
+		font-size: 12pt;
+	}
+}
+
+/*!********************************************************************!*\\\\
+  !*** css ./local-at-import-supports.css (supports: display: grid) ***!
+  \\\\********************************************************************/
+@supports (display: grid) {
+	.local-import-supports {
+		display: grid;
+	}
+}
+
+/*!********************************************!*\\\\
+  !*** css ./local-at-import-with-media.css ***!
+  \\\\********************************************/
+
+.local-import-host {
+	color: red;
+}
+
+"
+`;
+
 exports[`ConfigCacheTestCases css mini-css-extract-plugin exported tests should work with match resource 1`] = `
 "/*!****************************************!*\\\\
   !*** css ./virtual.css!=!./source.txt ***!

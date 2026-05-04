@@ -1,0 +1,7 @@
+@import "./local-at-import-media-screen.css" screen and (min-width: 768px);
+@import "./local-at-import-media-print.css" print;
+@import "./local-at-import-supports.css" supports(display: grid);
+
+.local-import-host {
+	color: red;
+}
