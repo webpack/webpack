@@ -4970,6 +4970,11 @@ declare interface CssData {
 	 * the css exports
 	 */
 	exports: Map<string, string>;
+
+	/**
+	 * source position (line is 1-based, column is 0-based) of each export's defining identifier in the original CSS, used to emit fine-grained JS-to-CSS source mappings
+	 */
+	exportLocs?: Map<string, { line: number; column: number }>;
 }
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
