@@ -7257,6 +7257,13 @@ declare abstract class ExportInfo {
 	 * undefined: not yet determined
 	 */
 	canInlineUse?: 0 | 1 | 2;
+
+	/**
+	 * Only specific export info can be pure, so other_export_info.pure is always undefined.
+	 * true: calling the export has no observable side effects
+	 * undefined: it was not determined whether the export is pure
+	 */
+	pureProvide?: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
@@ -7422,6 +7429,11 @@ declare interface ExportSpec {
 	 * is the export a terminal binding that should be checked for export star conflicts
 	 */
 	terminalBinding?: boolean;
+
+	/**
+	 * calling this export has no observable side effects
+	 */
+	isPure?: boolean;
 
 	/**
 	 * nested exports
@@ -7643,6 +7655,11 @@ declare interface ExportsSpec {
 	 * are the exports terminal bindings that should be checked for export star conflicts
 	 */
 	terminalBinding?: boolean;
+
+	/**
+	 * calling these exports has no observable side effects
+	 */
+	isPure?: boolean;
 
 	/**
 	 * module on which the result depends on
@@ -9704,6 +9721,40 @@ declare abstract class InlinedValue {
 	deserialize(__0: ObjectDeserializerContext): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
+declare interface InnerGraphUtils {
+	enable: (parserState: ParserState) => void;
+	bailout: (parserState: ParserState) => void;
+	isEnabled: (parserState: ParserState) => boolean;
+	addUsage: (
+		parserState: ParserState,
+		symbol: null | TopLevelSymbol,
+		usage: Usage
+	) => void;
+	onUsage: (
+		parserState: ParserState,
+		onUsageCallback: (
+			value: undefined | boolean | Set<string>,
+			module: Module
+		) => void
+	) => void;
+	setTopLevelSymbol: (
+		parserState: ParserState,
+		symbol?: TopLevelSymbol
+	) => void;
+	getTopLevelSymbol: (parserState: ParserState) => void | TopLevelSymbol;
+	tagTopLevelSymbol: (
+		parser: JavascriptParser,
+		name: string,
+		pure?: boolean | ((compilation: Compilation, module: Module) => boolean)
+	) => undefined | TopLevelSymbol;
+	addVariableUsage: (
+		parser: JavascriptParser,
+		name: string,
+		usage: Usage
+	) => void;
+	inferDependencyUsage: (module: Module) => void;
+	release: (module: Module) => void;
+}
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -12509,6 +12560,11 @@ declare interface KnownBuildInfo {
 	 * top level declaration names
 	 */
 	topLevelDeclarations?: Set<string>;
+
+	/**
+	 * names of locally declared functions known to be free of side effects
+	 */
+	pureFunctions?: Set<string>;
 
 	/**
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
@@ -19052,6 +19108,9 @@ declare interface ProvidesConfig {
 declare interface ProvidesObject {
 	[index: string]: string | ProvidesConfig;
 }
+type PureCondition =
+	| boolean
+	| ((compilation: Compilation, module: Module) => boolean);
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
@@ -20943,6 +21002,7 @@ declare interface RestoreProvidedDataExports {
 	canMangleProvide?: boolean;
 	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
+	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
@@ -24065,8 +24125,19 @@ declare class TopLevelSymbol {
 	/**
 	 * Creates an instance of TopLevelSymbol.
 	 */
-	constructor(name: string);
+	constructor(
+		name: string,
+		pure?: boolean | ((compilation: Compilation, module: Module) => boolean)
+	);
 	name: string;
+	conditional: boolean;
+	pureFn?: (compilation: Compilation, module: Module) => boolean;
+
+	/**
+	 * Sets the pure condition
+	 */
+	setPure(pure: PureCondition): void;
+	isPure(compilation: Compilation, module: Module): boolean;
 }
 
 /**
@@ -25430,21 +25501,8 @@ declare namespace exports {
 	}
 	export namespace optimize {
 		export namespace InnerGraph {
-			export let addUsage: (
-				state: ParserState,
-				symbol: null | TopLevelSymbol,
-				usage: Usage
-			) => void;
-			export let addVariableUsage: (
-				parser: JavascriptParser,
-				name: string,
-				usage: Usage
-			) => void;
-			export let bailout: (parserState: ParserState) => void;
-			export let enable: (parserState: ParserState) => void;
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
-				usedByExports: undefined | boolean | Set<string>,
 				moduleGraph: ModuleGraph
 			) =>
 				| null
@@ -25453,29 +25511,7 @@ declare namespace exports {
 						moduleGraphConnection: ModuleGraphConnection,
 						runtime: RuntimeSpec
 				  ) => ConnectionState);
-			export let getTopLevelSymbol: (
-				state: ParserState
-			) => void | TopLevelSymbol;
-			export let inferDependencyUsage: (state: ParserState) => void;
-			export let isDependencyUsedByExports: (
-				dependency: Dependency,
-				usedByExports: undefined | boolean | Set<string>,
-				moduleGraph: ModuleGraph,
-				runtime: RuntimeSpec
-			) => boolean;
-			export let isEnabled: (parserState: ParserState) => boolean;
-			export let onUsage: (
-				state: ParserState,
-				onUsageCallback: (value?: boolean | Set<string>) => void
-			) => void;
-			export let setTopLevelSymbol: (
-				state: ParserState,
-				symbol?: TopLevelSymbol
-			) => void;
-			export let tagTopLevelSymbol: (
-				parser: JavascriptParser,
-				name: string
-			) => undefined | TopLevelSymbol;
+			export let getInnerGraph: (compilation: Compilation) => InnerGraphUtils;
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {
