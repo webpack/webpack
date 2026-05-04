@@ -773,34 +773,13 @@ const knownBugs = [
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
 	// Bugs with defer
-	"import/import-defer/evaluation-triggers/ignore-exported-then-defineOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-exported-then-super-property-define.js",
-	"import/import-defer/evaluation-triggers/ignore-not-exported-then-defineOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-not-exported-then-super-property-define.js",
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	"import/import-defer/evaluation-triggers/ignore-set-string-exported.js",
 	"import/import-defer/evaluation-triggers/ignore-set-string-not-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-super-property-set-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-super-property-set-not-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-defineOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-get-in-prototype.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-get.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-getOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-hasProperty-in-prototype.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-hasProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-super-get.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-super-property-define.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-toStringTag-defineOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-toStringTag-getOwnProperty.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-toStringTag-super-property-define.js",
 	"import/import-defer/evaluation-triggers/trigger-exported-string-delete.js",
 	"import/import-defer/evaluation-triggers/trigger-not-exported-string-delete.js",
-	"import/import-defer/evaluation-triggers/ignore-exported-then-super-property-set-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-not-exported-then-super-property-set-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-symbol-other-super-property-set-exported.js",
 	// Bugs with defer and evaluation
 	"import/import-defer/deferred-namespace-object/identity.js",
-	"import/import-defer/deferred-namespace-object/to-string-tag.js",
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
@@ -815,6 +794,12 @@ const knownBugs = [
 	"import/import-defer/errors/get-other-while-dep-evaluating-async/main.js",
 	"import/import-defer/errors/get-other-while-dep-evaluating/main.js",
 	// Just bugs, need to fix
+	// `Reflect.preventExtensions(ns)` should return true and the deferred
+	// namespace should report `isExtensible() === false` per the TC39 spec —
+	// webpack's proxy target is mutable until init runs and it cannot be
+	// frozen up-front because the underlying module's exports aren't yet
+	// known. Pre-knowing exports would require a larger architectural
+	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
 	// Bug when import itself
 	"import/import-defer/errors/get-self-while-evaluating.js",
