@@ -1,5 +1,37 @@
 # webpack
 
+## 5.107.0
+
+### Minor Changes
+
+- Add `module.generator.javascript.anonymousDefaultExportName` option to control whether webpack sets `.name` to `"default"` for anonymous default export functions and classes per ES spec. Defaults to `true` for applications and `false` for libraries (when `output.library` is set) to avoid unnecessary bundle size overhead. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20894](https://github.com/webpack/webpack/pull/20894))
+
+- Support the `#__NO_SIDE_EFFECTS__` annotation to mark functions as pure for better tree-shaking. (by [@hai-x](https://github.com/hai-x) in [#20775](https://github.com/webpack/webpack/pull/20775))
+
+### Patch Changes
+
+- Extract anonymous default export `.name` fix-up into a shared runtime helper (`__webpack_require__.dn`), replacing repeated inline `Object.defineProperty` / `Object.getOwnPropertyDescriptor` calls with a single short call per module to reduce output size. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20883](https://github.com/webpack/webpack/pull/20883))
+
+- Embed an inline `sourceMappingURL` data URI inside the CSS when the `parser.exportType` option are `text`, `style`, or `css-style-sheet`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20886](https://github.com/webpack/webpack/pull/20886))
+
+- Resolve `[hash]`/`[fullhash]` placeholders in `output.publicPath` (including function publicPaths that reference `pathData.hash`) when generating `url()` references for `experiments.css`. Previously these produced broken URLs containing `undefined` or an un-substituted `[hash]` placeholder because the compilation hash was not yet available at code generation time. (by [@alexander-akait](https://github.com/alexander-akait) in [#20879](https://github.com/webpack/webpack/pull/20879))
+
+- Stable shared module ids and runtime-chunk emission order. (by [@imccausl](https://github.com/imccausl) in [#20860](https://github.com/webpack/webpack/pull/20860))
+
+- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+
+- Improve tree-shaking by handling more expression types in `isPure`: `ArrayExpression`, `ObjectExpression` and `NewExpression`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
+
+- Silence unhandled rejection from the prefetch trigger when chunk loading fails. The `ensureChunkHandlers.prefetch` runtime created `Promise.all(promises).then(...)` whose result is discarded by `__webpack_require__.e`. If chunk loading rejected (e.g. `chunkLoadTimeout`), that dangling chain produced an unhandled rejection. Prefetch is best-effort, so a no-op rejection handler is now attached. (by [@alexander-akait](https://github.com/alexander-akait) in [#20898](https://github.com/webpack/webpack/pull/20898))
+
+- Remove outdated `@types/eslint-scope` package from dependencies. (by [@alexander-akait](https://github.com/alexander-akait) in [#20869](https://github.com/webpack/webpack/pull/20869))
+
+- Preserve `using` declaration initializers when the inner graph optimization is enabled. (by [@hai-x](https://github.com/hai-x) in [#20906](https://github.com/webpack/webpack/pull/20906))
+
+- Fixed typescript types. (by [@alexander-akait](https://github.com/alexander-akait) in [#20880](https://github.com/webpack/webpack/pull/20880))
+
+- Bump `webpack-sources` to `^3.4.1` and feed asset bytes into hashes via the new `Source.prototype.buffers()` API. For large `ConcatSource`/`ReplaceSource` outputs this avoids the intermediate `Buffer.concat` that `source.buffer()` performs, removing a peak-memory spike equal to the source's total size on each hashed asset (`AssetGenerator.getFullContentHash`, `CssIcssExportDependency` content hashing, and `RealContentHashPlugin`). A small benchmark on a 64 MiB `ConcatSource` shows ~64 MiB lower peak external memory and ~45% faster hashing. (by [@alexander-akait](https://github.com/alexander-akait) in [#20897](https://github.com/webpack/webpack/pull/20897))
+
 ## 5.106.2
 
 ### Patch Changes
