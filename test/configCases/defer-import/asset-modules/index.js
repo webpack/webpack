@@ -10,11 +10,6 @@
 // change what a module exports. For `asset/source` (text) and `asset/bytes`
 // (Uint8Array) we additionally cross-check the value against `fs.readFileSync`
 // of the same source file: the most direct Node.js reference available.
-//
-// All `.default` accesses on a static `import defer * as ns` go through
-// `Reflect.get(ns, "default")` to defeat webpack's default-only inlining
-// (which rewrites `ns.default` to a reference to the namespace itself —
-// harmless for value comparisons but trips `typeof`).
 
 // asset/source via `with { type: "text" }` (default rule in lib/config/defaults.js)
 import defer * as deferText from "./payload.txt" with { type: "text" };
@@ -50,7 +45,6 @@ import {
 } from "./side-effect-counter.cjs";
 
 const PAYLOAD_TEXT = "hello asset modules\n";
-const get = Reflect.get;
 
 function assertIsNamespaceObject(ns) {
 	if (typeof ns !== "object" || ns === null) {
@@ -79,14 +73,14 @@ it("should defer asset/source via static `import defer` + `with { type: 'text' }
 	assertIsNamespaceObject(deferText);
 	assertOnlyDefault(deferText);
 
-	expect(typeof get(deferText, "default")).toBe("string");
-	expect(get(deferText, "default")).toBe(PAYLOAD_TEXT);
+	expect(typeof deferText.default).toBe("string");
+	expect(deferText.default).toBe(PAYLOAD_TEXT);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
-	expect(get(deferText, "default")).toBe(textEager);
+	expect(deferText.default).toBe(textEager);
 
 	// Node.js cross-check — webpack's text == fs.readFileSync as utf-8.
 	const ref = await readFixtureBytes("payload.txt");
-	expect(get(deferText, "default")).toBe(ref.toString("utf8"));
+	expect(deferText.default).toBe(ref.toString("utf8"));
 });
 
 it("should defer asset/source via dynamic `import.defer` + `with { type: 'text' }`", async () => {
@@ -94,7 +88,7 @@ it("should defer asset/source via dynamic `import.defer` + `with { type: 'text' 
 	assertIsNamespaceObject(dyn);
 	assertOnlyDefault(dyn);
 	expect(dyn.default).toBe(PAYLOAD_TEXT);
-	expect(dyn.default).toBe(get(deferText, "default"));
+	expect(dyn.default).toBe(deferText.default);
 });
 
 it("should defer asset/bytes via static `import defer` + `with { type: 'bytes' }`", async () => {
@@ -102,15 +96,15 @@ it("should defer asset/bytes via static `import defer` + `with { type: 'bytes' }
 	assertOnlyDefault(deferBytes);
 
 	const decoder = new TextDecoder("utf-8");
-	expect(decoder.decode(get(deferBytes, "default"))).toBe(PAYLOAD_TEXT);
+	expect(decoder.decode(deferBytes.default)).toBe(PAYLOAD_TEXT);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
-	expect(decoder.decode(get(deferBytes, "default"))).toBe(
+	expect(decoder.decode(deferBytes.default)).toBe(
 		decoder.decode(bytesEager)
 	);
 
 	// Node.js cross-check — webpack's bytes == fs.readFileSync.
 	const ref = await readFixtureBytes("payload.txt");
-	expect(Buffer.from(get(deferBytes, "default"))).toEqual(ref);
+	expect(Buffer.from(deferBytes.default)).toEqual(ref);
 });
 
 it("should defer asset/bytes via dynamic `import.defer` + `with { type: 'bytes' }`", async () => {
@@ -120,7 +114,7 @@ it("should defer asset/bytes via dynamic `import.defer` + `with { type: 'bytes' 
 	const decoder = new TextDecoder("utf-8");
 	expect(decoder.decode(dyn.default)).toBe(PAYLOAD_TEXT);
 	expect(decoder.decode(dyn.default)).toBe(
-		decoder.decode(get(deferBytes, "default"))
+		decoder.decode(deferBytes.default)
 	);
 });
 
@@ -128,11 +122,11 @@ it("should defer asset/resource (URL) via static `import defer`", () => {
 	assertIsNamespaceObject(deferResource);
 	assertOnlyDefault(deferResource);
 
-	expect(typeof get(deferResource, "default")).toBe("string");
+	expect(typeof deferResource.default).toBe("string");
 	// `output.assetModuleFilename` is `[hash][ext]`.
-	expect(get(deferResource, "default")).toMatch(/^[\da-f]+\.svg$/);
+	expect(deferResource.default).toMatch(/^[\da-f]+\.svg$/);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
-	expect(get(deferResource, "default")).toBe(resourceEager);
+	expect(deferResource.default).toBe(resourceEager);
 });
 
 it("should defer asset/resource (URL) via dynamic `import.defer`", async () => {
@@ -147,10 +141,10 @@ it("should defer asset/inline (data URI) via static `import defer`", () => {
 	assertIsNamespaceObject(deferInline);
 	assertOnlyDefault(deferInline);
 
-	expect(typeof get(deferInline, "default")).toBe("string");
-	expect(get(deferInline, "default")).toMatch(/^data:image\/svg\+xml(;|,)/);
+	expect(typeof deferInline.default).toBe("string");
+	expect(deferInline.default).toMatch(/^data:image\/svg\+xml(;|,)/);
 	// Per the TC39 proposal, deferred and eager namespaces must agree.
-	expect(get(deferInline, "default")).toBe(inlineEager);
+	expect(deferInline.default).toBe(inlineEager);
 });
 
 it("should defer asset/inline (data URI) via dynamic `import.defer`", async () => {
@@ -168,7 +162,7 @@ it("should produce equivalent namespaces for `webpackMode: \"eager\"` defer", as
 	);
 	assertIsNamespaceObject(eager);
 	expect(eager.default).toBe(PAYLOAD_TEXT);
-	expect(eager.default).toBe(get(deferText, "default"));
+	expect(eager.default).toBe(deferText.default);
 });
 
 it("should defer evaluation until first access for every asset module type (TC39 spec invariant)", () => {
@@ -176,14 +170,14 @@ it("should defer evaluation until first access for every asset module type (TC39
 	reset();
 	assertIsNamespaceObject(wrappedText);
 	assertUntouched();
-	expect(get(wrappedText, "default")).toBe(PAYLOAD_TEXT);
+	expect(wrappedText.default).toBe(PAYLOAD_TEXT);
 	assertTouched();
 
 	// asset/bytes via `with { type: "bytes" }`
 	reset();
 	assertIsNamespaceObject(wrappedBytes);
 	assertUntouched();
-	expect(new TextDecoder("utf-8").decode(get(wrappedBytes, "default"))).toBe(
+	expect(new TextDecoder("utf-8").decode(wrappedBytes.default)).toBe(
 		PAYLOAD_TEXT
 	);
 	assertTouched();
@@ -192,13 +186,13 @@ it("should defer evaluation until first access for every asset module type (TC39
 	reset();
 	assertIsNamespaceObject(wrappedResource);
 	assertUntouched();
-	expect(get(wrappedResource, "default")).toMatch(/^[\da-f]+\.svg$/);
+	expect(wrappedResource.default).toMatch(/^[\da-f]+\.svg$/);
 	assertTouched();
 
 	// asset/inline — data URI string
 	reset();
 	assertIsNamespaceObject(wrappedInline);
 	assertUntouched();
-	expect(get(wrappedInline, "default")).toMatch(/^data:image\/svg\+xml(;|,)/);
+	expect(wrappedInline.default).toMatch(/^data:image\/svg\+xml(;|,)/);
 	assertTouched();
 });

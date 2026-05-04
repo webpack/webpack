@@ -53,6 +53,13 @@ it("should match Node.js for static `import defer` of a JSON module", async () =
 	expect(Reflect.has(data, "nested")).toBe(false);
 	expect(Reflect.get(data, "value")).toBe(undefined);
 	expect(Reflect.get(data, "nested")).toBe(undefined);
+	// Structural introspection (Object.getOwnPropertyNames / Object.keys) now
+	// also works — proxy invariants hold for the deferred namespace. Webpack
+	// additionally exposes `__esModule` (because `__webpack_require__.r`
+	// stamps it onto the underlying module exports as a non-configurable
+	// property and the proxy's target is the same object); Node.js's native
+	// dynamic `import("./x.json", { with: { type: "json" } })` does not.
+	expect(Object.getOwnPropertyNames(data)).toContain("default");
 
 	// Quoted-key form of the import attribute should behave identically.
 	assertIsNamespaceObject(dataStr);

@@ -16,15 +16,10 @@
 // requires that evaluation of a deferred module be delayed until the first
 // observable access on its namespace; we verify that directly here:
 //
-//     reset();                         // counter back to 0
-//     assertUntouched();               // wrapper not yet evaluated
-//     Reflect.get(wrapped, "default"); // first access — must trigger eval
-//     assertTouched();                 // wrapper ran exactly once
-//
-// All `.default` accesses on a static `import defer * as ns` go through
-// `Reflect.get(ns, "default")` so webpack's default-only inlining (which
-// would rewrite `ns.default` to a reference to the namespace itself) does
-// not interfere with the observation.
+//     reset();                  // counter back to 0
+//     assertUntouched();        // wrapper not yet evaluated
+//     wrapped.default;          // first access — must trigger eval
+//     assertTouched();          // wrapper ran exactly once
 
 import defer * as wrappedText from "./wrapper-text.js";
 import defer * as wrappedStylesheet from "./wrapper-stylesheet.js";
@@ -35,8 +30,6 @@ import {
 	assertUntouched,
 	reset
 } from "./side-effect-counter.cjs";
-
-const get = Reflect.get;
 
 function assertIsNamespaceObject(ns) {
 	if (typeof ns !== "object" || ns === null) {
@@ -56,7 +49,7 @@ it("should defer CSS exportType: 'text' (static `import defer`)", () => {
 	// not evaluate the module.
 	assertUntouched();
 
-	const value = get(wrappedText, "default");
+	const value = wrappedText.default;
 	assertTouched();
 
 	expect(typeof value).toBe("string");
@@ -65,7 +58,7 @@ it("should defer CSS exportType: 'text' (static `import defer`)", () => {
 
 	// Subsequent accesses must not re-evaluate the wrapper.
 	reset();
-	expect(get(wrappedText, "default")).toBe(value);
+	expect(wrappedText.default).toBe(value);
 	assertUntouched();
 });
 
@@ -74,7 +67,7 @@ it("should defer CSS exportType: 'css-style-sheet' (static `import defer`)", () 
 	assertIsNamespaceObject(wrappedStylesheet);
 	assertUntouched();
 
-	const sheet = get(wrappedStylesheet, "default");
+	const sheet = wrappedStylesheet.default;
 	assertTouched();
 
 	expect(sheet).toBeInstanceOf(CSSStyleSheet);
@@ -88,7 +81,7 @@ it("should defer CSS exportType: 'css-style-sheet' (static `import defer`)", () 
 
 	// Subsequent accesses must not re-evaluate the wrapper.
 	reset();
-	expect(get(wrappedStylesheet, "default")).toBe(sheet);
+	expect(wrappedStylesheet.default).toBe(sheet);
 	assertUntouched();
 });
 
@@ -97,7 +90,7 @@ it("should defer CSS imported with `{ type: 'css' }` (static `import defer`)", (
 	assertIsNamespaceObject(wrappedAttr);
 	assertUntouched();
 
-	const sheet = get(wrappedAttr, "default");
+	const sheet = wrappedAttr.default;
 	assertTouched();
 
 	// `with { type: "css" }` is routed to exportType "css-style-sheet" by the
