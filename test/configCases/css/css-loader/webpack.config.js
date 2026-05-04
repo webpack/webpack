@@ -89,6 +89,53 @@ module.exports = {
 					localIdentName: (pathData) =>
 						`prefix-${pathData.filename}---${pathData.local}---${pathData.hash}-postfix`
 				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-10$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashSalt: "my-custom-salt"
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-11$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashDigest: "hex",
+					localIdentHashDigestLength: 8
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-12$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashDigest: "base64",
+					localIdentHashDigestLength: 8
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-13$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashFunction: "md4",
+					localIdentHashDigest: "base64url",
+					localIdentHashDigestLength: 6
+				}
+			},
+			{
+				test: /.css$/,
+				resourceQuery: /\?local-ident-name-14$/,
+				generator: {
+					localIdentName: "[name]--[local]--[fullhash]",
+					localIdentHashFunction: "sha256",
+					localIdentHashSalt: "another-salt",
+					localIdentHashDigest: "hex",
+					localIdentHashDigestLength: 12
+				}
 			}
 		]
 	},

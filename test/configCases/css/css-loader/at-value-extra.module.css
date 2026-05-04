@@ -1,0 +1,56 @@
+@value v-color: red;
+@value v-shadow-color: rgba(0, 0, 0, 0.5);
+
+.shadow {
+	box-shadow:
+		0 10px 10px v-shadow-color,
+		10px 0 5px v-shadow-color;
+}
+
+@value def: red;
+
+.foo1 { prop: func(def); }
+.foo2 { prop: func(10px def); }
+.foo3 { prop: func(def 10px); }
+.foo4 { prop: func(10px def 10px); }
+.foo5 { prop: func(10px, def); }
+.foo6 { prop: func(def, 10px); }
+
+@value imported-color from "./colors.module.css";
+@value composed-shadow: 0 0 imported-color, 0 0 imported-color;
+
+.uses-composed-shadow {
+	box-shadow: composed-shadow;
+}
+
+@value foo from "~test/index.css";
+@value bar from "test/index.css";
+
+.from-node-modules {
+	color: foo;
+	background: bar;
+}
+
+@value chain-1: green;
+@value chain-2: chain-1;
+@value chain-3: chain-2;
+
+.chained {
+	color: chain-3;
+}
+
+@value v-base: 10px;
+@value v-large: calc(v-base * 2);
+@value v-margin: v-large 0;
+
+.spacing {
+	margin: v-margin;
+	padding: v-large;
+}
+
+@value alias-1, alias-2 from "./colors.module.css";
+
+.multi-import {
+	color: alias-1;
+	background: alias-2;
+}

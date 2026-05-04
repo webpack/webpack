@@ -18,6 +18,11 @@ import * as styles16 from "./local-Ident-name.module.css?local-ident-name-6";
 import * as styles17 from "./local-Ident-name.module.css?local-ident-name-7";
 import * as styles18 from "./local-Ident-name.module.css?local-ident-name-8";
 import * as styles19 from "./local-Ident-name.module.css?local-ident-name-9";
+import * as stylesHash10 from "./local-Ident-name.module.css?local-ident-name-10";
+import * as stylesHash11 from "./local-Ident-name.module.css?local-ident-name-11";
+import * as stylesHash12 from "./local-Ident-name.module.css?local-ident-name-12";
+import * as stylesHash13 from "./local-Ident-name.module.css?local-ident-name-13";
+import * as stylesHash14 from "./local-Ident-name.module.css?local-ident-name-14";
 import * as styles20 from "./order.module.css";
 import * as styles21 from "./dedup.module.css";
 import * as styles22 from "./composes-from-less.module.css";
@@ -30,6 +35,7 @@ import * as styles28 from "./file.with.many.dots.in.name.module.css";
 import * as styles29 from "./composes-duplicate.module.css";
 import * as styles30 from "./keyframes-leak-scope.module.css";
 import * as styles31 from "./path-placeholder.module.css";
+import * as styles32 from "./at-value-extra.module.css";
 
 it("should work", () => {
 	const links = document.getElementsByTagName("link");
@@ -60,6 +66,11 @@ it("should work", () => {
 	expect(styles17).toMatchSnapshot();
 	expect(styles18).toMatchSnapshot();
 	expect(styles19).toMatchSnapshot();
+	expect(stylesHash10).toMatchSnapshot();
+	expect(stylesHash11).toMatchSnapshot();
+	expect(stylesHash12).toMatchSnapshot();
+	expect(stylesHash13).toMatchSnapshot();
+	expect(stylesHash14).toMatchSnapshot();
 	expect(styles20).toMatchSnapshot();
 	expect(styles21).toMatchSnapshot();
 	expect(styles22).toMatchSnapshot();
@@ -72,5 +83,6 @@ it("should work", () => {
 	expect(styles29).toMatchSnapshot();
 	expect(styles30).toMatchSnapshot();
 	expect(styles31).toMatchSnapshot();
+	expect(styles32).toMatchSnapshot();
 	expect(css).toMatchSnapshot();
 });

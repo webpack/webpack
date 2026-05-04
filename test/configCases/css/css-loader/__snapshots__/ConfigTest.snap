@@ -649,25 +649,290 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should work 21`] = `
 Object {
+  "#": "local-Ident-name.module--#--HhZOGz",
+  "##": "local-Ident-name.module--##--9WIAe0",
+  "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
+  "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
+  ".": "local-Ident-name.module--.--BPq0xF",
+  "123": "local-Ident-name.module--123--B3OEQK",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--oaY1J8",
+  ":)": "local-Ident-name.module--:)--Pj6vDs",
+  ":\`(": "local-Ident-name.module--:\`(--IVbXBm",
+  ":hover": "local-Ident-name.module--:hover--1mpkFN",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--YELMY9",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Uf6Aq5",
+  "<p>": "local-Ident-name.module--<p>--Wp80__",
+  "?": "local-Ident-name.module--?--Q_Zy2v",
+  "@": "local-Ident-name.module--@--SWeck6",
+  "B&W?": "local-Ident-name.module--B&W?--JmVOKE",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--s_2WkM",
+  "_": "local-Ident-name.module--_--R0gCHb",
+  "_test": "local-Ident-name.module--_test--qE51sB",
+  "className": "local-Ident-name.module--className--DXQmdk",
+  "f!o!o": "local-Ident-name.module--f!o!o--uNwFsi",
+  "f'o'o": "local-Ident-name.module--f'o'o--a6OZfH",
+  "f*o*o": "local-Ident-name.module--f*o*o--Pzh7Iy",
+  "f+o+o": "local-Ident-name.module--f+o+o--QH3xLM",
+  "f/o/o": "local-Ident-name.module--f/o/o--PcOcIs",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gaJvBS",
+  "foo.bar": "local-Ident-name.module--foo.bar--bKDReN",
+  "foo/bar": "local-Ident-name.module--foo/bar--9drIBx",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p04ctN",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--S2Dcc1",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--jFAF-g",
+  "f~o~o": "local-Ident-name.module--f~o~o--PUOhHl",
+  "m_x_@": "local-Ident-name.module--m_x_@--ZIn6c4",
+  "someId": "local-Ident-name.module--someId--tVcVTm",
+  "subClass": "local-Ident-name.module--subClass--j9K5GX",
+  "test": "local-Ident-name.module--test--Wxl9SQ",
+  "{}": "local-Ident-name.module--{}--x9uHdU",
+  "©": "local-Ident-name.module--©--GlglrH",
+  "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
+  "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
+  "♥": "local-Ident-name.module--♥--n0DExN",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--bJsUdV",
+  "💩": "local-Ident-name.module--💩--sn5uaI",
+  "😍": "local-Ident-name.module--😍--eF1kUF",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
+Object {
+  "#": "local-Ident-name.module--#--58ffa81a",
+  "##": "local-Ident-name.module--##--e4c1f1f4",
+  "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
+  "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
+  ".": "local-Ident-name.module--.--c60e13df",
+  "123": "local-Ident-name.module--123--1cfa6799",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b0622ca1",
+  ":)": "local-Ident-name.module--:)--7c5c25e1",
+  ":\`(": "local-Ident-name.module--:\`(--70a3d865",
+  ":hover": "local-Ident-name.module--:hover--00e0e9cf",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--9fac1801",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--de7a296d",
+  "<p>": "local-Ident-name.module--<p>--1a958d1c",
+  "?": "local-Ident-name.module--?--14d8edf4",
+  "@": "local-Ident-name.module--@--d4a78331",
+  "B&W?": "local-Ident-name.module--B&W?--a78d0393",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--c0361de2",
+  "_": "local-Ident-name.module--_--80de2974",
+  "_test": "local-Ident-name.module--_test--0473fb8d",
+  "className": "local-Ident-name.module--className--a79e037f",
+  "f!o!o": "local-Ident-name.module--f!o!o--d963c01e",
+  "f'o'o": "local-Ident-name.module--f'o'o--de8bb216",
+  "f*o*o": "local-Ident-name.module--f*o*o--43f20f40",
+  "f+o+o": "local-Ident-name.module--f+o+o--589e0f04",
+  "f/o/o": "local-Ident-name.module--f/o/o--fae128a6",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--4f58244c",
+  "foo.bar": "local-Ident-name.module--foo.bar--2f64db2c",
+  "foo/bar": "local-Ident-name.module--foo/bar--1993240b",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--6aef178e",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--64e39502",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--c92e29e0",
+  "f~o~o": "local-Ident-name.module--f~o~o--67ce3441",
+  "m_x_@": "local-Ident-name.module--m_x_@--7d75708c",
+  "someId": "local-Ident-name.module--someId--14048457",
+  "subClass": "local-Ident-name.module--subClass--20021468",
+  "test": "local-Ident-name.module--test--8270b0ef",
+  "{}": "local-Ident-name.module--{}--ae3dd8d2",
+  "©": "local-Ident-name.module--©--1b9a8b1c",
+  "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
+  "☺☃": "local-Ident-name.module--☺☃--1469d673",
+  "♥": "local-Ident-name.module--♥--49c9e5f7",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--9b2f29da",
+  "💩": "local-Ident-name.module--💩--94ba226c",
+  "😍": "local-Ident-name.module--😍--2fcf5128",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 23`] = `
+Object {
+  "#": "local-Ident-name.module--#--9Wz8iS8u",
+  "##": "local-Ident-name.module--##--Xw2rY7zd",
+  "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
+  "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
+  ".": "local-Ident-name.module--.--M5qzfpLo",
+  "123": "local-Ident-name.module--123--YUqF5zS2",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bQNiwONU",
+  ":)": "local-Ident-name.module--:)--4Iu7JUbn",
+  ":\`(": "local-Ident-name.module--:\`(--GHVmYb5c",
+  ":hover": "local-Ident-name.module--:hover--VAXzRyCg",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0lla+F2p",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--XLiNBlLA",
+  "<p>": "local-Ident-name.module--<p>--Z3z/E54Y",
+  "?": "local-Ident-name.module--?--WiZDtscd",
+  "@": "local-Ident-name.module--@--C4CmO5xx",
+  "B&W?": "local-Ident-name.module--B&W?--g3tmGQ1e",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--zQk/kDjQ",
+  "_": "local-Ident-name.module--_--qnfZWXNI",
+  "_test": "local-Ident-name.module--_test--qMUjbC/I",
+  "className": "local-Ident-name.module--className--pwM6UboM",
+  "f!o!o": "local-Ident-name.module--f!o!o--j3soDiCp",
+  "f'o'o": "local-Ident-name.module--f'o'o--MHMzH0KY",
+  "f*o*o": "local-Ident-name.module--f*o*o--26bZ4t0o",
+  "f+o+o": "local-Ident-name.module--f+o+o--vQ+lI2jp",
+  "f/o/o": "local-Ident-name.module--f/o/o--e3jIJGEf",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--G9+prJD1",
+  "foo.bar": "local-Ident-name.module--foo.bar--THng2+Bz",
+  "foo/bar": "local-Ident-name.module--foo/bar--YB6qbQ9S",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--Q20sxeqj",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--Kxtcf1c9",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--YBybJKnk",
+  "f~o~o": "local-Ident-name.module--f~o~o--JjjvJFSt",
+  "m_x_@": "local-Ident-name.module--m_x_@--Ez6PsYJh",
+  "someId": "local-Ident-name.module--someId--IGKlSlnh",
+  "subClass": "local-Ident-name.module--subClass--dwOKrGpm",
+  "test": "local-Ident-name.module--test--NLdHRDRl",
+  "{}": "local-Ident-name.module--{}--6OhFoptN",
+  "©": "local-Ident-name.module--©--tHIIl+/T",
+  "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
+  "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
+  "♥": "local-Ident-name.module--♥--7lqZpUgl",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--cvCnWCP/",
+  "💩": "local-Ident-name.module--💩--3GaohJIg",
+  "😍": "local-Ident-name.module--😍--FLeSmaPd",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 24`] = `
+Object {
+  "#": "local-Ident-name.module--#--WLkUKg",
+  "##": "local-Ident-name.module--##--jZQh9o",
+  "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
+  "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
+  ".": "local-Ident-name.module--.--MWGP9-",
+  "123": "local-Ident-name.module--123--Nm8irE",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bVeVN5",
+  ":)": "local-Ident-name.module--:)--Ie3pA9",
+  ":\`(": "local-Ident-name.module--:\`(--WwHPwk",
+  ":hover": "local-Ident-name.module--:hover--DqSicW",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--7Xp248",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Hz1mIz",
+  "<p>": "local-Ident-name.module--<p>--HpZvES",
+  "?": "local-Ident-name.module--?--L-dtlw",
+  "@": "local-Ident-name.module--@--siEE0h",
+  "B&W?": "local-Ident-name.module--B&W?--7ftAnV",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--u54HDK",
+  "_": "local-Ident-name.module--_--3k2Agq",
+  "_test": "local-Ident-name.module--_test--8xrdZV",
+  "className": "local-Ident-name.module--className--2Kh-Ov",
+  "f!o!o": "local-Ident-name.module--f!o!o--T3prsX",
+  "f'o'o": "local-Ident-name.module--f'o'o--jt-RhY",
+  "f*o*o": "local-Ident-name.module--f*o*o--QbjpCQ",
+  "f+o+o": "local-Ident-name.module--f+o+o--bBOiFl",
+  "f/o/o": "local-Ident-name.module--f/o/o--lJEk9y",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--DGQBRU",
+  "foo.bar": "local-Ident-name.module--foo.bar--7yacah",
+  "foo/bar": "local-Ident-name.module--foo/bar--2nkRzH",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--aTk6tX",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--00tycH",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--Xyl0u2",
+  "f~o~o": "local-Ident-name.module--f~o~o--98SqRg",
+  "m_x_@": "local-Ident-name.module--m_x_@--X8bP8q",
+  "someId": "local-Ident-name.module--someId--hIrhgH",
+  "subClass": "local-Ident-name.module--subClass--CS7Un_",
+  "test": "local-Ident-name.module--test--2GQpZJ",
+  "{}": "local-Ident-name.module--{}--nRmS1p",
+  "©": "local-Ident-name.module--©--iWVpcm",
+  "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
+  "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
+  "♥": "local-Ident-name.module--♥--y3MitJ",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--72crRY",
+  "💩": "local-Ident-name.module--💩--7uK8qM",
+  "😍": "local-Ident-name.module--😍--WcxZ0t",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 25`] = `
+Object {
+  "#": "local-Ident-name.module--#--e4f1b73cd809",
+  "##": "local-Ident-name.module--##--405237512524",
+  "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
+  "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
+  ".": "local-Ident-name.module--.--5470f44f036b",
+  "123": "local-Ident-name.module--123--d17ed8537e79",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b883ad2dd9f8",
+  ":)": "local-Ident-name.module--:)--17eb8b70354f",
+  ":\`(": "local-Ident-name.module--:\`(--bc61af26245b",
+  ":hover": "local-Ident-name.module--:hover--5c74060ab542",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--940cf6c5d089",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--f10fbf26846b",
+  "<p>": "local-Ident-name.module--<p>--3ee2ce137c10",
+  "?": "local-Ident-name.module--?--f76eafe5a169",
+  "@": "local-Ident-name.module--@--e273723fec35",
+  "B&W?": "local-Ident-name.module--B&W?--8cd981d8b590",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--e0514aa37eca",
+  "_": "local-Ident-name.module--_--572d2835970e",
+  "_test": "local-Ident-name.module--_test--89d707c3fad8",
+  "className": "local-Ident-name.module--className--9f53c7efa137",
+  "f!o!o": "local-Ident-name.module--f!o!o--dd84868984da",
+  "f'o'o": "local-Ident-name.module--f'o'o--d25297ca72bf",
+  "f*o*o": "local-Ident-name.module--f*o*o--e6413d687d7f",
+  "f+o+o": "local-Ident-name.module--f+o+o--50ed97029705",
+  "f/o/o": "local-Ident-name.module--f/o/o--7590fb61ecff",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--ac338e117e89",
+  "foo.bar": "local-Ident-name.module--foo.bar--d1268ba07c09",
+  "foo/bar": "local-Ident-name.module--foo/bar--4fbc31b40f2d",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--e0d2321851b9",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--ae3f0073234b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--782f833dc5da",
+  "f~o~o": "local-Ident-name.module--f~o~o--72d738764f15",
+  "m_x_@": "local-Ident-name.module--m_x_@--e7a6eff38a8d",
+  "someId": "local-Ident-name.module--someId--bfc6d0920e46",
+  "subClass": "local-Ident-name.module--subClass--97560fae798c",
+  "test": "local-Ident-name.module--test--a60f4680ad27",
+  "{}": "local-Ident-name.module--{}--00d46b3a8952",
+  "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
+  "☺☃": "local-Ident-name.module--☺☃--543bef227373",
+  "♥": "local-Ident-name.module--♥--76ddd7511c43",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--95edd86361c1",
+  "💩": "local-Ident-name.module--💩--54f8b2bdd0e9",
+  "😍": "local-Ident-name.module--😍--29d85c2489ef",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 26`] = `
+Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 22`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 27`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 23`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 28`] = `
 Object {
   "bar": "composes-from-less_module_css-bar foo_less-foo",
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 24`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 29`] = `
 Object {
   "bar": "#fff",
   "className": "tilde_module_css-className",
@@ -675,7 +940,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 25`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 30`] = `
 Object {
   "_test": "_right_value",
   "_test1": "1",
@@ -691,9 +956,9 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 26`] = `Object {}`;
+exports[`ConfigTestCases css css-loader exported tests should work 31`] = `Object {}`;
 
-exports[`ConfigTestCases css css-loader exported tests should work 27`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 32`] = `
 Object {
   "Button": "component-name_module_css-Button",
   "Container": "component-name_module_css-Container",
@@ -707,7 +972,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 28`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 33`] = `
 Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
@@ -716,7 +981,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 29`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 34`] = `
 Object {
   "a": "file_with_many_dots_in_name_module_css-a",
   "b": "file_with_many_dots_in_name_module_css-b",
@@ -724,7 +989,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 30`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 35`] = `
 Object {
   "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
   "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
@@ -732,7 +997,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 31`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
   "b": "keyframes-leak-scope_module_css-b",
@@ -747,7 +1012,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 32`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 37`] = `
 Object {
   "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
   "foo": "path-placeholder_module_css-foo",
@@ -755,7 +1020,39 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css css-loader exported tests should work 33`] = `
+exports[`ConfigTestCases css css-loader exported tests should work 38`] = `
+Object {
+  "alias-1": "gold",
+  "alias-2": "navy",
+  "bar": "#fff",
+  "chain-1": "green",
+  "chain-2": "green",
+  "chain-3": "green",
+  "chained": "at-value-extra_module_css-chained",
+  "composed-shadow": "0 0 imported-color, 0 0 imported-color",
+  "def": "red",
+  "foo": "#000",
+  "foo1": "at-value-extra_module_css-foo1",
+  "foo2": "at-value-extra_module_css-foo2",
+  "foo3": "at-value-extra_module_css-foo3",
+  "foo4": "at-value-extra_module_css-foo4",
+  "foo5": "at-value-extra_module_css-foo5",
+  "foo6": "at-value-extra_module_css-foo6",
+  "from-node-modules": "at-value-extra_module_css-from-node-modules",
+  "imported-color": "tomato",
+  "multi-import": "at-value-extra_module_css-multi-import",
+  "shadow": "at-value-extra_module_css-shadow",
+  "spacing": "at-value-extra_module_css-spacing",
+  "uses-composed-shadow": "at-value-extra_module_css-uses-composed-shadow",
+  "v-base": "10px",
+  "v-color": "red",
+  "v-large": "calc(v-base * 2)",
+  "v-margin": "v-large 0",
+  "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should work 39`] = `
 Array [
   "/*!******************************!*\\\\
   !*** css ./basic.module.css ***!
@@ -2384,6 +2681,596 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
+/*!*************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-10 ***!
+  \\\\*************************************************************/
+.local-Ident-name\\\\.module--test--Wxl9SQ {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--qE51sB {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--DXQmdk {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--tVcVTm {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--DXQmdk .local-Ident-name\\\\.module--subClass--j9K5GX {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--tVcVTm .local-Ident-name\\\\.module--subClass--j9K5GX {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--PS1ay2 {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--ZIn6c4 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--JmVOKE {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--IVbXBm {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--oaY1J8 {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--6FWV9i {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---IYz9aF {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--GlglrH {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--n0DExN { background: lime; }
+.local-Ident-name\\\\.module--©--GlglrH { background: lime; }
+.local-Ident-name\\\\.module--😍--eF1kUF { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--kFrgHQ { background: lime; }
+.local-Ident-name\\\\.module--☺☃--RQhCjb { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--IU4ZsQ { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--bJsUdV { background: lime; }
+.local-Ident-name\\\\.module--💩--sn5uaI { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--Q_Zy2v { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--SWeck6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--BPq0xF { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--Pj6vDs { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--IVbXBm { background: lime; }
+.local-Ident-name\\\\.module--123--B3OEQK { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--oaY1J8 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--Wp80__ { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--Uf6Aq5 { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--eWkFUR { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--HhZOGz { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--9WIAe0 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--KWHj86 { background: lime; }
+.local-Ident-name\\\\.module--_--R0gCHb { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--x9uHdU { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--6FWV9i { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--bKDReN { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--1mpkFN { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--YELMY9 { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--s_2WkM { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--PcOcIs { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--gaJvBS { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--Pzh7Iy { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--uNwFsi { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--a6OZfH { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--PUOhHl { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--QH3xLM { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--9drIBx {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--S2Dcc1 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--p04ctN {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--jFAF-g {
+  background: hotpink;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-11 ***!
+  \\\\*************************************************************/
+.local-Ident-name\\\\.module--test--8270b0ef {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--0473fb8d {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--a79e037f {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--14048457 {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--a79e037f .local-Ident-name\\\\.module--subClass--20021468 {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--14048457 .local-Ident-name\\\\.module--subClass--20021468 {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--4e81654c {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--7d75708c {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--a78d0393 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--70a3d865 {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--b0622ca1 {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--7f4db0e0 {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---aaccc232 {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--1b9a8b1c {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--49c9e5f7 { background: lime; }
+.local-Ident-name\\\\.module--©--1b9a8b1c { background: lime; }
+.local-Ident-name\\\\.module--😍--2fcf5128 { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--f7de2a8c { background: lime; }
+.local-Ident-name\\\\.module--☺☃--1469d673 { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--a716095a { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--9b2f29da { background: lime; }
+.local-Ident-name\\\\.module--💩--94ba226c { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--14d8edf4 { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--d4a78331 { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--c60e13df { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--7c5c25e1 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--70a3d865 { background: lime; }
+.local-Ident-name\\\\.module--123--1cfa6799 { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--b0622ca1 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--1a958d1c { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--de7a296d { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--fc3f7bcd { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--58ffa81a { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--e4c1f1f4 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--55dcc6f4 { background: lime; }
+.local-Ident-name\\\\.module--_--80de2974 { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--ae3dd8d2 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--7f4db0e0 { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--2f64db2c { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--00e0e9cf { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--9fac1801 { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--c0361de2 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--fae128a6 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--4f58244c { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--43f20f40 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--d963c01e { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--de8bb216 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--67ce3441 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--589e0f04 { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--1993240b {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--64e39502 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--6aef178e {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--c92e29e0 {
+  background: hotpink;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-12 ***!
+  \\\\*************************************************************/
+.local-Ident-name\\\\.module--test--NLdHRDRl {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--qMUjbC\\\\/I {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--pwM6UboM {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--IGKlSlnh {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--pwM6UboM .local-Ident-name\\\\.module--subClass--dwOKrGpm {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--IGKlSlnh .local-Ident-name\\\\.module--subClass--dwOKrGpm {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--pYiaTYyp {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--Ez6PsYJh {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--g3tmGQ1e {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--GHVmYb5c {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--bQNiwONU {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--OAAO9JtY {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---2n5qnvlm {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--tHIIl\\\\+\\\\/T {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--7lqZpUgl { background: lime; }
+.local-Ident-name\\\\.module--©--tHIIl\\\\+\\\\/T { background: lime; }
+.local-Ident-name\\\\.module--😍--FLeSmaPd { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--\\\\+9nwT2o\\\\+ { background: lime; }
+.local-Ident-name\\\\.module--☺☃--YgLNlGOB { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--CPntnPbX { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--cvCnWCP\\\\/ { background: lime; }
+.local-Ident-name\\\\.module--💩--3GaohJIg { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--WiZDtscd { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--C4CmO5xx { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--M5qzfpLo { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--4Iu7JUbn { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--GHVmYb5c { background: lime; }
+.local-Ident-name\\\\.module--123--YUqF5zS2 { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--bQNiwONU { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--Z3z\\\\/E54Y { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--XLiNBlLA { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--5IxQmIT6 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--9Wz8iS8u { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--Xw2rY7zd { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--KxM40M3r { background: lime; }
+.local-Ident-name\\\\.module--_--qnfZWXNI { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--6OhFoptN { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--OAAO9JtY { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--THng2\\\\+Bz { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--VAXzRyCg { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--0lla\\\\+F2p { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--zQk\\\\/kDjQ { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--e3jIJGEf { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--G9\\\\+prJD1 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--26bZ4t0o { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--j3soDiCp { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--MHMzH0KY { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--JjjvJFSt { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--vQ\\\\+lI2jp { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--YB6qbQ9S {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--Kxtcf1c9 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--Q20sxeqj {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--YBybJKnk {
+  background: hotpink;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-13 ***!
+  \\\\*************************************************************/
+.local-Ident-name\\\\.module--test--2GQpZJ {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--8xrdZV {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--2Kh-Ov {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--hIrhgH {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--2Kh-Ov .local-Ident-name\\\\.module--subClass--CS7Un_ {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--hIrhgH .local-Ident-name\\\\.module--subClass--CS7Un_ {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--IDqcbV {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--X8bP8q {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--7ftAnV {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--WwHPwk {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--bVeVN5 {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--V2cCf7 {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---Z08EAB {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--iWVpcm {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--y3MitJ { background: lime; }
+.local-Ident-name\\\\.module--©--iWVpcm { background: lime; }
+.local-Ident-name\\\\.module--😍--WcxZ0t { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--tEAd1K { background: lime; }
+.local-Ident-name\\\\.module--☺☃--8UhLTD { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--0M-Dzq { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--72crRY { background: lime; }
+.local-Ident-name\\\\.module--💩--7uK8qM { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--L-dtlw { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--siEE0h { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--MWGP9- { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--Ie3pA9 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--WwHPwk { background: lime; }
+.local-Ident-name\\\\.module--123--Nm8irE { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--bVeVN5 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--HpZvES { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--Hz1mIz { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--jkaqMF { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--WLkUKg { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--jZQh9o { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--tDxSdx { background: lime; }
+.local-Ident-name\\\\.module--_--3k2Agq { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--nRmS1p { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--V2cCf7 { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--7yacah { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--DqSicW { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--7Xp248 { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--u54HDK { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--lJEk9y { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--DGQBRU { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--QbjpCQ { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--T3prsX { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--jt-RhY { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--98SqRg { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--bBOiFl { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--2nkRzH {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--00tycH {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--aTk6tX {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--Xyl0u2 {
+  background: hotpink;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-14 ***!
+  \\\\*************************************************************/
+.local-Ident-name\\\\.module--test--a60f4680ad27 {
+  background: red;
+}
+
+.local-Ident-name\\\\.module--_test--89d707c3fad8 {
+  background: blue;
+}
+
+.local-Ident-name\\\\.module--className--9f53c7efa137 {
+  background: red;
+}
+
+#local-Ident-name\\\\.module--someId--bfc6d0920e46 {
+  background: green;
+}
+
+.local-Ident-name\\\\.module--className--9f53c7efa137 .local-Ident-name\\\\.module--subClass--97560fae798c {
+  color: green;
+}
+
+#local-Ident-name\\\\.module--someId--bfc6d0920e46 .local-Ident-name\\\\.module--subClass--97560fae798c {
+  color: blue;
+}
+
+.local-Ident-name\\\\.module---a0-34a___f--4612db420e23 {
+  color: red;
+}
+
+.local-Ident-name\\\\.module--m_x_\\\\@--e7a6eff38a8d {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.local-Ident-name\\\\.module--B\\\\&W\\\\?--8cd981d8b590 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* matches elements with class=\\":\`(\\" */
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--bc61af26245b {
+  color: aqua;
+}
+
+/* matches elements with class=\\"1a2b3c\\" */
+.local-Ident-name\\\\.module--1a2b3c--b883ad2dd9f8 {
+  color: aliceblue;
+}
+
+/* matches the element with id=\\"#fake-id\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id--9e548df04926 {
+  color: antiquewhite;
+}
+
+/* matches the element with id=\\"-a-b-c-\\" */
+#local-Ident-name\\\\.module---a-b-c---b170d6339a09 {
+  color: azure;
+}
+
+/* matches the element with id=\\"©\\" */
+#local-Ident-name\\\\.module--©--73e3d1219ba0 {
+  color: black;
+}
+
+.local-Ident-name\\\\.module--♥--76ddd7511c43 { background: lime; }
+.local-Ident-name\\\\.module--©--73e3d1219ba0 { background: lime; }
+.local-Ident-name\\\\.module--😍--29d85c2489ef { background: lime; }
+.local-Ident-name\\\\.module--“‘’”--bf4bc7cf1f92 { background: lime; }
+.local-Ident-name\\\\.module--☺☃--543bef227373 { background: lime; }
+.local-Ident-name\\\\.module--⌘⌥--d045ac42a7d0 { background: lime; }
+.local-Ident-name\\\\.module--𝄞♪♩♫♬--95edd86361c1 { background: lime; }
+.local-Ident-name\\\\.module--💩--54f8b2bdd0e9 { background: lime; }
+.local-Ident-name\\\\.module--\\\\?--f76eafe5a169 { background: lime; }
+.local-Ident-name\\\\.module--\\\\@--e273723fec35 { background: lime; }
+.local-Ident-name\\\\.module--\\\\.--5470f44f036b { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\)--17eb8b70354f { background: lime; }
+.local-Ident-name\\\\.module--\\\\:\\\\\`\\\\(--bc61af26245b { background: lime; }
+.local-Ident-name\\\\.module--123--d17ed8537e79 { background: lime; }
+.local-Ident-name\\\\.module--1a2b3c--b883ad2dd9f8 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<p\\\\>--3ee2ce137c10 { background: lime; }
+.local-Ident-name\\\\.module--\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\>--f10fbf26846b { background: lime; }
+.local-Ident-name\\\\.module--\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.------\\\\.--------\\\\.\\\\>\\\\+\\\\.\\\\>\\\\.--35f5b6eb7413 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#--e4f1b73cd809 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\#--405237512524 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#\\\\.\\\\#\\\\.\\\\#--381b432f1b73 { background: lime; }
+.local-Ident-name\\\\.module--_--572d2835970e { background: lime; }
+.local-Ident-name\\\\.module--\\\\{\\\\}--00d46b3a8952 { background: lime; }
+.local-Ident-name\\\\.module--\\\\#fake-id--9e548df04926 { background: lime; }
+.local-Ident-name\\\\.module--foo\\\\.bar--d1268ba07c09 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover--5c74060ab542 { background: lime; }
+.local-Ident-name\\\\.module--\\\\:hover\\\\:focus\\\\:active--940cf6c5d089 { background: lime; }
+.local-Ident-name\\\\.module--\\\\[attr\\\\=value\\\\]--e0514aa37eca { background: lime; }
+.local-Ident-name\\\\.module--f\\\\/o\\\\/o--7590fb61ecff { background: lime; }
+.local-Ident-name\\\\.module--f\\\\\\\\o\\\\\\\\o--ac338e117e89 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\*o\\\\*o--e6413d687d7f { background: lime; }
+.local-Ident-name\\\\.module--f\\\\!o\\\\!o--dd84868984da { background: lime; }
+.local-Ident-name\\\\.module--f\\\\'o\\\\'o--d25297ca72bf { background: lime; }
+.local-Ident-name\\\\.module--f\\\\~o\\\\~o--72d738764f15 { background: lime; }
+.local-Ident-name\\\\.module--f\\\\+o\\\\+o--50ed97029705 { background: lime; }
+
+.local-Ident-name\\\\.module--foo\\\\/bar--4fbc31b40f2d {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar--ae3f0073234b {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\/bar\\\\/baz--e0d2321851b9 {
+  background: hotpink;
+}
+
+.local-Ident-name\\\\.module--foo\\\\\\\\bar\\\\\\\\baz--782f833dc5da {
+  background: hotpink;
+}
+
 /*!*************************!*\\\\
   !*** css ./order-1.css ***!
   \\\\*************************/
@@ -2688,6 +3575,73 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 
 .path-placeholder_module_css-\\\\[\\\\/\\\\?\\\\<\\\\>\\\\\\\\\\\\\\\\\\\\:\\\\*\\\\|\\\\\\"\\\\:\\\\] {
 	color: yellow;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./colors.module.css ***!
+  \\\\*******************************/
+
+
+
+
+/*!***************************************!*\\\\
+  !*** css ./at-value-extra.module.css ***!
+  \\\\***************************************/
+
+
+
+.at-value-extra_module_css-shadow {
+	box-shadow:
+		0 10px 10px rgba(0, 0, 0, 0.5),
+		10px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+
+.at-value-extra_module_css-foo1 { prop: func(red); }
+.at-value-extra_module_css-foo2 { prop: func(10px red); }
+.at-value-extra_module_css-foo3 { prop: func(red 10px); }
+.at-value-extra_module_css-foo4 { prop: func(10px red 10px); }
+.at-value-extra_module_css-foo5 { prop: func(10px, red); }
+.at-value-extra_module_css-foo6 { prop: func(red, 10px); }
+
+
+
+
+.at-value-extra_module_css-uses-composed-shadow {
+	box-shadow: 0 0 imported-color, 0 0 imported-color;
+}
+
+
+
+
+.at-value-extra_module_css-from-node-modules {
+	color: #000;
+	background: #fff;
+}
+
+
+
+
+
+.at-value-extra_module_css-chained {
+	color: green;
+}
+
+
+
+
+
+.at-value-extra_module_css-spacing {
+	margin: v-large 0;
+	padding: calc(v-base * 2);
+}
+
+
+
+.at-value-extra_module_css-multi-import {
+	color: gold;
+	background: navy;
 }
 
 ",
