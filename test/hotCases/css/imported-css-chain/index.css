@@ -1,0 +1,13 @@
+@import "./c.css";
+@import "./b.css";
+
+.host {
+	border: 1px solid red;
+}
+---
+@import "./c.css";
+@import "./b.css";
+
+.host {
+	border: 1px solid blue;
+}

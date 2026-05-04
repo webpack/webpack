@@ -1,0 +1,9 @@
+.button {
+	composes: shared from "./shared.module.css";
+	color: red;
+}
+---
+.button {
+	composes: shared from "./shared.module.css";
+	color: green;
+}
