@@ -769,9 +769,6 @@ const knownBugs = [
 	"expressions/dynamic-import/import-attributes/2nd-param-with-non-object.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-with-value-abrupt.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-with-value-non-string.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-return.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
@@ -852,11 +849,16 @@ const knownBugs = [
 	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
 	"eval-code/indirect/var-env-var-init-global-exstng.js",
 
-	// `with` problems
+	// `with` problems — webpack hoists/scopes bindings such that compound
+	// assignment, mutation through deleted prototype-chain entries, and idref
+	// rewrites inside `with` proxy environments don't preserve spec semantics.
 	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
 	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
 	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
 
+	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
+	// or collide global bindings; webpack wraps each module so `this` is not
+	// the realm's global object and there is no Script Record context.
 	"global-code/decl-func.js",
 	"global-code/script-decl-func-err-non-configurable.js",
 	"global-code/script-decl-func-err-non-extensible.js",
@@ -867,9 +869,16 @@ const knownBugs = [
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
 
+	// `Object.defineProperty(this, "x", { get })` on the global object — the
+	// test relies on the getter side-effect (deleting `this.x`) being visible
+	// to a bare `x--` reference. Webpack wraps modules so `this` is not the
+	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
 
+	// Assignment tests rely on `with` proxy env bindings going stale during
+	// the assignment (PutValue must use the original Reference even after the
+	// binding is deleted). Webpack's transforms break this invariant.
 	"expressions/assignment/S11.13.1_A5_T1.js",
 	"expressions/assignment/S11.13.1_A5_T2.js",
 	"expressions/assignment/S11.13.1_A5_T3.js",
@@ -877,13 +886,24 @@ const knownBugs = [
 	"expressions/assignment/S11.13.1_A6_T2.js",
 	"expressions/assignment/S11.13.1_A6_T3.js",
 
+	// `delete global.NaN` (via `var global = this;`) — relies on `this` being
+	// the realm's global object, which it is not under webpack's module wrap.
 	"expressions/delete/11.4.1-4.a-8-s.js",
+	// `delete super[(super(), 0)]` in a derived constructor — webpack rewrites
+	// `super` references in a way that doesn't preserve the uninitialized
+	// `this`-binding ReferenceError before the inner `super()` call runs.
 	"expressions/delete/super-property-uninitialized-this.js",
 
-	// Not a bug, we need to improve our test runner
+	// Not a bug, we need to improve our test runner — the test asserts that
+	// `await new Promise()` body executes immediately, but our async-promise
+	// wait misses the synchronous `assert(called)` due to microtask ordering.
 	"statements/async-function/evaluation-body.js",
 
-	// Do we need to call `Object.setPrototypeOf(__webpack_exports__, null);` for namespace imports and other things
+	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
+	// is a plain object with `__esModule: true` rather than a true namespace
+	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
+	// freezing/extensibility tweaks) would change runtime behaviour broadly,
+	// so these spec-conformance tests remain skipped.
 	"module-code/namespace/internals/get-own-property-str-found-init.js",
 	"module-code/namespace/internals/get-own-property-str-found-uninit.js",
 	"module-code/namespace/internals/get-prototype-of.js",
@@ -897,8 +917,14 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
+	// `await a?.b` where `a` is named like a contextual keyword — acorn parses
+	// this differently from V8 in our test harness, the result is `undefined`
+	// vs the spec-required value. Upstream parser limitation.
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
+	// Nested `import(import(...))` — webpack collapses dynamic-import
+	// expressions to module dependencies at compile time and cannot represent
+	// `import` calls whose argument is itself a dynamic import.
 	"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
@@ -912,6 +938,11 @@ const knownBugs = [
 	"expressions/dynamic-import/syntax/valid/new-covered-expression-is-valid.js",
 	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
 
+	// Module Namespace Exotic Object semantics for the dynamically imported
+	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
+	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
+	// throw-on-set in strict, sorted ownKeys, and frozen prop descriptors are
+	// not all satisfied (same root cause as `module-code/namespace/internals/*`).
 	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-no-strict.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-strict.js",
@@ -944,6 +975,10 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
+	// Tests catch the SyntaxError from importing `script-code_FIXTURE.js`
+	// (a script-only file that shouldn't parse as a module). webpack treats
+	// every imported file as a module and won't surface the script-vs-module
+	// mismatch as a runtime SyntaxError.
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-eval-script-code-target.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-await-eval-script-code-target.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-eval-script-code-target.js",
@@ -961,6 +996,10 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-while-import-catch-eval-script-code-target.js",
 	"expressions/dynamic-import/catch/top-level-import-catch-eval-script-code-target.js",
 
+	// Tests expect a runtime SyntaxError from an ambiguous re-export
+	// (`export * from a; export * from b;` with the same name in both).
+	// webpack reports ambiguous exports as a build-time error, not as a
+	// runtime rejection of `import()`.
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
@@ -977,6 +1016,10 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-ambiguous-import.js",
 
+	// Tests expect a runtime SyntaxError from a circular re-export chain
+	// (`a` re-exports from `b`, `b` re-exports from `a`). webpack resolves
+	// circular exports during the build and does not surface this as a
+	// runtime rejection of `import()`.
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-circular.js",
@@ -993,6 +1036,19 @@ const knownBugs = [
 	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
 
+	// Dynamic-import edge cases that don't fit webpack's static module graph:
+	// - Self-importing script that asserts evaluation count.
+	// - Async-generator yielding `import()` of a module whose top-level export
+	//   throws ("poisoned" fixture).
+	// - Re-importing a module that previously errored: webpack caches the
+	//   failed module and replays its error rather than re-evaluating.
+	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
+	//   require dynamic specifiers webpack cannot resolve at build time.
+	// - `import(<UnaryExpression>)` (e.g. `import(typeof {})`): non-string
+	//   specifiers are emitted by the parser but webpack rejects them.
+	// - The `import-defer/*/main.js` cases interleave defer and eager loads of
+	//   the same module graph; webpack currently produces a single shared
+	//   module record so ordering and async-vs-sync semantics differ.
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
@@ -1005,6 +1061,10 @@ const knownBugs = [
 	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
 	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
 
+	// Top-level-await ordering/observability: webpack inlines TLA into a
+	// promise chain inside the runtime, so V8/Node's Module Record evaluation
+	// order (rejection-order, fulfillment-order, async-evaluation-count reset)
+	// and "module graph does not hang on cycle" semantics are not preserved.
 	"module-code/top-level-await/unobservable-global-async-evaluation-count-reset.js",
 	"module-code/top-level-await/dynamic-import-resolution.js",
 	"module-code/top-level-await/rejection-order.js",
@@ -1012,6 +1072,9 @@ const knownBugs = [
 	"module-code/top-level-await/fulfillment-order.js",
 	"module-code/top-level-await/module-graphs-does-not-hang.js",
 
+	// Same root cause as the postfix variants above: getter on a global `this`
+	// property must run before the increment writes back, but webpack scopes
+	// bare `x` to its module wrapper rather than the realm global.
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
