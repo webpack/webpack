@@ -625,5 +625,56 @@ ${details(snapshot)}`)
 				done();
 			});
 		});
+
+		it("keeps the snapshot valid when watchpack reports `{}` for a missing dependency that is still missing", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					if (err) return done(err);
+					const fsInfo2 = createFsInfo(fs);
+					// Pretend watchpack reports an existence-only entry for a
+					// missing dep. The fix must treat this as "no info" and
+					// re-stat the file, observing that it still doesn't exist.
+					fsInfo2.addFileTimestamps(
+						new Map([["/path/package.json", {}]]),
+						true
+					);
+					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(true);
+						done();
+					});
+				}
+			);
+		});
+
+		it("invalidates the snapshot when a previously-missing dep now exists", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					if (err) return done(err);
+					// Create the missing file and re-check.
+					fs.writeFileSync("/path/package.json", "{}");
+					const fsInfo2 = createFsInfo(fs);
+					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(false);
+						done();
+					});
+				}
+			);
+		});
 	});
 });
