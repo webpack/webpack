@@ -6788,7 +6788,7 @@ declare interface Experiments {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.
+	 * Enable experimental HTML support. This flag does not by itself make `.html` files usable directly as entry points without additional HTML handling.
 	 * @experimental
 	 */
 	html?: boolean;
@@ -21824,7 +21824,6 @@ declare class Source {
 	constructor();
 	source(): SourceValue;
 	buffer(): Buffer;
-	buffers(): Buffer[];
 	size(): number;
 	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): SourceAndMap;
@@ -21851,11 +21850,6 @@ declare interface SourceLike {
 	 * buffer
 	 */
 	buffer?: () => Buffer;
-
-	/**
-	 * buffers
-	 */
-	buffers?: () => Buffer[];
 
 	/**
 	 * size

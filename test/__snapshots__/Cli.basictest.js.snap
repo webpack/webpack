@@ -829,32 +829,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-future-defaults": Object {
-    "configs": Array [
-      Object {
-        "description": "Apply defaults of next major version.",
-        "multiple": false,
-        "path": "experiments.futureDefaults",
-        "type": "boolean",
-      },
-    ],
-    "description": "Apply defaults of next major version.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-html": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable HTML entry support. Treats \`.html\` files as a first-class module type so they can be used directly as entry points.",
-        "multiple": false,
-        "path": "experiments.html",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable HTML entry support. Treats \`.html\` files as a first-class module type so they can be used directly as entry points.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-lazy-compilation": Object {
     "configs": Array [
       Object {
