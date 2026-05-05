@@ -894,9 +894,12 @@ const knownBugs = [
 	// `this`-binding ReferenceError before the inner `super()` call runs.
 	"expressions/delete/super-property-uninitialized-this.js",
 
-	// Not a bug, we need to improve our test runner — the test asserts that
-	// `await new Promise()` body executes immediately, but our async-promise
-	// wait misses the synchronous `assert(called)` due to microtask ordering.
+	// `foo()` in this test discards a promise that synchronously rejects with
+	// `TypeError` (from `new Promise()` with no executor). Jest's per-test
+	// `unhandledRejection` tracking surfaces that rejection as a test failure
+	// even though the test itself only asserts `assert(called)` synchronously.
+	// Working around it would require sandboxing Jest's rejection tracking
+	// per-test, which is a substantial test-runner refactor.
 	"statements/async-function/evaluation-body.js",
 
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
@@ -1083,9 +1086,6 @@ const knownBugs = [
 
 	// We need to handle `import.meta` in `import`
 	"expressions/dynamic-import/assignment-expression/import-meta.js",
-
-	// Bug in parser
-	"expressions/dynamic-import/assignment-expression/cover-parenthesized-expr.js",
 
 	// Looks like a bug in webpack
 	"module-code/top-level-await/dynamic-import-rejection.js",
