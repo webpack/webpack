@@ -754,16 +754,18 @@ const knownBugs = [
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
 	"import/import-attributes/json-via-namespace.js",
-	// `yield` outside a generator in strict-mode is a SyntaxError, but the
-	// test262 runner only prepends `'use strict'` outside webpack's bundled
-	// module wrapper, so the source itself parses in non-strict mode and the
-	// expected `negative: { phase: parse, type: SyntaxError }` doesn't fire.
+	// `import(spec, options)` cases where the second argument cannot be lifted
+	// to a static `with`/`assert` attributes object. webpack's
+	// `ImportDependency` template overwrites the entire `import(...)` source
+	// range with the runtime require chain and so drops the second
+	// argument's evaluation entirely (`yield`, sequence expressions, getters
+	// that throw, ToString conversion, etc). The spec also requires runtime
+	// validation of the options object (must be Object, `with`/`assert`
+	// keys, value type checks).
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
-	// These rely on webpack implementing the spec's runtime second-arg
-	// validation (must be Object, `with`/`assert` keys, value type checks)
-	// at the call site — wrapping the runtime require chain in an IIFE
-	// preserves evaluation, but the spec also requires throwing TypeError
-	// from the import call when the options aren't well-formed.
+	"expressions/dynamic-import/import-attributes/2nd-param-yield-expr.js",
+	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-return.js",
+	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-get-with-error.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-non-object.js",
