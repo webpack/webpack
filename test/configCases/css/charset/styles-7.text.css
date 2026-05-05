@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+@import "./inherit-charset.text.css";
+
+.class-7 {
+	color: red;
+}

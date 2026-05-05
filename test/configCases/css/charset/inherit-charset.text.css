@@ -1,0 +1,5 @@
+@import "./leaf-with-charset.text.css";
+
+.inherit-charset {
+	color: red;
+}

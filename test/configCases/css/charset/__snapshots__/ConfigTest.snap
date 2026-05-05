@@ -177,6 +177,60 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 `;
 
 exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 5`] = `
+"@charset \\"UTF-8\\";
+/*!***********************************************************!*\\\\
+  !*** css ./leaf-with-charset.text.css (exportType: text) ***!
+  \\\\***********************************************************/
+
+
+.leaf-with-charset {
+	color: red;
+}
+
+/*!*********************************************************!*\\\\
+  !*** css ./inherit-charset.text.css (exportType: text) ***!
+  \\\\*********************************************************/
+
+.inherit-charset {
+	color: red;
+}
+
+/*!**************************************************!*\\\\
+  !*** css ./styles-7.text.css (exportType: text) ***!
+  \\\\**************************************************/
+
+
+
+.class-7 {
+	color: red;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 6`] = `
+"@charset \\"UTF-8\\";
+/*!***********************************************************!*\\\\
+  !*** css ./leaf-with-charset.text.css (exportType: text) ***!
+  \\\\***********************************************************/
+
+
+.leaf-with-charset {
+	color: red;
+}
+
+/*!*********************************************************!*\\\\
+  !*** css ./inherit-charset.text.css (exportType: text) ***!
+  \\\\*********************************************************/
+
+.inherit-charset {
+	color: red;
+}
+
+"
+`;
+
+exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 7`] = `
 Array [
   "/*!********************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: style) ***!
