@@ -772,14 +772,12 @@ const knownBugs = [
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-return.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
-	// Bugs with defer
+	// `#mark in obj` requires the deferred namespace target to report
+	// `isExtensible() === false` to throw a TypeError. webpack's proxy
+	// target is mutable until init runs and cannot be frozen up-front
+	// because the underlying module's exports aren't yet known.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	"import/import-defer/evaluation-triggers/ignore-set-string-exported.js",
-	"import/import-defer/evaluation-triggers/ignore-set-string-not-exported.js",
-	"import/import-defer/evaluation-triggers/trigger-exported-string-delete.js",
-	"import/import-defer/evaluation-triggers/trigger-not-exported-string-delete.js",
 	// Bugs with defer and evaluation
-	"import/import-defer/deferred-namespace-object/identity.js",
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
@@ -1051,7 +1049,11 @@ const knownProductionBuildBugs = [
 	"module-code/instn-star-props-nrml.js",
 	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
 	// Production concatenation orders eager import after defer
-	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js"
+	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
+	// Production concatenation inlines a re-exported deferred namespace as
+	// the eager namespace of the underlying module, so cross-file deferred
+	// namespaces are no longer the same object as the local Proxy.
+	"import/import-defer/deferred-namespace-object/identity.js"
 ];
 /* cspell:enable */
 
