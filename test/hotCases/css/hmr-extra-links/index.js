@@ -1,12 +1,15 @@
 import "./index.css";
 
-const findOurLink = () =>
-	[...window.document.getElementsByTagName("link")].find(
-		(link) =>
-			link.rel === "stylesheet" &&
-			link.href &&
-			link.href.includes("bundle.css")
+const findOurLink = () => {
+	const link = [...window.document.getElementsByTagName("link")].find(
+		(item) =>
+			item.rel === "stylesheet" &&
+			item.href &&
+			item.href.includes("bundle.css")
 	);
+	expect(link).toBeDefined();
+	return link;
+};
 
 it("should not touch non-stylesheet, data:, anchor or external links during CSS HMR", (done) => {
 	const head = window.document.head;

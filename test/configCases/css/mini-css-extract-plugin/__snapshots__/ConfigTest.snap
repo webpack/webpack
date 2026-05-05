@@ -509,6 +509,15 @@ exports[`ConfigTestCases css mini-css-extract-plugin exported tests should work 
 	}
 }
 
+/*!***********************************************************!*\\\\
+  !*** css ./local-at-import-layer.css (layer: layer-name) ***!
+  \\\\***********************************************************/
+@layer layer-name {
+	.local-import-layer {
+		color: orange;
+	}
+}
+
 /*!********************************************!*\\\\
   !*** css ./local-at-import-with-media.css ***!
   \\\\********************************************/
