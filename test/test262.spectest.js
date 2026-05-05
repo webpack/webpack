@@ -747,8 +747,6 @@ const knownBugs = [
 	"statements/using/syntax/using-for-statement.js",
 	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
 	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
-	"expressions/dynamic-import/syntax/invalid/nested-with-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/top-level-import-defer-no-new-call-expression.js",
 
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
@@ -804,7 +802,12 @@ const knownBugs = [
 	"module-code/export-expname-binding-index.js",
 	// When two `export * from "one"; export * from "two";` re-exports the same export, it should be false for `in`
 	"module-code/ambiguous-export-bindings/omitted-from-namespace.js",
-	// Bug when you export `valueOf` and use `Number`
+	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
+	// module namespace exotic object). webpack's `__webpack_exports__` is a
+	// plain object inheriting `Object.prototype`, so `Object.prototype.toString`
+	// is reachable and returns `"[object Module]"` instead of falling back to
+	// the exported `valueOf`. Setting the prototype to `null` would impact
+	// other webpack-generated code paths.
 	"expressions/dynamic-import/custom-primitive.js",
 	// `import.meta` in script context should throw SyntaxError
 	"expressions/import.meta/syntax/goal-script.js",
@@ -812,27 +815,6 @@ const knownBugs = [
 	"import/import-attributes/text-via-namespace.js",
 	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
 	"expressions/import.meta/distinct-for-each-module.js",
-	// We should throw `SyntaxError` here instead `Can't resolve`
-	"expressions/dynamic-import/syntax/invalid/nested-arrow-assignment-expression-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-arrow-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-arrow-function-await-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-arrow-function-return-await-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-function-await-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-function-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-function-return-await-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-async-gen-await-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-block-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-block-labeled-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-do-while-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-else-braceless-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-else-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-function-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-function-return-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-if-braceless-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-if-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-while-import-defer-no-new-call-expression.js",
-	"expressions/dynamic-import/syntax/invalid/nested-with-expression-import-defer-no-new-call-expression.js",
-
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
 	"module-code/namespace/internals/own-property-keys-binding-types.js",
 	"module-code/namespace/internals/own-property-keys-sort.js",
@@ -938,7 +920,6 @@ const knownBugs = [
 	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-script-code-valid.js",
-	"expressions/dynamic-import/syntax/valid/new-covered-expression-is-valid.js",
 	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
