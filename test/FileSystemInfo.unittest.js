@@ -500,4 +500,130 @@ ${details(snapshot)}`)
 			);
 		});
 	});
+
+	// Reproduces the type-lie discussed in webpack/webpack#16886:
+	// `addFileTimestamps`/`addContextTimestamps` accept watchpack-style
+	// `ExistenceOnlyTimeEntry` (`{}`) values, but the cached entries used to
+	// be compared directly against snapshots that include a `timestamp` /
+	// `timestampHash`. Cache lookups now treat existence-only entries as a
+	// cache miss and re-read from disk so snapshots stay valid.
+	describe("existence-only watchpack entries", () => {
+		const buildFsInfoWithSnapshot = (callback) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					if (err) return callback(err);
+					callback(null, fs, snapshot);
+				}
+			);
+		};
+
+		const onlyNonIgnored = (paths) => paths.filter((p) => !ignored.includes(p));
+
+		it("keeps the snapshot valid when watchpack reports `{}` for context dirs", (done) => {
+			buildFsInfoWithSnapshot((err, fs, snapshot) => {
+				if (err) return done(err);
+				const fsInfo = createFsInfo(fs);
+				const map = new Map(directories.map((d) => [d, {}]));
+				fsInfo.addContextTimestamps(map, true);
+				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+					if (err) return done(err);
+					expect(valid).toBe(true);
+					done();
+				});
+			});
+		});
+
+		it("keeps the snapshot valid when watchpack reports `{}` for files", (done) => {
+			buildFsInfoWithSnapshot((err, fs, snapshot) => {
+				if (err) return done(err);
+				const fsInfo = createFsInfo(fs);
+				const map = new Map(onlyNonIgnored(files).map((f) => [f, {}]));
+				fsInfo.addFileTimestamps(map, true);
+				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+					if (err) return done(err);
+					expect(valid).toBe(true);
+					done();
+				});
+			});
+		});
+
+		it("keeps the snapshot valid when watchpack reports `{ safeTime }` (no timestampHash) for an existing context dir", (done) => {
+			buildFsInfoWithSnapshot((err, fs, snapshot) => {
+				if (err) return done(err);
+				const fsInfo = createFsInfo(fs);
+				// Only target existing directories — for missing ones the cache
+				// would claim the dir exists while the snapshot says it doesn't.
+				fsInfo.addContextTimestamps(
+					new Map([["/path/context+files", { safeTime: 1 }]]),
+					true
+				);
+				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+					if (err) return done(err);
+					expect(valid).toBe(true);
+					done();
+				});
+			});
+		});
+
+		it("invalidates the snapshot when watchpack `safeTime` is newer than snapshot start", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			const startTime = Date.now() - 1000;
+			fsInfo.createSnapshot(
+				startTime,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					if (err) return done(err);
+					const fsInfo2 = createFsInfo(fs);
+					fsInfo2.addContextTimestamps(
+						new Map([["/path/context+files", { safeTime: startTime + 5000 }]]),
+						true
+					);
+					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(false);
+						done();
+					});
+				}
+			);
+		});
+
+		it("getContextTimestamp falls back to disk read when cache is `{}`", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			const dir = "/path/context+files";
+			fsInfo.addContextTimestamps(new Map([[dir, {}]]), true);
+			fsInfo.getContextTimestamp(dir, (err, entry) => {
+				if (err) return done(err);
+				expect(entry).toBeTruthy();
+				expect(entry).not.toBe("ignore");
+				expect(entry).toHaveProperty("timestampHash");
+				done();
+			});
+		});
+
+		it("getFileTimestamp falls back to disk read when cache is `{}`", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			const file = "/path/file.txt";
+			fsInfo.addFileTimestamps(new Map([[file, {}]]), true);
+			fsInfo.getFileTimestamp(file, (err, entry) => {
+				if (err) return done(err);
+				expect(entry).toBeTruthy();
+				expect(entry).not.toBe("ignore");
+				expect(entry).toHaveProperty("timestamp");
+				done();
+			});
+		});
+	});
 });
