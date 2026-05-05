@@ -50,8 +50,6 @@ Array [
 
 exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 2`] = `
 "@charset \\"UTF-8\\";
-@charset \\"UTF-8\\";
-@charset \\"UTF-8\\";
 /*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
   \\\\*******************************************************/
@@ -61,7 +59,6 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 	color: red;
 }
 
-@charset \\"UTF-8\\";
 /*!***************************************************************!*\\\\
   !*** css ./import-nested.text.css?foo=bar (exportType: text) ***!
   \\\\***************************************************************/
@@ -81,8 +78,6 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 	color: red;
 }
 
-@charset \\"UTF-8\\";
-@charset \\"UTF-8\\";
 /*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
   \\\\*******************************************************/
@@ -92,7 +87,6 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 	color: red;
 }
 
-@charset \\"UTF-8\\";
 /*!***************************************************************!*\\\\
   !*** css ./import-nested.text.css?foo=bar (exportType: text) ***!
   \\\\***************************************************************/
@@ -127,7 +121,6 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 
 exports[`ConfigTestCases css charset exported tests should handle \`@charset\` at-rule 3`] = `
 "@charset \\"UTF-8\\";
-@charset \\"UTF-8\\";
 /*!*******************************************************!*\\\\
   !*** css ./import-nested.text.css (exportType: text) ***!
   \\\\*******************************************************/
@@ -137,7 +130,6 @@ exports[`ConfigTestCases css charset exported tests should handle \`@charset\` a
 	color: red;
 }
 
-@charset \\"UTF-8\\";
 /*!***************************************************************!*\\\\
   !*** css ./import-nested.text.css?foo=bar (exportType: text) ***!
   \\\\***************************************************************/
