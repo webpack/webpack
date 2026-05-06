@@ -676,5 +676,35 @@ ${details(snapshot)}`)
 				}
 			);
 		});
+
+		it("snapshot creation re-reads disk when cache for a context dir lacks `timestampHash`", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			// Pre-populate the cache with a watchpack-style `{ safeTime }`
+			// entry (no `timestampHash`). Without re-reading disk during
+			// snapshot creation, the snapshot would be stored without a
+			// `timestampHash` and could miss directory-change detection on
+			// subsequent validations.
+			fsInfo.addContextTimestamps(
+				new Map([["/path/context+files", { safeTime: 1 }]]),
+				true
+			);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				["timestamp", { timestamp: true }],
+				(err, snapshot) => {
+					if (err) return done(err);
+					const stored = /** @type {Map<string, EXPECTED_ANY>} */ (
+						snapshot.contextTimestamps
+					).get("/path/context+files");
+					expect(stored).toBeTruthy();
+					expect(stored).toHaveProperty("timestampHash");
+					done();
+				}
+			);
+		});
 	});
 });
