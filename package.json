@@ -158,7 +158,7 @@
     "json5": "^2.1.3",
     "less": "^4.6.4",
     "less-loader": "^12.3.2",
-    "lint-staged": "^16.2.3",
+    "lint-staged": "^17.0.2",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
     "memfs": "^4.51.1",
