@@ -51,6 +51,12 @@ module.exports = createTestCases({
 			dep: ["g"]
 		}
 	},
+	tplPure: {
+		usedExports: ["tplPure"],
+		expect: {
+			dep: ["h"]
+		}
+	},
 	all: {
 		usedExports: [
 			"chained",
@@ -59,10 +65,11 @@ module.exports = createTestCases({
 			"typed",
 			"voided",
 			"eqStrict",
-			"neStrict"
+			"neStrict",
+			"tplPure"
 		],
 		expect: {
-			dep: ["a", "b", "c", "d", "e", "f", "g"]
+			dep: ["a", "b", "c", "d", "e", "f", "g", "h"]
 		}
 	}
 });
