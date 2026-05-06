@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 1`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 1`] = `
 Object {
   "@bounce": "basic_module_css-@bounce",
   "a": "basic_module_css-a",
@@ -39,14 +39,13 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 2`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 2`] = `
 Object {
-  "default": "classes_module_css_0c83-default",
-  "module": "classes_module_css_0c83-module",
+  "module": "classes_module_css_4420-module",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 3`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 3`] = `
 Object {
   "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
   "class-1": "composes-multiple_module_css-class-1",
@@ -56,13 +55,13 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 4`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 4`] = `
 Object {
   "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 5`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 5`] = `
 Object {
   "class-a": "scope-at-rule_module_css-class-a",
   "class-b": "scope-at-rule_module_css-class-b",
@@ -71,7 +70,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 6`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 6`] = `
 Object {
   "a": "nesting_module_css-a",
   "b": "nesting_module_css-b nesting_module_css-a",
@@ -88,14 +87,14 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 7`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 7`] = `
 Object {
   "one": "prefer-relative_module_css-one package_one_css-imported-relative",
   "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 8`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 8`] = `
 Object {
   "a": "animation-name_module_css-a",
   "animationName": "animation-name_module_css-animationName",
@@ -104,20 +103,20 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 9`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 9`] = `
 Object {
   "myClass": "at-sign-in-package-name_module_css-myClass",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 10`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 10`] = `
 Object {
   "color-grey": "gray",
   "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading node_modules_@otherlocalpackage_style_css-type-heading2",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 11`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 11`] = `
 Object {
   "#": "local-Ident-name_module_css-#",
   "##": "local-Ident-name_module_css-##",
@@ -170,7 +169,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 12`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 12`] = `
 Object {
   "#": "local-Ident-name.module--#--0fms6",
   "##": "local-Ident-name.module--##--4MjQ_",
@@ -223,7 +222,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 13`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 13`] = `
 Object {
   "#": "_-1#",
   "##": "_-1##",
@@ -276,7 +275,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 14`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 14`] = `
 Object {
   "#": "_--#",
   "##": "_--##",
@@ -329,7 +328,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 15`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 15`] = `
 Object {
   "#": "__#",
   "##": "__##",
@@ -382,7 +381,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 16`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 16`] = `
 Object {
   "#": "#--tlFV0b",
   "##": "##--7vA-7E",
@@ -435,7 +434,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 17`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 17`] = `
 Object {
   "#": "😀- -#",
   "##": "😀- -##",
@@ -488,7 +487,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 18`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 18`] = `
 Object {
   "#": "local-Ident-name.module--#--CUiuWNpacN",
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
@@ -541,7 +540,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 19`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 19`] = `
 Object {
   "#": "local-Ident-name.module--#--H4xWOk",
   "##": "local-Ident-name.module--##--qmWu4j",
@@ -594,7 +593,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 20`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 20`] = `
 Object {
   "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
@@ -647,7 +646,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 21`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 21`] = `
 Object {
   "#": "local-Ident-name.module--#--HhZOGz",
   "##": "local-Ident-name.module--##--9WIAe0",
@@ -700,7 +699,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 22`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 22`] = `
 Object {
   "#": "local-Ident-name.module--#--58ffa81a",
   "##": "local-Ident-name.module--##--e4c1f1f4",
@@ -753,7 +752,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 23`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 23`] = `
 Object {
   "#": "local-Ident-name.module--#--9Wz8iS8u",
   "##": "local-Ident-name.module--##--Xw2rY7zd",
@@ -806,7 +805,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 24`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 24`] = `
 Object {
   "#": "local-Ident-name.module--#--WLkUKg",
   "##": "local-Ident-name.module--##--jZQh9o",
@@ -859,7 +858,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 25`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 25`] = `
 Object {
   "#": "local-Ident-name.module--#--e4f1b73cd809",
   "##": "local-Ident-name.module--##--405237512524",
@@ -912,27 +911,27 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 26`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 26`] = `
 Object {
   "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
   "simple-other": "order_module_css-simple-other order-1_css-order-1",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 27`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 27`] = `
 Object {
   "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
   "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 28`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 28`] = `
 Object {
   "bar": "composes-from-less_module_css-bar foo_less-foo",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 29`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 29`] = `
 Object {
   "bar": "#fff",
   "className": "tilde_module_css-className",
@@ -940,7 +939,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 30`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 30`] = `
 Object {
   "_test": "_right_value",
   "_test1": "1",
@@ -951,14 +950,14 @@ Object {
   "_the_same_name": "_the_same_name",
   "className": "icss_module_css-className",
   "constructor": "constructor",
-  "reexport": "classes_module_css_884d-module",
+  "reexport": "classes_module_css_5011-module",
   "toString": "toString",
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 31`] = `Object {}`;
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 31`] = `Object {}`;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 32`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 32`] = `
 Object {
   "Button": "component-name_module_css-Button",
   "Container": "component-name_module_css-Container",
@@ -972,7 +971,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 33`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 33`] = `
 Object {
   "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
   "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
@@ -981,7 +980,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 34`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 34`] = `
 Object {
   "a": "file_with_many_dots_in_name_module_css-a",
   "b": "file_with_many_dots_in_name_module_css-b",
@@ -989,7 +988,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 35`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 35`] = `
 Object {
   "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
   "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
@@ -997,7 +996,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 36`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
   "b": "keyframes-leak-scope_module_css-b",
@@ -1012,7 +1011,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 37`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 37`] = `
 Object {
   "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
   "foo": "path-placeholder_module_css-foo",
@@ -1020,7 +1019,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 38`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 38`] = `
 Object {
   "alias-1": "gold",
   "alias-2": "navy",
@@ -1052,11 +1051,3164 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-loader exported tests should work 39`] = `
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 1`] = `
+Object {
+  "@bounce": "basic_module_css-@bounce",
+  "a": "basic_module_css-a",
+  "abc": "basic_module_css-abc",
+  "b": "basic_module_css-b",
+  "bar-1": "basic_module_css-bar-1",
+  "bounce": "basic_module_css-bounce",
+  "bounce2": "basic_module_css-bounce2",
+  "bounce3": "basic_module_css-bounce3",
+  "bounce4": "basic_module_css-bounce4",
+  "c": "basic_module_css-c",
+  "c1": "basic_module_css-c1",
+  "c2": "basic_module_css-c2 basic_module_css-c1",
+  "c3": "basic_module_css-c3",
+  "c4": "basic_module_css-c4",
+  "c5": "basic_module_css-c5",
+  "c6": "basic_module_css-c6",
+  "c7": "basic_module_css-c7",
+  "c8": "basic_module_css-c8",
+  "class-1": "basic_module_css-class-1",
+  "class-10": "basic_module_css-class-10",
+  "className": "basic_module_css-className",
+  "container": "basic_module_css-container",
+  "d": "basic_module_css-d",
+  "def": "basic_module_css-def basic_module_css-abc",
+  "fade-in": "basic_module_css-fade-in",
+  "ghi": "basic_module_css-ghi",
+  "id": "basic_module_css-id",
+  "jkl": "basic_module_css-jkl",
+  "q": "basic_module_css-q",
+  "slide-right": "basic_module_css-slide-right",
+  "someId": "basic_module_css-someId",
+  "subClass": "basic_module_css-subClass",
+  "x": "basic_module_css-x",
+  "y": "basic_module_css-y",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 2`] = `
+Object {
+  "module": "classes_module_css_cdbd-module",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 3`] = `
+Object {
+  "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
+  "class-1": "composes-multiple_module_css-class-1",
+  "class-2": "composes-multiple_module_css-class-2",
+  "class-other": "composes-multiple_module_css-class-other composes-multiple_module_css-other-class composes-multiple_module_css-class-1",
+  "other-class": "composes-multiple_module_css-other-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 4`] = `
+Object {
+  "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 5`] = `
+Object {
+  "class-a": "scope-at-rule_module_css-class-a",
+  "class-b": "scope-at-rule_module_css-class-b",
+  "dark-scheme": "scope-at-rule_module_css-dark-scheme",
+  "light-scheme": "scope-at-rule_module_css-light-scheme",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 6`] = `
+Object {
+  "a": "nesting_module_css-a",
+  "b": "nesting_module_css-b nesting_module_css-a",
+  "bar": "nesting_module_css-bar nesting_module_css-foo",
+  "baz": "nesting_module_css-baz",
+  "foo": "nesting_module_css-foo",
+  "n": "nesting_module_css-n nesting_module_css-a",
+  "notice": "nesting_module_css-notice",
+  "notice-heading": "nesting_module_css-notice-heading",
+  "success": "nesting_module_css-success",
+  "success-heading": "nesting_module_css-success-heading",
+  "warning": "nesting_module_css-warning",
+  "warning-heading": "nesting_module_css-warning-heading",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 7`] = `
+Object {
+  "one": "prefer-relative_module_css-one package_one_css-imported-relative",
+  "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 8`] = `
+Object {
+  "a": "animation-name_module_css-a",
+  "animationName": "animation-name_module_css-animationName",
+  "b": "animation-name_module_css-b",
+  "c": "animation-name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 9`] = `
+Object {
+  "myClass": "at-sign-in-package-name_module_css-myClass",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 10`] = `
+Object {
+  "color-grey": "gray",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading node_modules_@otherlocalpackage_style_css-type-heading2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 11`] = `
+Object {
+  "#": "local-Ident-name_module_css-#",
+  "##": "local-Ident-name_module_css-##",
+  "#.#.#": "local-Ident-name_module_css-#.#.#",
+  "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
+  "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
+  ".": "local-Ident-name_module_css-.",
+  "123": "local-Ident-name_module_css-123",
+  "1a2b3c": "local-Ident-name_module_css-1a2b3c",
+  ":)": "local-Ident-name_module_css-:)",
+  ":\`(": "local-Ident-name_module_css-:\`(",
+  ":hover": "local-Ident-name_module_css-:hover",
+  ":hover:focus:active": "local-Ident-name_module_css-:hover:focus:active",
+  "<><<<>><>": "local-Ident-name_module_css-<><<<>><>",
+  "<p>": "local-Ident-name_module_css-<p>",
+  "?": "local-Ident-name_module_css-?",
+  "@": "local-Ident-name_module_css-@",
+  "B&W?": "local-Ident-name_module_css-B&W?",
+  "[attr=value]": "local-Ident-name_module_css-[attr=value]",
+  "_": "local-Ident-name_module_css-_",
+  "_test": "local-Ident-name_module_css-_test",
+  "className": "local-Ident-name_module_css-className",
+  "f!o!o": "local-Ident-name_module_css-f!o!o",
+  "f'o'o": "local-Ident-name_module_css-f'o'o",
+  "f*o*o": "local-Ident-name_module_css-f*o*o",
+  "f+o+o": "local-Ident-name_module_css-f+o+o",
+  "f/o/o": "local-Ident-name_module_css-f/o/o",
+  "f\\\\o\\\\o": "local-Ident-name_module_css-f\\\\o\\\\o",
+  "foo.bar": "local-Ident-name_module_css-foo.bar",
+  "foo/bar": "local-Ident-name_module_css-foo/bar",
+  "foo/bar/baz": "local-Ident-name_module_css-foo/bar/baz",
+  "foo\\\\bar": "local-Ident-name_module_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "local-Ident-name_module_css-foo\\\\bar\\\\baz",
+  "f~o~o": "local-Ident-name_module_css-f~o~o",
+  "m_x_@": "local-Ident-name_module_css-m_x_@",
+  "someId": "local-Ident-name_module_css-someId",
+  "subClass": "local-Ident-name_module_css-subClass",
+  "test": "local-Ident-name_module_css-test",
+  "{}": "local-Ident-name_module_css-{}",
+  "©": "local-Ident-name_module_css-©",
+  "“‘’”": "local-Ident-name_module_css-“‘’”",
+  "⌘⌥": "local-Ident-name_module_css-⌘⌥",
+  "☺☃": "local-Ident-name_module_css-☺☃",
+  "♥": "local-Ident-name_module_css-♥",
+  "𝄞♪♩♫♬": "local-Ident-name_module_css-𝄞♪♩♫♬",
+  "💩": "local-Ident-name_module_css-💩",
+  "😍": "local-Ident-name_module_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 12`] = `
+Object {
+  "#": "local-Ident-name.module--#--0fms6",
+  "##": "local-Ident-name.module--##--4MjQ_",
+  "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
+  "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
+  ".": "local-Ident-name.module--.--Bix0N",
+  "123": "local-Ident-name.module--123--PvTN4",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--xSd9R",
+  ":)": "local-Ident-name.module--:)--kXjo5",
+  ":\`(": "local-Ident-name.module--:\`(--YZqyU",
+  ":hover": "local-Ident-name.module--:hover--QXnD_",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0eQHC",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--q0Tti",
+  "<p>": "local-Ident-name.module--<p>--RCYv0",
+  "?": "local-Ident-name.module--?--tcA6P",
+  "@": "local-Ident-name.module--@--IjjsD",
+  "B&W?": "local-Ident-name.module--B&W?--9Uv5j",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--bHMhi",
+  "_": "local-Ident-name.module--_--wWsEV",
+  "_test": "local-Ident-name.module--_test--c_lQ7",
+  "className": "local-Ident-name.module--className--QdX5M",
+  "f!o!o": "local-Ident-name.module--f!o!o--U5evv",
+  "f'o'o": "local-Ident-name.module--f'o'o--5azUC",
+  "f*o*o": "local-Ident-name.module--f*o*o--1OZxX",
+  "f+o+o": "local-Ident-name.module--f+o+o--r42Md",
+  "f/o/o": "local-Ident-name.module--f/o/o--gpPiW",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gu2u7",
+  "foo.bar": "local-Ident-name.module--foo.bar--EDSRu",
+  "foo/bar": "local-Ident-name.module--foo/bar--ARBA4",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p2TDV",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--vSOik",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--FlFA-",
+  "f~o~o": "local-Ident-name.module--f~o~o--6JU27",
+  "m_x_@": "local-Ident-name.module--m_x_@--wXBtR",
+  "someId": "local-Ident-name.module--someId--fs0tG",
+  "subClass": "local-Ident-name.module--subClass--EEiow",
+  "test": "local-Ident-name.module--test--n138O",
+  "{}": "local-Ident-name.module--{}--yOiSk",
+  "©": "local-Ident-name.module--©--ABrkO",
+  "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
+  "☺☃": "local-Ident-name.module--☺☃--_YUxr",
+  "♥": "local-Ident-name.module--♥--zQEWH",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--16ySy",
+  "💩": "local-Ident-name.module--💩--fhsK2",
+  "😍": "local-Ident-name.module--😍--rYTiW",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 13`] = `
+Object {
+  "#": "_-1#",
+  "##": "_-1##",
+  "#.#.#": "_-1#.#.#",
+  "#fake-id": "_-1#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_-1-a-b-c-",
+  "-a0-34a___f": "_-1-a0-34a___f",
+  ".": "_-1.",
+  "123": "_-1123",
+  "1a2b3c": "_-11a2b3c",
+  ":)": "_-1:)",
+  ":\`(": "_-1:\`(",
+  ":hover": "_-1:hover",
+  ":hover:focus:active": "_-1:hover:focus:active",
+  "<><<<>><>": "_-1<><<<>><>",
+  "<p>": "_-1<p>",
+  "?": "_-1?",
+  "@": "_-1@",
+  "B&W?": "_-1B&W?",
+  "[attr=value]": "_-1[attr=value]",
+  "_": "_-1_",
+  "_test": "_-1_test",
+  "className": "_-1className",
+  "f!o!o": "_-1f!o!o",
+  "f'o'o": "_-1f'o'o",
+  "f*o*o": "_-1f*o*o",
+  "f+o+o": "_-1f+o+o",
+  "f/o/o": "_-1f/o/o",
+  "f\\\\o\\\\o": "_-1f\\\\o\\\\o",
+  "foo.bar": "_-1foo.bar",
+  "foo/bar": "_-1foo/bar",
+  "foo/bar/baz": "_-1foo/bar/baz",
+  "foo\\\\bar": "_-1foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_-1foo\\\\bar\\\\baz",
+  "f~o~o": "_-1f~o~o",
+  "m_x_@": "_-1m_x_@",
+  "someId": "_-1someId",
+  "subClass": "_-1subClass",
+  "test": "_-1test",
+  "{}": "_-1{}",
+  "©": "_-1©",
+  "“‘’”": "_-1“‘’”",
+  "⌘⌥": "_-1⌘⌥",
+  "☺☃": "_-1☺☃",
+  "♥": "_-1♥",
+  "𝄞♪♩♫♬": "_-1𝄞♪♩♫♬",
+  "💩": "_-1💩",
+  "😍": "_-1😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 14`] = `
+Object {
+  "#": "_--#",
+  "##": "_--##",
+  "#.#.#": "_--#.#.#",
+  "#fake-id": "_--#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_---a-b-c-",
+  "-a0-34a___f": "_---a0-34a___f",
+  ".": "_--.",
+  "123": "_--123",
+  "1a2b3c": "_--1a2b3c",
+  ":)": "_--:)",
+  ":\`(": "_--:\`(",
+  ":hover": "_--:hover",
+  ":hover:focus:active": "_--:hover:focus:active",
+  "<><<<>><>": "_--<><<<>><>",
+  "<p>": "_--<p>",
+  "?": "_--?",
+  "@": "_--@",
+  "B&W?": "_--B&W?",
+  "[attr=value]": "_--[attr=value]",
+  "_": "_--_",
+  "_test": "_--_test",
+  "className": "_--className",
+  "f!o!o": "_--f!o!o",
+  "f'o'o": "_--f'o'o",
+  "f*o*o": "_--f*o*o",
+  "f+o+o": "_--f+o+o",
+  "f/o/o": "_--f/o/o",
+  "f\\\\o\\\\o": "_--f\\\\o\\\\o",
+  "foo.bar": "_--foo.bar",
+  "foo/bar": "_--foo/bar",
+  "foo/bar/baz": "_--foo/bar/baz",
+  "foo\\\\bar": "_--foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_--foo\\\\bar\\\\baz",
+  "f~o~o": "_--f~o~o",
+  "m_x_@": "_--m_x_@",
+  "someId": "_--someId",
+  "subClass": "_--subClass",
+  "test": "_--test",
+  "{}": "_--{}",
+  "©": "_--©",
+  "“‘’”": "_--“‘’”",
+  "⌘⌥": "_--⌘⌥",
+  "☺☃": "_--☺☃",
+  "♥": "_--♥",
+  "𝄞♪♩♫♬": "_--𝄞♪♩♫♬",
+  "💩": "_--💩",
+  "😍": "_--😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 15`] = `
+Object {
+  "#": "__#",
+  "##": "__##",
+  "#.#.#": "__#.#.#",
+  "#fake-id": "__#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "__-a-b-c-",
+  "-a0-34a___f": "__-a0-34a___f",
+  ".": "__.",
+  "123": "__123",
+  "1a2b3c": "__1a2b3c",
+  ":)": "__:)",
+  ":\`(": "__:\`(",
+  ":hover": "__:hover",
+  ":hover:focus:active": "__:hover:focus:active",
+  "<><<<>><>": "__<><<<>><>",
+  "<p>": "__<p>",
+  "?": "__?",
+  "@": "__@",
+  "B&W?": "__B&W?",
+  "[attr=value]": "__[attr=value]",
+  "_": "___",
+  "_test": "___test",
+  "className": "__className",
+  "f!o!o": "__f!o!o",
+  "f'o'o": "__f'o'o",
+  "f*o*o": "__f*o*o",
+  "f+o+o": "__f+o+o",
+  "f/o/o": "__f/o/o",
+  "f\\\\o\\\\o": "__f\\\\o\\\\o",
+  "foo.bar": "__foo.bar",
+  "foo/bar": "__foo/bar",
+  "foo/bar/baz": "__foo/bar/baz",
+  "foo\\\\bar": "__foo\\\\bar",
+  "foo\\\\bar\\\\baz": "__foo\\\\bar\\\\baz",
+  "f~o~o": "__f~o~o",
+  "m_x_@": "__m_x_@",
+  "someId": "__someId",
+  "subClass": "__subClass",
+  "test": "__test",
+  "{}": "__{}",
+  "©": "__©",
+  "“‘’”": "__“‘’”",
+  "⌘⌥": "__⌘⌥",
+  "☺☃": "__☺☃",
+  "♥": "__♥",
+  "𝄞♪♩♫♬": "__𝄞♪♩♫♬",
+  "💩": "__💩",
+  "😍": "__😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 16`] = `
+Object {
+  "#": "#--tlFV0b",
+  "##": "##--7vA-7E",
+  "#.#.#": "#.#.#--1Hd875",
+  "#fake-id": "#fake-id--ez7Dik",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
+  "-a-b-c-": "-a-b-c---jfQ3Qn",
+  "-a0-34a___f": "-a0-34a___f--OWXZy-",
+  ".": ".--ZtQPX0",
+  "123": "_123--j0sSmE",
+  "1a2b3c": "_1a2b3c--AMCMZb",
+  ":)": ":)--u1ngqY",
+  ":\`(": ":\`(--hgmvDX",
+  ":hover": ":hover--8XNA4p",
+  ":hover:focus:active": ":hover:focus:active--EpwJWE",
+  "<><<<>><>": "<><<<>><>--8jXRVC",
+  "<p>": "<p>--MHaC0-",
+  "?": "?--9Y6SkK",
+  "@": "@--Sc9iGx",
+  "B&W?": "B&W?--D7HZ-H",
+  "[attr=value]": "[attr=value]--ZTV_uO",
+  "_": "_--NFJ6vs",
+  "_test": "_test--Kfd_4M",
+  "className": "className--b9RUK8",
+  "f!o!o": "f!o!o--QQGZu2",
+  "f'o'o": "f'o'o--00bSFC",
+  "f*o*o": "f*o*o--kom_Jq",
+  "f+o+o": "f+o+o--J4WAkM",
+  "f/o/o": "f/o/o--3vNZZM",
+  "f\\\\o\\\\o": "f\\\\o\\\\o--wNzTj3",
+  "foo.bar": "foo.bar--pYS5El",
+  "foo/bar": "foo/bar--9GWp9d",
+  "foo/bar/baz": "foo/bar/baz--MRJglc",
+  "foo\\\\bar": "foo\\\\bar--CCzsTj",
+  "foo\\\\bar\\\\baz": "foo\\\\bar\\\\baz--nRgTR7",
+  "f~o~o": "f~o~o--26zzb-",
+  "m_x_@": "m_x_@--kG1v1e",
+  "someId": "someId--TlAET9",
+  "subClass": "subClass--sglK-1",
+  "test": "test--mowWgR",
+  "{}": "{}--Tr49RL",
+  "©": "©--sWiP9l",
+  "“‘’”": "“‘’”--M3gyy-",
+  "⌘⌥": "⌘⌥--oDuNAW",
+  "☺☃": "☺☃--pbZo-2",
+  "♥": "♥--e6nEYm",
+  "𝄞♪♩♫♬": "𝄞♪♩♫♬--vrTCd6",
+  "💩": "💩--1Txu-k",
+  "😍": "😍--rPyRbM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 17`] = `
+Object {
+  "#": "😀- -#",
+  "##": "😀- -##",
+  "#.#.#": "😀- -#.#.#",
+  "#fake-id": "😀- -#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "😀- --a-b-c-",
+  "-a0-34a___f": "😀- --a0-34a___f",
+  ".": "😀- -.",
+  "123": "😀- -123",
+  "1a2b3c": "😀- -1a2b3c",
+  ":)": "😀- -:)",
+  ":\`(": "😀- -:\`(",
+  ":hover": "😀- -:hover",
+  ":hover:focus:active": "😀- -:hover:focus:active",
+  "<><<<>><>": "😀- -<><<<>><>",
+  "<p>": "😀- -<p>",
+  "?": "😀- -?",
+  "@": "😀- -@",
+  "B&W?": "😀- -B&W?",
+  "[attr=value]": "😀- -[attr=value]",
+  "_": "😀- -_",
+  "_test": "😀- -_test",
+  "className": "😀- -className",
+  "f!o!o": "😀- -f!o!o",
+  "f'o'o": "😀- -f'o'o",
+  "f*o*o": "😀- -f*o*o",
+  "f+o+o": "😀- -f+o+o",
+  "f/o/o": "😀- -f/o/o",
+  "f\\\\o\\\\o": "😀- -f\\\\o\\\\o",
+  "foo.bar": "😀- -foo.bar",
+  "foo/bar": "😀- -foo/bar",
+  "foo/bar/baz": "😀- -foo/bar/baz",
+  "foo\\\\bar": "😀- -foo\\\\bar",
+  "foo\\\\bar\\\\baz": "😀- -foo\\\\bar\\\\baz",
+  "f~o~o": "😀- -f~o~o",
+  "m_x_@": "😀- -m_x_@",
+  "someId": "😀- -someId",
+  "subClass": "😀- -subClass",
+  "test": "😀- -test",
+  "{}": "😀- -{}",
+  "©": "😀- -©",
+  "“‘’”": "😀- -“‘’”",
+  "⌘⌥": "😀- -⌘⌥",
+  "☺☃": "😀- -☺☃",
+  "♥": "😀- -♥",
+  "𝄞♪♩♫♬": "😀- -𝄞♪♩♫♬",
+  "💩": "😀- -💩",
+  "😍": "😀- -😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 18`] = `
+Object {
+  "#": "local-Ident-name.module--#--CUiuWNpacN",
+  "##": "local-Ident-name.module--##--CU4LyzXr4m",
+  "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
+  "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
+  ".": "local-Ident-name.module--.--TYgwrPPlce",
+  "123": "local-Ident-name.module--123--dRCMetfS4k",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--27Ol2f1A5B",
+  ":)": "local-Ident-name.module--:)--8IGwE2kP5T",
+  ":\`(": "local-Ident-name.module--:\`(--XFoJZOBwb2",
+  ":hover": "local-Ident-name.module--:hover--gj5dKEVBLV",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--MF6oOllQUU",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--efv0wrKauZ",
+  "<p>": "local-Ident-name.module--<p>--VleHaJt0jW",
+  "?": "local-Ident-name.module--?--iQGuBSRyn5",
+  "@": "local-Ident-name.module--@--rXUc81UfOs",
+  "B&W?": "local-Ident-name.module--B&W?--2nDwDstWPk",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--pVXs1yvO-c",
+  "_": "local-Ident-name.module--_--O587A_Y16h",
+  "_test": "local-Ident-name.module--_test--jkChnYaYBV",
+  "className": "local-Ident-name.module--className--HP09CfTnX1",
+  "f!o!o": "local-Ident-name.module--f!o!o--piVwcUXcCA",
+  "f'o'o": "local-Ident-name.module--f'o'o--_4GqKKgPVD",
+  "f*o*o": "local-Ident-name.module--f*o*o--i7809YiNmT",
+  "f+o+o": "local-Ident-name.module--f+o+o--22BN9FvSaj",
+  "f/o/o": "local-Ident-name.module--f/o/o--IfM4TmY7KJ",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--smRz6NSna2",
+  "foo.bar": "local-Ident-name.module--foo.bar--ekmt08iOcx",
+  "foo/bar": "local-Ident-name.module--foo/bar--pmM_pDdiuz",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--OHGMWfcvMx",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--37QAOKIbi2",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--zz8kivuxZ6",
+  "f~o~o": "local-Ident-name.module--f~o~o--zcYow3hnn9",
+  "m_x_@": "local-Ident-name.module--m_x_@--hTokNmWv2C",
+  "someId": "local-Ident-name.module--someId--MLaknB8z97",
+  "subClass": "local-Ident-name.module--subClass--4o6O5CPJI6",
+  "test": "local-Ident-name.module--test--6y2MZL2dRW",
+  "{}": "local-Ident-name.module--{}--KmrFboxFIk",
+  "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
+  "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
+  "♥": "local-Ident-name.module--♥--44uxusx5VU",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--BSgrxZWBoa",
+  "💩": "local-Ident-name.module--💩--IYSuXUnVFH",
+  "😍": "local-Ident-name.module--😍--ZFvdqtu3qG",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 19`] = `
+Object {
+  "#": "local-Ident-name.module--#--H4xWOk",
+  "##": "local-Ident-name.module--##--qmWu4j",
+  "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
+  "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
+  ".": "local-Ident-name.module--.--v7SGE3",
+  "123": "local-Ident-name.module--123--FPfb_a",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--Prq2-n",
+  ":)": "local-Ident-name.module--:)--stxQmr",
+  ":\`(": "local-Ident-name.module--:\`(--PKfNRg",
+  ":hover": "local-Ident-name.module--:hover--7J6Ovy",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--N6KkcF",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--bH0ZRJ",
+  "<p>": "local-Ident-name.module--<p>--Lzbt_f",
+  "?": "local-Ident-name.module--?--cFxilG",
+  "@": "local-Ident-name.module--@--RJiOrO",
+  "B&W?": "local-Ident-name.module--B&W?--Cx7Xfj",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--_X7r6s",
+  "_": "local-Ident-name.module--_--jZA8cH",
+  "_test": "local-Ident-name.module--_test--IFXC8J",
+  "className": "local-Ident-name.module--className--Gf2qKu",
+  "f!o!o": "local-Ident-name.module--f!o!o--IQSVKY",
+  "f'o'o": "local-Ident-name.module--f'o'o--Jke6Ar",
+  "f*o*o": "local-Ident-name.module--f*o*o--US0RYV",
+  "f+o+o": "local-Ident-name.module--f+o+o--JZ_ZYM",
+  "f/o/o": "local-Ident-name.module--f/o/o--TnGHtD",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--zZG-0O",
+  "foo.bar": "local-Ident-name.module--foo.bar--_-hir3",
+  "foo/bar": "local-Ident-name.module--foo/bar--LMZK6C",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--44CiTQ",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--qVBL0b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--aiT34M",
+  "f~o~o": "local-Ident-name.module--f~o~o--wi3S5B",
+  "m_x_@": "local-Ident-name.module--m_x_@--j3M2wy",
+  "someId": "local-Ident-name.module--someId--hSsSyu",
+  "subClass": "local-Ident-name.module--subClass--rJLSP7",
+  "test": "local-Ident-name.module--test--_SesvC",
+  "{}": "local-Ident-name.module--{}--rC8he6",
+  "©": "local-Ident-name.module--©--if7zkU",
+  "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
+  "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
+  "♥": "local-Ident-name.module--♥--Wquu8v",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--qoKZGt",
+  "💩": "local-Ident-name.module--💩--Wmv5n7",
+  "😍": "local-Ident-name.module--😍--vXWvMf",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 20`] = `
+Object {
+  "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
+  "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
+  "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
+  "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
+  "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
+  "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
+  ".": "prefix-./local-Ident-name.module.css?local-ident-name-9---.---XxpCFm-postfix",
+  "123": "prefix-./local-Ident-name.module.css?local-ident-name-9---123---29k572-postfix",
+  "1a2b3c": "prefix-./local-Ident-name.module.css?local-ident-name-9---1a2b3c---8RwOZv-postfix",
+  ":)": "prefix-./local-Ident-name.module.css?local-ident-name-9---:)---tpNOM_-postfix",
+  ":\`(": "prefix-./local-Ident-name.module.css?local-ident-name-9---:\`(---w0y-3T-postfix",
+  ":hover": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover---p-SVOd-postfix",
+  ":hover:focus:active": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover:focus:active---7ppzcn-postfix",
+  "<><<<>><>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<><<<>><>---DV-Ytr-postfix",
+  "<p>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<p>---T4r2DZ-postfix",
+  "?": "prefix-./local-Ident-name.module.css?local-ident-name-9---?---8rRplk-postfix",
+  "@": "prefix-./local-Ident-name.module.css?local-ident-name-9---@---LKRCz--postfix",
+  "B&W?": "prefix-./local-Ident-name.module.css?local-ident-name-9---B&W?---pAfmJZ-postfix",
+  "[attr=value]": "prefix-./local-Ident-name.module.css?local-ident-name-9---[attr=value]---uMrr4n-postfix",
+  "_": "prefix-./local-Ident-name.module.css?local-ident-name-9---_---UdFsE6-postfix",
+  "_test": "prefix-./local-Ident-name.module.css?local-ident-name-9---_test---RdGpUF-postfix",
+  "className": "prefix-./local-Ident-name.module.css?local-ident-name-9---className---Rbuqv6-postfix",
+  "f!o!o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f!o!o---XqT8S3-postfix",
+  "f'o'o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f'o'o---BxXL6g-postfix",
+  "f*o*o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f*o*o---fF4DcX-postfix",
+  "f+o+o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f+o+o---F93mpm-postfix",
+  "f/o/o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f/o/o---kXNiKY-postfix",
+  "f\\\\o\\\\o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f\\\\o\\\\o---fLLGuT-postfix",
+  "foo.bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo.bar---d2rdEE-postfix",
+  "foo/bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar---uZ8i8d-postfix",
+  "foo/bar/baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar/baz---zWw2aH-postfix",
+  "foo\\\\bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar---pozdkJ-postfix",
+  "foo\\\\bar\\\\baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar\\\\baz---C9LnZz-postfix",
+  "f~o~o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f~o~o---SPRjm3-postfix",
+  "m_x_@": "prefix-./local-Ident-name.module.css?local-ident-name-9---m_x_@---0FTqJc-postfix",
+  "someId": "prefix-./local-Ident-name.module.css?local-ident-name-9---someId---rz34Z--postfix",
+  "subClass": "prefix-./local-Ident-name.module.css?local-ident-name-9---subClass---KZbh3P-postfix",
+  "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
+  "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
+  "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
+  "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
+  "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
+  "♥": "prefix-./local-Ident-name.module.css?local-ident-name-9---♥---J7fhlX-postfix",
+  "𝄞♪♩♫♬": "prefix-./local-Ident-name.module.css?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix",
+  "💩": "prefix-./local-Ident-name.module.css?local-ident-name-9---💩---Y7HlBo-postfix",
+  "😍": "prefix-./local-Ident-name.module.css?local-ident-name-9---😍---JD7n4W-postfix",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 21`] = `
+Object {
+  "#": "local-Ident-name.module--#--HhZOGz",
+  "##": "local-Ident-name.module--##--9WIAe0",
+  "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
+  "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
+  ".": "local-Ident-name.module--.--BPq0xF",
+  "123": "local-Ident-name.module--123--B3OEQK",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--oaY1J8",
+  ":)": "local-Ident-name.module--:)--Pj6vDs",
+  ":\`(": "local-Ident-name.module--:\`(--IVbXBm",
+  ":hover": "local-Ident-name.module--:hover--1mpkFN",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--YELMY9",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Uf6Aq5",
+  "<p>": "local-Ident-name.module--<p>--Wp80__",
+  "?": "local-Ident-name.module--?--Q_Zy2v",
+  "@": "local-Ident-name.module--@--SWeck6",
+  "B&W?": "local-Ident-name.module--B&W?--JmVOKE",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--s_2WkM",
+  "_": "local-Ident-name.module--_--R0gCHb",
+  "_test": "local-Ident-name.module--_test--qE51sB",
+  "className": "local-Ident-name.module--className--DXQmdk",
+  "f!o!o": "local-Ident-name.module--f!o!o--uNwFsi",
+  "f'o'o": "local-Ident-name.module--f'o'o--a6OZfH",
+  "f*o*o": "local-Ident-name.module--f*o*o--Pzh7Iy",
+  "f+o+o": "local-Ident-name.module--f+o+o--QH3xLM",
+  "f/o/o": "local-Ident-name.module--f/o/o--PcOcIs",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gaJvBS",
+  "foo.bar": "local-Ident-name.module--foo.bar--bKDReN",
+  "foo/bar": "local-Ident-name.module--foo/bar--9drIBx",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p04ctN",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--S2Dcc1",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--jFAF-g",
+  "f~o~o": "local-Ident-name.module--f~o~o--PUOhHl",
+  "m_x_@": "local-Ident-name.module--m_x_@--ZIn6c4",
+  "someId": "local-Ident-name.module--someId--tVcVTm",
+  "subClass": "local-Ident-name.module--subClass--j9K5GX",
+  "test": "local-Ident-name.module--test--Wxl9SQ",
+  "{}": "local-Ident-name.module--{}--x9uHdU",
+  "©": "local-Ident-name.module--©--GlglrH",
+  "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
+  "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
+  "♥": "local-Ident-name.module--♥--n0DExN",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--bJsUdV",
+  "💩": "local-Ident-name.module--💩--sn5uaI",
+  "😍": "local-Ident-name.module--😍--eF1kUF",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 22`] = `
+Object {
+  "#": "local-Ident-name.module--#--58ffa81a",
+  "##": "local-Ident-name.module--##--e4c1f1f4",
+  "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
+  "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
+  ".": "local-Ident-name.module--.--c60e13df",
+  "123": "local-Ident-name.module--123--1cfa6799",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b0622ca1",
+  ":)": "local-Ident-name.module--:)--7c5c25e1",
+  ":\`(": "local-Ident-name.module--:\`(--70a3d865",
+  ":hover": "local-Ident-name.module--:hover--00e0e9cf",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--9fac1801",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--de7a296d",
+  "<p>": "local-Ident-name.module--<p>--1a958d1c",
+  "?": "local-Ident-name.module--?--14d8edf4",
+  "@": "local-Ident-name.module--@--d4a78331",
+  "B&W?": "local-Ident-name.module--B&W?--a78d0393",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--c0361de2",
+  "_": "local-Ident-name.module--_--80de2974",
+  "_test": "local-Ident-name.module--_test--0473fb8d",
+  "className": "local-Ident-name.module--className--a79e037f",
+  "f!o!o": "local-Ident-name.module--f!o!o--d963c01e",
+  "f'o'o": "local-Ident-name.module--f'o'o--de8bb216",
+  "f*o*o": "local-Ident-name.module--f*o*o--43f20f40",
+  "f+o+o": "local-Ident-name.module--f+o+o--589e0f04",
+  "f/o/o": "local-Ident-name.module--f/o/o--fae128a6",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--4f58244c",
+  "foo.bar": "local-Ident-name.module--foo.bar--2f64db2c",
+  "foo/bar": "local-Ident-name.module--foo/bar--1993240b",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--6aef178e",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--64e39502",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--c92e29e0",
+  "f~o~o": "local-Ident-name.module--f~o~o--67ce3441",
+  "m_x_@": "local-Ident-name.module--m_x_@--7d75708c",
+  "someId": "local-Ident-name.module--someId--14048457",
+  "subClass": "local-Ident-name.module--subClass--20021468",
+  "test": "local-Ident-name.module--test--8270b0ef",
+  "{}": "local-Ident-name.module--{}--ae3dd8d2",
+  "©": "local-Ident-name.module--©--1b9a8b1c",
+  "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
+  "☺☃": "local-Ident-name.module--☺☃--1469d673",
+  "♥": "local-Ident-name.module--♥--49c9e5f7",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--9b2f29da",
+  "💩": "local-Ident-name.module--💩--94ba226c",
+  "😍": "local-Ident-name.module--😍--2fcf5128",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 23`] = `
+Object {
+  "#": "local-Ident-name.module--#--9Wz8iS8u",
+  "##": "local-Ident-name.module--##--Xw2rY7zd",
+  "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
+  "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
+  ".": "local-Ident-name.module--.--M5qzfpLo",
+  "123": "local-Ident-name.module--123--YUqF5zS2",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bQNiwONU",
+  ":)": "local-Ident-name.module--:)--4Iu7JUbn",
+  ":\`(": "local-Ident-name.module--:\`(--GHVmYb5c",
+  ":hover": "local-Ident-name.module--:hover--VAXzRyCg",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0lla+F2p",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--XLiNBlLA",
+  "<p>": "local-Ident-name.module--<p>--Z3z/E54Y",
+  "?": "local-Ident-name.module--?--WiZDtscd",
+  "@": "local-Ident-name.module--@--C4CmO5xx",
+  "B&W?": "local-Ident-name.module--B&W?--g3tmGQ1e",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--zQk/kDjQ",
+  "_": "local-Ident-name.module--_--qnfZWXNI",
+  "_test": "local-Ident-name.module--_test--qMUjbC/I",
+  "className": "local-Ident-name.module--className--pwM6UboM",
+  "f!o!o": "local-Ident-name.module--f!o!o--j3soDiCp",
+  "f'o'o": "local-Ident-name.module--f'o'o--MHMzH0KY",
+  "f*o*o": "local-Ident-name.module--f*o*o--26bZ4t0o",
+  "f+o+o": "local-Ident-name.module--f+o+o--vQ+lI2jp",
+  "f/o/o": "local-Ident-name.module--f/o/o--e3jIJGEf",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--G9+prJD1",
+  "foo.bar": "local-Ident-name.module--foo.bar--THng2+Bz",
+  "foo/bar": "local-Ident-name.module--foo/bar--YB6qbQ9S",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--Q20sxeqj",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--Kxtcf1c9",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--YBybJKnk",
+  "f~o~o": "local-Ident-name.module--f~o~o--JjjvJFSt",
+  "m_x_@": "local-Ident-name.module--m_x_@--Ez6PsYJh",
+  "someId": "local-Ident-name.module--someId--IGKlSlnh",
+  "subClass": "local-Ident-name.module--subClass--dwOKrGpm",
+  "test": "local-Ident-name.module--test--NLdHRDRl",
+  "{}": "local-Ident-name.module--{}--6OhFoptN",
+  "©": "local-Ident-name.module--©--tHIIl+/T",
+  "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
+  "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
+  "♥": "local-Ident-name.module--♥--7lqZpUgl",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--cvCnWCP/",
+  "💩": "local-Ident-name.module--💩--3GaohJIg",
+  "😍": "local-Ident-name.module--😍--FLeSmaPd",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 24`] = `
+Object {
+  "#": "local-Ident-name.module--#--WLkUKg",
+  "##": "local-Ident-name.module--##--jZQh9o",
+  "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
+  "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
+  ".": "local-Ident-name.module--.--MWGP9-",
+  "123": "local-Ident-name.module--123--Nm8irE",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bVeVN5",
+  ":)": "local-Ident-name.module--:)--Ie3pA9",
+  ":\`(": "local-Ident-name.module--:\`(--WwHPwk",
+  ":hover": "local-Ident-name.module--:hover--DqSicW",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--7Xp248",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Hz1mIz",
+  "<p>": "local-Ident-name.module--<p>--HpZvES",
+  "?": "local-Ident-name.module--?--L-dtlw",
+  "@": "local-Ident-name.module--@--siEE0h",
+  "B&W?": "local-Ident-name.module--B&W?--7ftAnV",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--u54HDK",
+  "_": "local-Ident-name.module--_--3k2Agq",
+  "_test": "local-Ident-name.module--_test--8xrdZV",
+  "className": "local-Ident-name.module--className--2Kh-Ov",
+  "f!o!o": "local-Ident-name.module--f!o!o--T3prsX",
+  "f'o'o": "local-Ident-name.module--f'o'o--jt-RhY",
+  "f*o*o": "local-Ident-name.module--f*o*o--QbjpCQ",
+  "f+o+o": "local-Ident-name.module--f+o+o--bBOiFl",
+  "f/o/o": "local-Ident-name.module--f/o/o--lJEk9y",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--DGQBRU",
+  "foo.bar": "local-Ident-name.module--foo.bar--7yacah",
+  "foo/bar": "local-Ident-name.module--foo/bar--2nkRzH",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--aTk6tX",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--00tycH",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--Xyl0u2",
+  "f~o~o": "local-Ident-name.module--f~o~o--98SqRg",
+  "m_x_@": "local-Ident-name.module--m_x_@--X8bP8q",
+  "someId": "local-Ident-name.module--someId--hIrhgH",
+  "subClass": "local-Ident-name.module--subClass--CS7Un_",
+  "test": "local-Ident-name.module--test--2GQpZJ",
+  "{}": "local-Ident-name.module--{}--nRmS1p",
+  "©": "local-Ident-name.module--©--iWVpcm",
+  "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
+  "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
+  "♥": "local-Ident-name.module--♥--y3MitJ",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--72crRY",
+  "💩": "local-Ident-name.module--💩--7uK8qM",
+  "😍": "local-Ident-name.module--😍--WcxZ0t",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 25`] = `
+Object {
+  "#": "local-Ident-name.module--#--e4f1b73cd809",
+  "##": "local-Ident-name.module--##--405237512524",
+  "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
+  "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
+  ".": "local-Ident-name.module--.--5470f44f036b",
+  "123": "local-Ident-name.module--123--d17ed8537e79",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b883ad2dd9f8",
+  ":)": "local-Ident-name.module--:)--17eb8b70354f",
+  ":\`(": "local-Ident-name.module--:\`(--bc61af26245b",
+  ":hover": "local-Ident-name.module--:hover--5c74060ab542",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--940cf6c5d089",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--f10fbf26846b",
+  "<p>": "local-Ident-name.module--<p>--3ee2ce137c10",
+  "?": "local-Ident-name.module--?--f76eafe5a169",
+  "@": "local-Ident-name.module--@--e273723fec35",
+  "B&W?": "local-Ident-name.module--B&W?--8cd981d8b590",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--e0514aa37eca",
+  "_": "local-Ident-name.module--_--572d2835970e",
+  "_test": "local-Ident-name.module--_test--89d707c3fad8",
+  "className": "local-Ident-name.module--className--9f53c7efa137",
+  "f!o!o": "local-Ident-name.module--f!o!o--dd84868984da",
+  "f'o'o": "local-Ident-name.module--f'o'o--d25297ca72bf",
+  "f*o*o": "local-Ident-name.module--f*o*o--e6413d687d7f",
+  "f+o+o": "local-Ident-name.module--f+o+o--50ed97029705",
+  "f/o/o": "local-Ident-name.module--f/o/o--7590fb61ecff",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--ac338e117e89",
+  "foo.bar": "local-Ident-name.module--foo.bar--d1268ba07c09",
+  "foo/bar": "local-Ident-name.module--foo/bar--4fbc31b40f2d",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--e0d2321851b9",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--ae3f0073234b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--782f833dc5da",
+  "f~o~o": "local-Ident-name.module--f~o~o--72d738764f15",
+  "m_x_@": "local-Ident-name.module--m_x_@--e7a6eff38a8d",
+  "someId": "local-Ident-name.module--someId--bfc6d0920e46",
+  "subClass": "local-Ident-name.module--subClass--97560fae798c",
+  "test": "local-Ident-name.module--test--a60f4680ad27",
+  "{}": "local-Ident-name.module--{}--00d46b3a8952",
+  "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
+  "☺☃": "local-Ident-name.module--☺☃--543bef227373",
+  "♥": "local-Ident-name.module--♥--76ddd7511c43",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--95edd86361c1",
+  "💩": "local-Ident-name.module--💩--54f8b2bdd0e9",
+  "😍": "local-Ident-name.module--😍--29d85c2489ef",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 26`] = `
+Object {
+  "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
+  "simple-other": "order_module_css-simple-other order-1_css-order-1",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 27`] = `
+Object {
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 28`] = `
+Object {
+  "bar": "composes-from-less_module_css-bar foo_less-foo",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 29`] = `
+Object {
+  "bar": "#fff",
+  "className": "tilde_module_css-className",
+  "foo": "#000",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 30`] = `
+Object {
+  "_test": "_right_value",
+  "_test1": "1",
+  "_test2": "'string'",
+  "_test3": "1px 2px 3px",
+  "_test4": "1px 2px 3px, 1px 2px 3px",
+  "_test_other": "_right_value",
+  "_the_same_name": "_the_same_name",
+  "className": "icss_module_css-className",
+  "constructor": "constructor",
+  "reexport": "classes_module_css_948f-module",
+  "toString": "toString",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 31`] = `Object {}`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 32`] = `
+Object {
+  "Button": "component-name_module_css-Button",
+  "Container": "component-name_module_css-Container",
+  "Header": "component-name_module_css-Header",
+  "HeaderTitle": "component-name_module_css-HeaderTitle component-name_module_css-Header",
+  "MyButton": "component-name_module_css-MyButton",
+  "PrimaryButton": "component-name_module_css-PrimaryButton component-name_module_css-Button",
+  "UPPER": "component-name_module_css-UPPER",
+  "lowercase": "component-name_module_css-lowercase",
+  "mixedCase": "component-name_module_css-mixedCase",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 33`] = `
+Object {
+  "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-3": "composes-chain_module_css-level-3",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 34`] = `
+Object {
+  "a": "file_with_many_dots_in_name_module_css-a",
+  "b": "file_with_many_dots_in_name_module_css-b",
+  "c": "file_with_many_dots_in_name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 35`] = `
+Object {
+  "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
+  "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
+  "simple-foo": "composes-duplicate_module_css-simple-foo imported-simple_module_css-imported-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 36`] = `
+Object {
+  "a": "keyframes-leak-scope_module_css-a",
+  "b": "keyframes-leak-scope_module_css-b",
+  "c": "keyframes-leak-scope_module_css-c",
+  "c1": "keyframes-leak-scope_module_css-c1",
+  "c2": "keyframes-leak-scope_module_css-c2",
+  "c3": "keyframes-leak-scope_module_css-c3",
+  "c4": "keyframes-leak-scope_module_css-c4",
+  "d": "keyframes-leak-scope_module_css-d",
+  "f": "keyframes-leak-scope_module_css-f",
+  "local-keyframe": "keyframes-leak-scope_module_css-local-keyframe",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 37`] = `
+Object {
+  "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
+  "foo": "path-placeholder_module_css-foo",
+  "foo/bar": "path-placeholder_module_css-foo/bar",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (link) 38`] = `
+Object {
+  "alias-1": "gold",
+  "alias-2": "navy",
+  "bar": "#fff",
+  "chain-1": "green",
+  "chain-2": "green",
+  "chain-3": "green",
+  "chained": "at-value-extra_module_css-chained",
+  "composed-shadow": "0 0 imported-color, 0 0 imported-color",
+  "def": "red",
+  "foo": "#000",
+  "foo1": "at-value-extra_module_css-foo1",
+  "foo2": "at-value-extra_module_css-foo2",
+  "foo3": "at-value-extra_module_css-foo3",
+  "foo4": "at-value-extra_module_css-foo4",
+  "foo5": "at-value-extra_module_css-foo5",
+  "foo6": "at-value-extra_module_css-foo6",
+  "from-node-modules": "at-value-extra_module_css-from-node-modules",
+  "imported-color": "tomato",
+  "multi-import": "at-value-extra_module_css-multi-import",
+  "shadow": "at-value-extra_module_css-shadow",
+  "spacing": "at-value-extra_module_css-spacing",
+  "uses-composed-shadow": "at-value-extra_module_css-uses-composed-shadow",
+  "v-base": "10px",
+  "v-color": "red",
+  "v-large": "calc(v-base * 2)",
+  "v-margin": "v-large 0",
+  "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 1`] = `
+Object {
+  "@bounce": "basic_module_css-@bounce",
+  "a": "basic_module_css-a",
+  "abc": "basic_module_css-abc",
+  "b": "basic_module_css-b",
+  "bar-1": "basic_module_css-bar-1",
+  "bounce": "basic_module_css-bounce",
+  "bounce2": "basic_module_css-bounce2",
+  "bounce3": "basic_module_css-bounce3",
+  "bounce4": "basic_module_css-bounce4",
+  "c": "basic_module_css-c",
+  "c1": "basic_module_css-c1",
+  "c2": "basic_module_css-c2 basic_module_css-c1",
+  "c3": "basic_module_css-c3",
+  "c4": "basic_module_css-c4",
+  "c5": "basic_module_css-c5",
+  "c6": "basic_module_css-c6",
+  "c7": "basic_module_css-c7",
+  "c8": "basic_module_css-c8",
+  "class-1": "basic_module_css-class-1",
+  "class-10": "basic_module_css-class-10",
+  "className": "basic_module_css-className",
+  "container": "basic_module_css-container",
+  "d": "basic_module_css-d",
+  "def": "basic_module_css-def basic_module_css-abc",
+  "fade-in": "basic_module_css-fade-in",
+  "ghi": "basic_module_css-ghi",
+  "id": "basic_module_css-id",
+  "jkl": "basic_module_css-jkl",
+  "q": "basic_module_css-q",
+  "slide-right": "basic_module_css-slide-right",
+  "someId": "basic_module_css-someId",
+  "subClass": "basic_module_css-subClass",
+  "x": "basic_module_css-x",
+  "y": "basic_module_css-y",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 2`] = `
+Object {
+  "module": "classes_module_css_ad45-module",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 3`] = `
+Object {
+  "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
+  "class-1": "composes-multiple_module_css-class-1",
+  "class-2": "composes-multiple_module_css-class-2",
+  "class-other": "composes-multiple_module_css-class-other composes-multiple_module_css-other-class composes-multiple_module_css-class-1",
+  "other-class": "composes-multiple_module_css-other-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 4`] = `
+Object {
+  "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 5`] = `
+Object {
+  "class-a": "scope-at-rule_module_css-class-a",
+  "class-b": "scope-at-rule_module_css-class-b",
+  "dark-scheme": "scope-at-rule_module_css-dark-scheme",
+  "light-scheme": "scope-at-rule_module_css-light-scheme",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 6`] = `
+Object {
+  "a": "nesting_module_css-a",
+  "b": "nesting_module_css-b nesting_module_css-a",
+  "bar": "nesting_module_css-bar nesting_module_css-foo",
+  "baz": "nesting_module_css-baz",
+  "foo": "nesting_module_css-foo",
+  "n": "nesting_module_css-n nesting_module_css-a",
+  "notice": "nesting_module_css-notice",
+  "notice-heading": "nesting_module_css-notice-heading",
+  "success": "nesting_module_css-success",
+  "success-heading": "nesting_module_css-success-heading",
+  "warning": "nesting_module_css-warning",
+  "warning-heading": "nesting_module_css-warning-heading",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 7`] = `
+Object {
+  "one": "prefer-relative_module_css-one package_one_css-imported-relative",
+  "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 8`] = `
+Object {
+  "a": "animation-name_module_css-a",
+  "animationName": "animation-name_module_css-animationName",
+  "b": "animation-name_module_css-b",
+  "c": "animation-name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 9`] = `
+Object {
+  "myClass": "at-sign-in-package-name_module_css-myClass",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 10`] = `
+Object {
+  "color-grey": "gray",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading node_modules_@otherlocalpackage_style_css-type-heading2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 11`] = `
+Object {
+  "#": "local-Ident-name_module_css-#",
+  "##": "local-Ident-name_module_css-##",
+  "#.#.#": "local-Ident-name_module_css-#.#.#",
+  "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
+  "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
+  ".": "local-Ident-name_module_css-.",
+  "123": "local-Ident-name_module_css-123",
+  "1a2b3c": "local-Ident-name_module_css-1a2b3c",
+  ":)": "local-Ident-name_module_css-:)",
+  ":\`(": "local-Ident-name_module_css-:\`(",
+  ":hover": "local-Ident-name_module_css-:hover",
+  ":hover:focus:active": "local-Ident-name_module_css-:hover:focus:active",
+  "<><<<>><>": "local-Ident-name_module_css-<><<<>><>",
+  "<p>": "local-Ident-name_module_css-<p>",
+  "?": "local-Ident-name_module_css-?",
+  "@": "local-Ident-name_module_css-@",
+  "B&W?": "local-Ident-name_module_css-B&W?",
+  "[attr=value]": "local-Ident-name_module_css-[attr=value]",
+  "_": "local-Ident-name_module_css-_",
+  "_test": "local-Ident-name_module_css-_test",
+  "className": "local-Ident-name_module_css-className",
+  "f!o!o": "local-Ident-name_module_css-f!o!o",
+  "f'o'o": "local-Ident-name_module_css-f'o'o",
+  "f*o*o": "local-Ident-name_module_css-f*o*o",
+  "f+o+o": "local-Ident-name_module_css-f+o+o",
+  "f/o/o": "local-Ident-name_module_css-f/o/o",
+  "f\\\\o\\\\o": "local-Ident-name_module_css-f\\\\o\\\\o",
+  "foo.bar": "local-Ident-name_module_css-foo.bar",
+  "foo/bar": "local-Ident-name_module_css-foo/bar",
+  "foo/bar/baz": "local-Ident-name_module_css-foo/bar/baz",
+  "foo\\\\bar": "local-Ident-name_module_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "local-Ident-name_module_css-foo\\\\bar\\\\baz",
+  "f~o~o": "local-Ident-name_module_css-f~o~o",
+  "m_x_@": "local-Ident-name_module_css-m_x_@",
+  "someId": "local-Ident-name_module_css-someId",
+  "subClass": "local-Ident-name_module_css-subClass",
+  "test": "local-Ident-name_module_css-test",
+  "{}": "local-Ident-name_module_css-{}",
+  "©": "local-Ident-name_module_css-©",
+  "“‘’”": "local-Ident-name_module_css-“‘’”",
+  "⌘⌥": "local-Ident-name_module_css-⌘⌥",
+  "☺☃": "local-Ident-name_module_css-☺☃",
+  "♥": "local-Ident-name_module_css-♥",
+  "𝄞♪♩♫♬": "local-Ident-name_module_css-𝄞♪♩♫♬",
+  "💩": "local-Ident-name_module_css-💩",
+  "😍": "local-Ident-name_module_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 12`] = `
+Object {
+  "#": "local-Ident-name.module--#--0fms6",
+  "##": "local-Ident-name.module--##--4MjQ_",
+  "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
+  "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
+  ".": "local-Ident-name.module--.--Bix0N",
+  "123": "local-Ident-name.module--123--PvTN4",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--xSd9R",
+  ":)": "local-Ident-name.module--:)--kXjo5",
+  ":\`(": "local-Ident-name.module--:\`(--YZqyU",
+  ":hover": "local-Ident-name.module--:hover--QXnD_",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0eQHC",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--q0Tti",
+  "<p>": "local-Ident-name.module--<p>--RCYv0",
+  "?": "local-Ident-name.module--?--tcA6P",
+  "@": "local-Ident-name.module--@--IjjsD",
+  "B&W?": "local-Ident-name.module--B&W?--9Uv5j",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--bHMhi",
+  "_": "local-Ident-name.module--_--wWsEV",
+  "_test": "local-Ident-name.module--_test--c_lQ7",
+  "className": "local-Ident-name.module--className--QdX5M",
+  "f!o!o": "local-Ident-name.module--f!o!o--U5evv",
+  "f'o'o": "local-Ident-name.module--f'o'o--5azUC",
+  "f*o*o": "local-Ident-name.module--f*o*o--1OZxX",
+  "f+o+o": "local-Ident-name.module--f+o+o--r42Md",
+  "f/o/o": "local-Ident-name.module--f/o/o--gpPiW",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gu2u7",
+  "foo.bar": "local-Ident-name.module--foo.bar--EDSRu",
+  "foo/bar": "local-Ident-name.module--foo/bar--ARBA4",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p2TDV",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--vSOik",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--FlFA-",
+  "f~o~o": "local-Ident-name.module--f~o~o--6JU27",
+  "m_x_@": "local-Ident-name.module--m_x_@--wXBtR",
+  "someId": "local-Ident-name.module--someId--fs0tG",
+  "subClass": "local-Ident-name.module--subClass--EEiow",
+  "test": "local-Ident-name.module--test--n138O",
+  "{}": "local-Ident-name.module--{}--yOiSk",
+  "©": "local-Ident-name.module--©--ABrkO",
+  "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
+  "☺☃": "local-Ident-name.module--☺☃--_YUxr",
+  "♥": "local-Ident-name.module--♥--zQEWH",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--16ySy",
+  "💩": "local-Ident-name.module--💩--fhsK2",
+  "😍": "local-Ident-name.module--😍--rYTiW",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 13`] = `
+Object {
+  "#": "_-1#",
+  "##": "_-1##",
+  "#.#.#": "_-1#.#.#",
+  "#fake-id": "_-1#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_-1-a-b-c-",
+  "-a0-34a___f": "_-1-a0-34a___f",
+  ".": "_-1.",
+  "123": "_-1123",
+  "1a2b3c": "_-11a2b3c",
+  ":)": "_-1:)",
+  ":\`(": "_-1:\`(",
+  ":hover": "_-1:hover",
+  ":hover:focus:active": "_-1:hover:focus:active",
+  "<><<<>><>": "_-1<><<<>><>",
+  "<p>": "_-1<p>",
+  "?": "_-1?",
+  "@": "_-1@",
+  "B&W?": "_-1B&W?",
+  "[attr=value]": "_-1[attr=value]",
+  "_": "_-1_",
+  "_test": "_-1_test",
+  "className": "_-1className",
+  "f!o!o": "_-1f!o!o",
+  "f'o'o": "_-1f'o'o",
+  "f*o*o": "_-1f*o*o",
+  "f+o+o": "_-1f+o+o",
+  "f/o/o": "_-1f/o/o",
+  "f\\\\o\\\\o": "_-1f\\\\o\\\\o",
+  "foo.bar": "_-1foo.bar",
+  "foo/bar": "_-1foo/bar",
+  "foo/bar/baz": "_-1foo/bar/baz",
+  "foo\\\\bar": "_-1foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_-1foo\\\\bar\\\\baz",
+  "f~o~o": "_-1f~o~o",
+  "m_x_@": "_-1m_x_@",
+  "someId": "_-1someId",
+  "subClass": "_-1subClass",
+  "test": "_-1test",
+  "{}": "_-1{}",
+  "©": "_-1©",
+  "“‘’”": "_-1“‘’”",
+  "⌘⌥": "_-1⌘⌥",
+  "☺☃": "_-1☺☃",
+  "♥": "_-1♥",
+  "𝄞♪♩♫♬": "_-1𝄞♪♩♫♬",
+  "💩": "_-1💩",
+  "😍": "_-1😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 14`] = `
+Object {
+  "#": "_--#",
+  "##": "_--##",
+  "#.#.#": "_--#.#.#",
+  "#fake-id": "_--#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_---a-b-c-",
+  "-a0-34a___f": "_---a0-34a___f",
+  ".": "_--.",
+  "123": "_--123",
+  "1a2b3c": "_--1a2b3c",
+  ":)": "_--:)",
+  ":\`(": "_--:\`(",
+  ":hover": "_--:hover",
+  ":hover:focus:active": "_--:hover:focus:active",
+  "<><<<>><>": "_--<><<<>><>",
+  "<p>": "_--<p>",
+  "?": "_--?",
+  "@": "_--@",
+  "B&W?": "_--B&W?",
+  "[attr=value]": "_--[attr=value]",
+  "_": "_--_",
+  "_test": "_--_test",
+  "className": "_--className",
+  "f!o!o": "_--f!o!o",
+  "f'o'o": "_--f'o'o",
+  "f*o*o": "_--f*o*o",
+  "f+o+o": "_--f+o+o",
+  "f/o/o": "_--f/o/o",
+  "f\\\\o\\\\o": "_--f\\\\o\\\\o",
+  "foo.bar": "_--foo.bar",
+  "foo/bar": "_--foo/bar",
+  "foo/bar/baz": "_--foo/bar/baz",
+  "foo\\\\bar": "_--foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_--foo\\\\bar\\\\baz",
+  "f~o~o": "_--f~o~o",
+  "m_x_@": "_--m_x_@",
+  "someId": "_--someId",
+  "subClass": "_--subClass",
+  "test": "_--test",
+  "{}": "_--{}",
+  "©": "_--©",
+  "“‘’”": "_--“‘’”",
+  "⌘⌥": "_--⌘⌥",
+  "☺☃": "_--☺☃",
+  "♥": "_--♥",
+  "𝄞♪♩♫♬": "_--𝄞♪♩♫♬",
+  "💩": "_--💩",
+  "😍": "_--😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 15`] = `
+Object {
+  "#": "__#",
+  "##": "__##",
+  "#.#.#": "__#.#.#",
+  "#fake-id": "__#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "__-a-b-c-",
+  "-a0-34a___f": "__-a0-34a___f",
+  ".": "__.",
+  "123": "__123",
+  "1a2b3c": "__1a2b3c",
+  ":)": "__:)",
+  ":\`(": "__:\`(",
+  ":hover": "__:hover",
+  ":hover:focus:active": "__:hover:focus:active",
+  "<><<<>><>": "__<><<<>><>",
+  "<p>": "__<p>",
+  "?": "__?",
+  "@": "__@",
+  "B&W?": "__B&W?",
+  "[attr=value]": "__[attr=value]",
+  "_": "___",
+  "_test": "___test",
+  "className": "__className",
+  "f!o!o": "__f!o!o",
+  "f'o'o": "__f'o'o",
+  "f*o*o": "__f*o*o",
+  "f+o+o": "__f+o+o",
+  "f/o/o": "__f/o/o",
+  "f\\\\o\\\\o": "__f\\\\o\\\\o",
+  "foo.bar": "__foo.bar",
+  "foo/bar": "__foo/bar",
+  "foo/bar/baz": "__foo/bar/baz",
+  "foo\\\\bar": "__foo\\\\bar",
+  "foo\\\\bar\\\\baz": "__foo\\\\bar\\\\baz",
+  "f~o~o": "__f~o~o",
+  "m_x_@": "__m_x_@",
+  "someId": "__someId",
+  "subClass": "__subClass",
+  "test": "__test",
+  "{}": "__{}",
+  "©": "__©",
+  "“‘’”": "__“‘’”",
+  "⌘⌥": "__⌘⌥",
+  "☺☃": "__☺☃",
+  "♥": "__♥",
+  "𝄞♪♩♫♬": "__𝄞♪♩♫♬",
+  "💩": "__💩",
+  "😍": "__😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 16`] = `
+Object {
+  "#": "#--tlFV0b",
+  "##": "##--7vA-7E",
+  "#.#.#": "#.#.#--1Hd875",
+  "#fake-id": "#fake-id--ez7Dik",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
+  "-a-b-c-": "-a-b-c---jfQ3Qn",
+  "-a0-34a___f": "-a0-34a___f--OWXZy-",
+  ".": ".--ZtQPX0",
+  "123": "_123--j0sSmE",
+  "1a2b3c": "_1a2b3c--AMCMZb",
+  ":)": ":)--u1ngqY",
+  ":\`(": ":\`(--hgmvDX",
+  ":hover": ":hover--8XNA4p",
+  ":hover:focus:active": ":hover:focus:active--EpwJWE",
+  "<><<<>><>": "<><<<>><>--8jXRVC",
+  "<p>": "<p>--MHaC0-",
+  "?": "?--9Y6SkK",
+  "@": "@--Sc9iGx",
+  "B&W?": "B&W?--D7HZ-H",
+  "[attr=value]": "[attr=value]--ZTV_uO",
+  "_": "_--NFJ6vs",
+  "_test": "_test--Kfd_4M",
+  "className": "className--b9RUK8",
+  "f!o!o": "f!o!o--QQGZu2",
+  "f'o'o": "f'o'o--00bSFC",
+  "f*o*o": "f*o*o--kom_Jq",
+  "f+o+o": "f+o+o--J4WAkM",
+  "f/o/o": "f/o/o--3vNZZM",
+  "f\\\\o\\\\o": "f\\\\o\\\\o--wNzTj3",
+  "foo.bar": "foo.bar--pYS5El",
+  "foo/bar": "foo/bar--9GWp9d",
+  "foo/bar/baz": "foo/bar/baz--MRJglc",
+  "foo\\\\bar": "foo\\\\bar--CCzsTj",
+  "foo\\\\bar\\\\baz": "foo\\\\bar\\\\baz--nRgTR7",
+  "f~o~o": "f~o~o--26zzb-",
+  "m_x_@": "m_x_@--kG1v1e",
+  "someId": "someId--TlAET9",
+  "subClass": "subClass--sglK-1",
+  "test": "test--mowWgR",
+  "{}": "{}--Tr49RL",
+  "©": "©--sWiP9l",
+  "“‘’”": "“‘’”--M3gyy-",
+  "⌘⌥": "⌘⌥--oDuNAW",
+  "☺☃": "☺☃--pbZo-2",
+  "♥": "♥--e6nEYm",
+  "𝄞♪♩♫♬": "𝄞♪♩♫♬--vrTCd6",
+  "💩": "💩--1Txu-k",
+  "😍": "😍--rPyRbM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 17`] = `
+Object {
+  "#": "😀- -#",
+  "##": "😀- -##",
+  "#.#.#": "😀- -#.#.#",
+  "#fake-id": "😀- -#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "😀- --a-b-c-",
+  "-a0-34a___f": "😀- --a0-34a___f",
+  ".": "😀- -.",
+  "123": "😀- -123",
+  "1a2b3c": "😀- -1a2b3c",
+  ":)": "😀- -:)",
+  ":\`(": "😀- -:\`(",
+  ":hover": "😀- -:hover",
+  ":hover:focus:active": "😀- -:hover:focus:active",
+  "<><<<>><>": "😀- -<><<<>><>",
+  "<p>": "😀- -<p>",
+  "?": "😀- -?",
+  "@": "😀- -@",
+  "B&W?": "😀- -B&W?",
+  "[attr=value]": "😀- -[attr=value]",
+  "_": "😀- -_",
+  "_test": "😀- -_test",
+  "className": "😀- -className",
+  "f!o!o": "😀- -f!o!o",
+  "f'o'o": "😀- -f'o'o",
+  "f*o*o": "😀- -f*o*o",
+  "f+o+o": "😀- -f+o+o",
+  "f/o/o": "😀- -f/o/o",
+  "f\\\\o\\\\o": "😀- -f\\\\o\\\\o",
+  "foo.bar": "😀- -foo.bar",
+  "foo/bar": "😀- -foo/bar",
+  "foo/bar/baz": "😀- -foo/bar/baz",
+  "foo\\\\bar": "😀- -foo\\\\bar",
+  "foo\\\\bar\\\\baz": "😀- -foo\\\\bar\\\\baz",
+  "f~o~o": "😀- -f~o~o",
+  "m_x_@": "😀- -m_x_@",
+  "someId": "😀- -someId",
+  "subClass": "😀- -subClass",
+  "test": "😀- -test",
+  "{}": "😀- -{}",
+  "©": "😀- -©",
+  "“‘’”": "😀- -“‘’”",
+  "⌘⌥": "😀- -⌘⌥",
+  "☺☃": "😀- -☺☃",
+  "♥": "😀- -♥",
+  "𝄞♪♩♫♬": "😀- -𝄞♪♩♫♬",
+  "💩": "😀- -💩",
+  "😍": "😀- -😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 18`] = `
+Object {
+  "#": "local-Ident-name.module--#--CUiuWNpacN",
+  "##": "local-Ident-name.module--##--CU4LyzXr4m",
+  "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
+  "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
+  ".": "local-Ident-name.module--.--TYgwrPPlce",
+  "123": "local-Ident-name.module--123--dRCMetfS4k",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--27Ol2f1A5B",
+  ":)": "local-Ident-name.module--:)--8IGwE2kP5T",
+  ":\`(": "local-Ident-name.module--:\`(--XFoJZOBwb2",
+  ":hover": "local-Ident-name.module--:hover--gj5dKEVBLV",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--MF6oOllQUU",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--efv0wrKauZ",
+  "<p>": "local-Ident-name.module--<p>--VleHaJt0jW",
+  "?": "local-Ident-name.module--?--iQGuBSRyn5",
+  "@": "local-Ident-name.module--@--rXUc81UfOs",
+  "B&W?": "local-Ident-name.module--B&W?--2nDwDstWPk",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--pVXs1yvO-c",
+  "_": "local-Ident-name.module--_--O587A_Y16h",
+  "_test": "local-Ident-name.module--_test--jkChnYaYBV",
+  "className": "local-Ident-name.module--className--HP09CfTnX1",
+  "f!o!o": "local-Ident-name.module--f!o!o--piVwcUXcCA",
+  "f'o'o": "local-Ident-name.module--f'o'o--_4GqKKgPVD",
+  "f*o*o": "local-Ident-name.module--f*o*o--i7809YiNmT",
+  "f+o+o": "local-Ident-name.module--f+o+o--22BN9FvSaj",
+  "f/o/o": "local-Ident-name.module--f/o/o--IfM4TmY7KJ",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--smRz6NSna2",
+  "foo.bar": "local-Ident-name.module--foo.bar--ekmt08iOcx",
+  "foo/bar": "local-Ident-name.module--foo/bar--pmM_pDdiuz",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--OHGMWfcvMx",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--37QAOKIbi2",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--zz8kivuxZ6",
+  "f~o~o": "local-Ident-name.module--f~o~o--zcYow3hnn9",
+  "m_x_@": "local-Ident-name.module--m_x_@--hTokNmWv2C",
+  "someId": "local-Ident-name.module--someId--MLaknB8z97",
+  "subClass": "local-Ident-name.module--subClass--4o6O5CPJI6",
+  "test": "local-Ident-name.module--test--6y2MZL2dRW",
+  "{}": "local-Ident-name.module--{}--KmrFboxFIk",
+  "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
+  "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
+  "♥": "local-Ident-name.module--♥--44uxusx5VU",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--BSgrxZWBoa",
+  "💩": "local-Ident-name.module--💩--IYSuXUnVFH",
+  "😍": "local-Ident-name.module--😍--ZFvdqtu3qG",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 19`] = `
+Object {
+  "#": "local-Ident-name.module--#--H4xWOk",
+  "##": "local-Ident-name.module--##--qmWu4j",
+  "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
+  "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
+  ".": "local-Ident-name.module--.--v7SGE3",
+  "123": "local-Ident-name.module--123--FPfb_a",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--Prq2-n",
+  ":)": "local-Ident-name.module--:)--stxQmr",
+  ":\`(": "local-Ident-name.module--:\`(--PKfNRg",
+  ":hover": "local-Ident-name.module--:hover--7J6Ovy",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--N6KkcF",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--bH0ZRJ",
+  "<p>": "local-Ident-name.module--<p>--Lzbt_f",
+  "?": "local-Ident-name.module--?--cFxilG",
+  "@": "local-Ident-name.module--@--RJiOrO",
+  "B&W?": "local-Ident-name.module--B&W?--Cx7Xfj",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--_X7r6s",
+  "_": "local-Ident-name.module--_--jZA8cH",
+  "_test": "local-Ident-name.module--_test--IFXC8J",
+  "className": "local-Ident-name.module--className--Gf2qKu",
+  "f!o!o": "local-Ident-name.module--f!o!o--IQSVKY",
+  "f'o'o": "local-Ident-name.module--f'o'o--Jke6Ar",
+  "f*o*o": "local-Ident-name.module--f*o*o--US0RYV",
+  "f+o+o": "local-Ident-name.module--f+o+o--JZ_ZYM",
+  "f/o/o": "local-Ident-name.module--f/o/o--TnGHtD",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--zZG-0O",
+  "foo.bar": "local-Ident-name.module--foo.bar--_-hir3",
+  "foo/bar": "local-Ident-name.module--foo/bar--LMZK6C",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--44CiTQ",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--qVBL0b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--aiT34M",
+  "f~o~o": "local-Ident-name.module--f~o~o--wi3S5B",
+  "m_x_@": "local-Ident-name.module--m_x_@--j3M2wy",
+  "someId": "local-Ident-name.module--someId--hSsSyu",
+  "subClass": "local-Ident-name.module--subClass--rJLSP7",
+  "test": "local-Ident-name.module--test--_SesvC",
+  "{}": "local-Ident-name.module--{}--rC8he6",
+  "©": "local-Ident-name.module--©--if7zkU",
+  "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
+  "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
+  "♥": "local-Ident-name.module--♥--Wquu8v",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--qoKZGt",
+  "💩": "local-Ident-name.module--💩--Wmv5n7",
+  "😍": "local-Ident-name.module--😍--vXWvMf",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 20`] = `
+Object {
+  "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
+  "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
+  "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
+  "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
+  "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
+  "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
+  ".": "prefix-./local-Ident-name.module.css?local-ident-name-9---.---XxpCFm-postfix",
+  "123": "prefix-./local-Ident-name.module.css?local-ident-name-9---123---29k572-postfix",
+  "1a2b3c": "prefix-./local-Ident-name.module.css?local-ident-name-9---1a2b3c---8RwOZv-postfix",
+  ":)": "prefix-./local-Ident-name.module.css?local-ident-name-9---:)---tpNOM_-postfix",
+  ":\`(": "prefix-./local-Ident-name.module.css?local-ident-name-9---:\`(---w0y-3T-postfix",
+  ":hover": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover---p-SVOd-postfix",
+  ":hover:focus:active": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover:focus:active---7ppzcn-postfix",
+  "<><<<>><>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<><<<>><>---DV-Ytr-postfix",
+  "<p>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<p>---T4r2DZ-postfix",
+  "?": "prefix-./local-Ident-name.module.css?local-ident-name-9---?---8rRplk-postfix",
+  "@": "prefix-./local-Ident-name.module.css?local-ident-name-9---@---LKRCz--postfix",
+  "B&W?": "prefix-./local-Ident-name.module.css?local-ident-name-9---B&W?---pAfmJZ-postfix",
+  "[attr=value]": "prefix-./local-Ident-name.module.css?local-ident-name-9---[attr=value]---uMrr4n-postfix",
+  "_": "prefix-./local-Ident-name.module.css?local-ident-name-9---_---UdFsE6-postfix",
+  "_test": "prefix-./local-Ident-name.module.css?local-ident-name-9---_test---RdGpUF-postfix",
+  "className": "prefix-./local-Ident-name.module.css?local-ident-name-9---className---Rbuqv6-postfix",
+  "f!o!o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f!o!o---XqT8S3-postfix",
+  "f'o'o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f'o'o---BxXL6g-postfix",
+  "f*o*o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f*o*o---fF4DcX-postfix",
+  "f+o+o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f+o+o---F93mpm-postfix",
+  "f/o/o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f/o/o---kXNiKY-postfix",
+  "f\\\\o\\\\o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f\\\\o\\\\o---fLLGuT-postfix",
+  "foo.bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo.bar---d2rdEE-postfix",
+  "foo/bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar---uZ8i8d-postfix",
+  "foo/bar/baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar/baz---zWw2aH-postfix",
+  "foo\\\\bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar---pozdkJ-postfix",
+  "foo\\\\bar\\\\baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar\\\\baz---C9LnZz-postfix",
+  "f~o~o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f~o~o---SPRjm3-postfix",
+  "m_x_@": "prefix-./local-Ident-name.module.css?local-ident-name-9---m_x_@---0FTqJc-postfix",
+  "someId": "prefix-./local-Ident-name.module.css?local-ident-name-9---someId---rz34Z--postfix",
+  "subClass": "prefix-./local-Ident-name.module.css?local-ident-name-9---subClass---KZbh3P-postfix",
+  "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
+  "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
+  "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
+  "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
+  "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
+  "♥": "prefix-./local-Ident-name.module.css?local-ident-name-9---♥---J7fhlX-postfix",
+  "𝄞♪♩♫♬": "prefix-./local-Ident-name.module.css?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix",
+  "💩": "prefix-./local-Ident-name.module.css?local-ident-name-9---💩---Y7HlBo-postfix",
+  "😍": "prefix-./local-Ident-name.module.css?local-ident-name-9---😍---JD7n4W-postfix",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 21`] = `
+Object {
+  "#": "local-Ident-name.module--#--HhZOGz",
+  "##": "local-Ident-name.module--##--9WIAe0",
+  "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
+  "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
+  ".": "local-Ident-name.module--.--BPq0xF",
+  "123": "local-Ident-name.module--123--B3OEQK",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--oaY1J8",
+  ":)": "local-Ident-name.module--:)--Pj6vDs",
+  ":\`(": "local-Ident-name.module--:\`(--IVbXBm",
+  ":hover": "local-Ident-name.module--:hover--1mpkFN",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--YELMY9",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Uf6Aq5",
+  "<p>": "local-Ident-name.module--<p>--Wp80__",
+  "?": "local-Ident-name.module--?--Q_Zy2v",
+  "@": "local-Ident-name.module--@--SWeck6",
+  "B&W?": "local-Ident-name.module--B&W?--JmVOKE",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--s_2WkM",
+  "_": "local-Ident-name.module--_--R0gCHb",
+  "_test": "local-Ident-name.module--_test--qE51sB",
+  "className": "local-Ident-name.module--className--DXQmdk",
+  "f!o!o": "local-Ident-name.module--f!o!o--uNwFsi",
+  "f'o'o": "local-Ident-name.module--f'o'o--a6OZfH",
+  "f*o*o": "local-Ident-name.module--f*o*o--Pzh7Iy",
+  "f+o+o": "local-Ident-name.module--f+o+o--QH3xLM",
+  "f/o/o": "local-Ident-name.module--f/o/o--PcOcIs",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gaJvBS",
+  "foo.bar": "local-Ident-name.module--foo.bar--bKDReN",
+  "foo/bar": "local-Ident-name.module--foo/bar--9drIBx",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p04ctN",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--S2Dcc1",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--jFAF-g",
+  "f~o~o": "local-Ident-name.module--f~o~o--PUOhHl",
+  "m_x_@": "local-Ident-name.module--m_x_@--ZIn6c4",
+  "someId": "local-Ident-name.module--someId--tVcVTm",
+  "subClass": "local-Ident-name.module--subClass--j9K5GX",
+  "test": "local-Ident-name.module--test--Wxl9SQ",
+  "{}": "local-Ident-name.module--{}--x9uHdU",
+  "©": "local-Ident-name.module--©--GlglrH",
+  "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
+  "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
+  "♥": "local-Ident-name.module--♥--n0DExN",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--bJsUdV",
+  "💩": "local-Ident-name.module--💩--sn5uaI",
+  "😍": "local-Ident-name.module--😍--eF1kUF",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 22`] = `
+Object {
+  "#": "local-Ident-name.module--#--58ffa81a",
+  "##": "local-Ident-name.module--##--e4c1f1f4",
+  "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
+  "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
+  ".": "local-Ident-name.module--.--c60e13df",
+  "123": "local-Ident-name.module--123--1cfa6799",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b0622ca1",
+  ":)": "local-Ident-name.module--:)--7c5c25e1",
+  ":\`(": "local-Ident-name.module--:\`(--70a3d865",
+  ":hover": "local-Ident-name.module--:hover--00e0e9cf",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--9fac1801",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--de7a296d",
+  "<p>": "local-Ident-name.module--<p>--1a958d1c",
+  "?": "local-Ident-name.module--?--14d8edf4",
+  "@": "local-Ident-name.module--@--d4a78331",
+  "B&W?": "local-Ident-name.module--B&W?--a78d0393",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--c0361de2",
+  "_": "local-Ident-name.module--_--80de2974",
+  "_test": "local-Ident-name.module--_test--0473fb8d",
+  "className": "local-Ident-name.module--className--a79e037f",
+  "f!o!o": "local-Ident-name.module--f!o!o--d963c01e",
+  "f'o'o": "local-Ident-name.module--f'o'o--de8bb216",
+  "f*o*o": "local-Ident-name.module--f*o*o--43f20f40",
+  "f+o+o": "local-Ident-name.module--f+o+o--589e0f04",
+  "f/o/o": "local-Ident-name.module--f/o/o--fae128a6",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--4f58244c",
+  "foo.bar": "local-Ident-name.module--foo.bar--2f64db2c",
+  "foo/bar": "local-Ident-name.module--foo/bar--1993240b",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--6aef178e",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--64e39502",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--c92e29e0",
+  "f~o~o": "local-Ident-name.module--f~o~o--67ce3441",
+  "m_x_@": "local-Ident-name.module--m_x_@--7d75708c",
+  "someId": "local-Ident-name.module--someId--14048457",
+  "subClass": "local-Ident-name.module--subClass--20021468",
+  "test": "local-Ident-name.module--test--8270b0ef",
+  "{}": "local-Ident-name.module--{}--ae3dd8d2",
+  "©": "local-Ident-name.module--©--1b9a8b1c",
+  "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
+  "☺☃": "local-Ident-name.module--☺☃--1469d673",
+  "♥": "local-Ident-name.module--♥--49c9e5f7",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--9b2f29da",
+  "💩": "local-Ident-name.module--💩--94ba226c",
+  "😍": "local-Ident-name.module--😍--2fcf5128",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 23`] = `
+Object {
+  "#": "local-Ident-name.module--#--9Wz8iS8u",
+  "##": "local-Ident-name.module--##--Xw2rY7zd",
+  "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
+  "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
+  ".": "local-Ident-name.module--.--M5qzfpLo",
+  "123": "local-Ident-name.module--123--YUqF5zS2",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bQNiwONU",
+  ":)": "local-Ident-name.module--:)--4Iu7JUbn",
+  ":\`(": "local-Ident-name.module--:\`(--GHVmYb5c",
+  ":hover": "local-Ident-name.module--:hover--VAXzRyCg",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0lla+F2p",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--XLiNBlLA",
+  "<p>": "local-Ident-name.module--<p>--Z3z/E54Y",
+  "?": "local-Ident-name.module--?--WiZDtscd",
+  "@": "local-Ident-name.module--@--C4CmO5xx",
+  "B&W?": "local-Ident-name.module--B&W?--g3tmGQ1e",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--zQk/kDjQ",
+  "_": "local-Ident-name.module--_--qnfZWXNI",
+  "_test": "local-Ident-name.module--_test--qMUjbC/I",
+  "className": "local-Ident-name.module--className--pwM6UboM",
+  "f!o!o": "local-Ident-name.module--f!o!o--j3soDiCp",
+  "f'o'o": "local-Ident-name.module--f'o'o--MHMzH0KY",
+  "f*o*o": "local-Ident-name.module--f*o*o--26bZ4t0o",
+  "f+o+o": "local-Ident-name.module--f+o+o--vQ+lI2jp",
+  "f/o/o": "local-Ident-name.module--f/o/o--e3jIJGEf",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--G9+prJD1",
+  "foo.bar": "local-Ident-name.module--foo.bar--THng2+Bz",
+  "foo/bar": "local-Ident-name.module--foo/bar--YB6qbQ9S",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--Q20sxeqj",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--Kxtcf1c9",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--YBybJKnk",
+  "f~o~o": "local-Ident-name.module--f~o~o--JjjvJFSt",
+  "m_x_@": "local-Ident-name.module--m_x_@--Ez6PsYJh",
+  "someId": "local-Ident-name.module--someId--IGKlSlnh",
+  "subClass": "local-Ident-name.module--subClass--dwOKrGpm",
+  "test": "local-Ident-name.module--test--NLdHRDRl",
+  "{}": "local-Ident-name.module--{}--6OhFoptN",
+  "©": "local-Ident-name.module--©--tHIIl+/T",
+  "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
+  "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
+  "♥": "local-Ident-name.module--♥--7lqZpUgl",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--cvCnWCP/",
+  "💩": "local-Ident-name.module--💩--3GaohJIg",
+  "😍": "local-Ident-name.module--😍--FLeSmaPd",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 24`] = `
+Object {
+  "#": "local-Ident-name.module--#--WLkUKg",
+  "##": "local-Ident-name.module--##--jZQh9o",
+  "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
+  "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
+  ".": "local-Ident-name.module--.--MWGP9-",
+  "123": "local-Ident-name.module--123--Nm8irE",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bVeVN5",
+  ":)": "local-Ident-name.module--:)--Ie3pA9",
+  ":\`(": "local-Ident-name.module--:\`(--WwHPwk",
+  ":hover": "local-Ident-name.module--:hover--DqSicW",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--7Xp248",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Hz1mIz",
+  "<p>": "local-Ident-name.module--<p>--HpZvES",
+  "?": "local-Ident-name.module--?--L-dtlw",
+  "@": "local-Ident-name.module--@--siEE0h",
+  "B&W?": "local-Ident-name.module--B&W?--7ftAnV",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--u54HDK",
+  "_": "local-Ident-name.module--_--3k2Agq",
+  "_test": "local-Ident-name.module--_test--8xrdZV",
+  "className": "local-Ident-name.module--className--2Kh-Ov",
+  "f!o!o": "local-Ident-name.module--f!o!o--T3prsX",
+  "f'o'o": "local-Ident-name.module--f'o'o--jt-RhY",
+  "f*o*o": "local-Ident-name.module--f*o*o--QbjpCQ",
+  "f+o+o": "local-Ident-name.module--f+o+o--bBOiFl",
+  "f/o/o": "local-Ident-name.module--f/o/o--lJEk9y",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--DGQBRU",
+  "foo.bar": "local-Ident-name.module--foo.bar--7yacah",
+  "foo/bar": "local-Ident-name.module--foo/bar--2nkRzH",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--aTk6tX",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--00tycH",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--Xyl0u2",
+  "f~o~o": "local-Ident-name.module--f~o~o--98SqRg",
+  "m_x_@": "local-Ident-name.module--m_x_@--X8bP8q",
+  "someId": "local-Ident-name.module--someId--hIrhgH",
+  "subClass": "local-Ident-name.module--subClass--CS7Un_",
+  "test": "local-Ident-name.module--test--2GQpZJ",
+  "{}": "local-Ident-name.module--{}--nRmS1p",
+  "©": "local-Ident-name.module--©--iWVpcm",
+  "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
+  "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
+  "♥": "local-Ident-name.module--♥--y3MitJ",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--72crRY",
+  "💩": "local-Ident-name.module--💩--7uK8qM",
+  "😍": "local-Ident-name.module--😍--WcxZ0t",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 25`] = `
+Object {
+  "#": "local-Ident-name.module--#--e4f1b73cd809",
+  "##": "local-Ident-name.module--##--405237512524",
+  "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
+  "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
+  ".": "local-Ident-name.module--.--5470f44f036b",
+  "123": "local-Ident-name.module--123--d17ed8537e79",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b883ad2dd9f8",
+  ":)": "local-Ident-name.module--:)--17eb8b70354f",
+  ":\`(": "local-Ident-name.module--:\`(--bc61af26245b",
+  ":hover": "local-Ident-name.module--:hover--5c74060ab542",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--940cf6c5d089",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--f10fbf26846b",
+  "<p>": "local-Ident-name.module--<p>--3ee2ce137c10",
+  "?": "local-Ident-name.module--?--f76eafe5a169",
+  "@": "local-Ident-name.module--@--e273723fec35",
+  "B&W?": "local-Ident-name.module--B&W?--8cd981d8b590",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--e0514aa37eca",
+  "_": "local-Ident-name.module--_--572d2835970e",
+  "_test": "local-Ident-name.module--_test--89d707c3fad8",
+  "className": "local-Ident-name.module--className--9f53c7efa137",
+  "f!o!o": "local-Ident-name.module--f!o!o--dd84868984da",
+  "f'o'o": "local-Ident-name.module--f'o'o--d25297ca72bf",
+  "f*o*o": "local-Ident-name.module--f*o*o--e6413d687d7f",
+  "f+o+o": "local-Ident-name.module--f+o+o--50ed97029705",
+  "f/o/o": "local-Ident-name.module--f/o/o--7590fb61ecff",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--ac338e117e89",
+  "foo.bar": "local-Ident-name.module--foo.bar--d1268ba07c09",
+  "foo/bar": "local-Ident-name.module--foo/bar--4fbc31b40f2d",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--e0d2321851b9",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--ae3f0073234b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--782f833dc5da",
+  "f~o~o": "local-Ident-name.module--f~o~o--72d738764f15",
+  "m_x_@": "local-Ident-name.module--m_x_@--e7a6eff38a8d",
+  "someId": "local-Ident-name.module--someId--bfc6d0920e46",
+  "subClass": "local-Ident-name.module--subClass--97560fae798c",
+  "test": "local-Ident-name.module--test--a60f4680ad27",
+  "{}": "local-Ident-name.module--{}--00d46b3a8952",
+  "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
+  "☺☃": "local-Ident-name.module--☺☃--543bef227373",
+  "♥": "local-Ident-name.module--♥--76ddd7511c43",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--95edd86361c1",
+  "💩": "local-Ident-name.module--💩--54f8b2bdd0e9",
+  "😍": "local-Ident-name.module--😍--29d85c2489ef",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 26`] = `
+Object {
+  "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
+  "simple-other": "order_module_css-simple-other order-1_css-order-1",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 27`] = `
+Object {
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 28`] = `
+Object {
+  "bar": "composes-from-less_module_css-bar foo_less-foo",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 29`] = `
+Object {
+  "bar": "#fff",
+  "className": "tilde_module_css-className",
+  "foo": "#000",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 30`] = `
+Object {
+  "_test": "_right_value",
+  "_test1": "1",
+  "_test2": "'string'",
+  "_test3": "1px 2px 3px",
+  "_test4": "1px 2px 3px, 1px 2px 3px",
+  "_test_other": "_right_value",
+  "_the_same_name": "_the_same_name",
+  "className": "icss_module_css-className",
+  "constructor": "constructor",
+  "reexport": "classes_module_css_65f8-module",
+  "toString": "toString",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 31`] = `Object {}`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 32`] = `
+Object {
+  "Button": "component-name_module_css-Button",
+  "Container": "component-name_module_css-Container",
+  "Header": "component-name_module_css-Header",
+  "HeaderTitle": "component-name_module_css-HeaderTitle component-name_module_css-Header",
+  "MyButton": "component-name_module_css-MyButton",
+  "PrimaryButton": "component-name_module_css-PrimaryButton component-name_module_css-Button",
+  "UPPER": "component-name_module_css-UPPER",
+  "lowercase": "component-name_module_css-lowercase",
+  "mixedCase": "component-name_module_css-mixedCase",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 33`] = `
+Object {
+  "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-3": "composes-chain_module_css-level-3",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 34`] = `
+Object {
+  "a": "file_with_many_dots_in_name_module_css-a",
+  "b": "file_with_many_dots_in_name_module_css-b",
+  "c": "file_with_many_dots_in_name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 35`] = `
+Object {
+  "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
+  "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
+  "simple-foo": "composes-duplicate_module_css-simple-foo imported-simple_module_css-imported-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 36`] = `
+Object {
+  "a": "keyframes-leak-scope_module_css-a",
+  "b": "keyframes-leak-scope_module_css-b",
+  "c": "keyframes-leak-scope_module_css-c",
+  "c1": "keyframes-leak-scope_module_css-c1",
+  "c2": "keyframes-leak-scope_module_css-c2",
+  "c3": "keyframes-leak-scope_module_css-c3",
+  "c4": "keyframes-leak-scope_module_css-c4",
+  "d": "keyframes-leak-scope_module_css-d",
+  "f": "keyframes-leak-scope_module_css-f",
+  "local-keyframe": "keyframes-leak-scope_module_css-local-keyframe",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 37`] = `
+Object {
+  "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
+  "foo": "path-placeholder_module_css-foo",
+  "foo/bar": "path-placeholder_module_css-foo/bar",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (style) 38`] = `
+Object {
+  "alias-1": "gold",
+  "alias-2": "navy",
+  "bar": "#fff",
+  "chain-1": "green",
+  "chain-2": "green",
+  "chain-3": "green",
+  "chained": "at-value-extra_module_css-chained",
+  "composed-shadow": "0 0 imported-color, 0 0 imported-color",
+  "def": "red",
+  "foo": "#000",
+  "foo1": "at-value-extra_module_css-foo1",
+  "foo2": "at-value-extra_module_css-foo2",
+  "foo3": "at-value-extra_module_css-foo3",
+  "foo4": "at-value-extra_module_css-foo4",
+  "foo5": "at-value-extra_module_css-foo5",
+  "foo6": "at-value-extra_module_css-foo6",
+  "from-node-modules": "at-value-extra_module_css-from-node-modules",
+  "imported-color": "tomato",
+  "multi-import": "at-value-extra_module_css-multi-import",
+  "shadow": "at-value-extra_module_css-shadow",
+  "spacing": "at-value-extra_module_css-spacing",
+  "uses-composed-shadow": "at-value-extra_module_css-uses-composed-shadow",
+  "v-base": "10px",
+  "v-color": "red",
+  "v-large": "calc(v-base * 2)",
+  "v-margin": "v-large 0",
+  "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 1`] = `
+Object {
+  "@bounce": "basic_module_css-@bounce",
+  "a": "basic_module_css-a",
+  "abc": "basic_module_css-abc",
+  "b": "basic_module_css-b",
+  "bar-1": "basic_module_css-bar-1",
+  "bounce": "basic_module_css-bounce",
+  "bounce2": "basic_module_css-bounce2",
+  "bounce3": "basic_module_css-bounce3",
+  "bounce4": "basic_module_css-bounce4",
+  "c": "basic_module_css-c",
+  "c1": "basic_module_css-c1",
+  "c2": "basic_module_css-c2 basic_module_css-c1",
+  "c3": "basic_module_css-c3",
+  "c4": "basic_module_css-c4",
+  "c5": "basic_module_css-c5",
+  "c6": "basic_module_css-c6",
+  "c7": "basic_module_css-c7",
+  "c8": "basic_module_css-c8",
+  "class-1": "basic_module_css-class-1",
+  "class-10": "basic_module_css-class-10",
+  "className": "basic_module_css-className",
+  "container": "basic_module_css-container",
+  "d": "basic_module_css-d",
+  "def": "basic_module_css-def basic_module_css-abc",
+  "fade-in": "basic_module_css-fade-in",
+  "ghi": "basic_module_css-ghi",
+  "id": "basic_module_css-id",
+  "jkl": "basic_module_css-jkl",
+  "q": "basic_module_css-q",
+  "slide-right": "basic_module_css-slide-right",
+  "someId": "basic_module_css-someId",
+  "subClass": "basic_module_css-subClass",
+  "x": "basic_module_css-x",
+  "y": "basic_module_css-y",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 2`] = `
+Object {
+  "module": "classes_module_css_0a63-module",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 3`] = `
+Object {
+  "class": "composes-multiple_module_css-class composes-multiple_module_css-other-class composes-multiple_module_css-class-1 composes-multiple_module_css-class-2 alias_css-imported-alias alias-1_css-imported-alias-2 alias-1_css-imported-alias-3 global-class global-class-1 global-class-2",
+  "class-1": "composes-multiple_module_css-class-1",
+  "class-2": "composes-multiple_module_css-class-2",
+  "class-other": "composes-multiple_module_css-class-other composes-multiple_module_css-other-class composes-multiple_module_css-class-1",
+  "other-class": "composes-multiple_module_css-other-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 4`] = `
+Object {
+  "otherClassName": "composes-global_module_css-otherClassName global-class other-global-class",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 5`] = `
+Object {
+  "class-a": "scope-at-rule_module_css-class-a",
+  "class-b": "scope-at-rule_module_css-class-b",
+  "dark-scheme": "scope-at-rule_module_css-dark-scheme",
+  "light-scheme": "scope-at-rule_module_css-light-scheme",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 6`] = `
+Object {
+  "a": "nesting_module_css-a",
+  "b": "nesting_module_css-b nesting_module_css-a",
+  "bar": "nesting_module_css-bar nesting_module_css-foo",
+  "baz": "nesting_module_css-baz",
+  "foo": "nesting_module_css-foo",
+  "n": "nesting_module_css-n nesting_module_css-a",
+  "notice": "nesting_module_css-notice",
+  "notice-heading": "nesting_module_css-notice-heading",
+  "success": "nesting_module_css-success",
+  "success-heading": "nesting_module_css-success-heading",
+  "warning": "nesting_module_css-warning",
+  "warning-heading": "nesting_module_css-warning-heading",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 7`] = `
+Object {
+  "one": "prefer-relative_module_css-one package_one_css-imported-relative",
+  "two": "prefer-relative_module_css-two node_modules_package_two_css-imported-relative",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 8`] = `
+Object {
+  "a": "animation-name_module_css-a",
+  "animationName": "animation-name_module_css-animationName",
+  "b": "animation-name_module_css-b",
+  "c": "animation-name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 9`] = `
+Object {
+  "myClass": "at-sign-in-package-name_module_css-myClass",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 10`] = `
+Object {
+  "color-grey": "gray",
+  "copyright": "resolving-from-node_modules_module_css-copyright node_modules_@localpackage_style_css-type-heading node_modules_@otherlocalpackage_style_css-type-heading2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 11`] = `
+Object {
+  "#": "local-Ident-name_module_css-#",
+  "##": "local-Ident-name_module_css-##",
+  "#.#.#": "local-Ident-name_module_css-#.#.#",
+  "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
+  "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
+  ".": "local-Ident-name_module_css-.",
+  "123": "local-Ident-name_module_css-123",
+  "1a2b3c": "local-Ident-name_module_css-1a2b3c",
+  ":)": "local-Ident-name_module_css-:)",
+  ":\`(": "local-Ident-name_module_css-:\`(",
+  ":hover": "local-Ident-name_module_css-:hover",
+  ":hover:focus:active": "local-Ident-name_module_css-:hover:focus:active",
+  "<><<<>><>": "local-Ident-name_module_css-<><<<>><>",
+  "<p>": "local-Ident-name_module_css-<p>",
+  "?": "local-Ident-name_module_css-?",
+  "@": "local-Ident-name_module_css-@",
+  "B&W?": "local-Ident-name_module_css-B&W?",
+  "[attr=value]": "local-Ident-name_module_css-[attr=value]",
+  "_": "local-Ident-name_module_css-_",
+  "_test": "local-Ident-name_module_css-_test",
+  "className": "local-Ident-name_module_css-className",
+  "f!o!o": "local-Ident-name_module_css-f!o!o",
+  "f'o'o": "local-Ident-name_module_css-f'o'o",
+  "f*o*o": "local-Ident-name_module_css-f*o*o",
+  "f+o+o": "local-Ident-name_module_css-f+o+o",
+  "f/o/o": "local-Ident-name_module_css-f/o/o",
+  "f\\\\o\\\\o": "local-Ident-name_module_css-f\\\\o\\\\o",
+  "foo.bar": "local-Ident-name_module_css-foo.bar",
+  "foo/bar": "local-Ident-name_module_css-foo/bar",
+  "foo/bar/baz": "local-Ident-name_module_css-foo/bar/baz",
+  "foo\\\\bar": "local-Ident-name_module_css-foo\\\\bar",
+  "foo\\\\bar\\\\baz": "local-Ident-name_module_css-foo\\\\bar\\\\baz",
+  "f~o~o": "local-Ident-name_module_css-f~o~o",
+  "m_x_@": "local-Ident-name_module_css-m_x_@",
+  "someId": "local-Ident-name_module_css-someId",
+  "subClass": "local-Ident-name_module_css-subClass",
+  "test": "local-Ident-name_module_css-test",
+  "{}": "local-Ident-name_module_css-{}",
+  "©": "local-Ident-name_module_css-©",
+  "“‘’”": "local-Ident-name_module_css-“‘’”",
+  "⌘⌥": "local-Ident-name_module_css-⌘⌥",
+  "☺☃": "local-Ident-name_module_css-☺☃",
+  "♥": "local-Ident-name_module_css-♥",
+  "𝄞♪♩♫♬": "local-Ident-name_module_css-𝄞♪♩♫♬",
+  "💩": "local-Ident-name_module_css-💩",
+  "😍": "local-Ident-name_module_css-😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 12`] = `
+Object {
+  "#": "local-Ident-name.module--#--0fms6",
+  "##": "local-Ident-name.module--##--4MjQ_",
+  "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
+  "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
+  ".": "local-Ident-name.module--.--Bix0N",
+  "123": "local-Ident-name.module--123--PvTN4",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--xSd9R",
+  ":)": "local-Ident-name.module--:)--kXjo5",
+  ":\`(": "local-Ident-name.module--:\`(--YZqyU",
+  ":hover": "local-Ident-name.module--:hover--QXnD_",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0eQHC",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--q0Tti",
+  "<p>": "local-Ident-name.module--<p>--RCYv0",
+  "?": "local-Ident-name.module--?--tcA6P",
+  "@": "local-Ident-name.module--@--IjjsD",
+  "B&W?": "local-Ident-name.module--B&W?--9Uv5j",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--bHMhi",
+  "_": "local-Ident-name.module--_--wWsEV",
+  "_test": "local-Ident-name.module--_test--c_lQ7",
+  "className": "local-Ident-name.module--className--QdX5M",
+  "f!o!o": "local-Ident-name.module--f!o!o--U5evv",
+  "f'o'o": "local-Ident-name.module--f'o'o--5azUC",
+  "f*o*o": "local-Ident-name.module--f*o*o--1OZxX",
+  "f+o+o": "local-Ident-name.module--f+o+o--r42Md",
+  "f/o/o": "local-Ident-name.module--f/o/o--gpPiW",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gu2u7",
+  "foo.bar": "local-Ident-name.module--foo.bar--EDSRu",
+  "foo/bar": "local-Ident-name.module--foo/bar--ARBA4",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p2TDV",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--vSOik",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--FlFA-",
+  "f~o~o": "local-Ident-name.module--f~o~o--6JU27",
+  "m_x_@": "local-Ident-name.module--m_x_@--wXBtR",
+  "someId": "local-Ident-name.module--someId--fs0tG",
+  "subClass": "local-Ident-name.module--subClass--EEiow",
+  "test": "local-Ident-name.module--test--n138O",
+  "{}": "local-Ident-name.module--{}--yOiSk",
+  "©": "local-Ident-name.module--©--ABrkO",
+  "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
+  "☺☃": "local-Ident-name.module--☺☃--_YUxr",
+  "♥": "local-Ident-name.module--♥--zQEWH",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--16ySy",
+  "💩": "local-Ident-name.module--💩--fhsK2",
+  "😍": "local-Ident-name.module--😍--rYTiW",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 13`] = `
+Object {
+  "#": "_-1#",
+  "##": "_-1##",
+  "#.#.#": "_-1#.#.#",
+  "#fake-id": "_-1#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_-1-a-b-c-",
+  "-a0-34a___f": "_-1-a0-34a___f",
+  ".": "_-1.",
+  "123": "_-1123",
+  "1a2b3c": "_-11a2b3c",
+  ":)": "_-1:)",
+  ":\`(": "_-1:\`(",
+  ":hover": "_-1:hover",
+  ":hover:focus:active": "_-1:hover:focus:active",
+  "<><<<>><>": "_-1<><<<>><>",
+  "<p>": "_-1<p>",
+  "?": "_-1?",
+  "@": "_-1@",
+  "B&W?": "_-1B&W?",
+  "[attr=value]": "_-1[attr=value]",
+  "_": "_-1_",
+  "_test": "_-1_test",
+  "className": "_-1className",
+  "f!o!o": "_-1f!o!o",
+  "f'o'o": "_-1f'o'o",
+  "f*o*o": "_-1f*o*o",
+  "f+o+o": "_-1f+o+o",
+  "f/o/o": "_-1f/o/o",
+  "f\\\\o\\\\o": "_-1f\\\\o\\\\o",
+  "foo.bar": "_-1foo.bar",
+  "foo/bar": "_-1foo/bar",
+  "foo/bar/baz": "_-1foo/bar/baz",
+  "foo\\\\bar": "_-1foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_-1foo\\\\bar\\\\baz",
+  "f~o~o": "_-1f~o~o",
+  "m_x_@": "_-1m_x_@",
+  "someId": "_-1someId",
+  "subClass": "_-1subClass",
+  "test": "_-1test",
+  "{}": "_-1{}",
+  "©": "_-1©",
+  "“‘’”": "_-1“‘’”",
+  "⌘⌥": "_-1⌘⌥",
+  "☺☃": "_-1☺☃",
+  "♥": "_-1♥",
+  "𝄞♪♩♫♬": "_-1𝄞♪♩♫♬",
+  "💩": "_-1💩",
+  "😍": "_-1😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 14`] = `
+Object {
+  "#": "_--#",
+  "##": "_--##",
+  "#.#.#": "_--#.#.#",
+  "#fake-id": "_--#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "_---a-b-c-",
+  "-a0-34a___f": "_---a0-34a___f",
+  ".": "_--.",
+  "123": "_--123",
+  "1a2b3c": "_--1a2b3c",
+  ":)": "_--:)",
+  ":\`(": "_--:\`(",
+  ":hover": "_--:hover",
+  ":hover:focus:active": "_--:hover:focus:active",
+  "<><<<>><>": "_--<><<<>><>",
+  "<p>": "_--<p>",
+  "?": "_--?",
+  "@": "_--@",
+  "B&W?": "_--B&W?",
+  "[attr=value]": "_--[attr=value]",
+  "_": "_--_",
+  "_test": "_--_test",
+  "className": "_--className",
+  "f!o!o": "_--f!o!o",
+  "f'o'o": "_--f'o'o",
+  "f*o*o": "_--f*o*o",
+  "f+o+o": "_--f+o+o",
+  "f/o/o": "_--f/o/o",
+  "f\\\\o\\\\o": "_--f\\\\o\\\\o",
+  "foo.bar": "_--foo.bar",
+  "foo/bar": "_--foo/bar",
+  "foo/bar/baz": "_--foo/bar/baz",
+  "foo\\\\bar": "_--foo\\\\bar",
+  "foo\\\\bar\\\\baz": "_--foo\\\\bar\\\\baz",
+  "f~o~o": "_--f~o~o",
+  "m_x_@": "_--m_x_@",
+  "someId": "_--someId",
+  "subClass": "_--subClass",
+  "test": "_--test",
+  "{}": "_--{}",
+  "©": "_--©",
+  "“‘’”": "_--“‘’”",
+  "⌘⌥": "_--⌘⌥",
+  "☺☃": "_--☺☃",
+  "♥": "_--♥",
+  "𝄞♪♩♫♬": "_--𝄞♪♩♫♬",
+  "💩": "_--💩",
+  "😍": "_--😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 15`] = `
+Object {
+  "#": "__#",
+  "##": "__##",
+  "#.#.#": "__#.#.#",
+  "#fake-id": "__#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "__-a-b-c-",
+  "-a0-34a___f": "__-a0-34a___f",
+  ".": "__.",
+  "123": "__123",
+  "1a2b3c": "__1a2b3c",
+  ":)": "__:)",
+  ":\`(": "__:\`(",
+  ":hover": "__:hover",
+  ":hover:focus:active": "__:hover:focus:active",
+  "<><<<>><>": "__<><<<>><>",
+  "<p>": "__<p>",
+  "?": "__?",
+  "@": "__@",
+  "B&W?": "__B&W?",
+  "[attr=value]": "__[attr=value]",
+  "_": "___",
+  "_test": "___test",
+  "className": "__className",
+  "f!o!o": "__f!o!o",
+  "f'o'o": "__f'o'o",
+  "f*o*o": "__f*o*o",
+  "f+o+o": "__f+o+o",
+  "f/o/o": "__f/o/o",
+  "f\\\\o\\\\o": "__f\\\\o\\\\o",
+  "foo.bar": "__foo.bar",
+  "foo/bar": "__foo/bar",
+  "foo/bar/baz": "__foo/bar/baz",
+  "foo\\\\bar": "__foo\\\\bar",
+  "foo\\\\bar\\\\baz": "__foo\\\\bar\\\\baz",
+  "f~o~o": "__f~o~o",
+  "m_x_@": "__m_x_@",
+  "someId": "__someId",
+  "subClass": "__subClass",
+  "test": "__test",
+  "{}": "__{}",
+  "©": "__©",
+  "“‘’”": "__“‘’”",
+  "⌘⌥": "__⌘⌥",
+  "☺☃": "__☺☃",
+  "♥": "__♥",
+  "𝄞♪♩♫♬": "__𝄞♪♩♫♬",
+  "💩": "__💩",
+  "😍": "__😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 16`] = `
+Object {
+  "#": "#--tlFV0b",
+  "##": "##--7vA-7E",
+  "#.#.#": "#.#.#--1Hd875",
+  "#fake-id": "#fake-id--ez7Dik",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
+  "-a-b-c-": "-a-b-c---jfQ3Qn",
+  "-a0-34a___f": "-a0-34a___f--OWXZy-",
+  ".": ".--ZtQPX0",
+  "123": "_123--j0sSmE",
+  "1a2b3c": "_1a2b3c--AMCMZb",
+  ":)": ":)--u1ngqY",
+  ":\`(": ":\`(--hgmvDX",
+  ":hover": ":hover--8XNA4p",
+  ":hover:focus:active": ":hover:focus:active--EpwJWE",
+  "<><<<>><>": "<><<<>><>--8jXRVC",
+  "<p>": "<p>--MHaC0-",
+  "?": "?--9Y6SkK",
+  "@": "@--Sc9iGx",
+  "B&W?": "B&W?--D7HZ-H",
+  "[attr=value]": "[attr=value]--ZTV_uO",
+  "_": "_--NFJ6vs",
+  "_test": "_test--Kfd_4M",
+  "className": "className--b9RUK8",
+  "f!o!o": "f!o!o--QQGZu2",
+  "f'o'o": "f'o'o--00bSFC",
+  "f*o*o": "f*o*o--kom_Jq",
+  "f+o+o": "f+o+o--J4WAkM",
+  "f/o/o": "f/o/o--3vNZZM",
+  "f\\\\o\\\\o": "f\\\\o\\\\o--wNzTj3",
+  "foo.bar": "foo.bar--pYS5El",
+  "foo/bar": "foo/bar--9GWp9d",
+  "foo/bar/baz": "foo/bar/baz--MRJglc",
+  "foo\\\\bar": "foo\\\\bar--CCzsTj",
+  "foo\\\\bar\\\\baz": "foo\\\\bar\\\\baz--nRgTR7",
+  "f~o~o": "f~o~o--26zzb-",
+  "m_x_@": "m_x_@--kG1v1e",
+  "someId": "someId--TlAET9",
+  "subClass": "subClass--sglK-1",
+  "test": "test--mowWgR",
+  "{}": "{}--Tr49RL",
+  "©": "©--sWiP9l",
+  "“‘’”": "“‘’”--M3gyy-",
+  "⌘⌥": "⌘⌥--oDuNAW",
+  "☺☃": "☺☃--pbZo-2",
+  "♥": "♥--e6nEYm",
+  "𝄞♪♩♫♬": "𝄞♪♩♫♬--vrTCd6",
+  "💩": "💩--1Txu-k",
+  "😍": "😍--rPyRbM",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 17`] = `
+Object {
+  "#": "😀- -#",
+  "##": "😀- -##",
+  "#.#.#": "😀- -#.#.#",
+  "#fake-id": "😀- -#fake-id",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
+  "-a-b-c-": "😀- --a-b-c-",
+  "-a0-34a___f": "😀- --a0-34a___f",
+  ".": "😀- -.",
+  "123": "😀- -123",
+  "1a2b3c": "😀- -1a2b3c",
+  ":)": "😀- -:)",
+  ":\`(": "😀- -:\`(",
+  ":hover": "😀- -:hover",
+  ":hover:focus:active": "😀- -:hover:focus:active",
+  "<><<<>><>": "😀- -<><<<>><>",
+  "<p>": "😀- -<p>",
+  "?": "😀- -?",
+  "@": "😀- -@",
+  "B&W?": "😀- -B&W?",
+  "[attr=value]": "😀- -[attr=value]",
+  "_": "😀- -_",
+  "_test": "😀- -_test",
+  "className": "😀- -className",
+  "f!o!o": "😀- -f!o!o",
+  "f'o'o": "😀- -f'o'o",
+  "f*o*o": "😀- -f*o*o",
+  "f+o+o": "😀- -f+o+o",
+  "f/o/o": "😀- -f/o/o",
+  "f\\\\o\\\\o": "😀- -f\\\\o\\\\o",
+  "foo.bar": "😀- -foo.bar",
+  "foo/bar": "😀- -foo/bar",
+  "foo/bar/baz": "😀- -foo/bar/baz",
+  "foo\\\\bar": "😀- -foo\\\\bar",
+  "foo\\\\bar\\\\baz": "😀- -foo\\\\bar\\\\baz",
+  "f~o~o": "😀- -f~o~o",
+  "m_x_@": "😀- -m_x_@",
+  "someId": "😀- -someId",
+  "subClass": "😀- -subClass",
+  "test": "😀- -test",
+  "{}": "😀- -{}",
+  "©": "😀- -©",
+  "“‘’”": "😀- -“‘’”",
+  "⌘⌥": "😀- -⌘⌥",
+  "☺☃": "😀- -☺☃",
+  "♥": "😀- -♥",
+  "𝄞♪♩♫♬": "😀- -𝄞♪♩♫♬",
+  "💩": "😀- -💩",
+  "😍": "😀- -😍",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 18`] = `
+Object {
+  "#": "local-Ident-name.module--#--CUiuWNpacN",
+  "##": "local-Ident-name.module--##--CU4LyzXr4m",
+  "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
+  "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
+  ".": "local-Ident-name.module--.--TYgwrPPlce",
+  "123": "local-Ident-name.module--123--dRCMetfS4k",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--27Ol2f1A5B",
+  ":)": "local-Ident-name.module--:)--8IGwE2kP5T",
+  ":\`(": "local-Ident-name.module--:\`(--XFoJZOBwb2",
+  ":hover": "local-Ident-name.module--:hover--gj5dKEVBLV",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--MF6oOllQUU",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--efv0wrKauZ",
+  "<p>": "local-Ident-name.module--<p>--VleHaJt0jW",
+  "?": "local-Ident-name.module--?--iQGuBSRyn5",
+  "@": "local-Ident-name.module--@--rXUc81UfOs",
+  "B&W?": "local-Ident-name.module--B&W?--2nDwDstWPk",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--pVXs1yvO-c",
+  "_": "local-Ident-name.module--_--O587A_Y16h",
+  "_test": "local-Ident-name.module--_test--jkChnYaYBV",
+  "className": "local-Ident-name.module--className--HP09CfTnX1",
+  "f!o!o": "local-Ident-name.module--f!o!o--piVwcUXcCA",
+  "f'o'o": "local-Ident-name.module--f'o'o--_4GqKKgPVD",
+  "f*o*o": "local-Ident-name.module--f*o*o--i7809YiNmT",
+  "f+o+o": "local-Ident-name.module--f+o+o--22BN9FvSaj",
+  "f/o/o": "local-Ident-name.module--f/o/o--IfM4TmY7KJ",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--smRz6NSna2",
+  "foo.bar": "local-Ident-name.module--foo.bar--ekmt08iOcx",
+  "foo/bar": "local-Ident-name.module--foo/bar--pmM_pDdiuz",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--OHGMWfcvMx",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--37QAOKIbi2",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--zz8kivuxZ6",
+  "f~o~o": "local-Ident-name.module--f~o~o--zcYow3hnn9",
+  "m_x_@": "local-Ident-name.module--m_x_@--hTokNmWv2C",
+  "someId": "local-Ident-name.module--someId--MLaknB8z97",
+  "subClass": "local-Ident-name.module--subClass--4o6O5CPJI6",
+  "test": "local-Ident-name.module--test--6y2MZL2dRW",
+  "{}": "local-Ident-name.module--{}--KmrFboxFIk",
+  "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
+  "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
+  "♥": "local-Ident-name.module--♥--44uxusx5VU",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--BSgrxZWBoa",
+  "💩": "local-Ident-name.module--💩--IYSuXUnVFH",
+  "😍": "local-Ident-name.module--😍--ZFvdqtu3qG",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 19`] = `
+Object {
+  "#": "local-Ident-name.module--#--H4xWOk",
+  "##": "local-Ident-name.module--##--qmWu4j",
+  "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
+  "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
+  ".": "local-Ident-name.module--.--v7SGE3",
+  "123": "local-Ident-name.module--123--FPfb_a",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--Prq2-n",
+  ":)": "local-Ident-name.module--:)--stxQmr",
+  ":\`(": "local-Ident-name.module--:\`(--PKfNRg",
+  ":hover": "local-Ident-name.module--:hover--7J6Ovy",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--N6KkcF",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--bH0ZRJ",
+  "<p>": "local-Ident-name.module--<p>--Lzbt_f",
+  "?": "local-Ident-name.module--?--cFxilG",
+  "@": "local-Ident-name.module--@--RJiOrO",
+  "B&W?": "local-Ident-name.module--B&W?--Cx7Xfj",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--_X7r6s",
+  "_": "local-Ident-name.module--_--jZA8cH",
+  "_test": "local-Ident-name.module--_test--IFXC8J",
+  "className": "local-Ident-name.module--className--Gf2qKu",
+  "f!o!o": "local-Ident-name.module--f!o!o--IQSVKY",
+  "f'o'o": "local-Ident-name.module--f'o'o--Jke6Ar",
+  "f*o*o": "local-Ident-name.module--f*o*o--US0RYV",
+  "f+o+o": "local-Ident-name.module--f+o+o--JZ_ZYM",
+  "f/o/o": "local-Ident-name.module--f/o/o--TnGHtD",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--zZG-0O",
+  "foo.bar": "local-Ident-name.module--foo.bar--_-hir3",
+  "foo/bar": "local-Ident-name.module--foo/bar--LMZK6C",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--44CiTQ",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--qVBL0b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--aiT34M",
+  "f~o~o": "local-Ident-name.module--f~o~o--wi3S5B",
+  "m_x_@": "local-Ident-name.module--m_x_@--j3M2wy",
+  "someId": "local-Ident-name.module--someId--hSsSyu",
+  "subClass": "local-Ident-name.module--subClass--rJLSP7",
+  "test": "local-Ident-name.module--test--_SesvC",
+  "{}": "local-Ident-name.module--{}--rC8he6",
+  "©": "local-Ident-name.module--©--if7zkU",
+  "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
+  "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
+  "♥": "local-Ident-name.module--♥--Wquu8v",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--qoKZGt",
+  "💩": "local-Ident-name.module--💩--Wmv5n7",
+  "😍": "local-Ident-name.module--😍--vXWvMf",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 20`] = `
+Object {
+  "#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#---qicdNs-postfix",
+  "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
+  "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
+  "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
+  "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
+  "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
+  ".": "prefix-./local-Ident-name.module.css?local-ident-name-9---.---XxpCFm-postfix",
+  "123": "prefix-./local-Ident-name.module.css?local-ident-name-9---123---29k572-postfix",
+  "1a2b3c": "prefix-./local-Ident-name.module.css?local-ident-name-9---1a2b3c---8RwOZv-postfix",
+  ":)": "prefix-./local-Ident-name.module.css?local-ident-name-9---:)---tpNOM_-postfix",
+  ":\`(": "prefix-./local-Ident-name.module.css?local-ident-name-9---:\`(---w0y-3T-postfix",
+  ":hover": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover---p-SVOd-postfix",
+  ":hover:focus:active": "prefix-./local-Ident-name.module.css?local-ident-name-9---:hover:focus:active---7ppzcn-postfix",
+  "<><<<>><>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<><<<>><>---DV-Ytr-postfix",
+  "<p>": "prefix-./local-Ident-name.module.css?local-ident-name-9---<p>---T4r2DZ-postfix",
+  "?": "prefix-./local-Ident-name.module.css?local-ident-name-9---?---8rRplk-postfix",
+  "@": "prefix-./local-Ident-name.module.css?local-ident-name-9---@---LKRCz--postfix",
+  "B&W?": "prefix-./local-Ident-name.module.css?local-ident-name-9---B&W?---pAfmJZ-postfix",
+  "[attr=value]": "prefix-./local-Ident-name.module.css?local-ident-name-9---[attr=value]---uMrr4n-postfix",
+  "_": "prefix-./local-Ident-name.module.css?local-ident-name-9---_---UdFsE6-postfix",
+  "_test": "prefix-./local-Ident-name.module.css?local-ident-name-9---_test---RdGpUF-postfix",
+  "className": "prefix-./local-Ident-name.module.css?local-ident-name-9---className---Rbuqv6-postfix",
+  "f!o!o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f!o!o---XqT8S3-postfix",
+  "f'o'o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f'o'o---BxXL6g-postfix",
+  "f*o*o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f*o*o---fF4DcX-postfix",
+  "f+o+o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f+o+o---F93mpm-postfix",
+  "f/o/o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f/o/o---kXNiKY-postfix",
+  "f\\\\o\\\\o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f\\\\o\\\\o---fLLGuT-postfix",
+  "foo.bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo.bar---d2rdEE-postfix",
+  "foo/bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar---uZ8i8d-postfix",
+  "foo/bar/baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo/bar/baz---zWw2aH-postfix",
+  "foo\\\\bar": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar---pozdkJ-postfix",
+  "foo\\\\bar\\\\baz": "prefix-./local-Ident-name.module.css?local-ident-name-9---foo\\\\bar\\\\baz---C9LnZz-postfix",
+  "f~o~o": "prefix-./local-Ident-name.module.css?local-ident-name-9---f~o~o---SPRjm3-postfix",
+  "m_x_@": "prefix-./local-Ident-name.module.css?local-ident-name-9---m_x_@---0FTqJc-postfix",
+  "someId": "prefix-./local-Ident-name.module.css?local-ident-name-9---someId---rz34Z--postfix",
+  "subClass": "prefix-./local-Ident-name.module.css?local-ident-name-9---subClass---KZbh3P-postfix",
+  "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
+  "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
+  "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
+  "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
+  "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
+  "♥": "prefix-./local-Ident-name.module.css?local-ident-name-9---♥---J7fhlX-postfix",
+  "𝄞♪♩♫♬": "prefix-./local-Ident-name.module.css?local-ident-name-9---𝄞♪♩♫♬---a1kviT-postfix",
+  "💩": "prefix-./local-Ident-name.module.css?local-ident-name-9---💩---Y7HlBo-postfix",
+  "😍": "prefix-./local-Ident-name.module.css?local-ident-name-9---😍---JD7n4W-postfix",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 21`] = `
+Object {
+  "#": "local-Ident-name.module--#--HhZOGz",
+  "##": "local-Ident-name.module--##--9WIAe0",
+  "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
+  "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
+  ".": "local-Ident-name.module--.--BPq0xF",
+  "123": "local-Ident-name.module--123--B3OEQK",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--oaY1J8",
+  ":)": "local-Ident-name.module--:)--Pj6vDs",
+  ":\`(": "local-Ident-name.module--:\`(--IVbXBm",
+  ":hover": "local-Ident-name.module--:hover--1mpkFN",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--YELMY9",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Uf6Aq5",
+  "<p>": "local-Ident-name.module--<p>--Wp80__",
+  "?": "local-Ident-name.module--?--Q_Zy2v",
+  "@": "local-Ident-name.module--@--SWeck6",
+  "B&W?": "local-Ident-name.module--B&W?--JmVOKE",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--s_2WkM",
+  "_": "local-Ident-name.module--_--R0gCHb",
+  "_test": "local-Ident-name.module--_test--qE51sB",
+  "className": "local-Ident-name.module--className--DXQmdk",
+  "f!o!o": "local-Ident-name.module--f!o!o--uNwFsi",
+  "f'o'o": "local-Ident-name.module--f'o'o--a6OZfH",
+  "f*o*o": "local-Ident-name.module--f*o*o--Pzh7Iy",
+  "f+o+o": "local-Ident-name.module--f+o+o--QH3xLM",
+  "f/o/o": "local-Ident-name.module--f/o/o--PcOcIs",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--gaJvBS",
+  "foo.bar": "local-Ident-name.module--foo.bar--bKDReN",
+  "foo/bar": "local-Ident-name.module--foo/bar--9drIBx",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--p04ctN",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--S2Dcc1",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--jFAF-g",
+  "f~o~o": "local-Ident-name.module--f~o~o--PUOhHl",
+  "m_x_@": "local-Ident-name.module--m_x_@--ZIn6c4",
+  "someId": "local-Ident-name.module--someId--tVcVTm",
+  "subClass": "local-Ident-name.module--subClass--j9K5GX",
+  "test": "local-Ident-name.module--test--Wxl9SQ",
+  "{}": "local-Ident-name.module--{}--x9uHdU",
+  "©": "local-Ident-name.module--©--GlglrH",
+  "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
+  "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
+  "♥": "local-Ident-name.module--♥--n0DExN",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--bJsUdV",
+  "💩": "local-Ident-name.module--💩--sn5uaI",
+  "😍": "local-Ident-name.module--😍--eF1kUF",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 22`] = `
+Object {
+  "#": "local-Ident-name.module--#--58ffa81a",
+  "##": "local-Ident-name.module--##--e4c1f1f4",
+  "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
+  "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
+  ".": "local-Ident-name.module--.--c60e13df",
+  "123": "local-Ident-name.module--123--1cfa6799",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b0622ca1",
+  ":)": "local-Ident-name.module--:)--7c5c25e1",
+  ":\`(": "local-Ident-name.module--:\`(--70a3d865",
+  ":hover": "local-Ident-name.module--:hover--00e0e9cf",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--9fac1801",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--de7a296d",
+  "<p>": "local-Ident-name.module--<p>--1a958d1c",
+  "?": "local-Ident-name.module--?--14d8edf4",
+  "@": "local-Ident-name.module--@--d4a78331",
+  "B&W?": "local-Ident-name.module--B&W?--a78d0393",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--c0361de2",
+  "_": "local-Ident-name.module--_--80de2974",
+  "_test": "local-Ident-name.module--_test--0473fb8d",
+  "className": "local-Ident-name.module--className--a79e037f",
+  "f!o!o": "local-Ident-name.module--f!o!o--d963c01e",
+  "f'o'o": "local-Ident-name.module--f'o'o--de8bb216",
+  "f*o*o": "local-Ident-name.module--f*o*o--43f20f40",
+  "f+o+o": "local-Ident-name.module--f+o+o--589e0f04",
+  "f/o/o": "local-Ident-name.module--f/o/o--fae128a6",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--4f58244c",
+  "foo.bar": "local-Ident-name.module--foo.bar--2f64db2c",
+  "foo/bar": "local-Ident-name.module--foo/bar--1993240b",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--6aef178e",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--64e39502",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--c92e29e0",
+  "f~o~o": "local-Ident-name.module--f~o~o--67ce3441",
+  "m_x_@": "local-Ident-name.module--m_x_@--7d75708c",
+  "someId": "local-Ident-name.module--someId--14048457",
+  "subClass": "local-Ident-name.module--subClass--20021468",
+  "test": "local-Ident-name.module--test--8270b0ef",
+  "{}": "local-Ident-name.module--{}--ae3dd8d2",
+  "©": "local-Ident-name.module--©--1b9a8b1c",
+  "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
+  "☺☃": "local-Ident-name.module--☺☃--1469d673",
+  "♥": "local-Ident-name.module--♥--49c9e5f7",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--9b2f29da",
+  "💩": "local-Ident-name.module--💩--94ba226c",
+  "😍": "local-Ident-name.module--😍--2fcf5128",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 23`] = `
+Object {
+  "#": "local-Ident-name.module--#--9Wz8iS8u",
+  "##": "local-Ident-name.module--##--Xw2rY7zd",
+  "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
+  "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
+  ".": "local-Ident-name.module--.--M5qzfpLo",
+  "123": "local-Ident-name.module--123--YUqF5zS2",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bQNiwONU",
+  ":)": "local-Ident-name.module--:)--4Iu7JUbn",
+  ":\`(": "local-Ident-name.module--:\`(--GHVmYb5c",
+  ":hover": "local-Ident-name.module--:hover--VAXzRyCg",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--0lla+F2p",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--XLiNBlLA",
+  "<p>": "local-Ident-name.module--<p>--Z3z/E54Y",
+  "?": "local-Ident-name.module--?--WiZDtscd",
+  "@": "local-Ident-name.module--@--C4CmO5xx",
+  "B&W?": "local-Ident-name.module--B&W?--g3tmGQ1e",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--zQk/kDjQ",
+  "_": "local-Ident-name.module--_--qnfZWXNI",
+  "_test": "local-Ident-name.module--_test--qMUjbC/I",
+  "className": "local-Ident-name.module--className--pwM6UboM",
+  "f!o!o": "local-Ident-name.module--f!o!o--j3soDiCp",
+  "f'o'o": "local-Ident-name.module--f'o'o--MHMzH0KY",
+  "f*o*o": "local-Ident-name.module--f*o*o--26bZ4t0o",
+  "f+o+o": "local-Ident-name.module--f+o+o--vQ+lI2jp",
+  "f/o/o": "local-Ident-name.module--f/o/o--e3jIJGEf",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--G9+prJD1",
+  "foo.bar": "local-Ident-name.module--foo.bar--THng2+Bz",
+  "foo/bar": "local-Ident-name.module--foo/bar--YB6qbQ9S",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--Q20sxeqj",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--Kxtcf1c9",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--YBybJKnk",
+  "f~o~o": "local-Ident-name.module--f~o~o--JjjvJFSt",
+  "m_x_@": "local-Ident-name.module--m_x_@--Ez6PsYJh",
+  "someId": "local-Ident-name.module--someId--IGKlSlnh",
+  "subClass": "local-Ident-name.module--subClass--dwOKrGpm",
+  "test": "local-Ident-name.module--test--NLdHRDRl",
+  "{}": "local-Ident-name.module--{}--6OhFoptN",
+  "©": "local-Ident-name.module--©--tHIIl+/T",
+  "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
+  "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
+  "♥": "local-Ident-name.module--♥--7lqZpUgl",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--cvCnWCP/",
+  "💩": "local-Ident-name.module--💩--3GaohJIg",
+  "😍": "local-Ident-name.module--😍--FLeSmaPd",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 24`] = `
+Object {
+  "#": "local-Ident-name.module--#--WLkUKg",
+  "##": "local-Ident-name.module--##--jZQh9o",
+  "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
+  "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
+  ".": "local-Ident-name.module--.--MWGP9-",
+  "123": "local-Ident-name.module--123--Nm8irE",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--bVeVN5",
+  ":)": "local-Ident-name.module--:)--Ie3pA9",
+  ":\`(": "local-Ident-name.module--:\`(--WwHPwk",
+  ":hover": "local-Ident-name.module--:hover--DqSicW",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--7Xp248",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--Hz1mIz",
+  "<p>": "local-Ident-name.module--<p>--HpZvES",
+  "?": "local-Ident-name.module--?--L-dtlw",
+  "@": "local-Ident-name.module--@--siEE0h",
+  "B&W?": "local-Ident-name.module--B&W?--7ftAnV",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--u54HDK",
+  "_": "local-Ident-name.module--_--3k2Agq",
+  "_test": "local-Ident-name.module--_test--8xrdZV",
+  "className": "local-Ident-name.module--className--2Kh-Ov",
+  "f!o!o": "local-Ident-name.module--f!o!o--T3prsX",
+  "f'o'o": "local-Ident-name.module--f'o'o--jt-RhY",
+  "f*o*o": "local-Ident-name.module--f*o*o--QbjpCQ",
+  "f+o+o": "local-Ident-name.module--f+o+o--bBOiFl",
+  "f/o/o": "local-Ident-name.module--f/o/o--lJEk9y",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--DGQBRU",
+  "foo.bar": "local-Ident-name.module--foo.bar--7yacah",
+  "foo/bar": "local-Ident-name.module--foo/bar--2nkRzH",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--aTk6tX",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--00tycH",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--Xyl0u2",
+  "f~o~o": "local-Ident-name.module--f~o~o--98SqRg",
+  "m_x_@": "local-Ident-name.module--m_x_@--X8bP8q",
+  "someId": "local-Ident-name.module--someId--hIrhgH",
+  "subClass": "local-Ident-name.module--subClass--CS7Un_",
+  "test": "local-Ident-name.module--test--2GQpZJ",
+  "{}": "local-Ident-name.module--{}--nRmS1p",
+  "©": "local-Ident-name.module--©--iWVpcm",
+  "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
+  "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
+  "♥": "local-Ident-name.module--♥--y3MitJ",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--72crRY",
+  "💩": "local-Ident-name.module--💩--7uK8qM",
+  "😍": "local-Ident-name.module--😍--WcxZ0t",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 25`] = `
+Object {
+  "#": "local-Ident-name.module--#--e4f1b73cd809",
+  "##": "local-Ident-name.module--##--405237512524",
+  "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
+  "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
+  "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
+  "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
+  ".": "local-Ident-name.module--.--5470f44f036b",
+  "123": "local-Ident-name.module--123--d17ed8537e79",
+  "1a2b3c": "local-Ident-name.module--1a2b3c--b883ad2dd9f8",
+  ":)": "local-Ident-name.module--:)--17eb8b70354f",
+  ":\`(": "local-Ident-name.module--:\`(--bc61af26245b",
+  ":hover": "local-Ident-name.module--:hover--5c74060ab542",
+  ":hover:focus:active": "local-Ident-name.module--:hover:focus:active--940cf6c5d089",
+  "<><<<>><>": "local-Ident-name.module--<><<<>><>--f10fbf26846b",
+  "<p>": "local-Ident-name.module--<p>--3ee2ce137c10",
+  "?": "local-Ident-name.module--?--f76eafe5a169",
+  "@": "local-Ident-name.module--@--e273723fec35",
+  "B&W?": "local-Ident-name.module--B&W?--8cd981d8b590",
+  "[attr=value]": "local-Ident-name.module--[attr=value]--e0514aa37eca",
+  "_": "local-Ident-name.module--_--572d2835970e",
+  "_test": "local-Ident-name.module--_test--89d707c3fad8",
+  "className": "local-Ident-name.module--className--9f53c7efa137",
+  "f!o!o": "local-Ident-name.module--f!o!o--dd84868984da",
+  "f'o'o": "local-Ident-name.module--f'o'o--d25297ca72bf",
+  "f*o*o": "local-Ident-name.module--f*o*o--e6413d687d7f",
+  "f+o+o": "local-Ident-name.module--f+o+o--50ed97029705",
+  "f/o/o": "local-Ident-name.module--f/o/o--7590fb61ecff",
+  "f\\\\o\\\\o": "local-Ident-name.module--f\\\\o\\\\o--ac338e117e89",
+  "foo.bar": "local-Ident-name.module--foo.bar--d1268ba07c09",
+  "foo/bar": "local-Ident-name.module--foo/bar--4fbc31b40f2d",
+  "foo/bar/baz": "local-Ident-name.module--foo/bar/baz--e0d2321851b9",
+  "foo\\\\bar": "local-Ident-name.module--foo\\\\bar--ae3f0073234b",
+  "foo\\\\bar\\\\baz": "local-Ident-name.module--foo\\\\bar\\\\baz--782f833dc5da",
+  "f~o~o": "local-Ident-name.module--f~o~o--72d738764f15",
+  "m_x_@": "local-Ident-name.module--m_x_@--e7a6eff38a8d",
+  "someId": "local-Ident-name.module--someId--bfc6d0920e46",
+  "subClass": "local-Ident-name.module--subClass--97560fae798c",
+  "test": "local-Ident-name.module--test--a60f4680ad27",
+  "{}": "local-Ident-name.module--{}--00d46b3a8952",
+  "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
+  "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
+  "☺☃": "local-Ident-name.module--☺☃--543bef227373",
+  "♥": "local-Ident-name.module--♥--76ddd7511c43",
+  "𝄞♪♩♫♬": "local-Ident-name.module--𝄞♪♩♫♬--95edd86361c1",
+  "💩": "local-Ident-name.module--💩--54f8b2bdd0e9",
+  "😍": "local-Ident-name.module--😍--29d85c2489ef",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 26`] = `
+Object {
+  "simple": "order_module_css-simple order-1_css-order-1 order-2_css-order-2 order-1_css-order-1-1 order-2_css-order-2-2",
+  "simple-other": "order_module_css-simple-other order-1_css-order-1",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 27`] = `
+Object {
+  "backButton": "dedup_module_css-backButton secondary-button_css-secondaryButton button_css-button",
+  "nextButton": "dedup_module_css-nextButton primary-button_css-primaryButton button_css-button",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 28`] = `
+Object {
+  "bar": "composes-from-less_module_css-bar foo_less-foo",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 29`] = `
+Object {
+  "bar": "#fff",
+  "className": "tilde_module_css-className",
+  "foo": "#000",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 30`] = `
+Object {
+  "_test": "_right_value",
+  "_test1": "1",
+  "_test2": "'string'",
+  "_test3": "1px 2px 3px",
+  "_test4": "1px 2px 3px, 1px 2px 3px",
+  "_test_other": "_right_value",
+  "_the_same_name": "_the_same_name",
+  "className": "icss_module_css-className",
+  "constructor": "constructor",
+  "reexport": "classes_module_css_08cb-module",
+  "toString": "toString",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 31`] = `Object {}`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 32`] = `
+Object {
+  "Button": "component-name_module_css-Button",
+  "Container": "component-name_module_css-Container",
+  "Header": "component-name_module_css-Header",
+  "HeaderTitle": "component-name_module_css-HeaderTitle component-name_module_css-Header",
+  "MyButton": "component-name_module_css-MyButton",
+  "PrimaryButton": "component-name_module_css-PrimaryButton component-name_module_css-Button",
+  "UPPER": "component-name_module_css-UPPER",
+  "lowercase": "component-name_module_css-lowercase",
+  "mixedCase": "component-name_module_css-mixedCase",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 33`] = `
+Object {
+  "level-1": "composes-chain_module_css-level-1 composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-2": "composes-chain_module_css-level-2 composes-chain_module_css-level-3",
+  "level-3": "composes-chain_module_css-level-3",
+  "target": "composes-chain_module_css-target composes-chain_module_css-level-1 composes-chain_module_css-level-2",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 34`] = `
+Object {
+  "a": "file_with_many_dots_in_name_module_css-a",
+  "b": "file_with_many_dots_in_name_module_css-b",
+  "c": "file_with_many_dots_in_name_module_css-c",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 35`] = `
+Object {
+  "simple-bar": "composes-duplicate_module_css-simple-bar imported-simple_module_css-imported-simple",
+  "simple-baz": "composes-duplicate_module_css-simple-baz imported-simple_module_css-imported-simple",
+  "simple-foo": "composes-duplicate_module_css-simple-foo imported-simple_module_css-imported-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 36`] = `
+Object {
+  "a": "keyframes-leak-scope_module_css-a",
+  "b": "keyframes-leak-scope_module_css-b",
+  "c": "keyframes-leak-scope_module_css-c",
+  "c1": "keyframes-leak-scope_module_css-c1",
+  "c2": "keyframes-leak-scope_module_css-c2",
+  "c3": "keyframes-leak-scope_module_css-c3",
+  "c4": "keyframes-leak-scope_module_css-c4",
+  "d": "keyframes-leak-scope_module_css-d",
+  "f": "keyframes-leak-scope_module_css-f",
+  "local-keyframe": "keyframes-leak-scope_module_css-local-keyframe",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 37`] = `
+Object {
+  "[/?<>\\\\\\\\:*|\\":]": "path-placeholder_module_css-[/?<>\\\\\\\\:*|\\":]",
+  "foo": "path-placeholder_module_css-foo",
+  "foo/bar": "path-placeholder_module_css-foo/bar",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should export CSS module class names (text) 38`] = `
+Object {
+  "alias-1": "gold",
+  "alias-2": "navy",
+  "bar": "#fff",
+  "chain-1": "green",
+  "chain-2": "green",
+  "chain-3": "green",
+  "chained": "at-value-extra_module_css-chained",
+  "composed-shadow": "0 0 imported-color, 0 0 imported-color",
+  "def": "red",
+  "foo": "#000",
+  "foo1": "at-value-extra_module_css-foo1",
+  "foo2": "at-value-extra_module_css-foo2",
+  "foo3": "at-value-extra_module_css-foo3",
+  "foo4": "at-value-extra_module_css-foo4",
+  "foo5": "at-value-extra_module_css-foo5",
+  "foo6": "at-value-extra_module_css-foo6",
+  "from-node-modules": "at-value-extra_module_css-from-node-modules",
+  "imported-color": "tomato",
+  "multi-import": "at-value-extra_module_css-multi-import",
+  "shadow": "at-value-extra_module_css-shadow",
+  "spacing": "at-value-extra_module_css-spacing",
+  "uses-composed-shadow": "at-value-extra_module_css-uses-composed-shadow",
+  "v-base": "10px",
+  "v-color": "red",
+  "v-large": "calc(v-base * 2)",
+  "v-margin": "v-large 0",
+  "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigCacheTestCases css css-loader exported tests should load extracted CSS chunk via <link> tag (link) 1`] = `
 Array [
-  "/*!******************************!*\\\\
-  !*** css ./basic.module.css ***!
-  \\\\******************************/
+  "/*!*************************************************!*\\\\
+  !*** css ./basic.module.css (exportType: link) ***!
+  \\\\*************************************************/
 .basic_module_css-class-1, .basic_module_css-class-10 .basic_module_css-bar-1 {
 	color: green;
 }
@@ -1203,32 +4355,32 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	2.5% {color: green;}
 }
 
-/*!********************************!*\\\\
-  !*** css ./classes.module.css ***!
-  \\\\********************************/
+/*!***************************************************!*\\\\
+  !*** css ./classes.module.css (exportType: link) ***!
+  \\\\***************************************************/
 /* Tests from css-loader */
 
 /* should work with the \`default\` class and with named export */
-.classes_module_css_0c83-default {
+.classes_module_css_cdbd-default {
 	background: red
 }
 
 
 /* should work with the \`module\` class and with named export */
-.classes_module_css_0c83-module {
+.classes_module_css_cdbd-module {
 	background: red
 }
 
-/*!***********************!*\\\\
-  !*** css ./alias.css ***!
-  \\\\***********************/
+/*!******************************************!*\\\\
+  !*** css ./alias.css (exportType: link) ***!
+  \\\\******************************************/
 .alias_css-imported-alias {
   display: table;
 }
 
-/*!*************************!*\\\\
-  !*** css ./alias-1.css ***!
-  \\\\*************************/
+/*!********************************************!*\\\\
+  !*** css ./alias-1.css (exportType: link) ***!
+  \\\\********************************************/
 .alias-1_css-imported-alias-2 {
   background: red;
 }
@@ -1237,9 +4389,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: red;
 }
 
-/*!******************************************!*\\\\
-  !*** css ./composes-multiple.module.css ***!
-  \\\\******************************************/
+/*!*************************************************************!*\\\\
+  !*** css ./composes-multiple.module.css (exportType: link) ***!
+  \\\\*************************************************************/
 .composes-multiple_module_css-other-class {
 	color: red;
 }
@@ -1272,9 +4424,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 
 
-/*!****************************************!*\\\\
-  !*** css ./composes-global.module.css ***!
-  \\\\****************************************/
+/*!***********************************************************!*\\\\
+  !*** css ./composes-global.module.css (exportType: link) ***!
+  \\\\***********************************************************/
 .global-class {
 	color: red;
 }
@@ -1287,9 +4439,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: blue;
 }
 
-/*!**************************************!*\\\\
-  !*** css ./scope-at-rule.module.css ***!
-  \\\\**************************************/
+/*!*********************************************************!*\\\\
+  !*** css ./scope-at-rule.module.css (exportType: link) ***!
+  \\\\*********************************************************/
 @scope (.scope-at-rule_module_css-light-scheme) {
 	:scope {
 		background-color: plum;
@@ -1317,9 +4469,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 }
 
-/*!********************************!*\\\\
-  !*** css ./nesting.module.css ***!
-  \\\\********************************/
+/*!***************************************************!*\\\\
+  !*** css ./nesting.module.css (exportType: link) ***!
+  \\\\***************************************************/
 .nesting_module_css-notice {
 	width: 90%;
 	justify-content: center;
@@ -1398,23 +4550,23 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 }
 
-/*!*****************************!*\\\\
-  !*** css ./package/one.css ***!
-  \\\\*****************************/
+/*!************************************************!*\\\\
+  !*** css ./package/one.css (exportType: link) ***!
+  \\\\************************************************/
 .package_one_css-imported-relative {
     display: block;
 }
 
-/*!******************************************!*\\\\
-  !*** css ./node_modules/package/two.css ***!
-  \\\\******************************************/
+/*!*************************************************************!*\\\\
+  !*** css ./node_modules/package/two.css (exportType: link) ***!
+  \\\\*************************************************************/
 .node_modules_package_two_css-imported-relative {
     display: inline;
 }
 
-/*!****************************************!*\\\\
-  !*** css ./prefer-relative.module.css ***!
-  \\\\****************************************/
+/*!***********************************************************!*\\\\
+  !*** css ./prefer-relative.module.css (exportType: link) ***!
+  \\\\***********************************************************/
 .prefer-relative_module_css-one {
 	color: yellow;
 	}
@@ -1423,9 +4575,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: yellow;
 	}
 
-/*!***************************************!*\\\\
-  !*** css ./animation-name.module.css ***!
-  \\\\***************************************/
+/*!**********************************************************!*\\\\
+  !*** css ./animation-name.module.css (exportType: link) ***!
+  \\\\**********************************************************/
 .animation-name_module_css-a {
 	animation: 3s animation-name_module_css-animationName;
 }
@@ -1447,52 +4599,52 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 }
 
-/*!********************************************************!*\\\\
-  !*** css ./node_modules/@foo/package/style.module.css ***!
-  \\\\********************************************************/
+/*!***************************************************************************!*\\\\
+  !*** css ./node_modules/@foo/package/style.module.css (exportType: link) ***!
+  \\\\***************************************************************************/
 .node_modules_\\\\@foo_package_style_module_css-class {
 	color: red;
 }
 
-/*!*******************************************************!*\\\\
-  !*** css ./node_modules/foo/package/style.module.css ***!
-  \\\\*******************************************************/
+/*!**************************************************************************!*\\\\
+  !*** css ./node_modules/foo/package/style.module.css (exportType: link) ***!
+  \\\\**************************************************************************/
 .node_modules_foo_package_style_module_css-class {
 	color: red;
 }
 
-/*!************************************************!*\\\\
-  !*** css ./at-sign-in-package-name.module.css ***!
-  \\\\************************************************/
+/*!*******************************************************************!*\\\\
+  !*** css ./at-sign-in-package-name.module.css (exportType: link) ***!
+  \\\\*******************************************************************/
 
 .at-sign-in-package-name_module_css-myClass {
 	color: red;
 }
 
-/*!**************************************************!*\\\\
-  !*** css ./node_modules/@localpackage/color.css ***!
-  \\\\**************************************************/
+/*!*********************************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/color.css (exportType: link) ***!
+  \\\\*********************************************************************/
 
 
-/*!*******************************************************!*\\\\
-  !*** css ./node_modules/@otherlocalpackage/style.css ***!
-  \\\\*******************************************************/
+/*!**************************************************************************!*\\\\
+  !*** css ./node_modules/@otherlocalpackage/style.css (exportType: link) ***!
+  \\\\**************************************************************************/
 .node_modules_\\\\@otherlocalpackage_style_css-type-heading2 {
   display: flex;
 }
 
-/*!**************************************************!*\\\\
-  !*** css ./node_modules/@localpackage/style.css ***!
-  \\\\**************************************************/
+/*!*********************************************************************!*\\\\
+  !*** css ./node_modules/@localpackage/style.css (exportType: link) ***!
+  \\\\*********************************************************************/
 .node_modules_\\\\@localpackage_style_css-type-heading {
   color: red;
   margin: 0;
   padding: 0;
 }
 
-/*!****************************************************!*\\\\
-  !*** css ./resolving-from-node_modules.module.css ***!
-  \\\\****************************************************/
+/*!***********************************************************************!*\\\\
+  !*** css ./resolving-from-node_modules.module.css (exportType: link) ***!
+  \\\\***********************************************************************/
 
 
 .resolving-from-node_modules_module_css-copyright {
@@ -1501,9 +4653,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   padding: 0;
 }
 
-/*!*****************************************!*\\\\
-  !*** css ./local-Ident-name.module.css ***!
-  \\\\*****************************************/
+/*!************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css (exportType: link) ***!
+  \\\\************************************************************/
 .local-Ident-name_module_css-test {
   background: red;
 }
@@ -1619,9 +4771,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-1 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-1 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .local-Ident-name\\\\.module--test--n138O {
   background: red;
 }
@@ -1737,9 +4889,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-2 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-2 (exportType: link) ***!
+  \\\\*******************************************************************************/
 ._-1test {
   background: red;
 }
@@ -1855,9 +5007,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-3 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-3 (exportType: link) ***!
+  \\\\*******************************************************************************/
 ._--test {
   background: red;
 }
@@ -1973,9 +5125,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-4 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-4 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .__test {
   background: red;
 }
@@ -2091,9 +5243,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-5 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-5 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .test--mowWgR {
   background: red;
 }
@@ -2209,9 +5361,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-6 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-6 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .😀-\\\\ -test {
   background: red;
 }
@@ -2327,9 +5479,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-7 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-7 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .local-Ident-name\\\\.module--test--6y2MZL2dRW {
   background: red;
 }
@@ -2445,9 +5597,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-8 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-8 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .local-Ident-name\\\\.module--test--_SesvC {
   background: red;
 }
@@ -2563,9 +5715,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-9 ***!
-  \\\\************************************************************/
+/*!*******************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-9 (exportType: link) ***!
+  \\\\*******************************************************************************/
 .prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---test---PboabM-postfix {
   background: red;
 }
@@ -2681,9 +5833,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-10 ***!
-  \\\\*************************************************************/
+/*!********************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-10 (exportType: link) ***!
+  \\\\********************************************************************************/
 .local-Ident-name\\\\.module--test--Wxl9SQ {
   background: red;
 }
@@ -2799,9 +5951,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-11 ***!
-  \\\\*************************************************************/
+/*!********************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-11 (exportType: link) ***!
+  \\\\********************************************************************************/
 .local-Ident-name\\\\.module--test--8270b0ef {
   background: red;
 }
@@ -2917,9 +6069,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-12 ***!
-  \\\\*************************************************************/
+/*!********************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-12 (exportType: link) ***!
+  \\\\********************************************************************************/
 .local-Ident-name\\\\.module--test--NLdHRDRl {
   background: red;
 }
@@ -3035,9 +6187,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-13 ***!
-  \\\\*************************************************************/
+/*!********************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-13 (exportType: link) ***!
+  \\\\********************************************************************************/
 .local-Ident-name\\\\.module--test--2GQpZJ {
   background: red;
 }
@@ -3153,9 +6305,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************************************************!*\\\\
-  !*** css ./local-Ident-name.module.css?local-ident-name-14 ***!
-  \\\\*************************************************************/
+/*!********************************************************************************!*\\\\
+  !*** css ./local-Ident-name.module.css?local-ident-name-14 (exportType: link) ***!
+  \\\\********************************************************************************/
 .local-Ident-name\\\\.module--test--a60f4680ad27 {
   background: red;
 }
@@ -3271,9 +6423,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   background: hotpink;
 }
 
-/*!*************************!*\\\\
-  !*** css ./order-1.css ***!
-  \\\\*************************/
+/*!********************************************!*\\\\
+  !*** css ./order-1.css (exportType: link) ***!
+  \\\\********************************************/
 .order-1_css-order-1 {
   color: red;
 }
@@ -3282,9 +6434,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/*!*************************!*\\\\
-  !*** css ./order-2.css ***!
-  \\\\*************************/
+/*!********************************************!*\\\\
+  !*** css ./order-2.css (exportType: link) ***!
+  \\\\********************************************/
 .order-2_css-order-2 {
   color: blue;
 }
@@ -3293,9 +6445,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/*!******************************!*\\\\
-  !*** css ./order.module.css ***!
-  \\\\******************************/
+/*!*************************************************!*\\\\
+  !*** css ./order.module.css (exportType: link) ***!
+  \\\\*************************************************/
 .order_module_css-simple {
 	display: block;
 	}
@@ -3305,35 +6457,35 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 
 
-/*!************************!*\\\\
-  !*** css ./button.css ***!
-  \\\\************************/
+/*!*******************************************!*\\\\
+  !*** css ./button.css (exportType: link) ***!
+  \\\\*******************************************/
 .button_css-button {
   border: none;
   padding: 7px 15px;
   cursor: pointer;
 }
 
-/*!********************************!*\\\\
-  !*** css ./primary-button.css ***!
-  \\\\********************************/
+/*!***************************************************!*\\\\
+  !*** css ./primary-button.css (exportType: link) ***!
+  \\\\***************************************************/
 .primary-button_css-primaryButton {
   background-color: blue;
   color: white;
 }
 
-/*!**********************************!*\\\\
-  !*** css ./secondary-button.css ***!
-  \\\\**********************************/
+/*!*****************************************************!*\\\\
+  !*** css ./secondary-button.css (exportType: link) ***!
+  \\\\*****************************************************/
 .secondary-button_css-secondaryButton
 {
   background-color: #555;
   color: white;
 }
 
-/*!******************************!*\\\\
-  !*** css ./dedup.module.css ***!
-  \\\\******************************/
+/*!*************************************************!*\\\\
+  !*** css ./dedup.module.css (exportType: link) ***!
+  \\\\*************************************************/
 .dedup_module_css-nextButton {
 	}
 
@@ -3341,22 +6493,22 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	}
 
 
-/*!**********************!*\\\\
-  !*** css ./foo.less ***!
-  \\\\**********************/
+/*!*****************************************!*\\\\
+  !*** css ./foo.less (exportType: link) ***!
+  \\\\*****************************************/
 .foo_less-foo {
   color: red;
 }
 
-/*!*******************************************!*\\\\
-  !*** css ./composes-from-less.module.css ***!
-  \\\\*******************************************/
+/*!**************************************************************!*\\\\
+  !*** css ./composes-from-less.module.css (exportType: link) ***!
+  \\\\**************************************************************/
 .composes-from-less_module_css-bar {
 	}
 
-/*!*****************************************!*\\\\
-  !*** css ./node_modules/test/index.css ***!
-  \\\\*****************************************/
+/*!************************************************************!*\\\\
+  !*** css ./node_modules/test/index.css (exportType: link) ***!
+  \\\\************************************************************/
 
 
 
@@ -3364,9 +6516,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: red;
 }
 
-/*!******************************!*\\\\
-  !*** css ./tilde.module.css ***!
-  \\\\******************************/
+/*!*************************************************!*\\\\
+  !*** css ./tilde.module.css (exportType: link) ***!
+  \\\\*************************************************/
 
 
 
@@ -3376,25 +6528,25 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 }
 
 
-/*!********************************!*\\\\
-  !*** css ./classes.module.css ***!
-  \\\\********************************/
+/*!***************************************************!*\\\\
+  !*** css ./classes.module.css (exportType: link) ***!
+  \\\\***************************************************/
 /* Tests from css-loader */
 
 /* should work with the \`default\` class and with named export */
-.classes_module_css_884d-default {
+.classes_module_css_948f-default {
 	background: red
 }
 
 
 /* should work with the \`module\` class and with named export */
-.classes_module_css_884d-module {
+.classes_module_css_948f-module {
 	background: red
 }
 
-/*!*****************************!*\\\\
-  !*** css ./icss.module.css ***!
-  \\\\*****************************/
+/*!************************************************!*\\\\
+  !*** css ./icss.module.css (exportType: link) ***!
+  \\\\************************************************/
 
 
 
@@ -3404,18 +6556,18 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 
 
 .icss_module_css-className {
-	color: classes_module_css_884d-module;
+	color: classes_module_css_948f-module;
 }
 
 
 
-/*!******************************!*\\\\
-  !*** css ./empty.module.css ***!
-  \\\\******************************/
+/*!*************************************************!*\\\\
+  !*** css ./empty.module.css (exportType: link) ***!
+  \\\\*************************************************/
 
-/*!***************************************!*\\\\
-  !*** css ./component-name.module.css ***!
-  \\\\***************************************/
+/*!**********************************************************!*\\\\
+  !*** css ./component-name.module.css (exportType: link) ***!
+  \\\\**********************************************************/
 .component-name_module_css-Button {
 	color: red;
 }
@@ -3452,9 +6604,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: gray;
 }
 
-/*!***************************************!*\\\\
-  !*** css ./composes-chain.module.css ***!
-  \\\\***************************************/
+/*!**********************************************************!*\\\\
+  !*** css ./composes-chain.module.css (exportType: link) ***!
+  \\\\**********************************************************/
 .composes-chain_module_css-level-3 {
 	color: blue;
 }
@@ -3471,9 +6623,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	padding: 10px;
 }
 
-/*!****************************************************!*\\\\
-  !*** css ./file.with.many.dots.in.name.module.css ***!
-  \\\\****************************************************/
+/*!***********************************************************************!*\\\\
+  !*** css ./file.with.many.dots.in.name.module.css (exportType: link) ***!
+  \\\\***********************************************************************/
 .file_with_many_dots_in_name_module_css-a {
 	color: red;
 }
@@ -3486,16 +6638,16 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: blue;
 }
 
-/*!****************************************!*\\\\
-  !*** css ./imported-simple.module.css ***!
-  \\\\****************************************/
+/*!***********************************************************!*\\\\
+  !*** css ./imported-simple.module.css (exportType: link) ***!
+  \\\\***********************************************************/
 .imported-simple_module_css-imported-simple {
 	background: yellow;
 }
 
-/*!*******************************************!*\\\\
-  !*** css ./composes-duplicate.module.css ***!
-  \\\\*******************************************/
+/*!**************************************************************!*\\\\
+  !*** css ./composes-duplicate.module.css (exportType: link) ***!
+  \\\\**************************************************************/
 .composes-duplicate_module_css-simple-foo {
 	color: red;
 	}
@@ -3508,9 +6660,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: green;
 	}
 
-/*!*********************************************!*\\\\
-  !*** css ./keyframes-leak-scope.module.css ***!
-  \\\\*********************************************/
+/*!****************************************************************!*\\\\
+  !*** css ./keyframes-leak-scope.module.css (exportType: link) ***!
+  \\\\****************************************************************/
 .keyframes-leak-scope_module_css-a {
 	color: green;
 	animation: keyframes-leak-scope_module_css-a;
@@ -3562,9 +6714,9 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	animation-name: keyframes-leak-scope_module_css-local-keyframe;
 }
 
-/*!*****************************************!*\\\\
-  !*** css ./path-placeholder.module.css ***!
-  \\\\*****************************************/
+/*!************************************************************!*\\\\
+  !*** css ./path-placeholder.module.css (exportType: link) ***!
+  \\\\************************************************************/
 .path-placeholder_module_css-foo {
 	color: red;
 }
@@ -3577,16 +6729,16 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	color: yellow;
 }
 
-/*!*******************************!*\\\\
-  !*** css ./colors.module.css ***!
-  \\\\*******************************/
+/*!**************************************************!*\\\\
+  !*** css ./colors.module.css (exportType: link) ***!
+  \\\\**************************************************/
 
 
 
 
-/*!***************************************!*\\\\
-  !*** css ./at-value-extra.module.css ***!
-  \\\\***************************************/
+/*!**********************************************************!*\\\\
+  !*** css ./at-value-extra.module.css (exportType: link) ***!
+  \\\\**********************************************************/
 
 
 

@@ -1,11 +1,22 @@
 "use strict";
 
 const path = require("path");
+const webpack = require("../../../../");
 
 /** @typedef {import("../../../../").PathData} PathData */
+/** @typedef {import("../../../../").Configuration} Configuration */
+/** @typedef {"link" | "text" | "css-style-sheet" | "style"} ExportType */
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+const EXPORT_TYPES =
+	/** @type {ExportType[]} */
+	(["link", "text", "css-style-sheet", "style"]);
+
+/**
+ * @param {ExportType} exportType css parser exportType
+ * @returns {Configuration} webpack configuration
+ */
+const createConfig = (exportType) => ({
+	name: exportType,
 	target: "web",
 	mode: "development",
 	devtool: false,
@@ -19,7 +30,6 @@ module.exports = {
 				test: /.css$/,
 				resourceQuery: /\?local-ident-name-1$/,
 				generator: {
-					// TODO do we need to support `[hash]` as  `[fullhash]` here
 					localIdentName: "[name]--[local]--[fullhash]",
 					localIdentHashDigest: "base64url",
 					localIdentHashDigestLength: 5
@@ -137,15 +147,26 @@ module.exports = {
 					localIdentHashDigestLength: 12
 				}
 			}
-		]
+		],
+		parser: {
+			css: {
+				exportType
+			}
+		}
 	},
 	resolve: {
 		alias: {
-			// Migration example
 			"~test": path.resolve(__dirname, "node_modules/test")
 		}
 	},
 	experiments: {
 		css: true
-	}
-};
+	},
+	plugins: [
+		new webpack.DefinePlugin({
+			"process.env.EXPORT_TYPE": JSON.stringify(exportType)
+		})
+	]
+});
+
+module.exports = EXPORT_TYPES.map(createConfig);

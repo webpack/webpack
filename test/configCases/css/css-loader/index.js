@@ -37,52 +37,137 @@ import * as styles30 from "./keyframes-leak-scope.module.css";
 import * as styles31 from "./path-placeholder.module.css";
 import * as styles32 from "./at-value-extra.module.css";
 
-it("should work", () => {
-	const links = document.getElementsByTagName("link");
-	const css = [];
+const EXPORT_TYPE = process.env.EXPORT_TYPE;
 
-	// Skip first because import it by default
-	for (const link of links.slice(1)) {
-		css.push(link.sheet.css);
+// Read `default` via Reflect.get so webpack's HarmonyImportSpecifier analysis
+// does not flag a "missing export 'default'" warning for exportTypes that
+// legitimately have no default export (link/style).
+const DEFAULT_KEY = "default";
+const getDefault = (/** @type {object} */ ns) => Reflect.get(ns, DEFAULT_KEY);
+
+/**
+ * Returns the namespace's class name exports without the `default` export.
+ * Class name maps should be identical across exportTypes; the `default` export
+ * shape varies per exportType and is asserted separately below.
+ * @param {object} ns module namespace object
+ * @returns {object} exports without `default`
+ */
+const classes = (ns) => {
+	const out = {};
+	for (const key of Object.keys(ns)) {
+		if (key === "default") continue;
+		out[key] = ns[key];
 	}
+	return out;
+};
 
-	expect(basic).toMatchSnapshot();
-	expect(styles).toMatchSnapshot();
-	expect(styles1).toMatchSnapshot();
-	expect(styles3).toMatchSnapshot();
-	expect(styles4).toMatchSnapshot();
-	expect(styles5).toMatchSnapshot();
-	expect(styles6).toMatchSnapshot();
-	expect(styles7).toMatchSnapshot();
-	expect(styles8).toMatchSnapshot();
-	expect(styles9).toMatchSnapshot();
-	expect(styles10).toMatchSnapshot();
-	expect(styles11).toMatchSnapshot();
-	expect(styles12).toMatchSnapshot();
-	expect(styles13).toMatchSnapshot();
-	expect(styles14).toMatchSnapshot();
-	expect(styles15).toMatchSnapshot();
-	expect(styles16).toMatchSnapshot();
-	expect(styles17).toMatchSnapshot();
-	expect(styles18).toMatchSnapshot();
-	expect(styles19).toMatchSnapshot();
-	expect(stylesHash10).toMatchSnapshot();
-	expect(stylesHash11).toMatchSnapshot();
-	expect(stylesHash12).toMatchSnapshot();
-	expect(stylesHash13).toMatchSnapshot();
-	expect(stylesHash14).toMatchSnapshot();
-	expect(styles20).toMatchSnapshot();
-	expect(styles21).toMatchSnapshot();
-	expect(styles22).toMatchSnapshot();
-	expect(styles23).toMatchSnapshot();
-	expect(styles24).toMatchSnapshot();
-	expect(styles25).toMatchSnapshot();
-	expect(styles26).toMatchSnapshot();
-	expect(styles27).toMatchSnapshot();
-	expect(styles28).toMatchSnapshot();
-	expect(styles29).toMatchSnapshot();
-	expect(styles30).toMatchSnapshot();
-	expect(styles31).toMatchSnapshot();
-	expect(styles32).toMatchSnapshot();
-	expect(css).toMatchSnapshot();
+it(`should export CSS module class names (${EXPORT_TYPE})`, () => {
+	expect(classes(basic)).toMatchSnapshot();
+	expect(classes(styles)).toMatchSnapshot();
+	expect(classes(styles1)).toMatchSnapshot();
+	expect(classes(styles3)).toMatchSnapshot();
+	expect(classes(styles4)).toMatchSnapshot();
+	expect(classes(styles5)).toMatchSnapshot();
+	expect(classes(styles6)).toMatchSnapshot();
+	expect(classes(styles7)).toMatchSnapshot();
+	expect(classes(styles8)).toMatchSnapshot();
+	expect(classes(styles9)).toMatchSnapshot();
+	expect(classes(styles10)).toMatchSnapshot();
+	expect(classes(styles11)).toMatchSnapshot();
+	expect(classes(styles12)).toMatchSnapshot();
+	expect(classes(styles13)).toMatchSnapshot();
+	expect(classes(styles14)).toMatchSnapshot();
+	expect(classes(styles15)).toMatchSnapshot();
+	expect(classes(styles16)).toMatchSnapshot();
+	expect(classes(styles17)).toMatchSnapshot();
+	expect(classes(styles18)).toMatchSnapshot();
+	expect(classes(styles19)).toMatchSnapshot();
+	expect(classes(stylesHash10)).toMatchSnapshot();
+	expect(classes(stylesHash11)).toMatchSnapshot();
+	expect(classes(stylesHash12)).toMatchSnapshot();
+	expect(classes(stylesHash13)).toMatchSnapshot();
+	expect(classes(stylesHash14)).toMatchSnapshot();
+	expect(classes(styles20)).toMatchSnapshot();
+	expect(classes(styles21)).toMatchSnapshot();
+	expect(classes(styles22)).toMatchSnapshot();
+	expect(classes(styles23)).toMatchSnapshot();
+	expect(classes(styles24)).toMatchSnapshot();
+	expect(classes(styles25)).toMatchSnapshot();
+	expect(classes(styles26)).toMatchSnapshot();
+	expect(classes(styles27)).toMatchSnapshot();
+	expect(classes(styles28)).toMatchSnapshot();
+	expect(classes(styles29)).toMatchSnapshot();
+	expect(classes(styles30)).toMatchSnapshot();
+	expect(classes(styles31)).toMatchSnapshot();
+	expect(classes(styles32)).toMatchSnapshot();
 });
+
+// Note: assertions about `default` use `basic.module.css` because
+// `classes.module.css` defines a class literally named `default`, which
+// collides with the module's actual default export.
+
+if (EXPORT_TYPE === "link") {
+	it("should load extracted CSS chunk via <link> tag (link)", () => {
+		const links = document.getElementsByTagName("link");
+		const css = [];
+
+		// Skip first because import it by default
+		for (const link of links.slice(1)) {
+			css.push(link.sheet.css);
+		}
+
+		expect(css).toMatchSnapshot();
+	});
+
+	it("should not provide a `default` export for the link exportType", () => {
+		expect(Object.keys(basic).includes("default")).toBe(false);
+	});
+}
+
+if (EXPORT_TYPE === "text") {
+	it("should export CSS text as the `default` export (text)", () => {
+		const basicDefault = getDefault(basic);
+		expect(typeof basicDefault).toBe("string");
+		expect(basicDefault).toContain("basic_module_css-a");
+	});
+
+	it("should not produce a separate CSS chunk for the text exportType", () => {
+		const links = document.getElementsByTagName("link");
+		// Only the manually-attached <link> from test.config.js (when present) exists;
+		// the bundle itself does not emit a CSS chunk.
+		expect(links.length).toBeLessThanOrEqual(1);
+	});
+}
+
+if (EXPORT_TYPE === "css-style-sheet") {
+	it("should export a CSSStyleSheet as the `default` export (css-style-sheet)", () => {
+		const basicDefault = getDefault(basic);
+		expect(basicDefault).toBeInstanceOf(CSSStyleSheet);
+		expect(basicDefault.cssRules.length).toBeGreaterThan(0);
+	});
+
+	it("should not produce a separate CSS chunk for the css-style-sheet exportType", () => {
+		const links = document.getElementsByTagName("link");
+		expect(links.length).toBeLessThanOrEqual(1);
+	});
+}
+
+if (EXPORT_TYPE === "style") {
+	it("should inject CSS via <style> tags (style)", () => {
+		const styleTags = document.getElementsByTagName("style");
+		expect(styleTags.length).toBeGreaterThan(0);
+
+		const allCSS = Array.from(styleTags).map((s) => s.textContent);
+		// basic.module.css contributes class `a` -> `basic_module_css-a`
+		expect(allCSS.some((c) => c.includes("basic_module_css-a"))).toBe(true);
+	});
+
+	it("should not provide a `default` export for the style exportType", () => {
+		expect(Object.keys(basic).includes("default")).toBe(false);
+	});
+
+	it("should not produce a separate CSS chunk for the style exportType", () => {
+		const links = document.getElementsByTagName("link");
+		expect(links.length).toBeLessThanOrEqual(1);
+	});
+}
