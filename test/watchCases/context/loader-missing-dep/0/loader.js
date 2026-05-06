@@ -5,7 +5,10 @@ const target = path.resolve(__dirname, "future.json");
 module.exports = function () {
 	this.addMissingDependency(target);
 	const callback = this.async();
-	this.fs.stat(target, (_err, stat) => {
+	this.fs.stat(target, (err, stat) => {
+		if (err && /** @type {NodeJS.ErrnoException} */ (err).code !== "ENOENT") {
+			return callback(err);
+		}
 		callback(
 			null,
 			`module.exports = ${JSON.stringify({

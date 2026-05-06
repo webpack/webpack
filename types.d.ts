@@ -5000,6 +5000,11 @@ declare interface ContextResolveData {
 	contextDependencies: LazySet<string>;
 	dependencies: ContextDependency[];
 }
+type ContextTimestamp =
+	| null
+	| ContextFileSystemInfoEntry
+	| "ignore"
+	| ExistenceOnlyTimeEntryFileSystemInfo;
 declare interface ContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
@@ -8046,13 +8051,7 @@ declare abstract class FileSystemInfo {
 	 * Adds file timestamps.
 	 */
 	addFileTimestamps(
-		map: ReadonlyMap<
-			string,
-			| null
-			| FileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
-		>,
+		map: ReadonlyMap<string, FileTimestamp>,
 		immutable?: boolean
 	): void;
 
@@ -8060,13 +8059,7 @@ declare abstract class FileSystemInfo {
 	 * Adds context timestamps.
 	 */
 	addContextTimestamps(
-		map: ReadonlyMap<
-			string,
-			| null
-			| ContextFileSystemInfoEntry
-			| "ignore"
-			| ExistenceOnlyTimeEntryFileSystemInfo
-		>,
+		map: ReadonlyMap<string, ContextTimestamp>,
 		immutable?: boolean
 	): void;
 
@@ -8173,6 +8166,11 @@ declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
 }
+type FileTimestamp =
+	| null
+	| FileSystemInfoEntry
+	| "ignore"
+	| ExistenceOnlyTimeEntryFileSystemInfo;
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
