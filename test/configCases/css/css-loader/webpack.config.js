@@ -30,6 +30,7 @@ const createConfig = (exportType) => ({
 				test: /.css$/,
 				resourceQuery: /\?local-ident-name-1$/,
 				generator: {
+					// TODO do we need to support `[hash]` as  `[fullhash]` here
 					localIdentName: "[name]--[local]--[fullhash]",
 					localIdentHashDigest: "base64url",
 					localIdentHashDigestLength: 5
@@ -156,6 +157,7 @@ const createConfig = (exportType) => ({
 	},
 	resolve: {
 		alias: {
+			// Migration example
 			"~test": path.resolve(__dirname, "node_modules/test")
 		}
 	},
