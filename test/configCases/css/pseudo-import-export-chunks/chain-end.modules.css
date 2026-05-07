@@ -1,0 +1,11 @@
+:import("./chain-middle.modules.css") {
+	_mid: mid-color;
+}
+
+:export {
+	end-color: _mid;
+}
+
+.chain-end {
+	color: _mid;
+}

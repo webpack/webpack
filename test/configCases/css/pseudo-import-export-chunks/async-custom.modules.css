@@ -1,0 +1,16 @@
+:import("./custom-vars.modules.css") {
+	_color: --my-color;
+	_bg: --my-bg;
+}
+
+:export {
+	--async-color: _color;
+	--async-bg: _bg;
+}
+
+.async-custom {
+	--scoped-color: _color;
+	--scoped-bg: _bg;
+	color: var(--scoped-color);
+	background: var(--scoped-bg);
+}

@@ -1,0 +1,17 @@
+:import("./shared-vars.modules.css") {
+	_primary: primary-color;
+}
+
+:import("./async-vars.modules.css") {
+	_border: border-color;
+}
+
+:export {
+	primary: _primary;
+	border: _border;
+}
+
+.async-mixed {
+	color: _primary;
+	border-color: _border;
+}

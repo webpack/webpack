@@ -1,0 +1,11 @@
+:import("./async-only-vars.modules.css") {
+	_tone: tone;
+}
+
+:export {
+	tone: _tone;
+}
+
+.async-a {
+	color: _tone;
+}

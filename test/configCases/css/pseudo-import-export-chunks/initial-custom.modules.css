@@ -1,0 +1,12 @@
+:import("./custom-vars.modules.css") {
+	_color: --my-color;
+}
+
+:export {
+	--initial-color: _color;
+}
+
+.initial-custom {
+	--scoped-color: _color;
+	color: var(--scoped-color);
+}
