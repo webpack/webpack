@@ -41,7 +41,7 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 2`] = `
 Object {
-  "module": "classes_module_css_4420-module",
+  "module": "classes_module_css-module",
 }
 `;
 
@@ -950,7 +950,7 @@ Object {
   "_the_same_name": "_the_same_name",
   "className": "icss_module_css-className",
   "constructor": "constructor",
-  "reexport": "classes_module_css_5011-module",
+  "reexport": "classes_module_css-module",
   "toString": "toString",
 }
 `;
@@ -1099,7 +1099,7 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (link) 2`] = `
 Object {
-  "module": "classes_module_css_cdbd-module",
+  "module": "classes_module_css-module",
 }
 `;
 
@@ -2008,7 +2008,7 @@ Object {
   "_the_same_name": "_the_same_name",
   "className": "icss_module_css-className",
   "constructor": "constructor",
-  "reexport": "classes_module_css_948f-module",
+  "reexport": "classes_module_css-module",
   "toString": "toString",
 }
 `;
@@ -2157,7 +2157,7 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (style) 2`] = `
 Object {
-  "module": "classes_module_css_ad45-module",
+  "module": "classes_module_css-module",
 }
 `;
 
@@ -3066,7 +3066,7 @@ Object {
   "_the_same_name": "_the_same_name",
   "className": "icss_module_css-className",
   "constructor": "constructor",
-  "reexport": "classes_module_css_65f8-module",
+  "reexport": "classes_module_css-module",
   "toString": "toString",
 }
 `;
@@ -3215,7 +3215,7 @@ Object {
 
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (text) 2`] = `
 Object {
-  "module": "classes_module_css_0a63-module",
+  "module": "classes_module_css-module",
 }
 `;
 
@@ -4124,7 +4124,7 @@ Object {
   "_the_same_name": "_the_same_name",
   "className": "icss_module_css-className",
   "constructor": "constructor",
-  "reexport": "classes_module_css_08cb-module",
+  "reexport": "classes_module_css-module",
   "toString": "toString",
 }
 `;
@@ -4389,13 +4389,13 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 /* Tests from css-loader */
 
 /* should work with the \`default\` class and with named export */
-.classes_module_css_cdbd-default {
+.classes_module_css-default {
 	background: red
 }
 
 
 /* should work with the \`module\` class and with named export */
-.classes_module_css_cdbd-module {
+.classes_module_css-module {
 	background: red
 }
 
@@ -6556,22 +6556,6 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 }
 
 
-/*!***************************************************!*\\\\
-  !*** css ./classes.module.css (exportType: link) ***!
-  \\\\***************************************************/
-/* Tests from css-loader */
-
-/* should work with the \`default\` class and with named export */
-.classes_module_css_948f-default {
-	background: red
-}
-
-
-/* should work with the \`module\` class and with named export */
-.classes_module_css_948f-module {
-	background: red
-}
-
 /*!************************************************!*\\\\
   !*** css ./icss.module.css (exportType: link) ***!
   \\\\************************************************/
@@ -6584,7 +6568,7 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 
 
 .icss_module_css-className {
-	color: classes_module_css_948f-module;
+	color: classes_module_css-module;
 }
 
 
