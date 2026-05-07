@@ -1,0 +1,18 @@
+@value importPath: "./imported.module.css";
+@import importPath;
+
+@value bgPath: "./img/shape.png";
+@value bareBgPath: ./img/shape.png;
+@value singleQuotedBgPath: './img/shape.png';
+
+.bg-from-value {
+	background-image: url(bgPath);
+}
+
+.bg-from-bare-value {
+	background-image: url(bareBgPath);
+}
+
+.bg-from-single-quoted-value {
+	background-image: url(singleQuotedBgPath);
+}
