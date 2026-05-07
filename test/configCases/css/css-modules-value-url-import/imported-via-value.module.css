@@ -1,0 +1,7 @@
+@value externalBg, externalImport from "./values.module.css";
+
+@import externalImport;
+
+.uses-external-bg {
+	background-image: url(externalBg);
+}

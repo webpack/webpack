@@ -1,4 +1,8 @@
 import * as style from "./style.module.css";
+import * as importedViaValue from "./imported-via-value.module.css";
+
+const fs = __non_webpack_require__("fs");
+const path = __non_webpack_require__("path");
 
 it("should support @value identifiers as @import URLs and inside url() functions", () => {
 	// All three classes should be exported with hashed names.
@@ -8,8 +12,6 @@ it("should support @value identifiers as @import URLs and inside url() functions
 		/bg-from-single-quoted-value$/
 	);
 
-	const fs = __non_webpack_require__("fs");
-	const path = __non_webpack_require__("path");
 	const cssContent = fs.readFileSync(
 		path.join(__dirname, "bundle0.css"),
 		"utf-8"
@@ -25,10 +27,34 @@ it("should support @value identifiers as @import URLs and inside url() functions
 	expect(cssContent).not.toMatch(/url\(\s*bareBgPath\s*\)/);
 	expect(cssContent).not.toMatch(/url\(\s*singleQuotedBgPath\s*\)/);
 
-	// All three should resolve to the same asset URL.
-	const matches = [...cssContent.matchAll(/background-image:\s*url\(([^)]+)\)/g)];
-	expect(matches).toHaveLength(3);
-	const urls = new Set(matches.map((m) => m[1]));
-	expect(urls.size).toBe(1);
-	expect([...urls][0]).toMatch(/\.png$/);
+	// The local-shape url() refs should resolve to the same asset.
+	const matches = [
+		...cssContent.matchAll(/background-image:\s*url\(([^)]+)\)/g)
+	];
+	expect(matches.length).toBeGreaterThanOrEqual(3);
+	const localUrls = new Set(matches.slice(0, 3).map((m) => m[1]));
+	expect(localUrls.size).toBe(1);
+	expect([...localUrls][0]).toMatch(/\.png$/);
+});
+
+it("should still resolve @value identifiers imported from another file when used in declaration values", () => {
+	// `externalColor` is `@value externalColor from "./values.module.css"` and
+	// is referenced as a regular declaration value — that path is unchanged
+	// by the new @import/url() support and must keep working.
+	expect(style["uses-external-color"]).toMatch(/uses-external-color$/);
+
+	const cssContent = fs.readFileSync(
+		path.join(__dirname, "bundle0.css"),
+		"utf-8"
+	);
+
+	// The imported value should be substituted into the declaration.
+	expect(cssContent).toMatch(/uses-external-color[\s\S]*color:\s*rebeccapurple/);
+});
+
+it("should warn (and not crash) when an imported @value is used as @import URL or inside url()", () => {
+	// `imported-via-value.module.css` exercises both unsupported positions —
+	// the build emits warnings (asserted via warnings.js) but the rest of the
+	// module still parses successfully and exports its classes.
+	expect(importedViaValue["uses-external-bg"]).toMatch(/uses-external-bg$/);
 });
