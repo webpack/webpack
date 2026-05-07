@@ -1,0 +1,9 @@
+.local-name {
+	composes: local-name from "./composes-circular.module.css";
+	color: red;
+}
+
+.other-name {
+	composes: other-name local-name from "./composes-circular.module.css";
+	background: blue;
+}

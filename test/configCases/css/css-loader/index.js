@@ -36,6 +36,7 @@ import * as styles29 from "./composes-duplicate.module.css";
 import * as styles30 from "./keyframes-leak-scope.module.css";
 import * as styles31 from "./path-placeholder.module.css";
 import * as styles32 from "./at-value-extra.module.css";
+import * as styles33 from "./composes-circular.module.css";
 
 const EXPORT_TYPE = process.env.EXPORT_TYPE;
 
@@ -100,6 +101,7 @@ it(`should export CSS module class names (${EXPORT_TYPE})`, () => {
 	expect(classes(styles30)).toMatchSnapshot();
 	expect(classes(styles31)).toMatchSnapshot();
 	expect(classes(styles32)).toMatchSnapshot();
+	expect(classes(styles33)).toMatchSnapshot();
 });
 
 // Note: assertions about `default` use `basic.module.css` because

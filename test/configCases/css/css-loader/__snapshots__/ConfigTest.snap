@@ -1051,6 +1051,13 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 39`] = `
+Object {
+  "local-name": "composes-circular_module_css_ec01-local-name composes-circular_module_css_1e79-local-name",
+  "other-name": "composes-circular_module_css_ec01-other-name composes-circular_module_css_1e79-other-name composes-circular_module_css_1e79-local-name composes-circular_module_css_1e79-local-name",
+}
+`;
+
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (link) 1`] = `
 Object {
   "@bounce": "basic_module_css-@bounce",
@@ -2099,6 +2106,13 @@ Object {
   "v-large": "calc(v-base * 2)",
   "v-margin": "v-large 0",
   "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (link) 39`] = `
+Object {
+  "local-name": "composes-circular_module_css_4462-local-name composes-circular_module_css_358d-local-name",
+  "other-name": "composes-circular_module_css_4462-other-name composes-circular_module_css_358d-other-name composes-circular_module_css_358d-local-name composes-circular_module_css_358d-local-name",
 }
 `;
 
@@ -3153,6 +3167,13 @@ Object {
 }
 `;
 
+exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (style) 39`] = `
+Object {
+  "local-name": "composes-circular_module_css_20b9-local-name composes-circular_module_css_cf29-local-name",
+  "other-name": "composes-circular_module_css_20b9-other-name composes-circular_module_css_cf29-other-name composes-circular_module_css_cf29-local-name composes-circular_module_css_cf29-local-name",
+}
+`;
+
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (text) 1`] = `
 Object {
   "@bounce": "basic_module_css-@bounce",
@@ -4201,6 +4222,13 @@ Object {
   "v-large": "calc(v-base * 2)",
   "v-margin": "v-large 0",
   "v-shadow-color": "rgba(0, 0, 0, 0.5)",
+}
+`;
+
+exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (text) 39`] = `
+Object {
+  "local-name": "composes-circular_module_css_76eb-local-name composes-circular_module_css_e9e8-local-name",
+  "other-name": "composes-circular_module_css_76eb-other-name composes-circular_module_css_e9e8-other-name composes-circular_module_css_e9e8-local-name composes-circular_module_css_e9e8-local-name",
 }
 `;
 
@@ -6794,6 +6822,28 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 .at-value-extra_module_css-multi-import {
 	color: gold;
 	background: navy;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./composes-circular.module.css (exportType: link) ***!
+  \\\\*************************************************************/
+.composes-circular_module_css_358d-local-name {
+	color: red;
+}
+
+.composes-circular_module_css_358d-other-name {
+	background: blue;
+}
+
+/*!*************************************************************!*\\\\
+  !*** css ./composes-circular.module.css (exportType: link) ***!
+  \\\\*************************************************************/
+.composes-circular_module_css_4462-local-name {
+	color: red;
+}
+
+.composes-circular_module_css_4462-other-name {
+	background: blue;
 }
 
 ",
