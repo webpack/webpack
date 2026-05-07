@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+
+<img src="./image.png" alt="img">
+<img src='./image.png' alt="img">
+<img src=./image.png alt="img">
+
+<audio src="music.mp3" controls>
+	Not supported
+</audio>
+
+<embed src="music.mp3" type="audio/mpeg" width="300" height="50">
+
+<img srcset="image.png 200w, image.png 400w, image.png 800w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset=", image.png 400w, image.png 800w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="image.png 200w, , image.png 800w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="image.png 200w, image.png 400w, " sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="image.png 200w," sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="   image.png 200w," sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="image.png 200w,   " sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset=",image.png 200w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset=",image.png 200w   " sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+
+<form action="/submit-path" method="post">
+	<input type="image" src="image.png" alt="Send" width="30" height="30">
+</form>
+
+<link rel="preload" as="image" imagesrcset="image.png 400w, image.png 800w, image.png 1600w" imagesizes="100vw">
+<link rel="preload" as="image" imagesrcset="image.png 400w" imagesizes="100vw">
+<link rel="preload" as="image" imagesrcset="" imagesizes="100vw">
+
+<div data-b="2" data-a="1" data-c="3">text</div>
+<div class="f a b e d c">text</div>
+
+<link rel="icon">
+<link    rel   =   "   icon   "    href   =   "./image.png">
+<link rel="icon" href="./image.png">
+<link rel="ICON" href="./image.png">
+<link REL="icon" href="./image.png">
+<link REL="ICON" href="./image.png">
+<link rel="shortcut icon" href="./image.png">
+<link rel="shortcut    icon" href="./image.png">
+<link rel="icon shortcut" href="./image.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./image.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./image.png">
+<link rel="icon" type="image/png" sizes="194x194" href="./image.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./image.png">
+<link rel="apple-touch-icon" href="./image.png">
+<link rel="apple-touch-icon-precomposed" href="./image.png"/>
+<link rel="manifest" href="./site.webmanifest">
+<link rel="mask-icon" href="./webpack.svg" color="#5bbad5">
+<link rel="preload" as="image" imagesrcset="image.png 400w, image.png 800w, image.png 1600w" imagesizes="100vw">
+<meta name="twitter:image" content="./image.png">
+<meta name="msapplication-square70x70logo" content="./image.png">
+<meta NAME="msapplication-square70x70logo" content="./image.png">
+<meta name="msapplication-square150x150logo" content="./image.png">
+<meta name="msapplication-wide310x150logo" content="./image.png">
+<meta name="msapplication-square310x310logo" content="./image.png">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-TileImage" content="./image.png">
+<meta name="msapplication-config" content="./browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<meta content="name=Check Order Status;action-uri=./orderStatus.aspx?src=IE9;icon-uri=./favicon.ico" name="msapplication-task">
+
+<meta property="og:url" content="http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="When Great Minds Don’t Think Alike" />
+<meta property="og:description" content="How much does culture influence creative thinking?" />
+<meta property="og:image" content="./image.png" />
+<meta property="og:image:url" content="./image.png" />
+<meta property="og:image:secure_url" content="./image.png" />
+
+<meta property="og:audio" content="./sound.mp3" />
+<meta property="og:audio:secure_url" content="./sound.mp3" />
+<meta property="og:audio:type" content="audio/mpeg" />
+
+<meta property="og:video" content="./video.mp4" />
+<meta property="og:video:secure_url" content="./video.mp4" />
+<meta property="og:video:type" content="video/mp4" />
+<meta property="og:video:width" content="400" />
+<meta property="og:video:height" content="300" />
+
+<meta property="vk:image" content="./image.png" />
+
+<link itemprop="downloadUrl" href="image.png">
+<link itemprop="contentUrl" href="image.png">
+<link itemprop="installUrl" href="image.png">
+
+<link itemprop="a" href="should-not-resolve.png">
+<link itemprop="b" href="should-not-resolve.png">
+<link itemprop="  " href="should-not-resolve.png">
+<link href="should-not-resolve.png">
+
+<meta itemprop="image" content="./image.png" />
+<meta itemprop="logo" content="./image.png" />
+<meta itemprop="screenshot" content="./image.png" />
+<meta itemprop="thumbnailUrl" content="./image.png" />
+<meta itemprop="contentUrl" content="./image.png" />
+<meta itemprop="downloadUrl" content="./image.png" />
+<meta itemprop="duringMedia" content="./image.png" />
+<meta itemprop="embedUrl" content="./image.png" />
+<meta itemprop="installUrl" content="./image.png" />
+<meta itemprop="layoutImage" content="./image.png" />
+
+<meta itemprop="a" content="./should-not-resolve.png" />
+<meta itemprop="b" content="./should-not-resolve.png" />
+<meta itemprop=" " content="./should-not-resolve.png" />
+
+<link rel="unknown" href="./no-need-to-resolve.png">
+
+<object data="file.pdf" type="application/pdf" width="500" height="300">
+	Text
+</object>
+
+<source srcset="image.png 1200w, image.png 800w" sizes="100vw" type="image/png">
+
+<audio controls>
+	<source src="example.ogg" type="audio/ogg">
+	Your browser does not support the audio element.
+</audio>
+
+<video width="320" height="240" controls>
+	<source src="example.ogg" type="video/ogg">
+	<track src="example.vtt" kind="subtitles" srclang="en" label="English">
+</video>
+
+<video src="example.ogg" controls>
+	Your browser does not support the video tag.
+</video>
+
+<video controls poster="./image.png">
+	<source src="example.ogg" type="video/ogg">
+	<track src="example.vtt" kind="subtitles" srclang="en" label="English">
+</video>
+
+<meta content="name=Check Order Status;
+      action-uri=./orderStatus.aspx?src=IE9;
+      icon-uri= ./image.png" name="msapplication-task">
+
+<meta content="name=Check Order Status;
+      icon-uri= ./image.png;
+      action-uri=./orderStatus.aspx?src=IE9" name="msapplication-task">
+
+<meta content="name=Check Order Status;
+      action-uri=./orderStatus.aspx?src=IE9;
+      icon-uri=" name="msapplication-task">
+
+<svg width="200" height="200">
+	<image xlink:href="./webpack.svg" height="200" width="200"/>
+</svg>
+
+<svg width="200" height="200">
+	<image href="./webpack.svg" height="200" width="200"/>
+</svg>
+
+<svg width="200" height="200">
+	<use href="./webpack.svg"></use>
+</svg>
+
+<svg width="200" height="200">
+	<use xlink:href="./webpack.svg"></use>
+</svg>
+
+<img src="image.png">
+<img src='image.png'>
+<img src=image.png>
+<img src="./image.png">
+<img src="/image.png">
+<img src="image.png">
+<IMG src="image.png">
+<img SRC="image.png">
+<IMG SRC="image.png">
+
+<img src="./icons.svg#icon-chevron-with-circle-up">
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
+
+
+<a href="#" class="gmail-link">vincetanan@gmail.com</a>
+<a href="mailto:vince@gmail.com" class="gmail-link">vince@gmail.com</a>
+
+<p>Text</p>
+<p >Text</p>
+<p   >Text</p>
+
+<img src="./😀abc.png" alt="Smiley face">
+<img src="😀abc.png" alt="Smiley face">
+<img srcset="😀abc.png 480w, image.png 800w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+<img srcset="image.png 480w, 😀abc.png 800w" sizes="(max-width: 600px) 480px, 800px" src="image.png" alt="Elva dressed as a fairy">
+
+<img src="./im
+
+
+
+	age.png" alt="multi
+line
+alt" />
+
+<img src="data:image/png;base64,iVBORw0KGgoAAA
+ANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4
+//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU
+5ErkJggg==" alt="Red dot" />
+
+<img src="
+
+
+./pixel.png?url
+
+
+" alt="" />
+
+<img src="#hash" alt="test">
+<img src="image.png?foo=bar#hash" alt="test">
+<img src="image.png#hash" alt="test">
+
+<img src="/image.png" alt="test">
+
+</body>
+</html>

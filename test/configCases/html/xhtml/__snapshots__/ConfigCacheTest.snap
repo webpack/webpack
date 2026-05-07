@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html xhtml exported tests should compile and export html as string 1`] = `
+"<!DOCTYPE html PUBLIC \\"-//W3C//DTD XHTML 1.1//EN\\"
+	\\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\\">
+<html xmlns=\\"http://www.w3.org/1999/xhtml\\">
+<head>
+	<title>Title of document</title>
+</head>
+<body>
+
+some content here...
+
+<br />
+
+<a href=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+<a HREF=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+
+<input type=\\"checkbox\\" name=\\"vehicle\\" value=\\"car\\" checked=\\"checked\\" />
+
+<tag>Text</tag>
+<TAG>Text</TAG>
+
+</body>
+</html>
+"
+`;

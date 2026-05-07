@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html invisible-space exported tests should compile and export html as string 1`] = `
+"<html><body><ul><li> \\\\u2028 -   Text   </li><li> \\\\u2029 -   Text   </li></ul></body></html>
+"
+`;

@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html js-css-html exported tests should work 1`] = `"https://test.cases/path/handled-image.png"`;
+
+exports[`ConfigTestCases html js-css-html exported tests should work 2`] = `
+"<!doctype html>
+<html lang=\\"en\\">
+<head>
+	<meta charset=\\"UTF-8\\">
+	<meta name=\\"viewport\\"
+				content=\\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\\">
+	<meta http-equiv=\\"X-UA-Compatible\\" content=\\"ie=edge\\">
+	<title>Document</title>
+</head>
+<body>
+<img src=\\"handled-image.png\\" alt=\\"test\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html js-css-html exported tests should work 3`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.class {
+	background: url(handled-image.png);
+}
+
+",
+]
+`;

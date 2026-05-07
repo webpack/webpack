@@ -8804,6 +8804,38 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+declare abstract class HtmlGenerator extends Generator {
+	/**
+	 * Processes the provided module.
+	 */
+	sourceDependency(
+		module: NormalModule,
+		dependency: Dependency,
+		initFragments: InitFragment<GenerateContext>[],
+		source: ReplaceSource,
+		generateContext: GenerateContext
+	): void;
+
+	/**
+	 * Processes the provided module.
+	 */
+	sourceModule(
+		module: NormalModule,
+		initFragments: InitFragment<GenerateContext>[],
+		source: ReplaceSource,
+		generateContext: GenerateContext
+	): void;
+
+	/**
+	 * Generates fallback output for the provided error condition.
+	 */
+	generateError(
+		error: Error,
+		module: NormalModule,
+		generateContext: GenerateContext
+	): null | Source;
+}
+declare abstract class HtmlParser extends ParserClass {}
 
 /**
  * Options for building http resources.
@@ -15997,6 +16029,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
+				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
 				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
 		>;
 		parser: TypedHookMap<
@@ -16051,6 +16084,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
+				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
 				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
 		>;
 		createGenerator: TypedHookMap<
@@ -16105,6 +16139,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
+				Record<"html", SyncBailHook<[EmptyGeneratorOptions], HtmlGenerator>> &
 				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
 		>;
 		generator: TypedHookMap<
@@ -16164,6 +16199,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Record<
 					"css/global",
 					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
+				> &
+				Record<
+					"html",
+					SyncBailHook<[HtmlGenerator, EmptyGeneratorOptions], void>
 				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;

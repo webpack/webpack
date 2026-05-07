@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html broken-html-syntax exported tests should compile and export html as string 1`] = `
+"Text < img src=\\"image.png\\" >
+Text <<img src=\\"31d6cfe0d16ae931b73c.png\\">
+Text ><img src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<a foo><bar></a><!-- --><![CDATA[]]]><?foo?><!bar><boo/>boohay
+<<<<>foo
+<!-->>><<foo
+&;122222222222222222222222222222
+"
+`;

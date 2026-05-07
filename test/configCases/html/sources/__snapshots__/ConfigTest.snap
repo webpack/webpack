@@ -1,0 +1,219 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html sources exported tests should handle source 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"img\\">
+<img src='09a1a1112c577c279435.png' alt=\\"img\\">
+<img src=09a1a1112c577c279435.png alt=\\"img\\">
+
+<audio src=\\"31d6cfe0d16ae931b73c.mp3\\" controls>
+	Not supported
+</audio>
+
+<embed src=\\"31d6cfe0d16ae931b73c.mp3\\" type=\\"audio/mpeg\\" width=\\"300\\" height=\\"50\\">
+
+<img srcset=\\"09a1a1112c577c279435.png 200w, 09a1a1112c577c279435.png 400w, 09a1a1112c577c279435.png 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\", 09a1a1112c577c279435.png 400w, 09a1a1112c577c279435.png 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"09a1a1112c577c279435.png 200w, , 09a1a1112c577c279435.png 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"09a1a1112c577c279435.png 200w, 09a1a1112c577c279435.png 400w, \\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"09a1a1112c577c279435.png 200w,\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"   09a1a1112c577c279435.png 200w,\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"09a1a1112c577c279435.png 200w,   \\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\",09a1a1112c577c279435.png 200w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\",09a1a1112c577c279435.png 200w   \\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+
+<form action=\\"/submit-path\\" method=\\"post\\">
+	<input type=\\"image\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Send\\" width=\\"30\\" height=\\"30\\">
+</form>
+
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 400w, 09a1a1112c577c279435.png 800w, 09a1a1112c577c279435.png 1600w\\" imagesizes=\\"100vw\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 400w\\" imagesizes=\\"100vw\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"\\" imagesizes=\\"100vw\\">
+
+<div data-b=\\"2\\" data-a=\\"1\\" data-c=\\"3\\">text</div>
+<div class=\\"f a b e d c\\">text</div>
+
+<link rel=\\"icon\\">
+<link    rel   =   \\"   icon   \\"    href   =   \\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"ICON\\" href=\\"09a1a1112c577c279435.png\\">
+<link REL=\\"icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link REL=\\"ICON\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"shortcut icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"shortcut    icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon shortcut\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"16x16\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"32x32\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"194x194\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"192x192\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"apple-touch-icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"apple-touch-icon-precomposed\\" href=\\"09a1a1112c577c279435.png\\"/>
+<link rel=\\"manifest\\" href=\\"f2fd5abcd3951abacaa4.webmanifest\\">
+<link rel=\\"mask-icon\\" href=\\"258a547148033fda8727.svg\\" color=\\"#5bbad5\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 400w, 09a1a1112c577c279435.png 800w, 09a1a1112c577c279435.png 1600w\\" imagesizes=\\"100vw\\">
+<meta name=\\"twitter:image\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-square70x70logo\\" content=\\"09a1a1112c577c279435.png\\">
+<meta NAME=\\"msapplication-square70x70logo\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-square150x150logo\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-wide310x150logo\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-square310x310logo\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-TileColor\\" content=\\"#da532c\\">
+<meta name=\\"msapplication-TileImage\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"msapplication-config\\" content=\\"356ef95974ec6b7aec6b.xml\\">
+<meta name=\\"theme-color\\" content=\\"#ffffff\\">
+<meta content=\\"name=Check Order Status;action-uri=./orderStatus.aspx?src=IE9;icon-uri=./favicon.ico\\" name=\\"msapplication-task\\">
+
+<meta property=\\"og:url\\" content=\\"http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html\\" />
+<meta property=\\"og:type\\" content=\\"article\\" />
+<meta property=\\"og:title\\" content=\\"When Great Minds Don’t Think Alike\\" />
+<meta property=\\"og:description\\" content=\\"How much does culture influence creative thinking?\\" />
+<meta property=\\"og:image\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta property=\\"og:image:url\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta property=\\"og:image:secure_url\\" content=\\"09a1a1112c577c279435.png\\" />
+
+<meta property=\\"og:audio\\" content=\\"31d6cfe0d16ae931b73c.mp3\\" />
+<meta property=\\"og:audio:secure_url\\" content=\\"31d6cfe0d16ae931b73c.mp3\\" />
+<meta property=\\"og:audio:type\\" content=\\"audio/mpeg\\" />
+
+<meta property=\\"og:video\\" content=\\"31d6cfe0d16ae931b73c.mp4\\" />
+<meta property=\\"og:video:secure_url\\" content=\\"31d6cfe0d16ae931b73c.mp4\\" />
+<meta property=\\"og:video:type\\" content=\\"video/mp4\\" />
+<meta property=\\"og:video:width\\" content=\\"400\\" />
+<meta property=\\"og:video:height\\" content=\\"300\\" />
+
+<meta property=\\"vk:image\\" content=\\"09a1a1112c577c279435.png\\" />
+
+<link itemprop=\\"downloadUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"contentUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"installUrl\\" href=\\"09a1a1112c577c279435.png\\">
+
+<link itemprop=\\"a\\" href=\\"should-not-resolve.png\\">
+<link itemprop=\\"b\\" href=\\"should-not-resolve.png\\">
+<link itemprop=\\"  \\" href=\\"should-not-resolve.png\\">
+<link href=\\"should-not-resolve.png\\">
+
+<meta itemprop=\\"image\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"logo\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"screenshot\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"thumbnailUrl\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"contentUrl\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"downloadUrl\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"duringMedia\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"embedUrl\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"installUrl\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta itemprop=\\"layoutImage\\" content=\\"09a1a1112c577c279435.png\\" />
+
+<meta itemprop=\\"a\\" content=\\"./should-not-resolve.png\\" />
+<meta itemprop=\\"b\\" content=\\"./should-not-resolve.png\\" />
+<meta itemprop=\\" \\" content=\\"./should-not-resolve.png\\" />
+
+<link rel=\\"unknown\\" href=\\"./no-need-to-resolve.png\\">
+
+<object data=\\"31d6cfe0d16ae931b73c.pdf\\" type=\\"application/pdf\\" width=\\"500\\" height=\\"300\\">
+	Text
+</object>
+
+<source srcset=\\"09a1a1112c577c279435.png 1200w, 09a1a1112c577c279435.png 800w\\" sizes=\\"100vw\\" type=\\"image/png\\">
+
+<audio controls>
+	<source src=\\"feca5bad734cb69d8658.ogg\\" type=\\"audio/ogg\\">
+	Your browser does not support the audio element.
+</audio>
+
+<video width=\\"320\\" height=\\"240\\" controls>
+	<source src=\\"feca5bad734cb69d8658.ogg\\" type=\\"video/ogg\\">
+	<track src=\\"31d6cfe0d16ae931b73c.vtt\\" kind=\\"subtitles\\" srclang=\\"en\\" label=\\"English\\">
+</video>
+
+<video src=\\"feca5bad734cb69d8658.ogg\\" controls>
+	Your browser does not support the video tag.
+</video>
+
+<video controls poster=\\"09a1a1112c577c279435.png\\">
+	<source src=\\"feca5bad734cb69d8658.ogg\\" type=\\"video/ogg\\">
+	<track src=\\"31d6cfe0d16ae931b73c.vtt\\" kind=\\"subtitles\\" srclang=\\"en\\" label=\\"English\\">
+</video>
+
+<meta content=\\"name=Check Order Status;
+      action-uri=./orderStatus.aspx?src=IE9;
+      icon-uri= ./image.png\\" name=\\"msapplication-task\\">
+
+<meta content=\\"name=Check Order Status;
+      icon-uri= ./image.png;
+      action-uri=./orderStatus.aspx?src=IE9\\" name=\\"msapplication-task\\">
+
+<meta content=\\"name=Check Order Status;
+      action-uri=./orderStatus.aspx?src=IE9;
+      icon-uri=\\" name=\\"msapplication-task\\">
+
+<svg width=\\"200\\" height=\\"200\\">
+	<image xlink:href=\\"258a547148033fda8727.svg\\" height=\\"200\\" width=\\"200\\"/>
+</svg>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<image href=\\"258a547148033fda8727.svg\\" height=\\"200\\" width=\\"200\\"/>
+</svg>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<use href=\\"258a547148033fda8727.svg\\"></use>
+</svg>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<use xlink:href=\\"258a547148033fda8727.svg\\"></use>
+</svg>
+
+<img src=\\"09a1a1112c577c279435.png\\">
+<img src='09a1a1112c577c279435.png'>
+<img src=09a1a1112c577c279435.png>
+<img src=\\"09a1a1112c577c279435.png\\">
+<img src=\\"09a1a1112c577c279435.png\\">
+<img src=\\"09a1a1112c577c279435.png\\">
+<IMG src=\\"09a1a1112c577c279435.png\\">
+<img SRC=\\"09a1a1112c577c279435.png\\">
+<IMG SRC=\\"09a1a1112c577c279435.png\\">
+
+<img src=\\"30fdf7bd50c35732a776.svg#icon-chevron-with-circle-up\\">
+
+<img src=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"Red dot\\" />
+
+
+<a href=\\"#\\" class=\\"gmail-link\\">vincetanan@gmail.com</a>
+<a href=\\"mailto:vince@gmail.com\\" class=\\"gmail-link\\">vince@gmail.com</a>
+
+<p>Text</p>
+<p >Text</p>
+<p   >Text</p>
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"Smiley face\\">
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"Smiley face\\">
+<img srcset=\\"09a1a1112c577c279435.png 480w, 09a1a1112c577c279435.png 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"09a1a1112c577c279435.png 480w, 09a1a1112c577c279435.png 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"09a1a1112c577c279435.png\\" alt=\\"Elva dressed as a fairy\\">
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"multi
+line
+alt\\" />
+
+<img src=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"Red dot\\" />
+
+<img src=\\"
+
+
+cade4413b0346286d28e.png?url
+
+
+\\" alt=\\"\\" />
+
+<img src=\\"#hash\\" alt=\\"test\\">
+<img src=\\"09a1a1112c577c279435.png?foo=bar#hash\\" alt=\\"test\\">
+<img src=\\"09a1a1112c577c279435.png#hash\\" alt=\\"test\\">
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"test\\">
+
+</body>
+</html>
+"
+`;
