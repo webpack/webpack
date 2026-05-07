@@ -122,6 +122,13 @@ if (EXPORT_TYPE === "link") {
 	it("should not provide a `default` export for the link exportType", () => {
 		expect(Object.keys(basic).includes("default")).toBe(false);
 	});
+
+	it("should expose a class literally named `default` (link)", () => {
+		// classes.module.css defines `.default { ... }`; verify the named class
+		// export is preserved even though the namespace has no default export.
+		expect(typeof styles.default).toBe("string");
+		expect(styles.default).toContain("default");
+	});
 }
 
 if (EXPORT_TYPE === "text") {
@@ -164,6 +171,13 @@ if (EXPORT_TYPE === "style") {
 
 	it("should not provide a `default` export for the style exportType", () => {
 		expect(Object.keys(basic).includes("default")).toBe(false);
+	});
+
+	it("should expose a class literally named `default` (style)", () => {
+		// classes.module.css defines `.default { ... }`; the named class export
+		// must still be available even though there is no real default export.
+		expect(typeof styles.default).toBe("string");
+		expect(styles.default).toContain("default");
 	});
 
 	it("should not produce a separate CSS chunk for the style exportType", () => {
