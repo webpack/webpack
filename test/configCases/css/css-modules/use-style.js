@@ -54,6 +54,7 @@ export default {
 	exportLocalVarsShouldCleanup: `${hasOwnProperty(notACssModule, 'local-color')} ${hasOwnProperty(notACssModule, "LOCAL-COLOR")}`,
 	exportName: style.exportName,
 	exportNameOtherNoSpaces: style.exportNameOtherNoSpaces,
+	exportNameMixedLocalGlobalFunctions: style.exportNameMixedLocalGlobalFunctions,
 	exportNameOtherFromKeyword: style.exportNameOtherFromKeyword,
 	exportNameOtherFromKeywordWithFrom1: style.exportNameOtherFromKeywordWithFrom1,
 	exportNameOtherFromKeywordWithFrom2: style.exportNameOtherFromKeywordWithFrom2,

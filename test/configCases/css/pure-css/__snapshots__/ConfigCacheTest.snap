@@ -1883,6 +1883,22 @@ div {
 	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
 }
 
+:global(.global-class-name) {
+	color: red;
+}
+
+.local-class-name {
+	color: blue;
+}
+
+.other-local-class-name {
+	color: green;
+}
+
+.exportNameMixedLocalGlobalFunctions {
+	composes: local-class-name global(global-class-name) local(other-local-class-name);
+}
+
 .from {
 	color: red;
 }

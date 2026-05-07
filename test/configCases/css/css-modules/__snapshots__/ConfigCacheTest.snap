@@ -17,6 +17,7 @@ Object {
   "displayFlexInSupportsInMediaUpperCase": "my-app-style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
   "exportName": "my-app-style_module_css-exportName my-app-classes_modules_css-className beforeName my-app-style_module_css-className my-app-style_module_css-classNameLocal importName secondImport my-app-classes_modules_css-otherClassName my-app-classes_modules_css-otherClassNameToo my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther className className classNameOther className classNameOther my-app-classes_modules_css-className my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName",
+  "exportNameMixedLocalGlobalFunctions": "my-app-style_module_css-exportNameMixedLocalGlobalFunctions my-app-style_module_css-local-class-name global-class-name my-app-style_module_css-other-local-class-name",
   "exportNameOtherFromKeyword": "my-app-style_module_css-exportNameOtherFromKeyword my-app-style_module_css-from",
   "exportNameOtherFromKeywordWithFrom1": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom1 from",
   "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
@@ -2002,6 +2003,21 @@ div {
 .my-app-style_module_css-exportNameOtherNoSpaces {
 	}
 
+.global-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-local-class-name {
+	color: blue;
+}
+
+.my-app-style_module_css-other-local-class-name {
+	color: green;
+}
+
+.my-app-style_module_css-exportNameMixedLocalGlobalFunctions {
+	}
+
 .my-app-style_module_css-from {
 	color: red;
 }
@@ -2808,6 +2824,7 @@ Object {
   "displayFlexInSupportsInMediaUpperCase": "my-app-style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
   "exportName": "my-app-style_module_css-exportName my-app-classes_modules_css-className beforeName my-app-style_module_css-className my-app-style_module_css-classNameLocal importName secondImport my-app-classes_modules_css-otherClassName my-app-classes_modules_css-otherClassNameToo my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther className className classNameOther className classNameOther my-app-classes_modules_css-className my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName",
+  "exportNameMixedLocalGlobalFunctions": "my-app-style_module_css-exportNameMixedLocalGlobalFunctions my-app-style_module_css-local-class-name global-class-name my-app-style_module_css-other-local-class-name",
   "exportNameOtherFromKeyword": "my-app-style_module_css-exportNameOtherFromKeyword my-app-style_module_css-from",
   "exportNameOtherFromKeywordWithFrom1": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom1 from",
   "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
@@ -2883,6 +2900,7 @@ Object {
   "my-global-class-again": "my-app-style_module_css-my-global-class-again",
   "my-simple-local": "my-app-style_module_css-my-simple-local",
   "nested1": "my-app-style_module_css-nested1",
+  "other-local-class-name": "my-app-style_module_css-other-local-class-name",
   "progress": "--my-app-style_module_css-progress",
   "progressAnimationLocal": "my-app-style_module_css-progressAnimationLocal",
   "selected": "my-app-style_module_css-selected",
@@ -4795,6 +4813,22 @@ div {
 	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
 }
 
+.global-class-name {
+	color: red;
+}
+
+.local-class-name {
+	color: blue;
+}
+
+.other-local-class-name {
+	color: green;
+}
+
+.exportNameMixedLocalGlobalFunctions {
+	composes: local-class-name global-class-name my-app-style_module_css-other-local-class-name;
+}
+
 .from {
 	color: red;
 }
@@ -5594,6 +5628,7 @@ Object {
   "my-global-class-again": "W4wdXr",
   "my-simple-local": "xcsnD2",
   "nested1": "kbu2T9",
+  "other-local-class-name": "hsBq9m",
   "progress": "--z8dXmV",
   "progressAnimationLocal": "_1zMqGM",
   "selected": "n5D5Q0",
@@ -7506,6 +7541,22 @@ div {
 	composes:className from\\"./classes.modules.css\\",beforeName from global,className;
 }
 
+.global-class-name {
+	color: red;
+}
+
+.local-class-name {
+	color: blue;
+}
+
+.other-local-class-name {
+	color: green;
+}
+
+.exportNameMixedLocalGlobalFunctions {
+	composes: local-class-name global-class-name hsBq9m;
+}
+
 .from {
 	color: red;
 }
@@ -8286,6 +8337,7 @@ Object {
   "displayFlexInSupportsInMediaUpperCase": "xtny9t",
   "exportLocalVarsShouldCleanup": "false false",
   "exportName": "_276lNI qoIJa_ beforeName A8YDR8 _0xrNKu importName secondImport u-Iyhp eHk-1R _0xrNKu _0xrNKu RYh5jd _0xrNKu RYh5jd className className classNameOther className classNameOther qoIJa_ qoIJa_ u-Iyhp qoIJa_ u-Iyhp",
+  "exportNameMixedLocalGlobalFunctions": "V0CwQl -bicf2 global-class-name hsBq9m",
   "exportNameOtherFromKeyword": "SVt4hC xjD3LP",
   "exportNameOtherFromKeywordWithFrom1": "y7Ml6Q from",
   "exportNameOtherFromKeywordWithFrom2": "Ns9ysL FVDuEC",
@@ -10271,6 +10323,21 @@ div {
 .atrg9z {
 	}
 
+.global-class-name {
+	color: red;
+}
+
+.-bicf2 {
+	color: blue;
+}
+
+.hsBq9m {
+	color: green;
+}
+
+.V0CwQl {
+	}
+
 .xjD3LP {
 	color: red;
 }
@@ -11076,6 +11143,7 @@ Object {
   "displayFlexInSupportsInMediaUpperCase": "v0UVbD",
   "exportLocalVarsShouldCleanup": "false false",
   "exportName": "tavnFA FABkCo beforeName aPwTqM IPj7ZV importName secondImport _1H2HaF _vcSqh IPj7ZV IPj7ZV _2h_741 IPj7ZV _2h_741 className className classNameOther className classNameOther FABkCo FABkCo _1H2HaF FABkCo _1H2HaF",
+  "exportNameMixedLocalGlobalFunctions": "sxMHHy F-Qpg7 global-class-name _6aTSMS",
   "exportNameOtherFromKeyword": "G5CCpw agIvjM",
   "exportNameOtherFromKeywordWithFrom1": "u6EQvk from",
   "exportNameOtherFromKeywordWithFrom2": "_3wkyOF B1Oyw9",
@@ -11166,6 +11234,7 @@ Object {
   "err-404": "my-app-style_module_css-err-404",
   "error": "my-app-style_module_css-error",
   "exportName": "my-app-style_module_css-exportName my-app-classes_modules_css-className beforeName my-app-style_module_css-className my-app-style_module_css-classNameLocal importName secondImport my-app-classes_modules_css-otherClassName my-app-classes_modules_css-otherClassNameToo my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther my-app-style_module_css-classNameLocal my-app-style_module_css-classNameLocalOther className className classNameOther className classNameOther my-app-classes_modules_css-className my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName my-app-classes_modules_css-className my-app-classes_modules_css-otherClassName",
+  "exportNameMixedLocalGlobalFunctions": "my-app-style_module_css-exportNameMixedLocalGlobalFunctions my-app-style_module_css-local-class-name global-class-name my-app-style_module_css-other-local-class-name",
   "exportNameOtherFromKeyword": "my-app-style_module_css-exportNameOtherFromKeyword my-app-style_module_css-from",
   "exportNameOtherFromKeywordWithFrom1": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom1 from",
   "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
@@ -11291,6 +11360,7 @@ Object {
   "nested3": "my-app-style_module_css-nested3",
   "no-space": "my-app-style_module_css-no-space",
   "not-selector-inside": "my-app-style_module_css-not-selector-inside",
+  "other-local-class-name": "my-app-style_module_css-other-local-class-name",
   "otherDiv": "my-app-style_module_css-otherDiv",
   "overlay": "my-app-style_module_css-overlay",
   "padding-lg": "my-app-style_module_css-padding-lg",
@@ -13269,6 +13339,21 @@ div {
 }
 
 .my-app-style_module_css-exportNameOtherNoSpaces {
+	}
+
+.global-class-name {
+	color: red;
+}
+
+.my-app-style_module_css-local-class-name {
+	color: blue;
+}
+
+.my-app-style_module_css-other-local-class-name {
+	color: green;
+}
+
+.my-app-style_module_css-exportNameMixedLocalGlobalFunctions {
 	}
 
 .my-app-style_module_css-from {
