@@ -12167,7 +12167,7 @@ declare interface KnownBuildMeta {
 	treatAsCommonJs?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
-	isCSSModule?: boolean;
+	isCssModule?: boolean;
 	jsIncompatibleExports?: Record<string, string>;
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
 	exportsSourceByRuntime?: Map<string, string>;
