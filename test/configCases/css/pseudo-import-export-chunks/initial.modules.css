@@ -1,0 +1,20 @@
+:import("./shared-vars.modules.css") {
+	_primary: primary-color;
+	_secondary: secondary-color;
+}
+
+:import("./initial-vars.modules.css") {
+	_border: border-color;
+}
+
+:export {
+	primary: _primary;
+	secondary: _secondary;
+	border: _border;
+}
+
+.initial {
+	color: _primary;
+	background: _secondary;
+	border-color: _border;
+}

@@ -1,0 +1,11 @@
+:import("./async-vars.modules.css") {
+	_border: border-color;
+}
+
+:export {
+	border: _border;
+}
+
+.async-different {
+	border-color: _border;
+}

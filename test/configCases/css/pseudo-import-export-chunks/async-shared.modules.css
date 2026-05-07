@@ -1,0 +1,14 @@
+:import("./shared-vars.modules.css") {
+	_primary: primary-color;
+	_secondary: secondary-color;
+}
+
+:export {
+	primary: _primary;
+	secondary: _secondary;
+}
+
+.async-shared {
+	color: _primary;
+	background: _secondary;
+}
