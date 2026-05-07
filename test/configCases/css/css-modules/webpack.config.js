@@ -172,16 +172,24 @@ module.exports = (env, { testPath }) => [
 			uniqueName: "my-app"
 		},
 		module: {
-			parser: {
-				"css/auto": {
-					animation: false,
-					customIdents: false,
-					dashedIdents: false,
-					container: false,
-					function: false,
-					grid: false
+			rules: [
+				...base.module.rules,
+				{
+					// Scope the disable to the entry only — @imported `.module.css`
+					// files keep default parser options (so custom properties in
+					// var-function.module.css are still hashed).
+					test: /style\.module\.css$/,
+					type: "css/auto",
+					parser: {
+						animation: false,
+						customIdents: false,
+						dashedIdents: false,
+						container: false,
+						function: false,
+						grid: false
+					}
 				}
-			}
+			]
 		},
 		node: {
 			__dirname: false,
