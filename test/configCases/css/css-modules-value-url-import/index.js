@@ -28,11 +28,14 @@ it("should support @value identifiers as @import URLs and inside url() functions
 	expect(cssContent).not.toMatch(/url\(\s*singleQuotedBgPath\s*\)/);
 
 	// The local-shape url() refs should resolve to the same asset.
-	const matches = [
-		...cssContent.matchAll(/background-image:\s*url\(([^)]+)\)/g)
-	];
+	const re = /background-image:\s*url\(([^)]+)\)/g;
+	const matches = [];
+	let m;
+	while ((m = re.exec(cssContent)) !== null) {
+		matches.push(m[1]);
+	}
 	expect(matches.length).toBeGreaterThanOrEqual(3);
-	const localUrls = new Set(matches.slice(0, 3).map((m) => m[1]));
+	const localUrls = new Set(matches.slice(0, 3));
 	expect(localUrls.size).toBe(1);
 	expect([...localUrls][0]).toMatch(/\.png$/);
 });
