@@ -3,6 +3,7 @@ test/statsCases/** eol=lf
 test/hotCases/** eol=lf
 test/configCases/css/public-path/*.js eol=lf
 test/configCases/defer-import/** eol=lf
+test/configCases/html/sources/** eol=lf
 examples/* eol=lf
 bin/* eol=lf
 *.svg eol=lf

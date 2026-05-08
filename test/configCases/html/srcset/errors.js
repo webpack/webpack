@@ -33,7 +33,7 @@ module.exports = [
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a \[ , data:,b 1x, \], data:,c' at '\['/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a \{ , data:,b 1x, \}, data:,c' at '\{'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \(' at '\('/,
-	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \(  ' at '\(  '/,
+	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \( {2}' at '\( {2}'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \(,' at '\(,'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \(x' at '\(x'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a, data:,b \(\)' at '\(\)'/,
