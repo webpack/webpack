@@ -22,9 +22,21 @@ it("should concatenate every text-export css module into the entry scope", () =>
 	expect(concatModules[0].modules.length).toBeGreaterThanOrEqual(4);
 });
 
-it("should not include the __webpack_require__ runtime when fully concatenated", () => {
+it("should not include the require runtime when fully concatenated", () => {
+	// __non_webpack_require__ keeps these requires out of the dependency
+	// graph, so they don't pull the require runtime into the bundle and
+	// defeat the assertion below.
 	const fs = __non_webpack_require__("fs");
-	const source = fs.readFileSync(`${__dirname}/bundle0.js`, "utf-8");
+	const path = __non_webpack_require__("path");
+	const source = fs.readFileSync(
+		path.join(__dirname, "bundle0.js"),
+		"utf-8"
+	);
 
-	expect(source).not.toMatch(/function __webpack_require__\b/);
+	// The webpack require runtime template defines a private module cache
+	// variable; its identifier is only emitted when that runtime is
+	// included. The bundle inlines this test file's source verbatim, so
+	// the identifier is assembled at runtime to avoid matching itself.
+	const marker = `__webpack_${"module"}_cache__`;
+	expect(source).not.toContain(marker);
 });

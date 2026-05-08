@@ -2,7 +2,10 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
+	// target: node so the test code can `require("fs")` to inspect the
+	// emitted bundle. The CSS concatenation path under test does not
+	// depend on the target.
+	target: "node",
 	mode: "production",
 	devtool: false,
 	optimization: {
