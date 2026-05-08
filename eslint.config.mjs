@@ -114,21 +114,6 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/cases/**/test.config.js"],
-		// Allow to use `dynamic` import for routing through Node.js's ESM resolver
-		languageOptions: {
-			ecmaVersion: 2020
-		},
-		rules: {
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					ignores: ["dynamic-import"]
-				}
-			]
-		}
-	},
-	{
 		files: ["lib/**/*.runtime.js", "hot/*.js"],
 		ignores: ["hot/load-http.js"],
 		extends: [configs["javascript/es5"]],
