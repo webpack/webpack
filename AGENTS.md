@@ -90,14 +90,36 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
 - `.github/workflows/`, `.github/scripts/` — CI.
 
-## Conventions and gotchas
+## Source language: CommonJS + JSDoc
 
-These are footguns from past sessions, not blanket rules — apply judgement on the rest of the codebase:
+`lib/` is CommonJS only. Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via JSDoc — `@typedef {import("./Other")} Other` and friends — never TypeScript syntax inside `.js` files. The JSDoc annotations are compiled into `types.d.ts` by `yarn fix:special`.
 
-- **`lib/` is CommonJS + JSDoc.** Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via `@typedef {import("./Other")} Other` and friends — never TypeScript syntax in `.js` files.
-- **Auto-generated files are off-limits for hand edits.** That includes `types.d.ts`, `schemas/**/*.check.{js,d.ts}`, and the generated runtime code under `lib/`. After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs.
-- **Adding or renaming a webpack option requires edits in every layer.** Schema (`schemas/…`) → defaults (`lib/config/defaults.js`) → normalization (`lib/config/normalization.js`) → the implementation site that consumes the option. Skipping any one of these silently breaks the option (most often: the schema accepts it but `defaults.js` never sets it, so user code never reaches the new path).
-- **Run targeted tests during development.** `yarn jest test/<area>` or `yarn jest -t "<name>"` — the full suite is large. When updating snapshots (`yarn jest -u`), eyeball the diff first; never update blindly.
+## Auto-generated files
+
+These files are produced by `yarn fix:special` and must not be edited by hand:
+
+- `types.d.ts` — compiled from JSDoc + schemas.
+- `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
+- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+
+After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs. The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) *are* editable.
+
+## Adding or renaming a webpack option
+
+Adding or renaming a webpack option requires edits in every layer, in this order:
+
+1. **Schema** — `schemas/WebpackOptions.json` (or `schemas/plugins/<Name>.json`).
+2. **Defaults** — `lib/config/defaults.js`.
+3. **Normalization** — `lib/config/normalization.js`.
+4. **Implementation** — the site that consumes the option.
+
+Skipping any layer silently breaks the option. The most common failure: the schema accepts the new key but `defaults.js` never sets it, so user code never reaches the new path.
+
+## Running tests
+
+Run targeted tests during development — `yarn jest test/<area>` or `yarn jest -t "<name>"`. The full suite is large, so don't run `yarn test` unless asked.
+
+When updating snapshots (`yarn jest -u`), eyeball the diff first; never update blindly. See [TESTING_DOCS.md](TESTING_DOCS.md) for case structure and naming.
 
 ## Development Workflow
 
@@ -181,7 +203,7 @@ Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also bre
 
 webpack uses an **org-wide** PR template from [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md). The GitHub web UI prefills it; the GitHub API / MCP / `gh pr create` path does **not**, so you must paste the template yourself when opening a PR programmatically. Every PR body must contain **every** section below, in this order, with the labels spelled exactly as written. If a section truly does not apply, write `n/a` under it. Do not delete sections, do not reorder, do not strip the HTML comment hints, and do not substitute a different template (e.g. `## Summary` / `## Test plan`).
 
-Paste this body verbatim, then fill in answers directly under each label:
+Paste the body **inside** the fenced block below — only the lines between the ` ```markdown ` opener and the closing ` ``` ` (do **not** include the fence lines themselves; pasting them would render your whole PR body as a code block). Then fill in answers directly under each label:
 
 ```markdown
 <!-- Thanks for submitting a pull request! Please provide enough information so that others can review your pull request. -->
@@ -213,7 +235,7 @@ Paste this body verbatim, then fill in answers directly under each label:
 **Use of AI**
 
 <!-- If you have used AI, please state so here. Explain how you used it.
-Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due inresponsible use of AI. -->
+Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
 ```
 
 Required answer per section:
