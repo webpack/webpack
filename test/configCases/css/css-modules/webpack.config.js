@@ -85,6 +85,9 @@ module.exports = (env, { testPath }) => [
 		name: "node-production",
 		target: "node",
 		mode: "production",
+		output: {
+			uniqueName: "my-app"
+		},
 		plugins: [
 			new webpack.ids.DeterministicModuleIdsPlugin({
 				maxLength: 3,
