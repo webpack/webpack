@@ -42,14 +42,19 @@ exports[`ConfigTestCases html basic exported tests should compile and export htm
 	<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"Flowers\\" style=\\"width:auto;\\">
 </picture>
 
-<![CDATA[<img src=\\"31d6cfe0d16ae931b73c.png\\">]]><img src=\\"31d6cfe0d16ae931b73c.png\\">
+<img disabled src=\\"31d6cfe0d16ae931b73c.png\\">
+<img disabled  src=\\"31d6cfe0d16ae931b73c.png\\">
+<img data-empty=\\"\\" src=\\"31d6cfe0d16ae931b73c.png\\">
+<img data-unquoted=unquoted src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<![CDATA[<img src=\\"image.png\\">]]><img src=\\"31d6cfe0d16ae931b73c.png\\">
 
 <a rel=\\"author\\" href=\\"./simple.html\\">link text</a>
 
 <a href=\\"tel:1-408-555-5555\\">Call me</a>
 
 <!----><img src=\\"31d6cfe0d16ae931b73c.png\\">-->
-<!--><img src=\\"image.png\\">-->
+<!--><img src=\\"31d6cfe0d16ae931b73c.png\\">-->
 <!--<!--<img src=\\"image.png\\">-->
 <!--<img src=\\"image.png\\">-->
 
