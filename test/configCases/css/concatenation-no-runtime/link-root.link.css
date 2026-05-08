@@ -1,0 +1,5 @@
+@import "./link-leaf.link.css";
+
+.link-root {
+	color: blue;
+}
