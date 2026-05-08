@@ -1,0 +1,768 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`walkHtmlTokens should tokenize and roundtrip "attributes.html" 1`] = `
+Array [
+  Array [
+    "attribute",
+    "class",
+    "double",
+    1,
+  ],
+  Array [
+    "attribute",
+    "id",
+    "single",
+    2,
+  ],
+  Array [
+    "attribute",
+    "data-raw",
+    "unquoted",
+    0,
+  ],
+  Array [
+    "open-tag",
+    "<div class=\\"double\\" id='single' data-raw=unquoted>",
+    "div",
+    false,
+  ],
+  Array [
+    "close-tag",
+    "</div>",
+    "div",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "href",
+    "https://example.com?a=1&amp;b=2",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<a href=\\"https://example.com?a=1&amp;b=2\\">",
+    "a",
+    false,
+  ],
+  Array [
+    "text",
+    "Link",
+  ],
+  Array [
+    "close-tag",
+    "</a>",
+    "a",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "value",
+    "",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<input value=\\"\\">",
+    "input",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "data-empty",
+    "",
+    2,
+  ],
+  Array [
+    "open-tag",
+    "<div data-empty=''>",
+    "div",
+    false,
+  ],
+  Array [
+    "close-tag",
+    "</div>",
+    "div",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
+
+exports[`walkHtmlTokens should tokenize and roundtrip "basic.html" 1`] = `
+Array [
+  Array [
+    "comment",
+    "<!DOCTYPE html>",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "lang",
+    "en",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<html lang=\\"en\\">",
+    "html",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<head>",
+    "head",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "charset",
+    "UTF-8",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<meta charset=\\"UTF-8\\">",
+    "meta",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "open-tag",
+    "<title>",
+    "title",
+    false,
+  ],
+  Array [
+    "text",
+    "Basic Test",
+  ],
+  Array [
+    "close-tag",
+    "</title>",
+    "title",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "rel",
+    "stylesheet",
+    1,
+  ],
+  Array [
+    "attribute",
+    "href",
+    "./style.css",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<link rel=\\"stylesheet\\" href=\\"./style.css\\">",
+    "link",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "close-tag",
+    "</head>",
+    "head",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<body>",
+    "body",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "open-tag",
+    "<h1>",
+    "h1",
+    false,
+  ],
+  Array [
+    "text",
+    "Hello World",
+  ],
+  Array [
+    "close-tag",
+    "</h1>",
+    "h1",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "class",
+    "intro",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<p class=\\"intro\\">",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "Welcome to webpack",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "src",
+    "./logo.png",
+    1,
+  ],
+  Array [
+    "attribute",
+    "alt",
+    "Logo",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<img src=\\"./logo.png\\" alt=\\"Logo\\">",
+    "img",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "href",
+    "/about",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<a href=\\"/about\\">",
+    "a",
+    false,
+  ],
+  Array [
+    "text",
+    "About",
+  ],
+  Array [
+    "close-tag",
+    "</a>",
+    "a",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "open-tag",
+    "<br/>",
+    "br",
+    true,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "type",
+    "text",
+    1,
+  ],
+  Array [
+    "attribute",
+    "value",
+    "test",
+    1,
+  ],
+  Array [
+    "attribute",
+    "disabled",
+    null,
+    0,
+  ],
+  Array [
+    "open-tag",
+    "<input type=\\"text\\" value=\\"test\\" disabled>",
+    "input",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "comment",
+    "<!-- This is a comment -->",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "attribute",
+    "id",
+    "app",
+    1,
+  ],
+  Array [
+    "attribute",
+    "data-value",
+    "single-quoted",
+    2,
+  ],
+  Array [
+    "open-tag",
+    "<div id=\\"app\\" data-value='single-quoted'>",
+    "div",
+    false,
+  ],
+  Array [
+    "close-tag",
+    "</div>",
+    "div",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "close-tag",
+    "</body>",
+    "body",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "close-tag",
+    "</html>",
+    "html",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
+
+exports[`walkHtmlTokens should tokenize and roundtrip "comments.html" 1`] = `
+Array [
+  Array [
+    "comment",
+    "<!-- Single comment -->",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "Between comments",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "comment",
+    "<!-- Multi
+line
+comment -->",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "After multi-line",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "comment",
+    "<!---->",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "Empty comment above",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
+
+exports[`walkHtmlTokens should tokenize and roundtrip "nested.html" 1`] = `
+Array [
+  Array [
+    "open-tag",
+    "<div>",
+    "div",
+    false,
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "Nested ",
+  ],
+  Array [
+    "open-tag",
+    "<strong>",
+    "strong",
+    false,
+  ],
+  Array [
+    "text",
+    "bold ",
+  ],
+  Array [
+    "open-tag",
+    "<em>",
+    "em",
+    false,
+  ],
+  Array [
+    "text",
+    "italic",
+  ],
+  Array [
+    "close-tag",
+    "</em>",
+    "em",
+  ],
+  Array [
+    "close-tag",
+    "</strong>",
+    "strong",
+  ],
+  Array [
+    "text",
+    " text",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "open-tag",
+    "<ul>",
+    "ul",
+    false,
+  ],
+  Array [
+    "text",
+    "
+		",
+  ],
+  Array [
+    "open-tag",
+    "<li>",
+    "li",
+    false,
+  ],
+  Array [
+    "text",
+    "Item 1",
+  ],
+  Array [
+    "close-tag",
+    "</li>",
+    "li",
+  ],
+  Array [
+    "text",
+    "
+		",
+  ],
+  Array [
+    "open-tag",
+    "<li>",
+    "li",
+    false,
+  ],
+  Array [
+    "text",
+    "Item 2",
+  ],
+  Array [
+    "close-tag",
+    "</li>",
+    "li",
+  ],
+  Array [
+    "text",
+    "
+	",
+  ],
+  Array [
+    "close-tag",
+    "</ul>",
+    "ul",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "close-tag",
+    "</div>",
+    "div",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
+
+exports[`walkHtmlTokens should tokenize and roundtrip "self-closing.html" 1`] = `
+Array [
+  Array [
+    "attribute",
+    "src",
+    "logo.png",
+    1,
+  ],
+  Array [
+    "attribute",
+    "alt",
+    "Logo",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<img src=\\"logo.png\\" alt=\\"Logo\\">",
+    "img",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<br>",
+    "br",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<hr/>",
+    "hr",
+    true,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "type",
+    "text",
+    1,
+  ],
+  Array [
+    "attribute",
+    "required",
+    null,
+    0,
+  ],
+  Array [
+    "open-tag",
+    "<input type=\\"text\\" required>",
+    "input",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "charset",
+    "UTF-8",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<meta charset=\\"UTF-8\\">",
+    "meta",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "rel",
+    "icon",
+    1,
+  ],
+  Array [
+    "attribute",
+    "href",
+    "favicon.ico",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<link rel=\\"icon\\" href=\\"favicon.ico\\">",
+    "link",
+    false,
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
