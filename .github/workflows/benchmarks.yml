@@ -61,6 +61,8 @@ jobs:
   benchmark-memory:
     strategy:
       fail-fast: false
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -83,6 +85,12 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - name: Check Memory Status
+        run: >
+          node -e 'const os=require("os");
+          const toGb=b=>(b/1024**3).toFixed(2)+" GB";
+          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
+
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@3194d9a39c4d46684cb44bf7207fc56626aad8fd # v4.15.1
         with:
@@ -92,3 +100,4 @@ jobs:
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
+          SHARD: ${{ matrix.shard }}
