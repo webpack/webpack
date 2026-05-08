@@ -1,7 +1,7 @@
 "use strict";
 
-const cp = require("child_process");
 const path = require("path");
+const { Worker } = require("worker_threads");
 
 const fixtures = [
 	"module-sync-only",
@@ -9,45 +9,25 @@ const fixtures = [
 	"import-require-first"
 ];
 
-// Run real Node.js in a child process to capture how it resolves each fixture
-// via require() and dynamic import(). Jest's runtime resolves package "exports"
-// with a condition set that does not include "module-sync", so an in-process
-// reference would not match real Node.js behavior. cwd is the fixture
-// directory so bare-specifier import() resolves against its node_modules using
-// Node.js's ESM resolver — that activates the "import" condition rather than
-// "require".
-const out = cp.execFileSync(
-	process.execPath,
-	[
-		"-e",
-		`
-		"use strict";
-		const Module = require("module");
-		const r = Module.createRequire(${JSON.stringify(
-			path.join(__dirname, "index.js")
-		)});
-		const fixtures = ${JSON.stringify(fixtures)};
-		const requireResults = {};
-		for (const name of fixtures) requireResults[name] = r(name);
-		Promise.all(
-			fixtures.map((name) =>
-				import(name).then((mod) => [name, mod.default])
-			)
-		).then((entries) => {
-			process.stdout.write(JSON.stringify({
-				require: requireResults,
-				import: Object.fromEntries(entries)
-			}));
-		});
-		`
-	],
-	{
-		cwd: __dirname,
-		stdio: ["ignore", "pipe", "inherit"],
-		encoding: "utf8"
-	}
-);
-const nodeResults = JSON.parse(out);
+// Resolve each fixture via real Node.js's require() and import() in a worker
+// thread. Workers run in a fresh Node.js context that bypasses Jest's runtime
+// patches (Jest's CJS resolver omits the "module-sync" condition, so an
+// in-process Module.createRequire would not match real Node.js behavior).
+// Async messaging is used because dynamic import() in a worker deadlocks if
+// the main thread is parked on Atomics.wait.
+const nodeResultsPromise = new Promise((resolve, reject) => {
+	const worker = new Worker(path.join(__dirname, "node-resolve.worker.mjs"), {
+		workerData: {
+			fixture: path.join(__dirname, "index.js"),
+			fixtures
+		}
+	});
+	worker.on("message", (msg) => {
+		worker.terminate();
+		resolve(msg);
+	});
+	worker.on("error", reject);
+});
 
 module.exports = {
 	findBundle(_, options) {
@@ -55,7 +35,10 @@ module.exports = {
 		return `./bundle${ext}`;
 	},
 	moduleScope(scope) {
-		scope.nodeRequireResults = nodeResults.require;
-		scope.nodeImportResults = nodeResults.import;
+		scope.nodeRequire = async (name) =>
+			(await nodeResultsPromise).require[name];
+		scope.nodeImport = async (name) => ({
+			default: (await nodeResultsPromise).import[name]
+		});
 	}
 };
