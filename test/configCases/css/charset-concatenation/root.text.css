@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+@import "./middle.text.css";
+
+.root {
+	color: blue;
+}
