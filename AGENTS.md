@@ -10,15 +10,94 @@ A `> [!REQUIRED]` callout placed immediately under a heading marks that whole se
 
 webpack is a JavaScript module bundler. Package manager: **yarn**.
 
-- `lib/` — Main source code
-- `lib/javascript/` — JavaScript modules parsing and generation
-- `lib/css/` — CSS modules parsing and generation
-- `schemas/` — JSON schemas for webpack options
-- `test/` — All tests
-- `examples/` — Usage examples for webpack features and configuration options
-- `.changeset/` — Changeset files for releases
-- `types.d.ts` — Auto-generated type definitions (do not edit manually)
-- `package.json` — All available commands (defined in `scripts`)
+**Source**
+
+- `lib/` — Main source code (CommonJS only; types declared via JSDoc `@typedef`).
+  - `lib/asset/` — Asset modules (images, fonts, raw files).
+  - `lib/async-modules/` — Top-level await.
+  - `lib/cache/` — Filesystem and memory caches.
+  - `lib/config/` — Config defaults, normalization, target presets.
+  - `lib/container/` — Module Federation.
+  - `lib/css/` — CSS Modules, CSS parsing and generation.
+  - `lib/debug/` — Debug helpers.
+  - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
+  - `lib/dll/` — DllPlugin / DllReferencePlugin.
+  - `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates.
+  - `lib/errors/` — Error class hierarchy.
+  - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
+  - `lib/hmr/` — Hot Module Replacement plugins.
+  - `lib/html/` — Experimental HTML support.
+  - `lib/ids/` — Module/chunk id assignment plugins.
+  - `lib/javascript/` — JavaScript parsing (acorn), generation, exports analysis.
+  - `lib/json/` — JSON modules.
+  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
+  - `lib/logging/` — Logger API and console formatting.
+  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
+  - `lib/performance/` — Asset/entrypoint size hints.
+  - `lib/prefetch/` — Prefetch/preload plugins.
+  - `lib/rules/` — `module.rules` matching engine.
+  - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …).
+  - `lib/schemes/` — Custom URL scheme handlers (`data:`, `http:`, …).
+  - `lib/serialization/` — Persistent cache serialization.
+  - `lib/sharing/` — Shared modules / Module Federation runtime.
+  - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/url/` — `new URL(asset, import.meta.url)` references.
+  - `lib/util/` — Utility helpers.
+  - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
+- `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
+- `bin/` — `webpack` CLI entry point.
+- `tooling/` — Repo-internal build scripts (runtime/wasm code generators, hash-debug tool); invoked by `yarn fix:special`.
+- `assembly/` — WebAssembly source for the hash function.
+- `setup/` — One-time setup scripts.
+
+**Schemas (the source of truth for webpack's config API)**
+
+- `schemas/WebpackOptions.json` — top-level webpack options schema.
+- `schemas/plugins/*.json` — per-plugin option schemas (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
+- `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
+
+**Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for naming and how to run a single case.
+
+- `test/cases/` — Default-config compilation cases.
+- `test/configCases/` — Cases with explicit `webpack.config.js`.
+- `test/watchCases/` — Watch-mode incremental cases.
+- `test/hotCases/` — HMR runtime cases.
+- `test/statsCases/` — Stats output snapshots.
+- `test/typesCases/` — TypeScript type assertions against `types.d.ts`.
+- `test/test262-cases/` — JavaScript spec compliance (test262).
+- `test/memoryLimitCases/`, `test/benchmarkCases/` — Heap-bounded and perf cases.
+- `test/__snapshots__/`, `test/fixtures/`, `test/helpers/`, `test/harness/` — Snapshots and shared utilities.
+
+**Examples & changesets**
+
+- `examples/` — Usage examples (build with `yarn build:examples`).
+- `.changeset/` — Pending changeset files for the next release.
+
+**Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
+
+- `types.d.ts` — Compiled from JSDoc + schemas.
+- `schemas/**/*.check.{js,d.ts}` — Precompiled schema validators.
+- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+
+**Hand-maintained type declarations (these _are_ editable)**
+
+- `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
+
+**Configuration**
+
+- `package.json` — All commands (defined in `scripts`).
+- `tsconfig*.json` — TypeScript configs (one per surface: `lib`, `hot`, types tests, validation, benchmarks).
+- `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
+- `.github/workflows/`, `.github/scripts/` — CI.
+
+## Conventions and gotchas
+
+These are footguns from past sessions, not blanket rules — apply judgement on the rest of the codebase:
+
+- **`lib/` is CommonJS + JSDoc.** Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via `@typedef {import("./Other")} Other` and friends — never TypeScript syntax in `.js` files.
+- **Auto-generated files are off-limits for hand edits.** That includes `types.d.ts`, `schemas/**/*.check.{js,d.ts}`, and the generated runtime code under `lib/`. After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs.
+- **Adding or renaming a webpack option requires edits in every layer.** Schema (`schemas/…`) → defaults (`lib/config/defaults.js`) → normalization (`lib/config/normalization.js`) → the implementation site that consumes the option. Skipping any one of these silently breaks the option (most often: the schema accepts it but `defaults.js` never sets it, so user code never reaches the new path).
+- **Run targeted tests during development.** `yarn jest test/<area>` or `yarn jest -t "<name>"` — the full suite is large. When updating snapshots (`yarn jest -u`), eyeball the diff first; never update blindly.
 
 ## Development Workflow
 
