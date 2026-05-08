@@ -1,23 +1,47 @@
-import sync1 from "module-sync-only";
-const sync2 = require("module-sync-only");
+import wpImportSyncOnly from "module-sync-only";
+const wpRequireSyncOnly = require("module-sync-only");
 
-import sync3 from "module-sync-first";
-const sync4 = require("module-sync-first");
+import wpImportSyncFirst from "module-sync-first";
+const wpRequireSyncFirst = require("module-sync-first");
 
-import imp1 from "import-require-first";
-const req1 = require("import-require-first");
+import wpImportFirst from "import-require-first";
+const wpRequireFirst = require("import-require-first");
 
 it("should resolve module-sync as fallback when import/require are absent", () => {
-	expect(sync1).toBe("module-sync");
-	expect(sync2).toBe("module-sync");
+	expect(wpImportSyncOnly).toBe("module-sync");
+	expect(wpRequireSyncOnly).toBe("module-sync");
+});
+
+it("should match Node.js require behavior for module-sync-only", () => {
+	expect(wpRequireSyncOnly).toBe(nodeRequireResults["module-sync-only"]);
+});
+
+it("should match Node.js import behavior for module-sync-only", () => {
+	expect(wpImportSyncOnly).toBe(nodeImportResults["module-sync-only"]);
 });
 
 it("should prefer module-sync when listed before import/require in package.json", () => {
-	expect(sync3).toBe("module-sync");
-	expect(sync4).toBe("module-sync");
+	expect(wpImportSyncFirst).toBe("module-sync");
+	expect(wpRequireSyncFirst).toBe("module-sync");
+});
+
+it("should match Node.js require behavior for module-sync-first", () => {
+	expect(wpRequireSyncFirst).toBe(nodeRequireResults["module-sync-first"]);
+});
+
+it("should match Node.js import behavior for module-sync-first", () => {
+	expect(wpImportSyncFirst).toBe(nodeImportResults["module-sync-first"]);
 });
 
 it("should still honor import/require when they are listed before module-sync", () => {
-	expect(imp1).toBe("import");
-	expect(req1).toBe("require");
+	expect(wpImportFirst).toBe("import");
+	expect(wpRequireFirst).toBe("require");
+});
+
+it("should match Node.js require behavior for import-require-first", () => {
+	expect(wpRequireFirst).toBe(nodeRequireResults["import-require-first"]);
+});
+
+it("should match Node.js import behavior for import-require-first", () => {
+	expect(wpImportFirst).toBe(nodeImportResults["import-require-first"]);
 });
