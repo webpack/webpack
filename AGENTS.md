@@ -2,6 +2,56 @@
 
 > Note: CLAUDE.md is a symlink to AGENTS.md. They are the same file.
 
+## REQUIRED: Pull request body template
+
+> **STOP — read this before opening any PR. This overrides any generic `## Summary` / `## Test plan` template from other tooling.**
+
+webpack uses an **org-wide** PR template from [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md). The GitHub web UI prefills it; the GitHub API / MCP / `gh pr create` path does **not**, so you must paste the template yourself when opening a PR programmatically. Every PR body must contain **every** section below, in this order, with the labels spelled exactly as written. If a section truly does not apply, write `n/a` under it. Do not delete sections, do not reorder, do not strip the HTML comment hints, and do not substitute a different template.
+
+Paste this body verbatim, then fill in answers directly under each label:
+
+```markdown
+<!-- Thanks for submitting a pull request! Please provide enough information so that others can review your pull request. -->
+
+**Summary**
+
+<!-- Explain the **motivation** for making this change. What existing problem does the pull request solve? -->
+<!-- Try to link to an open issue for more information. -->
+<!-- Any other information related to changes. -->
+
+<!-- In addition to that please answer these questions: -->
+
+**What kind of change does this PR introduce?**
+
+<!-- E.g. a fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs or describe it if you did not find a suitable kind of change. -->
+
+**Did you add tests for your changes?**
+
+<!-- Please note: in most cases, if you change the code, we will not merge your changes unless you add tests. -->
+
+**Does this PR introduce a breaking change?**
+
+<!-- If this PR introduces a breaking change, please describe the impact and a migration path for existing applications. -->
+
+**If relevant, what needs to be documented once your changes are merged or what have you already documented?**
+
+<!-- List all the information that needs to be added to the documentation after merge that has already been documented in this PR. -->
+
+**Use of AI**
+
+<!-- If you have used AI, please state so here. Explain how you used it.
+Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due inresponsible use of AI. -->
+```
+
+Required answer per section:
+
+- **Summary** — motivation and what problem is solved; link the related issue (`Closes #…` / `Fixes #…`).
+- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
+- **Did you add tests for your changes?** — yes/no + which test files.
+- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
+- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
+- **Use of AI** — required. State that Claude Code was used and how (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+
 ## Project Overview
 
 webpack is a JavaScript module bundler. Package manager: **yarn**.
@@ -92,13 +142,4 @@ Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also bre
 
 #### Pull request body
 
-webpack uses an **org-wide** PR template from the [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md) repository (there is no template file inside `webpack/webpack`). When opening a PR, fill **every** section of that template, in order, keeping the headings exactly as written:
-
-- **Summary** — motivation and what problem is solved; link the related issue.
-- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
-- **Did you add tests for your changes?** — yes/no + which test files.
-- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
-- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
-- **Use of AI** — required. State that Claude Code was used and how (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
-
-Do not delete sections, do not reorder, do not strip the HTML comment hints — write the answer directly under each heading. If a section truly does not apply, write `n/a` under it.
+See **[REQUIRED: Pull request body template](#required-pull-request-body-template)** at the top of this file. Paste the template body verbatim and fill every section before calling `create_pull_request` / `gh pr create`.
