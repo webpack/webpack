@@ -63,7 +63,7 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 <meta name=\\"msapplication-square310x310logo\\" content=\\"09a1a1112c577c279435.png\\">
 <meta name=\\"msapplication-TileColor\\" content=\\"#da532c\\">
 <meta name=\\"msapplication-TileImage\\" content=\\"09a1a1112c577c279435.png\\">
-<meta name=\\"msapplication-config\\" content=\\"356ef95974ec6b7aec6b.xml\\">
+<meta name=\\"msapplication-config\\" content=\\"cdf6bf7956501ca5d4d6.xml\\">
 <meta name=\\"theme-color\\" content=\\"#ffffff\\">
 <meta content=\\"name=Check Order Status;action-uri=./orderStatus.aspx?src=IE9;icon-uri=./favicon.ico\\" name=\\"msapplication-task\\">
 
