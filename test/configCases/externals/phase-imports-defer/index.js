@@ -3,11 +3,10 @@
 const fs = require("fs");
 const path = require("path");
 
+const bundle = path.resolve(__dirname, "bundle.js");
+
 it("should generate a deferred runtime import for a sync external", () => {
-	const content = fs.readFileSync(
-		path.resolve(__dirname, "bundle.js"),
-		"utf-8"
-	);
+	const content = fs.readFileSync(bundle, "utf-8");
 
 	expect(content).toContain(
 		"/* deferred harmony import */ var ext_var_sync__WEBPACK_DEFERRED_IMPORTED_MODULE"
@@ -16,10 +15,7 @@ it("should generate a deferred runtime import for a sync external", () => {
 });
 
 it("should not defer an already-async external", () => {
-	const content = fs.readFileSync(
-		path.resolve(__dirname, "bundle.js"),
-		"utf-8"
-	);
+	const content = fs.readFileSync(bundle, "utf-8");
 
 	expect(content).toContain(
 		"/* harmony import */ var ext_promise_async__WEBPACK_IMPORTED_MODULE"
