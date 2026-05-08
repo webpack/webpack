@@ -471,6 +471,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -491,6 +492,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -511,6 +513,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "import",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -531,6 +534,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -551,6 +555,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "import",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -571,6 +576,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -591,6 +597,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -614,6 +621,7 @@ describe("snapshots", () => {
 		        ],
 		        "conditionNames": Array [
 		          "import",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
@@ -635,6 +643,7 @@ describe("snapshots", () => {
 		        "conditionNames": Array [
 		          "worker",
 		          "import",
+		          "module-sync",
 		          "module",
 		          "...",
 		        ],
