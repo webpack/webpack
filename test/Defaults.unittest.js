@@ -2348,6 +2348,7 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "dependency": /css-import-local-module/,
+			+         "exclude": /\\.module\\.\\w+$/i,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2356,6 +2357,7 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "dependency": /css-import-global-module/,
+			+         "exclude": /\\.module\\.\\w+$/i,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2924,8 +2926,7 @@ describe("snapshots", () => {
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2951,6 +2952,7 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "dependency": /css-import-local-module/,
+			+         "exclude": /\\.module\\.\\w+$/i,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -2959,6 +2961,7 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "dependency": /css-import-global-module/,
+			+         "exclude": /\\.module\\.\\w+$/i,
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -3004,6 +3007,8 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "html",
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -3085,6 +3090,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3112,11 +3120,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
