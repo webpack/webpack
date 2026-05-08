@@ -49,6 +49,12 @@ const config = {
 		"<rootDir>/node_modules"
 	],
 	testEnvironment: "./test/harness/patch-node-env.js",
+	testEnvironmentOptions: {
+		// Mirror Node.js's default condition set so package.json "exports"
+		// resolves identically to real Node.js (jest-environment-node defaults
+		// to ["node", "node-addons"], which drops "module-sync").
+		customExportConditions: ["node", "node-addons", "module-sync"]
+	},
 	snapshotResolver: "./test/harness/snapshot/resolver.js",
 	coverageReporters: ["json"],
 	snapshotFormat: {

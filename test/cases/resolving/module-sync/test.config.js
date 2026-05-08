@@ -1,51 +1,14 @@
 "use strict";
 
-const cp = require("child_process");
+const Module = require("module");
 const path = require("path");
 
-const fixtures = [
-	"module-sync-only",
-	"module-sync-first",
-	"import-require-first"
-];
+const nodeRequire = Module.createRequire(path.join(__dirname, "index.js"));
 
-// Run real Node.js in a child process (Jest patches Module.createRequire and
-// drops "module-sync" from the active condition set, so an in-process require
-// would not match Node.js behavior). cwd is the fixture directory so bare-
-// specifier import() resolves against its node_modules using Node.js's ESM
-// resolver — that activates the "import" condition rather than "require".
-const out = cp.execFileSync(
-	process.execPath,
-	[
-		"-e",
-		`
-		"use strict";
-		const Module = require("module");
-		const r = Module.createRequire(${JSON.stringify(
-			path.join(__dirname, "index.js")
-		)});
-		const fixtures = ${JSON.stringify(fixtures)};
-		const requireResults = {};
-		for (const name of fixtures) requireResults[name] = r(name);
-		Promise.all(
-			fixtures.map((name) =>
-				import(name).then((mod) => [name, mod.default])
-			)
-		).then((entries) => {
-			process.stdout.write(JSON.stringify({
-				require: requireResults,
-				import: Object.fromEntries(entries)
-			}));
-		});
-		`
-	],
-	{
-		cwd: __dirname,
-		stdio: ["ignore", "pipe", "inherit"],
-		encoding: "utf8"
-	}
-);
-const nodeResults = JSON.parse(out);
+// Bare specifiers in this dynamic import resolve relative to test.config.js,
+// which sits in the fixture directory — so Node.js's ESM resolver walks the
+// fixture's node_modules and the "import" condition is what's active.
+const nodeImport = (request) => import(request);
 
 module.exports = {
 	findBundle(_, options) {
@@ -53,7 +16,7 @@ module.exports = {
 		return `./bundle${ext}`;
 	},
 	moduleScope(scope) {
-		scope.nodeRequireResults = nodeResults.require;
-		scope.nodeImportResults = nodeResults.import;
+		scope.nodeRequire = nodeRequire;
+		scope.nodeImport = nodeImport;
 	}
 };
