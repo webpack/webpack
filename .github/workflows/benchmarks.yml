@@ -61,8 +61,6 @@ jobs:
   benchmark-memory:
     strategy:
       fail-fast: false
-      matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -100,4 +98,3 @@ jobs:
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
-          SHARD: ${{ matrix.shard }}

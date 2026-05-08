@@ -785,8 +785,64 @@ const withCodSpeed = async (bench) => {
 		 */
 		const finalizeSyncRun = () => finalizeBenchRun();
 
+		/**
+		 * Run a task's full lifecycle once with no instrumentation. Used as a
+		 * global prime pass for memory mode so module loads, V8 hidden-class
+		 * transitions, and inline-cache fills happen before any measurement —
+		 * removing the cross-task order-dependence that causes the same
+		 * benchmark to report different allocation counts across PRs.
+		 * @param {Task} task task
+		 * @returns {Promise<void>}
+		 */
+		const primeTaskAsync = async (task) => {
+			const meta = uriMap.get(task.name);
+			if (!meta) return;
+			await meta.options?.beforeAll?.call(task, "warmup");
+			try {
+				await iterationAsync(task, task.name);
+			} finally {
+				await meta.options?.afterAll?.call(task, "warmup");
+			}
+		};
+
+		/**
+		 * Sync version of primeTaskAsync.
+		 * @param {Task} task task
+		 */
+		const primeTaskSync = (task) => {
+			const meta = uriMap.get(task.name);
+			if (!meta) return;
+			meta.options?.beforeAll?.call(task, "warmup");
+			try {
+				iteration(task, task.name);
+			} finally {
+				meta.options?.afterAll?.call(task, "warmup");
+			}
+		};
+
 		bench.run = async () => {
 			setupBenchRun();
+
+			if (codspeedRunnerMode === "memory") {
+				console.log(
+					`[CodSpeed] memory mode: priming ${bench.tasks.length} tasks before measurement.`
+				);
+				for (const task of bench.tasks) {
+					await primeTaskAsync(task);
+				}
+				// Drain heap accumulated by the prime pass so it can't leak
+				// into the first measurement.
+				for (let i = 0; i < 4; i++) {
+					global.gc?.();
+					await new Promise((resolve) => {
+						queueMicrotask(() => resolve(undefined));
+					});
+				}
+				await new Promise((resolve) => {
+					setImmediate(resolve);
+				});
+				global.gc?.();
+			}
 
 			for (const task of bench.tasks) {
 				const uri = getTaskUri(bench, task.name, rootCallingFile);
@@ -798,6 +854,18 @@ const withCodSpeed = async (bench) => {
 
 		bench.runSync = () => {
 			setupBenchRun();
+
+			if (codspeedRunnerMode === "memory") {
+				console.log(
+					`[CodSpeed] memory mode: priming ${bench.tasks.length} tasks before measurement.`
+				);
+				for (const task of bench.tasks) {
+					primeTaskSync(task);
+				}
+				for (let i = 0; i < 4; i++) {
+					global.gc?.();
+				}
+			}
 
 			for (const task of bench.tasks) {
 				const uri = getTaskUri(bench, task.name, rootCallingFile);
