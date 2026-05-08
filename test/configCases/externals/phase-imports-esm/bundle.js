@@ -15,6 +15,12 @@ import source miSrcDefault from "ext-mi-source-static";
 const miImportDefer = import.defer("ext-mi-defer-dynamic");
 const miImportSource = import.source("ext-mi-source-dynamic");
 
+// Same external imported twice with two different phases — these must NOT
+// collapse to a single ExternalModule with a single phase, otherwise one of
+// the phase keywords would silently disappear from the emitted bundle.
+import defer * as bothDeferNs from "ext-both-phases";
+import source bothSrcDefault from "ext-both-phases";
+
 // Side-effect uses so no binding is tree-shaken away.
 console.log(
 	modDeferNs.x,
@@ -24,5 +30,7 @@ console.log(
 	miDeferNs.x,
 	miSrcDefault,
 	miImportDefer,
-	miImportSource
+	miImportSource,
+	bothDeferNs.x,
+	bothSrcDefault
 );

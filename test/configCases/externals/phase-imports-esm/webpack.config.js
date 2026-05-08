@@ -38,6 +38,9 @@ module.exports = {
 			"ext-mi-source-static": "module-import ext-mi-source-static",
 			"ext-mi-defer-dynamic": "module-import ext-mi-defer-dynamic",
 			"ext-mi-source-dynamic": "module-import ext-mi-source-dynamic",
+			// Same request, imported with two different phases: must produce
+			// two distinct ExternalModule instances.
+			"ext-both-phases": "module ext-both-phases",
 			fs: "commonjs fs",
 			path: "commonjs path"
 		}
