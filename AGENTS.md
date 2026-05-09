@@ -102,7 +102,7 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
-After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs. The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) *are* editable.
+After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs. The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
 
 ## Adding or renaming a webpack option
 
