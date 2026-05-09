@@ -37,6 +37,23 @@
 	color: fromB;
 }
 
+/*
+ * Same local name imported from two different modules — references between
+ * the two imports resolve through the first import (still in scope), and
+ * references after the second import resolve through the second.
+ */
+@value sharedColor from "./colors-a.module.css";
+
+.import-shared-a {
+	color: sharedColor;
+}
+
+@value sharedColor from "./colors-b.module.css";
+
+.import-shared-b {
+	color: sharedColor;
+}
+
 /* Local @value followed by import — the imported value wins afterwards. */
 @value baseColor: pink;
 
