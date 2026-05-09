@@ -209,7 +209,7 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 	--vars_module_css-my-var-u1: red;
 }
 
-.vars_module_css-my-var-u1 {
+.vars_module_css-my-var-u1-cls {
 	color: red;
 }
 
@@ -375,27 +375,27 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 }
 
 
-.styles_module_css-my-selector-value { value: my-selector-value; }
+.styles_module_css-selector-cls { value: my-selector-value; }
 
 
-.other-selector-value { value: other-selector-value; }
+.styles_module_css-other-selector-cls { value: other-selector-value; }
 
 
-.other-selector-value { value: other-selector-value; }
+.styles_module_css-alias-other-selector-cls { value: other-selector-value; }
 
 
-.reexport-selector-value { value: reexport-selector-value; }
+.styles_module_css-reexport-selector-cls { value: reexport-selector-value; }
 
 
-.reexport-selector-value { value: reexport-selector-value; }
-
-
-
-.#c1c2c3 { background-color: #c1c2c3; }
+.styles_module_css-reexport-selector-alias-cls { value: reexport-selector-value; }
 
 
 
-.#e74c3c { background-color: #e74c3c; }
+.styles_module_css-third-cls { background-color: #c1c2c3; }
+
+
+
+.styles_module_css-rename-3-cls { background-color: #e74c3c; }
 
 .styles_module_css-local-class {
 	color: white;
@@ -457,6 +457,7 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 Object {
   "--my-custom-property-1": "--color",
   "alias-other-selector": "other-selector-value",
+  "alias-other-selector-cls": "styles_module_css-alias-other-selector-cls",
   "blue": "#3498db",
   "button-color-red": "styles_module_css-button-color-red",
   "button-complex": "styles_module_css-button-complex styles_module_css-u-1/2 styles_module_css-local-composes styles_module_css-composes-here bar styles_module_css-button-color-red button-global-font-size button_module_css-base atoms_module_css-display-flex atoms_module_css-align-center atoms_module_css-padding-box atoms_module_css-interactive atoms-extra_module_css-transition reset_module_css-reset-display atoms-extra_module_css-cursor",
@@ -509,18 +510,24 @@ Object {
   "my-var-u1": "--vars_module_css-my-var-u1",
   "only-reexport": "styles_module_css-only-reexport classes-deep_module_css-deep-nested-c",
   "other-selector": "other-selector-value",
+  "other-selector-cls": "styles_module_css-other-selector-cls",
   "primary": "#3498db",
   "reexport": "classes_module_css-localName",
   "reexport-my-var-u1": "--vars_module_css-my-var-u1",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
+  "reexport-selector-alias-cls": "styles_module_css-reexport-selector-alias-cls",
+  "reexport-selector-cls": "styles_module_css-reexport-selector-cls",
   "rename": "#3498db",
   "rename-2": "#e74c3c",
   "rename-3": "#e74c3c",
+  "rename-3-cls": "styles_module_css-rename-3-cls",
   "selector": "my-selector-value",
+  "selector-cls": "styles_module_css-selector-cls",
   "shared": "--shared-custom-properties_module_css-shared",
   "the-same-classes-in-composes-but-different-modules": "styles_module_css-the-same-classes-in-composes-but-different-modules classes_module_css-localName classes-the-same_module_css-localName",
   "third": "#c1c2c3",
+  "third-cls": "styles_module_css-third-cls",
   "u-1/2": "styles_module_css-u-1/2",
 }
 `;
@@ -734,7 +741,7 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 	--KP4m31: red;
 }
 
-.KP4m31 {
+._8Lb4UB {
 	color: red;
 }
 
@@ -900,27 +907,27 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 }
 
 
-.BBfiX6 { value: my-selector-value; }
+.J5Mx9l { value: my-selector-value; }
 
 
-.other-selector-value { value: other-selector-value; }
+.U4BdYS { value: other-selector-value; }
 
 
-.other-selector-value { value: other-selector-value; }
+.FjIP9r { value: other-selector-value; }
 
 
-.reexport-selector-value { value: reexport-selector-value; }
+.icm7Yc { value: reexport-selector-value; }
 
 
-.reexport-selector-value { value: reexport-selector-value; }
-
-
-
-.#c1c2c3 { background-color: #c1c2c3; }
+.oX3_EH { value: reexport-selector-value; }
 
 
 
-.#e74c3c { background-color: #e74c3c; }
+.bih2-u { background-color: #c1c2c3; }
+
+
+
+.leTXpz { background-color: #e74c3c; }
 
 .gAniDw {
 	color: white;
@@ -982,6 +989,7 @@ exports[`ConfigCacheTestCases css reexport exported tests should work with asset
 Object {
   "--my-custom-property-1": "--color",
   "alias-other-selector": "other-selector-value",
+  "alias-other-selector-cls": "FjIP9r",
   "blue": "#3498db",
   "button-color-red": "Nk2MvV",
   "button-complex": "m8FtUN FVlv2P vupji7 vTFlpN bar Nk2MvV button-global-font-size IRudRu _4hzrjS _3N7KUJ FOqO9N h1WMpX uTFqYl r7veIg _G2W-m",
@@ -1034,18 +1042,24 @@ Object {
   "my-var-u1": "--KP4m31",
   "only-reexport": "CiSiqk h7hEph",
   "other-selector": "other-selector-value",
+  "other-selector-cls": "U4BdYS",
   "primary": "#3498db",
   "reexport": "sQL78s",
   "reexport-my-var-u1": "--KP4m31",
   "reexport-selector": "reexport-selector-value",
   "reexport-selector-alias": "reexport-selector-value",
+  "reexport-selector-alias-cls": "oX3_EH",
+  "reexport-selector-cls": "icm7Yc",
   "rename": "#3498db",
   "rename-2": "#e74c3c",
   "rename-3": "#e74c3c",
+  "rename-3-cls": "leTXpz",
   "selector": "my-selector-value",
+  "selector-cls": "J5Mx9l",
   "shared": "--qX-CSb",
   "the-same-classes-in-composes-but-different-modules": "u0iYW_ sQL78s MClDz9",
   "third": "#c1c2c3",
+  "third-cls": "bih2-u",
   "u-1/2": "FVlv2P",
 }
 `;

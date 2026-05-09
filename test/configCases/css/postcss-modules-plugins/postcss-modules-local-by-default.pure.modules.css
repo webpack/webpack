@@ -10,7 +10,7 @@
 .foo { animation: rotate 1s, global(spin) 3s, local(fly) 6s; }
 
 /* compile in pure mode */
-:global(.foo).bar, [type="radio"] ~ .label, :not(.foo), #bar { a_value: some-value; }
+:global(.foo).bar, [type="radio"] ~ .label, :not(.foo), #bar-id { a_value: some-value; }
 
 /* throw on not pure selector (global class) */
 :global(.foo) { a_value: some-value; }

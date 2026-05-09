@@ -46,8 +46,8 @@
   color: aliceblue;
 }
 
-/* matches the element with id="#fake-id" */
-#\#fake-id {
+/* matches the element with id="#fake-id-x" */
+#\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -56,8 +56,8 @@
   color: azure;
 }
 
-/* matches the element with id="©" */
-#© {
+/* matches the element with id="©id" */
+#©id {
   color: black;
 }
 

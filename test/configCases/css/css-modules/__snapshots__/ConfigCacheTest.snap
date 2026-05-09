@@ -134,19 +134,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-colorValue-cls {
 	color: red;
 }
 
 
 
-#my-app-at-rule-value_module_css-red {
+#my-app-at-rule-value_module_css-colorValue-v1-id {
 	color: red;
 }
 
 
 
-.my-app-at-rule-value_module_css-red > .my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-colorValue-v2-cls > .my-app-at-rule-value_module_css-colorValue-v2-cls {
 	color: red;
 }
 
@@ -241,7 +241,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-override-cls {
 	color: red;
 }
 
@@ -256,13 +256,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /* test */red/* test */;
 }
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /* test *//* test */red/* test */;
 }
 
@@ -304,7 +304,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /*
 	multiline
 	comment
@@ -340,7 +340,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	--my-app-var-function-export_modules_css-main-bg-color: red;
 }
 
-.my-app-var-function-export_modules_css-my-var-u1 {
+.my-app-var-function-export_modules_css-my-var-u1-cls {
 	color: red;
 }
 
@@ -483,7 +483,7 @@ div {
 	--my-app-var-function_module_css-not-override-class: red;
 }
 
-.my-app-var-function_module_css-not-override-class {
+.my-app-var-function_module_css-not-override-class-cls {
 	color: var(--my-app-var-function-export_modules_css-not-override-class)
 }
 
@@ -1069,7 +1069,7 @@ div {
 		}
 	}
 
-	@container my-app-style_module_css-foo {
+	@container my-app-style_module_css-foo-c {
 		background: red;
 
 		.my-app-style_module_css-nested-layer {
@@ -1213,10 +1213,10 @@ div {
 }
 
 :root {
-	--my-app-style_module_css-test: dark;
+	--my-app-style_module_css-test-prop: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--my-app-style_module_css-test)) {
+@media screen and (prefers-color-scheme: var(--my-app-style_module_css-test-prop)) {
 	.my-app-style_module_css-baz {
 		color: white;
 	}
@@ -1239,15 +1239,15 @@ div {
 		my-app-style_module_css-foo var(--my-app-style_module_css-animation-name) 3s,
 		var(--my-app-style_module_css-animation-name) 3s,
 		3s linear 1s infinite running my-app-style_module_css-slidein,
-		3s linear env(foo, var(--my-app-style_module_css-baz)) infinite running my-app-style_module_css-slidein;
+		3s linear env(foo, var(--my-app-style_module_css-baz-prop)) infinite running my-app-style_module_css-slidein;
 }
 
 :root {
-	--my-app-style_module_css-baz: 10px;
+	--my-app-style_module_css-baz-prop: 10px;
 }
 
 .my-app-style_module_css-class {
-	bar: env(foo, var(--my-app-style_module_css-baz));
+	bar: env(foo, var(--my-app-style_module_css-baz-prop));
 }
 
 .global-foo, .my-app-style_module_css-bar {
@@ -1288,14 +1288,14 @@ div {
 }
 
 :root {
-	--my-app-style_module_css-foo: red;
+	--my-app-style_module_css-foo-prop: red;
 }
 
 .again-again-global {
-	color: var(--foo);
+	color: var(--foo-prop);
 
 	.again-again-global {
-		color: var(--foo);
+		color: var(--foo-prop);
 	}
 }
 
@@ -1312,7 +1312,7 @@ div {
 	}
 }
 
-@unknown var(--my-app-style_module_css-foo) {
+@unknown var(--my-app-style_module_css-foo-prop) {
 	color: red;
 }
 
@@ -1565,7 +1565,7 @@ div {
 	}
 }
 
-@container my-app-style_module_css-card (width > 400px), style(--my-app-style_module_css-responsive: true), scroll-state(stuck: top) {
+@container my-app-style_module_css-card-c (width > 400px), style(--my-app-style_module_css-responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -1633,8 +1633,8 @@ div {
 	font-palette: --my-app-style_module_css-identifier;
 }
 
-@keyframes my-app-style_module_css-foo { /* ... */ }
-@keyframes my-app-style_module_css-foo { /* ... */ }
+@keyframes my-app-style_module_css-foo-kf { /* ... */ }
+@keyframes my-app-style_module_css-foo-kf-str { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -1799,10 +1799,10 @@ div {
 	}
 }
 
-#my-app-style_module_css-test {
+#my-app-style_module_css-test-id {
 	c: 1;
 
-	#my-app-style_module_css-test {
+	#my-app-style_module_css-test-id {
 		c: 2;
 	}
 }
@@ -1934,17 +1934,17 @@ div {
 	background-color-3: var(/**comment**/--my-app-style_module_css-item-color/**comment**/);
 }
 
-@keyframes/**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**//**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ /**test**/ my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**/ /**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes /**test**//**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**//**test**/my-app-style_module_css-foo { /* ... */ }
-@keyframes/**test**//**test**/my-app-style_module_css-foo/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ my-app-style_module_css-foo /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**/my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes/**test**/ my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**/ my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/ my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/ my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/my-app-style_module_css-foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/my-app-style_module_css-foo-kf2/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ my-app-style_module_css-foo-kf2 /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/my-app-style_module_css-class {
 	background: red;
@@ -1956,19 +1956,19 @@ div {
 
 .my-app-style_module_css-var {
 	--my-app-style_module_css-main-color: black;
-	--my-app-style_module_css-FOO: 10px;
-	--my-app-style_module_css-foo: 10px;
-	--my-app-style_module_css-bar: calc(var(--my-app-style_module_css-foo) + 10px);
+	--my-app-style_module_css-FOO-prop: 10px;
+	--my-app-style_module_css-foo-prop: 10px;
+	--my-app-style_module_css-bar-prop: calc(var(--my-app-style_module_css-foo-prop) + 10px);
 	--my-app-style_module_css-accent-background: linear-gradient(to top, var(--my-app-style_module_css-main-color), white);
 	--my-app-style_module_css-external-link: \\"test\\";
 	--my-app-style_module_css-custom-prop: yellow;
 	--my-app-style_module_css-default-value: red;
 	--my-app-style_module_css-main-bg-color: red;
 	--my-app-style_module_css-backup-bg-color: black;
-	-foo: calc(var(--my-app-style_module_css-bar) + 10px);
+	-foo: calc(var(--my-app-style_module_css-bar-prop) + 10px);
 	var: var(--my-app-style_module_css-main-color);
-	var1: var(--my-app-style_module_css-foo);
-	var2: var(--my-app-style_module_css-FOO);
+	var1: var(--my-app-style_module_css-foo-prop);
+	var2: var(--my-app-style_module_css-FOO-prop);
 	content: \\" (\\" var(--my-app-style_module_css-external-link) \\")\\";
 	var3: var(--my-app-style_module_css-main-color, blue);
 	var4: var(--my-app-style_module_css-custom-prop,);
@@ -1980,8 +1980,8 @@ div {
 }
 
 .my-app-style_module_css-var-order {
-	background-color: var(--my-app-style_module_css-test);
-	--my-app-style_module_css-test: red;
+	background-color: var(--my-app-style_module_css-test-prop);
+	--my-app-style_module_css-test-prop: red;
 }
 
 .my-app-style_module_css-className {
@@ -2051,10 +2051,10 @@ div {
 	width: --my-app-style_module_css-max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --my-app-style_module_css-anim-1s(--my-app-style_module_css-animation, --my-app-style_module_css-count) {
+@function --my-app-style_module_css-anim-1s(--my-app-style_module_css-animation-prop, --my-app-style_module_css-count) {
 	--my-app-style_module_css-duration: 1s;
 	--my-app-style_module_css-easing: linear;
-	result: var(--my-app-style_module_css-animation) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
+	result: var(--my-app-style_module_css-animation-prop) var(--my-app-style_module_css-duration) var(--my-app-style_module_css-count) var(--my-app-style_module_css-easing);
 }
 
 div {
@@ -2180,7 +2180,7 @@ section {
 	}
 }
 
-@keyframes my-app-style_module_css-broken;
+@keyframes my-app-style_module_css-broken-kf;
 
 .my-app-style_module_css-class-name-after-broken-keyframes {
 	color: red;
@@ -2217,16 +2217,16 @@ section {
 .my-app-style_module_css-class{.my-app-style_module_css-class{}}
 .my-app-style_module_css-class{color:#fff5f5}
 .my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
-.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--my-app-style_module_css-foo-prop:#fff5f5}
+.my-app-style_module_css-class{--my-app-style_module_css-foo-prop:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--my-app-style_module_css-foo-prop:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--my-app-style_module_css-foo-prop:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--my-app-style_module_css-foo-prop:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo-prop:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
-.my-app-style_module_css-class{--my-app-style_module_css-baz:[1, \\"string\\", .class, #f1f1f1, #id]}
-.my-app-style_module_css-class{--my-app-style_module_css-baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+.my-app-style_module_css-class{--my-app-style_module_css-bar-prop:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--my-app-style_module_css-baz-prop:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--my-app-style_module_css-baz-prop:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -2989,19 +2989,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.colorValue-cls {
 	color: red;
 }
 
 
 
-#colorValue-v1 {
+#colorValue-v1-id {
 	color: red;
 }
 
 
 
-.red > .red {
+.colorValue-v2-cls > .colorValue-v2-cls {
 	color: red;
 }
 
@@ -3096,7 +3096,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.override-cls {
 	color: red;
 }
 
@@ -3111,13 +3111,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.color {
+.color-cls {
 	color: /* test */red/* test */;
 }
 
 
 
-.color {
+.color-cls {
 	color: /* test *//* test */red/* test */;
 }
 
@@ -3159,7 +3159,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.color {
+.color-cls {
 	color: /*
 	multiline
 	comment
@@ -3322,7 +3322,7 @@ div {
 	--not-override-class: red;
 }
 
-.not-override-class {
+.not-override-class-cls {
 	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
 }
 
@@ -3861,7 +3861,7 @@ div {
 		}
 	}
 
-	@container foo {
+	@container foo-c {
 		background: red;
 
 		.nested-layer {
@@ -4005,10 +4005,10 @@ div {
 }
 
 :root {
-	--test: dark;
+	--test-prop: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--test)) {
+@media screen and (prefers-color-scheme: var(--test-prop)) {
 	.baz {
 		color: white;
 	}
@@ -4031,15 +4031,15 @@ div {
 		foo var(--animation-name) 3s,
 		var(--animation-name) 3s,
 		3s linear 1s infinite running slidein,
-		3s linear env(foo, var(--baz)) infinite running slidein;
+		3s linear env(foo, var(--baz-prop)) infinite running slidein;
 }
 
 :root {
-	--baz: 10px;
+	--baz-prop: 10px;
 }
 
 .class {
-	bar: env(foo, var(--baz));
+	bar: env(foo, var(--baz-prop));
 }
 
 .global-foo, .my-app-style_module_css-bar {
@@ -4080,14 +4080,14 @@ div {
 }
 
 :root {
-	--foo: red;
+	--foo-prop: red;
 }
 
 .again-again-global {
-	color: var(--foo);
+	color: var(--foo-prop);
 
 	.again-again-global {
-		color: var(--foo);
+		color: var(--foo-prop);
 	}
 }
 
@@ -4104,7 +4104,7 @@ div {
 	}
 }
 
-@unknown var(--foo) {
+@unknown var(--foo-prop) {
 	color: red;
 }
 
@@ -4357,7 +4357,7 @@ div {
 	}
 }
 
-@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+@container card-c (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -4425,8 +4425,8 @@ div {
 	font-palette: --identifier;
 }
 
-@keyframes foo { /* ... */ }
-@keyframes \\"foo\\" { /* ... */ }
+@keyframes foo-kf { /* ... */ }
+@keyframes \\"foo-kf-str\\" { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -4591,10 +4591,10 @@ div {
 	}
 }
 
-#test {
+#test-id {
 	c: 1;
 
-	#test {
+	#test-id {
 		c: 2;
 	}
 }
@@ -4726,17 +4726,17 @@ div {
 	background-color-3: var(/**comment**/--item-color/**comment**/);
 }
 
-@keyframes/**test**/foo { /* ... */ }
-@keyframes /**test**/foo { /* ... */ }
-@keyframes/**test**/ foo { /* ... */ }
-@keyframes /**test**/ foo { /* ... */ }
-@keyframes /**test**//**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/foo { /* ... */ }
-@keyframes /**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/class {
 	background: red;
@@ -4748,19 +4748,19 @@ div {
 
 .var {
 	--main-color: black;
-	--FOO: 10px;
-	--foo: 10px;
-	--bar: calc(var(--foo) + 10px);
+	--FOO-prop: 10px;
+	--foo-prop: 10px;
+	--bar-prop: calc(var(--foo-prop) + 10px);
 	--accent-background: linear-gradient(to top, var(--main-color), white);
 	--external-link: \\"test\\";
 	--custom-prop: yellow;
 	--default-value: red;
 	--main-bg-color: red;
 	--backup-bg-color: black;
-	-foo: calc(var(--bar) + 10px);
+	-foo: calc(var(--bar-prop) + 10px);
 	var: var(--main-color);
-	var1: var(--foo);
-	var2: var(--FOO);
+	var1: var(--foo-prop);
+	var2: var(--FOO-prop);
 	content: \\" (\\" var(--external-link) \\")\\";
 	var3: var(--main-color, blue);
 	var4: var(--custom-prop,);
@@ -4772,8 +4772,8 @@ div {
 }
 
 .var-order {
-	background-color: var(--test);
-	--test: red;
+	background-color: var(--test-prop);
+	--test-prop: red;
 }
 
 .className {
@@ -4866,10 +4866,10 @@ div {
 	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--animation, --count) {
+@function --anim-1s(--animation-prop, --count) {
 	--duration: 1s;
 	--easing: linear;
-	result: var(--animation) var(--duration) var(--count) var(--easing);
+	result: var(--animation-prop) var(--duration) var(--count) var(--easing);
 }
 
 div {
@@ -4995,7 +4995,7 @@ section {
 	}
 }
 
-@keyframes broken;
+@keyframes broken-kf;
 
 .class-name-after-broken-keyframes {
 	color: red;
@@ -5032,16 +5032,16 @@ section {
 .class{.class{}}
 .class{color:#fff5f5}
 .class{.class{color:#f1f1f1}}
-.class{--foo:#fff5f5}
-.class{--foo:#fff5f5;color:#f1f1f1}
-.class{--foo:#fff5f5;color:#f1f1f1;}
-.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
-.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
-.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo-prop:#fff5f5}
+.class{--foo-prop:#fff5f5;color:#f1f1f1}
+.class{--foo-prop:#fff5f5;color:#f1f1f1;}
+.class{--foo-prop:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo-prop:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo-prop:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
-.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
-.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+.class{--bar-prop:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz-prop:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz-prop:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -5717,19 +5717,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.colorValue-cls {
 	color: red;
 }
 
 
 
-#colorValue-v1 {
+#colorValue-v1-id {
 	color: red;
 }
 
 
 
-.red > .red {
+.colorValue-v2-cls > .colorValue-v2-cls {
 	color: red;
 }
 
@@ -5824,7 +5824,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.override-cls {
 	color: red;
 }
 
@@ -5839,13 +5839,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.color {
+.color-cls {
 	color: /* test */red/* test */;
 }
 
 
 
-.color {
+.color-cls {
 	color: /* test *//* test */red/* test */;
 }
 
@@ -5887,7 +5887,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.color {
+.color-cls {
 	color: /*
 	multiline
 	comment
@@ -6050,7 +6050,7 @@ div {
 	--not-override-class: red;
 }
 
-.not-override-class {
+.not-override-class-cls {
 	color: var(--not-override-class from \\"./var-function-export.modules.css\\")
 }
 
@@ -6589,7 +6589,7 @@ div {
 		}
 	}
 
-	@container foo {
+	@container foo-c {
 		background: red;
 
 		.nested-layer {
@@ -6733,10 +6733,10 @@ div {
 }
 
 :root {
-	--test: dark;
+	--test-prop: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--test)) {
+@media screen and (prefers-color-scheme: var(--test-prop)) {
 	.baz {
 		color: white;
 	}
@@ -6759,15 +6759,15 @@ div {
 		foo var(--animation-name) 3s,
 		var(--animation-name) 3s,
 		3s linear 1s infinite running slidein,
-		3s linear env(foo, var(--baz)) infinite running slidein;
+		3s linear env(foo, var(--baz-prop)) infinite running slidein;
 }
 
 :root {
-	--baz: 10px;
+	--baz-prop: 10px;
 }
 
 .class {
-	bar: env(foo, var(--baz));
+	bar: env(foo, var(--baz-prop));
 }
 
 .global-foo, .ueKKku {
@@ -6808,14 +6808,14 @@ div {
 }
 
 :root {
-	--foo: red;
+	--foo-prop: red;
 }
 
 .again-again-global {
-	color: var(--foo);
+	color: var(--foo-prop);
 
 	.again-again-global {
-		color: var(--foo);
+		color: var(--foo-prop);
 	}
 }
 
@@ -6832,7 +6832,7 @@ div {
 	}
 }
 
-@unknown var(--foo) {
+@unknown var(--foo-prop) {
 	color: red;
 }
 
@@ -7085,7 +7085,7 @@ div {
 	}
 }
 
-@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+@container card-c (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -7153,8 +7153,8 @@ div {
 	font-palette: --identifier;
 }
 
-@keyframes foo { /* ... */ }
-@keyframes \\"foo\\" { /* ... */ }
+@keyframes foo-kf { /* ... */ }
+@keyframes \\"foo-kf-str\\" { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -7319,10 +7319,10 @@ div {
 	}
 }
 
-#test {
+#test-id {
 	c: 1;
 
-	#test {
+	#test-id {
 		c: 2;
 	}
 }
@@ -7454,17 +7454,17 @@ div {
 	background-color-3: var(/**comment**/--item-color/**comment**/);
 }
 
-@keyframes/**test**/foo { /* ... */ }
-@keyframes /**test**/foo { /* ... */ }
-@keyframes/**test**/ foo { /* ... */ }
-@keyframes /**test**/ foo { /* ... */ }
-@keyframes /**test**//**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/foo { /* ... */ }
-@keyframes /**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/class {
 	background: red;
@@ -7476,19 +7476,19 @@ div {
 
 .var {
 	--main-color: black;
-	--FOO: 10px;
-	--foo: 10px;
-	--bar: calc(var(--foo) + 10px);
+	--FOO-prop: 10px;
+	--foo-prop: 10px;
+	--bar-prop: calc(var(--foo-prop) + 10px);
 	--accent-background: linear-gradient(to top, var(--main-color), white);
 	--external-link: \\"test\\";
 	--custom-prop: yellow;
 	--default-value: red;
 	--main-bg-color: red;
 	--backup-bg-color: black;
-	-foo: calc(var(--bar) + 10px);
+	-foo: calc(var(--bar-prop) + 10px);
 	var: var(--main-color);
-	var1: var(--foo);
-	var2: var(--FOO);
+	var1: var(--foo-prop);
+	var2: var(--FOO-prop);
 	content: \\" (\\" var(--external-link) \\")\\";
 	var3: var(--main-color, blue);
 	var4: var(--custom-prop,);
@@ -7500,8 +7500,8 @@ div {
 }
 
 .var-order {
-	background-color: var(--test);
-	--test: red;
+	background-color: var(--test-prop);
+	--test-prop: red;
 }
 
 .className {
@@ -7594,10 +7594,10 @@ div {
 	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--animation, --count) {
+@function --anim-1s(--animation-prop, --count) {
 	--duration: 1s;
 	--easing: linear;
-	result: var(--animation) var(--duration) var(--count) var(--easing);
+	result: var(--animation-prop) var(--duration) var(--count) var(--easing);
 }
 
 div {
@@ -7723,7 +7723,7 @@ section {
 	}
 }
 
-@keyframes broken;
+@keyframes broken-kf;
 
 .class-name-after-broken-keyframes {
 	color: red;
@@ -7760,16 +7760,16 @@ section {
 .class{.class{}}
 .class{color:#fff5f5}
 .class{.class{color:#f1f1f1}}
-.class{--foo:#fff5f5}
-.class{--foo:#fff5f5;color:#f1f1f1}
-.class{--foo:#fff5f5;color:#f1f1f1;}
-.class{--foo:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
-.class{--foo:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
-.class{.class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+.class{--foo-prop:#fff5f5}
+.class{--foo-prop:#fff5f5;color:#f1f1f1}
+.class{--foo-prop:#fff5f5;color:#f1f1f1;}
+.class{--foo-prop:#fff5f5;color:#f1f1f1;.class{color:#f1f1f1}}
+.class{--foo-prop:#fff5f5;.class{color:#f1f1f1}color:#f1f1f1;}
+.class{.class{color:#f1f1f1}--foo-prop:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.class{--bar:{1, 'string', .class, #f1f1f1, #id}}
-.class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
-.class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+.class{--bar-prop:{1, 'string', .class, #f1f1f1, #id}}
+.class{--baz-prop:[1, \\"string\\", .class, #f1f1f1, #id]}
+.class{--baz-prop:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -8454,19 +8454,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.elijK0 {
+.XCXqmj {
 	color: red;
 }
 
 
 
-#elijK0 {
+#_0HeG3p {
 	color: red;
 }
 
 
 
-.elijK0 > .elijK0 {
+.gEDBN5 > .gEDBN5 {
 	color: red;
 }
 
@@ -8561,7 +8561,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.elijK0 {
+.vHzJEl {
 	color: red;
 }
 
@@ -8576,13 +8576,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.nSXNVB {
+.fuagQv {
 	color: /* test */red/* test */;
 }
 
 
 
-.nSXNVB {
+.fuagQv {
 	color: /* test *//* test */red/* test */;
 }
 
@@ -8624,7 +8624,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.nSXNVB {
+.fuagQv {
 	color: /*
 	multiline
 	comment
@@ -8660,7 +8660,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	--dYeZZq: red;
 }
 
-._3Ux-sI {
+.Crfky2 {
 	color: red;
 }
 
@@ -8803,7 +8803,7 @@ div {
 	--_96YRqM: red;
 }
 
-._96YRqM {
+.HsZh7G {
 	color: var(--tPUA0N)
 }
 
@@ -9389,7 +9389,7 @@ div {
 		}
 	}
 
-	@container LXyTj4 {
+	@container cDtTrl {
 		background: red;
 
 		.Sin_15 {
@@ -9533,10 +9533,10 @@ div {
 }
 
 :root {
-	--OyMPmk: dark;
+	--L3Ue1K: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--OyMPmk)) {
+@media screen and (prefers-color-scheme: var(--L3Ue1K)) {
 	.v4rNLS {
 		color: white;
 	}
@@ -9559,15 +9559,15 @@ div {
 		LXyTj4 var(--q2l5qf) 3s,
 		var(--q2l5qf) 3s,
 		3s linear 1s infinite running AMud0z,
-		3s linear env(foo, var(--v4rNLS)) infinite running AMud0z;
+		3s linear env(foo, var(--KVzY59)) infinite running AMud0z;
 }
 
 :root {
-	--v4rNLS: 10px;
+	--KVzY59: 10px;
 }
 
 .Vx2ADA {
-	bar: env(foo, var(--v4rNLS));
+	bar: env(foo, var(--KVzY59));
 }
 
 .global-foo, .ueKKku {
@@ -9608,14 +9608,14 @@ div {
 }
 
 :root {
-	--LXyTj4: red;
+	--uFRHDF: red;
 }
 
 .again-again-global {
-	color: var(--foo);
+	color: var(--foo-prop);
 
 	.again-again-global {
-		color: var(--foo);
+		color: var(--foo-prop);
 	}
 }
 
@@ -9632,7 +9632,7 @@ div {
 	}
 }
 
-@unknown var(--LXyTj4) {
+@unknown var(--uFRHDF) {
 	color: red;
 }
 
@@ -9885,7 +9885,7 @@ div {
 	}
 }
 
-@container r3yzH0 (width > 400px), style(--jGz9MW: true), scroll-state(stuck: top) {
+@container RvD6Wm (width > 400px), style(--jGz9MW: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -9953,8 +9953,8 @@ div {
 	font-palette: --HKIucg;
 }
 
-@keyframes LXyTj4 { /* ... */ }
-@keyframes LXyTj4 { /* ... */ }
+@keyframes vhQPn0 { /* ... */ }
+@keyframes Yj7hcC { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -10119,10 +10119,10 @@ div {
 	}
 }
 
-#OyMPmk {
+#_4bz95g {
 	c: 1;
 
-	#OyMPmk {
+	#_4bz95g {
 		c: 2;
 	}
 }
@@ -10254,17 +10254,17 @@ div {
 	background-color-3: var(/**comment**/--E7I-GK/**comment**/);
 }
 
-@keyframes/**test**/LXyTj4 { /* ... */ }
-@keyframes /**test**/LXyTj4 { /* ... */ }
-@keyframes/**test**/ LXyTj4 { /* ... */ }
-@keyframes /**test**/ LXyTj4 { /* ... */ }
-@keyframes /**test**//**test**/ LXyTj4 { /* ... */ }
-@keyframes /**test**/ /**test**/ LXyTj4 { /* ... */ }
-@keyframes /**test**/ /**test**/LXyTj4 { /* ... */ }
-@keyframes /**test**//**test**/LXyTj4 { /* ... */ }
-@keyframes/**test**//**test**/LXyTj4 { /* ... */ }
-@keyframes/**test**//**test**/LXyTj4/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ LXyTj4 /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/EewzlP { /* ... */ }
+@keyframes /**test**/EewzlP { /* ... */ }
+@keyframes/**test**/ EewzlP { /* ... */ }
+@keyframes /**test**/ EewzlP { /* ... */ }
+@keyframes /**test**//**test**/ EewzlP { /* ... */ }
+@keyframes /**test**/ /**test**/ EewzlP { /* ... */ }
+@keyframes /**test**/ /**test**/EewzlP { /* ... */ }
+@keyframes /**test**//**test**/EewzlP { /* ... */ }
+@keyframes/**test**//**test**/EewzlP { /* ... */ }
+@keyframes/**test**//**test**/EewzlP/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ EewzlP /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/Vx2ADA {
 	background: red;
@@ -10276,19 +10276,19 @@ div {
 
 .vUySPm {
 	--Tn4rb2: black;
-	--xHd8kt: 10px;
-	--LXyTj4: 10px;
-	--ueKKku: calc(var(--LXyTj4) + 10px);
+	--fxpLAm: 10px;
+	--uFRHDF: 10px;
+	--NuQXSD: calc(var(--uFRHDF) + 10px);
 	--_8NggIH: linear-gradient(to top, var(--Tn4rb2), white);
 	--BAAHwR: \\"test\\";
 	--DU0JmL: yellow;
 	--dgphMa: red;
 	--KSHBQc: red;
 	--NfhiW3: black;
-	-foo: calc(var(--ueKKku) + 10px);
+	-foo: calc(var(--NuQXSD) + 10px);
 	var: var(--Tn4rb2);
-	var1: var(--LXyTj4);
-	var2: var(--xHd8kt);
+	var1: var(--uFRHDF);
+	var2: var(--fxpLAm);
 	content: \\" (\\" var(--BAAHwR) \\")\\";
 	var3: var(--Tn4rb2, blue);
 	var4: var(--DU0JmL,);
@@ -10300,8 +10300,8 @@ div {
 }
 
 .OUbvwN {
-	background-color: var(--OyMPmk);
-	--OyMPmk: red;
+	background-color: var(--L3Ue1K);
+	--L3Ue1K: red;
 }
 
 .A8YDR8 {
@@ -10371,10 +10371,10 @@ div {
 	width: --Zbzld7({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --vY2Qe3(--I7H8FK, --SKv8kz) {
+@function --vY2Qe3(--_5AmECH, --SKv8kz) {
 	---dC2HS: 1s;
 	--owuGkY: linear;
-	result: var(--I7H8FK) var(---dC2HS) var(--SKv8kz) var(--owuGkY);
+	result: var(--_5AmECH) var(---dC2HS) var(--SKv8kz) var(--owuGkY);
 }
 
 div {
@@ -10500,7 +10500,7 @@ section {
 	}
 }
 
-@keyframes PmzqEY;
+@keyframes Gw2M8P;
 
 .l-59kN {
 	color: red;
@@ -10537,16 +10537,16 @@ section {
 .Vx2ADA{.Vx2ADA{}}
 .Vx2ADA{color:#fff5f5}
 .Vx2ADA{.Vx2ADA{color:#f1f1f1}}
-.Vx2ADA{--LXyTj4:#fff5f5}
-.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1}
-.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;}
-.Vx2ADA{--LXyTj4:#fff5f5;color:#f1f1f1;.Vx2ADA{color:#f1f1f1}}
-.Vx2ADA{--LXyTj4:#fff5f5;.Vx2ADA{color:#f1f1f1}color:#f1f1f1;}
-.Vx2ADA{.Vx2ADA{color:#f1f1f1}--LXyTj4:#fff5f5;color:#f1f1f1;}
+.Vx2ADA{--uFRHDF:#fff5f5}
+.Vx2ADA{--uFRHDF:#fff5f5;color:#f1f1f1}
+.Vx2ADA{--uFRHDF:#fff5f5;color:#f1f1f1;}
+.Vx2ADA{--uFRHDF:#fff5f5;color:#f1f1f1;.Vx2ADA{color:#f1f1f1}}
+.Vx2ADA{--uFRHDF:#fff5f5;.Vx2ADA{color:#f1f1f1}color:#f1f1f1;}
+.Vx2ADA{.Vx2ADA{color:#f1f1f1}--uFRHDF:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.Vx2ADA{--ueKKku:{1, 'string', .Vx2ADA, #_5YNl5V, #NRwndY}}
-.Vx2ADA{--v4rNLS:[1, \\"string\\", .class, #f1f1f1, #id]}
-.Vx2ADA{--v4rNLS:(1, \\"string\\", .class, #f1f1f1, #id)}
+.Vx2ADA{--NuQXSD:{1, 'string', .Vx2ADA, #_5YNl5V, #NRwndY}}
+.Vx2ADA{--KVzY59:[1, \\"string\\", .class, #f1f1f1, #id]}
+.Vx2ADA{--KVzY59:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 
@@ -11380,6 +11380,7 @@ Object {
   "sticky-heading": "my-app-style_module_css-sticky-heading",
   "swop5c-local": "--my-app-style_module_css-swop5c-local",
   "test": "my-app-style_module_css-test",
+  "test-id": "my-app-style_module_css-test-id",
   "theme-dark": "my-app-style_module_css-theme-dark",
   "three": "my-app-style_module_css-three",
   "tipOnly": "my-app-style_module_css-tipOnly",
@@ -11472,19 +11473,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 
 
 
-.my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-colorValue-cls {
 	color: red;
 }
 
 
 
-#my-app-at-rule-value_module_css-red {
+#my-app-at-rule-value_module_css-colorValue-v1-id {
 	color: red;
 }
 
 
 
-.my-app-at-rule-value_module_css-red > .my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-colorValue-v2-cls > .my-app-at-rule-value_module_css-colorValue-v2-cls {
 	color: red;
 }
 
@@ -11579,7 +11580,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 
 
 
-.my-app-at-rule-value_module_css-red {
+.my-app-at-rule-value_module_css-override-cls {
 	color: red;
 }
 
@@ -11594,13 +11595,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /* test */red/* test */;
 }
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /* test *//* test */red/* test */;
 }
 
@@ -11642,7 +11643,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 
 
 
-.my-app-at-rule-value_module_css-color {
+.my-app-at-rule-value_module_css-color-cls {
 	color: /*
 	multiline
 	comment
@@ -11678,7 +11679,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 	--my-app-var-function-export_modules_css-main-bg-color: red;
 }
 
-.my-app-var-function-export_modules_css-my-var-u1 {
+.my-app-var-function-export_modules_css-my-var-u1-cls {
 	color: red;
 }
 
@@ -11821,7 +11822,7 @@ div {
 	--my-app-var-function_module_css-not-override-class: red;
 }
 
-.my-app-var-function_module_css-not-override-class {
+.my-app-var-function_module_css-not-override-class-cls {
 	color: var(--my-app-var-function-export_modules_css-not-override-class)
 }
 
@@ -12407,7 +12408,7 @@ div {
 		}
 	}
 
-	@container foo {
+	@container foo-c {
 		background: red;
 
 		.my-app-style_module_css-nested-layer {
@@ -12551,10 +12552,10 @@ div {
 }
 
 :root {
-	--test: dark;
+	--test-prop: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--test)) {
+@media screen and (prefers-color-scheme: var(--test-prop)) {
 	.my-app-style_module_css-baz {
 		color: white;
 	}
@@ -12577,15 +12578,15 @@ div {
 		foo var(--animation-name) 3s,
 		var(--animation-name) 3s,
 		3s linear 1s infinite running slidein,
-		3s linear env(foo, var(--baz)) infinite running slidein;
+		3s linear env(foo, var(--baz-prop)) infinite running slidein;
 }
 
 :root {
-	--baz: 10px;
+	--baz-prop: 10px;
 }
 
 .my-app-style_module_css-class {
-	bar: env(foo, var(--baz));
+	bar: env(foo, var(--baz-prop));
 }
 
 .global-foo, .my-app-style_module_css-bar {
@@ -12626,14 +12627,14 @@ div {
 }
 
 :root {
-	--foo: red;
+	--foo-prop: red;
 }
 
 .again-again-global {
-	color: var(--foo);
+	color: var(--foo-prop);
 
 	.again-again-global {
-		color: var(--foo);
+		color: var(--foo-prop);
 	}
 }
 
@@ -12650,7 +12651,7 @@ div {
 	}
 }
 
-@unknown var(--foo) {
+@unknown var(--foo-prop) {
 	color: red;
 }
 
@@ -12903,7 +12904,7 @@ div {
 	}
 }
 
-@container card (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
+@container card-c (width > 400px), style(--responsive: true), scroll-state(stuck: top) {
 	h2 {
 		font-size: 1.5em;
 	}
@@ -12971,8 +12972,8 @@ div {
 	font-palette: --identifier;
 }
 
-@keyframes foo { /* ... */ }
-@keyframes \\"foo\\" { /* ... */ }
+@keyframes foo-kf { /* ... */ }
+@keyframes \\"foo-kf-str\\" { /* ... */ }
 @keyframes { /* ... */ }
 @keyframes{ /* ... */ }
 
@@ -13137,10 +13138,10 @@ div {
 	}
 }
 
-#my-app-style_module_css-test {
+#my-app-style_module_css-test-id {
 	c: 1;
 
-	#my-app-style_module_css-test {
+	#my-app-style_module_css-test-id {
 		c: 2;
 	}
 }
@@ -13272,17 +13273,17 @@ div {
 	background-color-3: var(/**comment**/--item-color/**comment**/);
 }
 
-@keyframes/**test**/foo { /* ... */ }
-@keyframes /**test**/foo { /* ... */ }
-@keyframes/**test**/ foo { /* ... */ }
-@keyframes /**test**/ foo { /* ... */ }
-@keyframes /**test**//**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/ foo { /* ... */ }
-@keyframes /**test**/ /**test**/foo { /* ... */ }
-@keyframes /**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo { /* ... */ }
-@keyframes/**test**//**test**/foo/**test**//**test**/{ /* ... */ }
-@keyframes /**test**/ /**test**/ foo /**test**/ /**test**/ { /* ... */ }
+@keyframes/**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 { /* ... */ }
+@keyframes /**test**/ /**test**/foo-kf2 { /* ... */ }
+@keyframes /**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2 { /* ... */ }
+@keyframes/**test**//**test**/foo-kf2/**test**//**test**/{ /* ... */ }
+@keyframes /**test**/ /**test**/ foo-kf2 /**test**/ /**test**/ { /* ... */ }
 
 ./**test**//**test**/my-app-style_module_css-class {
 	background: red;
@@ -13294,19 +13295,19 @@ div {
 
 .my-app-style_module_css-var {
 	--main-color: black;
-	--FOO: 10px;
-	--foo: 10px;
-	--bar: calc(var(--foo) + 10px);
+	--FOO-prop: 10px;
+	--foo-prop: 10px;
+	--bar-prop: calc(var(--foo-prop) + 10px);
 	--accent-background: linear-gradient(to top, var(--main-color), white);
 	--external-link: \\"test\\";
 	--custom-prop: yellow;
 	--default-value: red;
 	--main-bg-color: red;
 	--backup-bg-color: black;
-	-foo: calc(var(--bar) + 10px);
+	-foo: calc(var(--bar-prop) + 10px);
 	var: var(--main-color);
-	var1: var(--foo);
-	var2: var(--FOO);
+	var1: var(--foo-prop);
+	var2: var(--FOO-prop);
 	content: \\" (\\" var(--external-link) \\")\\";
 	var3: var(--main-color, blue);
 	var4: var(--custom-prop,);
@@ -13318,8 +13319,8 @@ div {
 }
 
 .my-app-style_module_css-var-order {
-	background-color: var(--test);
-	--test: red;
+	background-color: var(--test-prop);
+	--test-prop: red;
 }
 
 .my-app-style_module_css-className {
@@ -13389,10 +13390,10 @@ div {
 	width: --max-plus-x({1px, 7px, 2px}, 3px); /* 10px */
 }
 
-@function --anim-1s(--animation, --count) {
+@function --anim-1s(--animation-prop, --count) {
 	--duration: 1s;
 	--easing: linear;
-	result: var(--animation) var(--duration) var(--count) var(--easing);
+	result: var(--animation-prop) var(--duration) var(--count) var(--easing);
 }
 
 div {
@@ -13518,7 +13519,7 @@ section {
 	}
 }
 
-@keyframes broken;
+@keyframes broken-kf;
 
 .class-name-after-broken-keyframes {
 	color: red;
@@ -13555,16 +13556,16 @@ section {
 .my-app-style_module_css-class{.my-app-style_module_css-class{}}
 .my-app-style_module_css-class{color:#fff5f5}
 .my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--foo:#fff5f5}
-.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1}
-.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;}
-.my-app-style_module_css-class{--foo:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
-.my-app-style_module_css-class{--foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
-.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--foo-prop:#fff5f5}
+.my-app-style_module_css-class{--foo-prop:#fff5f5;color:#f1f1f1}
+.my-app-style_module_css-class{--foo-prop:#fff5f5;color:#f1f1f1;}
+.my-app-style_module_css-class{--foo-prop:#fff5f5;color:#f1f1f1;.my-app-style_module_css-class{color:#f1f1f1}}
+.my-app-style_module_css-class{--foo-prop:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
+.my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--foo-prop:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.my-app-style_module_css-class{--bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
-.my-app-style_module_css-class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
-.my-app-style_module_css-class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
+.my-app-style_module_css-class{--bar-prop:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--baz-prop:[1, \\"string\\", .class, #f1f1f1, #id]}
+.my-app-style_module_css-class{--baz-prop:(1, \\"string\\", .class, #f1f1f1, #id)}
 
 /* Cases for \`css/global\` */
 

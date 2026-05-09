@@ -97,6 +97,7 @@ Object {
   "colon-local-name": "postcss-modules-local-by-default_local_modules_css-colon-local-name",
   "constructor": "postcss-modules-local-by-default_local_modules_css-constructor",
   "duplicate-name": "postcss-modules-local-by-default_local_modules_css-duplicate-name",
+  "duplicate-name-id": "postcss-modules-local-by-default_local_modules_css-duplicate-name-id",
   "ease": "postcss-modules-local-by-default_local_modules_css-ease",
   "ease-in": "postcss-modules-local-by-default_local_modules_css-ease-in",
   "ease-out": "postcss-modules-local-by-default_local_modules_css-ease-out",
@@ -106,9 +107,13 @@ Object {
   "fade-in": "postcss-modules-local-by-default_local_modules_css-fade-in",
   "fadeInOut": "postcss-modules-local-by-default_local_modules_css-fadeInOut",
   "fly": "postcss-modules-local-by-default_local_modules_css-fly",
-  "foo": "__foo",
+  "foo": "postcss-modules-local-by-default_local_modules_css-foo",
   "foo-bar": "--postcss-modules-local-by-default_local_modules_css-foo-bar",
+  "foo-export": "__foo",
+  "foo-kf": "postcss-modules-local-by-default_local_modules_css-foo-kf",
+  "foo-local-kf": "postcss-modules-local-by-default_local_modules_css-foo-local-kf",
   "foobar": "postcss-modules-local-by-default_local_modules_css-foobar",
+  "foobar-id": "postcss-modules-local-by-default_local_modules_css-foobar-id",
   "infinite": "postcss-modules-local-by-default_local_modules_css-infinite",
   "local-name": "postcss-modules-local-by-default_local_modules_css-local-name",
   "my-custom-var": "--postcss-modules-local-by-default_local_modules_css-my-custom-var",
@@ -146,6 +151,7 @@ Object {
   "article-footer": "postcss-modules-local-by-default_pure_modules_css-article-footer",
   "article-header": "postcss-modules-local-by-default_pure_modules_css-article-header",
   "bar": "postcss-modules-local-by-default_pure_modules_css-bar",
+  "bar-id": "postcss-modules-local-by-default_pure_modules_css-bar-id",
   "baz": "postcss-modules-local-by-default_pure_modules_css-baz",
   "bounce": "postcss-modules-local-by-default_pure_modules_css-bounce",
   "class": "postcss-modules-local-by-default_pure_modules_css-class",
@@ -257,13 +263,16 @@ Object {
   "local-b": "postcss-modules-scope_modules_css-local-b",
   "slidein": "postcss-modules-scope_modules_css-slidein",
   "smile": "postcss-modules-scope_modules_css-smile",
+  "smile-id": "postcss-modules-scope_modules_css-smile-id",
   "smile_with_A": "postcss-modules-scope_modules_css-smile_with_A",
+  "smile_with_A-id": "postcss-modules-scope_modules_css-smile_with_A-id",
   "sr-only": "--postcss-modules-scope_modules_css-sr-only",
   "test": "--postcss-modules-scope_modules_css-test",
   "title-align": "--postcss-modules-scope_modules_css-title-align",
   "toString": "postcss-modules-scope_modules_css-toString",
   "wrong": "postcss-modules-scope_modules_css-wrong",
   "😀": "postcss-modules-scope_modules_css-😀",
+  "😀-id": "postcss-modules-scope_modules_css-😀-id",
 }
 `;
 
@@ -281,7 +290,9 @@ Object {
   "exportName": "blue",
   "exportName1": "blue @value exportName2 yellow",
   "exportName10": "red",
+  "exportName10-id": "postcss-modules-values_modules_css-exportName10-id",
   "exportName11": "red",
+  "exportName11-cls": "postcss-modules-values_modules_css-exportName11-cls",
   "exportName12": "blue",
   "exportName13": "postcss-modules-values_modules_css-exportName13",
   "exportName14": "postcss-modules-values_modules_css-exportName14",
@@ -308,6 +319,7 @@ Object {
   "exportName7": "40px",
   "exportName8": "36px",
   "exportName9": "fuchsia",
+  "exportName9-cls": "postcss-modules-values_modules_css-exportName9-cls",
   "exportNameRed": "blue",
   "foo-replace": "postcss-modules-values_modules_css-foo-replace",
   "foo-replace-1": "postcss-modules-values_modules_css-foo-replace-1",
@@ -322,7 +334,8 @@ Object {
   "otherBlue": "red",
   "otherRed": "blue",
   "parentheses": "color(red lightness(50%))",
-  "red": "yellow",
+  "red": "blue",
+  "redAlias": "yellow",
   "rgba": "rgba(34, 12, 64, 0.3)",
   "v-color": "my-custom-value",
   "v-comment": "",
@@ -759,7 +772,7 @@ Array [
 .postcss-modules-local-by-default_local_modules_css-\\\\:\\\\) {}
 
 /* scope ids */
-#postcss-modules-local-by-default_local_modules_css-foobar { a_value: some-value; }
+#postcss-modules-local-by-default_local_modules_css-foobar-id { a_value: some-value; }
 
 /* scope escaped ids */
 #postcss-modules-local-by-default_local_modules_css-\\\\#test {}
@@ -1036,7 +1049,7 @@ Array [
 .postcss-modules-local-by-default_local_modules_css-foo { a_value: some-value; }
 
 /* localize keyframes */
-@keyframes postcss-modules-local-by-default_local_modules_css-foo { from { a_value: some-value; } to { a_value: some-value; } }
+@keyframes postcss-modules-local-by-default_local_modules_css-foo-kf { from { a_value: some-value; } to { a_value: some-value; } }
 
 /* localize keyframes starting with special characters */
 @keyframes postcss-modules-local-by-default_local_modules_css-\\\\@foo { from { color: red; } to { color: blue; } }
@@ -1045,7 +1058,7 @@ Array [
 @keyframes postcss-modules-local-by-default_local_modules_css-f\\\\@oo { from { color: red; } to { color: blue; } }
 
 /* localize explicit keyframes */
-@keyframes postcss-modules-local-by-default_local_modules_css-foo { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes postcss-modules-local-by-default_local_modules_css-foo-local-kf { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 @-webkit-keyframes bar { from { color: red; } to { color: blue; } }
 @keyframes postcss-modules-local-by-default_local_modules_css-local-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 @keyframes postcss-modules-local-by-default_local_modules_css-colon-local-name { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
@@ -1300,7 +1313,7 @@ input { a_value: some-value; }
 }
 
 /* duplicate-name */
-#postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
+#postcss-modules-local-by-default_local_modules_css-duplicate-name-id { color: red; }
 .postcss-modules-local-by-default_local_modules_css-duplicate-name { color: red; }
 
 /* in-media */
@@ -1390,7 +1403,7 @@ input { a_value: some-value; }
 .postcss-modules-local-by-default_pure_modules_css-foo { animation: postcss-modules-local-by-default_pure_modules_css-rotate 1s, spin 3s, postcss-modules-local-by-default_pure_modules_css-fly 6s; }
 
 /* compile in pure mode */
-.foo.postcss-modules-local-by-default_pure_modules_css-bar, [type=\\"radio\\"] ~ .postcss-modules-local-by-default_pure_modules_css-label, :not(.postcss-modules-local-by-default_pure_modules_css-foo), #postcss-modules-local-by-default_pure_modules_css-bar { a_value: some-value; }
+.foo.postcss-modules-local-by-default_pure_modules_css-bar, [type=\\"radio\\"] ~ .postcss-modules-local-by-default_pure_modules_css-label, :not(.postcss-modules-local-by-default_pure_modules_css-foo), #postcss-modules-local-by-default_pure_modules_css-bar-id { a_value: some-value; }
 
 /* throw on not pure selector (global class) */
 .foo { a_value: some-value; }
@@ -2133,11 +2146,11 @@ body {
 	color: red;
 }
 
-#postcss-modules-scope_modules_css-😀 #postcss-modules-scope_modules_css-smile #postcss-modules-scope_modules_css-😀{
+#postcss-modules-scope_modules_css-😀-id  #postcss-modules-scope_modules_css-smile-id #postcss-modules-scope_modules_css-😀-id {
 	color: red;
 }
 
-#postcss-modules-scope_modules_css-😀 #postcss-modules-scope_modules_css-smile_with_A #postcss-modules-scope_modules_css-😀{
+#postcss-modules-scope_modules_css-😀-id  #postcss-modules-scope_modules_css-smile_with_A-id #postcss-modules-scope_modules_css-😀-id {
 	color: red;
 }
 
@@ -2473,15 +2486,15 @@ body {
 
 /* should replace selectors within the file */
 
-.postcss-modules-values_modules_css-fuchsia { color: fuchsia; }
+.postcss-modules-values_modules_css-exportName9-cls { color: fuchsia; }
 
 /* should replace selectors within the file #1 */
 
-#postcss-modules-values_modules_css-red { color: red; }
+#postcss-modules-values_modules_css-exportName10-id { color: red; }
 
 /* should replace selectors within the file #2 */
 
-.postcss-modules-values_modules_css-red > .postcss-modules-values_modules_css-red { color: red; }
+.postcss-modules-values_modules_css-exportName11-cls > .postcss-modules-values_modules_css-exportName11-cls { color: red; }
 
 /* should import and re-export a simple constant */
 

@@ -277,11 +277,11 @@ body {
 	color: red;
 }
 
-#\1F600  :local(#smile) #\1F600 {
+#\1F600 -id  :local(#smile-id) #\1F600 -id {
 	color: red;
 }
 
-#\1F600  :local(#smile_with_A) #\1F600 {
+#\1F600 -id  :local(#smile_with_A-id) #\1F600 -id {
 	color: red;
 }
 

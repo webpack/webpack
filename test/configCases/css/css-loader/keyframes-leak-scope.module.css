@@ -1,4 +1,4 @@
-.a {
+.a-cls {
 	color: green;
 	animation: a;
 }
@@ -13,7 +13,7 @@
 	100% { left: 20px; }
 }
 
-.b {
+.b-cls {
 	animation: b;
 }
 
