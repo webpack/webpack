@@ -1,0 +1,82 @@
+/* Multiple local @value declarations with the same name — last one wins. */
+@value localValue: red;
+@value localValue: blue;
+
+.local-override {
+	color: localValue;
+}
+
+/*
+ * References between two local @value declarations should resolve to the
+ * value that was active at the point of reference.
+ */
+@value midValue: red;
+
+.mid-before {
+	color: midValue;
+}
+
+@value midValue: blue;
+
+.mid-after {
+	color: midValue;
+}
+
+/*
+ * Same source name imported from two different modules under different
+ * local aliases — both definitions coexist without overriding each other.
+ */
+@value (sharedColor as fromA) from "./colors-a.module.css";
+@value (sharedColor as fromB) from "./colors-b.module.css";
+
+.aliased-from-a {
+	color: fromA;
+}
+
+.aliased-from-b {
+	color: fromB;
+}
+
+/* Local @value followed by import — the imported value wins afterwards. */
+@value baseColor: pink;
+
+.local-base-pink {
+	color: baseColor;
+}
+
+@value baseColor from "./colors-a.module.css";
+
+.import-base-from-a {
+	color: baseColor;
+}
+
+/* Import followed by a local @value — the local value wins afterwards. */
+@value onlyInA from "./colors-a.module.css";
+
+.import-only-a {
+	color: onlyInA;
+}
+
+@value onlyInA: black;
+
+.local-after-import {
+	color: onlyInA;
+}
+
+/*
+ * Re-aliasing a local @value: a later `@value newName: existingName` should
+ * make `newName` resolve to whatever `existingName` currently resolves to.
+ */
+@value chainedSource: teal;
+@value chainedAlias: chainedSource;
+
+.chained-from-local {
+	color: chainedAlias;
+}
+
+@value chainedSource: maroon;
+@value chainedAlias: chainedSource;
+
+.chained-from-local-after {
+	color: chainedAlias;
+}
