@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Link Tag Test</title>
+
+<!-- Skipped: empty / invalid link tags -->
+<link>
+<link rel=\\"icon\\">
+<link href=\\"./image.png\\">
+<link rel=\\"\\" href=\\"./image.png\\">
+<link rel=\\"unknown\\" href=\\"./should-not-resolve.png\\">
+
+<!-- Icon variants -->
+<link rel=\\"icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"ICON\\" HREF=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"shortcut icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon shortcut\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"apple-touch-icon\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"apple-touch-icon-precomposed\\" href=\\"09a1a1112c577c279435.png\\" />
+<link rel=\\"apple-touch-startup-image\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"mask-icon\\" href=\\"09a1a1112c577c279435.png\\" color=\\"#000000\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"32x32\\" href=\\"09a1a1112c577c279435.png\\">
+
+<!-- Manifest -->
+<link rel=\\"manifest\\" href=\\"f2fd5abcd3951abacaa4.webmanifest\\">
+
+<!-- Stylesheet (multi-rel parsing) -->
+<link rel=\\"stylesheet\\" href=\\"070dc97d4bda865ae576.css\\">
+<link rel=\\"alternate stylesheet\\" href=\\"8c847557578fec6297af.css\\" title=\\"Alternate\\">
+
+<!-- Prefetch / Preload -->
+<link rel=\\"prefetch\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"preload\\" href=\\"09a1a1112c577c279435.png\\" as=\\"image\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 1x, 09a1a1112c577c279435.png 2x\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 100w, 09a1a1112c577c279435.png 200w\\" imagesizes=\\"100vw\\">
+<link rel=\\"preload\\" as=\\"font\\" type=\\"font/woff2\\" crossorigin href=\\"31d6cfe0d16ae931b73c.woff2\\">
+
+<!-- Modulepreload (resolves the JS module URL) -->
+<link rel=\\"modulepreload\\" href=\\"7fd113ab097894fc1f7a.mjs\\">
+
+<!-- Itemprop link rels (only allowed itemprops trigger resolution) -->
+<link itemprop=\\"downloadUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"contentUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"installUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"unknown\\" href=\\"./should-not-resolve.png\\">
+
+<!-- Whitespace and casing variations -->
+<link    rel  =  \\"  icon  \\"    href  =  \\"09a1a1112c577c279435.png\\">
+<link rel='icon' href='09a1a1112c577c279435.png'>
+<link rel=icon href=09a1a1112c577c279435.png>
+
+<!-- Hash-only hrefs are skipped -->
+<link rel=\\"icon\\" href=\\"#anchor\\">
+
+<!-- Data URLs are passed through unchanged -->
+<link rel=\\"icon\\" href=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\">
+</head>
+<body>
+</body>
+</html>
+"
+`;

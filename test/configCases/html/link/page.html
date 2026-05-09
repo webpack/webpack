@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Link Tag Test</title>
+
+<!-- Skipped: empty / invalid link tags -->
+<link>
+<link rel="icon">
+<link href="./image.png">
+<link rel="" href="./image.png">
+<link rel="unknown" href="./should-not-resolve.png">
+
+<!-- Icon variants -->
+<link rel="icon" href="./icon.png">
+<link rel="ICON" HREF="./icon.png">
+<link rel="shortcut icon" href="./icon.png">
+<link rel="icon shortcut" href="./icon.png">
+<link rel="apple-touch-icon" href="./icon.png">
+<link rel="apple-touch-icon-precomposed" href="./icon.png" />
+<link rel="apple-touch-startup-image" href="./icon.png">
+<link rel="mask-icon" href="./icon.png" color="#000000">
+<link rel="icon" type="image/png" sizes="32x32" href="./icon.png">
+
+<!-- Manifest -->
+<link rel="manifest" href="./manifest.webmanifest">
+
+<!-- Stylesheet (multi-rel parsing) -->
+<link rel="stylesheet" href="./style.css">
+<link rel="alternate stylesheet" href="./alt-style.css" title="Alternate">
+
+<!-- Prefetch / Preload -->
+<link rel="prefetch" href="./prefetch.png">
+<link rel="preload" href="./preload.png" as="image">
+<link rel="preload" as="image" imagesrcset="./image.png 1x, ./icon.png 2x">
+<link rel="preload" as="image" imagesrcset="./image.png 100w, ./icon.png 200w" imagesizes="100vw">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="./font.woff2">
+
+<!-- Modulepreload (resolves the JS module URL) -->
+<link rel="modulepreload" href="./module.mjs">
+
+<!-- Itemprop link rels (only allowed itemprops trigger resolution) -->
+<link itemprop="downloadUrl" href="./icon.png">
+<link itemprop="contentUrl" href="./icon.png">
+<link itemprop="installUrl" href="./icon.png">
+<link itemprop="unknown" href="./should-not-resolve.png">
+
+<!-- Whitespace and casing variations -->
+<link    rel  =  "  icon  "    href  =  "./icon.png">
+<link rel='icon' href='./icon.png'>
+<link rel=icon href=./icon.png>
+
+<!-- Hash-only hrefs are skipped -->
+<link rel="icon" href="#anchor">
+
+<!-- Data URLs are passed through unchanged -->
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">
+</head>
+<body>
+</body>
+</html>
