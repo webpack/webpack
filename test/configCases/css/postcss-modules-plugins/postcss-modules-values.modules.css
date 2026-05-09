@@ -41,15 +41,15 @@
 
 /* should replace selectors within the file */
 @value exportName9: fuchsia;
-.exportName9 { color: exportName9; }
+.exportName9-cls { color: exportName9; }
 
 /* should replace selectors within the file #1 */
 @value exportName10: red;
-#exportName10 { color: exportName10; }
+#exportName10-id { color: exportName10; }
 
 /* should replace selectors within the file #2 */
 @value exportName11: red;
-.exportName11 > .exportName11 { color: exportName11; }
+.exportName11-cls > .exportName11-cls { color: exportName11; }
 
 /* should import and re-export a simple constant */
 @value exportName12 from "./colors.css";
@@ -59,8 +59,8 @@
 .exportName13 { color: exportNameRed; }
 
 /* should import and alias a constant and replace usages */
-@value exportNameBlue as red from "./colors.modules.css";
-.exportName14 { color: red; }
+@value exportNameBlue as redAlias from "./colors.modules.css";
+.exportName14 { color: redAlias; }
 
 /* should import multiple from a single file */
 @value otherBlue, otherRed from "./colors.modules.css";

@@ -134,7 +134,7 @@ div {
 	--not-override-class: red;
 }
 
-.not-override-class {
+.not-override-class-cls {
 	color: var(--not-override-class from "./var-function-export.modules.css")
 }
 

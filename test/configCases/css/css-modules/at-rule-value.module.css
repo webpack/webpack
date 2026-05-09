@@ -53,19 +53,19 @@
 
 @value colorValue: red;
 
-.colorValue {
+.colorValue-cls {
 	color: colorValue;
 }
 
 @value colorValue-v1: red;
 
-#colorValue-v1 {
+#colorValue-v1-id {
 	color: colorValue-v1;
 }
 
 @value colorValue-v2: red;
 
-.colorValue-v2 > .colorValue-v2 {
+.colorValue-v2-cls > .colorValue-v2-cls {
 	color: colorValue-v2;
 }
 
@@ -160,7 +160,7 @@ colorValue-v3 {
 @value override: blue;
 @value override: red;
 
-.override {
+.override-cls {
 	color: override;
 }
 
@@ -175,13 +175,13 @@ colorValue-v3 {
 
 @value/* test */blue-v5/* test */:/* test */red/* test */;
 
-.color {
+.color-cls {
 	color: blue-v5;
 }
 
 @value/* test */blue-v6/* test *//* test */red/* test */;
 
-.color {
+.color-cls {
 	color: blue-v6;
 }
 
@@ -235,7 +235,7 @@ colorValue-v3 {
 	comment
 */;
 
-.color {
+.color-cls {
 	color: multiline-v1;
 }
 

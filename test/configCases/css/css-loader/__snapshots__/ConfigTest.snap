@@ -8,7 +8,9 @@ Object {
   "b": "basic_module_css-b",
   "bar-1": "basic_module_css-bar-1",
   "bounce": "basic_module_css-bounce",
+  "bounce-cls": "basic_module_css-bounce-cls",
   "bounce2": "basic_module_css-bounce2",
+  "bounce2-cls": "basic_module_css-bounce2-cls",
   "bounce3": "basic_module_css-bounce3",
   "bounce4": "basic_module_css-bounce4",
   "c": "basic_module_css-c",
@@ -122,6 +124,7 @@ Object {
   "##": "local-Ident-name_module_css-##",
   "#.#.#": "local-Ident-name_module_css-#.#.#",
   "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "#fake-id-x": "local-Ident-name_module_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
   "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
@@ -159,6 +162,7 @@ Object {
   "test": "local-Ident-name_module_css-test",
   "{}": "local-Ident-name_module_css-{}",
   "©": "local-Ident-name_module_css-©",
+  "©id": "local-Ident-name_module_css-©id",
   "“‘’”": "local-Ident-name_module_css-“‘’”",
   "⌘⌥": "local-Ident-name_module_css-⌘⌥",
   "☺☃": "local-Ident-name_module_css-☺☃",
@@ -175,6 +179,7 @@ Object {
   "##": "local-Ident-name.module--##--4MjQ_",
   "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
   "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--Ry90p",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
   "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
@@ -212,6 +217,7 @@ Object {
   "test": "local-Ident-name.module--test--n138O",
   "{}": "local-Ident-name.module--{}--yOiSk",
   "©": "local-Ident-name.module--©--ABrkO",
+  "©id": "local-Ident-name.module--©id--Dy6vK",
   "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
   "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
   "☺☃": "local-Ident-name.module--☺☃--_YUxr",
@@ -228,6 +234,7 @@ Object {
   "##": "_-1##",
   "#.#.#": "_-1#.#.#",
   "#fake-id": "_-1#fake-id",
+  "#fake-id-x": "_-1#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_-1-a-b-c-",
   "-a0-34a___f": "_-1-a0-34a___f",
@@ -265,6 +272,7 @@ Object {
   "test": "_-1test",
   "{}": "_-1{}",
   "©": "_-1©",
+  "©id": "_-1©id",
   "“‘’”": "_-1“‘’”",
   "⌘⌥": "_-1⌘⌥",
   "☺☃": "_-1☺☃",
@@ -281,6 +289,7 @@ Object {
   "##": "_--##",
   "#.#.#": "_--#.#.#",
   "#fake-id": "_--#fake-id",
+  "#fake-id-x": "_--#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_---a-b-c-",
   "-a0-34a___f": "_---a0-34a___f",
@@ -318,6 +327,7 @@ Object {
   "test": "_--test",
   "{}": "_--{}",
   "©": "_--©",
+  "©id": "_--©id",
   "“‘’”": "_--“‘’”",
   "⌘⌥": "_--⌘⌥",
   "☺☃": "_--☺☃",
@@ -334,6 +344,7 @@ Object {
   "##": "__##",
   "#.#.#": "__#.#.#",
   "#fake-id": "__#fake-id",
+  "#fake-id-x": "__#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "__-a-b-c-",
   "-a0-34a___f": "__-a0-34a___f",
@@ -371,6 +382,7 @@ Object {
   "test": "__test",
   "{}": "__{}",
   "©": "__©",
+  "©id": "__©id",
   "“‘’”": "__“‘’”",
   "⌘⌥": "__⌘⌥",
   "☺☃": "__☺☃",
@@ -387,6 +399,7 @@ Object {
   "##": "##--7vA-7E",
   "#.#.#": "#.#.#--1Hd875",
   "#fake-id": "#fake-id--ez7Dik",
+  "#fake-id-x": "#fake-id-x--sMxxrn",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
   "-a-b-c-": "-a-b-c---jfQ3Qn",
   "-a0-34a___f": "-a0-34a___f--OWXZy-",
@@ -424,6 +437,7 @@ Object {
   "test": "test--mowWgR",
   "{}": "{}--Tr49RL",
   "©": "©--sWiP9l",
+  "©id": "©id--2brne1",
   "“‘’”": "“‘’”--M3gyy-",
   "⌘⌥": "⌘⌥--oDuNAW",
   "☺☃": "☺☃--pbZo-2",
@@ -440,6 +454,7 @@ Object {
   "##": "😀- -##",
   "#.#.#": "😀- -#.#.#",
   "#fake-id": "😀- -#fake-id",
+  "#fake-id-x": "😀- -#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "😀- --a-b-c-",
   "-a0-34a___f": "😀- --a0-34a___f",
@@ -477,6 +492,7 @@ Object {
   "test": "😀- -test",
   "{}": "😀- -{}",
   "©": "😀- -©",
+  "©id": "😀- -©id",
   "“‘’”": "😀- -“‘’”",
   "⌘⌥": "😀- -⌘⌥",
   "☺☃": "😀- -☺☃",
@@ -493,6 +509,7 @@ Object {
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
   "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
   "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2EbZHbHGCY",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
   "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
@@ -530,6 +547,7 @@ Object {
   "test": "local-Ident-name.module--test--6y2MZL2dRW",
   "{}": "local-Ident-name.module--{}--KmrFboxFIk",
   "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "©id": "local-Ident-name.module--©id--UrZDoNLIly",
   "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
   "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
   "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
@@ -546,6 +564,7 @@ Object {
   "##": "local-Ident-name.module--##--qmWu4j",
   "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
   "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--hxBHhk",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
@@ -583,6 +602,7 @@ Object {
   "test": "local-Ident-name.module--test--_SesvC",
   "{}": "local-Ident-name.module--{}--rC8he6",
   "©": "local-Ident-name.module--©--if7zkU",
+  "©id": "local-Ident-name.module--©id--8B3d97",
   "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
   "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
@@ -599,6 +619,7 @@ Object {
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
   "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
   "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "#fake-id-x": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id-x---QgI35t-postfix",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
   "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
   "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
@@ -636,6 +657,7 @@ Object {
   "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
   "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
   "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "©id": "prefix-./local-Ident-name.module.css?local-ident-name-9---©id---YKO46_-postfix",
   "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
   "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
   "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
@@ -652,6 +674,7 @@ Object {
   "##": "local-Ident-name.module--##--9WIAe0",
   "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
   "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--PQSSyT",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
   "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
@@ -689,6 +712,7 @@ Object {
   "test": "local-Ident-name.module--test--Wxl9SQ",
   "{}": "local-Ident-name.module--{}--x9uHdU",
   "©": "local-Ident-name.module--©--GlglrH",
+  "©id": "local-Ident-name.module--©id--_N2Dmr",
   "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
   "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
@@ -705,6 +729,7 @@ Object {
   "##": "local-Ident-name.module--##--e4c1f1f4",
   "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
   "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--e7b7d50a",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
   "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
@@ -742,6 +767,7 @@ Object {
   "test": "local-Ident-name.module--test--8270b0ef",
   "{}": "local-Ident-name.module--{}--ae3dd8d2",
   "©": "local-Ident-name.module--©--1b9a8b1c",
+  "©id": "local-Ident-name.module--©id--2a5be927",
   "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
   "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
   "☺☃": "local-Ident-name.module--☺☃--1469d673",
@@ -758,6 +784,7 @@ Object {
   "##": "local-Ident-name.module--##--Xw2rY7zd",
   "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
   "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--UHdwhi/x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
@@ -795,6 +822,7 @@ Object {
   "test": "local-Ident-name.module--test--NLdHRDRl",
   "{}": "local-Ident-name.module--{}--6OhFoptN",
   "©": "local-Ident-name.module--©--tHIIl+/T",
+  "©id": "local-Ident-name.module--©id--Kz0Iz7Fz",
   "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
   "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
   "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
@@ -811,6 +839,7 @@ Object {
   "##": "local-Ident-name.module--##--jZQh9o",
   "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
   "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--uMKzBb",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
   "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
@@ -848,6 +877,7 @@ Object {
   "test": "local-Ident-name.module--test--2GQpZJ",
   "{}": "local-Ident-name.module--{}--nRmS1p",
   "©": "local-Ident-name.module--©--iWVpcm",
+  "©id": "local-Ident-name.module--©id--BNk8lB",
   "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
   "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
   "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
@@ -864,6 +894,7 @@ Object {
   "##": "local-Ident-name.module--##--405237512524",
   "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
   "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2b8a93aeef26",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
   "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
@@ -901,6 +932,7 @@ Object {
   "test": "local-Ident-name.module--test--a60f4680ad27",
   "{}": "local-Ident-name.module--{}--00d46b3a8952",
   "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "©id": "local-Ident-name.module--©id--1e41ac2b1eed",
   "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
   "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
   "☺☃": "local-Ident-name.module--☺☃--543bef227373",
@@ -999,7 +1031,9 @@ Object {
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (css-style-sheet) 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
+  "a-cls": "keyframes-leak-scope_module_css-a-cls",
   "b": "keyframes-leak-scope_module_css-b",
+  "b-cls": "keyframes-leak-scope_module_css-b-cls",
   "c": "keyframes-leak-scope_module_css-c",
   "c1": "keyframes-leak-scope_module_css-c1",
   "c2": "keyframes-leak-scope_module_css-c2",
@@ -1066,7 +1100,9 @@ Object {
   "b": "basic_module_css-b",
   "bar-1": "basic_module_css-bar-1",
   "bounce": "basic_module_css-bounce",
+  "bounce-cls": "basic_module_css-bounce-cls",
   "bounce2": "basic_module_css-bounce2",
+  "bounce2-cls": "basic_module_css-bounce2-cls",
   "bounce3": "basic_module_css-bounce3",
   "bounce4": "basic_module_css-bounce4",
   "c": "basic_module_css-c",
@@ -1180,6 +1216,7 @@ Object {
   "##": "local-Ident-name_module_css-##",
   "#.#.#": "local-Ident-name_module_css-#.#.#",
   "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "#fake-id-x": "local-Ident-name_module_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
   "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
@@ -1217,6 +1254,7 @@ Object {
   "test": "local-Ident-name_module_css-test",
   "{}": "local-Ident-name_module_css-{}",
   "©": "local-Ident-name_module_css-©",
+  "©id": "local-Ident-name_module_css-©id",
   "“‘’”": "local-Ident-name_module_css-“‘’”",
   "⌘⌥": "local-Ident-name_module_css-⌘⌥",
   "☺☃": "local-Ident-name_module_css-☺☃",
@@ -1233,6 +1271,7 @@ Object {
   "##": "local-Ident-name.module--##--4MjQ_",
   "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
   "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--Ry90p",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
   "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
@@ -1270,6 +1309,7 @@ Object {
   "test": "local-Ident-name.module--test--n138O",
   "{}": "local-Ident-name.module--{}--yOiSk",
   "©": "local-Ident-name.module--©--ABrkO",
+  "©id": "local-Ident-name.module--©id--Dy6vK",
   "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
   "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
   "☺☃": "local-Ident-name.module--☺☃--_YUxr",
@@ -1286,6 +1326,7 @@ Object {
   "##": "_-1##",
   "#.#.#": "_-1#.#.#",
   "#fake-id": "_-1#fake-id",
+  "#fake-id-x": "_-1#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_-1-a-b-c-",
   "-a0-34a___f": "_-1-a0-34a___f",
@@ -1323,6 +1364,7 @@ Object {
   "test": "_-1test",
   "{}": "_-1{}",
   "©": "_-1©",
+  "©id": "_-1©id",
   "“‘’”": "_-1“‘’”",
   "⌘⌥": "_-1⌘⌥",
   "☺☃": "_-1☺☃",
@@ -1339,6 +1381,7 @@ Object {
   "##": "_--##",
   "#.#.#": "_--#.#.#",
   "#fake-id": "_--#fake-id",
+  "#fake-id-x": "_--#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_---a-b-c-",
   "-a0-34a___f": "_---a0-34a___f",
@@ -1376,6 +1419,7 @@ Object {
   "test": "_--test",
   "{}": "_--{}",
   "©": "_--©",
+  "©id": "_--©id",
   "“‘’”": "_--“‘’”",
   "⌘⌥": "_--⌘⌥",
   "☺☃": "_--☺☃",
@@ -1392,6 +1436,7 @@ Object {
   "##": "__##",
   "#.#.#": "__#.#.#",
   "#fake-id": "__#fake-id",
+  "#fake-id-x": "__#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "__-a-b-c-",
   "-a0-34a___f": "__-a0-34a___f",
@@ -1429,6 +1474,7 @@ Object {
   "test": "__test",
   "{}": "__{}",
   "©": "__©",
+  "©id": "__©id",
   "“‘’”": "__“‘’”",
   "⌘⌥": "__⌘⌥",
   "☺☃": "__☺☃",
@@ -1445,6 +1491,7 @@ Object {
   "##": "##--7vA-7E",
   "#.#.#": "#.#.#--1Hd875",
   "#fake-id": "#fake-id--ez7Dik",
+  "#fake-id-x": "#fake-id-x--sMxxrn",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
   "-a-b-c-": "-a-b-c---jfQ3Qn",
   "-a0-34a___f": "-a0-34a___f--OWXZy-",
@@ -1482,6 +1529,7 @@ Object {
   "test": "test--mowWgR",
   "{}": "{}--Tr49RL",
   "©": "©--sWiP9l",
+  "©id": "©id--2brne1",
   "“‘’”": "“‘’”--M3gyy-",
   "⌘⌥": "⌘⌥--oDuNAW",
   "☺☃": "☺☃--pbZo-2",
@@ -1498,6 +1546,7 @@ Object {
   "##": "😀- -##",
   "#.#.#": "😀- -#.#.#",
   "#fake-id": "😀- -#fake-id",
+  "#fake-id-x": "😀- -#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "😀- --a-b-c-",
   "-a0-34a___f": "😀- --a0-34a___f",
@@ -1535,6 +1584,7 @@ Object {
   "test": "😀- -test",
   "{}": "😀- -{}",
   "©": "😀- -©",
+  "©id": "😀- -©id",
   "“‘’”": "😀- -“‘’”",
   "⌘⌥": "😀- -⌘⌥",
   "☺☃": "😀- -☺☃",
@@ -1551,6 +1601,7 @@ Object {
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
   "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
   "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2EbZHbHGCY",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
   "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
@@ -1588,6 +1639,7 @@ Object {
   "test": "local-Ident-name.module--test--6y2MZL2dRW",
   "{}": "local-Ident-name.module--{}--KmrFboxFIk",
   "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "©id": "local-Ident-name.module--©id--UrZDoNLIly",
   "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
   "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
   "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
@@ -1604,6 +1656,7 @@ Object {
   "##": "local-Ident-name.module--##--qmWu4j",
   "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
   "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--hxBHhk",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
@@ -1641,6 +1694,7 @@ Object {
   "test": "local-Ident-name.module--test--_SesvC",
   "{}": "local-Ident-name.module--{}--rC8he6",
   "©": "local-Ident-name.module--©--if7zkU",
+  "©id": "local-Ident-name.module--©id--8B3d97",
   "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
   "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
@@ -1657,6 +1711,7 @@ Object {
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
   "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
   "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "#fake-id-x": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id-x---QgI35t-postfix",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
   "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
   "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
@@ -1694,6 +1749,7 @@ Object {
   "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
   "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
   "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "©id": "prefix-./local-Ident-name.module.css?local-ident-name-9---©id---YKO46_-postfix",
   "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
   "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
   "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
@@ -1710,6 +1766,7 @@ Object {
   "##": "local-Ident-name.module--##--9WIAe0",
   "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
   "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--PQSSyT",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
   "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
@@ -1747,6 +1804,7 @@ Object {
   "test": "local-Ident-name.module--test--Wxl9SQ",
   "{}": "local-Ident-name.module--{}--x9uHdU",
   "©": "local-Ident-name.module--©--GlglrH",
+  "©id": "local-Ident-name.module--©id--_N2Dmr",
   "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
   "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
@@ -1763,6 +1821,7 @@ Object {
   "##": "local-Ident-name.module--##--e4c1f1f4",
   "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
   "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--e7b7d50a",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
   "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
@@ -1800,6 +1859,7 @@ Object {
   "test": "local-Ident-name.module--test--8270b0ef",
   "{}": "local-Ident-name.module--{}--ae3dd8d2",
   "©": "local-Ident-name.module--©--1b9a8b1c",
+  "©id": "local-Ident-name.module--©id--2a5be927",
   "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
   "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
   "☺☃": "local-Ident-name.module--☺☃--1469d673",
@@ -1816,6 +1876,7 @@ Object {
   "##": "local-Ident-name.module--##--Xw2rY7zd",
   "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
   "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--UHdwhi/x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
@@ -1853,6 +1914,7 @@ Object {
   "test": "local-Ident-name.module--test--NLdHRDRl",
   "{}": "local-Ident-name.module--{}--6OhFoptN",
   "©": "local-Ident-name.module--©--tHIIl+/T",
+  "©id": "local-Ident-name.module--©id--Kz0Iz7Fz",
   "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
   "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
   "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
@@ -1869,6 +1931,7 @@ Object {
   "##": "local-Ident-name.module--##--jZQh9o",
   "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
   "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--uMKzBb",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
   "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
@@ -1906,6 +1969,7 @@ Object {
   "test": "local-Ident-name.module--test--2GQpZJ",
   "{}": "local-Ident-name.module--{}--nRmS1p",
   "©": "local-Ident-name.module--©--iWVpcm",
+  "©id": "local-Ident-name.module--©id--BNk8lB",
   "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
   "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
   "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
@@ -1922,6 +1986,7 @@ Object {
   "##": "local-Ident-name.module--##--405237512524",
   "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
   "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2b8a93aeef26",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
   "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
@@ -1959,6 +2024,7 @@ Object {
   "test": "local-Ident-name.module--test--a60f4680ad27",
   "{}": "local-Ident-name.module--{}--00d46b3a8952",
   "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "©id": "local-Ident-name.module--©id--1e41ac2b1eed",
   "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
   "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
   "☺☃": "local-Ident-name.module--☺☃--543bef227373",
@@ -2057,7 +2123,9 @@ Object {
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (link) 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
+  "a-cls": "keyframes-leak-scope_module_css-a-cls",
   "b": "keyframes-leak-scope_module_css-b",
+  "b-cls": "keyframes-leak-scope_module_css-b-cls",
   "c": "keyframes-leak-scope_module_css-c",
   "c1": "keyframes-leak-scope_module_css-c1",
   "c2": "keyframes-leak-scope_module_css-c2",
@@ -2124,7 +2192,9 @@ Object {
   "b": "basic_module_css-b",
   "bar-1": "basic_module_css-bar-1",
   "bounce": "basic_module_css-bounce",
+  "bounce-cls": "basic_module_css-bounce-cls",
   "bounce2": "basic_module_css-bounce2",
+  "bounce2-cls": "basic_module_css-bounce2-cls",
   "bounce3": "basic_module_css-bounce3",
   "bounce4": "basic_module_css-bounce4",
   "c": "basic_module_css-c",
@@ -2238,6 +2308,7 @@ Object {
   "##": "local-Ident-name_module_css-##",
   "#.#.#": "local-Ident-name_module_css-#.#.#",
   "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "#fake-id-x": "local-Ident-name_module_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
   "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
@@ -2275,6 +2346,7 @@ Object {
   "test": "local-Ident-name_module_css-test",
   "{}": "local-Ident-name_module_css-{}",
   "©": "local-Ident-name_module_css-©",
+  "©id": "local-Ident-name_module_css-©id",
   "“‘’”": "local-Ident-name_module_css-“‘’”",
   "⌘⌥": "local-Ident-name_module_css-⌘⌥",
   "☺☃": "local-Ident-name_module_css-☺☃",
@@ -2291,6 +2363,7 @@ Object {
   "##": "local-Ident-name.module--##--4MjQ_",
   "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
   "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--Ry90p",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
   "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
@@ -2328,6 +2401,7 @@ Object {
   "test": "local-Ident-name.module--test--n138O",
   "{}": "local-Ident-name.module--{}--yOiSk",
   "©": "local-Ident-name.module--©--ABrkO",
+  "©id": "local-Ident-name.module--©id--Dy6vK",
   "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
   "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
   "☺☃": "local-Ident-name.module--☺☃--_YUxr",
@@ -2344,6 +2418,7 @@ Object {
   "##": "_-1##",
   "#.#.#": "_-1#.#.#",
   "#fake-id": "_-1#fake-id",
+  "#fake-id-x": "_-1#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_-1-a-b-c-",
   "-a0-34a___f": "_-1-a0-34a___f",
@@ -2381,6 +2456,7 @@ Object {
   "test": "_-1test",
   "{}": "_-1{}",
   "©": "_-1©",
+  "©id": "_-1©id",
   "“‘’”": "_-1“‘’”",
   "⌘⌥": "_-1⌘⌥",
   "☺☃": "_-1☺☃",
@@ -2397,6 +2473,7 @@ Object {
   "##": "_--##",
   "#.#.#": "_--#.#.#",
   "#fake-id": "_--#fake-id",
+  "#fake-id-x": "_--#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_---a-b-c-",
   "-a0-34a___f": "_---a0-34a___f",
@@ -2434,6 +2511,7 @@ Object {
   "test": "_--test",
   "{}": "_--{}",
   "©": "_--©",
+  "©id": "_--©id",
   "“‘’”": "_--“‘’”",
   "⌘⌥": "_--⌘⌥",
   "☺☃": "_--☺☃",
@@ -2450,6 +2528,7 @@ Object {
   "##": "__##",
   "#.#.#": "__#.#.#",
   "#fake-id": "__#fake-id",
+  "#fake-id-x": "__#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "__-a-b-c-",
   "-a0-34a___f": "__-a0-34a___f",
@@ -2487,6 +2566,7 @@ Object {
   "test": "__test",
   "{}": "__{}",
   "©": "__©",
+  "©id": "__©id",
   "“‘’”": "__“‘’”",
   "⌘⌥": "__⌘⌥",
   "☺☃": "__☺☃",
@@ -2503,6 +2583,7 @@ Object {
   "##": "##--7vA-7E",
   "#.#.#": "#.#.#--1Hd875",
   "#fake-id": "#fake-id--ez7Dik",
+  "#fake-id-x": "#fake-id-x--sMxxrn",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
   "-a-b-c-": "-a-b-c---jfQ3Qn",
   "-a0-34a___f": "-a0-34a___f--OWXZy-",
@@ -2540,6 +2621,7 @@ Object {
   "test": "test--mowWgR",
   "{}": "{}--Tr49RL",
   "©": "©--sWiP9l",
+  "©id": "©id--2brne1",
   "“‘’”": "“‘’”--M3gyy-",
   "⌘⌥": "⌘⌥--oDuNAW",
   "☺☃": "☺☃--pbZo-2",
@@ -2556,6 +2638,7 @@ Object {
   "##": "😀- -##",
   "#.#.#": "😀- -#.#.#",
   "#fake-id": "😀- -#fake-id",
+  "#fake-id-x": "😀- -#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "😀- --a-b-c-",
   "-a0-34a___f": "😀- --a0-34a___f",
@@ -2593,6 +2676,7 @@ Object {
   "test": "😀- -test",
   "{}": "😀- -{}",
   "©": "😀- -©",
+  "©id": "😀- -©id",
   "“‘’”": "😀- -“‘’”",
   "⌘⌥": "😀- -⌘⌥",
   "☺☃": "😀- -☺☃",
@@ -2609,6 +2693,7 @@ Object {
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
   "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
   "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2EbZHbHGCY",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
   "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
@@ -2646,6 +2731,7 @@ Object {
   "test": "local-Ident-name.module--test--6y2MZL2dRW",
   "{}": "local-Ident-name.module--{}--KmrFboxFIk",
   "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "©id": "local-Ident-name.module--©id--UrZDoNLIly",
   "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
   "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
   "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
@@ -2662,6 +2748,7 @@ Object {
   "##": "local-Ident-name.module--##--qmWu4j",
   "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
   "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--hxBHhk",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
@@ -2699,6 +2786,7 @@ Object {
   "test": "local-Ident-name.module--test--_SesvC",
   "{}": "local-Ident-name.module--{}--rC8he6",
   "©": "local-Ident-name.module--©--if7zkU",
+  "©id": "local-Ident-name.module--©id--8B3d97",
   "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
   "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
@@ -2715,6 +2803,7 @@ Object {
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
   "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
   "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "#fake-id-x": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id-x---QgI35t-postfix",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
   "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
   "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
@@ -2752,6 +2841,7 @@ Object {
   "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
   "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
   "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "©id": "prefix-./local-Ident-name.module.css?local-ident-name-9---©id---YKO46_-postfix",
   "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
   "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
   "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
@@ -2768,6 +2858,7 @@ Object {
   "##": "local-Ident-name.module--##--9WIAe0",
   "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
   "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--PQSSyT",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
   "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
@@ -2805,6 +2896,7 @@ Object {
   "test": "local-Ident-name.module--test--Wxl9SQ",
   "{}": "local-Ident-name.module--{}--x9uHdU",
   "©": "local-Ident-name.module--©--GlglrH",
+  "©id": "local-Ident-name.module--©id--_N2Dmr",
   "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
   "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
@@ -2821,6 +2913,7 @@ Object {
   "##": "local-Ident-name.module--##--e4c1f1f4",
   "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
   "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--e7b7d50a",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
   "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
@@ -2858,6 +2951,7 @@ Object {
   "test": "local-Ident-name.module--test--8270b0ef",
   "{}": "local-Ident-name.module--{}--ae3dd8d2",
   "©": "local-Ident-name.module--©--1b9a8b1c",
+  "©id": "local-Ident-name.module--©id--2a5be927",
   "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
   "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
   "☺☃": "local-Ident-name.module--☺☃--1469d673",
@@ -2874,6 +2968,7 @@ Object {
   "##": "local-Ident-name.module--##--Xw2rY7zd",
   "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
   "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--UHdwhi/x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
@@ -2911,6 +3006,7 @@ Object {
   "test": "local-Ident-name.module--test--NLdHRDRl",
   "{}": "local-Ident-name.module--{}--6OhFoptN",
   "©": "local-Ident-name.module--©--tHIIl+/T",
+  "©id": "local-Ident-name.module--©id--Kz0Iz7Fz",
   "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
   "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
   "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
@@ -2927,6 +3023,7 @@ Object {
   "##": "local-Ident-name.module--##--jZQh9o",
   "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
   "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--uMKzBb",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
   "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
@@ -2964,6 +3061,7 @@ Object {
   "test": "local-Ident-name.module--test--2GQpZJ",
   "{}": "local-Ident-name.module--{}--nRmS1p",
   "©": "local-Ident-name.module--©--iWVpcm",
+  "©id": "local-Ident-name.module--©id--BNk8lB",
   "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
   "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
   "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
@@ -2980,6 +3078,7 @@ Object {
   "##": "local-Ident-name.module--##--405237512524",
   "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
   "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2b8a93aeef26",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
   "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
@@ -3017,6 +3116,7 @@ Object {
   "test": "local-Ident-name.module--test--a60f4680ad27",
   "{}": "local-Ident-name.module--{}--00d46b3a8952",
   "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "©id": "local-Ident-name.module--©id--1e41ac2b1eed",
   "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
   "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
   "☺☃": "local-Ident-name.module--☺☃--543bef227373",
@@ -3115,7 +3215,9 @@ Object {
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (style) 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
+  "a-cls": "keyframes-leak-scope_module_css-a-cls",
   "b": "keyframes-leak-scope_module_css-b",
+  "b-cls": "keyframes-leak-scope_module_css-b-cls",
   "c": "keyframes-leak-scope_module_css-c",
   "c1": "keyframes-leak-scope_module_css-c1",
   "c2": "keyframes-leak-scope_module_css-c2",
@@ -3182,7 +3284,9 @@ Object {
   "b": "basic_module_css-b",
   "bar-1": "basic_module_css-bar-1",
   "bounce": "basic_module_css-bounce",
+  "bounce-cls": "basic_module_css-bounce-cls",
   "bounce2": "basic_module_css-bounce2",
+  "bounce2-cls": "basic_module_css-bounce2-cls",
   "bounce3": "basic_module_css-bounce3",
   "bounce4": "basic_module_css-bounce4",
   "c": "basic_module_css-c",
@@ -3296,6 +3400,7 @@ Object {
   "##": "local-Ident-name_module_css-##",
   "#.#.#": "local-Ident-name_module_css-#.#.#",
   "#fake-id": "local-Ident-name_module_css-#fake-id",
+  "#fake-id-x": "local-Ident-name_module_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name_module_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "local-Ident-name_module_css--a-b-c-",
   "-a0-34a___f": "local-Ident-name_module_css--a0-34a___f",
@@ -3333,6 +3438,7 @@ Object {
   "test": "local-Ident-name_module_css-test",
   "{}": "local-Ident-name_module_css-{}",
   "©": "local-Ident-name_module_css-©",
+  "©id": "local-Ident-name_module_css-©id",
   "“‘’”": "local-Ident-name_module_css-“‘’”",
   "⌘⌥": "local-Ident-name_module_css-⌘⌥",
   "☺☃": "local-Ident-name_module_css-☺☃",
@@ -3349,6 +3455,7 @@ Object {
   "##": "local-Ident-name.module--##--4MjQ_",
   "#.#.#": "local-Ident-name.module--#.#.#--4Z5kr",
   "#fake-id": "local-Ident-name.module--#fake-id--stuV6",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--Ry90p",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--GNmAU",
   "-a-b-c-": "local-Ident-name.module---a-b-c---BVuZu",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--rWQCS",
@@ -3386,6 +3493,7 @@ Object {
   "test": "local-Ident-name.module--test--n138O",
   "{}": "local-Ident-name.module--{}--yOiSk",
   "©": "local-Ident-name.module--©--ABrkO",
+  "©id": "local-Ident-name.module--©id--Dy6vK",
   "“‘’”": "local-Ident-name.module--“‘’”--Viviw",
   "⌘⌥": "local-Ident-name.module--⌘⌥--tU2QX",
   "☺☃": "local-Ident-name.module--☺☃--_YUxr",
@@ -3402,6 +3510,7 @@ Object {
   "##": "_-1##",
   "#.#.#": "_-1#.#.#",
   "#fake-id": "_-1#fake-id",
+  "#fake-id-x": "_-1#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_-1++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_-1-a-b-c-",
   "-a0-34a___f": "_-1-a0-34a___f",
@@ -3439,6 +3548,7 @@ Object {
   "test": "_-1test",
   "{}": "_-1{}",
   "©": "_-1©",
+  "©id": "_-1©id",
   "“‘’”": "_-1“‘’”",
   "⌘⌥": "_-1⌘⌥",
   "☺☃": "_-1☺☃",
@@ -3455,6 +3565,7 @@ Object {
   "##": "_--##",
   "#.#.#": "_--#.#.#",
   "#fake-id": "_--#fake-id",
+  "#fake-id-x": "_--#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "_--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "_---a-b-c-",
   "-a0-34a___f": "_---a0-34a___f",
@@ -3492,6 +3603,7 @@ Object {
   "test": "_--test",
   "{}": "_--{}",
   "©": "_--©",
+  "©id": "_--©id",
   "“‘’”": "_--“‘’”",
   "⌘⌥": "_--⌘⌥",
   "☺☃": "_--☺☃",
@@ -3508,6 +3620,7 @@ Object {
   "##": "__##",
   "#.#.#": "__#.#.#",
   "#fake-id": "__#fake-id",
+  "#fake-id-x": "__#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "__++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "__-a-b-c-",
   "-a0-34a___f": "__-a0-34a___f",
@@ -3545,6 +3658,7 @@ Object {
   "test": "__test",
   "{}": "__{}",
   "©": "__©",
+  "©id": "__©id",
   "“‘’”": "__“‘’”",
   "⌘⌥": "__⌘⌥",
   "☺☃": "__☺☃",
@@ -3561,6 +3675,7 @@ Object {
   "##": "##--7vA-7E",
   "#.#.#": "#.#.#--1Hd875",
   "#fake-id": "#fake-id--ez7Dik",
+  "#fake-id-x": "#fake-id-x--sMxxrn",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--OsAmD3",
   "-a-b-c-": "-a-b-c---jfQ3Qn",
   "-a0-34a___f": "-a0-34a___f--OWXZy-",
@@ -3598,6 +3713,7 @@ Object {
   "test": "test--mowWgR",
   "{}": "{}--Tr49RL",
   "©": "©--sWiP9l",
+  "©id": "©id--2brne1",
   "“‘’”": "“‘’”--M3gyy-",
   "⌘⌥": "⌘⌥--oDuNAW",
   "☺☃": "☺☃--pbZo-2",
@@ -3614,6 +3730,7 @@ Object {
   "##": "😀- -##",
   "#.#.#": "😀- -#.#.#",
   "#fake-id": "😀- -#fake-id",
+  "#fake-id-x": "😀- -#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "😀- -++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "😀- --a-b-c-",
   "-a0-34a___f": "😀- --a0-34a___f",
@@ -3651,6 +3768,7 @@ Object {
   "test": "😀- -test",
   "{}": "😀- -{}",
   "©": "😀- -©",
+  "©id": "😀- -©id",
   "“‘’”": "😀- -“‘’”",
   "⌘⌥": "😀- -⌘⌥",
   "☺☃": "😀- -☺☃",
@@ -3667,6 +3785,7 @@ Object {
   "##": "local-Ident-name.module--##--CU4LyzXr4m",
   "#.#.#": "local-Ident-name.module--#.#.#---k23lpEMg-",
   "#fake-id": "local-Ident-name.module--#fake-id--aoLUns9FUw",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2EbZHbHGCY",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--SjgB1SBFzx",
   "-a-b-c-": "local-Ident-name.module---a-b-c---spF-wFF3ki",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--8SmkpM38MT",
@@ -3704,6 +3823,7 @@ Object {
   "test": "local-Ident-name.module--test--6y2MZL2dRW",
   "{}": "local-Ident-name.module--{}--KmrFboxFIk",
   "©": "local-Ident-name.module--©--8qkLiWtfe0",
+  "©id": "local-Ident-name.module--©id--UrZDoNLIly",
   "“‘’”": "local-Ident-name.module--“‘’”--o0Ra2DG0ZC",
   "⌘⌥": "local-Ident-name.module--⌘⌥--S6bOlCWVBp",
   "☺☃": "local-Ident-name.module--☺☃--DnbMOfd6eV",
@@ -3720,6 +3840,7 @@ Object {
   "##": "local-Ident-name.module--##--qmWu4j",
   "#.#.#": "local-Ident-name.module--#.#.#--jTAz29",
   "#fake-id": "local-Ident-name.module--#fake-id--Tf_LXF",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--hxBHhk",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--G9OqS6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---baJWIK",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--j4G6AV",
@@ -3757,6 +3878,7 @@ Object {
   "test": "local-Ident-name.module--test--_SesvC",
   "{}": "local-Ident-name.module--{}--rC8he6",
   "©": "local-Ident-name.module--©--if7zkU",
+  "©id": "local-Ident-name.module--©id--8B3d97",
   "“‘’”": "local-Ident-name.module--“‘’”--zEDyfZ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--VM04KP",
   "☺☃": "local-Ident-name.module--☺☃--DzDnMo",
@@ -3773,6 +3895,7 @@ Object {
   "##": "prefix-./local-Ident-name.module.css?local-ident-name-9---##---7LLFg7-postfix",
   "#.#.#": "prefix-./local-Ident-name.module.css?local-ident-name-9---#.#.#---tkYIvY-postfix",
   "#fake-id": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id---0ySTTy-postfix",
+  "#fake-id-x": "prefix-./local-Ident-name.module.css?local-ident-name-9---#fake-id-x---QgI35t-postfix",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "prefix-./local-Ident-name.module.css?local-ident-name-9---++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.---I2RCq8-postfix",
   "-a-b-c-": "prefix-./local-Ident-name.module.css?local-ident-name-9----a-b-c----hDXrIM-postfix",
   "-a0-34a___f": "prefix-./local-Ident-name.module.css?local-ident-name-9----a0-34a___f---VQNZfx-postfix",
@@ -3810,6 +3933,7 @@ Object {
   "test": "prefix-./local-Ident-name.module.css?local-ident-name-9---test---PboabM-postfix",
   "{}": "prefix-./local-Ident-name.module.css?local-ident-name-9---{}---cEk0mR-postfix",
   "©": "prefix-./local-Ident-name.module.css?local-ident-name-9---©---l15bLc-postfix",
+  "©id": "prefix-./local-Ident-name.module.css?local-ident-name-9---©id---YKO46_-postfix",
   "“‘’”": "prefix-./local-Ident-name.module.css?local-ident-name-9---“‘’”---Jk8q45-postfix",
   "⌘⌥": "prefix-./local-Ident-name.module.css?local-ident-name-9---⌘⌥---WgMb99-postfix",
   "☺☃": "prefix-./local-Ident-name.module.css?local-ident-name-9---☺☃---PSP-1Q-postfix",
@@ -3826,6 +3950,7 @@ Object {
   "##": "local-Ident-name.module--##--9WIAe0",
   "#.#.#": "local-Ident-name.module--#.#.#--KWHj86",
   "#fake-id": "local-Ident-name.module--#fake-id--6FWV9i",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--PQSSyT",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--eWkFUR",
   "-a-b-c-": "local-Ident-name.module---a-b-c---IYz9aF",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--PS1ay2",
@@ -3863,6 +3988,7 @@ Object {
   "test": "local-Ident-name.module--test--Wxl9SQ",
   "{}": "local-Ident-name.module--{}--x9uHdU",
   "©": "local-Ident-name.module--©--GlglrH",
+  "©id": "local-Ident-name.module--©id--_N2Dmr",
   "“‘’”": "local-Ident-name.module--“‘’”--kFrgHQ",
   "⌘⌥": "local-Ident-name.module--⌘⌥--IU4ZsQ",
   "☺☃": "local-Ident-name.module--☺☃--RQhCjb",
@@ -3879,6 +4005,7 @@ Object {
   "##": "local-Ident-name.module--##--e4c1f1f4",
   "#.#.#": "local-Ident-name.module--#.#.#--55dcc6f4",
   "#fake-id": "local-Ident-name.module--#fake-id--7f4db0e0",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--e7b7d50a",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--fc3f7bcd",
   "-a-b-c-": "local-Ident-name.module---a-b-c---aaccc232",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4e81654c",
@@ -3916,6 +4043,7 @@ Object {
   "test": "local-Ident-name.module--test--8270b0ef",
   "{}": "local-Ident-name.module--{}--ae3dd8d2",
   "©": "local-Ident-name.module--©--1b9a8b1c",
+  "©id": "local-Ident-name.module--©id--2a5be927",
   "“‘’”": "local-Ident-name.module--“‘’”--f7de2a8c",
   "⌘⌥": "local-Ident-name.module--⌘⌥--a716095a",
   "☺☃": "local-Ident-name.module--☺☃--1469d673",
@@ -3932,6 +4060,7 @@ Object {
   "##": "local-Ident-name.module--##--Xw2rY7zd",
   "#.#.#": "local-Ident-name.module--#.#.#--KxM40M3r",
   "#fake-id": "local-Ident-name.module--#fake-id--OAAO9JtY",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--UHdwhi/x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--5IxQmIT6",
   "-a-b-c-": "local-Ident-name.module---a-b-c---2n5qnvlm",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--pYiaTYyp",
@@ -3969,6 +4098,7 @@ Object {
   "test": "local-Ident-name.module--test--NLdHRDRl",
   "{}": "local-Ident-name.module--{}--6OhFoptN",
   "©": "local-Ident-name.module--©--tHIIl+/T",
+  "©id": "local-Ident-name.module--©id--Kz0Iz7Fz",
   "“‘’”": "local-Ident-name.module--“‘’”--+9nwT2o+",
   "⌘⌥": "local-Ident-name.module--⌘⌥--CPntnPbX",
   "☺☃": "local-Ident-name.module--☺☃--YgLNlGOB",
@@ -3985,6 +4115,7 @@ Object {
   "##": "local-Ident-name.module--##--jZQh9o",
   "#.#.#": "local-Ident-name.module--#.#.#--tDxSdx",
   "#fake-id": "local-Ident-name.module--#fake-id--V2cCf7",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--uMKzBb",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--jkaqMF",
   "-a-b-c-": "local-Ident-name.module---a-b-c---Z08EAB",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--IDqcbV",
@@ -4022,6 +4153,7 @@ Object {
   "test": "local-Ident-name.module--test--2GQpZJ",
   "{}": "local-Ident-name.module--{}--nRmS1p",
   "©": "local-Ident-name.module--©--iWVpcm",
+  "©id": "local-Ident-name.module--©id--BNk8lB",
   "“‘’”": "local-Ident-name.module--“‘’”--tEAd1K",
   "⌘⌥": "local-Ident-name.module--⌘⌥--0M-Dzq",
   "☺☃": "local-Ident-name.module--☺☃--8UhLTD",
@@ -4038,6 +4170,7 @@ Object {
   "##": "local-Ident-name.module--##--405237512524",
   "#.#.#": "local-Ident-name.module--#.#.#--381b432f1b73",
   "#fake-id": "local-Ident-name.module--#fake-id--9e548df04926",
+  "#fake-id-x": "local-Ident-name.module--#fake-id-x--2b8a93aeef26",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "local-Ident-name.module--++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.--35f5b6eb7413",
   "-a-b-c-": "local-Ident-name.module---a-b-c---b170d6339a09",
   "-a0-34a___f": "local-Ident-name.module---a0-34a___f--4612db420e23",
@@ -4075,6 +4208,7 @@ Object {
   "test": "local-Ident-name.module--test--a60f4680ad27",
   "{}": "local-Ident-name.module--{}--00d46b3a8952",
   "©": "local-Ident-name.module--©--73e3d1219ba0",
+  "©id": "local-Ident-name.module--©id--1e41ac2b1eed",
   "“‘’”": "local-Ident-name.module--“‘’”--bf4bc7cf1f92",
   "⌘⌥": "local-Ident-name.module--⌘⌥--d045ac42a7d0",
   "☺☃": "local-Ident-name.module--☺☃--543bef227373",
@@ -4173,7 +4307,9 @@ Object {
 exports[`ConfigTestCases css css-loader exported tests should export CSS module class names (text) 36`] = `
 Object {
   "a": "keyframes-leak-scope_module_css-a",
+  "a-cls": "keyframes-leak-scope_module_css-a-cls",
   "b": "keyframes-leak-scope_module_css-b",
+  "b-cls": "keyframes-leak-scope_module_css-b-cls",
   "c": "keyframes-leak-scope_module_css-c",
   "c1": "keyframes-leak-scope_module_css-c1",
   "c2": "keyframes-leak-scope_module_css-c2",
@@ -4288,12 +4424,12 @@ a {
 	}
 }
 
-.basic_module_css-bounce {
+.basic_module_css-bounce-cls {
 	animation-name: basic_module_css-bounce;
 	animation: basic_module_css-bounce2 1s ease;
 }
 
-.basic_module_css-bounce2 {
+.basic_module_css-bounce2-cls {
 	color: green;
 	animation: basic_module_css-bounce 1s ease;
 	animation-name: basic_module_css-bounce2;
@@ -4732,8 +4868,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name_module_css-\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name_module_css-\\\\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -4742,8 +4878,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name_module_css-© {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name_module_css-©id {
   color: black;
 }
 
@@ -4850,8 +4986,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--stuV6 {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--Ry90p {
   color: antiquewhite;
 }
 
@@ -4860,8 +4996,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--ABrkO {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--Dy6vK {
   color: black;
 }
 
@@ -4968,8 +5104,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#_-1\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#_-1\\\\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -4978,8 +5114,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#_-1© {
+/* matches the element with id=\\"©id\\" */
+#_-1©id {
   color: black;
 }
 
@@ -5086,8 +5222,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#_--\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#_--\\\\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -5096,8 +5232,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#_--© {
+/* matches the element with id=\\"©id\\" */
+#_--©id {
   color: black;
 }
 
@@ -5204,8 +5340,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#__\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#__\\\\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -5214,8 +5350,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#__© {
+/* matches the element with id=\\"©id\\" */
+#__©id {
   color: black;
 }
 
@@ -5322,8 +5458,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#\\\\#fake-id--ez7Dik {
+/* matches the element with id=\\"#fake-id-x\\" */
+#\\\\#fake-id-x--sMxxrn {
   color: antiquewhite;
 }
 
@@ -5332,8 +5468,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#©--sWiP9l {
+/* matches the element with id=\\"©id\\" */
+#©id--2brne1 {
   color: black;
 }
 
@@ -5440,8 +5576,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#😀-\\\\ -\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#😀-\\\\ -\\\\#fake-id-x {
   color: antiquewhite;
 }
 
@@ -5450,8 +5586,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#😀-\\\\ -© {
+/* matches the element with id=\\"©id\\" */
+#😀-\\\\ -©id {
   color: black;
 }
 
@@ -5558,8 +5694,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--aoLUns9FUw {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--2EbZHbHGCY {
   color: antiquewhite;
 }
 
@@ -5568,8 +5704,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--8qkLiWtfe0 {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--UrZDoNLIly {
   color: black;
 }
 
@@ -5676,8 +5812,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--Tf_LXF {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--hxBHhk {
   color: antiquewhite;
 }
 
@@ -5686,8 +5822,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--if7zkU {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--8B3d97 {
   color: black;
 }
 
@@ -5794,8 +5930,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id---0ySTTy-postfix {
+/* matches the element with id=\\"#fake-id-x\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---\\\\#fake-id-x---QgI35t-postfix {
   color: antiquewhite;
 }
 
@@ -5804,8 +5940,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©---l15bLc-postfix {
+/* matches the element with id=\\"©id\\" */
+#prefix-\\\\.\\\\/local-Ident-name\\\\.module\\\\.css\\\\?local-ident-name-9---©id---YKO46_-postfix {
   color: black;
 }
 
@@ -5912,8 +6048,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--6FWV9i {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--PQSSyT {
   color: antiquewhite;
 }
 
@@ -5922,8 +6058,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--GlglrH {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--_N2Dmr {
   color: black;
 }
 
@@ -6030,8 +6166,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--7f4db0e0 {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--e7b7d50a {
   color: antiquewhite;
 }
 
@@ -6040,8 +6176,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--1b9a8b1c {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--2a5be927 {
   color: black;
 }
 
@@ -6148,8 +6284,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--OAAO9JtY {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--UHdwhi\\\\/x {
   color: antiquewhite;
 }
 
@@ -6158,8 +6294,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--tHIIl\\\\+\\\\/T {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--Kz0Iz7Fz {
   color: black;
 }
 
@@ -6266,8 +6402,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--V2cCf7 {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--uMKzBb {
   color: antiquewhite;
 }
 
@@ -6276,8 +6412,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--iWVpcm {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--BNk8lB {
   color: black;
 }
 
@@ -6384,8 +6520,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#local-Ident-name\\\\.module--\\\\#fake-id--9e548df04926 {
+/* matches the element with id=\\"#fake-id-x\\" */
+#local-Ident-name\\\\.module--\\\\#fake-id-x--2b8a93aeef26 {
   color: antiquewhite;
 }
 
@@ -6394,8 +6530,8 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
   color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#local-Ident-name\\\\.module--©--73e3d1219ba0 {
+/* matches the element with id=\\"©id\\" */
+#local-Ident-name\\\\.module--©id--1e41ac2b1eed {
   color: black;
 }
 
@@ -6675,7 +6811,7 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 /*!****************************************************************!*\\\\
   !*** css ./keyframes-leak-scope.module.css (exportType: link) ***!
   \\\\****************************************************************/
-.keyframes-leak-scope_module_css-a {
+.keyframes-leak-scope_module_css-a-cls {
 	color: green;
 	animation: keyframes-leak-scope_module_css-a;
 }
@@ -6690,7 +6826,7 @@ a[href=\\"#b.c\\"].basic_module_css-x.basic_module_css-y {
 	100% { left: 20px; }
 }
 
-.keyframes-leak-scope_module_css-b {
+.keyframes-leak-scope_module_css-b-cls {
 	animation: keyframes-leak-scope_module_css-b;
 }
 
