@@ -667,9 +667,11 @@ const withCodSpeed = async (bench) => {
 			// Drain heap before the instrumented region so allocations from the
 			// warmup runs aren't attributed to the measured sample (especially
 			// under massif). One GC can leave promoted-but-unreachable objects
-			// pending finalization; finalizers themselves can allocate. Loop:
-			// GC -> microtask drain -> GC, repeated, then a final setImmediate
-			// drain so any pending IO callbacks settle before measurement.
+			// pending finalization; finalizers themselves can allocate. Loop
+			// `gc -> microtask` three times so each GC's finalizers get a chance
+			// to run and any garbage they produce is collected on the next pass,
+			// then drain pending IO with `setImmediate`, then one final GC to
+			// catch anything the IO callbacks left behind.
 			for (let i = 0; i < 3; i++) {
 				global.gc?.();
 				await new Promise((resolve) => {
@@ -786,11 +788,19 @@ const withCodSpeed = async (bench) => {
 		const finalizeSyncRun = () => finalizeBenchRun();
 
 		/**
-		 * Run a task's full lifecycle once with no instrumentation. Used as a
-		 * global prime pass for memory mode so module loads, V8 hidden-class
-		 * transitions, and inline-cache fills happen before any measurement —
-		 * removing the cross-task order-dependence that causes the same
-		 * benchmark to report different allocation counts across PRs.
+		 * Run a task's per-task hooks plus one un-instrumented iteration. Used
+		 * as a global prime pass for memory mode so module loads, V8
+		 * hidden-class transitions, and inline-cache fills happen before any
+		 * measurement — removing the cross-task order-dependence that causes
+		 * the same benchmark to report different allocation counts across PRs.
+		 *
+		 * Intentionally skipped here: bench-level `setup` / `teardown`,
+		 * `beforeEach` / `afterEach`, `mongoMeasurement.start/stop`, and
+		 * `InstrumentHooks.startBenchmark/stopBenchmark`. Those belong to the
+		 * measurement loop and would either double-instrument or skew the
+		 * measured run if invoked here. `beforeAll` / `afterAll` are included
+		 * because they own setup/teardown that the iteration itself depends on
+		 * (e.g. the watch task opens its watcher in `beforeAll`).
 		 * @param {Task} task task
 		 * @returns {Promise<void>}
 		 */
@@ -806,7 +816,8 @@ const withCodSpeed = async (bench) => {
 		};
 
 		/**
-		 * Sync version of primeTaskAsync.
+		 * Sync version of primeTaskAsync — see that docstring for what is and
+		 * isn't included.
 		 * @param {Task} task task
 		 */
 		const primeTaskSync = (task) => {
