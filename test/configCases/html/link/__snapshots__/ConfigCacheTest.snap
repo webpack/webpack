@@ -28,8 +28,8 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <link rel=\\"manifest\\" href=\\"f2fd5abcd3951abacaa4.webmanifest\\">
 
 <!-- Stylesheet (multi-rel parsing) -->
-<link rel=\\"stylesheet\\" href=\\"070dc97d4bda865ae576.css\\">
-<link rel=\\"alternate stylesheet\\" href=\\"8c847557578fec6297af.css\\" title=\\"Alternate\\">
+<link rel=\\"stylesheet\\" href=\\"c27bf2ddca7855d4c9de.css\\">
+<link rel=\\"alternate stylesheet\\" href=\\"fc675722115470dd867f.css\\" title=\\"Alternate\\">
 
 <!-- Prefetch / Preload -->
 <link rel=\\"prefetch\\" href=\\"09a1a1112c577c279435.png\\">
@@ -62,4 +62,26 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 </body>
 </html>
 "
+`;
+
+exports[`ConfigCacheTestCases html link exported tests should handle link tag 2`] = `
+Array [
+  "/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.foo {
+	background: url(09a1a1112c577c279435.png);
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./alt-style.css ***!
+  \\\\***************************/
+.bar {
+	background: url(09a1a1112c577c279435.png);
+	color: blue;
+}
+
+",
+]
 `;

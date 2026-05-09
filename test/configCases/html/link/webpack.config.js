@@ -5,6 +5,7 @@ module.exports = {
 	devtool: false,
 	target: "web",
 	experiments: {
-		html: true
+		html: true,
+		css: true
 	}
 };
