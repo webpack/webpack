@@ -302,12 +302,12 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
 
 - [alexander-akait](https://github.com/alexander-akait) -
   **Alexander Akait** <<sheo13666q@gmail.com>> (he/him)
+- [avivkeller](https://github.com/avivkeller) -
+  **Aviv Keller** <<me@aviv.sh>> (he/him)
 - [evenstensberg](https://github.com/evenstensberg) -
   **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
 - [ovflowd](https://github.com/ovflowd) -
   **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
-- [snitin315](https://github.com/snitin315) -
-  **Nitin Kumar** <<snitin315@gmail.com>> (he/him)
 - [thelarkinn](https://github.com/thelarkinn) -
   **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 
