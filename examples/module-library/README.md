@@ -141,9 +141,8 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 174 bytes [emitted] [javascript module] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 302 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 302 bytes [entry] [rendered]
   > ./example.js main
-  runtime modules 396 bytes 2 modules
   ./example.js + 2 modules 302 bytes [built] [code generated]
     [exports: decrement, increment, print, reset, resetCounter, value]
     [all exports used]

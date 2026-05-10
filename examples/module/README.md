@@ -40,38 +40,6 @@ export function reset() {
 # dist/output.js
 
 ```javascript
-/******/ // The require scope
-/******/ var __webpack_require__ = {};
-/******/ 
-```
-
-<details><summary><code>/* webpack runtime code */</code></summary>
-
-``` js
-/************************************************************************/
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
-/************************************************************************/
-```
-
-</details>
-
-``` js
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
@@ -124,10 +92,9 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),o=0,c(o
 ## Unoptimized
 
 ```
-asset output.js 1.65 KiB [emitted] [javascript module] (name: main)
-chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
+asset output.js 775 bytes [emitted] [javascript module] (name: main)
+chunk (runtime: main) output.js (main) 453 bytes [entry] [rendered]
   > ./example.js main
-  runtime modules 396 bytes 2 modules
   ./example.js + 2 modules 453 bytes [built] [code generated]
     [exports: inc, print]
     [all exports used]
@@ -140,9 +107,8 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 110 bytes [emitted] [javascript module] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 453 bytes [entry] [rendered]
   > ./example.js main
-  runtime modules 396 bytes 2 modules
   ./example.js + 2 modules 453 bytes [built] [code generated]
     [exports: inc, print]
     [all exports used]
