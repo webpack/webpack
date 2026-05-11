@@ -32,6 +32,9 @@ exports[`ConfigCacheTestCases html webpack-ignore exported tests should support 
 
 <!-- webpackIgnore: 1 -->
 <img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"warning-non-boolean\\">
+
+<!? webpackIgnore: true ?>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"bogus-comment-not-magic\\">
 </body>
 </html>
 "

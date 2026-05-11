@@ -25,5 +25,10 @@ it("should support webpackIgnore magic comment in html modules", () => {
 	expect(page).toMatch(
 		/<img src="[a-f0-9]+\.png" alt="warning-non-boolean">/
 	);
+	// A "bogus comment" (e.g. `<? … ?>`) must not be parsed as a magic
+	// comment even if its body happens to contain `webpackIgnore`.
+	expect(page).toMatch(
+		/<img src="[a-f0-9]+\.png" alt="bogus-comment-not-magic">/
+	);
 	expect(page).toMatchSnapshot();
 });
