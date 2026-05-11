@@ -6,4 +6,6 @@ it("should call the linkInsert hook to control where the link is inserted", asyn
 
 	expect(styleLink).toBeDefined();
 	expect(styleLink.getAttribute("data-link-insert")).toBe("custom");
+	// hook redirected insertion away from <head> and into <body>.
+	expect(styleLink.parentNode).toBe(document.body);
 });

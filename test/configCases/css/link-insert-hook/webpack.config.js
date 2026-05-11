@@ -21,12 +21,12 @@ module.exports = {
 							compilation
 						);
 
-					// Override insertion: place link as first child of <head>
-					// (instead of the default appendChild).
+					// Override insertion: place link into <body> instead of
+					// the default `document.head.appendChild(link);`.
 					hooks.linkInsert.tap(
 						"LinkInsertHookTest",
 						() =>
-							'link.setAttribute("data-link-insert", "custom"); document.head.insertBefore(link, document.head.firstChild);'
+							'link.setAttribute("data-link-insert", "custom"); document.body.appendChild(link);'
 					);
 				}
 			);
