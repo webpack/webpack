@@ -90,6 +90,73 @@ describe("util/identifier", () => {
 		}
 	});
 
+	describe("parseResource", () => {
+		// [input, expectedPath, expectedQuery, expectedFragment]
+		/** @type {[string, string, string, string][]} */
+		const cases = [
+			["path#hash?query", "path", "", "#hash?query"],
+			["path?query#hash", "path", "?query", "#hash"],
+			["path", "path", "", ""],
+			["path#fragment", "path", "", "#fragment"],
+			["path?query", "path", "?query", ""],
+			[
+				"/home/user/test#folder/file.js",
+				"/home/user/test#folder/file.js",
+				"",
+				""
+			],
+			[
+				"C:\\Users\\test#folder\\file.js",
+				"C:\\Users\\test#folder\\file.js",
+				"",
+				""
+			],
+			["C:/Users/test#folder/file.js", "C:/Users/test#folder/file.js", "", ""],
+			[
+				"/home/user/test#folder/file.js?protocol=ws&port=8080",
+				"/home/user/test#folder/file.js",
+				"?protocol=ws&port=8080",
+				""
+			],
+			[
+				"/home/user/test#folder/file.js?query=1#fragment",
+				"/home/user/test#folder/file.js",
+				"?query=1",
+				"#fragment"
+			],
+			[
+				"/home/user/test#a/test#b/file.js",
+				"/home/user/test#a/test#b/file.js",
+				"",
+				""
+			],
+			[
+				"/home/user/test#a/test#b/file.js#fragment",
+				"/home/user/test#a/test#b/file.js",
+				"",
+				"#fragment"
+			],
+			["/abs/path/file.js#fragment", "/abs/path/file.js", "", "#fragment"],
+			[
+				"C:\\abs\\path\\file.js#fragment",
+				"C:\\abs\\path\\file.js",
+				"",
+				"#fragment"
+			],
+			["./relative/file#fragment", "./relative/file", "", "#fragment"],
+			["module#fragment", "module", "", "#fragment"]
+		];
+		for (const [input, path, query, fragment] of cases) {
+			it(JSON.stringify(input), () => {
+				const result = identifierUtil.parseResource(input);
+				expect(result.path).toBe(path);
+				expect(result.query).toBe(query);
+				expect(result.fragment).toBe(fragment);
+				expect(result.resource).toBe(input);
+			});
+		}
+	});
+
 	describe("parseResourceWithoutFragment", () => {
 		// [input, expectedPath, expectedQuery]
 		/** @type {[string, string, string][]} */
