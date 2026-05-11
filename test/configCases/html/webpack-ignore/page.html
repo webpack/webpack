@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>webpackIgnore</title></head>
+<body>
+<!-- Resolved: no comment -->
+<img src="./image.png" alt="resolved">
+
+<!-- webpackIgnore: true -->
+<img src="./ignored.png" alt="ignored">
+
+<!-- webpackIgnore: false -->
+<img src="./image.png" alt="resolved-explicit-false">
+
+<!--  webpackIgnore:   true  -->
+<img src="./still-ignored.png" srcset="./still-ignored.png 2x" alt="ignored-with-srcset">
+
+<!-- webpackIgnore: true -->
+<!-- a regular comment overrides the webpackIgnore -->
+<img src="./image.png" alt="overridden">
+
+<!-- not-a-magic-comment -->
+<!-- webpackIgnore: true -->
+<img src="./still-ignored2.png" alt="ignored-last-wins">
+
+<!-- webpackIgnore: true -->
+<div>
+	<img src="./image.png" alt="nested-not-ignored">
+</div>
+
+<!-- webpackIgnore: 1 -->
+<img src="./image.png" alt="warning-non-boolean">
+</body>
+</html>

@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html webpack-ignore exported tests should support webpackIgnore magic comment in html modules 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>webpackIgnore</title></head>
+<body>
+<!-- Resolved: no comment -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"resolved\\">
+
+<!-- webpackIgnore: true -->
+<img src=\\"./ignored.png\\" alt=\\"ignored\\">
+
+<!-- webpackIgnore: false -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"resolved-explicit-false\\">
+
+<!--  webpackIgnore:   true  -->
+<img src=\\"./still-ignored.png\\" srcset=\\"./still-ignored.png 2x\\" alt=\\"ignored-with-srcset\\">
+
+<!-- webpackIgnore: true -->
+<!-- a regular comment overrides the webpackIgnore -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"overridden\\">
+
+<!-- not-a-magic-comment -->
+<!-- webpackIgnore: true -->
+<img src=\\"./still-ignored2.png\\" alt=\\"ignored-last-wins\\">
+
+<!-- webpackIgnore: true -->
+<div>
+	<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"nested-not-ignored\\">
+</div>
+
+<!-- webpackIgnore: 1 -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"warning-non-boolean\\">
+</body>
+</html>
+"
+`;

@@ -8833,7 +8833,9 @@ declare abstract class HtmlGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class HtmlParser extends ParserClass {}
+declare abstract class HtmlParser extends ParserClass {
+	magicCommentContext: ContextImport;
+}
 
 /**
  * Options for building http resources.
