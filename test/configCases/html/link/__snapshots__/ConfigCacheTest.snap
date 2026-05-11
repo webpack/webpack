@@ -14,43 +14,43 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <link rel=\\"unknown\\" href=\\"./should-not-resolve.png\\">
 
 <!-- Icon variants -->
-<link rel=\\"icon\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"ICON\\" HREF=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"shortcut icon\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"icon shortcut\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"apple-touch-icon\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"apple-touch-icon-precomposed\\" href=\\"09a1a1112c577c279435.png\\" />
-<link rel=\\"apple-touch-startup-image\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"mask-icon\\" href=\\"09a1a1112c577c279435.png\\" color=\\"#000000\\">
-<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"32x32\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"icon\\" href=\\"handled-icon.png\\">
+<link rel=\\"ICON\\" HREF=\\"handled-icon.png\\">
+<link rel=\\"shortcut icon\\" href=\\"handled-icon.png\\">
+<link rel=\\"icon shortcut\\" href=\\"handled-icon.png\\">
+<link rel=\\"apple-touch-icon\\" href=\\"handled-icon.png\\">
+<link rel=\\"apple-touch-icon-precomposed\\" href=\\"handled-icon.png\\" />
+<link rel=\\"apple-touch-startup-image\\" href=\\"handled-icon.png\\">
+<link rel=\\"mask-icon\\" href=\\"handled-icon.png\\" color=\\"#000000\\">
+<link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"32x32\\" href=\\"handled-icon.png\\">
 
 <!-- Manifest -->
-<link rel=\\"manifest\\" href=\\"f2fd5abcd3951abacaa4.webmanifest\\">
+<link rel=\\"manifest\\" href=\\"handled-manifest.webmanifest\\">
 
 <!-- Stylesheet (multi-rel parsing) -->
-<link rel=\\"stylesheet\\" href=\\"c27bf2ddca7855d4c9de.css\\">
-<link rel=\\"alternate stylesheet\\" href=\\"fc675722115470dd867f.css\\" title=\\"Alternate\\">
+<link rel=\\"stylesheet\\" href=\\"handled-style.css\\">
+<link rel=\\"alternate stylesheet\\" href=\\"handled-alt-style.css\\" title=\\"Alternate\\">
 
 <!-- Prefetch / Preload -->
-<link rel=\\"prefetch\\" href=\\"09a1a1112c577c279435.png\\">
-<link rel=\\"preload\\" href=\\"09a1a1112c577c279435.png\\" as=\\"image\\">
-<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 1x, 09a1a1112c577c279435.png 2x\\">
-<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 100w, 09a1a1112c577c279435.png 200w\\" imagesizes=\\"100vw\\">
-<link rel=\\"preload\\" as=\\"font\\" type=\\"font/woff2\\" crossorigin href=\\"31d6cfe0d16ae931b73c.woff2\\">
+<link rel=\\"prefetch\\" href=\\"handled-prefetch.png\\">
+<link rel=\\"preload\\" href=\\"handled-preload.png\\" as=\\"image\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"handled-image.png 1x, handled-icon.png 2x\\">
+<link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"handled-image.png 100w, handled-icon.png 200w\\" imagesizes=\\"100vw\\">
+<link rel=\\"preload\\" as=\\"font\\" type=\\"font/woff2\\" crossorigin href=\\"handled-font.woff2\\">
 
 <!-- Modulepreload (resolves the JS module URL) -->
-<link rel=\\"modulepreload\\" href=\\"7fd113ab097894fc1f7a.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"handled-module.mjs\\">
 
 <!-- Itemprop link rels (only allowed itemprops trigger resolution) -->
-<link itemprop=\\"downloadUrl\\" href=\\"09a1a1112c577c279435.png\\">
-<link itemprop=\\"contentUrl\\" href=\\"09a1a1112c577c279435.png\\">
-<link itemprop=\\"installUrl\\" href=\\"09a1a1112c577c279435.png\\">
+<link itemprop=\\"downloadUrl\\" href=\\"handled-icon.png\\">
+<link itemprop=\\"contentUrl\\" href=\\"handled-icon.png\\">
+<link itemprop=\\"installUrl\\" href=\\"handled-icon.png\\">
 <link itemprop=\\"unknown\\" href=\\"./should-not-resolve.png\\">
 
 <!-- Whitespace and casing variations -->
-<link    rel  =  \\"  icon  \\"    href  =  \\"09a1a1112c577c279435.png\\">
-<link rel='icon' href='09a1a1112c577c279435.png'>
-<link rel=icon href=09a1a1112c577c279435.png>
+<link    rel  =  \\"  icon  \\"    href  =  \\"handled-icon.png\\">
+<link rel='icon' href='handled-icon.png'>
+<link rel=icon href=handled-icon.png>
 
 <!-- Hash-only hrefs are skipped -->
 <link rel=\\"icon\\" href=\\"#anchor\\">
@@ -70,7 +70,7 @@ Array [
   !*** css ./style.css ***!
   \\\\***********************/
 .foo {
-	background: url(09a1a1112c577c279435.png);
+	background: url(handled-image.png);
 	color: red;
 }
 
@@ -78,7 +78,7 @@ Array [
   !*** css ./alt-style.css ***!
   \\\\***************************/
 .bar {
-	background: url(09a1a1112c577c279435.png);
+	background: url(handled-icon.png);
 	color: blue;
 }
 
