@@ -5133,6 +5133,7 @@ declare interface CssLoadingRuntimeModulePluginHooks {
 	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
 	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+	linkInsert: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
