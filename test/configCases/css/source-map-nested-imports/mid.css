@@ -1,0 +1,6 @@
+@import url("./leaf.css");
+
+.imported-mid {
+	color: green;
+	font-style: italic;
+}

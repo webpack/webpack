@@ -1,0 +1,10 @@
+@import url("./mid.css");
+
+.parent-rule {
+	color: red;
+	background: blue;
+}
+
+.another-parent-rule {
+	font-size: 16px;
+}

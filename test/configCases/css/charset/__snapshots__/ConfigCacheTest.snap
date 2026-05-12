@@ -154,15 +154,34 @@ exports[`ConfigCacheTestCases css charset exported tests should handle \`@charse
 
 exports[`ConfigCacheTestCases css charset exported tests should handle \`@charset\` at-rule 4`] = `
 "@charset \\"UTF-8\\";
+/*!******************************************************************!*\\\\
+  !*** css ./import-nested.text.css (exportType: css-style-sheet) ***!
+  \\\\******************************************************************/
+
+
 .import-nested {
 	color: red;
 }
+
+/*!**************************************************************************!*\\\\
+  !*** css ./import-nested.text.css?foo=bar (exportType: css-style-sheet) ***!
+  \\\\**************************************************************************/
+
+
 .import-nested {
 	color: red;
 }
+
+/*!***********************************************************!*\\\\
+  !*** css ./import.text.css (exportType: css-style-sheet) ***!
+  \\\\***********************************************************/
+
+
+
 .import {
 	color: red;
 }
+
 /*!************************************************************************!*\\\\
   !*** css ./styles-5.css-style-sheet.css (exportType: css-style-sheet) ***!
   \\\\************************************************************************/
