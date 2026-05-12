@@ -2223,6 +2223,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-auto-pure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
+        "multiple": false,
+        "path": "module.parser.css/auto.pure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-url": Object {
     "configs": Array [
       Object {
@@ -2524,6 +2537,19 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-pure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
+        "multiple": false,
+        "path": "module.parser.css/module.pure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
     "multiple": false,
     "simpleType": "boolean",
   },
