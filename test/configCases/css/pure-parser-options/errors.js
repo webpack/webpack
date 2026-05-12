@@ -1,6 +1,13 @@
 "use strict";
 
 module.exports = [
+	// css/auto with a `.module.css` filename → pure check applies.
+	// Its sibling `auto-non-module.css` (no `.module.`) must NOT throw,
+	// even though the same rule has `parser: { pure: true }`.
+	{
+		moduleName: /auto-impure\.module\.css/,
+		message: /Selector "body" is not pure/
+	},
 	// Locks in Copilot review #2: prelude slice for the rule after an
 	// at-rule that consumes its own `;` (here `@import`) must NOT include
 	// the at-rule text.

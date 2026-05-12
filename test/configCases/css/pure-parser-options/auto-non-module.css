@@ -1,0 +1,9 @@
+/* Filename does NOT match IS_MODULES, so `css/auto` treats it as plain CSS —
+   pure check must NOT apply even though `parser: { pure: true }` is set. */
+body {
+	color: red;
+}
+
+:global(.global-only) {
+	color: blue;
+}
