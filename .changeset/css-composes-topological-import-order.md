@@ -1,0 +1,5 @@
+---
+"webpack": patch
+---
+
+Fix CSS modules `composes: ... from "<file>"` so the composed files load in an order consistent with every rule's local composes order, instead of source first-appearance order. Previously, if `.a { composes: c from "./c"; }` appeared before `.b { composes: b from "./b"; composes: c from "./c"; }`, `c.css` would be bundled before `b.css` even though `.b`'s local order requires `b` to load earlier so `c` can override it in the cascade. The CSS parser now builds a per-rule composes-from-file graph during parsing and, at end of parse, tags each file's first composes-import dependency with a `sourceOrder` according to a topological sort (Kahn's algorithm, source-order tie-breaking). `NormalModule#build`'s existing `sortWithSourceOrder` pass then reorders the deps for free. Files participating in a cycle (e.g. two rules disagreeing on the relative order of two files) keep their natural source-loc position. Matches the behavior of [`postcss-modules-extract-imports#138`](https://github.com/css-modules/postcss-modules-extract-imports/pull/138) used by `css-loader`.

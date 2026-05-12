@@ -1,0 +1,21 @@
+/*
+ * Regression test for the postcss-modules-extract-imports#138 port.
+ *
+ * `.first` composes `y` only, so `y` is the first composes-from-file
+ * webpack sees in source order. `.second` then composes `x` before `y` —
+ * which says `x.css` must load before `y.css` in the bundle so `y` can
+ * override `x` in the cascade. Topological sort across the rules must
+ * therefore emit `x.css` before `y.css`, even though `y` was encountered
+ * first.
+ */
+
+:local(.first) {
+	composes: y from "./y.modules.css";
+	color: green;
+}
+
+:local(.second) {
+	composes: x from "./x.modules.css";
+	composes: y from "./y.modules.css";
+	color: orange;
+}

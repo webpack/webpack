@@ -45,6 +45,8 @@ Object {
   "exportName42": "postcss-modules-extract-imports_modules_css-exportName42 postcss-modules-extract-imports_modules_css-localName",
   "exportName43": "postcss-modules-extract-imports_modules_css-exportName43 postcss-modules-extract-imports_modules_css-localName",
   "exportName44": "postcss-modules-extract-imports_modules_css-exportName44",
+  "exportName45": "postcss-modules-extract-imports_modules_css-exportName45 resolve-composes-order-cx_modules_css-cx",
+  "exportName46": "postcss-modules-extract-imports_modules_css-exportName46 resolve-composes-order-bx_modules_css-bx resolve-composes-order-cx_modules_css-cx",
   "exportName5": "postcss-modules-extract-imports_modules_css-exportName5 library_modules_css-importName library_modules_css-importName2",
   "exportName6": "postcss-modules-extract-imports_modules_css-exportName6 library_modules_css-importName",
   "exportName7": "postcss-modules-extract-imports_modules_css-exportName7 library_modules_css-importName library_modules_css-secondImport",
@@ -498,6 +500,20 @@ Array [
 	color: red;
 }
 
+/*!***************************************************!*\\\\
+  !*** css ./resolve-composes-order-bx.modules.css ***!
+  \\\\***************************************************/
+.resolve-composes-order-bx_modules_css-bx {
+	color: red;
+}
+
+/*!***************************************************!*\\\\
+  !*** css ./resolve-composes-order-cx.modules.css ***!
+  \\\\***************************************************/
+.resolve-composes-order-cx_modules_css-cx {
+	color: blue;
+}
+
 /*!*********************************************************!*\\\\
   !*** css ./postcss-modules-extract-imports.modules.css ***!
   \\\\*********************************************************/
@@ -617,7 +633,6 @@ Array [
 	}
 }
 
-/* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
 /* resolve-composes-order */
 .postcss-modules-extract-imports_modules_css-exportName20 {
 	color: #bebebe;
@@ -716,6 +731,20 @@ Array [
 
 
 .postcss-modules-extract-imports_modules_css-exportName44 { color: unknown; }
+
+/* resolve-composes-order (isolated regression test for PR 138 port).
+ * Uses dedicated \`cx\`/\`bx\` files so no earlier rule \\"primes\\" their
+ * insertion order: only \`.exportName45\` and \`.exportName46\` reference
+ * them, in the order \`.exportName46\` requires \`bx\` before \`cx\`.
+ * Without the topological sort, \`cx.modules.css\` would be bundled
+ * before \`bx.modules.css\` because \`.exportName45\` is parsed first.
+ */
+.postcss-modules-extract-imports_modules_css-exportName45 {
+	}
+
+.postcss-modules-extract-imports_modules_css-exportName46 {
+	/* \`bx\` must come before \`cx\` in the bundle */
+	}
 
 /*!****************************************************************!*\\\\
   !*** css ./postcss-modules-local-by-default.local.modules.css ***!

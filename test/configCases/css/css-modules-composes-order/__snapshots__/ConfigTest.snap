@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css css-modules-composes-order exported tests orders composes-from-file imports topologically across rules 1`] = `
+"/*!***************************!*\\\\
+  !*** css ./x.modules.css ***!
+  \\\\***************************/
+.x_modules_css-x {
+	color: red;
+}
+
+/*!***************************!*\\\\
+  !*** css ./y.modules.css ***!
+  \\\\***************************/
+.y_modules_css-y {
+	color: blue;
+}
+
+/*!*******************************!*\\\\
+  !*** css ./entry.modules.css ***!
+  \\\\*******************************/
+/*
+ * Regression test for the postcss-modules-extract-imports#138 port.
+ *
+ * \`.first\` composes \`y\` only, so \`y\` is the first composes-from-file
+ * webpack sees in source order. \`.second\` then composes \`x\` before \`y\` —
+ * which says \`x.css\` must load before \`y.css\` in the bundle so \`y\` can
+ * override \`x\` in the cascade. Topological sort across the rules must
+ * therefore emit \`x.css\` before \`y.css\`, even though \`y\` was encountered
+ * first.
+ */
+
+.entry_modules_css-first {
+	color: green;
+}
+
+.entry_modules_css-second {
+	color: orange;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;
+
+exports[`ConfigTestCases css css-modules-composes-order exported tests orders composes-from-file imports topologically across rules 2`] = `
+Object {
+  "first": "entry_modules_css-first y_modules_css-y",
+  "second": "entry_modules_css-second x_modules_css-x y_modules_css-y",
+}
+`;

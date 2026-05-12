@@ -143,7 +143,6 @@
 	}
 }
 
-/* TODO bug - need port https://github.com/css-modules/postcss-modules-extract-imports/pull/138 */
 /* resolve-composes-order */
 :local(.exportName20) {
 	composes: c from "./c.modules.css";
@@ -287,3 +286,20 @@
 }
 
 .exportName44 { color: unknown; }
+
+/* resolve-composes-order (isolated regression test for PR 138 port).
+ * Uses dedicated `cx`/`bx` files so no earlier rule "primes" their
+ * insertion order: only `.exportName45` and `.exportName46` reference
+ * them, in the order `.exportName46` requires `bx` before `cx`.
+ * Without the topological sort, `cx.modules.css` would be bundled
+ * before `bx.modules.css` because `.exportName45` is parsed first.
+ */
+:local(.exportName45) {
+	composes: cx from "./resolve-composes-order-cx.modules.css";
+}
+
+:local(.exportName46) {
+	/* `bx` must come before `cx` in the bundle */
+	composes: bx from "./resolve-composes-order-bx.modules.css";
+	composes: cx from "./resolve-composes-order-cx.modules.css";
+}
