@@ -107,7 +107,7 @@ Array [
 exports[`walkHtmlTokens should tokenize and roundtrip "basic.html" 1`] = `
 Array [
   Array [
-    "comment",
+    "doctype",
     "<!DOCTYPE html>",
   ],
   Array [

@@ -62,6 +62,10 @@ describe("walkHtmlTokens", () => {
 					results.push(["comment", input.slice(start, end)]);
 					return end;
 				},
+				doctype: (input, start, end) => {
+					results.push(["doctype", input.slice(start, end)]);
+					return end;
+				},
 				text: (input, start, end) => {
 					results.push(["text", input.slice(start, end)]);
 					return end;
@@ -83,6 +87,10 @@ describe("walkHtmlTokens", () => {
 					return end;
 				},
 				comment: (input, start, end) => {
+					reconstructed.push(input.slice(start, end));
+					return end;
+				},
+				doctype: (input, start, end) => {
 					reconstructed.push(input.slice(start, end));
 					return end;
 				},
@@ -188,5 +196,140 @@ describe("walkHtmlTokens", () => {
 			}
 		});
 		expect(texts).toEqual(["hello<"]);
+	});
+
+	it("should parse DOCTYPE as doctype", () => {
+		const results = [];
+		walkHtmlTokens("<!DOCTYPE html><div>hi</div>", 0, {
+			doctype: (input, start, end) => {
+				results.push(["doctype", input.slice(start, end)]);
+				return end;
+			},
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["doctype", "<!DOCTYPE html>"],
+			["open", "div"],
+			["text", "hi"],
+			["close", "div"]
+		]);
+	});
+
+	it("should parse DOCTYPE case-insensitively", () => {
+		const doctypes = [];
+		walkHtmlTokens("<!doctype html><!DoCtYpE html>", 0, {
+			doctype: (input, start, end) => {
+				doctypes.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(doctypes).toEqual(["<!doctype html>", "<!DoCtYpE html>"]);
+	});
+
+	it("should handle CDATA sections", () => {
+		const results = [];
+		walkHtmlTokens("<div><![CDATA[<img src='x'>]]></div>", 0, {
+			comment: (input, start, end) => {
+				results.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			}
+		});
+		// CDATA content should NOT be parsed as tags
+		expect(results).toEqual([
+			["open", "div"],
+			["comment", "<![CDATA[<img src='x'>]]>"],
+			["close", "div"]
+		]);
+	});
+
+	it("should handle nested brackets in CDATA", () => {
+		const comments = [];
+		walkHtmlTokens("<![CDATA[a]b]]c]]>", 0, {
+			comment: (input, start, end) => {
+				comments.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(comments).toEqual(["<![CDATA[a]b]]c]]>"]);
+	});
+
+	it("should handle nested <!-- inside comments", () => {
+		const comments = [];
+		walkHtmlTokens("<!-- outer <!-- inner -->", 0, {
+			comment: (input, start, end) => {
+				comments.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(comments).toEqual(["<!-- outer <!-- inner -->"]);
+	});
+
+	it("should handle EOF in DOCTYPE", () => {
+		const doctypes = [];
+		walkHtmlTokens("<!DOCTYPE html", 0, {
+			doctype: (input, start, end) => {
+				doctypes.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(doctypes).toEqual(["<!DOCTYPE html"]);
+	});
+
+	it("should handle EOF in CDATA", () => {
+		const comments = [];
+		walkHtmlTokens("<![CDATA[unclosed", 0, {
+			comment: (input, start, end) => {
+				comments.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(comments).toEqual(["<![CDATA[unclosed"]);
+	});
+
+	it("should roundtrip DOCTYPE + tags + CDATA", () => {
+		const html = "<!DOCTYPE html><html><body><![CDATA[data]]></body></html>";
+		const parts = [];
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			comment: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			doctype: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
 	});
 });
