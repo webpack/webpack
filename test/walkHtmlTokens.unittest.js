@@ -227,14 +227,14 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should parse DOCTYPE case-insensitively", () => {
-		const doctypes = [];
+		const results = [];
 		walkHtmlTokens("<!doctype html><!DoCtYpE html>", 0, {
 			doctype: (input, start, end) => {
-				doctypes.push(input.slice(start, end));
+				results.push(input.slice(start, end));
 				return end;
 			}
 		});
-		expect(doctypes).toEqual(["<!doctype html>", "<!DoCtYpE html>"]);
+		expect(results).toEqual(["<!doctype html>", "<!DoCtYpE html>"]);
 	});
 
 	it("should handle CDATA sections", () => {
@@ -284,14 +284,14 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle EOF in DOCTYPE", () => {
-		const doctypes = [];
+		const results = [];
 		walkHtmlTokens("<!DOCTYPE html", 0, {
 			doctype: (input, start, end) => {
-				doctypes.push(input.slice(start, end));
+				results.push(input.slice(start, end));
 				return end;
 			}
 		});
-		expect(doctypes).toEqual(["<!DOCTYPE html"]);
+		expect(results).toEqual(["<!DOCTYPE html"]);
 	});
 
 	it("should handle EOF in CDATA", () => {
