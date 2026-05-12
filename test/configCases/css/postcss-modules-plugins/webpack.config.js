@@ -20,6 +20,9 @@ module.exports = {
 			{
 				test: /postcss-modules-local-by-default\.pure\.modules\.css$/,
 				// Pure is like a local but more strict
+				parser: {
+					pure: true
+				},
 				type: "css/module"
 			}
 		]

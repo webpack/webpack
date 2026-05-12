@@ -777,6 +777,50 @@ export type AssetModuleOutputPath =
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
 /**
+ * Enable/disable renaming of `@keyframes`.
+ */
+export type CssParserAnimation = boolean;
+/**
+ * Enable/disable renaming of `@container` names.
+ */
+export type CssParserContainer = boolean;
+/**
+ * Enable/disable renaming of custom identifiers.
+ */
+export type CssParserCustomIdents = boolean;
+/**
+ * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+ */
+export type CssParserDashedIdents = boolean;
+/**
+ * Configure how CSS content is exported as default.
+ */
+export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
+/**
+ * Enable/disable renaming of `@function` names.
+ */
+export type CssParserFunction = boolean;
+/**
+ * Enable/disable renaming of grid identifiers.
+ */
+export type CssParserGrid = boolean;
+/**
+ * Enable/disable `@import` at-rules handling.
+ */
+export type CssParserImport = boolean;
+/**
+ * Use ES modules named export for css exports.
+ */
+export type CssParserNamedExports = boolean;
+/**
+ * Enable strict pure mode: every selector must contain at least one local class or id selector.
+ */
+export type CssParserPure = boolean;
+/**
+ * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+ */
+export type CssParserUrl = boolean;
+/**
  * Configure the generated JS modules that use the ES modules syntax.
  */
 export type CssGeneratorEsModule = boolean;
@@ -796,46 +840,6 @@ export type CssGeneratorExportsOnly = boolean;
 export type CssGeneratorLocalIdentName =
 	| string
 	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
-/**
- * Configure how CSS content is exported as default.
- */
-export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
-/**
- * Enable/disable renaming of `@keyframes`.
- */
-export type CssParserAnimation = boolean;
-/**
- * Enable/disable renaming of `@container` names.
- */
-export type CssParserContainer = boolean;
-/**
- * Enable/disable renaming of custom identifiers.
- */
-export type CssParserCustomIdents = boolean;
-/**
- * Enable/disable renaming of dashed identifiers, e. g. custom properties.
- */
-export type CssParserDashedIdents = boolean;
-/**
- * Enable/disable renaming of `@function` names.
- */
-export type CssParserFunction = boolean;
-/**
- * Enable/disable renaming of grid identifiers.
- */
-export type CssParserGrid = boolean;
-/**
- * Enable/disable `@import` at-rules handling.
- */
-export type CssParserImport = boolean;
-/**
- * Use ES modules named export for css exports.
- */
-export type CssParserNamedExports = boolean;
-/**
- * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
- */
-export type CssParserUrl = boolean;
 /**
  * Options for defer import.
  */
@@ -3163,6 +3167,55 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
+ * Parser options for css/auto and css/module modules.
+ */
+export interface CssAutoOrModuleParserOptions {
+	/**
+	 * Enable/disable renaming of `@keyframes`.
+	 */
+	animation?: CssParserAnimation;
+	/**
+	 * Enable/disable renaming of `@container` names.
+	 */
+	container?: CssParserContainer;
+	/**
+	 * Enable/disable renaming of custom identifiers.
+	 */
+	customIdents?: CssParserCustomIdents;
+	/**
+	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+	 */
+	dashedIdents?: CssParserDashedIdents;
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: CssParserExportType;
+	/**
+	 * Enable/disable renaming of `@function` names.
+	 */
+	function?: CssParserFunction;
+	/**
+	 * Enable/disable renaming of grid identifiers.
+	 */
+	grid?: CssParserGrid;
+	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: CssParserImport;
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+	/**
+	 * Enable strict pure mode: every selector must contain at least one local class or id selector.
+	 */
+	pure?: CssParserPure;
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: CssParserUrl;
+}
+/**
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {
@@ -3217,7 +3270,7 @@ export interface CssModuleGeneratorOptions {
 	localIdentName?: CssGeneratorLocalIdentName;
 }
 /**
- * Parser options for css/module modules.
+ * Parser options for css/global modules.
  */
 export interface CssModuleParserOptions {
 	/**
@@ -4229,17 +4282,17 @@ export interface ParserOptionsByModuleTypeKnown {
 	 */
 	css?: CssParserOptions;
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/auto and css/module modules.
 	 */
-	"css/auto"?: CssModuleParserOptions;
+	"css/auto"?: CssAutoOrModuleParserOptions;
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/global modules.
 	 */
 	"css/global"?: CssModuleParserOptions;
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/auto and css/module modules.
 	 */
-	"css/module"?: CssModuleParserOptions;
+	"css/module"?: CssAutoOrModuleParserOptions;
 	/**
 	 * Parser options for javascript modules.
 	 */

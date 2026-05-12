@@ -1,0 +1,14 @@
+/* file leading comment */
+/* cssmodules-pure-no-check */
+
+body {
+	color: red;
+}
+
+:global(.global-only) {
+	color: green;
+}
+
+.ok {
+	color: blue;
+}

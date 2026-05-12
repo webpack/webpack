@@ -371,6 +371,46 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssAutoOrModuleParserOptions": {
+      "description": "Parser options for css/auto and css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "animation": {
+          "$ref": "#/definitions/CssParserAnimation"
+        },
+        "container": {
+          "$ref": "#/definitions/CssParserContainer"
+        },
+        "customIdents": {
+          "$ref": "#/definitions/CssParserCustomIdents"
+        },
+        "dashedIdents": {
+          "$ref": "#/definitions/CssParserDashedIdents"
+        },
+        "exportType": {
+          "$ref": "#/definitions/CssParserExportType"
+        },
+        "function": {
+          "$ref": "#/definitions/CssParserFunction"
+        },
+        "grid": {
+          "$ref": "#/definitions/CssParserGrid"
+        },
+        "import": {
+          "$ref": "#/definitions/CssParserImport"
+        },
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        },
+        "pure": {
+          "$ref": "#/definitions/CssParserPure"
+        },
+        "url": {
+          "$ref": "#/definitions/CssParserUrl"
+        }
+      }
+    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -473,7 +513,7 @@
       }
     },
     "CssModuleParserOptions": {
-      "description": "Parser options for css/module modules.",
+      "description": "Parser options for css/global modules.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -563,6 +603,10 @@
           "$ref": "#/definitions/CssParserUrl"
         }
       }
+    },
+    "CssParserPure": {
+      "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
+      "type": "boolean"
     },
     "CssParserUrl": {
       "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
@@ -4043,13 +4087,13 @@
           "$ref": "#/definitions/CssParserOptions"
         },
         "css/auto": {
-          "$ref": "#/definitions/CssModuleParserOptions"
+          "$ref": "#/definitions/CssAutoOrModuleParserOptions"
         },
         "css/global": {
           "$ref": "#/definitions/CssModuleParserOptions"
         },
         "css/module": {
-          "$ref": "#/definitions/CssModuleParserOptions"
+          "$ref": "#/definitions/CssAutoOrModuleParserOptions"
         },
         "javascript": {
           "$ref": "#/definitions/JavascriptParserOptions"

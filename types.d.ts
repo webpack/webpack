@@ -5027,6 +5027,66 @@ type CreatedObject<T, F> = T extends ChunkGroupInfoWithName[]
 	: T extends (infer V)[]
 		? StatsObject<V, F>[]
 		: StatsObject<T, F>;
+
+/**
+ * Parser options for css/auto and css/module modules.
+ */
+declare interface CssAutoOrModuleParserOptions {
+	/**
+	 * Enable/disable renaming of `@keyframes`.
+	 */
+	animation?: boolean;
+
+	/**
+	 * Enable/disable renaming of `@container` names.
+	 */
+	container?: boolean;
+
+	/**
+	 * Enable/disable renaming of custom identifiers.
+	 */
+	customIdents?: boolean;
+
+	/**
+	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
+	 */
+	dashedIdents?: boolean;
+
+	/**
+	 * Configure how CSS content is exported as default.
+	 */
+	exportType?: "link" | "text" | "css-style-sheet" | "style";
+
+	/**
+	 * Enable/disable renaming of `@function` names.
+	 */
+	function?: boolean;
+
+	/**
+	 * Enable/disable renaming of grid identifiers.
+	 */
+	grid?: boolean;
+
+	/**
+	 * Enable/disable `@import` at-rules handling.
+	 */
+	import?: boolean;
+
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: boolean;
+
+	/**
+	 * Enable strict pure mode: every selector must contain at least one local class or id selector.
+	 */
+	pure?: boolean;
+
+	/**
+	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
+	 */
+	url?: boolean;
+}
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -5202,7 +5262,7 @@ declare interface CssModuleGeneratorOptions {
 }
 
 /**
- * Parser options for css/module modules.
+ * Parser options for css/global modules.
  */
 declare interface CssModuleParserOptions {
 	/**
@@ -5357,6 +5417,10 @@ declare abstract class CssParser extends ParserClass {
 		 * Use ES modules named export for css exports.
 		 */
 		namedExports: boolean;
+		/**
+		 * Enable strict pure mode: every selector must contain at least one local class or id selector.
+		 */
+		pure?: boolean;
 		/**
 		 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
 		 */
@@ -18031,19 +18095,19 @@ declare interface ParserOptionsByModuleTypeKnown {
 	css?: CssParserOptions;
 
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/auto and css/module modules.
 	 */
-	"css/auto"?: CssModuleParserOptions;
+	"css/auto"?: CssAutoOrModuleParserOptions;
 
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/global modules.
 	 */
 	"css/global"?: CssModuleParserOptions;
 
 	/**
-	 * Parser options for css/module modules.
+	 * Parser options for css/auto and css/module modules.
 	 */
-	"css/module"?: CssModuleParserOptions;
+	"css/module"?: CssAutoOrModuleParserOptions;
 
 	/**
 	 * Parser options for javascript modules.

@@ -1350,7 +1350,6 @@ input { a_value: some-value; }
   !*** css ./postcss-modules-local-by-default.pure.modules.css ***!
   \\\\***************************************************************/
 /* postcss-modules-local-by-default */
-/* TODO not implemented yet */
 
 @keyframes postcss-modules-local-by-default_pure_modules_css-bounce {}
 @keyframes postcss-modules-local-by-default_pure_modules_css-fly {}

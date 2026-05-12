@@ -1,0 +1,28 @@
+/* `@import` consuming its own `;` shouldn't prepend its text to the
+   next prelude error (Copilot review #2). */
+@import "./imported.css";
+
+:global(.after-import) {
+	color: red;
+}
+
+body {
+	color: red;
+}
+
+.ok,
+section {
+	color: blue;
+}
+
+:global(.only-global) {
+	color: orange;
+}
+
+/* Mixed comma list with a pure trailing selector must not be treated as
+   pure for nested selectors (Copilot review #1). */
+:global(.mixed-global), .mixed-local {
+	span {
+		color: green;
+	}
+}
