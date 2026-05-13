@@ -1,0 +1,13 @@
+.foo-bar {
+	color: red;
+}
+
+.baz {
+	composes: foo-bar;
+	background: blue;
+}
+
+.qux {
+	composes: dashy-thing from "./other.modules.css";
+	font-weight: bold;
+}

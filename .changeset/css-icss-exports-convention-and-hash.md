@@ -1,0 +1,9 @@
+---
+"webpack": patch
+---
+
+Fix three correctness gaps in CSS ICSS dependencies (`CssIcssExportDependency`, `CssIcssImportDependency`):
+
+1. **No more spurious "name not found" warnings under `camel-case-only` / `dashes-only`.** Both `CssIcssExportDependency.getWarnings` (for `composes: foo-bar;`) and `CssIcssImportDependency.getWarnings` (for `composes: foo-bar from "./other.css";`) compared the raw composed/imported name against `ExportsInfo`, which only stores names produced by `exportsConvention`. With `camel-case-only` the class `.foo-bar` is exported as `fooBar`, so the lookup would fail and a "Self-referencing name … not found" / "Referenced name … not found" warning would be emitted even though the class exists. Both checks now expand the looked-up name through the relevant module's `exportsConvention` and pass if any alias is provided.
+2. **`CssIcssExportDependency.updateHash` now hashes the dep's `value`, `range`, `interpolate`, `exportMode`, and `exportType`** in addition to `name`'s convention-derived aliases and `localIdentName`. Previously two instances with the same `name` but different `value` / mode / type produced the same hash, so switching e.g. `composes: foo` → `composes: bar` or `ONCE` → `APPEND` would not invalidate the module's persistent cache. `CssIcssSymbolDependency.updateHash` gets explicit field separators for the same reason (avoid adjacent-field aliasing).
+3. **`CssIcssExportDependency.getReferencedExports` for `SELF_REFERENCE`** now returns the composed class (`this.value`) instead of the exporting class (`this.name`), and applies the generator's `exportsConvention` so the optimizer sees the export names actually stored under that convention.
