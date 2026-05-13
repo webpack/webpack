@@ -133,7 +133,7 @@ module.exports = \\"first entry\\";
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			\\"__html_6fc36061_0\\": 0
+/******/ 			\\"__html_cbe5b59d_0\\": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -195,12 +195,12 @@ exports[`ConfigTestCases html script-src-classic exported tests should rewrite s
 <html>
 <head>
 <title>Classic-output test</title>
-<script src=\\"__html_6fc36061_0.chunk.js\\"></script>
+<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
 </head>
 <body>
-<script src=\\"__html_6fc36061_1.chunk.js\\"></script>
-<script type=\\"text/javascript\\" src=\\"__html_6fc36061_2.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_6fc36061_3.chunk.js\\"></script>
+<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<script type=\\"text/javascript\\" src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
 <script type=\\"application/ld+json\\" src=\\"1aeae0731d54e523748c.jsonld\\"></script>
 </body>
 </html>

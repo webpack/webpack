@@ -98,13 +98,13 @@ exports[`ConfigCacheTestCases html modulepreload-esm exported tests should rewri
 <html>
 <head>
 <title>Test</title>
-<link rel=\\"modulepreload\\" href=\\"__html_167ec275_0.chunk.mjs\\">
-<link rel=\\"modulepreload    \\" href=\\"__html_167ec275_1.chunk.mjs\\">
-<link rel=\\"modulepreload\\" href=\\"__html_167ec275_2.chunk.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_0.chunk.mjs\\">
+<link rel=\\"modulepreload    \\" href=\\"__html_cbe5b59d_1.chunk.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_2.chunk.mjs\\">
 </head>
 <body>
 <h1>Hello</h1>
-<script type=\\"module\\" src=\\"__html_167ec275_3.chunk.mjs\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.mjs\\"></script>
 </body>
 </html>
 "

@@ -100,7 +100,7 @@ module.exports = \\"first entry\\";
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		\\"__html_8562062f_0\\": 0
+/******/ 		\\"__html_cbe5b59d_0\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	var installChunk = (data) => {
@@ -155,15 +155,15 @@ exports[`ConfigCacheTestCases html script-src exported tests should bundle class
 <title>Test</title>
 <link rel=\\"stylesheet\\" href=\\"a69243d21de4c981a8a4.css\\">
 <link rel=\\"icon\\" href=\\"31d6cfe0d16ae931b73c.png\\">
-<script type=\\"module\\" src=\\"__html_8562062f_0.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
 </head>
 <body>
 <h1>Hello</h1>
-<script type=\\"module\\" src=\\"__html_8562062f_1.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_8562062f_2.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_8562062f_3.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_8562062f_4.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_8562062f_5.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_4.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_5.chunk.js\\"></script>
 <!-- Non-JS script types must NOT be bundled as JS entries. They flow
      through the regular HtmlSourceDependency path: rewritten as an
      asset URL, the attribute stays as-is. -->
