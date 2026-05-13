@@ -2,6 +2,9 @@
   "version": "0.2",
   "language": "en",
   "words": [
+    "RCDATA",
+    "RAWTEXT",
+    "noembed",
     "absolutify",
     "abortable",
     "acircular",

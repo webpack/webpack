@@ -332,4 +332,209 @@ describe("walkHtmlTokens", () => {
 		});
 		expect(parts.join("")).toBe(html);
 	});
+
+	it("should handle RCDATA for title element", () => {
+		const results = [];
+		walkHtmlTokens("<title>Hello <b>World</b></title>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "title"],
+			["text", "Hello <b>World</b>"],
+			["close", "title"]
+		]);
+	});
+
+	it("should handle RCDATA for textarea element", () => {
+		const results = [];
+		walkHtmlTokens("<textarea><p>not a tag</p></textarea>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "textarea"],
+			["text", "<p>not a tag</p>"],
+			["close", "textarea"]
+		]);
+	});
+
+	it("should handle RAWTEXT for style element", () => {
+		const results = [];
+		walkHtmlTokens("<style>.a { color: red; }</style>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "style"],
+			["text", ".a { color: red; }"],
+			["close", "style"]
+		]);
+	});
+
+	it("should handle script data state", () => {
+		const results = [];
+		walkHtmlTokens("<script>var x = 1 < 2;</script>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "script"],
+			["text", "var x = 1 < 2;"],
+			["close", "script"]
+		]);
+	});
+
+	it("should handle script data escaped state (<!-- inside script)", () => {
+		const results = [];
+		walkHtmlTokens("<script><!--- comment --></script>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "script"],
+			["text", "<!--- comment -->"],
+			["close", "script"]
+		]);
+	});
+
+	it("should not match wrong end tag in RCDATA", () => {
+		const results = [];
+		walkHtmlTokens("<title>text</div></title>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "title"],
+			["text", "text</div>"],
+			["close", "title"]
+		]);
+	});
+
+	it("should handle case-insensitive end tags in content modes", () => {
+		const results = [];
+		walkHtmlTokens("<style>.a{}</STYLE>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "style"],
+			["text", ".a{}"],
+			["close", "STYLE"]
+		]);
+	});
+
+	it("should roundtrip HTML with script and style", () => {
+		const html =
+			"<html><head><style>.a{}</style></head><body><script>var x=1;</script></body></html>";
+		const parts = [];
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle PLAINTEXT state", () => {
+		const results = [];
+		walkHtmlTokens("<div><plaintext><p>ignored</p></div>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
+			}
+		});
+		expect(results).toEqual([
+			["open", "div"],
+			["open", "plaintext"],
+			["text", "<p>ignored</p></div>"]
+		]);
+	});
 });
