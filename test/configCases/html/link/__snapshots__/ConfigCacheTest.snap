@@ -39,7 +39,7 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <link rel=\\"preload\\" as=\\"font\\" type=\\"font/woff2\\" crossorigin href=\\"handled-font.woff2\\">
 
 <!-- Modulepreload (resolves the JS module URL) -->
-<link rel=\\"modulepreload\\" href=\\"handled-module.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"117.bundle0.js\\">
 
 <!-- Itemprop link rels (only allowed itemprops trigger resolution) -->
 <link itemprop=\\"downloadUrl\\" href=\\"handled-icon.png\\">

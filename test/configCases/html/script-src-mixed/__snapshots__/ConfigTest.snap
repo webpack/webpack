@@ -1,0 +1,313 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html script-src-mixed exported tests should bundle multiple classic and module scripts in one HTML 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Mixed scripts</title>
+<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+</head>
+<body>
+<script src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 1`] = `
+"/******/ var __webpack_modules__ = ({
+
+/***/ 219
+/*!*********************!*\\\\
+  !*** ./module-a.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   o: () => (/* binding */ moduleA)
+/* harmony export */ });
+const moduleA = \\"module-a value\\";
+globalThis.__moduleA = moduleA;
+
+
+/***/ }
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/******/ // expose the modules object (__webpack_modules__)
+/******/ __webpack_require__.m = __webpack_modules__;
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/export webpack runtime */
+/******/ export { __webpack_require__ };
+/******/ 
+/******/ /* webpack/runtime/import chunk loading */
+/******/ (() => {
+/******/ 	// no baseURI
+/******/ 	
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		\\"__html_cbe5b59d_1\\": 0
+/******/ 	};
+/******/ 	
+/******/ 	var installChunk = (data) => {
+/******/ 		var {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
+/******/ 		// add \\"modules\\" to the modules object,
+/******/ 		// then flag all \\"ids\\" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0;
+/******/ 		for(moduleId in __webpack_esm_modules__) {
+/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
+/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
+/******/ 		for(;i < __webpack_esm_ids__.length; i++) {
+/******/ 			chunkId = __webpack_esm_ids__[i];
+/******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				installedChunks[chunkId][0]();
+/******/ 			}
+/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 		}
+/******/ 	
+/******/ 	}
+/******/ 	
+/******/ 	// no chunk on demand loading
+/******/ 	
+/******/ 	// no prefetching
+/******/ 	
+/******/ 	// no preloaded
+/******/ 	
+/******/ 	__webpack_require__.C = installChunk;
+/******/ 	
+/******/ 	// no on chunks loaded
+/******/ 	// no HMR
+/******/ 	
+/******/ 	// no HMR manifest
+/******/ })();
+/******/ 
+/************************************************************************/
+/******/ 
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ // This entry module is referenced by other modules so it can't be inlined
+/******/ var __webpack_exports__ = __webpack_require__(219);
+/******/ 
+"
+`;
+
+exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 2`] = `
+"export const __webpack_esm_id__ = \\"__html_cbe5b59d_3\\";
+export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_3\\"];
+export const __webpack_esm_modules__ = {
+
+/***/ 942
+/*!*********************!*\\\\
+  !*** ./module-b.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+/* harmony import */ var _module_a_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module-a.js */ 219);
+
+
+// module-b imports module-a; under the chained dependOn webpack should
+// resolve this import through the shared runtime rather than duplicating
+// module-a into both chunks.
+globalThis.__moduleB = \`module-b sees: \${_module_a_js__WEBPACK_IMPORTED_MODULE_0__/* .moduleA */ .o}\`;
+
+
+/***/ }
+
+};
+;
+
+// load runtime
+import { __webpack_require__ } from \\"./__html_cbe5b59d_1.chunk.js\\";
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+
+import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_3.chunk.js\\";
+__webpack_require__.C(__webpack_chunk_1__);
+var __webpack_exports__ = __webpack_exec__(942);
+"
+`;
+
+exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 1`] = `
+"/******/ var __webpack_modules__ = ({});
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/******/ // expose the modules object (__webpack_modules__)
+/******/ __webpack_require__.m = __webpack_modules__;
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/export webpack runtime */
+/******/ export { __webpack_require__ };
+/******/ 
+/******/ /* webpack/runtime/import chunk loading */
+/******/ (() => {
+/******/ 	// no baseURI
+/******/ 	
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		\\"__html_cbe5b59d_0\\": 0
+/******/ 	};
+/******/ 	
+/******/ 	var installChunk = (data) => {
+/******/ 		var {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
+/******/ 		// add \\"modules\\" to the modules object,
+/******/ 		// then flag all \\"ids\\" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0;
+/******/ 		for(moduleId in __webpack_esm_modules__) {
+/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
+/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
+/******/ 		for(;i < __webpack_esm_ids__.length; i++) {
+/******/ 			chunkId = __webpack_esm_ids__[i];
+/******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				installedChunks[chunkId][0]();
+/******/ 			}
+/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 		}
+/******/ 	
+/******/ 	}
+/******/ 	
+/******/ 	// no chunk on demand loading
+/******/ 	
+/******/ 	// no prefetching
+/******/ 	
+/******/ 	// no preloaded
+/******/ 	
+/******/ 	__webpack_require__.C = installChunk;
+/******/ 	
+/******/ 	// no on chunks loaded
+/******/ 	// no HMR
+/******/ 	
+/******/ 	// no HMR manifest
+/******/ })();
+/******/ 
+/************************************************************************/
+/*!**********************!*\\\\
+  !*** ./classic-a.js ***!
+  \\\\**********************/
+globalThis.__classicA = \\"classic-a value\\";
+
+"
+`;
+
+exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 2`] = `
+"export const __webpack_esm_id__ = \\"__html_cbe5b59d_2\\";
+export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_2\\"];
+export const __webpack_esm_modules__ = {
+
+/***/ 702
+/*!**********************!*\\\\
+  !*** ./classic-b.js ***!
+  \\\\**********************/
+() {
+
+// classic-b loads after classic-a in document order; it reads the global set
+// by classic-a (browser execution order) — webpack doesn't link them.
+globalThis.__classicB = \\"classic-b value\\";
+
+
+/***/ }
+
+};
+;
+
+// load runtime
+import { __webpack_require__ } from \\"./__html_cbe5b59d_0.chunk.js\\";
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+
+import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_2.chunk.js\\";
+__webpack_require__.C(__webpack_chunk_1__);
+var __webpack_exports__ = __webpack_exec__(702);
+"
+`;

@@ -8880,6 +8880,17 @@ declare abstract class HtmlGenerator extends Generator {
 	): void;
 
 	/**
+	 * Processes the provided dependencies block.
+	 */
+	sourceBlock(
+		module: NormalModule,
+		block: DependenciesBlock,
+		initFragments: InitFragment<GenerateContext>[],
+		source: ReplaceSource,
+		generateContext: GenerateContext
+	): void;
+
+	/**
 	 * Processes the provided module.
 	 */
 	sourceModule(
@@ -8900,6 +8911,7 @@ declare abstract class HtmlGenerator extends Generator {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
+	hashFunction?: string | typeof Hash;
 }
 
 /**
