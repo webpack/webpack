@@ -13,5 +13,10 @@
 <script type="text/javascript" src="./classic-typed.js"></script>
 <script src="data:text/javascript,console.log(1)"></script>
 <script src="data:application/javascript;base64,Y29uc29sZS5sb2coMSk="></script>
+<!-- Non-JS script types must NOT be bundled as JS entries. They flow
+     through the regular HtmlSourceDependency path: rewritten as an
+     asset URL, the attribute stays as-is. -->
+<script type="application/ld+json" src="./jsonld-data.jsonld"></script>
+<script type="importmap" src="./importmap.json"></script>
 </body>
 </html>

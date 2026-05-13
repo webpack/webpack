@@ -5,11 +5,11 @@ exports[`ConfigTestCases html script-src-mixed exported tests should bundle mult
 <html>
 <head>
 <title>Mixed scripts</title>
-<script src=\\"__html_29b7ccf9_0.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_29b7ccf9_0.chunk.js\\"></script>
 <script type=\\"module\\" src=\\"__html_29b7ccf9_1.chunk.js\\"></script>
 </head>
 <body>
-<script src=\\"__html_29b7ccf9_2.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_29b7ccf9_2.chunk.js\\"></script>
 <script type=\\"module\\" src=\\"__html_29b7ccf9_3.chunk.js\\"></script>
 </body>
 </html>
