@@ -81,21 +81,11 @@ const SOURCE_MAPPING_DATA_URI =
 // each css module's JS literal carries exactly one map covering both the
 // module's own CSS and all of its transitively `@import`ed content; there
 // should never be more than one map per module.
-//
-// Uses `RegExp#exec` in a loop instead of `String#matchAll` for Node 10
-// compatibility — the integration job in `.github/workflows/test.yml`
-// still runs the full configCases suite on Node 10.x, where `matchAll`
-// is unavailable.
 const extractAllInlineMaps = (bundle) => {
-	const maps = [];
-	// Reset `lastIndex` so repeated calls (one per `it`) start from 0;
-	// `SOURCE_MAPPING_DATA_URI` is a `/g` regex shared across calls.
-	SOURCE_MAPPING_DATA_URI.lastIndex = 0;
-	let m;
-	while ((m = SOURCE_MAPPING_DATA_URI.exec(bundle)) !== null) {
-		maps.push(JSON.parse(NodeBuffer.from(m[1], "base64").toString("utf-8")));
-	}
-	return maps;
+	const matches = [...bundle.matchAll(SOURCE_MAPPING_DATA_URI)];
+	return matches.map((m) =>
+		JSON.parse(NodeBuffer.from(m[1], "base64").toString("utf-8"))
+	);
 };
 
 const readBundle = () => {
