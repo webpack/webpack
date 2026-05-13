@@ -144,7 +144,16 @@ describe("util/identifier", () => {
 				"#fragment"
 			],
 			["./relative/file#fragment", "./relative/file", "", "#fragment"],
-			["module#fragment", "module", "", "#fragment"]
+			["module#fragment", "module", "", "#fragment"],
+			// https://github.com/webpack/webpack/issues/16819 — webpack-dev-server
+			// adds entries as absolute paths with query strings when serving from a
+			// project directory containing `#` (e.g. `~/projects/f#/webpack`).
+			[
+				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true",
+				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js",
+				"?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true",
+				""
+			]
 		];
 		for (const [input, path, query, fragment] of cases) {
 			it(JSON.stringify(input), () => {
