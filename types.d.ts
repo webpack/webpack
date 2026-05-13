@@ -8912,6 +8912,8 @@ declare abstract class HtmlGenerator extends Generator {
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	hashFunction?: string | typeof Hash;
+	context?: string;
+	outputModule?: boolean;
 }
 
 /**
