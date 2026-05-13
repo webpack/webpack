@@ -5,12 +5,12 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should bundle
 <html>
 <head>
 <title>Mixed scripts</title>
-<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<script src=\\"__html_29b7ccf9_0.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_29b7ccf9_1.chunk.js\\"></script>
 </head>
 <body>
-<script src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+<script src=\\"__html_29b7ccf9_2.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"__html_29b7ccf9_3.chunk.js\\"></script>
 </body>
 </html>
 "
@@ -98,7 +98,7 @@ globalThis.__moduleA = moduleA;
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		\\"__html_cbe5b59d_1\\": 0
+/******/ 		\\"__html_29b7ccf9_1\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	var installChunk = (data) => {
@@ -147,8 +147,8 @@ globalThis.__moduleA = moduleA;
 `;
 
 exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 2`] = `
-"export const __webpack_esm_id__ = \\"__html_cbe5b59d_3\\";
-export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_3\\"];
+"export const __webpack_esm_id__ = \\"__html_29b7ccf9_3\\";
+export const __webpack_esm_ids__ = [\\"__html_29b7ccf9_3\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 942
@@ -172,10 +172,10 @@ globalThis.__moduleB = \`module-b sees: \${_module_a_js__WEBPACK_IMPORTED_MODULE
 ;
 
 // load runtime
-import { __webpack_require__ } from \\"./__html_cbe5b59d_1.chunk.js\\";
+import { __webpack_require__ } from \\"./__html_29b7ccf9_1.chunk.js\\";
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 
-import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_3.chunk.js\\";
+import * as __webpack_chunk_1__ from \\"./__html_29b7ccf9_3.chunk.js\\";
 __webpack_require__.C(__webpack_chunk_1__);
 var __webpack_exports__ = __webpack_exec__(942);
 "
@@ -234,7 +234,7 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain 
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		\\"__html_cbe5b59d_0\\": 0
+/******/ 		\\"__html_29b7ccf9_0\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	var installChunk = (data) => {
@@ -282,8 +282,8 @@ globalThis.__classicA = \\"classic-a value\\";
 `;
 
 exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 2`] = `
-"export const __webpack_esm_id__ = \\"__html_cbe5b59d_2\\";
-export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_2\\"];
+"export const __webpack_esm_id__ = \\"__html_29b7ccf9_2\\";
+export const __webpack_esm_ids__ = [\\"__html_29b7ccf9_2\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 702
@@ -303,10 +303,10 @@ globalThis.__classicB = \\"classic-b value\\";
 ;
 
 // load runtime
-import { __webpack_require__ } from \\"./__html_cbe5b59d_0.chunk.js\\";
+import { __webpack_require__ } from \\"./__html_29b7ccf9_0.chunk.js\\";
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 
-import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_2.chunk.js\\";
+import * as __webpack_chunk_1__ from \\"./__html_29b7ccf9_2.chunk.js\\";
 __webpack_require__.C(__webpack_chunk_1__);
 var __webpack_exports__ = __webpack_exec__(702);
 "

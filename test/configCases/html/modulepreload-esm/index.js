@@ -20,29 +20,23 @@ it("should rewrite <link rel=modulepreload> and <script type=module src> to chun
 	expect(page).not.toContain('href="./preload.js"');
 	expect(page).not.toContain('href="./preload-other.js"');
 	expect(page).not.toContain('src="./entry.js"');
-	// All entries get rewritten to the generated chunk filenames.
 	expect(page).toMatch(/<link rel="modulepreload" href="__html_[^"]+\.mjs">/);
 	expect(page).toMatch(/<script type="module" src="__html_[^"]+\.mjs">/);
-	// Data URI in modulepreload is also bundled (webpack resolves the inline
-	// module via DataUriPlugin) and the href is rewritten.
+	// Data URI in modulepreload is also bundled.
 	expect(page).not.toContain('href="data:text/javascript');
 });
 
 it("should emit module-format chunks (no IIFE wrapper) when output.module is enabled", () => {
-	// First modulepreload chunk (in document order) holds the runtime.
 	const preloadChunkName = chunkFor(
 		/<link rel="modulepreload" href="(__html_[^"]+\.mjs)">/
 	);
 	const preloadChunk = readChunk(preloadChunkName);
 	expect(preloadChunk).toMatchSnapshot();
-	// No IIFE wrapper because the user enabled `output.module` /
-	// `experiments.outputModule`.
+	// No IIFE wrapper because output.module / experiments.outputModule is on.
 	expect(preloadChunk).not.toContain("// webpackBootstrap");
 	expect(preloadChunk).not.toMatch(/^\/\*+\/ \(\(\) => \{/);
-	expect(preloadChunk).toContain("var __webpack_modules__");
 	expect(preloadChunk).toContain('"preload module"');
 
-	// `<script type="module" src>` is also ESM-resolved.
 	const entryChunkName = chunkFor(
 		/<script type="module" src="(__html_[^"]+\.mjs)">/
 	);
@@ -51,11 +45,13 @@ it("should emit module-format chunks (no IIFE wrapper) when output.module is ena
 	expect(entryChunk).not.toContain("// webpackBootstrap");
 });
 
-it("should not force preload-only entries to execute via dependOn", () => {
-	// Each entry depends only on the group leader, so a later
-	// <script type="module" src> chunk imports the leader (to share the
-	// runtime) but never the intermediate modulepreload chunks. That keeps
-	// the "preload without execute" contract of <link rel="modulepreload">.
+it("should keep <link rel=modulepreload> entries independent of the module script chunk", () => {
+	// Modulepreload entries are emitted as independent chunks with no
+	// `dependOn`, so a later `<script type="module" src>` chunk never
+	// imports them — that's what preserves the "preload but don't execute"
+	// contract of modulepreload. (If a module script wants the preloaded
+	// module to actually run, it must import it via JS, in which case
+	// webpack inlines the module into the script chunk on its own.)
 	const preloadChunkUrls = [
 		...page.matchAll(/<link rel="modulepreload" href="(__html_[^"]+\.mjs)">/g)
 	].map((m) => m[1]);
@@ -63,12 +59,8 @@ it("should not force preload-only entries to execute via dependOn", () => {
 		/<script type="module" src="(__html_[^"]+\.mjs)">/
 	);
 	expect(preloadChunkUrls.length).toBeGreaterThanOrEqual(2);
-	const leader = preloadChunkUrls[0];
 	const moduleScriptChunk = readChunk(moduleScriptUrl);
-	// The late entry references the leader so it can reuse the runtime…
-	expect(moduleScriptChunk).toContain(leader);
-	// …but does not import the intermediate modulepreload chunks.
-	for (let i = 1; i < preloadChunkUrls.length; i++) {
-		expect(moduleScriptChunk).not.toContain(preloadChunkUrls[i]);
+	for (const preloadChunkUrl of preloadChunkUrls) {
+		expect(moduleScriptChunk).not.toContain(preloadChunkUrl);
 	}
 });
