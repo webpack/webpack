@@ -50,3 +50,25 @@ it("should emit module-format chunks (no IIFE wrapper) when output.module is ena
 	expect(entryChunk).toMatchSnapshot();
 	expect(entryChunk).not.toContain("// webpackBootstrap");
 });
+
+it("should not force preload-only entries to execute via dependOn", () => {
+	// Each entry depends only on the group leader, so a later
+	// <script type="module" src> chunk imports the leader (to share the
+	// runtime) but never the intermediate modulepreload chunks. That keeps
+	// the "preload without execute" contract of <link rel="modulepreload">.
+	const preloadChunkUrls = [
+		...page.matchAll(/<link rel="modulepreload" href="(__html_[^"]+\.mjs)">/g)
+	].map((m) => m[1]);
+	const moduleScriptUrl = chunkFor(
+		/<script type="module" src="(__html_[^"]+\.mjs)">/
+	);
+	expect(preloadChunkUrls.length).toBeGreaterThanOrEqual(2);
+	const leader = preloadChunkUrls[0];
+	const moduleScriptChunk = readChunk(moduleScriptUrl);
+	// The late entry references the leader so it can reuse the runtime…
+	expect(moduleScriptChunk).toContain(leader);
+	// …but does not import the intermediate modulepreload chunks.
+	for (let i = 1; i < preloadChunkUrls.length; i++) {
+		expect(moduleScriptChunk).not.toContain(preloadChunkUrls[i]);
+	}
+});

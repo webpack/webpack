@@ -157,12 +157,8 @@ globalThis.__entryResult = \`entry: \${_preload_js__WEBPACK_IMPORTED_MODULE_0__/
 import { __webpack_require__ } from \\"./__html_cbe5b59d_0.chunk.mjs\\";
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 
-import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_1.chunk.mjs\\";
+import * as __webpack_chunk_1__ from \\"./__html_cbe5b59d_3.chunk.mjs\\";
 __webpack_require__.C(__webpack_chunk_1__);
-import * as __webpack_chunk_2__ from \\"./__html_cbe5b59d_2.chunk.mjs\\";
-__webpack_require__.C(__webpack_chunk_2__);
-import * as __webpack_chunk_3__ from \\"./__html_cbe5b59d_3.chunk.mjs\\";
-__webpack_require__.C(__webpack_chunk_3__);
 var __webpack_exports__ = __webpack_exec__(97);
 "
 `;
