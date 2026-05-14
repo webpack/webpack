@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Style Tag Test</title>
+<style>
+body { color: red; }
+.foo { background: url("./pixel.png"); }
+</style>
+<style type="text/css">
+.bar { color: blue; }
+</style>
+<!-- Non-CSS type stays untouched -->
+<style type="text/foo">
+this stays
+</style>
+<style>
+  /* second sheet */
+  .baz { color: green; }
+</style>
+</head>
+<body>
+<p>Hi</p>
+</body>
+</html>
