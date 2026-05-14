@@ -28,5 +28,5 @@ it("should process inline <style> tags through the CSS pipeline", () => {
 	// Style 3 (`type="text/foo"`) stays raw, so the marker only shows up
 	// three times.
 	const cssHeaderCount = (page.match(/css data:text\/css,/g) || []).length;
-	expect(cssHeaderCount).toBe(1);
+	expect(cssHeaderCount).toBe(3);
 });
