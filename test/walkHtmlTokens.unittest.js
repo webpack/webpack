@@ -448,6 +448,33 @@ describe("walkHtmlTokens", () => {
 		]);
 	});
 
+	it("should handle script data double escaped state transitions (<script and </script)", () => {
+		const results = [];
+		walkHtmlTokens(
+			"<script><!-- <script> var x = 1; </script> --></script>",
+			0,
+			{
+				openTag: (input, start, end, ns, ne) => {
+					results.push(["open", input.slice(ns, ne)]);
+					return end;
+				},
+				closeTag: (input, start, end, ns, ne) => {
+					results.push(["close", input.slice(ns, ne)]);
+					return end;
+				},
+				text: (input, start, end) => {
+					results.push(["text", input.slice(start, end)]);
+					return end;
+				}
+			}
+		);
+		expect(results).toEqual([
+			["open", "script"],
+			["text", "<!-- <script> var x = 1; </script> -->"],
+			["close", "script"]
+		]);
+	});
+
 	it("should not match wrong end tag in RCDATA", () => {
 		const results = [];
 		walkHtmlTokens("<title>text</div></title>", 0, {
