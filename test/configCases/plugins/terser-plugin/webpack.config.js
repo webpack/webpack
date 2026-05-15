@@ -1,6 +1,6 @@
 "use strict";
 
-const TerserPlugin = require("terser-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -21,16 +21,16 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new TerserPlugin({
+			new MinimizerPlugin({
 				parallel: false,
 				extractComments: false,
 				exclude: ["vendors.js", "compress.js", "extract.js"]
 			}),
-			new TerserPlugin({
+			new MinimizerPlugin({
 				parallel: false,
 				include: ["extract.js"]
 			}),
-			new TerserPlugin({
+			new MinimizerPlugin({
 				parallel: false,
 				terserOptions: {
 					compress: {

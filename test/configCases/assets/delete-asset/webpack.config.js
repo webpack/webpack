@@ -1,6 +1,6 @@
 "use strict";
 
-const TerserPlugin = require("terser-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 const { BannerPlugin, Compilation } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
@@ -8,7 +8,7 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new TerserPlugin({
+			new MinimizerPlugin({
 				extractComments: {
 					filename: "LICENSES.txt"
 				}
@@ -43,7 +43,7 @@ module.exports = {
 							compilation.getAsset("chunk_js.bundle0.js.map")
 						).toBeDefined();
 						expect(compilation.getAsset("LICENSES.txt")).toBeDefined();
-						// TODO: terser-webpack-plugin should set related info
+						// TODO: minimizer-webpack-plugin should set related info
 						compilation.updateAsset(
 							"chunk_js.bundle0.js",
 							compilation.assets["chunk_js.bundle0.js"],

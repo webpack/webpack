@@ -1,6 +1,6 @@
 "use strict";
 
-const TerserPlugin = require("terser-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 
 /** @type {import("../../../").Configuration} */
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new TerserPlugin({
+			new MinimizerPlugin({
 				terserOptions: {
 					mangle: false,
 					output: {
