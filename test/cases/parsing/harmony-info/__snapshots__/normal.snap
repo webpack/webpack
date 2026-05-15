@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing harmony-info harmony-info should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "5:1-4",
+    "message": "export 'default' (imported as 'def') was not found in './module' (possible exports: b, c, d)",
+    "moduleName": "./parsing/harmony-info/index.js",
+  },
+  Object {
+    "loc": "5:6-8",
+    "message": "export 'a' (imported as 'aa') was not found in './module' (possible exports: b, c, d)",
+    "moduleName": "./parsing/harmony-info/index.js",
+  },
+  Object {
+    "loc": "5:19-20",
+    "message": "export 'e' (imported as 'e') was not found in './module' (possible exports: b, c, d)",
+    "moduleName": "./parsing/harmony-info/index.js",
+  },
+]
+`;

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css conflicting-order conflicting-order should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "chunk css
+Conflicting order between css ./b.css and css ./c.css
+CSS modules are imported in:
+  - css ./lazy1.css
+  - css ./lazy2.css",
+  },
+]
+`;

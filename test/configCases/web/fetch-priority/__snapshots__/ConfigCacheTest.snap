@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases web fetch-priority fetch-priority should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "61:1-55",
+    "message": "\`webpackFetchPriority\` expected true or \\"low\\", \\"high\\" or \\"auto\\", but received: unknown.",
+    "moduleName": "./index.js",
+  },
+]
+`;

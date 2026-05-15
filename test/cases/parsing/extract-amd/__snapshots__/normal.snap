@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing extract-amd extract-amd should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "3:6-39",
+    "message": "Module not found: Error: Can't resolve './b' in '<TEST_DIR>'",
+    "moduleName": "./parsing/extract-amd/optional.js",
+  },
+]
+`;

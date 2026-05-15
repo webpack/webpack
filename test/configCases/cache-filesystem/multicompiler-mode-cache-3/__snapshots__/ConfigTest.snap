@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases cache-filesystem multicompiler-mode-cache-3 multicompiler-mode-cache-3 should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "Please set unique \\"cache.name\\" option. Name \\"filesystem\\" already used.",
+  },
+  Object {
+    "compilerPath": "3rd compiler",
+    "message": "Compiler with name \\"3rd compiler\\" doesn't use unique cache name. Please set unique \\"cache.name\\" option. Name \\"filesystem\\" already used.",
+  },
+]
+`;

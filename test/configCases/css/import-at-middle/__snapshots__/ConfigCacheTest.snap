@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css import-at-middle import-at-middle should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "5:0-7",
+    "message": "Any '@import' rules must precede all other rules",
+    "moduleName": "css ./b.css",
+  },
+  Object {
+    "loc": "6:0-7",
+    "message": "Any '@import' rules must precede all other rules",
+    "moduleName": "css ./b.css",
+  },
+  Object {
+    "loc": "4:0-7",
+    "message": "Any '@import' rules must precede all other rules",
+    "moduleName": "css ./c.css",
+  },
+  Object {
+    "loc": "5:0-7",
+    "message": "Any '@import' rules must precede all other rules",
+    "moduleName": "css ./c.css",
+  },
+]
+`;

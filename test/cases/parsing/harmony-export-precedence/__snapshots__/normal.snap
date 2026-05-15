@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing harmony-export-precedence harmony-export-precedence should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "20:16-29",
+    "message": "export 'default' (imported as 'defaultImport') was not found in './a' (possible exports: a, b, c, d, e, f)",
+    "moduleName": "./parsing/harmony-export-precedence/index.js",
+  },
+]
+`;

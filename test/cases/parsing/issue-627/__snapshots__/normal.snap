@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing issue-627 issue-627 should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "3:1-45",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./parsing/issue-627/dir/test.js",
+  },
+]
+`;

@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases defer-import comment-error comment-error should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "1:0-55",
+    "message": "Deferred import can only be used with \`import * as namespace from '...'\` syntax.",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "2:0-51",
+    "message": "Deferred import can only be used with \`import * as namespace from '...'\` syntax.",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "4:0-64",
+    "message": "Deferred import can only be used with \`import * as namespace from '...'\` syntax.",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "6:0-56",
+    "message": "Deferred re-export (\`export defer * as namespace from '...'\`) is not a part of the Import Defer proposal.
+Use the following code instead:
+    import defer * as namespace from '...';
+    export { namespace };",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "7:0-60",
+    "message": "Deferred re-export (\`export defer * as namespace from '...'\`) is not a part of the Import Defer proposal.
+Use the following code instead:
+    import defer * as namespace from '...';
+    export { namespace };",
+    "moduleName": "./index.js",
+  },
+]
+`;

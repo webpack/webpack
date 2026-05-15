@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases async-module environment-not-support-async-warning environment-not-support-async-warning should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"topLevelAwait\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "./tla.js",
+  },
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"external import\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "external [\\"import.js\\",\\"request\\"]",
+  },
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"external module\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "external [\\"module.js\\",\\"request\\"]",
+  },
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"external promise\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "external \\"Promise.resolve('promise.js')\\"",
+  },
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"external script\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "external \\"scriptGlobal@https://example.com/script.js\\"",
+  },
+  Object {
+    "message": "The generated code contains 'async/await' because this module is using \\"asyncWebAssembly\\".
+However, your target environment does not appear to support 'async/await'.
+As a result, the code may not run as expected or may cause runtime errors.",
+    "moduleName": "./wasm.wat",
+  },
+]
+`;

@@ -2274,3 +2274,83 @@ body {
 /*# sourceMappingURL=bundle1.css.map*/",
 ]
 `;
+
+exports[`ConfigTestCases css import import should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "223:0-24",
+    "message": "Expected URL in '@import nourl(test.css);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "224:0-9",
+    "message": "Expected URL in '@import ;'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "225:0-16",
+    "message": "Expected URL in '@import foo-bar;'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "226:0-104",
+    "message": "Expected URL in '@import layer(super.foo) \\"./style2.css?warning=1\\" supports(display: flex) screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "227:0-104",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) \\"./style2.css?warning=2\\" screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "228:0-104",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) \\"./style2.css?warning=3\\";'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "229:0-109",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(\\"./style2.css?warning=6\\");'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "229:0-109",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) url(\\"./style2.css?warning=5\\") screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "229:0-109",
+    "message": "Expected URL in '@import layer(super.foo) url(\\"./style2.css?warning=4\\") supports(display: flex) screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "230:0-10",
+    "message": "'@namespace' is not supported in bundled CSS",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "232:0-89",
+    "message": "Expected URL in '@import layer(test) supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "232:0-38",
+    "message": "Expected URL in '@import screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "232:0-77",
+    "message": "Expected URL in '@import supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "232:0-47",
+    "message": "Expected URL in '@import supports(background: url(\\"./img.png\\"));'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "233:0-10",
+    "message": "'@namespace' is not supported in bundled CSS",
+    "moduleName": "css ./style.css",
+  },
+]
+`;

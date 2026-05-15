@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases container 3-container-full 3-container-full should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "No version specified and unable to automatically determine one. No version in description file (usually package.json). Add version to description file <TEST_DIR>/package.json, or manually specify version in shared config.",
+  },
+]
+`;

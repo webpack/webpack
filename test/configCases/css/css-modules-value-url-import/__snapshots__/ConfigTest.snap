@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css css-modules-value-url-import css-modules-value-url-import should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "3:0-23",
+    "message": "'@value' identifier 'externalImport' was imported from another module and cannot be used as the URL of '@import' — only locally defined values are supported here",
+    "moduleName": "css ./imported-via-value.module.css",
+  },
+  Object {
+    "loc": "6:19-34",
+    "message": "'@value' identifier 'externalBg' was imported from another module and cannot be used inside 'url()' — only locally defined values are supported here",
+    "moduleName": "css ./imported-via-value.module.css",
+  },
+]
+`;

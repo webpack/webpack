@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases ecmaVersion browserslist-missing browserslist-missing should compile: errors 1`] = `
+Array [
+  Object {
+    "message": "No browserslist config found to handle the 'browserslist' target.
+See https://github.com/browserslist/browserslist#queries for possible ways to provide a config.
+The recommended way is to add a 'browserslist' key to your package.json and list supported browsers (resp. node.js versions).
+You can also more options via the 'target' option: 'browserslist' / 'browserslist:env' / 'browserslist:query' / 'browserslist:path-to-config' / 'browserslist:path-to-config:env'",
+  },
+]
+`;

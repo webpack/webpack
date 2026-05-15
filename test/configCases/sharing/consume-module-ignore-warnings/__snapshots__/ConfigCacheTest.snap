@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases sharing consume-module-ignore-warnings consume-module-ignore-warnings should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "resolving fallback for shared module prefix/deep/c",
+    "message": "Module not found: Error: Can't resolve 'prefix/deep/c' in '<TEST_DIR>'",
+  },
+]
+`;

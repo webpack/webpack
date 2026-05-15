@@ -8,6 +8,7 @@ const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
+const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -74,6 +75,9 @@ const describeCases = (config) => {
 					// eslint-disable-next-line no-loop-func
 					describe(testName, () => {
 						const testDirectory = path.join(casesPath, category.name, testName);
+
+						registerPerCaseSnapshotHooks(testDirectory, config.name);
+
 						const outputDirectory = path.join(
 							__dirname,
 							"js",
