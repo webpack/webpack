@@ -8914,6 +8914,7 @@ declare abstract class HtmlParser extends ParserClass {
 	hashFunction?: string | typeof Hash;
 	context?: string;
 	outputModule?: boolean;
+	css?: boolean;
 }
 
 /**
