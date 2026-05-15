@@ -5,6 +5,7 @@
 // composes its source map with the loader's, so the final map still points
 // back to the loader's original input (the on-disk `.ts` content).
 
+/** @type {import("../../../../../").LoaderDefinition} */
 module.exports = function (source) {
 	const banner = "// banner\n\n";
 	const generated = banner + source;
@@ -19,6 +20,7 @@ module.exports = function (source) {
 
 	this.callback(null, generated, {
 		version: 3,
+		file: this.resourcePath,
 		sources: [this.resourcePath],
 		sourcesContent: [source],
 		names: [],

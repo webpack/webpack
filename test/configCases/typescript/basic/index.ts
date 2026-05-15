@@ -7,13 +7,8 @@ import mod5 from "./module-4.js";
 
 const myString: string = "foo";
 
-enum UserRole {
-	Admin,
-	Editor,
-	Viewer
-}
-
-const myRole = UserRole.Viewer;
+type UserRole = 0 | 1 | 2;
+const myRole: UserRole = 2;
 
 function getString(str: string): string {
 	return str;
@@ -37,5 +32,5 @@ it("source maps should work", function() {
 	const sourceIndex = map.sources.findIndex((item) => /index\.ts/.test(item));
 
 	expect(sourceIndex).not.toBe(-1);
-	expect(map.sourcesContent[sourceIndex]).toContain("enum UserRole {");
+	expect(map.sourcesContent[sourceIndex]).toContain("type UserRole = 0 | 1 | 2;");
 });
