@@ -9740,7 +9740,10 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	constructor(
 		sourceType?: "module" | "auto" | "script",
-		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+		options?: {
+			parse?: (code: string, options: ParseOptions) => ParseResult;
+			typescript?: boolean;
+		}
 	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -10181,7 +10184,10 @@ declare class JavascriptParser extends ParserClass {
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
-	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
+	options: {
+		parse?: (code: string, options: ParseOptions) => ParseResult;
+		typescript?: boolean;
+	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];

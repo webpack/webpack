@@ -2109,7 +2109,8 @@
         },
         "typescript": {
           "description": "Enable typescript support.",
-          "type": "boolean"
+          "type": "boolean",
+          "experimental": true
         },
         "unknownContextCritical": {
           "description": "Enable warnings when using the require function in a not statically analyse-able way.",
