@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html style-tag exported tests should process inline <style> tags through the CSS pipeline 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Style Tag Test</title>
+<style>/*!********************************************************************************************************************************************************!*\\\\
+  !*** css data:text/css,%0Abody%20%7B%20color%3A%20red%3B%20%7D%0A.foo%20%7B%20background%3A%20url(%22.%2Fpixel.png%22)%3B%20%7D%0A (exportType: text) ***!
+  \\\\********************************************************************************************************************************************************/
+
+body { color: red; }
+.foo { background: url(handled-pixel.png); }
+
+</style>
+<style type=\\"text/css\\">/*!****************************************************************************************!*\\\\
+  !*** css data:text/css,%0A.bar%20%7B%20color%3A%20blue%3B%20%7D%0A (exportType: text) ***!
+  \\\\****************************************************************************************/
+
+.bar { color: blue; }
+
+</style>
+<!-- Non-CSS type stays untouched -->
+<style type=\\"text/foo\\">
+this stays
+</style>
+<style>/*!************************************************************************************************************************************!*\\\\
+  !*** css data:text/css,%0A%20%20%2F*%20second%20sheet%20*%2F%0A%20%20.baz%20%7B%20color%3A%20green%3B%20%7D%0A (exportType: text) ***!
+  \\\\************************************************************************************************************************************/
+
+  /* second sheet */
+  .baz { color: green; }
+
+</style>
+</head>
+<body>
+<p>Hi</p>
+</body>
+</html>
+"
+`;
