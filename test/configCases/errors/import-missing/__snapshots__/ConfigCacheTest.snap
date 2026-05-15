@@ -11,7 +11,7 @@ Array [
 exports[`ConfigCacheTestCases errors import-missing import-missing should pre-compile to fill disk cache (1st): errors 1`] = `
 Array [
   Object {
-    "message": "Module not found: Error: Can't resolve './e' in '<TEST_DIR>'",
+    "message": "Module not found: Error: Can't resolve './f' in '<TEST_DIR>'",
   },
 ]
 `;
