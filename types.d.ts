@@ -22441,6 +22441,15 @@ declare abstract class StackEntry {
 	/**
 	 * Walk the linked list looking for an entry with the same request shape.
 	 * Set-compatible: callers that used `stack.has(entry)` keep working.
+	 * NOTE: kept monomorphic on purpose. An earlier draft accepted a string
+	 * query too (so pre-5.21 plugins keeping their own `Set<string>` of
+	 * seen entries could probe the live stack with the formatted form),
+	 * but adding the second shape regressed `doResolve`'s heap profile by
+	 * ~1 MiB / 200 resolves on stack-churn — V8 keeps a polymorphic
+	 * call-site state for `parent.has(stackEntry)` once `has` has two
+	 * argument shapes. Plugins that need string membership can reach for
+	 * `[...stack].find(e => e.includes(formattedString))` via the
+	 * `String`-method proxies on `StackEntry` instead.
 	 */
 	has(query: StackEntry): boolean;
 
@@ -22450,8 +22459,10 @@ declare abstract class StackEntry {
 	get size(): number;
 
 	/**
-	 * Human-readable form used in recursion error messages and logs.
-	 * Matches the historical string format so existing log parsers stay valid.
+	 * Human-readable form used in recursion error messages, logs, and the
+	 * iterator above. Not memoized: caching would require an extra slot on
+	 * every `StackEntry`, which costs heap even on resolves that never look
+	 * at the formatted form.
 	 */
 	toString(): string;
 }
