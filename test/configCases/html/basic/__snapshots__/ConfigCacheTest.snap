@@ -111,11 +111,11 @@ or
 </script>
 
 <img src=\\"#hash\\" />
-<img src='31d6cfe0d16ae931b73c.png#hash' />
-<img src=31d6cfe0d16ae931b73c.png#hash />
-<img src=31d6cfe0d16ae931b73c.png# />
-<img srcset=\\"31d6cfe0d16ae931b73c.png#hash\\" />
-<img srcset=\\"31d6cfe0d16ae931b73c.png#foo 480w, 31d6cfe0d16ae931b73c.png#bar 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"31d6cfe0d16ae931b73c.png#baz\\" alt=\\"Elva dressed as a fairy\\">
+<img src='image.png#hash' />
+<img src=image.png#hash />
+<img src=image.png# />
+<img srcset=\\"image.png#hash\\" />
+<img srcset=\\"image.png#foo 480w, image.png#bar 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"image.png#baz\\" alt=\\"Elva dressed as a fairy\\">
 
 <span>foo</span> <span>bar</span>
 
@@ -142,7 +142,7 @@ or
 	</template>
 </div>
 
-<img src=\\"data:,\\">
+<img src=\\"https://raw.githubusercontent.com/webpack/html-loader/main/test/fixtures/image.png\\">
 
 </body>
 </html>
