@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases json tree-shaking-default tree-shaking-default should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "44:8-35",
+    "message": "Should not import the named export 'nestedArray'.'1'.'1'.'deep'.'deep' (imported as 'nestedArray') from default-exporting module (only default export is available soon)",
+    "moduleName": "./index.js",
+  },
+]
+`;

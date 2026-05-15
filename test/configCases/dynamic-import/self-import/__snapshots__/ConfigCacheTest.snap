@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases dynamic-import self-import self-import should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "10:1-33",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "10:1-33",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "10:1-33",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "10:1-33",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./index.js",
+  },
+]
+`;

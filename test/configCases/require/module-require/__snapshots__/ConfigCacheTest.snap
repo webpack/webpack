@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases require module-require module-require should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "68:11-19",
+    "message": "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "74:8-21",
+    "message": "createRequire().main is not supported by webpack.",
+    "moduleName": "./index.js",
+  },
+]
+`;

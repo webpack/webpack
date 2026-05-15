@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing missing-export-warning-nested missing-export-warning-nested should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "4:1-4",
+    "message": "export 'A' (imported as 'm') was not found in './a' (possible exports: a, x)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+  Object {
+    "loc": "5:1-6",
+    "message": "export 'x'.'B' (imported as 'm') was not found in './a' (possible exports: b, y)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+  Object {
+    "loc": "6:1-8",
+    "message": "export 'x'.'y'.'C' (imported as 'm') was not found in './a' (possible exports: Z, c, z)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+  Object {
+    "loc": "7:1-10",
+    "message": "export 'x'.'y'.'z'.'D' (imported as 'm') was not found in './a' (possible exports: default, d)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+  Object {
+    "loc": "9:1-12",
+    "message": "export 'x'.'y'.'z'.'v' (imported as 'm') was not found in './a' (possible exports: default, d)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+  Object {
+    "loc": "11:1-8",
+    "message": "export 'p' (imported as 'm') was not found in './a' (possible exports: a, x)",
+    "moduleName": "./parsing/missing-export-warning-nested/index.js",
+  },
+]
+`;

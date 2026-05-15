@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases source-map extract-source-map extract-source-map should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "Module Warning: Failed to parse source map. ENOENT: no such file or directory, open '<TEST_DIR>/no-source-map.map'",
+    "moduleName": "./no-source-map.js",
+  },
+]
+`;

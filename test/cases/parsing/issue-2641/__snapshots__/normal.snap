@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing issue-2641 issue-2641 should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "11:1-19:3",
+    "message": "Module not found: Error: Can't resolve './missingModule' in '<TEST_DIR>'",
+    "moduleName": "./parsing/issue-2641/index.js",
+  },
+]
+`;

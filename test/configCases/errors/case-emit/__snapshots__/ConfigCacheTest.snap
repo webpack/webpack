@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases errors case-emit case-emit should compile: errors 1`] = `
+Array [
+  Object {
+    "message": "Prevent writing to file that only differs in casing or query string from already written file.
+This will lead to a race-condition and corrupted files on case-insensitive file systems.
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/A.js
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/a.js",
+  },
+]
+`;
+
+exports[`ConfigCacheTestCases errors case-emit case-emit should pre-compile to fill disk cache (1st): errors 1`] = `
+Array [
+  Object {
+    "message": "Prevent writing to file that only differs in casing or query string from already written file.
+This will lead to a race-condition and corrupted files on case-insensitive file systems.
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/A.js
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/a.js",
+  },
+]
+`;
+
+exports[`ConfigCacheTestCases errors case-emit case-emit should pre-compile to fill disk cache (2nd): errors 1`] = `
+Array [
+  Object {
+    "message": "Prevent writing to file that only differs in casing or query string from already written file.
+This will lead to a race-condition and corrupted files on case-insensitive file systems.
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/A.js
+<WEBPACK_ROOT>/test/js/ConfigCacheTestCases/errors/case-emit/a.js",
+  },
+]
+`;

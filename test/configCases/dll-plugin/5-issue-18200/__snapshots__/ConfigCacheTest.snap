@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases dll-plugin 5-issue-18200 5-issue-18200 should compile: errors 1`] = `
+Array [
+  Object {
+    "message": "each chunk must have a unique path",
+  },
+]
+`;
+
+exports[`ConfigCacheTestCases dll-plugin 5-issue-18200 5-issue-18200 should pre-compile to fill disk cache (1st): errors 1`] = `
+Array [
+  Object {
+    "message": "each chunk must have a unique path",
+  },
+]
+`;
+
+exports[`ConfigCacheTestCases dll-plugin 5-issue-18200 5-issue-18200 should pre-compile to fill disk cache (2nd): errors 1`] = `
+Array [
+  Object {
+    "message": "each chunk must have a unique path",
+  },
+]
+`;

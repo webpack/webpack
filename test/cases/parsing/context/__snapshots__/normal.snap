@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing context context should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "1:5",
+    "message": "Module parse failed: Unexpected token (1:5)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+> This is a file!
+| 
+| with some content",
+    "moduleName": "./parsing/context/templates/dump-file.txt",
+  },
+]
+`;
+
+exports[`TestCases normal parsing context context should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "5:8-21",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./parsing/context/templates/templateLoader.js",
+  },
+  Object {
+    "loc": "5:14-21",
+    "message": "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
+    "moduleName": "./parsing/context/templates/templateLoaderIndirect.js",
+  },
+  Object {
+    "loc": "7:9-16",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "./parsing/context/templates/templateLoaderIndirect.js",
+  },
+]
+`;

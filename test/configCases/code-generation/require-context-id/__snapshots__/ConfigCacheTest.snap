@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases code-generation require-context-id require-context-id should compile: warnings 1`] = `
+Array [
+  Object {
+    "message": "configuration
+The value 'hashed' for option 'optimization.moduleIds' is deprecated. Use 'deterministic' instead.",
+  },
+]
+`;

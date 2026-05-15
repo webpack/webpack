@@ -39,3 +39,13 @@ exports[`ConfigCacheTestCases html webpack-ignore exported tests should support 
 </html>
 "
 `;
+
+exports[`ConfigCacheTestCases html webpack-ignore webpack-ignore should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "30:0-25",
+    "message": "\`webpackIgnore\` expected a boolean, but received: 1.",
+    "moduleName": "./page.html",
+  },
+]
+`;

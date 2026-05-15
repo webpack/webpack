@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases errors generator-generate-error generator-generate-error should compile: errors 1`] = `
+Array [
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: javascript/auto error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./module.js",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/inline error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./inline.txt",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/resource error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./file.svg",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/resource other error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./other.svg",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/resource in css error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./in-style.png",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/source error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./source.txt",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: asset/source in css error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./in-style-source.png",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: css/auto error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "css ./style.modules.css",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: css error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: json error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./file.json",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: json other error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./other.json",
+  },
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: webassembly/async error message
+    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+    "moduleName": "./async-wasm.wat",
+  },
+]
+`;

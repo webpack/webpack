@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal parsing harmony-star-conflict harmony-star-conflict should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "2:0-23",
+    "message": "The requested module './b.js' contains conflicting star exports for the names 'named1', 'named2', 'named3' with the previous requested module './a.js'",
+    "moduleName": "./parsing/harmony-star-conflict/named-with-namespace-no-side/index.js",
+  },
+  Object {
+    "loc": "2:0-23",
+    "message": "The requested module './b.js' contains conflicting star exports for the names 'named1', 'named2', 'named3' with the previous requested module './a.js'",
+    "moduleName": "./parsing/harmony-star-conflict/named-with-namespace/index.js",
+  },
+]
+`;

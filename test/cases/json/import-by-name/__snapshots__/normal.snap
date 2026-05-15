@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TestCases normal json import-by-name import-by-name should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "8:8-12",
+    "message": "Should not import the named export '2' (imported as 'c') from default-exporting module (only default export is available soon)",
+    "moduleName": "./json/import-by-name/index.js",
+  },
+  Object {
+    "loc": "10:8-10",
+    "message": "Should not import the named export 'aa' (imported as 'aa') from default-exporting module (only default export is available soon)",
+    "moduleName": "./json/import-by-name/index.js",
+  },
+  Object {
+    "loc": "11:8-10",
+    "message": "Should not import the named export 'bb' (imported as 'bb') from default-exporting module (only default export is available soon)",
+    "moduleName": "./json/import-by-name/index.js",
+  },
+  Object {
+    "loc": "12:8-13",
+    "message": "Should not import the named export 'named' (imported as 'named') from default-exporting module (only default export is available soon)",
+    "moduleName": "./json/import-by-name/index.js",
+  },
+  Object {
+    "loc": "20:22-28",
+    "message": "Should not import the named export 'named' (imported as 'gnamed') from default-exporting module (only default export is available soon)",
+    "moduleName": "./json/import-by-name/index.js",
+  },
+]
+`;

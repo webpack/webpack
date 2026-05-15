@@ -1,0 +1,1106 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html srcset srcset should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "1:13-37",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'image.png 480w 2x broken' at 'broken'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "2:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'image.png broken' at 'broken'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "8:13-14",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "9:13-16",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "10:10-13",
+    "message": "Bad value for attribute \\"src\\" on element \\"img\\": Must be non-empty",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "11:13-16",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "11:23-26",
+    "message": "Bad value for attribute \\"src\\" on element \\"img\\": Must be non-empty",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "12:10-13:0",
+    "message": "Bad value for attribute \\"src\\" on element \\"img\\": Must be non-empty",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "14:13-15:0",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "15:7-16:0",
+    "message": "Bad value for attribute \\"src\\" on element \\"img\\": Must be non-empty",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "17:20-21:0",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "22:20-23:0",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "24:10-13",
+    "message": "Bad value for attribute \\"src\\" on element \\"img\\": Must be non-empty",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "25:13-41",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'image.png 0h, image.png 800w' at '0h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "27:13-19",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in ',a foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "28:13-17",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'a (,' at '(,'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "32:13-14",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "33:13-16",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "34:13-52",
+    "message": "Module not found: Error: Can't resolve '&#x9;&#x9;data:,a&#x9;&#x9;1x&#x9;&#x9;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "35:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xA;&#xA;data:,a&#xA;&#xA;1x&#xA;&#xA;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "36:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xB;&#xB;data:,a&#xB;&#xB;1x&#xB;&#xB;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "37:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xC;&#xC;data:,a&#xC;&#xC;1x&#xC;&#xC;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "38:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xD;&#xD;data:,a&#xD;&#xD;1x&#xD;&#xD;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "39:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xE;&#xE;data:,a&#xE;&#xE;1x&#xE;&#xE;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "40:13-52",
+    "message": "Module not found: Error: Can't resolve '&#xF;&#xF;data:,a&#xF;&#xF;1x&#xF;&#xF;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "41:13-58",
+    "message": "Module not found: Error: Can't resolve '&#x10;&#x10;data:,a&#x10;&#x10;1x&#x10;&#x10;' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "52:13-26",
+    "message": "Module not found: Error: Can't resolve '&nbsp;data:,a' in '<TEST_DIR>'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "58:13-47",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a ( , data:,b 1x, ), data:,c' at '( , data:,b 1x, )'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "59:13-49",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a ((( , data:,b 1x, ), data:,c' at '((( , data:,b 1x, )'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "60:13-47",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a [ , data:,b 1x, ], data:,c' at '['",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "61:13-47",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a { , data:,b 1x, }, data:,c' at '{'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "64:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a, data:,b (' at '('",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "65:13-33",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a, data:,b (  ' at '(  '",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "66:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a, data:,b (,' at '(,'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "67:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a, data:,b (x' at '(x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "68:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a, data:,b ()' at '()'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "69:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a (, data:,b' at '(, data:,b'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "70:13-44",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a /*, data:,b, data:,c */' at '/*'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "71:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a //, data:,b' at '//'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "73:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "74:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "75:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo 1x' at '1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "76:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo 1x foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "77:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo 1w' at '1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "78:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo 1w foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "79:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1x' at '1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "80:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1w' at '1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "81:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1h 1h' at '1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "82:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1x' at '1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "83:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1w' at '1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "86:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1h 1x' at '1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "87:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1h 1w 1x' at '1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "88:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1w 1h' at '1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "89:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1h foo' at 'foo'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "90:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a foo 1h' at '1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "91:13-23",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0w' at '0w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "92:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a -1w' at '-1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "93:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w -1w' at '-1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "94:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1.0w' at '1.0w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "95:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1.0w' at '1.0w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "96:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1e0w' at '1e0w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "97:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1e0w' at '1e0w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "98:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1www' at '1www'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "99:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1www' at '1www'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "100:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w +1w' at '+1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "101:13-23",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1W' at '1W'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "102:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1W' at '1W'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "103:13-30",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a Infinityw' at 'Infinityw'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "104:13-33",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w Infinityw' at 'Infinityw'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "105:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a NaNw' at 'NaNw'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "106:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w NaNw' at 'NaNw'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "107:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0x1w' at '0x1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "108:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x1;w' at '1&#x1;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "109:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&nbsp;w' at '1&nbsp;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "110:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x1680;w' at '1&#x1680;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "111:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2000;w' at '1&#x2000;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "112:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2001;w' at '1&#x2001;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "113:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2002;w' at '1&#x2002;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "114:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2003;w' at '1&#x2003;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "115:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2004;w' at '1&#x2004;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "116:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2005;w' at '1&#x2005;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "117:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2006;w' at '1&#x2006;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "118:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2007;w' at '1&#x2007;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "119:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2008;w' at '1&#x2008;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "120:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2009;w' at '1&#x2009;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "121:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200A;w' at '1&#x200A;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "122:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200C;w' at '1&#x200C;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "123:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200D;w' at '1&#x200D;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "124:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x202F;w' at '1&#x202F;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "125:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x205F;w' at '1&#x205F;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "126:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x3000;w' at '1&#x3000;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "127:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#xFEFF;w' at '1&#xFEFF;w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "128:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x1;1w' at '&#x1;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "129:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &nbsp;1w' at '&nbsp;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "130:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x1680;1w' at '&#x1680;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "131:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2000;1w' at '&#x2000;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "132:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2001;1w' at '&#x2001;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "133:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2002;1w' at '&#x2002;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "134:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2003;1w' at '&#x2003;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "135:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2004;1w' at '&#x2004;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "136:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2005;1w' at '&#x2005;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "137:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2006;1w' at '&#x2006;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "138:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2007;1w' at '&#x2007;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "139:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2008;1w' at '&#x2008;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "140:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2009;1w' at '&#x2009;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "141:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200A;1w' at '&#x200A;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "142:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200C;1w' at '&#x200C;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "143:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200D;1w' at '&#x200D;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "144:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x202F;1w' at '&#x202F;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "145:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x205F;1w' at '&#x205F;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "146:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x3000;1w' at '&#x3000;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "147:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#xFEFF;1w' at '&#xFEFF;1w'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "150:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x -0x' at '-0x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "151:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a -1x' at '-1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "152:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x -1x' at '-1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "157:13-23",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a -x' at '-x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "158:13-23",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a .x' at '.x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "159:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a -.x' at '-.x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "160:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1.x' at '1.x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "163:13-30",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1.5e1x' at '1.5e1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "164:13-30",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1e1.5x' at '1e1.5x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "166:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1x 1.0x' at '1.0x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "167:13-24",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a +1x' at '+1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "168:13-23",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1X' at '1X'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "169:13-30",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a Infinityx' at 'Infinityx'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "170:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a NaNx' at 'NaNx'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "171:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0x1x' at '0x1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "172:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0X1x' at '0X1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "173:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x1;x' at '1&#x1;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "174:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&nbsp;x' at '1&nbsp;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "175:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x1680;x' at '1&#x1680;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "176:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2000;x' at '1&#x2000;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "177:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2001;x' at '1&#x2001;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "178:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2002;x' at '1&#x2002;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "179:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2003;x' at '1&#x2003;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "180:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2004;x' at '1&#x2004;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "181:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2005;x' at '1&#x2005;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "182:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2006;x' at '1&#x2006;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "183:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2007;x' at '1&#x2007;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "184:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2008;x' at '1&#x2008;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "185:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x2009;x' at '1&#x2009;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "186:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200A;x' at '1&#x200A;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "187:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200C;x' at '1&#x200C;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "188:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x200D;x' at '1&#x200D;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "189:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x202F;x' at '1&#x202F;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "190:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x205F;x' at '1&#x205F;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "191:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#x3000;x' at '1&#x3000;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "192:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1&#xFEFF;x' at '1&#xFEFF;x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "193:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x1;1x' at '&#x1;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "194:13-29",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &nbsp;1x' at '&nbsp;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "195:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x1680;1x' at '&#x1680;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "196:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2000;1x' at '&#x2000;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "197:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2001;1x' at '&#x2001;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "198:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2002;1x' at '&#x2002;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "199:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2003;1x' at '&#x2003;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "200:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2004;1x' at '&#x2004;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "201:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2005;1x' at '&#x2005;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "202:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2006;1x' at '&#x2006;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "203:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2007;1x' at '&#x2007;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "204:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2008;1x' at '&#x2008;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "205:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x2009;1x' at '&#x2009;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "206:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200A;1x' at '&#x200A;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "207:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200C;1x' at '&#x200C;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "208:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x200D;1x' at '&#x200D;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "209:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x202F;1x' at '&#x202F;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "210:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x205F;1x' at '&#x205F;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "211:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#x3000;1x' at '&#x3000;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "212:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a &#xFEFF;1x' at '&#xFEFF;1x'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "213:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 0h' at '0h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "214:13-27",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w -1h' at '-1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "215:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1.0h' at '1.0h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "216:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1e0h' at '1e0h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "217:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1hhh' at '1hhh'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "218:13-26",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1H' at '1H'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "219:13-33",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w Infinityh' at 'Infinityh'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "220:13-28",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w NaNh' at 'NaNh'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "221:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0x1h' at '0x1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "222:13-25",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 0X1h' at '0X1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "223:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x1;h' at '1&#x1;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "224:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&nbsp;h' at '1&nbsp;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "225:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x1680;h' at '1&#x1680;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "226:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2000;h' at '1&#x2000;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "227:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2001;h' at '1&#x2001;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "228:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2002;h' at '1&#x2002;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "229:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2003;h' at '1&#x2003;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "230:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2004;h' at '1&#x2004;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "231:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2005;h' at '1&#x2005;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "232:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2006;h' at '1&#x2006;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "233:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2007;h' at '1&#x2007;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "234:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2008;h' at '1&#x2008;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "235:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x2009;h' at '1&#x2009;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "236:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x200A;h' at '1&#x200A;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "237:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x200C;h' at '1&#x200C;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "238:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x200D;h' at '1&#x200D;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "239:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x202F;h' at '1&#x202F;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "240:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x205F;h' at '1&#x205F;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "241:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#x3000;h' at '1&#x3000;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "242:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w 1&#xFEFF;h' at '1&#xFEFF;h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "243:13-31",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x1;1h' at '&#x1;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "244:13-32",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &nbsp;1h' at '&nbsp;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "245:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x1680;1h' at '&#x1680;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "246:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2000;1h' at '&#x2000;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "247:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2001;1h' at '&#x2001;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "248:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2002;1h' at '&#x2002;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "249:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2003;1h' at '&#x2003;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "250:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2004;1h' at '&#x2004;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "251:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2005;1h' at '&#x2005;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "252:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2006;1h' at '&#x2006;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "253:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2007;1h' at '&#x2007;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "254:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2008;1h' at '&#x2008;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "255:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x2009;1h' at '&#x2009;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "256:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x200A;1h' at '&#x200A;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "257:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x200C;1h' at '&#x200C;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "258:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x200D;1h' at '&#x200D;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "259:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x202F;1h' at '&#x202F;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "260:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x205F;1h' at '&#x205F;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "261:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#x3000;1h' at '&#x3000;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "262:13-34",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Invalid srcset descriptor found in 'data:,a 1w &#xFEFF;1h' at '&#xFEFF;1h'",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "268:13-14",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+  Object {
+    "loc": "269:13-20",
+    "message": "Bad value for attribute \\"srcset\\" on element \\"img\\": Must contain one or more image candidate strings",
+    "moduleName": "./page.html",
+  },
+]
+`;

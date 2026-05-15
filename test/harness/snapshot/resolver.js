@@ -12,7 +12,8 @@ const suiteNameToTestFile = {
 		__dirname,
 		"../../ConfigCacheTestCases.basictest.js"
 	),
-	StatsTest: path.resolve(__dirname, "../../StatsTestCases.basictest.js")
+	StatsTest: path.resolve(__dirname, "../../StatsTestCases.basictest.js"),
+	normal: path.resolve(__dirname, "../../TestCasesNormal.basictest.js")
 };
 
 const SNAPSHOT_EXTENSION = ".snap";

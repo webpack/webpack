@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases parsing issue-2942 issue-2942 should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "6:16-31",
+    "message": "System.register is not supported by webpack.",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "7:16-26",
+    "message": "System.get is not supported by webpack.",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "8:16-26",
+    "message": "System.set is not supported by webpack.",
+    "moduleName": "./index.js",
+  },
+]
+`;

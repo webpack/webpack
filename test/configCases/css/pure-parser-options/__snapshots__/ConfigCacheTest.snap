@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css pure-parser-options pure-parser-options should compile: errors 1`] = `
+Array [
+  Object {
+    "loc": "3:0-4",
+    "message": "Selector \\"body\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./auto-impure.module.css",
+  },
+  Object {
+    "loc": "5:0-22",
+    "message": "Selector \\":global(.after-import)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./invalid.module.css",
+  },
+  Object {
+    "loc": "9:0-4",
+    "message": "Selector \\"body\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./invalid.module.css",
+  },
+  Object {
+    "loc": "13:0-14:7",
+    "message": "Selector \\".ok,
+section\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./invalid.module.css",
+  },
+  Object {
+    "loc": "18:0-21",
+    "message": "Selector \\":global(.only-global)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./invalid.module.css",
+  },
+  Object {
+    "loc": "25:1-5",
+    "message": "Selector \\"span\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./invalid.module.css",
+  },
+]
+`;

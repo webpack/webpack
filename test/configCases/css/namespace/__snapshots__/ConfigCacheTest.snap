@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css namespace namespace should compile: warnings 1`] = `
+Array [
+  Object {
+    "loc": "1:0-10",
+    "message": "'@namespace' is not supported in bundled CSS",
+    "moduleName": "css ./style.css",
+  },
+]
+`;
