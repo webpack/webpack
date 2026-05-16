@@ -362,7 +362,9 @@
     "publicpath",
     "Uninstantiated",
     "sccs",
-    "FEFF"
+    "FEFF",
+    "apos",
+    "Abaz"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
