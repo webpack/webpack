@@ -605,8 +605,6 @@ const bench = withCodSpeed(
 	})
 );
 
-console.log(Object.getOwnPropertyDescriptors(bench));
-
 for (const selectedCase of selected) {
 	await registerSuite(bench, selectedCase);
 }
