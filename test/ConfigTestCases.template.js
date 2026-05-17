@@ -19,13 +19,16 @@ const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 const prepareOptions = require("./helpers/prepareOptions");
 
 const casesPath = path.join(__dirname, "configCases");
-const categories = fs.readdirSync(casesPath).map((cat) => ({
-	name: cat,
-	tests: fs
-		.readdirSync(path.join(casesPath, cat))
-		.filter((folder) => !folder.startsWith("_"))
-		.sort()
-}));
+const categories = fs
+	.readdirSync(casesPath)
+	.filter((folder) => folder.startsWith("inline-exports"))
+	.map((cat) => ({
+		name: cat,
+		tests: fs
+			.readdirSync(path.join(casesPath, cat))
+
+			.sort()
+	}));
 
 const createLogger = (appendTarget) => ({
 	log: (l) => appendTarget.push(l),

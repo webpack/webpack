@@ -7238,14 +7238,29 @@ declare abstract class ExportInfo {
 	canMangleProvide?: boolean;
 
 	/**
+	 * defined: the export binds to a small primitive constant and may be inlined
+	 * undefined: not an inlined constant export
+	 */
+	canInlineProvide?: InlinedValue;
+
+	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
 	 */
 	canMangleUse?: boolean;
+
+	/**
+	 * CanInlineUse.HasInfo: collecting; no consumer has decided yet
+	 * CanInlineUse.Yes: at least one consumer accepts inlining, none rejected
+	 * CanInlineUse.No: at least one consumer rejected inlining
+	 * undefined: not yet determined
+	 */
+	canInlineUse?: 0 | 1 | 2;
 	exportsInfoOwned: boolean;
 	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
+	canInline(): undefined | InlinedValue;
 
 	/**
 	 * Sets used in unknown way.
@@ -7294,12 +7309,12 @@ declare abstract class ExportInfo {
 	getUsed(runtime: RuntimeSpec): UsageStateType;
 
 	/**
-	 * Returns used name.
+	 * Returns used name. May return InlinedUsedName when the export is inlined to a primitive.
 	 */
 	getUsedName(
 		fallbackName: undefined | string,
 		runtime: RuntimeSpec
-	): string | false;
+	): string | false | InlinedUsedName;
 
 	/**
 	 * Checks whether this export info has used name.
@@ -7309,7 +7324,7 @@ declare abstract class ExportInfo {
 	/**
 	 * Updates used name using the provided name.
 	 */
-	setUsedName(name: string): void;
+	setUsedName(name: string | InlinedUsedName): void;
 
 	/**
 	 * Gets terminal binding.
@@ -7432,6 +7447,11 @@ declare interface ExportSpec {
 	 * export is not visible, because another export blends over it
 	 */
 	hidden?: boolean;
+
+	/**
+	 * when set: the export binds to a small primitive constant eligible for inlining
+	 */
+	inlined?: InlinedValue;
 }
 type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
 declare abstract class ExportsInfo {
@@ -9670,6 +9690,20 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
+declare abstract class InlinedUsedName {
+	value: InlinedValue;
+	suffix: string[];
+	render(comment: string): string;
+}
+declare abstract class InlinedValue {
+	kind: InlinedValueKind;
+	value?: null | string | number | boolean;
+	renderLiteral(): string;
+	render(comment: string): string;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
+}
+type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -12475,6 +12509,11 @@ declare interface KnownBuildInfo {
 	 * top level declaration names
 	 */
 	topLevelDeclarations?: Set<string>;
+
+	/**
+	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
+	 */
+	inlineExports?: boolean;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
@@ -17073,6 +17112,11 @@ declare interface Optimization {
 	flagIncludedChunks?: boolean;
 
 	/**
+	 * Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.
+	 */
+	inlineExports?: boolean;
+
+	/**
 	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */
 	innerGraph?: boolean;
@@ -17223,6 +17267,11 @@ declare interface OptimizationNormalized {
 	flagIncludedChunks?: boolean;
 
 	/**
+	 * Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.
+	 */
+	inlineExports?: boolean;
+
+	/**
 	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */
 	innerGraph?: boolean;
@@ -17363,6 +17412,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	usedExports: NonNullable<undefined | boolean | "global">;
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
+	inlineExports: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<undefined | boolean>;
 	avoidEntryIife: NonNullable<undefined | boolean>;
 	emitOnErrors: NonNullable<undefined | boolean>;
@@ -19856,6 +19906,11 @@ declare interface ReferencedExport {
 	 * when false, referenced export can not be mangled, defaults to true
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * when false, the referenced export can not be substituted with an inlined literal at this site, defaults to true
+	 */
+	canInline?: boolean;
 }
 type Remotes = (string | RemotesObject)[] | RemotesObject;
 
@@ -20886,6 +20941,7 @@ declare interface RestoreProvidedDataExports {
 	name: string;
 	provided?: null | boolean;
 	canMangleProvide?: boolean;
+	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
@@ -24104,7 +24160,7 @@ declare interface UpdateHashContextGenerator {
 }
 type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
-type UsedName = string | false | string[];
+type UsedName = string | false | string[] | InlinedUsedName;
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
 declare interface Values {
