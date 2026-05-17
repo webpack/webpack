@@ -9253,10 +9253,10 @@ three@^0.184.0:
   resolved "https://registry.yarnpkg.com/three/-/three-0.184.0.tgz#5bca0a3851eea5345e4c205567b40dfa49b791b5"
   integrity sha512-wtTRjG92pM5eUg/KuUnHsqSAlPM296brTOcLgMRqEeylYTh/CdtvKUvCyyCQTzFuStieWxvZb8mVTMvdPyUpxg==
 
-tinybench@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-6.0.1.tgz#e15a4797a985a54b48d306497bb4aa9d20a534d6"
-  integrity sha512-cMdWsxmysdg8mNWf1pujiWl3TW0cU6m8QuNw55QlnP3I6N96Grb0wnu5N0syHIu3LbiVZCNqlfWzWDq84HZphA==
+tinybench@5:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.1.0.tgz#796a599a58114ef61279d8550bc2f34e1ad3cbf0"
+  integrity sha512-LXKNtFualiKOm6gADe1UXPtf8+Nfn1CtPMEHAT33Fd2YjQatrujkDcK0+4wRC1X6t7fxUDXUs6BsvuIgfkDgDg==
 
 tinyexec@^1.1.2:
   version "1.1.2"
