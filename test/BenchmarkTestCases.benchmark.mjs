@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { withCodSpeed } from "@codspeed/tinybench-plugin";
 import { Bench, hrtimeNow } from "tinybench";
 import webpack from "../lib/index.js";
+import benchmarkManifest from "./benchmarkCases/manifest.mjs";
 
 /** @typedef {import("..").Configuration} Configuration */
 /** @typedef {import("..").Stats} Stats */
@@ -11,6 +12,8 @@ import webpack from "../lib/index.js";
 /** @typedef {import("tinybench").FnOptions} FnOptions */
 
 /** @typedef {"dev-cold" | "prod-cold" | "dev-rebuild" | "filesystem-cache-warm"} ScenarioName */
+/** @typedef {Record<string, ScenarioName[]>} BenchmarkManifest */
+/** @typedef {{ index: number, total: number }} Shard */
 /**
  * @typedef {object} Scenario
  * @property {ScenarioName} name scenario name
@@ -49,8 +52,6 @@ const SCENARIOS = {
 	}
 };
 
-const ALL_SCENARIOS = /** @type {ScenarioName[]} */ (Object.keys(SCENARIOS));
-
 /**
  * @param {string[]} argv argv
  * @returns {{
@@ -58,6 +59,7 @@ const ALL_SCENARIOS = /** @type {ScenarioName[]} */ (Object.keys(SCENARIOS));
  * negativeFilter?: RegExp,
  * iterations: number,
  * list: boolean,
+ * shard: Shard,
  * }} parsed options
  */
 function parseArgs(argv) {
@@ -66,6 +68,7 @@ function parseArgs(argv) {
 		filter: process.env.FILTER,
 		negativeFilter: process.env.NEGATIVE_FILTER,
 		iterations: process.env.ITERATIONS || "3",
+		shard: process.env.SHARD || "1/1",
 		list: false
 	};
 
@@ -93,6 +96,9 @@ function parseArgs(argv) {
 				break;
 			case "iterations":
 				raw.iterations = readValue();
+				break;
+			case "shard":
+				raw.shard = readValue();
 				break;
 			case "list":
 				raw.list = true;
@@ -122,45 +128,60 @@ function parseArgs(argv) {
 				? new RegExp(raw.negativeFilter)
 				: undefined,
 		iterations,
-		list: Boolean(raw.list)
+		list: Boolean(raw.list),
+		shard: parseShard(String(raw.shard))
 	};
 }
 
 /**
- * @returns {Promise<string[]>} benchmark case names discovered in casesPath
+ * @param {string} value shard value
+ * @returns {Shard} parsed shard
  */
-async function discoverCases() {
-	const entries = await fs.readdir(casesPath, { withFileTypes: true });
-	const names = [];
-	for (const entry of entries) {
-		if (!entry.isDirectory()) continue;
-		const configPath = path.join(casesPath, entry.name, "webpack.config.mjs");
-		try {
-			await fs.access(configPath);
-			names.push(entry.name);
-		} catch {
-			// Skip directories without a webpack config.
-		}
+function parseShard(value) {
+	const match = /^(\d+)\/(\d+)$/.exec(value);
+	if (!match) {
+		throw new Error(
+			`Invalid --shard value "${value}". Expected "<index>/<total>".`
+		);
 	}
-	return names.sort();
+
+	const index = Number.parseInt(match[1], 10);
+	const total = Number.parseInt(match[2], 10);
+	if (index <= 0 || total <= 0 || index > total) {
+		throw new Error(
+			`Invalid --shard value "${value}". Expected 1 <= index <= total.`
+		);
+	}
+
+	return { index, total };
 }
 
 /**
- * @param {string[]} caseNames discovered case names
+ * @param {BenchmarkManifest} manifest benchmark manifest
  * @param {{
  * filter?: RegExp,
  * negativeFilter?: RegExp,
  * }} options options
  * @returns {SelectedCase[]} selected cases
  */
-function selectCases(caseNames, { filter, negativeFilter }) {
-	return caseNames
-		.filter((name) => (filter ? filter.test(name) : true))
-		.filter((name) => (negativeFilter ? !negativeFilter.test(name) : true))
-		.map((name) => ({
+function selectCases(manifest, { filter, negativeFilter }) {
+	return Object.entries(manifest)
+		.filter(([name]) => (filter ? filter.test(name) : true))
+		.filter(([name]) => (negativeFilter ? !negativeFilter.test(name) : true))
+		.map(([name, scenarios]) => ({
 			name,
-			scenarios: [...ALL_SCENARIOS]
+			scenarios: [...scenarios]
 		}));
+}
+
+/**
+ * @param {SelectedCase[]} selected selected cases
+ * @param {Shard} shard shard
+ * @returns {SelectedCase[]} sharded cases
+ */
+function selectShard(selected, shard) {
+	if (shard.total === 1) return selected;
+	return selected.filter((_, index) => index % shard.total === shard.index - 1);
 }
 
 /**
@@ -551,14 +572,20 @@ async function registerSuite(bench, selected) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const discoveredCases = await discoverCases();
-const selected = selectCases(discoveredCases, {
-	filter: args.filter,
-	negativeFilter: args.negativeFilter
-});
+const selected = selectShard(
+	selectCases(benchmarkManifest, {
+		filter: args.filter,
+		negativeFilter: args.negativeFilter
+	}),
+	args.shard
+);
 const taskSummaries = getTaskSummaries(selected);
+const shardLabel =
+	args.shard.total === 1
+		? ""
+		: ` for shard ${args.shard.index}/${args.shard.total}`;
 
-console.log(`Benchmark selected ${taskSummaries.length} task(s).`);
+console.log(`Benchmark selected ${taskSummaries.length} task(s)${shardLabel}.`);
 
 if (args.list) {
 	for (const task of taskSummaries) {
@@ -567,8 +594,6 @@ if (args.list) {
 	// eslint-disable-next-line n/no-process-exit
 	process.exit(0);
 }
-
-await fs.rm(baseOutputPath, { recursive: true, force: true });
 
 const bench = withCodSpeed(
 	new Bench({
