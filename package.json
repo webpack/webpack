@@ -188,7 +188,7 @@
     "style-loader": "^4.0.0",
     "terser": "^5.46.2",
     "three": "^0.184.0",
-    "tinybench": "5",
+    "tinybench": "^6.0.2",
     "toml": "^4.1.1",
     "tooling": "webpack/tooling#v1.26.1",
     "ts-loader": "^9.5.7",

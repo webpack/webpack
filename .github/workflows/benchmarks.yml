@@ -18,7 +18,7 @@ permissions:
 jobs:
   benchmark:
     name: benchmark (${{ matrix.shard }})
-    runs-on: ubuntu-latest
+    runs-on: codspeed-macro
     strategy:
       fail-fast: false
       matrix:
@@ -45,4 +45,4 @@ jobs:
         uses: CodSpeedHQ/action@3194d9a39c4d46684cb44bf7207fc56626aad8fd # v4.15.1
         with:
           run: yarn benchmark --shard=${{ matrix.shard }}
-          mode: "simulation,memory"
+          mode: "walltime"
