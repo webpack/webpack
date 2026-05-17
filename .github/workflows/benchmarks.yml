@@ -17,14 +17,7 @@ permissions:
 
 jobs:
   benchmark:
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+    runs-on: codspeed-macro
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -42,59 +35,9 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
-
-      - name: Check Memory Status
-        run: >
-          node -e 'const os=require("os");
-          const toGb=b=>(b/1024**3).toFixed(2)+" GB";
-          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@3194d9a39c4d46684cb44bf7207fc56626aad8fd # v4.15.1
         with:
-          run: yarn benchmark --ci
-          mode: "simulation"
-        env:
-          LAST_COMMIT: 1
-          NEGATIVE_FILTER: on-schedule
-          SHARD: ${{ matrix.shard }}
-  benchmark-memory:
-    strategy:
-      fail-fast: false
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-tags: true
-          fetch-depth: 0
-
-      - name: Use Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: lts/*
-          cache: yarn
-
-      - run: yarn --frozen-lockfile
-
-      - run: yarn link --frozen-lockfile || true
-
-      - run: yarn link webpack --frozen-lockfile
-
-      - name: Check Memory Status
-        run: >
-          node -e 'const os=require("os");
-          const toGb=b=>(b/1024**3).toFixed(2)+" GB";
-          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
-
-      - name: Run memory benchmarks
-        uses: CodSpeedHQ/action@3194d9a39c4d46684cb44bf7207fc56626aad8fd # v4.15.1
-        with:
-          run: yarn benchmark --ci
-          mode: "memory"
-          token: ${{ secrets.CODSPEED_TOKEN }}
-        env:
-          LAST_COMMIT: 1
-          NEGATIVE_FILTER: on-schedule
+          run: yarn benchmark
+          mode: "walltime"

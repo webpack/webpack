@@ -621,6 +621,14 @@
     form-data "^4.0.4"
     node-gyp-build "^4.6.0"
 
+"@codspeed/tinybench-plugin@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@codspeed/tinybench-plugin/-/tinybench-plugin-5.4.0.tgz#80e0c73d0cc3bcbf7df69c22aa1ba63a5fd92e7f"
+  integrity sha512-jzuFoyyoGxc3Lc+TTl54PnRsgqO3CYbbbnwYSVp/m/4rqvCwSUZChY9EuQJ6uZFbamT3UhWF2N6tDEGShkvsrw==
+  dependencies:
+    "@codspeed/core" "^5.4.0"
+    stack-trace "1.0.0-pre2"
+
 "@cspell/cspell-bundled-dicts@10.0.0":
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/@cspell/cspell-bundled-dicts/-/cspell-bundled-dicts-10.0.0.tgz#44c00f96b919b04d4385c41c9574e5bd22caae7f"
@@ -8908,6 +8916,11 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
+
+stack-trace@1.0.0-pre2:
+  version "1.0.0-pre2"
+  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-1.0.0-pre2.tgz#46a83a79f1b287807e9aaafc6a5dd8bcde626f9c"
+  integrity sha512-2ztBJRek8IVofG9DBJqdy2N5kulaacX30Nz7xmkYF6ale9WBVmIy6mFBchvGX7Vx/MyjBhx+Rcxqrj+dbOnQ6A==
 
 stack-utils@^2.0.6:
   version "2.0.6"
