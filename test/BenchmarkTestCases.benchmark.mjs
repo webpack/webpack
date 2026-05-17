@@ -58,7 +58,6 @@ const ALL_SCENARIOS = /** @type {ScenarioName[]} */ (Object.keys(SCENARIOS));
  * negativeFilter?: RegExp,
  * iterations: number,
  * list: boolean,
- * ci: boolean,
  * }} parsed options
  */
 function parseArgs(argv) {
@@ -67,8 +66,7 @@ function parseArgs(argv) {
 		filter: process.env.FILTER,
 		negativeFilter: process.env.NEGATIVE_FILTER,
 		iterations: process.env.ITERATIONS || "3",
-		list: false,
-		ci: false
+		list: false
 	};
 
 	for (let i = 0; i < argv.length; i++) {
@@ -124,8 +122,7 @@ function parseArgs(argv) {
 				? new RegExp(raw.negativeFilter)
 				: undefined,
 		iterations,
-		list: Boolean(raw.list),
-		ci: Boolean(raw.ci)
+		list: Boolean(raw.list)
 	};
 }
 
