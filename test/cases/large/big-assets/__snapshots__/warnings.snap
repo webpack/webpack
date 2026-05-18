@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "803:9-25",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../lib/serialization/ObjectMiddleware.js",
+  },
+  Object {
+    "loc": "58:17-37",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/loader-runner/lib/loadLoader.js",
+  },
+  Object {
+    "loc": "43:12-19",
+    "message": "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/minify.js",
+  },
+  Object {
+    "loc": "599:10-30",
+    "message": "Module not found: Error: Can't resolve '@swc/core' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "659:18-51",
+    "message": "Module not found: Error: Can't resolve '@swc/core/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "700:14-32",
+    "message": "Module not found: Error: Can't resolve 'esbuild' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "736:18-49",
+    "message": "Module not found: Error: Can't resolve 'esbuild/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "111:19-46",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/terser-webpack-plugin/node_modules/jest-worker/build/base/BaseWorkerPool.js",
+  },
+  Object {
+    "loc": "68:19-38",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/terser-webpack-plugin/node_modules/jest-worker/build/index.js",
+  },
+  Object {
+    "loc": "89:15-28",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/terser-webpack-plugin/node_modules/jest-worker/build/workers/processChild.js",
+  },
+  Object {
+    "loc": "105:15-28",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/terser-webpack-plugin/node_modules/jest-worker/build/workers/processChild.js",
+  },
+]
+`;

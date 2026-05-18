@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "compilerPath": "link",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./foo.less (exportType: link)",
+  },
+  Object {
+    "compilerPath": "text",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./foo.less (exportType: text)",
+  },
+  Object {
+    "compilerPath": "text",
+    "message": "Cannot read properties of null (reading 'source')",
+    "moduleName": "css ./composes-from-less.module.css (exportType: text)",
+  },
+  Object {
+    "compilerPath": "css-style-sheet",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./foo.less (exportType: css-style-sheet)",
+  },
+  Object {
+    "compilerPath": "css-style-sheet",
+    "message": "Cannot read properties of null (reading 'source')",
+    "moduleName": "css ./composes-from-less.module.css (exportType: css-style-sheet)",
+  },
+  Object {
+    "compilerPath": "style",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./foo.less (exportType: style)",
+  },
+]
+`;
