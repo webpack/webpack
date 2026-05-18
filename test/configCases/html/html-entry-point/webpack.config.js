@@ -11,14 +11,6 @@ const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
-	node: {
-		__dirname: false,
-		__filename: false
-	},
-	externalsPresets: {
-		node: true
-	},
 	entry: {
 		page: "./page.html"
 	},

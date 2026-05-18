@@ -5,19 +5,11 @@
 // references. The extracted HTML must reference both the split-out runtime
 // chunk and the entry chunk — otherwise the browser hits
 // `__webpack_require__ is not defined` when loading the entry chunk first.
-// We avoid splitting the test bundle's own runtime by checking the entry
-// name in the runtimeChunk factory.
+// The test bundle's own runtime is left in-place so the harness can still
+// load `bundle0.js` directly.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
-	node: {
-		__dirname: false,
-		__filename: false
-	},
-	externalsPresets: {
-		node: true
-	},
 	output: {
 		filename: "[name].js",
 		chunkFilename: "[name].chunk.js"
