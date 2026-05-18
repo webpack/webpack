@@ -13,24 +13,16 @@ body { color: red; }
 .foo { background: url(handled-pixel.png); }
 
 </style>
-<style type=\\"text/css\\">/*!****************************************************************************************!*\\\\
-  !*** css data:text/css,%0A.bar%20%7B%20color%3A%20blue%3B%20%7D%0A (exportType: text) ***!
-  \\\\****************************************************************************************/
-
+<style type=\\"text/css\\">
 .bar { color: blue; }
-
 </style>
 <!-- Non-CSS type stays untouched -->
 <style type=\\"text/foo\\">
 this stays
 </style>
-<style>/*!************************************************************************************************************************************!*\\\\
-  !*** css data:text/css,%0A%20%20%2F*%20second%20sheet%20*%2F%0A%20%20.baz%20%7B%20color%3A%20green%3B%20%7D%0A (exportType: text) ***!
-  \\\\************************************************************************************************************************************/
-
+<style>
   /* second sheet */
   .baz { color: green; }
-
 </style>
 </head>
 <body>
