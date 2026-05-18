@@ -5,6 +5,15 @@ const page = require("./page.html");
 
 const readChunk = (name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
+// `String.prototype.matchAll` requires Node 12+; this test runs on Node
+// 10 too, so collect all matches via a `regex.exec` loop instead.
+const collectMatches = (str, regex) => {
+	const out = [];
+	let m;
+	while ((m = regex.exec(str)) !== null) out.push(m);
+	return out;
+};
+
 it("should rewrite script src attributes without changing the type attribute when output.module is off", () => {
 	expect(typeof page).toBe("string");
 	expect(page).toMatchSnapshot();
@@ -45,9 +54,10 @@ it("should emit IIFE-wrapped chunks for <script type=module src> too (still vali
 	// `type="module"` is dropped from the rewritten tag when
 	// output.module is off, so we can't discriminate the module-origin
 	// chunk by tag shape anymore — find it by content instead.
-	const allChunkUrls = [
-		...page.matchAll(/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g)
-	].map((m) => m[1]);
+	const allChunkUrls = collectMatches(
+		page,
+		/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g
+	).map((m) => m[1]);
 	const moduleChunk = allChunkUrls
 		.map(readChunk)
 		.find((c) => c.includes('"module entry"'));
