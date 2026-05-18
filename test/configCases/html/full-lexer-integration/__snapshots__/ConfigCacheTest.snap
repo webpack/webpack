@@ -64,9 +64,9 @@ exports[`ConfigCacheTestCases html full-lexer-integration exported tests should 
   Mixed attribute styles
 </div>
 
-<![CDATA[<div>ignored cdata</div>]]><img src=\\"image.png\\">
+<![CDATA[<div>ignored cdata</div>]]><img src=\\"31d6cfe0d16ae931b73c.png\\">
 
-<p>Self-closing voids: <br/><hr/><img src=\\"image.png\\"/></p>
+<p>Self-closing voids: <br/><hr/><img src=\\"31d6cfe0d16ae931b73c.png\\"/></p>
 
 <div class=\\"nested\\">
   <div class=\\"level-1\\">
