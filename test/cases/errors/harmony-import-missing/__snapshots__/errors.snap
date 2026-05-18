@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "1:0-26",
+    "message": "Module not found: Error: Can't resolve './missing' in '<TEST_DIR>'",
+    "moduleName": "./errors/harmony-import-missing/module.js",
+  },
+]
+`;

@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "compilerPath": "link-less",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style.less",
+  },
+  Object {
+    "compilerPath": "text-less",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style.less (exportType: text)",
+  },
+  Object {
+    "compilerPath": "style-less",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style.less (exportType: style)",
+  },
+  Object {
+    "compilerPath": "css-style-sheet-less",
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style.less (exportType: css-style-sheet)",
+  },
+]
+`;
