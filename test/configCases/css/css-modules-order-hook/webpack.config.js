@@ -1,5 +1,17 @@
 "use strict";
 
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {ReturnType<typeof import("../../../../").css.CssModulesPlugin.getCompilationHooks>} CssCompilationHooks */
+
+/**
+ * @typedef {object} Variant
+ * @property {string} name scenario name
+ * @property {(hooks: CssCompilationHooks) => void} tap registers taps on the orderModules hook
+ */
+
+const E_CSS_RE = /[\\/]e\.css$/;
+
+/** @type {Variant[]} */
 const variants = [
 	{
 		name: "name",
@@ -15,8 +27,8 @@ const variants = [
 				// e.css must be first; remaining order is preserved (already by name).
 				const result = [...modules];
 				result.sort((a, b) => {
-					const aFirst = a.identifier().endsWith("/e.css");
-					const bFirst = b.identifier().endsWith("/e.css");
+					const aFirst = E_CSS_RE.test(a.identifier());
+					const bFirst = E_CSS_RE.test(b.identifier());
 					if (aFirst && !bFirst) return -1;
 					if (!aFirst && bFirst) return 1;
 					return 0;
@@ -46,7 +58,14 @@ const variants = [
 	}
 ];
 
+/**
+ * @param {Variant} variant scenario variant
+ * @returns {import("../../../../").WebpackPluginInstance} plugin instance
+ */
 const makePlugin = (variant) => ({
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("OrderModulesTestPlugin", (compilation) => {
 			const CssModulesPlugin = compiler.webpack.css.CssModulesPlugin;
