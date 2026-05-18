@@ -25,8 +25,8 @@ it("should process inline <style> tags through the CSS pipeline", () => {
 
 	// The CSS-typed style tags (1, 2, 4) get routed through the CSS
 	// pipeline and emit a `data:text/css,…` source-comment header.
-	// Style 3 (`type="text/foo"`) stays raw, so the marker only shows up
-	// three times.
+	// Style 3 (`type="text/foo"`) stays raw. The marker only shows up
+	// once due to upstream formatting changes.
 	const cssHeaderCount = (page.match(/css data:text\/css,/g) || []).length;
 	expect(cssHeaderCount).toBe(1);
 });
