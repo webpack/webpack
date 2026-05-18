@@ -24,7 +24,11 @@ module.exports = {
 			PLAIN_MJS_PATH: JSON.stringify(path.resolve(__dirname, "plain.mjs")),
 			NO_SPECIAL_MJS_PATH: JSON.stringify(
 				path.resolve(__dirname, "no-special-export.mjs")
-			)
+			),
+			WITH_DEFAULT_MJS_PATH: JSON.stringify(
+				path.resolve(__dirname, "with-default.mjs")
+			),
+			REEXPORT_MJS_PATH: JSON.stringify(path.resolve(__dirname, "reexport.mjs"))
 		})
 	]
 };

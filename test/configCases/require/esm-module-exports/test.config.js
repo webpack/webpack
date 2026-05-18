@@ -17,11 +17,15 @@ const path = require("path");
 const valuePath = path.resolve(__dirname, "value.mjs");
 const plainPath = path.resolve(__dirname, "plain.mjs");
 const noSpecialPath = path.resolve(__dirname, "no-special-export.mjs");
+const withDefaultPath = path.resolve(__dirname, "with-default.mjs");
+const reexportPath = path.resolve(__dirname, "reexport.mjs");
 
 module.exports = {
 	modules: {
 		[valuePath]: Module._load(valuePath, null, false),
 		[plainPath]: Module._load(plainPath, null, false),
-		[noSpecialPath]: Module._load(noSpecialPath, null, false)
+		[noSpecialPath]: Module._load(noSpecialPath, null, false),
+		[withDefaultPath]: Module._load(withDefaultPath, null, false),
+		[reexportPath]: Module._load(reexportPath, null, false)
 	}
 };

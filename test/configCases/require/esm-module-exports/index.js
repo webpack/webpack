@@ -15,6 +15,8 @@
 const valueMjsPath = VALUE_MJS_PATH;
 const plainMjsPath = PLAIN_MJS_PATH;
 const noSpecialMjsPath = NO_SPECIAL_MJS_PATH;
+const withDefaultMjsPath = WITH_DEFAULT_MJS_PATH;
+const reexportMjsPath = REEXPORT_MJS_PATH;
 
 it("should unwrap a named export 'module.exports' for plain require()", () => {
 	const webpacked = require("./value.mjs");
@@ -48,6 +50,24 @@ it("should unwrap 'module.exports' when it is a primitive", () => {
 	const webpacked = require("./plain.mjs");
 	const native = require(/* webpackIgnore: true */ plainMjsPath);
 	expect(webpacked).toBe("i-am-the-module-exports");
+	expect(webpacked).toBe(native);
+});
+
+it("should let 'module.exports' win over a sibling default/named export", () => {
+	const webpacked = require("./with-default.mjs");
+	const native = require(/* webpackIgnore: true */ withDefaultMjsPath);
+	expect(webpacked).toBe("module-exports-wins");
+	expect(webpacked).toBe(native);
+	// The default and named exports are not visible on the unwrapped value
+	// (it's a string primitive here).
+	expect(webpacked.default).toBeUndefined();
+	expect(webpacked.named).toBeUndefined();
+});
+
+it("should unwrap 'module.exports' that was re-exported from another module", () => {
+	const webpacked = require("./reexport.mjs");
+	const native = require(/* webpackIgnore: true */ reexportMjsPath);
+	expect(webpacked).toBe("from-base-module");
 	expect(webpacked).toBe(native);
 });
 
