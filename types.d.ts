@@ -8942,14 +8942,9 @@ declare abstract class HtmlGenerator extends Generator {
  */
 declare interface HtmlGeneratorOptions {
 	/**
-	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export.
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
 	 */
 	extract?: boolean;
-
-	/**
-	 * Specifies the filename template of the emitted `.html` file. Only used when `extract` is enabled.
-	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
@@ -17576,6 +17571,20 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Ignore warnings in the browser.
 	 */
 	ignoreBrowserWarnings?: boolean;
@@ -17897,6 +17906,20 @@ declare interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
+
+	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Ignore warnings in the browser.
