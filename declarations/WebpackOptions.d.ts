@@ -3477,6 +3477,19 @@ export interface ExperimentsNormalized {
 	typescript?: boolean;
 }
 /**
+ * Generator options for html modules.
+ */
+export interface HtmlGeneratorOptions {
+	/**
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export.
+	 */
+	extract?: boolean;
+	/**
+	 * Specifies the filename template of the emitted `.html` file. Only used when `extract` is enabled.
+	 */
+	filename?: FilenameTemplate;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -4236,6 +4249,10 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for css/module modules.
 	 */
 	"css/module"?: CssModuleGeneratorOptions;
+	/**
+	 * Generator options for html modules.
+	 */
+	html?: HtmlGeneratorOptions;
 	/**
 	 * No generator options are supported for this module type.
 	 */

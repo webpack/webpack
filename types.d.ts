@@ -8436,6 +8436,11 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	"css/module"?: CssModuleGeneratorOptions;
 
 	/**
+	 * Generator options for html modules.
+	 */
+	html?: HtmlGeneratorOptions;
+
+	/**
 	 * No generator options are supported for this module type.
 	 */
 	javascript?: EmptyGeneratorOptions;
@@ -8888,6 +8893,8 @@ declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
 declare abstract class HtmlGenerator extends Generator {
+	options: HtmlGeneratorOptions;
+
 	/**
 	 * Processes the provided module.
 	 */
@@ -8928,6 +8935,21 @@ declare abstract class HtmlGenerator extends Generator {
 		module: NormalModule,
 		generateContext: GenerateContext
 	): null | Source;
+}
+
+/**
+ * Generator options for html modules.
+ */
+declare interface HtmlGeneratorOptions {
+	/**
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export.
+	 */
+	extract?: boolean;
+
+	/**
+	 * Specifies the filename template of the emitted `.html` file. Only used when `extract` is enabled.
+	 */
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
