@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-it("should order CSS modules deterministically by name without conflict warnings", done => {
-	__non_webpack_require__("./lazy4_js.bundle0.js");
+export function expectCssOrder(variant, idx, expected, done) {
+	__non_webpack_require__(`./${variant}-lazy4_js.bundle${idx}.js`);
 	Promise.all([
 		import("./lazy1.css"),
 		import("./lazy2.css"),
@@ -11,13 +11,16 @@ it("should order CSS modules deterministically by name without conflict warnings
 	]).then(() => {
 		try {
 			const matches = fs
-				.readFileSync(path.join(__dirname, "css.bundle0.css"), "utf-8")
+				.readFileSync(
+					path.join(__dirname, `${variant}-css.bundle${idx}.css`),
+					"utf-8"
+				)
 				.match(/color: ([a-z0-9])/g)
 				.map(match => match[7]);
-			expect(matches).toEqual("abcde123".split(""));
+			expect(matches).toEqual(expected.split(""));
 			done();
 		} catch (e) {
 			done(e);
 		}
 	}, done);
-});
+}
