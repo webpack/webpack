@@ -1691,6 +1691,9 @@
         "css/module": {
           "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
+        "html": {
+          "$ref": "#/definitions/HtmlGeneratorOptions"
+        },
         "javascript": {
           "$ref": "#/definitions/EmptyGeneratorOptions"
         },
@@ -1753,6 +1756,25 @@
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
       "type": "string",
       "absolutePath": false
+    },
+    "HtmlGeneratorOptions": {
+      "description": "Generator options for html modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "extract": {
+          "description": "Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export.",
+          "type": "boolean"
+        },
+        "filename": {
+          "description": "Specifies the filename template of the emitted `.html` file. Only used when `extract` is enabled.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FilenameTemplate"
+            }
+          ]
+        }
+      }
     },
     "HttpUriAllowedUris": {
       "description": "List of allowed URIs for building http resources.",

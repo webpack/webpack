@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html extract-runtime-chunk exported tests should reference the runtime chunk in addition to the entry chunk 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Extracted HTML with runtime chunk</title>
+<script src=\\"html-runtime.js\\"></script><script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+</head>
+<body>
+<h1>Hello</h1>
+</body>
+</html>
+"
+`;

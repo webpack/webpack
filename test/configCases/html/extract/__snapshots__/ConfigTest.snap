@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html extract exported tests should emit page.html with rewritten URLs alongside the JS bundle 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Extracted HTML</title>
+<link rel=\\"icon\\" href=\\"31d6cfe0d16ae931b73c.png\\">
+<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+</head>
+<body>
+<h1>Hello</h1>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"image\\">
+</body>
+</html>
+"
+`;
