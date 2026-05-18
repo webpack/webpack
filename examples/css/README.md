@@ -233,8 +233,9 @@ __webpack_require__.r(module.exports = {
 /******/ 				link.onload = onLinkComplete.bind(null, link.onload);
 /******/ 			} else onLinkComplete(undefined, { type: 'load', target: link });
 /******/ 		
-/******/ 		
-/******/ 			needAttach && document.head.appendChild(link);
+/******/ 			if (needAttach) {
+/******/ 				document.head.appendChild(link);
+/******/ 			}
 /******/ 			return link;
 /******/ 		};
 /******/ 		__webpack_require__.f.css = (chunkId, promises) => {
@@ -559,9 +560,9 @@ assets by path *.css 475 bytes
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 Entrypoint main 3.53 KiB (14.6 KiB) = output.js 3.09 KiB output.css 451 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 454 bytes (css) 14.6 KiB (asset) 568 bytes (javascript) 42 bytes (css-url) 42 bytes (css-import) 8.53 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 454 bytes (css) 14.6 KiB (asset) 568 bytes (javascript) 42 bytes (css-url) 42 bytes (css-import) 8.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.53 KiB 8 modules
+  runtime modules 8.54 KiB 8 modules
   dependent modules 14.6 KiB (asset) 42 bytes (javascript) 42 bytes (css-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
   built modules 526 bytes (javascript) 375 bytes (css) [built]
     ./example.js + 5 modules 435 bytes [not cacheable] [built] [code generated]
