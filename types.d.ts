@@ -6974,6 +6974,12 @@ declare interface Experiments {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 }
 
 /**
@@ -7051,6 +7057,12 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -9728,7 +9740,10 @@ declare class JavascriptParser extends ParserClass {
 	 */
 	constructor(
 		sourceType?: "module" | "auto" | "script",
-		options?: { parse?: (code: string, options: ParseOptions) => ParseResult }
+		options?: {
+			parse?: (code: string, options: ParseOptions) => ParseResult;
+			typescript?: boolean;
+		}
 	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
@@ -10169,7 +10184,10 @@ declare class JavascriptParser extends ParserClass {
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
-	options: { parse?: (code: string, options: ParseOptions) => ParseResult };
+	options: {
+		parse?: (code: string, options: ParseOptions) => ParseResult;
+		typescript?: boolean;
+	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
@@ -11873,6 +11891,12 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
 	 */
 	system?: boolean;
+
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 
 	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way.
