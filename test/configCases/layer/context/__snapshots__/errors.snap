@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "./test1/shared.less.webpack[javascript/auto]!=!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[0].use[2]!./test1/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "./test2/shared.less.webpack[javascript/auto]!=!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[0].use[2]!./test2/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "./test1/shared.less.webpack[javascript/auto]!=!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[1].use[2]!./test1/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "./test2/shared.less.webpack[javascript/auto]!=!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[1].use[2]!./test2/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/mini-css-extract-plugin/dist/loader.js):
+HookWebpackError: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+-- inner error --
+Error: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+
+Generated code for <WEBPACK_ROOT>/node_modules/css-loader/dist/cjs.js!<WEBPACK_ROOT>/node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[0].use[2]!<TEST_DIR>/test1/shared.less
+1 | throw new Error(\\"Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):/nNonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules/n    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:950:12)/n    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:527:11/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:277:20/n    at innerCallback (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:195:4)/n    at Object.lessLoader (<WEBPACK_ROOT>/node_modules/less-loader/dist/index.js:18:5)\\");",
+    "moduleName": "./test1/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/mini-css-extract-plugin/dist/loader.js):
+HookWebpackError: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+-- inner error --
+Error: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+
+Generated code for <WEBPACK_ROOT>/node_modules/css-loader/dist/cjs.js!<WEBPACK_ROOT>/node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[0].use[2]!<TEST_DIR>/test2/shared.less
+1 | throw new Error(\\"Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):/nNonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules/n    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:950:12)/n    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:527:11/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:277:20/n    at innerCallback (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:195:4)/n    at Object.lessLoader (<WEBPACK_ROOT>/node_modules/less-loader/dist/index.js:18:5)\\");",
+    "moduleName": "./test2/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/mini-css-extract-plugin/dist/loader.js):
+HookWebpackError: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+-- inner error --
+Error: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+
+Generated code for <WEBPACK_ROOT>/node_modules/css-loader/dist/cjs.js!<WEBPACK_ROOT>/node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[1].use[2]!<TEST_DIR>/test1/shared.less
+1 | throw new Error(\\"Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):/nNonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules/n    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:950:12)/n    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:527:11/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:277:20/n    at innerCallback (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:195:4)/n    at Object.lessLoader (<WEBPACK_ROOT>/node_modules/less-loader/dist/index.js:18:5)\\");",
+    "moduleName": "./test1/shared.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/mini-css-extract-plugin/dist/loader.js):
+HookWebpackError: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+-- inner error --
+Error: Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules
+
+Generated code for <WEBPACK_ROOT>/node_modules/css-loader/dist/cjs.js!<WEBPACK_ROOT>/node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].oneOf[1].use[2]!<TEST_DIR>/test2/shared.less
+1 | throw new Error(\\"Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):/nNonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules/n    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:950:12)/n    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:527:11/n    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:277:20/n    at innerCallback (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:195:4)/n    at Object.lessLoader (<WEBPACK_ROOT>/node_modules/less-loader/dist/index.js:18:5)\\");",
+    "moduleName": "./test2/shared.less",
+  },
+]
+`;
