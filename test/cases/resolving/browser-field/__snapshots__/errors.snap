@@ -26,7 +26,7 @@ Stack:
   describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
   rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
   normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
-  relative: (<TEST_DIR>/node_modules/recursive-file/a) ",
+  relative: (<TEST_DIR>/node_modules/recursive-file/a)",
     "moduleName": "./resolving/browser-field/index.js",
   },
   Object {
@@ -53,7 +53,7 @@ Stack:
   describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
   rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
   normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
-  relative: (<TEST_DIR>/node_modules/recursive-file/b) ",
+  relative: (<TEST_DIR>/node_modules/recursive-file/b)",
     "moduleName": "./resolving/browser-field/index.js",
   },
   Object {
@@ -122,7 +122,7 @@ Stack:
   relative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
   describedRelative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
   rawFile: (<TEST_DIR>/node_modules/recursive-file/d.js) 
-  file: (<TEST_DIR>/node_modules/recursive-file/d.js) ",
+  file: (<TEST_DIR>/node_modules/recursive-file/d.js)",
     "moduleName": "./resolving/browser-field/index.js",
   },
 ]

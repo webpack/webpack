@@ -4,74 +4,62 @@ exports[`errors 1`] = `
 Array [
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: javascript/auto error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: javascript/auto error message",
     "moduleName": "./module.js",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/inline error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/inline error message",
     "moduleName": "./inline.txt",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/resource error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/resource error message",
     "moduleName": "./file.svg",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/resource other error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/resource other error message",
     "moduleName": "./other.svg",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/resource in css error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/resource in css error message",
     "moduleName": "./in-style.png",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/source error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/source error message",
     "moduleName": "./source.txt",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: asset/source in css error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: asset/source in css error message",
     "moduleName": "./in-style-source.png",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: css/auto error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: css/auto error message",
     "moduleName": "css ./style.modules.css",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: css error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: css error message",
     "moduleName": "css ./style.css",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: json error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: json error message",
     "moduleName": "./file.json",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: json other error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: json other error message",
     "moduleName": "./other.json",
   },
   Object {
     "message": "Module build failed (from ./loader.js):
-Error: webassembly/async error message
-    at Object.module.exports (<TEST_DIR>/loader.js:6:11)",
+Error: webassembly/async error message",
     "moduleName": "./async-wasm.wat",
   },
 ]
