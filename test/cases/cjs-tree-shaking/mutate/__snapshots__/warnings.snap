@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "18:8-9",
+    "message": "export 'a' (imported as 'a') was not found in './module?2' (possible exports: abc, def)",
+    "moduleName": "./cjs-tree-shaking/mutate/index.js",
+  },
+  Object {
+    "loc": "30:8-9",
+    "message": "export 'a' (imported as 'a') was not found in './module?2' (possible exports: abc, def)",
+    "moduleName": "./cjs-tree-shaking/mutate/index.js",
+  },
+]
+`;

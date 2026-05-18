@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "4:2-33",
+    "message": "Cannot statically analyse 'require(…, …)' in line 4",
+    "moduleName": "./parsing/unsupported-amd/index.js",
+  },
+  Object {
+    "loc": "12:2-17",
+    "message": "Cannot statically analyse 'require(…, …)' in line 12",
+    "moduleName": "./parsing/unsupported-amd/index.js",
+  },
+]
+`;

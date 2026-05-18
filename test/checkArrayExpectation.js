@@ -2,6 +2,98 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
+const { matchKindSnapshot } = require("./harness/snapshot");
+
+/**
+ * @param {string} str string to escape for use in a RegExp
+ * @returns {string} escaped string
+ */
+const quoteMeta = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Derives the webpack root directory from a test directory path.
+ * @param {string} testDirectory absolute path to the test case directory
+ * @returns {string} webpack root path, or empty string if not found
+ */
+const getWebpackRoot = (testDirectory) => {
+	const idx = testDirectory.lastIndexOf(`${path.sep}test${path.sep}`);
+	return idx !== -1 ? testDirectory.slice(0, idx) : "";
+};
+
+/**
+ * Replaces absolute paths in a string with stable placeholders
+ * so that snapshots are portable across machines.
+ * @param {string} str the string to normalize
+ * @param {string} testDirectory absolute path to the test case directory
+ * @returns {string} normalized string
+ */
+const normalizeString = (str, testDirectory) => {
+	if (!str) return str;
+	const root = getWebpackRoot(testDirectory);
+	// Replace more-specific test dir first, then the broader root
+	str = str.replace(new RegExp(quoteMeta(testDirectory), "g"), "<TEST_DIR>");
+	if (root) {
+		str = str.replace(new RegExp(quoteMeta(root), "g"), "<WEBPACK_ROOT>");
+		// Replace ancestor directories above webpack root.
+		// The resolver walks up to the filesystem root looking for
+		// node_modules, producing paths like /Users/x/node_modules.
+		let ancestor = path.dirname(root);
+		while (ancestor !== path.dirname(ancestor)) {
+			str = str.replace(new RegExp(quoteMeta(ancestor), "g"), "<ANCESTOR>");
+			ancestor = path.dirname(ancestor);
+		}
+	}
+	// Normalize the output directory suite name (e.g. test/js/ConfigTestCases/
+	// vs test/js/ConfigCacheTestCases/) so all suites produce identical snapshots.
+	str = str.replace(/(<WEBPACK_ROOT>\/test\/js\/)[^/]+\//g, "$1<OUTPUT>/");
+	// Strip stack trace lines — line numbers vary across Node.js versions
+	// and between runs (e.g. processTicksAndRejections).
+	str = str
+		.split("\n")
+		.filter((line) => !/^\s+at\s/.test(line))
+		.join("\n")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim();
+	// Normalize Node.js JSON parse error messages — the detail after
+	// the hex code (e.g. "(0x68)") varies across Node.js versions.
+	str = str.replace(/(Unexpected token[^)]*\))[^\n]*(?:\n['"])?/g, "$1");
+	str = str.replace(/\\/g, "/");
+	return str;
+};
+
+/**
+ * Fields to include in snapshot serialization.
+ * Only stable, meaningful fields should be listed here —
+ * nondeterministic fields (e.g. moduleTrace, details) are excluded.
+ * @type {ReadonlyArray<{ key: string, normalize?: boolean }>}
+ */
+const SNAPSHOT_FIELDS = [
+	{ key: "message", normalize: true },
+	{ key: "moduleName", normalize: true },
+	{ key: "loc" },
+	{ key: "compilerPath" }
+];
+
+/**
+ * Serializes an array of error/warning objects into a normalized form
+ * suitable for Jest snapshot matching. Absolute paths are replaced with
+ * placeholders so snapshots stay stable across environments.
+ * @param {EXPECTED_ANY[]} items stats errors or warnings from stats.toJson()
+ * @param {string} testDirectory absolute path to the test case directory
+ * @returns {EXPECTED_ANY[]} normalized items for snapshot comparison
+ */
+const normalizeForSnapshot = (items, testDirectory) =>
+	items.map((item) => {
+		const result = {};
+		for (const { key, normalize } of SNAPSHOT_FIELDS) {
+			if (item[key]) {
+				result[key] = normalize
+					? normalizeString(item[key], testDirectory)
+					: item[key];
+			}
+		}
+		return result;
+	});
 
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
@@ -141,15 +233,27 @@ module.exports = function checkArrayExpectation(
 			}
 		}
 	} else if (array.length > 0) {
-		return (
-			done(
-				new Error(
-					`${upperCaseKind}s while compiling:\n\n${array
-						.map(explain)
-						.join("\n\n")}`
-				)
-			),
-			true
-		);
+		if (kind === "error" || kind === "warning") {
+			// Snapshot-based matching when no expectation file exists.
+			// Uses a dedicated snap file per kind (e.g. errors.snap)
+			// with a stable key shared across all test suites.
+			try {
+				const normalized = normalizeForSnapshot(array, testDirectory);
+				matchKindSnapshot(testDirectory, filename, normalized);
+			} catch (err) {
+				return (done(err), true);
+			}
+		} else {
+			return (
+				done(
+					new Error(
+						`${upperCaseKind}s while compiling:\n\n${array
+							.map(explain)
+							.join("\n\n")}`
+					)
+				),
+				true
+			);
+		}
 	}
 };

@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './b?3' contains conflicting star exports for the name 'x' with the previous requested module './a?3'",
+    "moduleName": "./parsing/harmony-duplicate-export/cjs/3.js",
+  },
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './a?4' contains conflicting star exports for the name 'x' with the previous requested module './b?4'",
+    "moduleName": "./parsing/harmony-duplicate-export/cjs/4.js",
+  },
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './b?6' contains conflicting star exports for the name 'x' with the previous requested module './a?6'",
+    "moduleName": "./parsing/harmony-duplicate-export/cjs/6.js",
+  },
+  Object {
+    "loc": "5:0-22",
+    "message": "The requested module './a?7' contains conflicting star exports for the name 'x' with the previous requested module './b?7'",
+    "moduleName": "./parsing/harmony-duplicate-export/cjs/7.js",
+  },
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './b?3' contains conflicting star exports for the name 'x' with the previous requested module './a?3'",
+    "moduleName": "./parsing/harmony-duplicate-export/3.js",
+  },
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './a?4' contains conflicting star exports for the name 'x' with the previous requested module './b?4'",
+    "moduleName": "./parsing/harmony-duplicate-export/4.js",
+  },
+  Object {
+    "loc": "3:0-22",
+    "message": "The requested module './b?6' contains conflicting star exports for the name 'x' with the previous requested module './a?6'",
+    "moduleName": "./parsing/harmony-duplicate-export/6.js",
+  },
+  Object {
+    "loc": "5:0-22",
+    "message": "The requested module './a?7' contains conflicting star exports for the name 'x' with the previous requested module './b?7'",
+    "moduleName": "./parsing/harmony-duplicate-export/7.js",
+  },
+]
+`;

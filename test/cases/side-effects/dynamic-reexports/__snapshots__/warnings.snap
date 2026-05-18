@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "66:8-16",
+    "message": "export 'default' (imported as 'Default1') was not found in './direct-export' (possible exports unknown)",
+    "moduleName": "./side-effects/dynamic-reexports/index.js",
+  },
+]
+`;

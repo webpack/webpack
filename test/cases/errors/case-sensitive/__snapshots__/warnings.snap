@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "message": "There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* <TEST_DIR>/A.js
+    Used by 1 module(s), i. e.
+    <TEST_DIR>/index.js
+* <TEST_DIR>/a.js
+    Used by 1 module(s), i. e.
+    <TEST_DIR>/index.js",
+    "moduleName": "./errors/case-sensitive/A.js",
+  },
+  Object {
+    "message": "There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* <TEST_DIR>/B/file.js
+    Used by 1 module(s), i. e.
+    <TEST_DIR>/index.js
+* <TEST_DIR>/b/file.js
+    Used by 1 module(s), i. e.
+    <TEST_DIR>/index.js",
+    "moduleName": "./errors/case-sensitive/B/file.js",
+  },
+]
+`;
