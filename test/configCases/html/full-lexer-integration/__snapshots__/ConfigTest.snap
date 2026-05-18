@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html full-lexer-integration exported tests should compile a kitchen-sink HTML document through all lexer states 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+<head>
+<meta charset=\\"UTF-8\\">
+<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+<title>Kitchen &amp; Sink &#x2014; Full Lexer Test</title>
+</head>
+<body>
+<!-- Standard comment -->
+<!---->
+<!----->
+<!-- Multi
+     line
+     comment -->
+<!--<img src=\\"image.png\\">-->
+
+<div id=\\"double-quoted\\" class=\\"foo bar\\" data-x=\\"a&amp;b\\">Double quoted</div>
+<div id='single-quoted' class='baz' data-y='c&lt;d'>Single quoted</div>
+<div id=unquoted class=plain>Unquoted attributes</div>
+
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"test image\\" width=\\"1\\" height=\\"1\\" />
+<br/>
+<hr />
+<input type=\\"text\\" value=\\"hello&quot;world\\" disabled />
+<input type=\\"checkbox\\" checked />
+
+<a href=\\"simple.html?a=1&amp;b=2&amp;c=3\\">Entity in URL</a>
+<a href='simple.html?x=1&lt;2'>Single quoted URL</a>
+<a href=simple.html>Unquoted URL</a>
+
+<p>Named entities: &amp; &lt; &gt; &quot;</p>
+<p>Decimal numeric: &#65;&#66;&#67;</p>
+<p>Hex numeric: &#x41;&#x42;&#x43;</p>
+<p>Upper hex: &#X44;&#X45;</p>
+<p>Bare ampersand: Tom & Jerry</p>
+<p>Unknown entity: &unknown; stays raw</p>
+<p>Missing semicolon: &amp without semicolon</p>
+<p>Empty numeric: &#; and &#x;</p>
+<p>Large codepoint: &#999;</p>
+
+<textarea>
+  RCDATA content: <not-a-tag> &amp; entities work here
+</textarea>
+
+<script type=\\"text/plain\\">
+  var x = \\"<div>not parsed as tags</div>\\";
+  var y = \\"<!-- not a comment -->\\";
+  var z = 1 < 2 && 3 > 1;
+</script>
+
+<script type=\\"text/plain\\">
+  This script type is non-standard but valid HTML.
+</script>
+
+<!-- Non-CSS style type stays raw -->
+<style type=\\"text/foo\\">
+  this is not CSS, stays untouched
+</style>
+
+<div data-empty=\\"\\" data-bool data-single='x' data-double=\\"y\\" data-unquoted=z>
+  Mixed attribute styles
+</div>
+
+<![CDATA[<div>ignored cdata</div>]]><img src=\\"image.png\\">
+
+<p>Self-closing voids: <br/><hr/><img src=\\"image.png\\"/></p>
+
+<div class=\\"nested\\">
+  <div class=\\"level-1\\">
+    <div class=\\"level-2\\">
+      <span>Deep nesting</span>
+    </div>
+  </div>
+</div>
+
+<p>Text</p>
+<p >Text</p>
+<p   >Text</p>
+
+</body>
+</html>
+"
+`;
