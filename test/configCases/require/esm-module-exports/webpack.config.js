@@ -28,7 +28,18 @@ module.exports = {
 			WITH_DEFAULT_MJS_PATH: JSON.stringify(
 				path.resolve(__dirname, "with-default.mjs")
 			),
-			REEXPORT_MJS_PATH: JSON.stringify(path.resolve(__dirname, "reexport.mjs"))
+			REEXPORT_MJS_PATH: JSON.stringify(
+				path.resolve(__dirname, "reexport.mjs")
+			),
+			WRAPPER_FULL_PATH: JSON.stringify(
+				path.resolve(__dirname, "wrapper-full.cjs")
+			),
+			WRAPPER_NAMED_PATH: JSON.stringify(
+				path.resolve(__dirname, "wrapper-named.cjs")
+			),
+			WRAPPER_PROP_PATH: JSON.stringify(
+				path.resolve(__dirname, "wrapper-prop.cjs")
+			)
 		})
 	]
 };

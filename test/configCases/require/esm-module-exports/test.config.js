@@ -19,6 +19,9 @@ const plainPath = path.resolve(__dirname, "plain.mjs");
 const noSpecialPath = path.resolve(__dirname, "no-special-export.mjs");
 const withDefaultPath = path.resolve(__dirname, "with-default.mjs");
 const reexportPath = path.resolve(__dirname, "reexport.mjs");
+const wrapperFullPath = path.resolve(__dirname, "wrapper-full.cjs");
+const wrapperNamedPath = path.resolve(__dirname, "wrapper-named.cjs");
+const wrapperPropPath = path.resolve(__dirname, "wrapper-prop.cjs");
 
 module.exports = {
 	modules: {
@@ -26,6 +29,9 @@ module.exports = {
 		[plainPath]: Module._load(plainPath, null, false),
 		[noSpecialPath]: Module._load(noSpecialPath, null, false),
 		[withDefaultPath]: Module._load(withDefaultPath, null, false),
-		[reexportPath]: Module._load(reexportPath, null, false)
+		[reexportPath]: Module._load(reexportPath, null, false),
+		[wrapperFullPath]: Module._load(wrapperFullPath, null, false),
+		[wrapperNamedPath]: Module._load(wrapperNamedPath, null, false),
+		[wrapperPropPath]: Module._load(wrapperPropPath, null, false)
 	}
 };

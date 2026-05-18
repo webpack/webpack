@@ -17,6 +17,9 @@ const plainMjsPath = PLAIN_MJS_PATH;
 const noSpecialMjsPath = NO_SPECIAL_MJS_PATH;
 const withDefaultMjsPath = WITH_DEFAULT_MJS_PATH;
 const reexportMjsPath = REEXPORT_MJS_PATH;
+const wrapperFullPath = WRAPPER_FULL_PATH;
+const wrapperNamedPath = WRAPPER_NAMED_PATH;
+const wrapperPropPath = WRAPPER_PROP_PATH;
 
 it("should unwrap a named export 'module.exports' for plain require()", () => {
 	const webpacked = require("./value.mjs");
@@ -68,6 +71,32 @@ it("should unwrap 'module.exports' that was re-exported from another module", ()
 	const webpacked = require("./reexport.mjs");
 	const native = require(/* webpackIgnore: true */ reexportMjsPath);
 	expect(webpacked).toBe("from-base-module");
+	expect(webpacked).toBe(native);
+});
+
+it("CJS wrapper `module.exports = require(esm)` re-exports the unwrapped value", () => {
+	const webpacked = require("./wrapper-full.cjs");
+	const native = require(/* webpackIgnore: true */ wrapperFullPath);
+	expect(typeof webpacked).toBe("function");
+	expect(webpacked()).toBe(42);
+	expect(webpacked()).toBe(native());
+	expect(webpacked.named).toBe(native.named);
+});
+
+it("CJS wrapper `module.exports.x = require(esm)` exposes the unwrapped value as a property", () => {
+	const webpacked = require("./wrapper-named.cjs");
+	const native = require(/* webpackIgnore: true */ wrapperNamedPath);
+	expect(typeof webpacked.fn).toBe("function");
+	expect(webpacked.fn()).toBe(42);
+	expect(webpacked.fn()).toBe(native.fn());
+	expect(webpacked.literal).toBe("i-am-the-module-exports");
+	expect(webpacked.literal).toBe(native.literal);
+});
+
+it("CJS wrapper `module.exports = require(esm).x` re-exports a property of the unwrapped value", () => {
+	const webpacked = require("./wrapper-prop.cjs");
+	const native = require(/* webpackIgnore: true */ wrapperPropPath);
+	expect(webpacked).toBe("named-prop");
 	expect(webpacked).toBe(native);
 });
 
