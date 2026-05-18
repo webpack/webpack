@@ -1,58 +1,24 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases html script-src-classic exported tests should emit IIFE-wrapped chunks for <script type=module src> too (still valid as ES modules) 1`] = `
+exports[`ConfigCacheTestCases html inline-script-classic exported tests should emit IIFE-wrapped chunks for inline <script type=module> too (no output.module) 1`] = `
 "/******/ (() => { // webpackBootstrap
 /******/ 	\\"use strict\\";
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-/*!*************************!*\\\\
-  !*** ./module-entry.js ***!
-  \\\\*************************/
-/* unused harmony export value */
-const value = \\"module entry\\";
-/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
+/*!****************************************************************************************************************************************************************************!*\\\\
+  !*** data:text/javascript;base64,CmNvbnN0IGFyciA9IFsxLCAyLCAzXTsKY29uc3Qgc3VtID0gYXJyLnJlZHVjZSgoYSwgYikgPT4gYSArIGIsIDApOwp3aW5kb3cuX19pbmxpbmVNb2R1bGVTdW0gPSBzdW07Cg== ***!
+  \\\\****************************************************************************************************************************************************************************/
+
+const arr = [1, 2, 3];
+const sum = arr.reduce((a, b) => a + b, 0);
+window.__inlineModuleSum = sum;
 
 /******/ })()
 ;"
 `;
 
-exports[`ConfigTestCases html script-src-classic exported tests should emit classic IIFE-wrapped chunks for <script src> 1`] = `
+exports[`ConfigCacheTestCases html inline-script-classic exported tests should emit classic IIFE-wrapped chunks for inline <script> bodies 1`] = `
 "/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 97
-/*!******************!*\\\\
-  !*** ./entry.js ***!
-  \\\\******************/
-(module) {
-
-module.exports = \\"first entry\\";
-
-
-/***/ }
-
-/******/ 	});
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({});
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -179,29 +145,34 @@ module.exports = \\"first entry\\";
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(97);
-/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/ 	
+var __webpack_exports__ = {};
+/*!********************************************************************************************************!*\\\\
+  !*** data:text/javascript;base64,CnZhciBncmVldGluZyA9ICJoaSI7CmNvbnNvbGUubG9nKCI8Yj5oZWxsbzwvYj4iKTsK ***!
+  \\\\********************************************************************************************************/
+
+var greeting = \\"hi\\";
+console.log(\\"<b>hello</b>\\");
+
+__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ })()
 ;"
 `;
 
-exports[`ConfigTestCases html script-src-classic exported tests should rewrite script src attributes without changing the type attribute when output.module is off 1`] = `
+exports[`ConfigCacheTestCases html inline-script-classic exported tests should rewrite inline <script> tags and drop \`type=module\` when output.module is off 1`] = `
 "<!DOCTYPE html>
 <html>
 <head>
-<title>Classic-output test</title>
+<title>Inline Script Classic Test</title>
 <script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<script src=\\"__html_cbe5b59d_2.chunk.js\\" type=\\"text/javascript\\"></script>
+<!-- Non-JS type stays untouched -->
+<script type=\\"application/ld+json\\">
+{\\"@context\\": \\"https://schema.org\\"}
+</script>
 </head>
 <body>
-<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
-<script type=\\"text/javascript\\" src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
-<script src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
-<script type=\\"application/ld+json\\" src=\\"1aeae0731d54e523748c.jsonld\\"></script>
+<p>Hi</p>
 </body>
 </html>
 "
