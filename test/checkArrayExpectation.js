@@ -54,6 +54,9 @@ const normalizeString = (str, testDirectory) => {
 		.join("\n")
 		.replace(/\n{3,}/g, "\n\n")
 		.trim();
+	// Normalize Node.js JSON parse error messages — the detail after
+	// the hex code (e.g. "(0x68)") varies across Node.js versions.
+	str = str.replace(/(Unexpected token[^)]*\))[^\n]*/g, "$1");
 	str = str.replace(/\\/g, "/");
 	return str;
 };
