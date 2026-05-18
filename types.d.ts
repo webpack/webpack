@@ -3061,6 +3061,9 @@ type CodeValuePrimitive =
 	| boolean
 	| Function
 	| RegExp;
+declare interface Codec {
+	decode: (decoder: Decoder) => any;
+}
 declare interface Colors {
 	reset: (value?: any) => string;
 	bold: (value?: any) => string;
@@ -4681,9 +4684,6 @@ declare class ConstDependency extends NullDependency {
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
 }
-declare interface Constructor {
-	new (...params: any[]): any;
-}
 declare class ConsumeSharedPlugin {
 	/**
 	 * Creates an instance of ConsumeSharedPlugin.
@@ -5472,6 +5472,21 @@ declare interface CssParserOptions {
 	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+declare abstract class Decoder {
+	reader: Reader;
+	stringRefs: string[];
+	objectRefs: any[];
+	objectRefSet: WeakSet<object>;
+	typeRefs: Codec[];
+	context: Record<string, any>;
+	fileStore?: FileStore;
+	lazyTarget: any;
+	dispatch: ((decoder: Decoder) => any)[];
+	read(): any;
+	setCircularReference(value?: any): void;
+	deserialize(): any;
+	readField(_field?: any): any;
+}
 declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
@@ -5557,12 +5572,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: Decoder): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -5685,12 +5700,12 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: Decoder): void;
 	module: any;
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
@@ -6394,6 +6409,34 @@ declare class EnableWasmLoadingPlugin {
 	 * attempts to use it.
 	 */
 	static checkEnabled(compiler: Compiler, type: string): void;
+}
+declare abstract class Encoder {
+	writer: Writer;
+	stringRefs: Map<string, number>;
+	objectRefs: Map<any, number>;
+	typeRefs: Map<string, number>;
+	cycleStack: Set<any>;
+	context: Record<string, any>;
+	fileStore?: FileStore;
+	lazyTarget: any;
+	write(value?: any): void;
+	writeLazy(value?: any): void;
+	writeSeparate(
+		value: any,
+		options: { name?: string; type?: string }
+	): () => any;
+	setCircularReference(value?: any): void;
+	snapshot(): EncoderSnapshot;
+	rollback(snapshot: EncoderSnapshot): void;
+	serialize(value?: any): null | Buffer;
+	writeField(value: any, field: FieldOptions): void;
+}
+declare interface EncoderSnapshot {
+	position: number;
+	stringRefs: Map<string, number>;
+	objectRefs: Map<any, number>;
+	typeRefs: Map<string, number>;
+	cycleStack: Set<any>;
 }
 type EncodingOptionFs =
 	| undefined
@@ -7956,6 +7999,7 @@ declare interface FetchCompileWasmPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
+type FieldOptions = string | { type?: string; name?: string };
 
 /**
  * Options object for persistent file-based caching.
@@ -8060,6 +8104,31 @@ declare interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
+}
+declare interface FileContext {
+	[index: string]: any;
+	filename: string;
+	extension?: string;
+}
+declare abstract class FileStore {
+	fs: IntermediateFileSystem;
+	hashFunction: HashFunction;
+	writeFileAtomic(filename: string, buffer: Buffer): Promise<void>;
+	readFile(filename: string): Promise<Buffer>;
+	serializeToBuffer(value: any, context: Record<string, any>): null | Buffer;
+	deserializeFromBuffer(buffer: Buffer, context: Record<string, any>): any;
+	serialize(value: any, context: FileContext): Promise<null | true>;
+	deserialize(_value: any, context: FileContext): Promise<any>;
+	writeSeparate(
+		encoder: Encoder,
+		value?: any,
+		options?: SeparateOptions
+	): { name: string; size: number; lazy: () => any };
+	readSeparateLazy(
+		name: string,
+		size: number,
+		context: Record<string, any>
+	): () => any;
 }
 declare interface FileSystem {
 	/**
@@ -8753,12 +8822,12 @@ declare abstract class HarmonyStarExportsList {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: Decoder): void;
 }
 declare class Hash {
 	constructor();
@@ -9461,12 +9530,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: Decoder): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -12860,20 +12929,6 @@ declare interface LazyCompilationOptions {
 	 */
 	test?: string | RegExp | ((module: Module) => boolean);
 }
-type LazyFunction<
-	InputValue,
-	OutputValue,
-	InternalLazyTarget extends SerializerMiddleware<
-		any,
-		any,
-		Record<string, any>
-	>,
-	InternalLazyOptions extends undefined | LazyOptions
-> = (() => InputValue | Promise<InputValue>) &
-	Partial<{ options: InternalLazyOptions }>;
-declare interface LazyOptions {
-	[index: string]: any;
-}
 declare class LazySet<T> {
 	/**
 	 * Seeds the set with an optional iterable while preparing internal queues for
@@ -12942,7 +12997,7 @@ declare class LazySet<T> {
 	 * Serializes the fully materialized set contents into webpack's object
 	 * serialization stream.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Returns the default iterator over values after forcing pending merges.
@@ -12952,7 +13007,7 @@ declare class LazySet<T> {
 	/**
 	 * Restores a `LazySet` from serialized item data.
 	 */
-	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
+	static deserialize<T>(__0: Decoder): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -13462,12 +13517,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: Decoder): void;
 }
 declare interface LogEntry {
 	type:
@@ -13504,8 +13559,6 @@ type LogTypeEnum =
 	| "profileEnd"
 	| "time"
 	| "status";
-declare const MEASURE_END_OPERATION: unique symbol;
-declare const MEASURE_START_OPERATION: unique symbol;
 declare interface MainRenderContext {
 	/**
 	 * the chunk
@@ -15915,7 +15968,7 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(context: Decoder): NormalModule;
 
 	/**
 	 * Gets source basic types.
@@ -16512,14 +16565,6 @@ declare interface ObjectConfiguration {
 }
 
 /**
- * Updates set size using the provided set.
- */
-declare interface ObjectDeserializerContext {
-	read: () => any;
-	setCircularReference: (value: ReferenceableItem) => void;
-}
-
-/**
  * Returns location of targetPath relative to rootPath.
  */
 declare interface ObjectEncodingOptionsFs {
@@ -16556,41 +16601,6 @@ declare interface ObjectEncodingOptionsTypes {
 		| "latin1"
 		| "binary"
 		| "hex";
-}
-
-/**
- * Updates set size using the provided set.
- */
-declare interface ObjectSerializer {
-	serialize: (value: any, context: ObjectSerializerContext) => void;
-	deserialize: (context: ObjectDeserializerContext) => any;
-}
-
-/**
- * Updates set size using the provided set.
- */
-declare interface ObjectSerializerContext {
-	write: (value?: any) => void;
-	setCircularReference: (value: ReferenceableItem) => void;
-	snapshot: () => ObjectSerializerSnapshot;
-	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
-		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
-}
-
-/**
- * Updates set size using the provided set.
- */
-declare interface ObjectSerializerSnapshot {
-	length: number;
-	cycleStackSize: number;
-	referenceableSize: number;
-	currentPos: number;
-	objectTypeLookupSize: number;
-	currentPosTypeLookup: number;
 }
 declare class OccurrenceChunkIdsPlugin {
 	/**
@@ -18807,7 +18817,6 @@ declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable)
 			| "ascii"
 			| "utf8"
 			| "utf-8"
@@ -18819,7 +18828,8 @@ declare interface ReadFileFs {
 			| "base64url"
 			| "latin1"
 			| "binary"
-			| "hex",
+			| "hex"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 	(
@@ -19215,6 +19225,17 @@ declare interface ReaddirTypes {
 		) => void
 	): void;
 }
+declare abstract class Reader {
+	readU8(): number;
+	readU32(): number;
+	readVarUint(): number;
+	readVarInt(): number;
+	readF64(): number;
+	readBytes(n: number): Buffer;
+	readBytesCopy(n: number): Buffer;
+	readString(byteLength: number): string;
+	get eof(): boolean;
+}
 declare interface ReadlinkFs {
 	(
 		path: PathLikeFs,
@@ -19459,7 +19480,6 @@ declare interface Reference {
 	isReadOnly: () => boolean;
 	isReadWrite: () => boolean;
 }
-type ReferenceableItem = string | object;
 declare interface ReferencedExport {
 	/**
 	 * name of the referenced export
@@ -20494,7 +20514,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 }
 declare interface RestoreProvidedDataExports {
 	name: string;
@@ -21708,47 +21728,18 @@ declare interface ScopeInfo {
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
-declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
-	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
-	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
-	context?: Context;
-
-	/**
-	 * Serializes this instance into the provided serializer context.
-	 */
-	serialize<ExtendedContext>(
-		obj: DeserializedValue | Promise<DeserializedValue>,
-		context: Context & ExtendedContext
-	): Promise<SerializedValue>;
-
-	/**
-	 * Restores this instance from the provided deserializer context.
-	 */
-	deserialize<ExtendedContext>(
-		value: SerializedValue | Promise<SerializedValue>,
-		context: Context & ExtendedContext
-	): Promise<DeserializedValue>;
+declare interface SeparateOptions {
+	name?: string;
+	type?: string;
 }
-declare abstract class SerializerMiddleware<
-	DeserializedType,
-	SerializedType,
-	Context
-> {
-	/**
-	 * Serializes this instance into the provided serializer context.
-	 */
-	serialize(
-		data: DeserializedType,
-		context: Context
-	): null | SerializedType | Promise<SerializedType>;
-
-	/**
-	 * Restores this instance from the provided deserializer context.
-	 */
-	deserialize(
-		data: SerializedType,
-		context: Context
-	): DeserializedType | Promise<DeserializedType>;
+declare abstract class Serializer {
+	options: SerializerOptions;
+	serialize(value?: any, context?: Record<string, any>): null | Buffer;
+	deserialize(buffer: Buffer, context?: Record<string, any>): any;
+}
+declare interface SerializerOptions {
+	context?: Record<string, any>;
+	fileStore?: FileStore;
 }
 type ServerLazyCompilationBackend =
 	| ServerImportHttp<typeof IncomingMessage>
@@ -21976,12 +21967,12 @@ declare abstract class Snapshot {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: Decoder): void;
 
 	/**
 	 * Gets file iterable.
@@ -24118,12 +24109,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: Encoder): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: Decoder): void;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -24640,6 +24631,18 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare abstract class Writer {
+	writeU8(byte: number): void;
+	writeU32(value: number): void;
+	writeVarUint(value: number): void;
+	writeVarInt(value: number): void;
+	writeF64(value: number): void;
+	writeBytes(bytes: Buffer | Uint8Array): void;
+	writeStringRaw(str: string, byteLength: number): void;
+	get length(): number;
+	truncate(pos: number): void;
+	toBuffer(): Buffer;
+}
 
 /**
  * Returns compiler or MultiCompiler.
@@ -25211,24 +25214,28 @@ declare namespace exports {
 			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
 		export namespace serialization {
-			export const register: (
-				Constructor: Constructor,
-				request: string,
-				name: null | string,
-				serializer: ObjectSerializer
+			export let register: (
+				Constructor?: any,
+				request?: any,
+				name?: any,
+				serializer?: any
 			) => void;
-			export const registerLoader: (
+			export let registerLoader: (
 				regExp: RegExp,
 				loader: (request: string) => boolean
 			) => void;
-			export const registerNotSerializable: (Constructor: Constructor) => void;
-			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: Serializer<any, any, any>;
+			export let registerNotSerializable: (Constructor?: any) => void;
+			export let NOT_SERIALIZABLE: object;
+			export let MEASURE_START_OPERATION: symbol;
+			export let MEASURE_END_OPERATION: symbol;
+			export const buffersSerializer: Serializer;
 			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
 				hashFunction: HashFunction
-			) => Serializer<D, S, C>;
-			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
+			) => {
+				serialize: (value: D, context: C) => Promise<null | true>;
+				deserialize: (value: S, context: C) => Promise<D>;
+			};
 		}
 		export const cleverMerge: <T, O>(
 			first?: null | T,
@@ -25473,8 +25480,8 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
-		ObjectSerializerContext,
-		ObjectDeserializerContext,
+		Encoder as ObjectSerializerContext,
+		Decoder as ObjectDeserializerContext,
 		InputFileSystem,
 		OutputFileSystem,
 		LoaderModule,
