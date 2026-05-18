@@ -3893,6 +3893,14 @@ declare interface CompilationHooksCssModulesPlugin {
 		Source
 	>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+
+	/**
+	 * called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default
+	 */
+	orderModules: SyncBailHook<
+		[Chunk, Module[], Compilation],
+		undefined | void | Module[]
+	>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<
