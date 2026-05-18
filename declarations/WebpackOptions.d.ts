@@ -3497,7 +3497,7 @@ export interface ExperimentsNormalized {
  */
 export interface HtmlGeneratorOptions {
 	/**
-	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
 	 */
 	extract?: boolean;
 }
