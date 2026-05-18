@@ -1757,22 +1757,30 @@
       "type": "string",
       "absolutePath": false
     },
+    "HtmlChunkFilename": {
+      "description": "Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "HtmlFilename": {
+      "description": "Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
     "HtmlGeneratorOptions": {
       "description": "Generator options for html modules.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "extract": {
-          "description": "Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export.",
+          "description": "Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.",
           "type": "boolean"
-        },
-        "filename": {
-          "description": "Specifies the filename template of the emitted `.html` file. Only used when `extract` is enabled.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/FilenameTemplate"
-            }
-          ]
         }
       }
     },
@@ -3813,6 +3821,12 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "htmlChunkFilename": {
+          "$ref": "#/definitions/HtmlChunkFilename"
+        },
+        "htmlFilename": {
+          "$ref": "#/definitions/HtmlFilename"
+        },
         "ignoreBrowserWarnings": {
           "description": "Ignore warnings in the browser.",
           "type": "boolean"
@@ -4018,6 +4032,12 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "htmlChunkFilename": {
+          "$ref": "#/definitions/HtmlChunkFilename"
+        },
+        "htmlFilename": {
+          "$ref": "#/definitions/HtmlFilename"
         },
         "ignoreBrowserWarnings": {
           "description": "Ignore warnings in the browser.",

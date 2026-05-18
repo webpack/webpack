@@ -6,6 +6,10 @@ const page = require("./page.html");
 const readFile = (name) =>
 	fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
+// `output.htmlFilename` defaults to `output.filename` with `.js` swapped for
+// `.html`, mirroring the CSS pipeline. `[name]` in the template resolves to
+// the HTML source's basename (e.g. `page` for `./page.html`) so multiple
+// HTML modules imported from the same chunk don't collide on output.
 it("should emit page.html with rewritten URLs alongside the JS bundle", () => {
 	const extracted = readFile("page.html");
 	expect(extracted).toMatchSnapshot();

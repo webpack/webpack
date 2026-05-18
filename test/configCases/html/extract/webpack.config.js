@@ -11,6 +11,7 @@ module.exports = {
 		node: true
 	},
 	output: {
+		filename: "[name].js",
 		chunkFilename: "[name].chunk.js"
 	},
 	optimization: {
@@ -19,8 +20,7 @@ module.exports = {
 	module: {
 		generator: {
 			html: {
-				extract: true,
-				filename: "[name].html"
+				extract: true
 			}
 		}
 	},
