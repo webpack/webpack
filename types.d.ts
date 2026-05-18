@@ -5316,7 +5316,12 @@ declare interface CssModuleParserOptions {
 	url?: boolean;
 }
 declare class CssModulesPlugin {
-	constructor();
+	constructor(options?: {
+		/**
+		 * algorithm to order CSS modules within a chunk
+		 */
+		order?: "import" | "name";
+	});
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -16680,6 +16685,11 @@ declare interface Optimization {
 	concatenateModules?: boolean;
 
 	/**
+	 * Define the algorithm to choose the order of CSS modules within a chunk (import: follow the import order across chunk groups using a topological merge, emitting a warning on unresolvable conflicts; name: order CSS modules deterministically by their full module name, ignoring import order).
+	 */
+	cssModulesOrder?: "import" | "name";
+
+	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
 	emitOnErrors?: boolean;
@@ -16828,6 +16838,11 @@ declare interface OptimizationNormalized {
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
 	concatenateModules?: boolean;
+
+	/**
+	 * Define the algorithm to choose the order of CSS modules within a chunk (import: follow the import order across chunk groups using a topological merge, emitting a warning on unresolvable conflicts; name: order CSS modules deterministically by their full module name, ignoring import order).
+	 */
+	cssModulesOrder?: "import" | "name";
 
 	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
