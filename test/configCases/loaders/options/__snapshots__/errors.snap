@@ -5,19 +5,13 @@ Array [
   Object {
     "message": "Module build failed (from ./loader-1.js):
 ValidationError: Invalid options object. Loader has been initialized using an options object that does not match the API schema.
- - options.arg6.bar.baz should be a string.
-    at validate (<WEBPACK_ROOT>/node_modules/schema-utils/dist/validate.js:213:11)
-    at Object.getOptions (<WEBPACK_ROOT>/lib/NormalModule.js:739:19)
-    at Object.module.exports (<TEST_DIR>/loader-1.js:5:23)",
+ - options.arg6.bar.baz should be a string.",
     "moduleName": "./error1.js",
   },
   Object {
     "message": "Module build failed (from ./loader-2.js):
 ValidationError: Invalid configuration object. Custom Loader Name has been initialized using a configuration object that does not match the API schema.
- - configuration.arg should be true.
-    at validate (<WEBPACK_ROOT>/node_modules/schema-utils/dist/validate.js:213:11)
-    at Object.getOptions (<WEBPACK_ROOT>/lib/NormalModule.js:739:19)
-    at Object.module.exports (<TEST_DIR>/loader-2.js:5:23)",
+ - configuration.arg should be true.",
     "moduleName": "./error2.js",
   },
 ]

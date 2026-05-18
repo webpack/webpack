@@ -46,6 +46,14 @@ const normalizeString = (str, testDirectory) => {
 	// Normalize the output directory suite name (e.g. test/js/ConfigTestCases/
 	// vs test/js/ConfigCacheTestCases/) so all suites produce identical snapshots.
 	str = str.replace(/(<WEBPACK_ROOT>\/test\/js\/)[^/]+\//g, "$1<OUTPUT>/");
+	// Strip stack trace lines — line numbers vary across Node.js versions
+	// and between runs (e.g. processTicksAndRejections).
+	str = str
+		.split("\n")
+		.filter((line) => !/^\s+at\s/.test(line))
+		.join("\n")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim();
 	str = str.replace(/\\/g, "/");
 	return str;
 };

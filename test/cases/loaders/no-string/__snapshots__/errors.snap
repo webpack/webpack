@@ -3,32 +3,11 @@
 exports[`errors 1`] = `
 Array [
   Object {
-    "message": "Module build failed: Error: Final loader (./loaders/no-string/loader.js) didn't return a Buffer or String
-    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:973:17)
-    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:534:3
-    at iterateNormalLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:282:9)
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:278:4
-    at runSyncOrAsync (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:229:11)
-    at iterateNormalLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:276:10)
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:301:3
-    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1108:14)",
+    "message": "Module build failed: Error: Final loader (./loaders/no-string/loader.js) didn't return a Buffer or String",
     "moduleName": "./loaders/no-string/loader.js!./loaders/no-string/file.js",
   },
   Object {
-    "message": "Module build failed: Error: Final loader (./loaders/no-string/loader.js) didn't return a Buffer or String
-    at processResult (<WEBPACK_ROOT>/lib/NormalModule.js:973:17)
-    at <WEBPACK_ROOT>/lib/NormalModule.js:1155:5
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:534:3
-    at iterateNormalLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:282:9)
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:278:4
-    at runSyncOrAsync (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:229:11)
-    at iterateNormalLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:276:10)
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:278:4
-    at runSyncOrAsync (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:229:11)
-    at iterateNormalLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:276:10)
-    at <WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:301:3
-    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1108:14)",
+    "message": "Module build failed: Error: Final loader (./loaders/no-string/loader.js) didn't return a Buffer or String",
     "moduleName": "./loaders/no-string/loader.js!./loaders/no-string/pitch-loader.js!./loaders/no-string/file.js",
   },
 ]
