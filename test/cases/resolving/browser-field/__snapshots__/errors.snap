@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "40:23-50",
+    "message": "Module not found: Error: Recursion in resolving
+Stack:
+  resolve: (<TEST_DIR>) recursive-file/a
+  parsedResolve: (<TEST_DIR>) recursive-file/a module
+  describedResolve: (<TEST_DIR>) recursive-file/a module
+  rawResolve: (<TEST_DIR>) recursive-file/a module
+  normalResolve: (<TEST_DIR>) recursive-file/a module
+  rawModule: (<TEST_DIR>) recursive-file/a module
+  module: (<TEST_DIR>/node_modules) ./recursive-file/a
+  resolveAsModule: (<TEST_DIR>/node_modules/recursive-file) ./a
+  undescribedResolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./a
+  resolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./a
+  resolveInExistingDirectory: (<TEST_DIR>/node_modules/recursive-file) ./a
+  relative: (<TEST_DIR>/node_modules/recursive-file/a) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/a) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/a) 
+  file: (<TEST_DIR>/node_modules/recursive-file/a.js) 
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
+  normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
+  relative: (<TEST_DIR>/node_modules/recursive-file/a) ",
+    "moduleName": "./resolving/browser-field/index.js",
+  },
+  Object {
+    "loc": "41:23-50",
+    "message": "Module not found: Error: Recursion in resolving
+Stack:
+  resolve: (<TEST_DIR>) recursive-file/b
+  parsedResolve: (<TEST_DIR>) recursive-file/b module
+  describedResolve: (<TEST_DIR>) recursive-file/b module
+  rawResolve: (<TEST_DIR>) recursive-file/b module
+  normalResolve: (<TEST_DIR>) recursive-file/b module
+  rawModule: (<TEST_DIR>) recursive-file/b module
+  module: (<TEST_DIR>/node_modules) ./recursive-file/b
+  resolveAsModule: (<TEST_DIR>/node_modules/recursive-file) ./b
+  undescribedResolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./b
+  resolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./b
+  resolveInExistingDirectory: (<TEST_DIR>/node_modules/recursive-file) ./b
+  relative: (<TEST_DIR>/node_modules/recursive-file/b) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/b) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/b) 
+  file: (<TEST_DIR>/node_modules/recursive-file/b.js) 
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
+  normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
+  relative: (<TEST_DIR>/node_modules/recursive-file/b) ",
+    "moduleName": "./resolving/browser-field/index.js",
+  },
+  Object {
+    "loc": "42:23-50",
+    "message": "Module not found: Error: Recursion in resolving
+Stack:
+  resolve: (<TEST_DIR>) recursive-file/c
+  parsedResolve: (<TEST_DIR>) recursive-file/c module
+  describedResolve: (<TEST_DIR>) recursive-file/c module
+  rawResolve: (<TEST_DIR>) recursive-file/c module
+  normalResolve: (<TEST_DIR>) recursive-file/c module
+  rawModule: (<TEST_DIR>) recursive-file/c module
+  module: (<TEST_DIR>/node_modules) ./recursive-file/c
+  resolveAsModule: (<TEST_DIR>/node_modules/recursive-file) ./c
+  undescribedResolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./c
+  resolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./c
+  resolveInExistingDirectory: (<TEST_DIR>/node_modules/recursive-file) ./c
+  relative: (<TEST_DIR>/node_modules/recursive-file/c) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/c) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/c) 
+  file: (<TEST_DIR>/node_modules/recursive-file/c.js) 
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  relative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  file: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js",
+    "moduleName": "./resolving/browser-field/index.js",
+  },
+  Object {
+    "loc": "43:23-50",
+    "message": "Module not found: Error: Recursion in resolving
+Stack:
+  resolve: (<TEST_DIR>) recursive-file/d
+  parsedResolve: (<TEST_DIR>) recursive-file/d module
+  describedResolve: (<TEST_DIR>) recursive-file/d module
+  rawResolve: (<TEST_DIR>) recursive-file/d module
+  normalResolve: (<TEST_DIR>) recursive-file/d module
+  rawModule: (<TEST_DIR>) recursive-file/d module
+  module: (<TEST_DIR>/node_modules) ./recursive-file/d
+  resolveAsModule: (<TEST_DIR>/node_modules/recursive-file) ./d
+  undescribedResolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./d
+  resolveInPackage: (<TEST_DIR>/node_modules/recursive-file) ./d
+  resolveInExistingDirectory: (<TEST_DIR>/node_modules/recursive-file) ./d
+  relative: (<TEST_DIR>/node_modules/recursive-file/d) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/d) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/d) 
+  file: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
+  internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  parsedResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js
+  relative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  describedRelative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  rawFile: (<TEST_DIR>/node_modules/recursive-file/d.js) 
+  file: (<TEST_DIR>/node_modules/recursive-file/d.js) ",
+    "moduleName": "./resolving/browser-field/index.js",
+  },
+]
+`;

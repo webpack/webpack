@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "24:8-30",
+    "message": "require.include() is deprecated and will be removed soon.",
+    "moduleName": "./parsing/typeof/index.js",
+  },
+  Object {
+    "loc": "45:5-27",
+    "message": "require.include() is deprecated and will be removed soon.",
+    "moduleName": "./parsing/typeof/index.js",
+  },
+]
+`;

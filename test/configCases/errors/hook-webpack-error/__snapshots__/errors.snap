@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Module build failed (from ./loader.js):
+Error: test",
+    "moduleName": "./my-errored-module.js",
+  },
+]
+`;

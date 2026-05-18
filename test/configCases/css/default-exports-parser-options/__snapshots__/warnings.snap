@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "8:8-18",
+    "message": "Should not import the named export 'foo' (imported as 'style1') from default-exporting module (only default export is available soon)",
+    "moduleName": "./index.js",
+  },
+  Object {
+    "loc": "12:8-11",
+    "message": "Should not import the named export 'foo' (imported as 'foo') from default-exporting module (only default export is available soon)",
+    "moduleName": "./index.js",
+  },
+]
+`;

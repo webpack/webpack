@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "23:2-29",
+    "message": "Module not found: Error: Can't resolve './missingModule2' in '<TEST_DIR>'",
+    "moduleName": "./runtime/error-handling/index.js",
+  },
+]
+`;

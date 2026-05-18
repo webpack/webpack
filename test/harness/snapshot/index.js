@@ -106,5 +106,57 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
 	});
 };
 
+/**
+ * Matches `received` against a snapshot stored in a dedicated per-kind
+ * file (`<caseDir>/__snapshots__/<kind>.snap`). Uses a stable key
+ * (`<kind> 1`) independent of the test suite name, so all suites
+ * sharing the same test case match one snapshot entry.
+ * @param {string} caseDir Absolute path to the test case directory
+ * @param {string} kind Snapshot kind, used as filename (e.g. "errors")
+ * @param {EXPECTED_ANY} received The value to match against the snapshot
+ */
+const matchKindSnapshot = function (caseDir, kind, received) {
+	const snapshotPath = path.join(caseDir, "__snapshots__", `${kind}.snap`);
+	const parentState =
+		getActiveSnapshotState() || expect.getState().snapshotState;
+
+	const kindState = new SnapshotState(snapshotPath, {
+		updateSnapshot: parentState._updateSnapshot,
+		snapshotFormat: parentState.snapshotFormat,
+		expand: parentState.expand,
+		prettierPath: parentState._prettierPath,
+		rootDir: parentState._rootDir || process.cwd()
+	});
+
+	// Call jest-snapshot's toMatchSnapshot directly with a controlled
+	// matcher context. Using `kind` as currentTestName produces the
+	// stable key "<kind> 1" (e.g. "errors 1"), independent of suite.
+	const { toMatchSnapshot } = require("jest-snapshot");
+	const context = {
+		snapshotState: kindState,
+		currentTestName: kind,
+		isNot: false,
+		promise: "",
+		utils: require("jest-matcher-utils"),
+		expand: false
+	};
+
+	try {
+		const result = toMatchSnapshot.call(context, received);
+		if (!result.pass) {
+			throw new Error(result.message());
+		}
+	} finally {
+		kindState.save();
+
+		// Bubble counts up to the parent state so Jest reports them.
+		parentState.unmatched += kindState.unmatched;
+		parentState.matched += kindState.matched;
+		parentState.updated += kindState.updated;
+		parentState.added += kindState.added;
+	}
+};
+
 module.exports.getActiveSnapshotState = getActiveSnapshotState;
 module.exports.registerPerCaseSnapshotHooks = registerPerCaseSnapshotHooks;
+module.exports.matchKindSnapshot = matchKindSnapshot;

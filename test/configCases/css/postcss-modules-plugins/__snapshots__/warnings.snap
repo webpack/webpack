@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "139:14-52",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName19\\", \\"exportName19-nested\\", \\"exportName19-nested-nested\\"",
+    "moduleName": "css ./postcss-modules-extract-imports.modules.css",
+  },
+  Object {
+    "loc": "232:25-28",
+    "message": "Incorrect composition, expected global keyword or string value",
+    "moduleName": "css ./postcss-modules-extract-imports.modules.css",
+  },
+  Object {
+    "loc": "237:11-13",
+    "message": "Incorrect composition, expected class named",
+    "moduleName": "css ./postcss-modules-extract-imports.modules.css",
+  },
+  Object {
+    "loc": "115:10-20",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName19\\", \\"exportName20\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "125:16-29",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName22\\", \\"exportName23\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "137:16-29",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName25\\", \\"exportName26\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "148:15-28",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName28\\", \\"exportName29\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "178:10-23",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName33\\", \\"exportName34\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "191:10-23",
+    "message": "Composition is only allowed when selector is single local class name not in \\"exportName37\\", \\"exportName38\\"",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "196:15-27",
+    "message": "Self-referencing name \\"exportName40\\" not found",
+    "moduleName": "css ./postcss-modules-scope.modules.css",
+  },
+  Object {
+    "loc": "15:2-3",
+    "message": "Missing whitespace after ':local' in ':local.b {'",
+    "moduleName": "css ./postcss-modules-local-by-default.global.modules.css",
+  },
+  Object {
+    "loc": "86:19-20",
+    "message": "Missing whitespace after ':global' in ':global, .foobar :global {'",
+    "moduleName": "css ./postcss-modules-local-by-default.local.modules.css",
+  },
+  Object {
+    "loc": "336:5-6",
+    "message": "Missing whitespace after ':global' in ':global.bar {'",
+    "moduleName": "css ./postcss-modules-local-by-default.local.modules.css",
+  },
+]
+`;

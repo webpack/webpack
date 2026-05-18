@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "20:8-21",
+    "message": "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?concatenated",
+  },
+  Object {
+    "loc": "103:8-18",
+    "message": "export 'default' (imported as 'm3') was not found in './esModule.js' (possible exports: __esModule, nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?concatenated",
+  },
+  Object {
+    "loc": "134:8-10",
+    "message": "export 'default' (imported as 'd3') was not found in './esModule.js' (possible exports: __esModule, nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?concatenated",
+  },
+  Object {
+    "loc": "20:8-21",
+    "message": "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?non-concatenated",
+  },
+  Object {
+    "loc": "103:8-18",
+    "message": "export 'default' (imported as 'm3') was not found in './esModule.js' (possible exports: __esModule, nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?non-concatenated",
+  },
+  Object {
+    "loc": "134:8-10",
+    "message": "export 'default' (imported as 'd3') was not found in './esModule.js' (possible exports: __esModule, nonEnumerable, prop)",
+    "moduleName": "./mjs/non-enumerable/test.js?non-concatenated",
+  },
+]
+`;

@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "16:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "19:0-19",
+    "message": "Selector \\".foo, :global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "22:0-19",
+    "message": "Selector \\":global(.bar), .foo\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "25:0-5",
+    "message": "Selector \\"input\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "28:0-14",
+    "message": "Selector \\"[type=\\"radio\\"]\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "31:0-23",
+    "message": "Selector \\"@keyframes :global(foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "49:16-23",
+    "message": "Selector \\"&:hover\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "94:0-13",
+    "message": "Selector \\":global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "99:1-14",
+    "message": "Selector \\":global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "179:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "180:0-13",
+    "message": "Selector \\":global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "181:0-13",
+    "message": "Selector \\":global(.baz)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "186:1-8",
+    "message": "Selector \\"&:hover\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "187:1-16",
+    "message": "Selector \\"& :global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "191:0-13",
+    "message": "Selector \\":global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "198:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "203:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "207:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "208:0-13",
+    "message": "Selector \\":global(.bar)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "211:2-22",
+    "message": "Selector \\"&::-webkit-scrollbar\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "217:0-26",
+    "message": "Selector \\"@keyframes :global(fadeIn)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "221:0-17",
+    "message": "Selector \\":global(.animate)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "227:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "231:0-13",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "236:1-14",
+    "message": "Selector \\":global(.foo)\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "350:13-17",
+    "message": "Selector \\"span\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "353:7-15",
+    "message": "Selector \\"& > span\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "356:16-24",
+    "message": "Selector \\"& > span\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "359:46-54",
+    "message": "Selector \\"& > span\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "362:28-29",
+    "message": "Selector \\"&\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "365:28-31",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "368:28-31",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "371:67-70",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "374:67-70",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "377:7-10",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "380:7-10",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "383:7-10",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "386:7-10",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "393:2-5",
+    "message": "Selector \\"div\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "400:0-4",
+    "message": "Selector \\"html\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "403:0-4",
+    "message": "Selector \\"html\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "409:1-7",
+    "message": "Selector \\"button\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+  Object {
+    "loc": "419:2-8",
+    "message": "Selector \\"button\\" is not pure (pure selectors must contain at least one local class or id)",
+    "moduleName": "css ./postcss-modules-local-by-default.pure.modules.css",
+  },
+]
+`;

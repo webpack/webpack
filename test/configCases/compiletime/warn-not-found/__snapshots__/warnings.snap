@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "4:13-20",
+    "message": "export 'NotHere' (imported as 'NotHere') was not found in './stub' (possible exports: default)",
+    "moduleName": "./index.js",
+  },
+]
+`;

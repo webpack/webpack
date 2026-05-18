@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "message": "Conflicting @charset at-rules detected: the module css ./styles-3.link.css (exportType: link) (in chunk main) specifies \\"UNKNOWN\\", but \\"UTF-8\\" was expected, all modules must use the same character set",
+    "moduleName": "css ./styles-3.link.css (exportType: link)",
+  },
+]
+`;

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Entrypoint 'b1' has a 'runtime' option which points to another entrypoint named 'a1'.
+It's not valid to use other entrypoints as runtime chunk.
+Did you mean to use 'dependOn: \\"a1\\"' instead to allow using entrypoint 'b1' within the runtime of entrypoint 'a1'? For this 'a1' must always be loaded when 'b1' is used.
+Or do you want to use the entrypoints 'b1' and 'a1' independently on the same page with a shared runtime? In this case give them both the same value for the 'runtime' option. It must be a name not already used by an entrypoint.",
+  },
+  Object {
+    "message": "Entrypoint 'b2' has 'dependOn' and 'runtime' specified. This is not valid.
+Entrypoints that depend on other entrypoints do not have their own runtime.
+They will use the runtime(s) from referenced entrypoints instead.
+Remove the 'runtime' option from the entrypoint.",
+  },
+  Object {
+    "message": "Entrypoints 'b3' and 'a3' use 'dependOn' to depend on each other in a circular way.",
+  },
+]
+`;

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "11:14-79",
+    "message": "\`webpackIgnore\` expected a boolean, but received: test.",
+    "moduleName": "./index.js",
+  },
+]
+`;

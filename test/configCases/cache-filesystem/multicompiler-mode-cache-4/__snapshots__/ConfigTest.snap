@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`ConfigTestCases cache-filesystem multicompiler-mode-cache-4 multicompiler-mode-cache-4 should compile: warnings 1`] = `
-Array [
-  Object {
-    "message": "Please set unique \\"cache.name\\" option. Name \\"default\\" already used.",
-  },
-]
-`;

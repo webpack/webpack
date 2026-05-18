@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "3:8-26",
+    "message": "Module not found: Error: Can't resolve './fail-1' in '<TEST_DIR>'",
+    "moduleName": "./runtime/missing-module-exception-dynamic-import/index.js",
+  },
+  Object {
+    "loc": "4:8-26",
+    "message": "Module not found: Error: Can't resolve './fail-2' in '<TEST_DIR>'",
+    "moduleName": "./runtime/missing-module-exception-dynamic-import/index.js",
+  },
+  Object {
+    "loc": "5:8-26",
+    "message": "Module not found: Error: Can't resolve './fail-3' in '<TEST_DIR>'",
+    "moduleName": "./runtime/missing-module-exception-dynamic-import/index.js",
+  },
+]
+`;

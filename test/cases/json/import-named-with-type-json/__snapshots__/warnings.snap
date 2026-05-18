@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "loc": "5:8-10",
+    "message": "Can't import the named export 'aa' (imported as 'aa') from default-exporting module (only default export is available)",
+    "moduleName": "./json/import-named-with-type-json/index.js",
+  },
+  Object {
+    "loc": "6:8-13",
+    "message": "Can't import the named export 'named' (imported as 'named') from default-exporting module (only default export is available)",
+    "moduleName": "./json/import-named-with-type-json/index.js",
+  },
+]
+`;
