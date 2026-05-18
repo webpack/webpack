@@ -1,0 +1,7 @@
+@import "b.css";
+@import "c.css";
+@import "a.css";
+
+body {
+	color: 1;
+}
