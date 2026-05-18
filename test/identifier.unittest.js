@@ -90,78 +90,36 @@ describe("util/identifier", () => {
 		}
 	});
 
-	describe("parseResource", () => {
-		// [input, expectedPath, expectedQuery, expectedFragment]
-		/** @type {[string, string, string, string][]} */
+	describe("escapeHashInAbsolutePath", () => {
+		// [input, expected]
+		/** @type {[string, string][]} */
 		const cases = [
-			["path#hash?query", "path", "", "#hash?query"],
-			["path?query#hash", "path", "?query", "#hash"],
-			["path", "path", "", ""],
-			["path#fragment", "path", "", "#fragment"],
-			["path?query", "path", "?query", ""],
+			["", ""],
+			["./relative/file.js", "./relative/file.js"],
+			["./relative/with#hash/file.js", "./relative/with#hash/file.js"],
+			["module-name", "module-name"],
+			["/abs/path/file.js", "/abs/path/file.js"],
+			["/abs/path/file.js#fragment", "/abs/path/file.js#fragment"],
+			["/abs/path/file.js?query", "/abs/path/file.js?query"],
+			["/abs/path/file.js?query#frag", "/abs/path/file.js?query#frag"],
+			["/home/user/proj#1/file.js", "/home/user/proj\0#1/file.js"],
+			["/home/user/proj#1/file.js?q=1", "/home/user/proj\0#1/file.js?q=1"],
 			[
-				"/home/user/test#folder/file.js",
-				"/home/user/test#folder/file.js",
-				"",
-				""
+				"/home/user/proj#1/file.js#fragment",
+				"/home/user/proj\0#1/file.js#fragment"
 			],
+			["/home/user/a#b/c#d/file.js?q=1", "/home/user/a\0#b/c\0#d/file.js?q=1"],
+			["C:\\Users\\proj#1\\file.js?q=1", "C:\\Users\\proj\0#1\\file.js?q=1"],
+			["C:/Users/proj#1/file.js", "C:/Users/proj\0#1/file.js"],
+			// the exact request webpack-dev-server produces for issue #16819
 			[
-				"C:\\Users\\test#folder\\file.js",
-				"C:\\Users\\test#folder\\file.js",
-				"",
-				""
-			],
-			["C:/Users/test#folder/file.js", "C:/Users/test#folder/file.js", "", ""],
-			[
-				"/home/user/test#folder/file.js?protocol=ws&port=8080",
-				"/home/user/test#folder/file.js",
-				"?protocol=ws&port=8080",
-				""
-			],
-			[
-				"/home/user/test#folder/file.js?query=1#fragment",
-				"/home/user/test#folder/file.js",
-				"?query=1",
-				"#fragment"
-			],
-			[
-				"/home/user/test#a/test#b/file.js",
-				"/home/user/test#a/test#b/file.js",
-				"",
-				""
-			],
-			[
-				"/home/user/test#a/test#b/file.js#fragment",
-				"/home/user/test#a/test#b/file.js",
-				"",
-				"#fragment"
-			],
-			["/abs/path/file.js#fragment", "/abs/path/file.js", "", "#fragment"],
-			[
-				"C:\\abs\\path\\file.js#fragment",
-				"C:\\abs\\path\\file.js",
-				"",
-				"#fragment"
-			],
-			["./relative/file#fragment", "./relative/file", "", "#fragment"],
-			["module#fragment", "module", "", "#fragment"],
-			// https://github.com/webpack/webpack/issues/16819 — webpack-dev-server
-			// adds entries as absolute paths with query strings when serving from a
-			// project directory containing `#` (e.g. `~/projects/f#/webpack`).
-			[
-				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true",
-				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js",
-				"?protocol=ws%3A&hostname=0.0.0.0&port=8080&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=true",
-				""
+				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080",
+				"/home/felix/projects/f\0#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080"
 			]
 		];
-		for (const [input, path, query, fragment] of cases) {
+		for (const [input, expected] of cases) {
 			it(JSON.stringify(input), () => {
-				const result = identifierUtil.parseResource(input);
-				expect(result.path).toBe(path);
-				expect(result.query).toBe(query);
-				expect(result.fragment).toBe(fragment);
-				expect(result.resource).toBe(input);
+				expect(identifierUtil.escapeHashInAbsolutePath(input)).toBe(expected);
 			});
 		}
 	});
