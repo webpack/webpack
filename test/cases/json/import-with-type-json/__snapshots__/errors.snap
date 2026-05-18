@@ -4,7 +4,6 @@ exports[`errors 1`] = `
 Array [
   Object {
     "message": "Module parse failed: Unexpected token \\"h\\" (0x68)
-'
 You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders",
     "moduleName": "./json/data/poison",
   },
