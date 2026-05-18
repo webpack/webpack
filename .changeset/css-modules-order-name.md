@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.cssModulesOrder` option (`"import" | "name"`, defaults to `"import"`) to control how CSS modules are ordered within a chunk. With `"name"`, modules are emitted in a deterministic order based on their full module name, bypassing the import-order topological merge and its "Conflicting order" warnings — useful when migrating from `mini-css-extract-plugin` to the builtin CSS support and when projects rely on CSS modules and only rarely share class names across files.
+Add `CssModulesPlugin.getCompilationHooks(compilation).orderModules` hook. The hook is called once per CSS source type (CSS imports, CSS modules) with the chunk's modules pre-sorted by full module name; taps may return an ordered `Module[]` to override webpack's default import-order topological sort, or return `undefined` to keep the default. This lets a plugin enforce a deterministic CSS module order (e.g. by file path) and side-step the "Conflicting order between css ..." warning when migrating from `mini-css-extract-plugin` to the builtin CSS support.

@@ -1,5 +1,17 @@
 "use strict";
 
+class CssOrderByNamePlugin {
+	apply(compiler) {
+		compiler.hooks.compilation.tap("CssOrderByNamePlugin", (compilation) => {
+			const CssModulesPlugin = compiler.webpack.css.CssModulesPlugin;
+			CssModulesPlugin.getCompilationHooks(compilation).orderModules.tap(
+				"CssOrderByNamePlugin",
+				(_chunk, modules) => modules
+			);
+		});
+	}
+}
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -8,7 +20,6 @@ module.exports = {
 		css: true
 	},
 	optimization: {
-		cssModulesOrder: "name",
 		splitChunks: {
 			cacheGroups: {
 				css: {
@@ -19,6 +30,7 @@ module.exports = {
 			}
 		}
 	},
+	plugins: [new CssOrderByNamePlugin()],
 	externalsPresets: {
 		node: true
 	},
