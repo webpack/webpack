@@ -4,12 +4,12 @@ exports[`warnings 1`] = `
 Array [
   Object {
     "loc": "12:8-37",
-    "message": "Compilation error while processing magic comment(-s): /****webpackIgnore: false***/: Unexpected token '**'",
+    "message": "Compilation error while processing magic comment(-s): /****webpackIgnore: false***/: Unexpected token **",
     "moduleName": "css ./style.css",
   },
   Object {
     "loc": "13:8-60",
-    "message": "Compilation error while processing magic comment(-s): /*   *   *   *   webpackIgnore:   false   *   *   */: Unexpected token '*'",
+    "message": "Compilation error while processing magic comment(-s): /*   *   *   *   webpackIgnore:   false   *   *   */: Unexpected token *",
     "moduleName": "css ./style.css",
   },
   Object {
@@ -34,22 +34,22 @@ Array [
   },
   Object {
     "loc": "301:19-47",
-    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token '**'",
+    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token **",
     "moduleName": "css ./style.css",
   },
   Object {
     "loc": "302:19-47",
-    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token '**'",
+    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token **",
     "moduleName": "css ./style.css",
   },
   Object {
     "loc": "303:29-57",
-    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token '**'",
+    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token **",
     "moduleName": "css ./style.css",
   },
   Object {
     "loc": "303:29-57",
-    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token '**'",
+    "message": "Compilation error while processing magic comment(-s): /***webpackIgnore:  true***/: Unexpected token **",
     "moduleName": "css ./style.css",
   },
 ]
