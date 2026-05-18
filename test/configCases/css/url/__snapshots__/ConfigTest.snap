@@ -1308,13 +1308,3 @@ div {
 ",
 ]
 `;
-
-exports[`ConfigTestCases css url url should compile: errors 1`] = `
-Array [
-  Object {
-    "loc": "618:7-26",
-    "message": "Module not found: Error: Can't resolve 'unresolved.png' in '<TEST_DIR>'",
-    "moduleName": "css ./style.css",
-  },
-]
-`;

@@ -2,6 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
+const { matchKindSnapshot } = require("./harness/snapshot");
 
 /**
  * @param {string} str string to escape for use in a RegExp
@@ -42,6 +43,9 @@ const normalizeString = (str, testDirectory) => {
 			ancestor = path.dirname(ancestor);
 		}
 	}
+	// Normalize the output directory suite name (e.g. test/js/ConfigTestCases/
+	// vs test/js/ConfigCacheTestCases/) so all suites produce identical snapshots.
+	str = str.replace(/(<WEBPACK_ROOT>\/test\/js\/)[^/]+\//g, "$1<OUTPUT>/");
 	str = str.replace(/\\/g, "/");
 	return str;
 };
@@ -219,10 +223,12 @@ module.exports = function checkArrayExpectation(
 		}
 	} else if (array.length > 0) {
 		if (kind === "error" || kind === "warning") {
-			// Snapshot-based matching when no expectation file exists
+			// Snapshot-based matching when no expectation file exists.
+			// Uses a dedicated snap file per kind (e.g. errors.snap)
+			// with a stable key shared across all test suites.
 			try {
 				const normalized = normalizeForSnapshot(array, testDirectory);
-				expect(normalized).toMatchSnapshot(`${filename}`);
+				matchKindSnapshot(testDirectory, filename, normalized);
 			} catch (err) {
 				return (done(err), true);
 			}

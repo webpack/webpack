@@ -1,20 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases css export-type export-type should compile: warnings 1`] = `
-Array [
-  Object {
-    "loc": "30:8-38",
-    "message": "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "30:8-38",
-    "message": "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
-    "moduleName": "./index.js",
-  },
-]
-`;
-
 exports[`ConfigCacheTestCases css export-type exported tests should export CSS text as default when exportType is text (css/module) 1`] = `
 "/*!************************************************!*\\\\
   !*** css ./module-text.css (exportType: text) ***!

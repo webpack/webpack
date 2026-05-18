@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
+Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
+You may need an additional plugin to handle \\"https:\\" URIs.
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1056:13
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1050:10
+    at new Promise (<anonymous>)
+    at readResource (<WEBPACK_ROOT>/lib/NormalModule.js:1047:14)
+    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1069:28)
+    at processResource (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:295:10)
+    at iteratePitchingLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:358:9)
+    at runLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:525:2)
+    at NormalModule._doBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1032:3)
+    at NormalModule.build (<WEBPACK_ROOT>/lib/NormalModule.js:1271:15)
+    at <WEBPACK_ROOT>/lib/Compilation.js:1633:12
+    at NormalModule.needBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1619:26)
+    at Compilation._buildModule (<WEBPACK_ROOT>/lib/Compilation.js:1614:10)
+    at <WEBPACK_ROOT>/lib/util/AsyncQueue.js:360:10
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at AsyncQueue._startProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:350:26)
+    at AsyncQueue._ensureProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:336:12)
+    at processImmediate (node:internal/timers:504:21)",
+    "moduleName": "https://test.cases/url-external.css",
+  },
+  Object {
+    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
+Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
+You may need an additional plugin to handle \\"https:\\" URIs.
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1056:13
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (<WEBPACK_ROOT>/node_modules/tapable/lib/Hook.js:21:14)
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1050:10
+    at new Promise (<anonymous>)
+    at readResource (<WEBPACK_ROOT>/lib/NormalModule.js:1047:14)
+    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1069:28)
+    at processResource (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:295:10)
+    at iteratePitchingLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:358:9)
+    at runLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:525:2)
+    at NormalModule._doBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1032:3)
+    at NormalModule.build (<WEBPACK_ROOT>/lib/NormalModule.js:1271:15)
+    at <WEBPACK_ROOT>/lib/Compilation.js:1633:12
+    at NormalModule.needBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1619:26)
+    at Compilation._buildModule (<WEBPACK_ROOT>/lib/Compilation.js:1614:10)
+    at <WEBPACK_ROOT>/lib/util/AsyncQueue.js:360:10
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at AsyncQueue._startProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:350:26)
+    at AsyncQueue._ensureProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:336:12)
+    at processImmediate (node:internal/timers:504:21)",
+    "moduleName": "https://test.cases/external.css",
+  },
+  Object {
+    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
+Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
+You may need an additional plugin to handle \\"https:\\" URIs.
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1056:13
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1050:10
+    at new Promise (<anonymous>)
+    at readResource (<WEBPACK_ROOT>/lib/NormalModule.js:1047:14)
+    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1069:28)
+    at processResource (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:295:10)
+    at iteratePitchingLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:358:9)
+    at runLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:525:2)
+    at NormalModule._doBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1032:3)
+    at NormalModule.build (<WEBPACK_ROOT>/lib/NormalModule.js:1271:15)
+    at <WEBPACK_ROOT>/lib/Compilation.js:1633:12
+    at NormalModule.needBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1619:26)
+    at Compilation._buildModule (<WEBPACK_ROOT>/lib/Compilation.js:1614:10)
+    at <WEBPACK_ROOT>/lib/util/AsyncQueue.js:360:10
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at AsyncQueue._startProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:350:26)
+    at AsyncQueue._ensureProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:336:12)
+    at processImmediate (node:internal/timers:504:21)",
+    "moduleName": "https://test.cases/url-external.css",
+  },
+  Object {
+    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
+Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
+You may need an additional plugin to handle \\"https:\\" URIs.
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1056:13
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (<WEBPACK_ROOT>/node_modules/tapable/lib/Hook.js:21:14)
+    at <WEBPACK_ROOT>/lib/NormalModule.js:1050:10
+    at new Promise (<anonymous>)
+    at readResource (<WEBPACK_ROOT>/lib/NormalModule.js:1047:14)
+    at Object.processResource (<WEBPACK_ROOT>/lib/NormalModule.js:1069:28)
+    at processResource (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:295:10)
+    at iteratePitchingLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:358:9)
+    at runLoaders (<WEBPACK_ROOT>/node_modules/loader-runner/lib/LoaderRunner.js:525:2)
+    at NormalModule._doBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1032:3)
+    at NormalModule.build (<WEBPACK_ROOT>/lib/NormalModule.js:1271:15)
+    at <WEBPACK_ROOT>/lib/Compilation.js:1633:12
+    at NormalModule.needBuild (<WEBPACK_ROOT>/lib/NormalModule.js:1619:26)
+    at Compilation._buildModule (<WEBPACK_ROOT>/lib/Compilation.js:1614:10)
+    at <WEBPACK_ROOT>/lib/util/AsyncQueue.js:360:10
+    at Hook.eval [as callAsync] (eval at create (<WEBPACK_ROOT>/node_modules/tapable/lib/HookCodeFactory.js:31:10), <anonymous>:6:1)
+    at AsyncQueue._startProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:350:26)
+    at AsyncQueue._ensureProcessing (<WEBPACK_ROOT>/lib/util/AsyncQueue.js:336:12)
+    at processImmediate (node:internal/timers:504:21)",
+    "moduleName": "https://test.cases/external.css",
+  },
+]
+`;

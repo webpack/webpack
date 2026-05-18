@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "3:1-12",
+    "message": "Module not found: Error: Empty dependency (no request)",
+    "moduleName": "./parsing/issue-2006/index.js",
+  },
+]
+`;
