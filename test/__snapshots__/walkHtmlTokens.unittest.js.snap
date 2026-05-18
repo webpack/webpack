@@ -419,6 +419,289 @@ Array [
 ]
 `;
 
+exports[`walkHtmlTokens should tokenize and roundtrip "character-references.html" 1`] = `
+Array [
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "Tom &amp; Jerry",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "href",
+    "?a=1&amp;b=2",
+    1,
+  ],
+  Array [
+    "open-tag",
+    "<a href=\\"?a=1&amp;b=2\\">",
+    "a",
+    false,
+  ],
+  Array [
+    "text",
+    "link",
+  ],
+  Array [
+    "close-tag",
+    "</a>",
+    "a",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "href",
+    "?x=1&lt;2",
+    2,
+  ],
+  Array [
+    "open-tag",
+    "<a href='?x=1&lt;2'>",
+    "a",
+    false,
+  ],
+  Array [
+    "text",
+    "link2",
+  ],
+  Array [
+    "close-tag",
+    "</a>",
+    "a",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "attribute",
+    "href",
+    "?q=1&gt;2",
+    0,
+  ],
+  Array [
+    "open-tag",
+    "<a href=?q=1&gt;2>",
+    "a",
+    false,
+  ],
+  Array [
+    "text",
+    "link3",
+  ],
+  Array [
+    "close-tag",
+    "</a>",
+    "a",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#65;&#66;&#67;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#x41;&#x42;&#x43;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#X41;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "bare & alone",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&unknown;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&amp without semicolon",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#x;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+  Array [
+    "open-tag",
+    "<p>",
+    "p",
+    false,
+  ],
+  Array [
+    "text",
+    "&#999;",
+  ],
+  Array [
+    "close-tag",
+    "</p>",
+    "p",
+  ],
+  Array [
+    "text",
+    "
+",
+  ],
+]
+`;
+
 exports[`walkHtmlTokens should tokenize and roundtrip "comments.html" 1`] = `
 Array [
   Array [

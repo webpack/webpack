@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html inline-script exported tests should bundle inline <script type=module> as an ES-module chunk 1`] = `
+"/*!****************************************************************************************************************************************************************************************************************************************************************************************************************!*\\\\
+  !*** data:text/javascript;base64,CmNvbnN0IGFyciA9IFsxLCAyLCAzXTsKY29uc3Qgc3VtID0gYXJyLnJlZHVjZSgoYSwgYikgPT4gYSArIGIsIDApOwp3aW5kb3cuX19pbmxpbmVNb2R1bGVTdW0gPSBzdW07Ci8vIE5vbi1BU0NJSSBzb3VyY2Ugc3Vydml2ZXMgdGhlIGRhdGEgVVJJIHJvdW5kLXRyaXAuCndpbmRvdy5fX2lubGluZU1vZHVsZVVuaWNvZGUgPSAi5pel5pys6KqeIM+AIjsK ***!
+  \\\\****************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+const arr = [1, 2, 3];
+const sum = arr.reduce((a, b) => a + b, 0);
+window.__inlineModuleSum = sum;
+// Non-ASCII source survives the data URI round-trip.
+window.__inlineModuleUnicode = \\"日本語 π\\";
+
+"
+`;
+
+exports[`ConfigTestCases html inline-script exported tests should bundle inline <script> bodies as entry chunks and rewrite their tags to \`<script src>\` 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Inline Script Test</title>
+<script src=\\"__html_cbe5b59d_0.chunk.js\\" type=\\"module\\"></script>
+<script src=\\"__html_cbe5b59d_1.chunk.js\\" type=\\"module\\"></script>
+<script src=\\"__html_cbe5b59d_2.chunk.js\\" type=\\"module\\"></script>
+<!-- Non-JS type stays untouched -->
+<script type=\\"application/ld+json\\">
+{\\"@context\\": \\"https://schema.org\\"}
+</script>
+<script type=\\"importmap\\">
+{\\"imports\\": {\\"foo\\": \\"./foo.js\\"}}
+</script>
+</head>
+<body>
+<p>Hi</p>
+<script src=\\"__html_cbe5b59d_3.chunk.js\\" type=\\"module\\"></script>
+</body>
+</html>
+"
+`;
