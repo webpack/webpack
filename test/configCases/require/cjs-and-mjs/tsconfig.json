@@ -5,7 +5,8 @@
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
     "rootDir": "./",
-    "strict": true
+    "strict": true,
+    "types": ["*"]
   },
   "includes": ["./**/*.mts", "./**/*.cts"]
 }

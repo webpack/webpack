@@ -7,7 +7,7 @@
     "checkJs": true,
     "noEmit": true,
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "types": ["node", "./module"],
     "esModuleInterop": true
   },
