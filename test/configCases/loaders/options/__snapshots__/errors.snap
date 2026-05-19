@@ -12,7 +12,7 @@ ValidationError: Invalid options object. Loader has been initialized using an op
     "message": "Module build failed (from ./loader-2.js):
 ValidationError: Invalid configuration object. Custom Loader Name has been initialized using a configuration object that does not match the API schema.
  - configuration.arg should be true.",
-    "moduleName": "./error2.js",
+    "moduleName": "./error2.js",233
   },
 ]
 `;
