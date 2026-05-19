@@ -22,6 +22,7 @@ const reexportPath = path.resolve(__dirname, "reexport.mjs");
 const wrapperFullPath = path.resolve(__dirname, "wrapper-full.cjs");
 const wrapperNamedPath = path.resolve(__dirname, "wrapper-named.cjs");
 const wrapperPropPath = path.resolve(__dirname, "wrapper-prop.cjs");
+const distinctPath = path.resolve(__dirname, "distinct.mjs");
 
 module.exports = {
 	modules: {
@@ -32,6 +33,7 @@ module.exports = {
 		[reexportPath]: Module._load(reexportPath, null, false),
 		[wrapperFullPath]: Module._load(wrapperFullPath, null, false),
 		[wrapperNamedPath]: Module._load(wrapperNamedPath, null, false),
-		[wrapperPropPath]: Module._load(wrapperPropPath, null, false)
+		[wrapperPropPath]: Module._load(wrapperPropPath, null, false),
+		[distinctPath]: Module._load(distinctPath, null, false)
 	}
 };

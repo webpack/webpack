@@ -20,6 +20,7 @@ const reexportMjsPath = REEXPORT_MJS_PATH;
 const wrapperFullPath = WRAPPER_FULL_PATH;
 const wrapperNamedPath = WRAPPER_NAMED_PATH;
 const wrapperPropPath = WRAPPER_PROP_PATH;
+const distinctMjsPath = DISTINCT_MJS_PATH;
 
 it("should unwrap a named export 'module.exports' for plain require()", () => {
 	const webpacked = require("./value.mjs");
@@ -98,6 +99,24 @@ it("CJS wrapper `module.exports = require(esm).x` re-exports a property of the u
 	const native = require(/* webpackIgnore: true */ wrapperPropPath);
 	expect(webpacked).toBe("named-prop");
 	expect(webpacked).toBe(native);
+});
+
+it("should not leak sibling named exports when 'module.exports' unwraps (usedExports regression)", () => {
+	// `"module.exports"` and `named` are bound to *different* values. With
+	// `usedExports: true`, webpack must mark `"module.exports"` referenced
+	// for property-access requires; otherwise `getUsedName` chicken-and-eggs
+	// itself and webpack falls back to `__webpack_require__(id).named`,
+	// returning "named-value" — which would NOT match Node's behavior of
+	// accessing `.named` on the unwrapped string (`undefined`).
+	const webpackedNamed = require("./distinct.mjs").named;
+	const nativeNamed = require(/* webpackIgnore: true */ distinctMjsPath).named;
+	expect(webpackedNamed).toBeUndefined();
+	expect(webpackedNamed).toBe(nativeNamed);
+
+	const webpackedPlain = require("./distinct.mjs");
+	const nativePlain = require(/* webpackIgnore: true */ distinctMjsPath);
+	expect(webpackedPlain).toBe("module-exports-value");
+	expect(webpackedPlain).toBe(nativePlain);
 });
 
 it("should preserve namespace behavior when ESM has no 'module.exports' export", () => {

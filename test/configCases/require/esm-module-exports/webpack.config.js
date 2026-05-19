@@ -7,6 +7,13 @@ const webpack = require("../../../..");
 module.exports = {
 	mode: "development",
 	target: "node",
+	// Enable used-exports tracking so the chicken-and-egg path between
+	// `getReferencedExports` and the unwrap helper is exercised — the
+	// regression this would catch is webpack falling back to `.named` for
+	// `require(esm).named` when `"module.exports"` hasn't been marked used yet.
+	optimization: {
+		usedExports: true
+	},
 	node: {
 		__dirname: false,
 		__filename: false
@@ -39,7 +46,8 @@ module.exports = {
 			),
 			WRAPPER_PROP_PATH: JSON.stringify(
 				path.resolve(__dirname, "wrapper-prop.cjs")
-			)
+			),
+			DISTINCT_MJS_PATH: JSON.stringify(path.resolve(__dirname, "distinct.mjs"))
 		})
 	]
 };
