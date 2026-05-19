@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases html extract-runtime-chunk exported tests should reference the runtime chunk in addition to the entry chunk 1`] = `
+exports[`ConfigTestCases html extract-runtime-chunk exported tests should load the shared runtime chunk exactly once even when multiple <script src> entries chain via dependOn 1`] = `
 "<!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +9,10 @@ exports[`ConfigTestCases html extract-runtime-chunk exported tests should refere
 </head>
 <body>
 <h1>Hello</h1>
+<!-- A second classic <script src> chains via dependOn to the first. The
+     shared runtime chunk is already loaded by the leader's tag above, so
+     this tag must NOT prepend another runtime <script> for itself. -->
+<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
 </body>
 </html>
 "

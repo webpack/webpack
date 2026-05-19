@@ -6,5 +6,9 @@
 </head>
 <body>
 <h1>Hello</h1>
+<!-- A second classic <script src> chains via dependOn to the first. The
+     shared runtime chunk is already loaded by the leader's tag above, so
+     this tag must NOT prepend another runtime <script> for itself. -->
+<script src="./other.js"></script>
 </body>
 </html>
