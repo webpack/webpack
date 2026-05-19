@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  Object {
+    "message": "Module Warning (from ./errors/loader-error-warning/warning-loader.js):
+(Emitted value instead of an instance of Error) xyz",
+    "moduleName": "./errors/loader-error-warning/warning-loader.js?xyz!./errors/loader-error-warning/a.js",
+  },
+]
+`;
