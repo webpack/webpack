@@ -1,4 +1,4 @@
-const schema = require("./loader-2.options.json");
+const schema = /** @type {EXPECTED_ANY} */ (require("./loader-2.options.json"));
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function () {

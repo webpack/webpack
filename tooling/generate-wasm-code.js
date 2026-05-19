@@ -10,9 +10,12 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	// @ts-expect-error remove when when we will migrate to ECMA modules
-	// eslint-disable-next-line import/no-unresolved, n/no-unsupported-features/es-syntax
-	const asc = (await import("assemblyscript/asc")).default;
+	// Use an indirect specifier so TypeScript does not statically resolve
+	// `assemblyscript/asc` and pull in its global type declarations (which
+	// redeclare `require`).
+	const ascSpecifier = "assemblyscript/asc";
+	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+	const asc = (await import(ascSpecifier)).default;
 
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
