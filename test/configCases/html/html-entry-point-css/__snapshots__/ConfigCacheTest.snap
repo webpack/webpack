@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html html-entry-point-css exported tests should emit page.html with a <link> pointing to the bundled CSS chunk 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>HTML entry point with CSS</title>
+<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.chunk.css\\">
+</head>
+<body>
+<h1>Hello</h1>
+<div class=\\"hero\\">Box</div>
+</body>
+</html>
+"
+`;

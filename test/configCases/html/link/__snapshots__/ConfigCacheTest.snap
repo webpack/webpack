@@ -28,8 +28,8 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <link rel=\\"manifest\\" href=\\"handled-manifest.webmanifest\\">
 
 <!-- Stylesheet (multi-rel parsing) -->
-<link rel=\\"stylesheet\\" href=\\"handled-style.css\\">
-<link rel=\\"alternate stylesheet\\" href=\\"handled-alt-style.css\\" title=\\"Alternate\\">
+<link rel=\\"stylesheet\\" href=\\"117.bundle0.css\\">
+<link rel=\\"alternate stylesheet\\" href=\\"308.bundle0.css\\" title=\\"Alternate\\">
 
 <!-- Prefetch / Preload -->
 <link rel=\\"prefetch\\" href=\\"handled-prefetch.png\\">
@@ -39,7 +39,7 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <link rel=\\"preload\\" as=\\"font\\" type=\\"font/woff2\\" crossorigin href=\\"handled-font.woff2\\">
 
 <!-- Modulepreload (resolves the JS module URL) -->
-<link rel=\\"modulepreload\\" href=\\"117.bundle0.js\\">
+<link rel=\\"modulepreload\\" href=\\"319.bundle0.js\\">
 
 <!-- Itemprop link rels (only allowed itemprops trigger resolution) -->
 <link itemprop=\\"downloadUrl\\" href=\\"handled-icon.png\\">
