@@ -436,6 +436,8 @@ describe("snapshots", () => {
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		    "htmlChunkFilename": "[name].html",
+		    "htmlFilename": "[name].html",
 		    "ignoreBrowserWarnings": undefined,
 		    "iife": true,
 		    "importFunctionName": "import",
@@ -1179,6 +1181,11 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
+		@@ ... @@
+		-     "htmlChunkFilename": "[name].html",
+		-     "htmlFilename": "[name].html",
+		+     "htmlChunkFilename": "[id].bundle.html",
+		+     "htmlFilename": "bundle.html",
 	`)
 	);
 
@@ -1198,6 +1205,11 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
+		@@ ... @@
+		-     "htmlChunkFilename": "[name].html",
+		-     "htmlFilename": "[name].html",
+		+     "htmlChunkFilename": "[id].html",
+		+     "htmlFilename": "[id].html",
 	`)
 	);
 
@@ -2307,6 +2319,7 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
+			+           ],
 			+         },
 			+         "resolve": Object {
 			+           "byDependency": Object {
@@ -2409,7 +2422,7 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			@@ ... @@
+			+         },
 			+       },
 			+       Object {
 			+         "resolve": Object {
@@ -2432,7 +2445,7 @@ describe("snapshots", () => {
 			+         "parser": Object {
 			+           "exportType": "text",
 			+         },
-			@@ ... @@
+			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -2453,9 +2466,16 @@ describe("snapshots", () => {
 			+           "type": "module",
 			+         },
 			+         "resolve": Object {
-			@@ ... @@
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
 			+         "test": /\\.ts$/i,
-			@@ ... @@
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
 			+       },
@@ -2471,18 +2491,6 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2512,6 +2520,7 @@ describe("snapshots", () => {
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
+			+       "html": Object {},
 			@@ ... @@
 			+         },
 			+       },
@@ -3037,16 +3046,6 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -3075,8 +3074,7 @@ describe("snapshots", () => {
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -3209,6 +3207,18 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -3238,6 +3248,7 @@ describe("snapshots", () => {
 			+         "localIdentHashSalt": undefined,
 			+         "localIdentName": "[fullhash]",
 			+       },
+			+       "html": Object {},
 			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
@@ -3329,11 +3340,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3345,9 +3355,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3468,11 +3480,11 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "type": "webassembly/async",
-			+       },
+			@@ ... @@
 			+       Object {
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -3489,16 +3501,9 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.mts$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "module",
 			+         },
@@ -3528,6 +3533,20 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			@@ ... @@
+			+       "html": Object {},
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@

@@ -9,9 +9,11 @@ const readFile = (name) =>
 it("should reference both the split-out vendor chunk and the entry chunk", () => {
 	const extracted = readFile("page.html");
 	expect(extracted).toMatchSnapshot();
-	const scriptSrcMatches = [
-		...extracted.matchAll(/<script src="([^"]+)">/g)
-	].map((m) => m[1]);
+	// Use exec()-in-a-loop instead of String.prototype.matchAll for
+	// compatibility with legacy Node.js.
+	const scriptSrcRe = /<script src="([^"]+)">/g;
+	const scriptSrcMatches = [];
+	for (let m; (m = scriptSrcRe.exec(extracted)); ) scriptSrcMatches.push(m[1]);
 	// One tag per chunk in the entry's chunk group: vendor + entry.
 	expect(scriptSrcMatches).toHaveLength(2);
 	const [vendorUrl, entryUrl] = scriptSrcMatches;

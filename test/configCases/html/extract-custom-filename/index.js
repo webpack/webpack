@@ -12,8 +12,11 @@ it("should honor a custom output.htmlFilename template", () => {
 	const [emitted] = files;
 	expect(emitted).toMatch(/^page\.[a-f0-9]{8}\.html$/);
 	const html = fs.readFileSync(path.join(pagesDir, emitted), "utf-8");
-	// Asset URL was rewritten — extract still goes through the same
-	// dependency-template pipeline regardless of the output path template.
+	// The page is emitted into `pages/`, but assets and chunks live at the
+	// `output.path` root. Asset URLs in the emitted HTML must therefore be
+	// rewritten with an `../` undo path relative to the HTML's location;
+	// otherwise the browser would look for `pages/<hash>.png` instead of
+	// `<hash>.png`.
 	expect(html).not.toContain('src="./image.png"');
-	expect(html).toMatch(/<img src="[a-f0-9]+\.png" alt="image">/);
+	expect(html).toMatch(/<img src="\.\.\/[a-f0-9]+\.png" alt="image">/);
 });
