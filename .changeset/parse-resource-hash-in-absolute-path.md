@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Treat `#` in an absolute path's directory name as part of the path rather than a fragment separator. `parseResource` and resolver requests now correctly handle absolute paths containing `#`, so projects in directories like `/home/user/proj#1` (and tools like webpack-dev-server that build absolute entry requests with query strings) resolve correctly.
+Escape `#` characters that appear inside a path-shaped request's directory portion before passing the request to the resolver, so projects located in directories like `/home/user/proj#1` (and tools like webpack-dev-server that build entry requests with query strings) resolve correctly. The escape only kicks in when the request contains both a `#` in the path portion and a `?` query string — paths without a query keep their existing semantics.
