@@ -12781,7 +12781,15 @@ declare interface LStatFs {
 	): void;
 }
 declare interface LStatSync {
-	(path: PathLikeFs, options?: undefined): IStatsFs;
+	(path: PathLikeFs): IStatsFs;
+	(
+		path: PathLikeFs,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry?: true }
+	): IStatsFs;
+	(
+		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry?: true }
+	): IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
@@ -12790,14 +12798,9 @@ declare interface LStatSync {
 		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStatsFs;
-	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: true }
-	): IBigIntStatsFs;
-	(
-		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
@@ -22650,7 +22653,15 @@ declare interface StatOptionsTypes {
 	bigint?: boolean;
 }
 declare interface StatSync {
-	(path: PathLikeFs, options?: undefined): IStatsFs;
+	(path: PathLikeFs): IStatsFs;
+	(
+		path: PathLikeFs,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry?: true }
+	): IStatsFs;
+	(
+		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry?: true }
+	): IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
@@ -22659,14 +22670,9 @@ declare interface StatSync {
 		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStatsFs;
-	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: true }
-	): IBigIntStatsFs;
-	(
-		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
