@@ -1183,9 +1183,7 @@ describe("snapshots", () => {
 		+     "filename": "bundle.js",
 		@@ ... @@
 		-     "htmlChunkFilename": "[name].html",
-		-     "htmlFilename": "[name].html",
 		+     "htmlChunkFilename": "[id].bundle.html",
-		+     "htmlFilename": "bundle.html",
 	`)
 	);
 
@@ -1207,9 +1205,7 @@ describe("snapshots", () => {
 		+     "filename": [Function filename],
 		@@ ... @@
 		-     "htmlChunkFilename": "[name].html",
-		-     "htmlFilename": "[name].html",
 		+     "htmlChunkFilename": "[id].html",
-		+     "htmlFilename": "[id].html",
 	`)
 	);
 
