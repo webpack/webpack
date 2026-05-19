@@ -129,7 +129,14 @@ describe("util/identifier", () => {
 			[
 				"/home/felix/projects/f#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080",
 				"/home/felix/projects/f\0#/webpack/node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=8080"
-			]
+			],
+			// pre-escaped `\0#` is preserved (explicit opt-out remains stable)
+			["/home/user/proj\0#1/file.js?q=1", "/home/user/proj\0#1/file.js?q=1"],
+			[
+				"/home/user/proj\0#a/raw#b/file.js?q=1",
+				"/home/user/proj\0#a/raw\0#b/file.js?q=1"
+			],
+			["./proj\0#1/file.js?q=1", "./proj\0#1/file.js?q=1"]
 		];
 		for (const [input, expected] of cases) {
 			it(JSON.stringify(input), () => {
