@@ -14,7 +14,7 @@ module.exports = {
 			case 2:
 				return ["bundle2.mjs"];
 			case 3:
-				return ["chunks/445.sync.js", "bundle3.js"];
+				return ["chunks/93.sync.js", "bundle3.js"];
 		}
 	},
 	moduleScope(scope, options) {
