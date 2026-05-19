@@ -3,6 +3,8 @@ import textB from "./text-b.css";
 import sheetA from "./sheet-a.css";
 import sheetB from "./sheet-b.css";
 import { "link-a-class" as linkAClass } from "./link-a.module.css";
+import "./style-a.css";
+import "./style-b.css";
 
 it("should concatenate text exportType modules", () => {
 	expect(typeof textA).toBe("string");
@@ -44,9 +46,18 @@ it("should concatenate link exportType (CSS modules) and export class names", (d
 	}, done);
 });
 
+it("should concatenate style exportType modules and inject <style> tags", () => {
+	const styles = [...document.getElementsByTagName("style")];
+	const allCss = styles.map(s => s.textContent).join("\n");
+	expect(allCss).toContain("color: orange");
+	expect(allCss).toContain("font-style: italic");
+	expect(allCss).toContain("color: magenta");
+});
+
 it("should concatenate all modules into one concatenated module", () => {
 	const concatModules = __STATS__.modules.filter(m => m.modules);
 	expect(concatModules.length).toBe(1);
-	// index.js + 2 text + 1 text-dep + 2 sheet + 1 sheet-dep + 1 link + 1 link-dep = 9
-	expect(concatModules[0].modules.length).toBeGreaterThanOrEqual(9);
+	// index.js + 2 text + 1 text-dep + 2 sheet + 1 sheet-dep + 1 link + 1 link-dep
+	// + 2 style + 1 style-dep = 12
+	expect(concatModules[0].modules.length).toBeGreaterThanOrEqual(12);
 });

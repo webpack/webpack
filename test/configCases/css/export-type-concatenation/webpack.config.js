@@ -33,6 +33,13 @@ module.exports = {
 				parser: {
 					exportType: "link"
 				}
+			},
+			{
+				test: /style-.*\.css$/,
+				type: "css/module",
+				parser: {
+					exportType: "style"
+				}
 			}
 		]
 	},
