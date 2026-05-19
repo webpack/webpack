@@ -346,6 +346,7 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 <a href="https://angular.io/" target="_blank" title="JS framework">Angular</a>
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software">MoonMail</a>
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates">MONEI</a>
+<a href="https://codspeed.io/?utm_source=webpack&utm_medium=readme" target="_blank" title="Optimize Performance, Eliminate Regressions">CodSpeed</a>
 
 </div>
 
