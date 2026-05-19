@@ -10,7 +10,7 @@ module.exports = {
 			case 0:
 				return ["bundle0.mjs"];
 			case 1:
-				return ["chunks/93.async.js", "bundle1.js"];
+				return ["chunks/295.async.js", "bundle1.js"];
 			case 2:
 				return ["bundle2.mjs"];
 			case 3:
