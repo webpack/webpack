@@ -21,6 +21,7 @@ const wrapperFullPath = WRAPPER_FULL_PATH;
 const wrapperNamedPath = WRAPPER_NAMED_PATH;
 const wrapperPropPath = WRAPPER_PROP_PATH;
 const distinctMjsPath = DISTINCT_MJS_PATH;
+const underscoreLikePath = UNDERSCORE_LIKE_PATH;
 
 it("should unwrap a named export 'module.exports' for plain require()", () => {
 	const webpacked = require("./value.mjs");
@@ -117,6 +118,43 @@ it("should not leak sibling named exports when 'module.exports' unwraps (usedExp
 	const nativePlain = require(/* webpackIgnore: true */ distinctMjsPath);
 	expect(webpackedPlain).toBe("module-exports-value");
 	expect(webpackedPlain).toBe(nativePlain);
+});
+
+// Underscore-shaped library regression (issue #20896 + the linked underscore
+// and esbuild issues): an ESM-only library that exports itself via
+// `"module.exports"` must be observable from CJS as the library function,
+// not as the ESM namespace.
+
+it("Underscore-like: `const _ = require(lib)` yields the callable library", () => {
+	const _ = require("./underscore-like.mjs");
+	const native = require(/* webpackIgnore: true */ underscoreLikePath);
+	expect(typeof _).toBe("function");
+	expect(typeof native).toBe("function");
+	expect(_.VERSION).toBe("1.0.0-esm");
+	expect(_.VERSION).toBe(native.VERSION);
+	expect(_.map([1, 2, 3], (x) => x * 2)).toEqual([2, 4, 6]);
+});
+
+it("Underscore-like: `_.partial.placeholder === _` (underscore/issues/3016)", () => {
+	const _ = require("./underscore-like.mjs");
+	// The library function and its default-placeholder reference must be the
+	// same object. With a namespace import this strict-equality check fails
+	// silently and `_.partial` stops recognising `_` as the placeholder.
+	expect(_.partial.placeholder).toBe(_);
+});
+
+it("Underscore-like: `_.partial(fn, _, x, _)` fills positionally with the placeholder", () => {
+	const _ = require("./underscore-like.mjs");
+	const concat3 = (a, b, c) => `${a}|${b}|${c}`;
+	expect(_.partial(concat3, _, "B", "C")("A")).toBe("A|B|C");
+	expect(_.partial(concat3, "A", _, "C")("B")).toBe("A|B|C");
+});
+
+it("Underscore-like: destructured pull behaves as `import _ from 'underscore'` would (esbuild/issues/4459)", () => {
+	const { map, VERSION } = require("./underscore-like.mjs");
+	const native = require(/* webpackIgnore: true */ underscoreLikePath);
+	expect(map([1, 2], (x) => x + 1)).toEqual([2, 3]);
+	expect(VERSION).toBe(native.VERSION);
 });
 
 it("should preserve namespace behavior when ESM has no 'module.exports' export", () => {

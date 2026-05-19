@@ -47,7 +47,12 @@ module.exports = {
 			WRAPPER_PROP_PATH: JSON.stringify(
 				path.resolve(__dirname, "wrapper-prop.cjs")
 			),
-			DISTINCT_MJS_PATH: JSON.stringify(path.resolve(__dirname, "distinct.mjs"))
+			DISTINCT_MJS_PATH: JSON.stringify(
+				path.resolve(__dirname, "distinct.mjs")
+			),
+			UNDERSCORE_LIKE_PATH: JSON.stringify(
+				path.resolve(__dirname, "underscore-like.mjs")
+			)
 		})
 	]
 };
